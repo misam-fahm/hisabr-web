@@ -115,14 +115,17 @@ const Home: FC = () => {
   };
 
   return (
-    <main className="max-h-[calc(100vh-70px)] overflow-auto" style={{scrollbarWidth:"thin"}}>
-      {/* <div>
-        <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 pl-6 pr-6">
+    <main
+      className="max-h-[calc(100vh-70px)] overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
+      <div className="below-md:flex below-md:justify-center ">
+        <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
           Home
         </p>
-      </div> */}
+      </div>
 
-      <div className="flex flex-row items-center justify-center gap-3 pt-3  bg-[#f7f8f9] pl-6 pr-6">
+      <div className="flex flex-row items-center justify-center gap-3 pt-3 pb-3 sticky top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div className="relative w-full">
           <p className="text-[#2D374880] text-[12px] mb-2">Select Store</p>
           {/* Dropdown Button */}
@@ -191,7 +194,7 @@ const Home: FC = () => {
         </div>
 
         {/* Third dropdown */}
-        <div className="relative w-full">
+        <div className="relative w-full below-md:hidden">
           <p className="text-[#2D374880] text-[12px] mb-2">View</p>
           {/* Dropdown Button */}
           <button
@@ -225,7 +228,7 @@ const Home: FC = () => {
         </div>
 
         {/* Tooltip image */}
-        <div className="relative w-[20%] mt-8">
+        <div className="relative w-[20%] mt-8 below-md:hidden">
           {/* Tooltip Image with group class */}
           <div className="group relative">
             <img
@@ -259,9 +262,9 @@ const Home: FC = () => {
         </div>
       </div>
 
-      <div className=" pr-6 pl-6">
-        <div className="flex flex-row gap-7 w-full mt-3">
-          <div className=" bg-white mt-6 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] h-auto">
+      <div className=" pr-6 pl-6 below-md:px-3 mt-12">
+        <div className="flex flex-row gap-7 below-md:gap-0 w-full below-md:flex-col">
+          <div className=" bg-white mt-6 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full below-md:min-h-[213px] h-auto min-h-[51vh]">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/groce.svg" />
@@ -281,7 +284,7 @@ const Home: FC = () => {
             </div>
           </div>
 
-          <div className="bg-white mt-6 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] h-auto min-h-[51vh]">
+          <div className="bg-white mt-6 below-md:mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full h-auto min-h-[51vh]  below-md:min-h-[213px]">
             <div className="flex flex-row mt-4 justify-between px-3 ">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/persentage.svg" />
@@ -296,7 +299,7 @@ const Home: FC = () => {
                 />
               </div>
             </div>
-            <div className=" overflow-hidden overflow-y-auto max-h-[42vh] custom-scrollbar">
+            <div className=" overflow-hidden overflow-y-auto below-md:overflow-x-auto max-h-[42vh] below-md:max-h-[30vh] custom-scrollbar">
               <table className="w-full bg-white border border-gray-200 mt-6 ">
                 <thead className="top-0 bg-[#FAFBFB] shadow-md">
                   <tr className="text-left text-gray-600 font-semibold">
@@ -356,8 +359,8 @@ const Home: FC = () => {
 
         {/* grid 1*/}
 
-        <div className="flex flex-row gap-7">
-          <div className=" bg-white mt-6 pb-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full  h-48 min-h-auto">
+        <div className="flex flex-row gap-7 below-md:gap-0 below-md:flex-col">
+          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full  h-48 min-h-auto">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/groce.svg" />
@@ -402,7 +405,7 @@ const Home: FC = () => {
           </div>
 
           {/** second grid  */}
-          <div className=" bg-white mt-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/plus.svg" />
@@ -446,7 +449,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/net.svg" />
@@ -486,8 +489,8 @@ const Home: FC = () => {
 
         {/* grid 2*/}
 
-        <div className="flex flex-row gap-7">
-          <div className=" bg-white mt-6 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  h-48 min-h-auto">
+        <div className="flex flex-row gap-7 below-md:gap-0 below-md:flex-col">
+          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  h-48 min-h-auto">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-1 ">
                 <img src="/images/operating.svg" />
@@ -535,7 +538,7 @@ const Home: FC = () => {
           </div>
 
           {/** second grid  */}
-          <div className=" bg-white mt-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/cost.svg" />
@@ -582,7 +585,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/labor.svg" />
@@ -631,8 +634,8 @@ const Home: FC = () => {
 
         {/* grid 3*/}
 
-        <div className="flex flex-row gap-7 mb-16">
-          <div className=" bg-white mt-6 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  h-48 min-h-auto">
+        <div className="flex flex-row gap-7 below-md:gap-0 mb-1 below-md:flex-col">
+          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  h-48 min-h-auto">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-1 ">
                 <img src="/images/crown.svg" />
@@ -674,7 +677,7 @@ const Home: FC = () => {
           </div>
 
           {/** second grid  */}
-          <div className=" bg-white mt-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/persentage.svg" />
@@ -715,7 +718,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 border-t-4 border-[#BCC7D5]  rounded-md shadow-md w-full pb-6 h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md w-full pb-6 h-48 min-h-auto">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/items.svg" />
@@ -731,7 +734,7 @@ const Home: FC = () => {
               </div>
             </div>
 
-            <div className=" overflow-hidden overflow-y-auto max-h-[135px] custom-scrollbar ">
+            <div className="w-full overflow-hidden overflow-y-auto below-md:overflow-x-auto max-h-[135px] custom-scrollbar ">
               <table className="w-full bg-white border border-gray-200 mt-6 ">
                 <tbody>
                   {tableData2.map((row, index) => (
@@ -741,13 +744,13 @@ const Home: FC = () => {
                         index % 2 === 1 ? "bg-white" : "bg-[#FAFBFB]"
                       }`}
                     >
-                      <td className="px-4 py-2 border-b border-gray-200 text-gray-700">
+                      <td className="px-3 py-2 border-b border-gray-200 text-gray-700">
                         {row.name}
                       </td>
-                      <td className="px-4 py-2 border-b border-gray-200 text-[#334155] text-[15px] font-bold text-center">
+                      <td className="px-3 py-2 border-b border-gray-200 text-[#334155] text-[15px] font-bold text-center">
                         {row.revenue.toLocaleString()}
                       </td>
-                      <td className="px-4 py-2 border-b border-gray-200 text[15px] font-bold text-[#334155]">
+                      <td className="px-3 py-2 border-b border-gray-200 text[15px] font-bold text-[#334155]">
                         ${row.commission}
                       </td>
                     </tr>
@@ -755,14 +758,14 @@ const Home: FC = () => {
                 </tbody>
                 <tfoot className="bottom-0 bg-white">
                   <tr className="font-bold text-[#E31212]">
-                    <td className="px-4 py-2 border-t border-gray-200">
+                    <td className="px-3 py-2 border-t border-gray-200">
                       Total
                     </td>
-                    <td className="px-4 py-2 border-t border-gray-200">
+                    <td className="px-3 py-2 border-t border-gray-200">
                       ${totalRevenue.toLocaleString()}
                     </td>
 
-                    <td className="px-4 py-2 border-t border-gray-200">
+                    <td className="px-3 py-2 border-t border-gray-200">
                       ${totalAmount.toFixed(2)}
                     </td>
                   </tr>
