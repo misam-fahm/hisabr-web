@@ -69,7 +69,7 @@ const Expenses = () => {
                 </div>
 
                 <div className='flex items-center justify-between mb-2'>
-                    <p className='text-[16px] font-bold text-[#334155] mt-2 '>Invoices</p>
+                    <p className='text-[16px] font-bold text-[#334155] mt-2 '>Expenses</p>
                    <AddExpenses />
                 </div>
 
