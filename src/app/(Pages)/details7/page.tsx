@@ -149,7 +149,7 @@ const columns: ColumnDef<TableRow>[] = [
     header: "Delete",
     cell: () => (
       <button className="bg-white p-2 rounded-full shadow-inner">
-        <Image src="/images/delete.svg" alt="Delete" width={14} height={14} />
+        <Image src="/images/delete1.svg" alt="Delete" width={14} height={14} />
       </button>
     ),
   },
@@ -232,7 +232,10 @@ const DetailsPage: React.FC = () => {
   };
 
   return (
-    <main>
+    <main
+      className="max-h-[calc(100vh-70px)] overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
       <div>
         <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 pl-6 pr-6">
           Labor Analysis

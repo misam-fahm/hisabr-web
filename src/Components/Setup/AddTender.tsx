@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Dialog, DialogPanel, DialogTitle , Button} from "@headlessui/react";
+import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 
 const AddTender = () => {
@@ -24,7 +24,9 @@ const AddTender = () => {
     setErrors({ name: "", type: "", commission: "" });
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
 
     setFormData((prevData) => ({
@@ -86,13 +88,13 @@ const AddTender = () => {
 
   return (
     <>
-    <div>
-      <Button
-        onClick={openModal}
-        className="font-semibold text-[14px] bg-[#1AA47D] hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
-      >
-        Add Tender
-      </Button>
+      <div>
+        <Button
+          onClick={openModal}
+          className="font-semibold text-[14px] bg-[#1AA47D] hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
+        >
+          Add Tender
+        </Button>
       </div>
 
       <Dialog

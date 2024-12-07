@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -124,7 +125,7 @@ const columns: ColumnDef<TableRow>[] = [
     header: "delete",
     cell: () => (
       <button className="bg-[#FFFFFF] p-[9px] rounded-full shadow-[inset_-2px_-2px_2px_#F7E2E259,inset_2px_2px_3px_#FFF3F396]">
-        <Image src="/images/delete.svg" alt="delete" width={14} height={14} />
+        <Image src="/images/delete1.svg" alt="delete" width={14} height={14} />
       </button>
     ),
   },
@@ -152,12 +153,6 @@ const DetailsPage: React.FC = () => {
   const startItem = pageIndex * pageSize + 1;
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
-  const [isTenderRowVisible, setTenderRowVisible] = useState(true); // State to control button and content visibility
-
-  const handleAddTenderClick = () => {
-    setTenderRowVisible(false); // Hide the button and tender label when clicked
-  };
-
   /**go back button */
   const router = useRouter();
   const handleBack = () => {
@@ -166,91 +161,41 @@ const DetailsPage: React.FC = () => {
     } else {
       router.push("/");
     }
+
+    const handleAddTenderClick = () => {
+      // Navigate to the desired page, e.g., "/add-tender" (you can change the path as needed)
+      router.push("/AddTender");
+    };
   };
 
   return (
-    <main>
+    <main
+      className="max-h-[calc(100vh-70px)] overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
       <div>
         <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 pl-6 pr-6">
           Tender Analysis
         </p>
       </div>
 
-      {/* Hide button and Tender label once clicked */}
-      {isTenderRowVisible ? (
-        <div className="flex flex-row justify-between items-center mt-20 mb-4 mx-6">
-          <div>
-            <p className="text-[16px] font-bold text-[#334155] ml-3"> Tender</p>
-          </div>
-          <div>
-            <button
-              onClick={handleAddTenderClick}
-              className="bg-[#1AA47D] [box-shadow:0px_3px_8px_0px_#00000026] w-[133px] h-[37px] rounded-md text-white text-[14px] font-semibold 
+      <div className="flex flex-row justify-between items-center mt-24 mb-4 mx-6">
+        <div>
+          <p className="text-[16px] font-bold text-[#334155] ml-3"> Tender</p>
+        </div>
+        <div>
+          <button
+            className="bg-[#1AA47D] [box-shadow:0px_3px_8px_0px_#00000026] w-[133px] h-[37px] rounded-md text-white text-[14px] font-semibold 
              hover:shadow-lg transition-shadow duration-300"
-            >
-              Add Tender
-            </button>
-          </div>
+          >
+            Add Tender
+          </button>
         </div>
-      ) : (
-        // This will show the new content when the button is clicked
-        <div className="flex justify-between items-center bg-white mx-6 py-10 px-6 mt-24 mb-10 shadow-md rounded-md">
-          {/* Add Tender  */}
-          <div className="flex flex-col gap-6">
-            <p className="text-[14px] text-[#5E6366] font-medium">
-              Add Tender :
-            </p>
-            <p className="text-[14px] text-transparent font-medium">
-              Add Tender :
-            </p>
-          </div>
-
-          {/* Tender Name Input */}
-          <div className="flex flex-col w-[23%]">
-            <label className="text-[13px] mb-2 text-[#000000CC]">Name</label>
-            <input
-              type="text"
-              placeholder="please Enter Tender name"
-              className="p-2 border bg-[#f7f8f9] rounded-md text-[12px] text-[#8D98AA] border-none focus:outline-none focus:ring-2 focus:ring-[#f7f8f9]"
-            />
-          </div>
-          {/* Type Input */}
-          <div className="flex flex-col w-[23%]">
-            <label className="text-[13px] mb-2 text-[#000000CC]">Type</label>
-            <input
-              type="text"
-              placeholder="please Enter type"
-              className="p-2 border bg-[#f7f8f9] rounded-md text-[12px] text-[#8D98AA] border-none focus:outline-none focus:ring-2 focus:ring-[#f7f8f9]"
-            />
-          </div>
-          {/* Commission Input */}
-          <div className="flex flex-col w-[23%]">
-            <label className="text-[13px] mb-2 text-[#000000CC]">
-              % of Commission
-            </label>
-            <input
-              type="text"
-              placeholder="Please Enter % Of Commission"
-              className="p-2 border bg-[#f7f8f9] rounded-md text-[12px] text-[#8D98AA] border-none focus:outline-none focus:ring-2 focus:ring-[#f7f8f9]"
-            />
-          </div>
-          {/* Save Button */}
-
-          <div className="flex flex-col gap-1">
-            <p className="text-[14px] text-transparent font-medium">
-              Add Tender :
-            </p>
-            <button className="bg-[#1AA47D] [box-shadow:0px_3px_8px_0px_#00000026] px-9 py-2 rounded-md text-white text-sm font-semibold hover:shadow-lg transition-shadow duration-300">
-              Save
-            </button>
-          </div>
-        </div>
-      )}
+      </div>
 
       {/* Table remains visible as is */}
       <div className="mb-10 mx-6">
         {/** Table */}
-
         <div>
           {/* Table */}
           <div className="overflow-x-auto shadow-md rounded-lg">
