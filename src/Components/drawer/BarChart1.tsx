@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -26,21 +26,51 @@ const data = [
 ];
 
 const SimpleBarChart: FC = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 800); // Mobile if screen width is ≤ 800px
+    };
+
+    handleResize(); // Check on initial load
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <div className="w-[100%] h-96">
+    <div className="w-[100%] h-72">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
-          margin={{ top: 20, right: 30, left: 50, bottom: 20 }}
+          margin={
+            isMobile
+              ? { right: 10, left: 12 }
+              : { top: 1, right: 25, left: 25, bottom: 20 }
+          }
         >
           {/* X-Axis */}
-          <XAxis dataKey="month" axisLine={false} tickLine={false} />
+          <XAxis
+            dataKey="month"
+            axisLine={false}
+            tickLine={false}
+            tick={{ fontSize: 12 }}
+            tickFormatter={(value) => (isMobile ? value.charAt(0) : value)}
+          />
           {/* Y-Axis */}
           <YAxis
             axisLine={false}
             tickLine={false}
             domain={[0, 2500000]} // Ensure the Y-axis accommodates the max value
             ticks={[0, 500000, 1000000, 1500000, 2000000, 2500000]} // Custom tick marks
+            tickFormatter={(value) =>
+              isMobile ? `${value / 1000}k` : value.toLocaleString()
+            }
+            tick={{ fontSize: 12 }}
           />
           {/* Tooltip */}
           <Tooltip />
@@ -48,7 +78,7 @@ const SimpleBarChart: FC = () => {
           <Bar
             dataKey="value"
             fill="rgba(95, 57, 92, 0.8)"
-            barSize={30}
+            barSize={isMobile ? 8 : 30}
             radius={[3, 3, 0, 0]} // Rounded top corners
           />
         </BarChart>

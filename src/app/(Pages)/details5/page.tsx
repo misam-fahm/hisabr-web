@@ -144,12 +144,13 @@ const columns: ColumnDef<TableRow>[] = [
       </button>
     ),
   },
+
   {
     id: "delete",
     header: "Delete",
     cell: () => (
       <button className="bg-white p-2 rounded-full shadow-inner">
-        <Image src="/images/delete.svg" alt="Delete" width={14} height={14} />
+        <Image src="/images/delete1.svg" alt="Delete" width={14} height={14} />
       </button>
     ),
   },
@@ -232,7 +233,10 @@ const DetailsPage: React.FC = () => {
   };
 
   return (
-    <main>
+    <main
+      className="max-h-[calc(100vh-70px)] overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
       <div>
         <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 pl-6 pr-6">
           Operating Expense Analysis
@@ -346,7 +350,7 @@ const DetailsPage: React.FC = () => {
         <div>
           {/* Table */}
           <div className="overflow-x-auto shadow-md rounded-lg">
-            <table className="w-full border-collapse border border-gray-200">
+            <table className="w-full border-collapse border border-gray-200 ">
               <thead className="bg-[#334155]">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>

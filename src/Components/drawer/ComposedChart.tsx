@@ -1,4 +1,6 @@
-import React, { FC } from "react";
+"use client";
+
+import React, { FC, useState, useEffect } from "react";
 import {
   ComposedChart,
   Line,
@@ -27,10 +29,29 @@ const data = [
 ];
 
 const CustomChart: FC = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 800); // Mobile if screen width is ≤ 800px
+    };
+
+    handleResize(); // Check on initial load
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <div className="w-full h-[299px] relative z-10">
+    <div className="w-full h-[299px] below-md:h-[240px] relative z-10">
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data}>
+        <ComposedChart
+          data={data}
+          margin={isMobile ? { right: -20, left: -20 } : { right: 0, left: 0 }}
+        >
           {/* X-Axis */}
           <XAxis
             dataKey="name"
@@ -40,6 +61,7 @@ const CustomChart: FC = () => {
               fontSize: 12,
               fill: "#000000B2",
             }}
+            tickFormatter={(value) => (isMobile ? value.charAt(0) : value)} // Show only first letter for mobile
           />
           {/* Left Y-Axis */}
           <YAxis
@@ -72,7 +94,9 @@ const CustomChart: FC = () => {
             content={({ payload }) => (
               <div style={{ display: "flex", justifyContent: "center" }}>
                 {payload
-                  ?.filter((entry, index) => index !== 2) // Exclude the third label
+                  ?.filter(
+                    (entry, index) => !(entry.value === "Profit" && index === 2)
+                  ) // Exclude only the 3rd Profit entry
                   .map((entry, index) => (
                     <div
                       key={index}
@@ -82,14 +106,28 @@ const CustomChart: FC = () => {
                         marginRight: 20,
                       }}
                     >
-                      <div
-                        style={{
-                          width: 10,
-                          height: 10,
-                          backgroundColor: entry.color,
-                          marginRight: 5,
-                        }}
-                      ></div>
+                      {entry.value === "Profit" ? (
+                        // Replace "Profit" with an image
+                        <img
+                          src="/images/profit1.svg" // Replace with the actual image path
+                          alt="Profit"
+                          style={{
+                            width: 20,
+                            height: 20,
+                            marginRight: 5,
+                          }}
+                        />
+                      ) : (
+                        // Default color legend for others
+                        <div
+                          style={{
+                            width: 10,
+                            height: 10,
+                            backgroundColor: entry.color,
+                            marginRight: 5,
+                          }}
+                        ></div>
+                      )}
                       <span
                         style={{
                           fontSize: "12px",
@@ -103,6 +141,7 @@ const CustomChart: FC = () => {
               </div>
             )}
           />
+
           {/* Bars */}
           <Bar
             dataKey="Expense"
