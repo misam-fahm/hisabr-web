@@ -253,15 +253,20 @@ const DetailsPage: React.FC = () => {
       className="max-h-[calc(100vh-70px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div>
-        <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 pl-6 pr-6">
+      <img
+        onClick={handleBack}
+        src="/images/backIcon.svg"
+        className="fixed top-6 left-4 z-30 below-lg:hidden"
+      />
+      <div className="below-md:flex below-md:justify-center ">
+        <p className="text-[18px] below-md:text-[16px] below-md:mr-8 font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
           Gross Revenue Analysis
         </p>
       </div>
-      <div className="pt-6 pb-6 sticky z-10 top-16 bg-[#f7f8f9] pl-6 pr-6">
+      <div className="pt-6 pb-6 sticky z-10 top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row gap-3  w-full">
-            <div className="relative w-[30%]">
+            <div className="relative w-[30%] below-md:w-full">
               <p className="text-[#2D374880] text-[12px] mb-2">Select Store</p>
               {/* Dropdown Button */}
               <button
@@ -298,7 +303,7 @@ const DetailsPage: React.FC = () => {
 
             {/*second dropdown */}
 
-            <div className="relative w-[30%]">
+            <div className="relative w-[30%]  below-md:w-full">
               <p className="text-[#2D374880] text-[12px] mb-2">Select Period</p>
               {/* Dropdown Button */}
               <button
@@ -336,7 +341,7 @@ const DetailsPage: React.FC = () => {
           <div>
             <p
               onClick={handleBack}
-              className="cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
+              className="below-md:hidden cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
             >
               Back
             </p>
@@ -345,8 +350,8 @@ const DetailsPage: React.FC = () => {
         <div />
       </div>
 
-      <div className=" pl-6 pr-6">
-        <div className="flex flex-row w-full h-full gap-6 pt-16 ">
+      <div className=" pl-6 pr-6 below-md:px-3">
+        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 pt-16 ">
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full h-full min-h-[130px] p-4 justify-between">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
@@ -405,8 +410,8 @@ const DetailsPage: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-row w-full mt-6 mb-9">
-          <div className="flex flex-col w-[70%]">
+        <div className="flex flex-row below-md:flex-col w-full mt-6 below-md:mt-3 mb-9">
+          <div className="flex flex-col w-[70%] below-md:w-full">
             <div className="bg-white shadow-md rounded-md">
               <div>
                 <p className="text-[#393E47] text-[16px] font-bold mt-3 ml-6 mb-3">
@@ -417,7 +422,7 @@ const DetailsPage: React.FC = () => {
                 <MultiLineChart />
               </div>
             </div>
-            <div className="bg-white shadow-md rounded-md mt-6">
+            <div className="bg-white shadow-md rounded-md mt-6 below-md:mt-3">
               <div className="flex flex-row justify-between mx-6 mt-5 mb-5">
                 <div>
                   <p className="text-[#393E47] text-[16px] font-bold mb-3">
@@ -464,7 +469,7 @@ const DetailsPage: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="w-[30%] bg-white ml-6 shadow-md rounded-md">
+          <div className="w-[30%] below-md:w-full below-md:ml-0 below-md:mt-3 bg-white ml-6 shadow-md rounded-md">
             <div className="flex flex-col ">
               <div className="flex flex-row justify-between px-6 pt-6">
                 <div>
@@ -472,7 +477,7 @@ const DetailsPage: React.FC = () => {
                     Product Revenue
                   </p>
                 </div>
-                <div className="relative w-[40%]">
+                <div className="relative w-[40%] ">
                   {/* Dropdown Button */}
                   <button
                     onClick={() => setIsOpen4(!isOpen4)}
@@ -510,7 +515,7 @@ const DetailsPage: React.FC = () => {
                 <PieChart2 />
               </div>
               <div>
-                <div className="w-full max-w-sm mx-auto px-6">
+                <div className="w-full max-w-sm mx-auto px-6 below-md:mb-6">
                   <ul>
                     {dat.map((item, index) => (
                       <li
@@ -592,7 +597,7 @@ const DetailsPage: React.FC = () => {
                       {row.getVisibleCells().map((cell) => (
                         <td
                           key={cell.id}
-                          className="px-4 py-1 text-[#636363] text-[14px]"
+                          className="px-4 py-1 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar"
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
@@ -610,7 +615,7 @@ const DetailsPage: React.FC = () => {
             <div className="mt-4 flex gap-2 justify-between items-center">
               {/* Page Range Display */}
               <div>
-                <span className="text-[#8899A8] text-[12px] font-medium ml-3">
+                <span className="text-[#8899A8] text-[12px] font-medium ml-3 below-md:hidden">
                   {startItem} - {endItem} of {totalItems}
                 </span>
               </div>
@@ -620,7 +625,7 @@ const DetailsPage: React.FC = () => {
                 <button
                   onClick={() => table.previousPage()}
                   disabled={!table.getCanPreviousPage()}
-                  className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
+                  className="px-4 py-2 below-md:px-2 below-md:py-1 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
                   style={{ background: "#EBEFF6" }}
                 >
                   <img src="/images/left.svg" />
@@ -632,7 +637,7 @@ const DetailsPage: React.FC = () => {
                     <button
                       key={pageIndex}
                       onClick={() => table.setPageIndex(pageIndex)}
-                      className={`px-4 py-2 rounded-md text-[12px] ${
+                      className={`px-4 py-2 below-md:px-2 below-md:py-1 rounded-md text-[12px] ${
                         table.getState().pagination.pageIndex === pageIndex
                           ? "!important text-[#FFFFFF]"
                           : " text-gray-700"
@@ -652,7 +657,7 @@ const DetailsPage: React.FC = () => {
                 <button
                   onClick={() => table.nextPage()}
                   disabled={!table.getCanNextPage()}
-                  className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
+                  className="px-4 py-2 below-md:px-2 below-md:py-1 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
                   style={{ background: "#EBEFF6" }}
                 >
                   <img src="/images/right.svg" />

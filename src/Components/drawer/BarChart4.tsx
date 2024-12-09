@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -43,27 +43,52 @@ const yearData: Record<number, { month: string; value1: number }[]> = {
 };
 
 const BarChart3: React.FC<{ selectedYear: number }> = ({ selectedYear }) => {
-  const chartData = yearData[selectedYear] || [];
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if screen size is less than 801px
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 801);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Set initial state based on current window size
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Prepare chart data based on screen size
+  const chartData =
+    yearData[selectedYear]?.map((item) => ({
+      ...item,
+      month: isMobile ? item.month[0] : item.month, // Display short month name on mobile
+    })) || [];
 
   return (
     <ResponsiveContainer width="100%" height={330}>
-      <BarChart data={chartData} barSize={35} barGap={8} barCategoryGap={12}>
+      <BarChart
+        data={chartData}
+        barSize={isMobile ? 10 : 35} // Smaller bar size for mobile
+        barGap={8}
+        barCategoryGap={12}
+        margin={isMobile ? { right: 20, left: -8 } : { right: 20, left: 0 }}
+      >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
           dataKey="month"
-          tick={{ fontSize: 12 }}
+          tick={{ fontSize: isMobile ? 10 : 12 }}
           tickMargin={10}
           interval={0}
           angle={0}
           tickLine={false}
         />
         <YAxis
-          tickFormatter={(tick) => `${tick / 1000}k`} // Updated to display in 'k' format
+          tickFormatter={(tick) => `${tick / 1000}k`}
           axisLine={false}
           tickLine={false}
           tick={{ fontSize: 12 }}
           domain={[0, 25000]}
-          ticks={[0, 5000, 10000, 15000, 20000, 25000]} // Defined ticks explicitly
+          ticks={[0, 5000, 10000, 15000, 20000, 25000]}
         />
         <Tooltip />
         <Legend

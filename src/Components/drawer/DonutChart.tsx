@@ -40,8 +40,8 @@ const DonutChart: React.FC = () => {
     cutout: "70%", // Donut hole size
     layout: {
       padding: {
-        left: 110,
-        right: 120,
+        left: 150,
+        right: 130,
       },
     },
   };

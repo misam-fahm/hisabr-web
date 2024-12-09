@@ -29,12 +29,24 @@ const yearData: Record<number, { category: string; value1: number }[]> = {
   ],
 };
 
+const getBarSize = () => {
+  if (window.innerWidth < 801) {
+    return 20; // Smaller bars for mobile view
+  }
+  return 35; // Default bar size for larger screens
+};
+
 const BarChart3: React.FC<{ selectedYear: number }> = ({ selectedYear }) => {
   const chartData = yearData[selectedYear] || [];
 
   return (
     <ResponsiveContainer width="100%" height={330}>
-      <BarChart data={chartData} barSize={35} barGap={8} barCategoryGap={12}>
+      <BarChart
+        data={chartData}
+        barSize={getBarSize()}
+        barGap={8}
+        barCategoryGap={12}
+      >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
           dataKey="category"
