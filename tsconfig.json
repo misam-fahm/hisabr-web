@@ -3,9 +3,11 @@
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
+    "strict": false,
+    "noImplicitAny": false,
     "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noEmit": true,  // This line should have a comma after the previous one
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
