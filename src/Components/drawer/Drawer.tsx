@@ -62,13 +62,29 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
 
   const sidebarClass = open ? "w-[230px]" : "w-[70px] below-md:w-0";
 
+  const pathsToHideHamburger = [
+    "/sales/sales_view",
+    "/details1",
+    "/details2",
+    "/details4",
+    "/details5",
+    "/details6",
+    "/details7",
+    "/details8",
+  ];
+  const shouldHideHamburger = pathsToHideHamburger.some((path) =>
+    currentPath.includes(path)
+  );
+
   return (
     <main className="flex h-[100vh]">
-      <img
-        src="/images/hamburger.svg"
-        className={`fixed top-6 left-[1rem] below-lg:hidden cursor-pointer z-[40]`}
-        onClick={() => setOpen(!open)}
-      />
+      {!shouldHideHamburger && (
+        <img
+          src="/images/hamburger.svg"
+          className="fixed top-6 left-4 cursor-pointer z-40"
+          onClick={() => setOpen(!open)}
+        />
+      )}
       <div
         className={`${sidebarClass} duration-300 h-full bg-defaultblack text-defaultwhite sticky below-md:fixed top-0 left-0 z-40`}
       >
