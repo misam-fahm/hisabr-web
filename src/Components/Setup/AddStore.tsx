@@ -127,7 +127,7 @@ const AddStore = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[420px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
-            <div className="flex justify-between">
+            <div className="flex justify-between mb-4">
               <DialogTitle as="h3" className="font-medium text-gray-900">
                 Add Store
               </DialogTitle>

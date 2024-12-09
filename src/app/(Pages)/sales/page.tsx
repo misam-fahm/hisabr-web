@@ -175,7 +175,7 @@ const Sales: FC = () => {
     },
     {
       accessorKey: "store",
-      header: "Store",
+      header: "Store ",
     },
     {
       accessorKey: "orders",

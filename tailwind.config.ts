@@ -10,6 +10,7 @@ export default {
   ],
   theme: {
     extend: {
+    
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -18,6 +19,7 @@ export default {
         white: "#FFFFFF",
       },
       screens: {
+        
         "below-md": { max: "800px" },
         "below-lg": { min: "801px" },
       },

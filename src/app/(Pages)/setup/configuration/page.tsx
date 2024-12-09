@@ -105,7 +105,7 @@ const Page = () => {
 
   return (
     <main className=" p-6">
-      <div className="flex justify-center items-center p-4">
+      <div className="flex justify-center items-center my-16 p-4">
         <div className="bg-white shadow-md rounded-lg p-6 w-full">
           <div>
             <p className="font-medium text-[#5E6366]">Add Configuration:</p>

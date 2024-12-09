@@ -347,7 +347,7 @@ const Page: FC = () => {
     },
     initialState: {
       pagination: {
-        pageSize: 5,
+        pageSize: 6,
         pageIndex: 0,
       },
     },
@@ -359,15 +359,17 @@ const Page: FC = () => {
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <main>
-      <div className="my-5  mx-6">
-        <div className="flex flex-row justify-between items-center mt-4 mb-4">
+    <main
+    className="max-h-[calc(100vh-10px)] overflow-auto"
+    style={{ scrollbarWidth: "thin" }}>
+      <div className="my-24  mx-6 below-md:my-24">
+        <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
           <div>
             <p className="text-[16px] font-bold text-[#334155]">
               Items
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-row gap-2 ">
             <AddNewItems />
 
             <AddCategories />
