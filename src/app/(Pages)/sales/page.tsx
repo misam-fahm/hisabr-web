@@ -175,7 +175,7 @@ const Sales: FC = () => {
     },
     {
       accessorKey: "store",
-      header: "Store",
+      header: "Store ",
     },
     {
       accessorKey: "orders",
@@ -258,16 +258,13 @@ const Sales: FC = () => {
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <main
-      className="max-h-[calc(100vh-70px)] overflow-auto"
-      style={{ scrollbarWidth: "thin" }}
-    >
-      <div>
+    <main>
+      {/* <div>
         <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 pl-6 pr-6">
           Sales
         </p>
-      </div>
-      <div className="my-4 mx-6 mt-24">
+      </div> */}
+      <div className="my-5  mx-6">
         <div className="flex flex-row w-full gap-3">
           <div className="w-[20%] relative">
             {/* Dropdown Button */}

@@ -1,159 +1,306 @@
-import AddStore from "@/Components/Setup/AddStore";
-import Link from "next/link";
-import React from "react";
 
-const Page = () => {
-  const data = [
-    {
-      store : "13246",
-      timestamp: "13246",
-      location: "VatisinVille",
-      description:"MORTGAGE",
-      royalty:"MORTGAGE",
-      imgSrc: "/images/greenEdit.svg",
+"use client";
+import React, { FC, useState } from "react";
+import DateRange from "@/Components/drawer/DateRangePicker";
+import Image from "next/image";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getFilteredRowModel,
+  flexRender,
+  ColumnDef,
+} from "@tanstack/react-table";
+
+import AddStore from "@/Components/Setup/AddStore";
+
+interface TableRow {
+  store:string;
+  timestamp:number;
+  location:string;
+  description:string;
+  royalty:string;
+}
+
+const data: TableRow[] = [
+  {
+    store : "13246",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+ 
+    
+  },
+  {
+    store : "Store 1",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+    
+  },
+  {
+    store : "Store 2",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+
+  },
+  {
+    store : "Store 3",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+    
+  },
+  {
+    store : "Store 1",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+    
+  },
+  {
+    store : "Store 2",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+  
+  },
+  {
+    store : "Store 3",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+  
+  },
+  {
+    store : "13246",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+    
+  },
+  {
+    store : "Store 2",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+  
+  },
+];
+
+const columns: ColumnDef<TableRow>[] = [
+  {
+    accessorKey: "store",
+    header: "Store",
+  },
+  {
+    accessorKey: "timestamp",
+    header: "Timestamp",
+  },
+  {
+    accessorKey: "location",
+    header: "Location",
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
+  },
+  {
+    accessorKey: "royalty",
+    header: "Royalty",
+  },
+  {
+    accessorKey: "edit",
+    header: "Edit",
+    cell: () => (
       
+        <Image src="/images/edit.svg" alt="edit" width={35} height={35} />
+      
+    ),
+  },
+
+  {
+    id: "delete",
+    header: "Delete",
+    cell: () => (
+     
+        <Image src="/images/delete.svg" alt="delete" width={35} height={35} />
+      
+    ),
+  },
+];
+const Page: FC = () => {
+  const [globalFilter, setGlobalFilter] = React.useState("");
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      globalFilter,
     },
-    {
-      store : "Store 1",
-      timestamp: "13246",
-      location: "VatisinVille",
-      description:"MORTGAGE",
-      royalty:"MORTGAGE",
-      imgSrc: "/images/greenEdit.svg",
+    initialState: {
+      pagination: {
+        pageSize: 6,
+        pageIndex: 0,
+      },
     },
-    {
-      store : "Store 2",
-      timestamp: "13246",
-      location: "VatisinVille",
-      description:"MORTGAGE",
-      royalty:"MORTGAGE",
-      imgSrc: "/images/greenEdit.svg",
-    },
-    {
-      store : "Store 3",
-      timestamp: "13246",
-      location: "VatisinVille",
-      description:"MORTGAGE",
-      royalty:"MORTGAGE",
-      imgSrc: "/images/greenEdit.svg",
-    },
-    {
-      store : "Store 1",
-      timestamp: "13246",
-      location: "VatisinVille",
-      description:"MORTGAGE",
-      royalty:"MORTGAGE",
-      imgSrc: "/images/greenEdit.svg",
-    },
-    {
-      store : "Store 2",
-      timestamp: "13246",
-      location: "VatisinVille",
-      description:"MORTGAGE",
-      royalty:"MORTGAGE",
-      imgSrc: "/images/greenEdit.svg",
-    },
-    {
-      store : "Store 3",
-      timestamp: "13246",
-      location: "VatisinVille",
-      description:"MORTGAGE",
-      royalty:"MORTGAGE",
-      imgSrc: "/images/greenEdit.svg",
-    },
-    {
-      store : "13246",
-      timestamp: "13246",
-      location: "VatisinVille",
-      description:"MORTGAGE",
-      royalty:"MORTGAGE",
-      imgSrc: "/images/greenEdit.svg",
-    },
-  ];
+  });
+
+  const { pageIndex, pageSize } = table.getState().pagination;
+  const totalItems = table.getFilteredRowModel().rows.length;
+  const startItem = pageIndex * pageSize + 1;
+  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <main className="mt-24 ml-6 mr-6">
-      <div className="w-full">
-        <div className="flex justify-between">
-          <p className="font-bold text-[16px]">Stores</p>
-        
-            <button className="font-semibold text-[14px] bg-[#1AA47D] hover:bg-[#168A68] px-5 h-[37px] text-[#FFFFFF] rounded-md">
-              <AddStore/>
-            </button>
-         
+    <main  className="max-h-[calc(100vh-10px)] overflow-auto"
+    style={{ scrollbarWidth: "thin" }}>
+      <div className="my-24 mx-6">
+        <div className="flex flex-row justify-between items-center mt-4 mb-4">
+          <div>
+            <p className="text-[16px] font-bold text-[#334155]">Stores</p>
+          </div>
+
+          <div className="font-semibold text-[14px] bg-[#1AA47D] hover:bg-[#168A68] px-5 h-[37px] text-[#FFFFFF] rounded-md">
+          <AddStore/>
+          </div>
         </div>
 
-        <div className="relative mt-4 shadow-md rounded-md overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-300 shadow-md rounded-md">
-            <thead className="bg-[#334155] sticky top-0 z-10">
-              <tr>
-                <th className="py-3 text-[15px] px-4 text-left text-xs font-medium text-[#FFFFFF] tracking-wider w-[11%]">
-                Store 
-
-                </th>
-                <th className="py-3 px-4 text-[15px] text-center text-xs font-medium text-[#FFFFFF] tracking-wider w-[20%]">
-                Timestamp
-
-                </th>
-                <th className="py-3 px-4 text-[15px] text-start text-xs font-medium text-[#FFFFFF] tracking-wider w-[20%]">
-                Location
-                </th>
-                <th className="py-3 px-4 text-[15px] text-start text-xs font-medium text-[#FFFFFF] tracking-wider w-[19%]">
-                Description
-                </th>
-                <th className="py-3 px-4 text-[15px] text-start text-xs font-medium text-[#FFFFFF] tracking-wider w-[15%]">
-                Royalty
-                </th>
-                <th className="py-3 px-4 text-[15px] text-center text-xs font-medium text-[#FFFFFF] tracking-wider w-[15%]">
-                  Edit
-                </th>
-                
-              </tr>
-            </thead>
-          </table>
-          <div
-            className="overflow-auto h-[300px]"
-            style={{ scrollbarWidth: "thin" }}
-          >
-            <table className="min-w-full">
+        <div>
+          {/* Table */}
+          <div className="overflow-x-auto shadow-md rounded-lg">
+            <table className="w-full border-collapse border border-gray-200">
+              <thead className="bg-[#334155]">
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px]"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
               <tbody>
-                {data.map((item, index) => (
+                {table.getRowModel().rows.map((row) => (
                   <tr
-                    key={index}
-                    className={index % 2 === 0 ? "bg-white" : "bg-[#F3F3F6]"}
+                    key={row.id}
+                    className={
+                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                    }
                   >
-                    <td className="py-3 px-4 text-sm text-left text-[#636363] w-[11%]">
-                      {item.store}
-                    </td>
-                    <td className="py-3 px-4 text-sm text-center  text-[#636363] w-[20%]">
-                      {item.timestamp}
-                    </td>
-                    <td className="py-3 px-4 text-start text-sm text-[#636363] w-[20.5%]">
-                      {item.location}
-                    </td>
-                    <td className="py-3 px-4 text-start text-sm text-[#636363] w-[19%]">
-                      {item.description}
-                    </td>
-                    <td className="py-3 px-4 text-start text-sm text-[#636363] w-[15%]">
-                      {item.royalty}
-                    </td>
-                    <td className="py-1 px-4 text-sm text-center text-[#636363] w-[15%]">
-                      <img
-                        src={item.imgSrc}
-                        alt="Edit"
-                        className="inline-block ml-4"
-                      />
-                    </td>
-                   
+                    {row.getVisibleCells().map((cell) => (
+                      <td
+                        key={cell.id}
+                        className="px-4 py-1 text-[#636363] text-[14px]"
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="mt-4 flex gap-2 justify-between items-center">
+            {/* Page Range Display */}
+            <div>
+              <span className="text-[#8899A8] text-[12px] font-medium ml-3">
+                {startItem} - {endItem} of {totalItems}
+              </span>
+            </div>
+
+            {/* Pagination Numbers */}
+            <div className="flex flex-row gap-3">
+              <button
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+                className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
+                style={{ background: "#EBEFF6" }}
+              >
+                <img src="/images/left.svg" />
+              </button>
+
+              {Array.from({ length: table.getPageCount() }, (_, index) => {
+                const pageIndex = index;
+                return (
+                  <button
+                    key={pageIndex}
+                    onClick={() => table.setPageIndex(pageIndex)}
+                    className={`px-4 py-2 rounded-md text-[12px] ${
+                      table.getState().pagination.pageIndex === pageIndex
+                        ? "!important text-[#FFFFFF]"
+                        : " text-gray-700"
+                    }`}
+                    style={{
+                      backgroundColor:
+                        table.getState().pagination.pageIndex === pageIndex
+                          ? "#1AA47D"
+                          : "transparent",
+                    }}
+                  >
+                    {pageIndex + 1}
+                  </button>
+                );
+              })}
+
+              <button
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+                className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
+                style={{ background: "#EBEFF6" }}
+              >
+                <img src="/images/right.svg" />
+              </button>
+
+              <div>
+                <div className="w-full">
+                  {/* Dropdown for Page Selection */}
+                  <select
+                    value={table.getState().pagination.pageIndex} // Sync with current page index
+                    onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
+                    className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
+                  >
+                    {Array.from(
+                      { length: table.getPageCount() },
+                      (_, index) => (
+                        <option key={index} value={index}>
+                          Page {index + 1}
+                        </option>
+                      )
+                    )}
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </main>
   );
 };
-
 export default Page;
