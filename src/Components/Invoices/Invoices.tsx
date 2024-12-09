@@ -118,7 +118,7 @@ const Invoices = () => {
   };
 
   return (
-    <main className="px-6 ">
+    <main className="my-4 mx-6 mt-24">
       <div className='flex flex-row w-full items-center gap-3 space-x-4 mt-4'>
         <div className="flex">
           {/* Dropdown Button */}
@@ -188,7 +188,7 @@ const Invoices = () => {
       </div>
 
 
-      <div className='flex items-center justify-between mb-2'>
+      <div className='flex items-center justify-between my-3'>
         <p className='text-[16px] font-bold text-[#334155] mt-2 '>Invoices</p>
         <button className="w-[170px] h-[37px] bg-[#1AA47D] hover:bg-[#168A6F] text-white rounded-md text-[14px]"
           onClick={handleButtonClick}

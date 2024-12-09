@@ -115,7 +115,7 @@ const Expenses: FC = () => {
 
 
     return (
-        <main className="px-6 ">
+        <main className="my-4 mx-6 mt-24">
             <>
                 <div className='flex flex-row w-full items-center gap-4 space-x-4 mt-4'>
 
@@ -181,10 +181,7 @@ const Expenses: FC = () => {
                     </div>
                 </div>
 
-
-
-
-                <div className='flex items-center justify-between mb-2'>
+                <div className='flex items-center justify-between my-3'>
                     <p className='text-[16px] font-bold text-[#334155] mt-2 '>Expenses</p>
                     <AddExpenses />
                 </div>
@@ -193,7 +190,7 @@ const Expenses: FC = () => {
 
 
                 {/* Expenses Table */}
-                <div className='bg-white shadow-lg rounded-lg overflow-hidden'>
+                <div className='bg-white  shadow-lg rounded-lg overflow-hidden'>
                     <div className='w-full' >
                         <table className='w-full border-collapse text-[12px] text-white'>
                             <thead className='bg-[#334155]' >
@@ -218,11 +215,11 @@ const Expenses: FC = () => {
                             <tbody>
                                 {table.getRowModel().rows.map((row) => (
                                     <tr
-                                        key={row.id}
-                                        className={
-                                            row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                                        }
-                                    >
+                                    key={row.id}
+                                    className={
+                                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                                    }
+                                  >
                                         {row.getVisibleCells().map((cell) => (
                                             <td
                                                 key={cell.id}

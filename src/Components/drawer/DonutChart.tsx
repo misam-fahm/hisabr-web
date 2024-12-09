@@ -24,6 +24,7 @@ const DonutChart: React.FC = () => {
           "#79AFC7", // Royalty
           "#AC8892", // Cogs
         ],
+
         borderWidth: 2,
       },
     ],
@@ -33,21 +34,19 @@ const DonutChart: React.FC = () => {
     responsive: true,
     plugins: {
       legend: {
-        display: false, // Hide default legend
+        display: false, // Disable default legend
       },
     },
     cutout: "70%", // Donut hole size
     layout: {
       padding: {
-        top: 50,
-        bottom: 50,
-        left: 100,
+        left: 110,
         right: 120,
       },
     },
   };
 
-  // Custom plugin with dots and arrows
+  // Custom plugin to display text labels and data values vertically (column)
   const customArrowsPlugin: Plugin<"doughnut"> = {
     id: "customArrowsPlugin",
     afterDatasetDraw(chart) {
@@ -60,51 +59,113 @@ const DonutChart: React.FC = () => {
       const centerY = (chartArea.top + chartArea.bottom) / 2;
       const outerRadius = Math.min(chartArea.width, chartArea.height) / 2;
 
+      // Define custom colors for each label
+      const lineColors = [
+        "#6E7F6F",
+        "#998156",
+        "#675660B8",
+        "#5E6B7E",
+        "#5A3D5599",
+      ];
+      const labelColors = [
+        "#3A3A3A",
+        "#4A4A4A",
+        "#5A5A5A",
+        "#6A6A6A",
+        "#7A7A7A",
+      ];
+      const valueColors = [
+        "#0A0A0A",
+        "#0A0A0A",
+        "#0A0A0A",
+        "#0A0A0A",
+        "#0A0A0A",
+      ];
+
       meta.data.forEach((arc, index) => {
-        const angle = (arc.startAngle + arc.endAngle) / 2; // Midpoint of the arc
-        const startX = centerX + Math.cos(angle) * (outerRadius * 0.9); // Vertical line start (inside)
-        const startY = centerY + Math.sin(angle) * (outerRadius * 0.9); // Vertical line start (inside)
-        const midX = centerX + Math.cos(angle) * outerRadius; // Vertical line end
-        const midY = centerY + Math.sin(angle) * outerRadius; // Vertical line end
-        const labelX = midX + (angle > Math.PI ? -50 : 50); // Horizontal line end
-        const labelY = midY; // Keep it aligned horizontally
+        const arcElement = arc as ArcElement;
+        const angle = (arcElement.startAngle + arcElement.endAngle) / 2;
+        const startX = centerX + Math.cos(angle) * (outerRadius * 0.9);
+        const startY = centerY + Math.sin(angle) * (outerRadius * 0.9);
+        const midX = centerX + Math.cos(angle) * outerRadius;
+        const midY = centerY + Math.sin(angle) * outerRadius;
 
-        // Draw vertical line (standing line inside)
-        ctx.beginPath();
-        ctx.moveTo(startX, startY);
-        ctx.lineTo(midX, midY);
-        ctx.strokeStyle = "#888";
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
+        let labelX = midX + (angle > Math.PI ? -50 : 50);
+        let labelY = midY;
 
-        // Draw horizontal line (sleeping line outside)
-        ctx.beginPath();
-        ctx.moveTo(midX, midY);
-        ctx.lineTo(labelX, labelY);
-        ctx.strokeStyle = "#888";
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        // Check if it's the 'Labor Cost' index and make it vertical with a horizontal line outside the chart
+        if (chartData.labels![index] === "Labor Cost") {
+          // Move label and percentage slightly to the left
+          labelX = centerX + Math.cos(angle) * (outerRadius * 1.5); // Adjust to position slightly left
+          labelY = centerY + Math.sin(angle) * (outerRadius * 1);
 
-        // Draw dots at both ends
+          // Draw lines as before
+          ctx.beginPath();
+          ctx.moveTo(startX, startY);
+          ctx.lineTo(midX, midY);
+          ctx.strokeStyle = lineColors[index];
+          ctx.lineWidth = 1;
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(midX, midY);
+          ctx.lineTo(labelX, labelY); // Horizontal line to label position
+          ctx.strokeStyle = lineColors[index];
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        } else {
+          // Default positioning for other sections
+
+          // Default behavior for other labels
+          labelX = midX + (angle > Math.PI ? -50 : 50);
+          labelY = midY;
+          // Draw lines and labels for other sections
+          ctx.beginPath();
+          ctx.moveTo(startX, startY);
+          ctx.lineTo(midX, midY);
+          ctx.strokeStyle = lineColors[index];
+          ctx.lineWidth = 1;
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(midX, midY);
+          ctx.lineTo(labelX, labelY);
+          ctx.strokeStyle = lineColors[index];
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+
+        // Draw dots, label, and percentage (same as before)
         ctx.beginPath();
-        ctx.arc(startX, startY, 3, 0, 2 * Math.PI); // Dot at start
-        ctx.fillStyle = "#888";
+        ctx.arc(startX, startY, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = lineColors[index];
         ctx.fill();
 
         ctx.beginPath();
-        ctx.arc(labelX, labelY, 3, 0, 2 * Math.PI); // Dot at end
-        ctx.fillStyle = "#888";
+        ctx.arc(labelX, labelY, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = lineColors[index];
         ctx.fill();
 
-        // Draw label text
         ctx.save();
-        ctx.font = "bold 12px Arial";
-        ctx.fillStyle = "#333";
-        ctx.textAlign = angle > Math.PI ? "right" : "left"; // Adjust alignment
+        ctx.font = "500 12px Arial";
+        ctx.fillStyle = labelColors[index];
+        ctx.textAlign = angle > Math.PI ? "right" : "left";
         ctx.fillText(
-          `${chartData.labels![index]} ${chartData.datasets[0].data[index]}%`,
-          labelX + (angle > Math.PI ? -5 : 5), // Slight adjustment for readability
+          chartData.labels![index] as string, // Assert the type as string
+          labelX + (angle > Math.PI ? -5 : 5),
           labelY - 5
+        );
+
+        ctx.restore();
+
+        ctx.save();
+        ctx.font = "700 12px Arial";
+        ctx.fillStyle = valueColors[index];
+        ctx.textAlign = angle > Math.PI ? "right" : "left";
+        ctx.fillText(
+          `${chartData.datasets[0].data[index]}%`,
+          labelX + (angle > Math.PI ? -5 : 5),
+          labelY + 15
         );
         ctx.restore();
       });
@@ -112,7 +173,7 @@ const DonutChart: React.FC = () => {
   };
 
   return (
-    <div style={{ width: "500px", height: "500px" }}>
+    <div className="w-[90vh] h-[90vh] below-md:w-[55vh] below-md:h-[55vh]">
       <Doughnut data={data} options={options} plugins={[customArrowsPlugin]} />
     </div>
   );
