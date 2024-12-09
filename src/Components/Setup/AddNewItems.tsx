@@ -101,10 +101,10 @@ const AddNewItems = () => {
 
   return (
     <>
-    <div>
+    <div >
       <Button
         onClick={openModal}
-        className="font-semibold text-[14px] bg-[#1AA47D] hover:bg-[#168A68] px-5 h-[37px] text-[#FFFFFF] rounded-md"
+         className="font-semibold text-[14px] bg-[#1AA47D] w-[148px]  below-md:w-[150px] hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
       >
         Add New Item
       </Button>

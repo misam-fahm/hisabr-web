@@ -104,13 +104,13 @@ const Page = () => {
   };
 
   return (
-    <main className="mt-24 ml-6 mr-6">
-      <div className="flex justify-center items-center p-4">
+    <main className=" p-6">
+      <div className="flex justify-center items-center my-16 p-4">
         <div className="bg-white shadow-md rounded-lg p-6 w-full">
           <div>
             <p className="font-medium text-[#5E6366]">Add Configuration:</p>
             <form onSubmit={handleSubmit}>
-              <div className="flex gap-10 mt-4 py-5">
+              <div className="flex gap-10 mt-4 py-4">
                 <div className="w-[30%]">
                   <label className="block text-sm font-medium text-[#5E6366]">
                     Store
@@ -158,7 +158,7 @@ const Page = () => {
                   </div>
                 ))}
               </div>
-              <div className="flex gap-10 mt-4 py-5">
+              <div className="flex gap-10  py-4">
                 {[
                   { name: "rent", label: "Rent", placeholder: "Please enter Rent" },
                   { name: "electricity", label: "Electricity", placeholder: "Please enter Electricity" },
@@ -184,7 +184,7 @@ const Page = () => {
                   </div>
                 ))}
               </div>
-              <div className="flex justify-between py-5">
+              <div className="flex justify-between py-4">
                 <div className="w-[30%]">
                   <label className="block text-sm font-medium text-[#5E6366]">
                     Other Expenses
@@ -203,13 +203,23 @@ const Page = () => {
                     <p className="text-xs text-red-500">{errors.otherExpenses}</p>
                   )}
                 </div>
-                <div className="mt-3 p-2 px-4">
+                <div className=" flex gap-4 mt-3 p-2 px-4 ">
+                  <div>
                   <button
                     type="submit"
-                    className="bg-[#1AA47D] hover:bg-[#168A68] text-white font-medium py-2 px-4 rounded-md"
+                    className=" w-[145px] bg-[#C8C8C8]  text-[#6F6F6F] font-medium py-2 px-4 rounded-md"
+                  >
+                    Cancle
+                  </button>
+                  </div>
+                  <div>
+                  <button
+                    type="submit"
+                    className=" w-[145px] bg-[#1AA47D]  hover:bg-[#168A68] text-white font-medium py-2 px-4 rounded-md"
                   >
                     Save
                   </button>
+                  </div>
                 </div>
               </div>
             </form>

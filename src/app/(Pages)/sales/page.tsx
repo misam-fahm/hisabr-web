@@ -175,7 +175,7 @@ const Sales: FC = () => {
     },
     {
       accessorKey: "store",
-      header: "Store",
+      header: "Store ",
     },
     {
       accessorKey: "orders",
@@ -258,6 +258,7 @@ const Sales: FC = () => {
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
+
     <main
       className="max-h-[calc(100vh-70px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
@@ -277,6 +278,7 @@ const Sales: FC = () => {
                 className="bg-[#ffffff] text-[#636363] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
               >
                 <span>{selectedOption}</span>
+
 
                 <Image
                   src="/images/icon.svg" // Updated path (use `/` instead of `./`)

@@ -107,7 +107,7 @@ const AddTender = () => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[420px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
             <div className="flex justify-between">
-              <DialogTitle as="h3" className="font-medium text-gray-900">
+              <DialogTitle as="h3" className="font-medium text-gray-900 mb-4">
                 Add Tender
               </DialogTitle>
               <img onClick={closeModal} src="/images/cancelicon.svg" alt="" />

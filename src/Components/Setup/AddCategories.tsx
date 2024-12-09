@@ -48,7 +48,7 @@ const AddCategories = () => {
       <div>
         <Button
           onClick={openModal}
-          className="font-semibold text-[14px] bg-[#1AA47D] px-6 hover:bg-[#168A68]  h-[37px] text-[#FFFFFF] rounded-md"
+          className="font-semibold text-[14px] bg-[#1AA47D] w-[166px] below-md:w-[150px] hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md "
         >
           Add New Category
         </Button>
