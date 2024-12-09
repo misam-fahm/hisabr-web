@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Dialog, DialogPanel, DialogTitle ,Button } from "@headlessui/react";
+import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 
 const AddCategories = () => {
@@ -12,7 +12,7 @@ const AddCategories = () => {
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
-  const handleInputChange = (e: { target: { value: any; }; }) => {
+  const handleInputChange = (e: { target: { value: any } }) => {
     const { value } = e.target;
     setCategoryName(value);
 
@@ -34,7 +34,7 @@ const AddCategories = () => {
     return isValid;
   };
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
+  const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (validateForm()) {
       // Form is valid, proceed with submission
@@ -45,13 +45,13 @@ const AddCategories = () => {
 
   return (
     <>
-     <div>
-      <Button
-        onClick={openModal}
-       className="font-semibold text-[14px] bg-[#1AA47D] px-6 hover:bg-[#168A68]  h-[37px] text-[#FFFFFF] rounded-md"
-      >
-        Add New Category
-      </Button>
+      <div>
+        <Button
+          onClick={openModal}
+          className="font-semibold text-[14px] bg-[#1AA47D] px-6 hover:bg-[#168A68]  h-[37px] text-[#FFFFFF] rounded-md"
+        >
+          Add New Category
+        </Button>
       </div>
       {/* Dialog for the modal */}
       <Dialog
@@ -82,7 +82,9 @@ const AddCategories = () => {
                       value={categoryName}
                       onChange={handleInputChange}
                       className={`h-[42px] mt-2 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
-                        errors.categoryName ? "border-red-500" : "border-gray-300"
+                        errors.categoryName
+                          ? "border-red-500"
+                          : "border-gray-300"
                       }`}
                       placeholder="Please enter Category name"
                     />

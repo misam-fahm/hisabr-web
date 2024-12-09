@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import plugin from 'tailwindcss/plugin';
+import plugin from "tailwindcss/plugin";
 
 export default {
   content: [
@@ -17,7 +17,11 @@ export default {
         defaultblack: "#334155",
         white: "#FFFFFF",
       },
+      screens: {
+        "below-md": { max: "800px" },
+        "below-lg": { min: "801px" },
+      },
     },
   },
-  plugins: [require('tailwind-scrollbar')],
+  plugins: [require("tailwind-scrollbar")],
 } satisfies Config;

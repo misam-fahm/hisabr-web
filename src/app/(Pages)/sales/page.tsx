@@ -2,6 +2,8 @@
 import React, { FC, useState } from "react";
 import DateRange from "@/Components/drawer/DateRangePicker";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -159,46 +161,67 @@ const data: TableRow[] = [
   },
 ];
 
-const columns: ColumnDef<TableRow>[] = [
-  {
-    accessorKey: "date",
-    header: "Date",
-  },
-  {
-    accessorKey: "store",
-    header: "Store",
-  },
-  {
-    accessorKey: "orders",
-    header: "Orders",
-  },
-  {
-    accessorKey: "quantity",
-    header: "Quantity",
-  },
-  {
-    accessorKey: "amount",
-    header: "Amount",
-  },
-  {
-    accessorKey: "net",
-    header: "Net",
-  },
-  {
-    accessorKey: "average",
-    header: "Average",
-  },
-  {
-    id: "view",
-    header: "View",
-    cell: () => (
-      <button className="bg-[#FFFFFF] p-[7px] rounded-full shadow-[inset_-2px_-2px_2px_#F3FFF3,inset_2px_2px_3px_#E2F7E380]">
-        <Image src="/images/eye.svg" alt="Eye Icon" width={25} height={25} />
-      </button>
-    ),
-  },
-];
 const Sales: FC = () => {
+  const router = useRouter();
+
+  const handleImageClick = () => {
+    router.push("/sales/sales_view"); // Navigates to the 'details' page
+  };
+
+  const columns: ColumnDef<TableRow>[] = [
+    {
+      accessorKey: "date",
+      header: "Date",
+    },
+    {
+      accessorKey: "store",
+      header: "Store",
+    },
+    {
+      accessorKey: "orders",
+      header: "Orders",
+    },
+    {
+      accessorKey: "quantity",
+      header: "Quantity",
+    },
+    {
+      accessorKey: "amount",
+      header: "Amount",
+    },
+    {
+      accessorKey: "net",
+      header: "Net",
+    },
+    {
+      accessorKey: "average",
+      header: "Average",
+    },
+    {
+      id: "view",
+      header: "View",
+      cell: () => (
+        <button
+          onClick={handleImageClick}
+          className="bg-[#FFFFFF] p-[7px] rounded-full shadow-[inset_-2px_-2px_2px_#F3FFF3,inset_2px_2px_3px_#E2F7E380]"
+        >
+          <Image src="/images/eye.svg" alt="Eye Icon" width={25} height={25} />
+        </button>
+      ),
+    },
+  ];
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      console.log("Selected file:", file);
+    }
+  };
+
+  const handleUploadClick = () => {
+    document.getElementById("fileInput")?.click(); // Programmatically click the hidden input
+  };
+
   const [globalFilter, setGlobalFilter] = React.useState("");
   const table = useReactTable({
     data,
@@ -243,7 +266,7 @@ const Sales: FC = () => {
       </div> */}
       <div className="my-5  mx-6">
         <div className="flex flex-row w-full gap-3">
-          <div className="w-[20%]">
+          <div className="w-[20%] relative">
             {/* Dropdown Button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -252,12 +275,12 @@ const Sales: FC = () => {
               <span>{selectedOption}</span>
 
               <Image
-                src="./images/icon.svg"
-                alt="Icon"
-                width={20}
-                height={20}
-                className={`w-4 h-4 ml-2 transition-transform duration-200 ${
-                  isOpen ? "transform rotate-180" : ""
+                src="/images/icon.svg" // Updated path (use `/` instead of `./`)
+                alt="Dropdown Icon"
+                width={16} // Adjusted size for consistency
+                height={16}
+                className={`transition-transform duration-200 ${
+                  isOpen ? "rotate-180" : ""
                 }`}
               />
             </button>
@@ -265,7 +288,7 @@ const Sales: FC = () => {
             {/* Dropdown Menu */}
             {isOpen && (
               <div
-                className="absolute left-0 w-[20%] mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
+                className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
                 style={{ zIndex: 20 }}
               >
                 {options.map((option, index) => (
@@ -280,6 +303,7 @@ const Sales: FC = () => {
               </div>
             )}
           </div>
+
           <div className="w-[30%]">
             <DateRange />
           </div>
@@ -316,7 +340,14 @@ const Sales: FC = () => {
             <p className="text-[16px] font-bold text-[#334155]"> Sales</p>
           </div>
           <div>
+            <input
+              type="file"
+              id="fileInput"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
             <button
+              onClick={handleUploadClick}
               className="bg-[#1AA47D] [box-shadow:0px_3px_8px_0px_#00000026] w-[133px] h-[37px] rounded-md text-white text-[14px] font-semibold 
              hover:shadow-lg transition-shadow duration-300"
             >
