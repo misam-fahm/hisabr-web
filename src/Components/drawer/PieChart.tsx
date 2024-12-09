@@ -17,7 +17,7 @@ const DonutChart = () => {
   const total = data.reduce((acc, item) => acc + item.value, 0);
 
   return (
-    <div className="w-full h-[400px] flex justify-center items-center">
+    <div className="w-full h-[320px] flex justify-center items-center relative">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           {/* Donut Chart */}
@@ -43,8 +43,10 @@ const DonutChart = () => {
       {/* Center Text */}
       <div
         style={{
-          position: "relative",
-          right:"210px",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",

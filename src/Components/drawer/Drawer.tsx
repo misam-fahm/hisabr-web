@@ -150,9 +150,10 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
             ))}
           </ul>
         </div>
+
         <div className="flex px-6 mt-10 gap-4">
           <img src="/images/logout.png" />
-          <p>Logout</p>
+          {open && <p>Logout</p>}
         </div>
       </div>
     </main>

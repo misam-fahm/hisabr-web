@@ -70,7 +70,10 @@ const DetailsPage: React.FC = () => {
     router.push("/sales");
   };
   return (
-    <main>
+    <main
+      className="max-h-[calc(100vh-70px)] overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
       {/* Top Navigation Bar */}
       <div>
         <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 pl-6 pr-6">
@@ -79,7 +82,7 @@ const DetailsPage: React.FC = () => {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="pt-2 pb-6 bg-[#f7f8f9] pl-6 pr-6">
+      <div className="pt-20 pb-6 bg-[#f7f8f9] pl-6 pr-6">
         <div className="flex flex-row justify-between items-center gap-6">
           {/* Tab Buttons */}
           <div className="w-full border-b-[2px] border-[#E1E0E0D1]">
