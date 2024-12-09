@@ -1,167 +1,268 @@
+
 "use client";
+import React, { FC, useState } from "react";
+import DateRange from "@/Components/drawer/DateRangePicker";
+import Image from "next/image";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getFilteredRowModel,
+  flexRender,
+  ColumnDef,
+} from "@tanstack/react-table";
 
-import React, { useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-
-import AddCategories from "@/Components/Setup/AddCategories";
 import AddNewItems from "@/Components/Setup/AddNewItems";
+import AddCategories from "@/Components/Setup/AddCategories";
 
-const page = () => {
-  const data = [
-    {
-      name: "Beverage",
-      type: "VISA",
-      percent: "2 %",
-      imgSrc: "/images/edit.svg",
-      imgsrc: "/images/delete.svg",
+interface TableRow {
+  name: string;
+  description: string;
+  noOfItems: number;
+}
+
+const data: TableRow[] = [
+  {
+    name: "Beverage",
+    description: "Soft Drinks, Juices",
+    noOfItems: 7327,
+  },
+  {
+    name: "Bakery",
+    description: "Cold drinks, Juices",
+    noOfItems: 43643,
+  },
+  {
+    name: "Dairy",
+    description: "Chips., Cookies, Biscuits",
+    noOfItems: 8979,
+  },
+  {
+    name: "Snacks",
+    description: "Soft Drinks, Juices",
+    noOfItems: 7327,
+  },
+  {
+    name: "Soft Serve",
+    description: "Cold drinks, Juices",
+    noOfItems: 7327,
+  },
+  {
+    name: "Beverage",
+    description: "Chips., Cookies, Biscuits",
+    noOfItems: 76486,
+  },
+  {
+    name: "Snacks",
+    description: "Bread, Cakes, Pasteries",
+    noOfItems: 54787,
+  },
+  {
+    name: "Soft Serve",
+    description: "Milk, butter, cheese",
+    noOfItems: 899,
+  },
+  {
+    name: "Snacks",
+    description: "Soft Drinks, Juices",
+    noOfItems: 4214,
+  },
+];
+
+const columns: ColumnDef<TableRow>[] = [
+  {
+    accessorKey: "name",
+    header: "Name",
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
+  },
+  {
+    accessorKey: "noOfItems",
+    header: "No. of Items",
+  },
+
+  {
+    accessorKey: "edit",
+    header: "Edit",
+    cell: () => (
+      <Image src="/images/edit.svg" alt="edit" width={35} height={35} />
+    ),
+  },
+
+  {
+    id: "delete",
+    header: "Delete",
+    cell: () => (
+      <Image src="/images/delete.svg" alt="delete" width={35} height={35} />
+    ),
+  },
+];
+const Page: FC = () => {
+  const [globalFilter, setGlobalFilter] = React.useState("");
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      globalFilter,
     },
-    {
-      name: "Bakery",
-      type: "Amex",
-      percent: "1.5 %",
-      imgSrc: "/images/edit.svg",
-      imgsrc: "/images/delete.svg",
+    initialState: {
+      pagination: {
+        pageSize: 5,
+        pageIndex: 0,
+      },
     },
-    {
-      name: "American Express",
-      type: "Discovery  ",
-      percent: "3 %",
-      imgSrc: "/images/edit.svg",
-      imgsrc: "/images/delete.svg",
-    },
-    {
-      name: "Dairy",
-      type: "Master",
-      percent: "3.5 %",
-      imgSrc: "/images/edit.svg",
-      imgsrc: "/images/delete.svg",
-    },
-    {
-      name: "Snacks",
-      type: "Amex",
-      percent: "10 %",
-      imgSrc: "/images/edit.svg",
-      imgsrc: "/images/delete.svg",
-    },
-    {
-      name: "Soft Serve",
-      type: "Discovery",
-      percent: "12 %",
-      imgSrc: "/images/edit.svg",
-      imgsrc: "/images/delete.svg",
-    },
-    {
-      name: "Beverage",
-      type: "VISA",
-      percent: "2.5 %",
-      imgSrc: "/images/edit.svg",
-      imgsrc: "/images/delete.svg",
-    },
-    {
-      name: "Bakery",
-      type: "Amex",
-      percent: "6.2 %",
-      imgSrc: "/images/edit.svg",
-      imgsrc: "/images/delete.svg",
-    },
-  ];
-  const [dateRange, setDateRange] = useState<
-    [Date | undefined, Date | undefined]
-  >([undefined, undefined]); // From and To Date
-  const [startDate, endDate] = dateRange;
-  const [isOpen, setIsOpen] = useState(false); //control pop up vivibility
-  const togglePopup = () => {
-    setIsOpen(!isOpen);
-  };
+  });
+
+  const { pageIndex, pageSize } = table.getState().pagination;
+  const totalItems = table.getFilteredRowModel().rows.length;
+  const startItem = pageIndex * pageSize + 1;
+  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <main className="px-6 mt-20">
-      <>
-        <div className="flex flex-col mb-5">
-          <div className="flex justify-between">
-            <p className="font-bold text-[16px]">Item Categories</p>
-            <div className="flex space-x-4">
-            
-                <AddNewItems/>
-            
-                <AddCategories />
-             
-            </div>
+    <main>
+      <div className="my-5  mx-6">
+        <div className="flex flex-row justify-between items-center mt-4 mb-4">
+          <div>
+            <p className="text-[16px] font-bold text-[#334155]">
+              Item Categories
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <AddNewItems />
+
+            <AddCategories />
           </div>
         </div>
-        {/* Categories Table */}
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-          <div className="w-full ">
-            <table className="w-full border-collapse text-[12px] text-white">
+
+        <div>
+          {/* Table */}
+          <div className="overflow-x-auto shadow-md rounded-lg">
+            <table className="w-full border-collapse border border-gray-200">
               <thead className="bg-[#334155]">
-                <tr>
-                  <th className="py-3 px-4 text-[15px] text-left text-xs font-medium text-[#FFFFFF] tracking-wider w-[25%]">
-                    {" "}
-                    Name
-                  </th>
-                  <th className="py-3 px-3 text-[15px] text-left text-xs font-medium text-[#FFFFFF] tracking-wider w-[25%]">
-                    Description
-                  </th>
-                  <th className="py-3 px-3 text-[15px] text-left text-xs font-medium text-[#FFFFFF] tracking-wider w-[25%]">
-                    No. of Items
-                  </th>
-                  <th className="py-3 px-4 text-[15px] text-center text-xs font-medium text-[#FFFFFF] tracking-wider w-[10%]">
-                    Edit
-                  </th>
-                  <th className="py-3 px-4 text-[15px] text-center text-xs font-medium text-[#FFFFFF] tracking-wider w-[10%]">
-                    Delete
-                  </th>
-                </tr>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px]"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
               </thead>
+              <tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <tr
+                    key={row.id}
+                    className={
+                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                    }
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <td
+                        key={cell.id}
+                        className="px-4 py-1 text-[#636363] text-[14px]"
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
             </table>
+          </div>
 
-            <div
-              className="h-[340px] overflow-auto"
-              style={{ scrollbarWidth: "thin" }}
-            >
-              <table className="min-w-full">
-                <tbody>
-                  {data.map((item, index) => (
-                    <tr
-                      key={index}
-                      className={index % 2 === 0 ? "bg-white" : "bg-[#F3F3F6]"}
-                    >
-                      <td className="py-3 px-4 text-sm text-left text-[#636363] w-[25%]">
-                        {item.name}
-                      </td>
-                      <td className="py-3 px-4 text-sm text-left text-[#636363] w-[25%]">
-                        {item.type}
-                      </td>
-                      <td className="py-3 px-4 text-left text-sm text-[#636363] w-[25%]">
-                        {item.percent}
-                      </td>
-                      <td className="py-1 px-4 text-sm text-center text-[#636363] w-[10%]">
-                        <img
-                          src={item.imgSrc}
-                          alt="Edit"
-                          className=" inline-block ml-4"
-                        />
-                      </td>
-                      <td className="py-1 px-4 text-sm text-center text-[#636363] w-[10%]">
-                        <img
-                          src={item.imgsrc}
-                          alt="Delete"
-                          className="  inline-block ml-5"
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {/* Pagination */}
+          <div className="mt-4 flex gap-2 justify-between items-center">
+            {/* Page Range Display */}
+            <div>
+              <span className="text-[#8899A8] text-[12px] font-medium ml-3">
+                {startItem} - {endItem} of {totalItems}
+              </span>
+            </div>
+
+            {/* Pagination Numbers */}
+            <div className="flex flex-row gap-3">
+              <button
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+                className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
+                style={{ background: "#EBEFF6" }}
+              >
+                <img src="/images/left.svg" />
+              </button>
+
+              {Array.from({ length: table.getPageCount() }, (_, index) => {
+                const pageIndex = index;
+                return (
+                  <button
+                    key={pageIndex}
+                    onClick={() => table.setPageIndex(pageIndex)}
+                    className={`px-4 py-2 rounded-md text-[12px] ${
+                      table.getState().pagination.pageIndex === pageIndex
+                        ? "!important text-[#FFFFFF]"
+                        : " text-gray-700"
+                    }`}
+                    style={{
+                      backgroundColor:
+                        table.getState().pagination.pageIndex === pageIndex
+                          ? "#1AA47D"
+                          : "transparent",
+                    }}
+                  >
+                    {pageIndex + 1}
+                  </button>
+                );
+              })}
+
+              <button
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+                className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
+                style={{ background: "#EBEFF6" }}
+              >
+                <img src="/images/right.svg" />
+              </button>
+
+              <div>
+                <div className="w-full">
+                  {/* Dropdown for Page Selection */}
+                  <select
+                    value={table.getState().pagination.pageIndex} // Sync with current page index
+                    onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
+                    className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
+                  >
+                    {Array.from(
+                      { length: table.getPageCount() },
+                      (_, index) => (
+                        <option key={index} value={index}>
+                          Page {index + 1}
+                        </option>
+                      )
+                    )}
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-
-
-      </>
+      </div>
     </main>
   );
 };
-
-export default page;
+export default Page;

@@ -236,11 +236,11 @@ const Sales: FC = () => {
 
   return (
     <main>
-      <div>
+      {/* <div>
         <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 pl-6 pr-6">
           Sales
         </p>
-      </div>
+      </div> */}
       <div className="my-5  mx-6">
         <div className="flex flex-row w-full gap-3">
           <div className="w-[20%]">
