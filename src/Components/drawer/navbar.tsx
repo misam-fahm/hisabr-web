@@ -57,8 +57,8 @@ const Navbar: React.FC = () => {
             <div className="absolute right-0 mt-5 mr-2 pl-4 w-52 bg-white shadow-lg rounded-lg">
               <ul className="py-2">
                 <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
-                  <Images
-                    src="/images/profile.svg"
+                  <img
+                    src="/images/Profile.svg"
                     className="inline-block mr-2"
                   />
                   My Profile
