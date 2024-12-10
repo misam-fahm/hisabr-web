@@ -258,7 +258,6 @@ const Sales: FC = () => {
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-
     <main
       className="max-h-[calc(100vh-70px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
@@ -278,7 +277,6 @@ const Sales: FC = () => {
                 className="bg-[#ffffff] text-[#636363] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
               >
                 <span>{selectedOption}</span>
-
 
                 <Image
                   src="/images/icon.svg" // Updated path (use `/` instead of `./`)
@@ -355,11 +353,16 @@ const Sales: FC = () => {
               style={{ display: "none" }}
               onChange={handleFileChange}
             />
+
             <button
               onClick={handleUploadClick}
-              className="bg-[#1AA47D] [box-shadow:0px_3px_8px_0px_#00000026] w-[133px] h-[37px] rounded-md text-white text-[14px] font-semibold 
-             hover:shadow-lg transition-shadow duration-300"
+              className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300"
             >
+              <img
+                src="/images/uploadIcon.svg"
+                alt="Upload Icon"
+                className="mr-2"
+              />
               Upload Sale
             </button>
           </div>

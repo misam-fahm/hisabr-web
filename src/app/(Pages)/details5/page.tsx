@@ -340,10 +340,8 @@ const DetailsPage: React.FC = () => {
           <p className="text-[16px] font-bold text-[#334155] ml-3"> Expenses</p>
         </div>
         <div>
-          <button
-            className="bg-[#1AA47D] [box-shadow:0px_3px_8px_0px_#00000026] w-[133px] h-[37px] rounded-md text-white text-[14px] font-semibold 
-             hover:shadow-lg transition-shadow duration-300"
-          >
+          <button className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300">
+            <img src="/images/addIcon.svg" alt="add Icon" className="mr-2" />
             Add Expense
           </button>
         </div>
