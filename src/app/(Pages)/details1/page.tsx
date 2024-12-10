@@ -132,6 +132,25 @@ const data: TableRow[] = [
   },
 ];
 
+const formattedData = data.map((item) => {
+  const rawDate = new Date(item.date);
+
+  // Format the date as MM-DD-YY
+  const formattedDate = `${(rawDate.getMonth() + 1)
+    .toString()
+    .padStart(
+      2,
+      "0"
+    )}-${rawDate.getDate().toString().padStart(2, "0")}-${rawDate
+    .getFullYear()
+    .toString()
+    .slice(-2)}`;
+
+  return { ...item, date: formattedDate };
+});
+
+console.log(formattedData);
+
 const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "date",
@@ -175,7 +194,7 @@ const dat = [
 
 const DetailsPage: React.FC = () => {
   const table = useReactTable({
-    data,
+    data: formattedData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
