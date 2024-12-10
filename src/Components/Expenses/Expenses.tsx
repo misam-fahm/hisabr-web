@@ -4,7 +4,7 @@ import React, { FC, useState } from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from '@/Components/Expenses/AddExpenses';
-import Image from "next/image";
+import Images from "@/Components/ui/Common/Image";
 import {
     useReactTable,
     getCoreRowModel,
@@ -68,7 +68,7 @@ const columns: ColumnDef<TableRow>[] = [
         id: "delete",
         header: "Delete",
         cell: () => (
-            <Image src="/images/DeleteIcon.svg" alt="Delete Icon" width={30} height={30} />
+            <Images src="/images/DeleteIcon.svg" alt="Delete Icon" width={30} height={30} />
         ),
     },
 ];

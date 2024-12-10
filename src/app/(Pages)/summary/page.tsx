@@ -113,7 +113,7 @@ const summary: FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-70px)] overflow-auto"
+      className="max-h-[calc(100vh-10px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="below-md:flex below-md:justify-center">
