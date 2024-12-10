@@ -1,7 +1,7 @@
 "use client";
 import React, { FC, useState } from "react";
 import DateRange from "@/Components/drawer/DateRangePicker";
-import Image from "next/image";
+import Images from "@/Components/ui/Common/Image";
 import { useRouter } from "next/navigation";
 
 import {
@@ -205,7 +205,7 @@ const Sales: FC = () => {
           onClick={handleImageClick}
           className="bg-[#FFFFFF] p-[7px] rounded-full shadow-[inset_-2px_-2px_2px_#F3FFF3,inset_2px_2px_3px_#E2F7E380]"
         >
-          <Image src="/images/eye.svg" alt="Eye Icon" width={25} height={25} />
+          <Images src="/images/eye.svg" alt="Eye Icon" width={25} height={25} />
         </button>
       ),
     },
@@ -280,7 +280,7 @@ const Sales: FC = () => {
                 <span>{selectedOption}</span>
 
 
-                <Image
+                <Images
                   src="/images/icon.svg" // Updated path (use `/` instead of `./`)
                   alt="Dropdown Icon"
                   width={16} // Adjusted size for consistency

@@ -5,6 +5,7 @@ import Linechart from "@/Components/drawer/LineChart";
 import React from "react";
 import { useRouter } from "next/navigation";
 
+
 interface TableRow {
   name: string;
   revenue: number;
@@ -74,49 +75,49 @@ const Home: FC = () => {
   /**first link(gross revenue) */
   const router = useRouter();
 
-  const handleImageClick = () => {
+  const handleClick = () => {
     router.push("/details1"); // Navigates to the 'details' page
   };
 
   /**second link(tender) */
 
-  const handleImageClick2 = () => {
+  const handleClick2 = () => {
     router.push("/details2"); // Navigates to the 'details' page
   };
 
   //forth link(customer count)
 
-  const handleImageClick4 = () => {
+  const handleClick4 = () => {
     router.push("/details4"); // Navigates to the 'details' page
   };
 
   //fifth link(customer count)
 
-  const handleImageClick5 = () => {
+  const handleClick5 = () => {
     router.push("/details5"); // Navigates to the 'details' page
   };
 
   //sixth link(customer count)
 
-  const handleImageClick6 = () => {
+  const handleClick6 = () => {
     router.push("/details6"); // Navigates to the 'details' page
   };
 
   //seventh link(customer count)
 
-  const handleImageClick7 = () => {
+  const handleClick7 = () => {
     router.push("/details7"); // Navigates to the 'details' page
   };
 
   //eighth link(customer count)
 
-  const handleImageClick8 = () => {
+  const handleClick8 = () => {
     router.push("/details8"); // Navigates to the 'details' page
   };
 
   return (
     <main
-      className="max-h-[calc(100vh-70px)] overflow-auto"
+      className="max-h-[calc(100vh-10px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="below-md:flex below-md:justify-center ">
@@ -227,9 +228,9 @@ const Home: FC = () => {
           )}
         </div>
 
-        {/* Tooltip image */}
+        {/* Tooltip Images */}
         <div className="relative w-[20%] mt-8 below-md:hidden">
-          {/* Tooltip Image with group class */}
+          {/* Tooltip Images with group class */}
           <div className="group relative">
             <img
               src="/images/tooltip.svg"
@@ -275,7 +276,7 @@ const Home: FC = () => {
               <div className="cursor-pointer">
                 <img
                   src="/images/under_details.svg"
-                  onClick={handleImageClick}
+                  onClick={handleClick}
                 />
               </div>
             </div>
@@ -294,7 +295,7 @@ const Home: FC = () => {
               </div>
               <div className="cursor-pointer">
                 <img
-                  onClick={handleImageClick2}
+                  onClick={handleClick2}
                   src="/images/under_details.svg"
                 />
               </div>
@@ -371,7 +372,7 @@ const Home: FC = () => {
               <div className="cursor-pointer">
                 <img
                   src="/images/under_details.svg"
-                  onClick={handleImageClick}
+                  onClick={handleClick}
                 />
               </div>
             </div>
@@ -416,7 +417,7 @@ const Home: FC = () => {
               <div className="cursor-pointer">
                 <img
                   src="/images/under_details.svg"
-                  onClick={handleImageClick4}
+                  onClick={handleClick4}
                 />
               </div>
             </div>
@@ -504,7 +505,7 @@ const Home: FC = () => {
               <div className="cursor-pointer">
                 <img
                   src="/images/under_details.svg"
-                  onClick={handleImageClick5}
+                  onClick={handleClick5}
                 />
               </div>
             </div>
@@ -552,7 +553,7 @@ const Home: FC = () => {
               <div className="cursor-pointer">
                 <img
                   src="/images/under_details.svg"
-                  onClick={handleImageClick6}
+                  onClick={handleClick6}
                 />
               </div>
             </div>
@@ -599,7 +600,7 @@ const Home: FC = () => {
               <div className="cursor-pointer">
                 <img
                   src="/images/under_details.svg"
-                  onClick={handleImageClick7}
+                  onClick={handleClick7}
                 />
               </div>
             </div>
@@ -729,7 +730,7 @@ const Home: FC = () => {
               <div className="cursor-pointer">
                 <img
                   src="/images/under_details.svg"
-                  onClick={handleImageClick8}
+                  onClick={handleClick8}
                 />
               </div>
             </div>

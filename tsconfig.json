@@ -6,7 +6,7 @@
     "strict": false,
     "noImplicitAny": false,
     "skipLibCheck": true,
-    "suppressImplicitAnyIndexErrors": true,
+    // "suppressImplicitAnyIndexErrors": true,
     "noEmit": true,  // This line should have a comma after the previous one
     "esModuleInterop": true,
     "module": "esnext",
