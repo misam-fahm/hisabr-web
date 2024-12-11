@@ -448,7 +448,7 @@ const DetailsPage: React.FC = () => {
               <div>
                 <div className="w-full max-w-sm mx-auto px-6 below-md:mb-6">
                   <ul>
-                    {dat.map((item, index) => (
+                    {dat?.map((item, index) => (
                       <li
                         key={index}
                         className="flex items-center justify-between py-2"
