@@ -161,16 +161,16 @@ const data: TableRow[] = [
   },
 ];
 
-const formattedData = data.map((item) => {
-  const rawDate = new Date(item.date);
+const formattedData = data?.map((item) => {
+  const rawDate = new Date(item?.date);
 
   // Format the date as MM-DD-YY
-  const formattedDate = `${(rawDate.getMonth() + 1)
+  const formattedDate = `${(rawDate?.getMonth() + 1)
     .toString()
     .padStart(
       2,
       "0"
-    )}-${rawDate.getDate().toString().padStart(2, "0")}-${rawDate
+    )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
     .getFullYear()
     .toString()
     .slice(-2)}`;
