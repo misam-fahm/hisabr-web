@@ -129,6 +129,25 @@ const data: TableRow[] = [
   },
 ];
 
+const formattedData = data?.map((item) => {
+  const rawDate = new Date(item?.date);
+
+  // Format the date as MM-DD-YY
+  const formattedDate = `${(rawDate?.getMonth() + 1)
+    .toString()
+    .padStart(
+      2,
+      "0"
+    )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
+    .getFullYear()
+    .toString()
+    .slice(-2)}`;
+
+  return { ...item, date: formattedDate };
+});
+
+console.log(formattedData);
+
 const columns: ColumnDef<TableRow>[] = [
   { accessorKey: "date", header: "Date" },
   { accessorKey: "store", header: "Store" },
@@ -148,7 +167,7 @@ const columns: ColumnDef<TableRow>[] = [
 
 const DetailsPage: React.FC = () => {
   const table = useReactTable({
-    data,
+    data: formattedData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -330,10 +349,12 @@ const DetailsPage: React.FC = () => {
           <p className="text-[16px] font-bold text-[#334155] ml-3"> Invoices</p>
         </div>
         <div>
-          <button
-            className="bg-[#1AA47D] [box-shadow:0px_3px_8px_0px_#00000026] w-[133px] h-[37px] rounded-md text-white text-[14px] font-semibold 
-             hover:shadow-lg transition-shadow duration-300"
-          >
+          <button className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300">
+            <img
+              src="/images/uploadIcon.svg"
+              alt="Upload Icon"
+              className="mr-2"
+            />
             Upload Invoice
           </button>
         </div>

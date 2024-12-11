@@ -81,10 +81,12 @@ const SalesKPI: FC = () => {
             </div>
           </div>
           <div className="below-md:w-full below-md:flex below-md:justify-end below-md:pl-3">
-            <button
-              className="bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[133px] below-md:w-[50%]  h-[37px] rounded-md text-white text-[14px] font-semibold 
-             hover:shadow-lg transition-shadow duration-300"
-            >
+            <button className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300">
+              <img
+                src="/images/uploadIcon.svg"
+                alt="Upload Icon"
+                className="mr-2"
+              />
               PI Report
             </button>
           </div>
