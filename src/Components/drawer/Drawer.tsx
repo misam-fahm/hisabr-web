@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import React, { ReactNode, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import Images from "../ui/Common/Image";
 
 interface DrawerProps {
   children: ReactNode;
@@ -97,7 +98,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         <div
           className={`flex gap-x-4 mt-[13px] ${open ? "pl-10" : "pl-3"}  below-md:pl-5 ${open ? "ml-[13px]" : "ml-[3px]"}`}
         >
-          <img
+          <Images
             src={open ? "/images/logo.svg" : "/images/halflogo.png"}
             className={`cursor-pointer ${open ? "w-[136px]" : "w-[36px]"} h-auto`}
           />

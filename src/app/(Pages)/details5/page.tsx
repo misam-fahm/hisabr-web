@@ -3,7 +3,7 @@ import React from "react";
 import { useState } from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Images from "@/Components/ui/Common/Image";
 import {
   useReactTable,
   getCoreRowModel,
@@ -159,7 +159,7 @@ const columns: ColumnDef<TableRow>[] = [
     header: "Edit",
     cell: () => (
       <button className="bg-white p-2 rounded-full shadow-inner">
-        <Image src="/images/pencil.svg" alt="Edit" width={14} height={14} />
+        <Images src="/Imagess/pencil.svg" alt="Edit" width={14} height={14} />
       </button>
     ),
   },
@@ -169,7 +169,7 @@ const columns: ColumnDef<TableRow>[] = [
     header: "Delete",
     cell: () => (
       <button className="bg-white p-2 rounded-full shadow-inner">
-        <Image src="/images/delete1.svg" alt="Delete" width={14} height={14} />
+        <Images src="/images/delete1.svg" alt="Delete" width={14} height={14} />
       </button>
     ),
   },

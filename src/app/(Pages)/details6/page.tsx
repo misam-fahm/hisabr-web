@@ -3,7 +3,7 @@ import React from "react";
 import { useState } from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Images from "@/Components/ui/Common/Image";
 import {
   useReactTable,
   getCoreRowModel,
@@ -159,7 +159,7 @@ const columns: ColumnDef<TableRow>[] = [
     header: "View",
     cell: () => (
       <button className="bg-[#FFFFFF] p-[7px] rounded-full shadow-[inset_-2px_-2px_2px_#F3FFF3,inset_2px_2px_3px_#E2F7E380]">
-        <Image src="/images/eye.svg" alt="Eye Icon" width={25} height={25} />
+        <Images src="/images/eye.svg" alt="Eye Icon" width={25} height={25} />
       </button>
     ),
   },

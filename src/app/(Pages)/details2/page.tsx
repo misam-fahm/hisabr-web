@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Images from "@/Components/ui/Common/Image";
 
 import {
   useReactTable,
@@ -116,7 +116,7 @@ const columns: ColumnDef<TableRow>[] = [
     header: "pencil",
     cell: () => (
       <button className="bg-[#FFFFFF] p-[9px] rounded-full shadow-[inset_-2px_-2px_2px_#E2F3F780,inset_2px_2px_3px_#F3F6FFAD]">
-        <Image src="/images/pencil.svg" alt="pencil" width={14} height={14} />
+        <Images src="/images/pencil.svg" alt="pencil" width={14} height={14} />
       </button>
     ),
   },
@@ -125,7 +125,7 @@ const columns: ColumnDef<TableRow>[] = [
     header: "delete",
     cell: () => (
       <button className="bg-[#FFFFFF] p-[9px] rounded-full shadow-[inset_-2px_-2px_2px_#F7E2E259,inset_2px_2px_3px_#FFF3F396]">
-        <Image src="/images/delete1.svg" alt="delete" width={14} height={14} />
+        <Images src="/images/delete1.svg" alt="delete" width={14} height={14} />
       </button>
     ),
   },
