@@ -5,7 +5,6 @@ import Linechart from "@/Components/drawer/LineChart";
 import React from "react";
 import { useRouter } from "next/navigation";
 
-
 interface TableRow {
   name: string;
   revenue: number;
@@ -53,17 +52,6 @@ const Home: FC = () => {
   const handleSelect2 = (option2: string) => {
     setSelectedOption2(option2);
     setIsOpen2(false);
-  };
-
-  /**third dropdown */
-  const [selectedOption3, setSelectedOption3] = useState<string>("Summary");
-  const [isOpen3, setIsOpen3] = useState<boolean>(false);
-
-  const options3 = ["Summary", "Details", "Details", "Summary"];
-
-  const handleSelect3 = (option3: string) => {
-    setSelectedOption3(option3);
-    setIsOpen3(false);
   };
 
   const totalRevenue = tableData.reduce((sum, row) => sum + row.revenue, 0);
@@ -126,111 +114,82 @@ const Home: FC = () => {
         </p>
       </div>
 
-      <div className="flex flex-row items-center justify-center gap-3 pt-3 pb-3 sticky top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
-        <div className="relative w-full">
-          <p className="text-[#2D374880] text-[12px] mb-2">Select Store</p>
-          {/* Dropdown Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px] "
-          >
-            <span>{selectedOption}</span>
-            <img
-              src="./images/icon.svg"
-              className={`w-4 h-4 ml-2 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""}`}
-            />
-          </button>
-
-          {/* Dropdown Menu */}
-          {isOpen && (
-            <div
-              className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-              style={{ zIndex: 50 }}
+      <div className="flex flex-row items-center gap-3 pt-4 pb-3 sticky top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
+        {/* Dropdowns grouped together */}
+        <div className="flex flex-row gap-3 w-full below-md:flex-col">
+          {/* Dropdown 1 */}
+          <div className="relative w-[30%] below-md:w-full">
+            <p className="text-[#2D374880] text-[12px] mb-2 below-md:hidden">
+              Select Store
+            </p>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
             >
-              {options.map((option, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleSelect(option)}
-                  className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                >
-                  {option}
-                </div>
-              ))}
-            </div>
-          )}
+              <span>{selectedOption}</span>
+              <img
+                src="./images/icon.svg"
+                className={`w-4 h-4 ml-2 transition-transform duration-200 ${
+                  isOpen ? "transform rotate-180" : ""
+                }`}
+              />
+            </button>
+            {isOpen && (
+              <div
+                className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
+                style={{ zIndex: 50 }}
+              >
+                {options.map((option, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleSelect(option)}
+                    className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
+                  >
+                    {option}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Dropdown 2 */}
+          <div className="relative w-[30%] below-md:w-full">
+            <p className="text-[#2D374880] text-[12px] mb-2 below-md:hidden">
+              Select Period
+            </p>
+            <button
+              onClick={() => setIsOpen2(!isOpen2)}
+              className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
+            >
+              <span>{selectedOption2}</span>
+              <img
+                src="./images/icon.svg"
+                className={`w-4 h-4 ml-2 transition-transform duration-200 ${
+                  isOpen2 ? "transform rotate-180" : ""
+                }`}
+              />
+            </button>
+            {isOpen2 && (
+              <div
+                className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
+                style={{ zIndex: 50 }}
+              >
+                {options2.map((option, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleSelect2(option)}
+                    className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
+                  >
+                    {option}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Second dropdown */}
-        <div className="relative w-full">
-          <p className="text-[#2D374880] text-[12px] mb-2">Select Period</p>
-          {/* Dropdown Button */}
-          <button
-            onClick={() => setIsOpen2(!isOpen2)}
-            className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
-          >
-            <span>{selectedOption2}</span>
-            <img
-              src="./images/icon.svg"
-              className={`w-4 h-4 ml-2 transition-transform duration-200 ${isOpen2 ? "transform rotate-180" : ""}`}
-            />
-          </button>
-
-          {/* Dropdown Menu */}
-          {isOpen2 && (
-            <div
-              className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-              style={{ zIndex: 50 }}
-            >
-              {options2.map((option, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleSelect2(option)}
-                  className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                >
-                  {option}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Third dropdown */}
-        <div className="relative w-full below-md:hidden">
-          <p className="text-[#2D374880] text-[12px] mb-2">View</p>
-          {/* Dropdown Button */}
-          <button
-            onClick={() => setIsOpen3(!isOpen3)}
-            className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
-          >
-            <span>{selectedOption3}</span>
-            <img
-              src="./images/icon.svg"
-              className={`w-4 h-4 ml-2 transition-transform duration-200 ${isOpen3 ? "transform rotate-180" : ""}`}
-            />
-          </button>
-
-          {/* Dropdown Menu */}
-          {isOpen3 && (
-            <div
-              className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-              style={{ zIndex: 50 }}
-            >
-              {options3.map((option3, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleSelect3(option3)}
-                  className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                >
-                  {option3}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Tooltip Images */}
-        <div className="relative w-[20%] mt-8 below-md:hidden">
-          {/* Tooltip Images with group class */}
+        {/* Tooltip positioned at the end of the screen */}
+        <div className="relative ml-auto mt-8 below-md:hidden">
           <div className="group relative">
             <img
               src="/images/tooltip.svg"
@@ -274,10 +233,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  src="/images/under_details.svg"
-                  onClick={handleClick}
-                />
+                <img src="/images/under_details.svg" onClick={handleClick} />
               </div>
             </div>
             <div>
@@ -294,10 +250,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  onClick={handleClick2}
-                  src="/images/under_details.svg"
-                />
+                <img onClick={handleClick2} src="/images/under_details.svg" />
               </div>
             </div>
             <div className=" overflow-hidden overflow-y-auto below-md:overflow-x-auto max-h-[42vh] below-md:max-h-[30vh] custom-scrollbar">
@@ -370,10 +323,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  src="/images/under_details.svg"
-                  onClick={handleClick}
-                />
+                <img src="/images/under_details.svg" onClick={handleClick} />
               </div>
             </div>
 
@@ -415,10 +365,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  src="/images/under_details.svg"
-                  onClick={handleClick4}
-                />
+                <img src="/images/under_details.svg" onClick={handleClick4} />
               </div>
             </div>
             <div className="mt-4 mx-4">
@@ -503,10 +450,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  src="/images/under_details.svg"
-                  onClick={handleClick5}
-                />
+                <img src="/images/under_details.svg" onClick={handleClick5} />
               </div>
             </div>
 
@@ -551,10 +495,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  src="/images/under_details.svg"
-                  onClick={handleClick6}
-                />
+                <img src="/images/under_details.svg" onClick={handleClick6} />
               </div>
             </div>
             <div className="mt-4 mx-4">
@@ -598,10 +539,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  src="/images/under_details.svg"
-                  onClick={handleClick7}
-                />
+                <img src="/images/under_details.svg" onClick={handleClick7} />
               </div>
             </div>
             <div className="mt-4 mx-4">
@@ -728,10 +666,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  src="/images/under_details.svg"
-                  onClick={handleClick8}
-                />
+                <img src="/images/under_details.svg" onClick={handleClick8} />
               </div>
             </div>
 

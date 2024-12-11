@@ -42,7 +42,7 @@ const SalesKPI: FC = () => {
 
       <div className=" mb-10">
         <div className="flex flex-row below-md:flex-col below-md:items-end sticky top-16 justify-between pt-6 below-md:px-3  pl-6 pr-6 pb-6 below-md:pb-3 bg-[#f7f8f9] ">
-          <div className="flex flex-row w-full gap-3">
+          <div className="flex flex-row below-md:flex-col w-full gap-3">
             <div className="w-[20%] below-md:w-full relative">
               {/* Dropdown Button */}
               <button

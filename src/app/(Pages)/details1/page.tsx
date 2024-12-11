@@ -1,10 +1,11 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import "../globals.css";
 import MultiLineChart from "@/Components/drawer/MultiLineChart";
 import BarChart3 from "@/Components/drawer/BarChart3";
 import PieChart2 from "@/Components/drawer/Piechart2";
 import { useRouter } from "next/navigation";
+import Pagination from "@/Components/ui/Common/Pagination";
 
 import Dropdown from "@/Components/ui/Common/DropDown";
 import {
@@ -193,7 +194,6 @@ const dat = [
 ];
 
 const DetailsPage: React.FC = () => {
-
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -223,37 +223,28 @@ const DetailsPage: React.FC = () => {
       },
     },
   });
-  //pagination range
-  const { pageIndex, pageSize } = table.getState().pagination;
-  const totalItems = table.getFilteredRowModel().rows.length;
-  const startItem = pageIndex * pageSize + 1;
-  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   /**go back button */
   const router = useRouter();
   const handleBack = () => {
-      router.back();
-  
+    router.back();
   };
 
   /**first dropdown */
   const [selectedOption, setSelectedOption] = useState<string>("All stores");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-    /**second dropdown */
-    const [selectedOption2, setSelectedOption2] = useState<string>("2021");
-    const [isOpen2, setIsOpen2] = useState<boolean>(false);
+  /**second dropdown */
+  const [selectedOption2, setSelectedOption2] = useState<string>("2021");
+  const [isOpen2, setIsOpen2] = useState<boolean>(false);
 
-    
   /**third dropdown */
   const [selectedOption3, setSelectedOption3] = useState<string>("2021");
   const [isOpen3, setIsOpen3] = useState<boolean>(false);
 
-  
   /**fourth dropdown */
   const [selectedOption4, setSelectedOption4] = useState<string>("2021");
   const [isOpen4, setIsOpen4] = useState<boolean>(false);
-  
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
   const options2 = ["2024", "2023", "2022", "2021"];
@@ -301,38 +292,38 @@ const DetailsPage: React.FC = () => {
         </p>
       </div>
       <div className="pt-6 pb-6 sticky z-10 top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
-      <div className="flex flex-row justify-between items-center">
-        <div className="flex flex-row gap-3 w-full">
-          {/* First Dropdown */}
-          <Dropdown
-            label="Select Store"
-            options={options}
-            selectedOption={selectedOption}
-            onSelect={handleSelect}
-            isOpen={isOpen}
-            toggleOpen={toggleDropdown1}
-          />
+        <div className="flex flex-row justify-between items-center">
+          <div className="flex flex-row gap-3 w-full">
+            {/* First Dropdown */}
+            <Dropdown
+              label="Select Store"
+              options={options}
+              selectedOption={selectedOption}
+              onSelect={handleSelect}
+              isOpen={isOpen}
+              toggleOpen={toggleDropdown1}
+            />
 
-          {/* Second Dropdown */}
-          <Dropdown
-            label="Select Period"
-            options={options2}
-            selectedOption={selectedOption2}
-            onSelect={handleSelect2}
-            isOpen={isOpen2}
-            toggleOpen={toggleDropdown2}
-          />
-        </div>
-        <div>
-          <p
-            onClick={handleBack}
-            className="below-md:hidden cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
-          >
-            Back
-          </p>
+            {/* Second Dropdown */}
+            <Dropdown
+              label="Select Period"
+              options={options2}
+              selectedOption={selectedOption2}
+              onSelect={handleSelect2}
+              isOpen={isOpen2}
+              toggleOpen={toggleDropdown2}
+            />
+          </div>
+          <div>
+            <p
+              onClick={handleBack}
+              className="below-md:hidden cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
+            >
+              Back
+            </p>
+          </div>
         </div>
       </div>
-    </div>
 
       <div className=" pl-6 pr-6 below-md:px-3">
         <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 pt-16 ">
@@ -415,14 +406,14 @@ const DetailsPage: React.FC = () => {
                 </div>
 
                 <div className="relative w-[30%]">
-                <Dropdown
-            label="Select Option"
-            options={options3}
-            selectedOption={selectedOption3}
-            onSelect={handleSelect3}
-            isOpen={isOpen3}
-            toggleOpen={toggleDropdown3}
-          />
+                  <Dropdown
+                    label="Select Option"
+                    options={options3}
+                    selectedOption={selectedOption3}
+                    onSelect={handleSelect3}
+                    isOpen={isOpen3}
+                    toggleOpen={toggleDropdown3}
+                  />
                 </div>
               </div>
               <div>
@@ -439,14 +430,14 @@ const DetailsPage: React.FC = () => {
                   </p>
                 </div>
                 <div className="relative w-[40%] ">
-                <Dropdown
-                      label="Select Option"
-                      options={options4}
-                      selectedOption={selectedOption4}
-                      onSelect={handleSelect4}
-                      isOpen={isOpen4}
-                     toggleOpen={toggleDropdown4}
-                 />
+                  <Dropdown
+                    label="Select Option"
+                    options={options4}
+                    selectedOption={selectedOption4}
+                    onSelect={handleSelect4}
+                    isOpen={isOpen4}
+                    toggleOpen={toggleDropdown4}
+                  />
                 </div>
               </div>
               <div>
@@ -552,80 +543,7 @@ const DetailsPage: React.FC = () => {
             </div>
 
             {/* Pagination */}
-            <div className="mt-4 flex gap-2 justify-between items-center">
-              {/* Page Range Display */}
-              <div>
-                <span className="text-[#8899A8] text-[12px] font-medium ml-3 below-md:hidden">
-                  {startItem} - {endItem} of {totalItems}
-                </span>
-              </div>
-
-              {/* Pagination Numbers */}
-              <div className="flex flex-row gap-3">
-                <button
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
-                  className="px-4 py-2 below-md:px-2 below-md:py-1 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
-                  style={{ background: "#EBEFF6" }}
-                >
-                  <img src="/images/left.svg" />
-                </button>
-
-                {Array.from({ length: table.getPageCount() }, (_, index) => {
-                  const pageIndex = index;
-                  return (
-                    <button
-                      key={pageIndex}
-                      onClick={() => table.setPageIndex(pageIndex)}
-                      className={`px-4 py-2 below-md:px-2 below-md:py-1 rounded-md text-[12px] ${
-                        table.getState().pagination.pageIndex === pageIndex
-                          ? "!important text-[#FFFFFF]"
-                          : " text-gray-700"
-                      }`}
-                      style={{
-                        backgroundColor:
-                          table.getState().pagination.pageIndex === pageIndex
-                            ? "#1AA47D"
-                            : "transparent",
-                      }}
-                    >
-                      {pageIndex + 1}
-                    </button>
-                  );
-                })}
-
-                <button
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
-                  className="px-4 py-2 below-md:px-2 below-md:py-1 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
-                  style={{ background: "#EBEFF6" }}
-                >
-                  <img src="/images/right.svg" />
-                </button>
-
-                <div>
-                  <div className="w-full">
-                    {/* Dropdown for Page Selection */}
-                    <select
-                      value={table.getState().pagination.pageIndex} // Sync with current page index
-                      onChange={(e) =>
-                        table.setPageIndex(Number(e.target.value))
-                      } // Update page on selection
-                      className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
-                    >
-                      {Array.from(
-                        { length: table.getPageCount() },
-                        (_, index) => (
-                          <option key={index} value={index}>
-                            Page {index + 1}
-                          </option>
-                        )
-                      )}
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Pagination table={table} />
           </div>
         </div>
       </div>
