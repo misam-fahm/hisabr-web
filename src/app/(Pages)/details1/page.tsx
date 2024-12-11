@@ -149,8 +149,6 @@ const formattedData = data?.map((item) => {
   return { ...item, date: formattedDate };
 });
 
-console.log(formattedData);
-
 const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "date",
@@ -203,12 +201,7 @@ const DetailsPage: React.FC = () => {
   if (!isClient) {
     return null; // Or some placeholder
   }
-
-  // Code that uses `window` here
-  useEffect(() => {
-    console.log(window.innerWidth); // Example of window usage
-  }, []);
-
+  
   const table = useReactTable({
     data: formattedData,
     columns,
