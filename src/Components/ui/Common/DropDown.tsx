@@ -38,7 +38,7 @@ const Dropdown = ({
         className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
         style={{ zIndex: 50 }}
       >
-        {options.map((option, index) => (
+        {options?.map((option, index) => (
           <div
             key={index}
             onClick={() => onSelect(option)}
