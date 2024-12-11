@@ -191,8 +191,19 @@ const dat = [
 ];
 
 const DetailsPage: React.FC = () => {
-
   const [isClient, setIsClient] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string>("All stores");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedOption2, setSelectedOption2] = useState<string>("2021");
+  const [isOpen2, setIsOpen2] = useState<boolean>(false);
+  const [selectedOption3, setSelectedOption3] = useState<string>("2021");
+  const [isOpen3, setIsOpen3] = useState<boolean>(false);
+  const [selectedOption4, setSelectedOption4] = useState<string>("2021");
+  const [isOpen4, setIsOpen4] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log(window.innerWidth); // Safe to use window
+  }, []);
 
   useEffect(() => {
     setIsClient(true); // This will run only on the client side
@@ -228,25 +239,6 @@ const DetailsPage: React.FC = () => {
       router.back();
   
   };
-
-  /**first dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("All stores");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
-    /**second dropdown */
-    const [selectedOption2, setSelectedOption2] = useState<string>("2021");
-    const [isOpen2, setIsOpen2] = useState<boolean>(false);
-
-    
-  /**third dropdown */
-  const [selectedOption3, setSelectedOption3] = useState<string>("2021");
-  const [isOpen3, setIsOpen3] = useState<boolean>(false);
-
-  
-  /**fourth dropdown */
-  const [selectedOption4, setSelectedOption4] = useState<string>("2021");
-  const [isOpen4, setIsOpen4] = useState<boolean>(false);
-  
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
   const options2 = ["2024", "2023", "2022", "2021"];
