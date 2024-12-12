@@ -5,6 +5,7 @@ const Dropdown = ({
   label,
   options,
   selectedOption,
+  className,
   onSelect,
   isOpen,
   toggleOpen,
@@ -12,11 +13,12 @@ const Dropdown = ({
   label: string;
   options: string[];
   selectedOption: string;
+  className?: string ;
   onSelect: (option: string) => void;
   isOpen: boolean;
   toggleOpen: () => void;
 }) => (
-  <div className="relative w-[30%] below-md:w-full">
+  <div className={`${className ? className : "relative w-[30%] below-md:w-full"}`}>
     <p className="text-[#2D374880] text-[12px] mb-2">{label}</p>
     {/* Dropdown Button */}
     <button
