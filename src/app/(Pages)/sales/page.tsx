@@ -4,6 +4,8 @@ import DateRange from "@/Components/drawer/DateRangePicker";
 import Images from "@/Components/ui/Common/Image";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Pagination from "@/Components/ui/Common/Pagination";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -224,7 +226,7 @@ const Sales: FC = () => {
           onClick={handleImageClick}
           className="bg-[#FFFFFF] p-[7px] rounded-full shadow-[inset_-2px_-2px_2px_#F3FFF3,inset_2px_2px_3px_#E2F7E380]"
         >
-          <Images src="/images/eye.svg" alt="Eye Icon" width={25} height={25} />
+          <Images src="/images/eye.svg" alt="Eye Icon" width={20} height={20} />
         </button>
       ),
     },
@@ -270,12 +272,6 @@ const Sales: FC = () => {
     setIsOpen(false);
   };
 
-  //pagination range
-  const { pageIndex, pageSize } = table.getState().pagination;
-  const totalItems = table.getFilteredRowModel().rows.length;
-  const startItem = pageIndex * pageSize + 1;
-  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
-
   return (
     <main
       className="max-h-[calc(100vh-70px)] overflow-auto"
@@ -287,9 +283,9 @@ const Sales: FC = () => {
         </p>
       </div>
       <div className="my-4 mx-6 mt-24 below-md:mx-3 below-md:mt-20">
-        <div className="flex flex-row below-md:flex-col">
-          <div className="flex flex-row  w-full gap-3">
-            <div className="w-[20%] below-md:w-full relative">
+        <div className="flex flex-row below-md:flex-col mb-6">
+          <div className="flex flex-row below-md:flex-col  w-full gap-3">
+            <div className="w-[40%] below-md:w-full relative">
               {/* Dropdown Button */}
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -326,63 +322,81 @@ const Sales: FC = () => {
               )}
             </div>
 
-            <div className="w-[30%] below-md:w-full">
+            <div className="w-[50%] below-md:w-full">
               <DateRange />
             </div>
-          </div>
 
-          {/* Search Filter */}
-          <div className="w-[30%] below-md:w-full below-md:mt-3">
-            <div className="w-full relative">
-              <input
-                value={globalFilter ?? ""}
-                onChange={(e) => setGlobalFilter(e.target.value)}
-                placeholder="Search"
-                className=" py-[10px] px-[8] w-full shadow-md rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
-              />
-              <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-[#636363]"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={3}
+            <div className="flex flex-row w-full gap-3">
+              <div className="w-[50%] below-md:w-full relative">
+                <input
+                  value={globalFilter ?? ""}
+                  onChange={(e) => setGlobalFilter(e.target.value)}
+                  placeholder="Search"
+                  className=" py-[10px] px-[8] w-full shadow-md rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                />
+                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-[#636363]"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 21l-4.35-4.35m2.6-6.4a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              <div className="below-lg:hidden">
+                <input
+                  type="file"
+                  id="fileInput"
+                  style={{ display: "none" }}
+                  onChange={handleFileChange}
+                />
+
+                <button
+                  onClick={handleUploadClick}
+                  className="flex items-center justify-center bg-[#1AA47D] [box-shadow:0px_3px_8px_0px_#00000026] w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 21l-4.35-4.35m2.6-6.4a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z"
+                  <img
+                    src="/images/uploadIcon.svg"
+                    alt="Upload Icon"
+                    className="mr-2"
                   />
-                </svg>
+                  Upload Sale
+                </button>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex flex-row justify-between items-center mt-4 mb-4">
-          <div>
-            <p className="text-[16px] font-bold text-[#334155]"> Sales</p>
-          </div>
-          <div>
-            <input
-              type="file"
-              id="fileInput"
-              style={{ display: "none" }}
-              onChange={handleFileChange}
-            />
-
-            <button
-              onClick={handleUploadClick}
-              className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300"
-            >
-              <img
-                src="/images/uploadIcon.svg"
-                alt="Upload Icon"
-                className="mr-2"
+          {/* button */}
+          <div className=" below-md:w-full below-md:mt-3">
+            <div className="below-md:hidden">
+              <input
+                type="file"
+                id="fileInput"
+                style={{ display: "none" }}
+                onChange={handleFileChange}
               />
-              Upload Sale
-            </button>
+
+              <button
+                onClick={handleUploadClick}
+                className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300"
+              >
+                <img
+                  src="/images/uploadIcon.svg"
+                  alt="Upload Icon"
+                  className="mr-2"
+                />
+                Upload Sale
+              </button>
+            </div>
           </div>
         </div>
 
@@ -437,78 +451,7 @@ const Sales: FC = () => {
           </div>
 
           {/* Pagination */}
-          <div className="mt-4 flex gap-2 justify-between items-center">
-            {/* Page Range Display */}
-            <div>
-              <span className="text-[#8899A8] text-[12px] font-medium ml-3 below-md:hidden">
-                {startItem} - {endItem} of {totalItems}
-              </span>
-            </div>
-
-            {/* Pagination Numbers */}
-            <div className="flex flex-row gap-3">
-              <button
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-                className="px-4 py-2 below-md:px-2 below-md:py-1 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
-                style={{ background: "#EBEFF6" }}
-              >
-                <img src="/images/left.svg" />
-              </button>
-
-              {Array.from({ length: table.getPageCount() }, (_, index) => {
-                const pageIndex = index;
-                return (
-                  <button
-                    key={pageIndex}
-                    onClick={() => table.setPageIndex(pageIndex)}
-                    className={`px-4 py-2 below-md:px-2 below-md:py-1 rounded-md text-[12px] ${
-                      table.getState().pagination.pageIndex === pageIndex
-                        ? "!important text-[#FFFFFF]"
-                        : " text-gray-700"
-                    }`}
-                    style={{
-                      backgroundColor:
-                        table.getState().pagination.pageIndex === pageIndex
-                          ? "#1AA47D"
-                          : "transparent",
-                    }}
-                  >
-                    {pageIndex + 1}
-                  </button>
-                );
-              })}
-
-              <button
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-                className="px-4 py-2 below-md:px-2 below-md:py-1 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
-                style={{ background: "#EBEFF6" }}
-              >
-                <img src="/images/right.svg" />
-              </button>
-
-              <div>
-                <div className="w-full">
-                  {/* Dropdown for Page Selection */}
-                  <select
-                    value={table.getState().pagination.pageIndex} // Sync with current page index
-                    onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
-                    className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
-                  >
-                    {Array.from(
-                      { length: table.getPageCount() },
-                      (_, index) => (
-                        <option key={index} value={index}>
-                          Page {index + 1}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Pagination table={table} />
         </div>
       </div>
     </main>
