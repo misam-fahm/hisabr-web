@@ -1,6 +1,5 @@
 "use client";
-import React, { FC, useState } from "react";
-import DateRange from "@/Components/drawer/DateRangePicker";
+import React, { FC } from "react";
 import Image from "next/image";
 import {
   useReactTable,
@@ -10,7 +9,6 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-
 import AddNewItems from "@/Components/Setup/AddNewItems";
 import AddCategories from "@/Components/Setup/AddCategories";
 
@@ -21,83 +19,82 @@ interface TableRow {
 }
 
 const data: TableRow[] = [
+  { name: "Beverage", description: "Soft Drinks, Juices", noOfItems: 7327 },
+  { name: "Bakery", description: "Cold drinks, Juices", noOfItems: 43643 },
+  { name: "Dairy", description: "Chips, Cookies, Biscuits", noOfItems: 8979 },
+  { name: "Snacks", description: "Soft Drinks, Juices", noOfItems: 7327 },
+  { name: "Soft Serve", description: "Cold drinks, Juices", noOfItems: 7327 },
   {
     name: "Beverage",
-    description: "Soft Drinks, Juices",
-    noOfItems: 7327,
-  },
-  {
-    name: "Bakery",
-    description: "Cold drinks, Juices",
-    noOfItems: 43643,
-  },
-  {
-    name: "Dairy",
-    description: "Chips., Cookies, Biscuits",
-    noOfItems: 8979,
-  },
-  {
-    name: "Snacks",
-    description: "Soft Drinks, Juices",
-    noOfItems: 7327,
-  },
-  {
-    name: "Soft Serve",
-    description: "Cold drinks, Juices",
-    noOfItems: 7327,
-  },
-  {
-    name: "Beverage",
-    description: "Chips., Cookies, Biscuits",
+    description: "Chips, Cookies, Biscuits",
     noOfItems: 76486,
   },
+  { name: "Snacks", description: "Bread, Cakes, Pastries", noOfItems: 54787 },
+  { name: "Soft Serve", description: "Milk, Butter, Cheese", noOfItems: 899 },
+  { name: "Beverage", description: "Soft Drinks, Juices", noOfItems: 7327 },
+  { name: "Bakery", description: "Cold drinks, Juices", noOfItems: 43643 },
+  { name: "Dairy", description: "Chips, Cookies, Biscuits", noOfItems: 8979 },
+  { name: "Snacks", description: "Soft Drinks, Juices", noOfItems: 7327 },
+  { name: "Soft Serve", description: "Cold drinks, Juices", noOfItems: 7327 },
   {
-    name: "Snacks",
-    description: "Bread, Cakes, Pasteries",
-    noOfItems: 54787,
+    name: "Beverage",
+    description: "Chips, Cookies, Biscuits",
+    noOfItems: 76486,
   },
-  {
-    name: "Soft Serve",
-    description: "Milk, butter, cheese",
-    noOfItems: 899,
-  },
-  {
-    name: "Snacks",
-    description: "Soft Drinks, Juices",
-    noOfItems: 4214,
-  },
+  { name: "Snacks", description: "Bread, Cakes, Pastries", noOfItems: 54787 },
+  { name: "Soft Serve", description: "Milk, Butter, Cheese", noOfItems: 899 },
+  { name: "Snacks", description: "Soft Drinks, Juices", noOfItems: 4214 },
+  { name: "Snacks", description: "Soft Drinks, Juices", noOfItems: 4214 },
 ];
 
 const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "name",
-    header: "Name",
+    header: () => <div className="text-left">Name</div>,
+    cell: (info) => <span>{info.getValue() as string}</span>,
+
+    size: 200,
   },
   {
     accessorKey: "description",
-    header: "Description",
+    header: () => <div className="text-left">Description</div>,
+    cell: (info) => <span>{info.getValue() as string}</span>,
+
+    size: 250,
   },
   {
     accessorKey: "noOfItems",
-    header: "No. of Items",
-  },
-
-  {
-    accessorKey: "edit",
-    header: "Edit",
-    cell: () => (
-      <Image src="/images/edit.svg" alt="edit" width={35} height={35} />
+    header: () => <div className="text-right mr-16">No. of Items</div>,
+    cell: (info) => (
+      <div className="text-right mr-14">{info.getValue() as number}</div>
     ),
-  },
 
+    size: 150,
+  },
+  {
+    id: "edit",
+    header: () => <div className="text-center">Edit</div>,
+    cell: () => (
+      <div className="flex justify-center ml-5 cursor-pointer">
+        <Image src="/images/edit.svg" alt="edit" width={32} height={32} />
+      </div>
+    ),
+
+    size: 80,
+  },
   {
     id: "delete",
-    header: "Delete",
+    header: () => <div className="text-center">Delete</div>,
     cell: () => (
-      <Image src="/images/delete.svg" alt="delete" width={35} height={35} />
+      <div className="flex justify-center ml-5 cursor-pointer">
+        <Image src="/images/delete.svg" alt="delete" width={32} height={32} />
+      </div>
     ),
+
+    size: 80,
   },
 ];
+
 const Page: FC = () => {
   const [globalFilter, setGlobalFilter] = React.useState("");
   const table = useReactTable({
@@ -111,7 +108,7 @@ const Page: FC = () => {
     },
     initialState: {
       pagination: {
-        pageSize: 6,
+        pageSize: 10,
         pageIndex: 0,
       },
     },
@@ -123,143 +120,188 @@ const Page: FC = () => {
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <main
-      className="max-h-[calc(100vh-10px)] overflow-auto"
-      style={{ scrollbarWidth: "thin" }}
-    >
-      <div className=" my-24 mx-6 below-md:my-24">
+    <main className="w-full h-screen flex flex-col overflow-hidden">
+      <div className="mt-20 mx-6 flex-grow">
         <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
-          <p className="text-[16px] font-bold text-[#334155]">
+          <p className="text-[16px] font-bold text-[#334155] hidden md:block">
             Item Categories
           </p>
-
-          <div className="flex flex-row gap-2 ">
+          <div className="flex flex-row gap-2">
             <AddNewItems />
             <AddCategories />
           </div>
         </div>
 
-        <div>
-          {/* Table */}
-          <div className="overflow-x-auto shadow-md rounded-lg">
-            <table className="w-full border-collapse border border-gray-200">
-              <thead className="bg-[#334155]">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <th
-                        key={header.id}
-                        className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px]"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={
-                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                    }
-                    
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="px-4 py-1 text-[#636363] text-[14px]"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          
-
-          {/* Pagination */}
-          <div className="mt-4 flex gap-2 justify-between items-center">
-            {/* Page Range Display */}
-            <div>
-              <span className="text-[#8899A8] text-[12px] font-medium ml-3">
-                {startItem} - {endItem} of {totalItems}
-              </span>
-            </div>
-
-            {/* Pagination Numbers */}
-            <div className="flex flex-row gap-3">
-              <button
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-                className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
-                style={{ background: "#EBEFF6" }}
+        <div className="overflow-hidden max-w-full ">
+          {/* Mobile view */}
+          <div
+            className="block md:hidden"
+            style={{
+              maxHeight: "calc(100vh - 270px)",
+              overflowY: "auto",
+              WebkitOverflowScrolling: "touch", // Enables smooth scrolling on mobile
+              scrollbarWidth: "none", // Hide scrollbar
+            }}
+          >
+            {table.getRowModel().rows.map((row) => (
+              <div
+                key={row.id}
+                className={`border-b border-gray-300 p-3 bg-white rounded-lg mb-2 shadow-sm`}
               >
-                <img src="/images/left.svg" />
-              </button>
+                <div className="flex justify-between items-center">
+                  {/* Name */}
+                  <span className="font-medium text-[16px] text-[#334155]">
+                    {row.getValue("name")}
+                  </span>
+                  <div className="flex items-center gap-3">
+                    {/* Edit */}
+                    <Image
+                      src="/images/edit1.svg"
+                      alt="edit"
+                      width={16}
+                      height={16}
+                      className="cursor-pointer"
+                    />
+                    {/* Delete */}
+                    <Image
+                      src="/images/delete2.svg"
+                      alt="delete"
+                      width={16}
+                      height={16}
+                      className="cursor-pointer"
+                    />
+                  </div>
+                </div>
 
-              {Array.from({ length: table.getPageCount() }, (_, index) => {
-                const pageIndex = index;
-                return (
-                  <button
-                    key={pageIndex}
-                    onClick={() => table.setPageIndex(pageIndex)}
-                    className={`px-4 py-2 rounded-md text-[12px] ${
-                      table.getState().pagination.pageIndex === pageIndex
-                        ? "!important text-[#FFFFFF]"
-                        : " text-gray-700"
-                    }`}
-                    style={{
-                      backgroundColor:
-                        table.getState().pagination.pageIndex === pageIndex
-                          ? "#1AA47D"
-                          : "transparent",
-                    }}
-                  >
-                    {pageIndex + 1}
-                  </button>
-                );
-              })}
+                {/* Border */}
+                <div className="h-[1px] bg-gray-300 my-2"></div>
 
-              <button
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-                className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
-                style={{ background: "#EBEFF6" }}
-              >
-                <img src="/images/right.svg" />
-              </button>
+                <div className="text-[14px]  flex justify-between">
+                  <span className=" text-[#636363]">Description</span>{" "}
+                  {row.getValue("description")}
+                </div>
 
-              <div>
-                <div className="w-full">
-                  {/* Dropdown for Page Selection */}
-                  <select
-                    value={table.getState().pagination.pageIndex} // Sync with current page index
-                    onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
-                    className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
-                  >
-                    {Array.from(
-                      { length: table.getPageCount() },
-                      (_, index) => (
-                        <option key={index} value={index}>
-                          Page {index + 1}
-                        </option>
-                      )
-                    )}
-                  </select>
+                <div className="text-[14px]  mt-1 flex justify-between">
+                  <span className=" text-[#636363]">No. of Items</span>{" "}
+                  {row.getValue("noOfItems")}
                 </div>
               </div>
+            ))}
+          </div>
+
+          {/* Desktop View */}
+          <div className="overflow-x-auto shadow-md rounded-lg flex-grow hidden flex-col md:block">
+            <div className="overflow-hidden max-w-full">
+              <table className="w-full border-collapse border-gray-200 table-fixed">
+                <thead className="bg-[#334155] sticky top-0 z-10">
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <tr key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => (
+                        <th
+                          key={header.id}
+                          className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+                          style={{ width: `${header.column.getSize()}px` }} // Applying dynamic width
+                        >
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
+              </table>
+
+              <div
+                className="w-full overflow-y-auto scrollbar-thin flex-grow"
+                style={{ maxHeight: "calc(100vh - 270px)" }}
+              >
+                <table className="w-full border-collapse border-gray-200 table-fixed">
+                  <tbody>
+                    {table.getRowModel().rows.map((row) => (
+                      <tr
+                        key={row.id}
+                        className={
+                          row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <td
+                            key={cell.id}
+                            className="px-4 py-1.5 text-[#636363] text-[14px]"
+                            style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 flex gap-2 justify-between items-center">
+          <div>
+            <span className="text-[#8899A8] text-[12px] font-medium ml-3">
+              {startItem} - {endItem} of {totalItems}
+            </span>
+          </div>
+
+          <div className="flex flex-row gap-3">
+            <button
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+              className="px-4 py-2 bg-[#EBEFF6] text-gray-700  rounded-md disabled:opacity-50"
+            >
+              <img src="/images/left.svg" />
+            </button>
+
+            {Array.from({ length: table.getPageCount() }, (_, index) => {
+              const pageIndex = index;
+              return (
+                <button
+                  key={pageIndex}
+                  onClick={() => table.setPageIndex(pageIndex)}
+                  className={`px-4 py-2 rounded-md text-[12px] ${
+                    table.getState().pagination.pageIndex === pageIndex
+                      ? "bg-[#1AA47D] text-[#FFFFFF]"
+                      : "text-gray-700"
+                  }`}
+                >
+                  {pageIndex + 1}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
+            >
+              <img src="/images/right.svg" />
+            </button>
+
+            <div>
+              <select
+                value={table.getState().pagination.pageIndex}
+                onChange={(e) => table.setPageIndex(Number(e.target.value))}
+                className="pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
+              >
+                {Array.from({ length: table.getPageCount() }, (_, index) => (
+                  <option key={index} value={index}>
+                    Page {index + 1}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
@@ -267,4 +309,5 @@ const Page: FC = () => {
     </main>
   );
 };
+
 export default Page;
