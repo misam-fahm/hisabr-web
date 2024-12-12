@@ -200,19 +200,7 @@ const DetailsPage: React.FC = () => {
   const [isOpen3, setIsOpen3] = useState<boolean>(false);
   const [selectedOption4, setSelectedOption4] = useState<string>("2021");
   const [isOpen4, setIsOpen4] = useState<boolean>(false);
-
-  useEffect(() => {
-    console.log(window.innerWidth); // Safe to use window
-  }, []);
-
-  useEffect(() => {
-    setIsClient(true); // This will run only on the client side
-  }, []);
-
-  if (!isClient) {
-    return null; // Or some placeholder
-  }
-  
+ 
   const table = useReactTable({
     data: formattedData,
     columns,
@@ -399,15 +387,16 @@ const DetailsPage: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="relative w-[30%]">
+                <div>
                 <Dropdown
-            label="Select Option"
-            options={options3}
-            selectedOption={selectedOption3}
-            onSelect={handleSelect3}
-            isOpen={isOpen3}
-            toggleOpen={toggleDropdown3}
-          />
+                 className="relative w-full below-md:w-full"
+                 label="Select Option"
+                 options={options3}
+                 selectedOption={selectedOption3}
+                 onSelect={handleSelect3}
+                 isOpen={isOpen3}
+                 toggleOpen={toggleDropdown3}
+                 />
                 </div>
               </div>
               <div>
@@ -423,8 +412,9 @@ const DetailsPage: React.FC = () => {
                     Product Revenue
                   </p>
                 </div>
-                <div className="relative w-[40%] ">
+                <div>
                 <Dropdown
+                      className="relative w-full below-md:w-full"
                       label="Select Option"
                       options={options4}
                       selectedOption={selectedOption4}
