@@ -150,8 +150,6 @@ const formattedData = data?.map((item) => {
   return { ...item, date: formattedDate };
 });
 
-console.log(formattedData);
-
 const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "date",
@@ -195,6 +193,18 @@ const dat = [
 
 const DetailsPage: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string>("All stores");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedOption2, setSelectedOption2] = useState<string>("2021");
+  const [isOpen2, setIsOpen2] = useState<boolean>(false);
+  const [selectedOption3, setSelectedOption3] = useState<string>("2021");
+  const [isOpen3, setIsOpen3] = useState<boolean>(false);
+  const [selectedOption4, setSelectedOption4] = useState<string>("2021");
+  const [isOpen4, setIsOpen4] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log(window.innerWidth); // Safe to use window
+  }, []);
 
   useEffect(() => {
     setIsClient(true); // This will run only on the client side
@@ -203,12 +213,7 @@ const DetailsPage: React.FC = () => {
   if (!isClient) {
     return null; // Or some placeholder
   }
-
-  // Code that uses `window` here
-  useEffect(() => {
-    console.log(window.innerWidth); // Example of window usage
-  }, []);
-
+  
   const table = useReactTable({
     data: formattedData,
     columns,
@@ -446,7 +451,7 @@ const DetailsPage: React.FC = () => {
               <div>
                 <div className="w-full max-w-sm mx-auto px-6 below-md:mb-6">
                   <ul>
-                    {dat.map((item, index) => (
+                    {dat?.map((item, index) => (
                       <li
                         key={index}
                         className="flex items-center justify-between py-2"
