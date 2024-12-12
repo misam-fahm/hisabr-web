@@ -2,7 +2,6 @@
 import React from "react";
 import { useState } from "react";
 import "../globals.css";
-import MultiLineChart from "@/Components/drawer/MultiLineChart";
 import BarChart4 from "@/Components/drawer/BarChart4";
 import PieChart3 from "@/Components/drawer/Piechart3";
 import { useRouter } from "next/navigation";
@@ -84,9 +83,11 @@ const DetailsPage: React.FC = () => {
       </div>
       <div className="pt-6 pb-6 sticky z-10 top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row gap-3  w-full">
+          <div className="flex flex-row below-md:flex-col gap-3  w-full">
             <div className="relative w-[30%] below-md:w-full">
-              <p className="text-[#2D374880] text-[12px] mb-2">Select Store</p>
+              <p className="text-[#2D374880] text-[12px] mb-2 below-md:hidden">
+                Select Store
+              </p>
               {/* Dropdown Button */}
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -123,7 +124,9 @@ const DetailsPage: React.FC = () => {
             {/*second dropdown */}
 
             <div className="relative w-[30%]  below-md:w-full">
-              <p className="text-[#2D374880] text-[12px] mb-2">Select Period</p>
+              <p className="text-[#2D374880] text-[12px] mb-2 below-md:hidden">
+                Select Period
+              </p>
               {/* Dropdown Button */}
               <button
                 onClick={() => setIsOpen2(!isOpen2)}

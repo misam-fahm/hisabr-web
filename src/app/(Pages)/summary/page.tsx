@@ -124,7 +124,7 @@ const summary: FC = () => {
 
       <div>
         <div className="z-[11] pb-6 bg-[#f7f8f9] sticky top-16 pt-6 pl-6 pr-6 below-md:px-3">
-          <div className="flex flex-row w-full gap-3">
+          <div className="flex flex-row below-md:flex-col w-full gap-3">
             <div className="w-[20%] below-md:w-full relative">
               {/* Dropdown Button */}
               <button
