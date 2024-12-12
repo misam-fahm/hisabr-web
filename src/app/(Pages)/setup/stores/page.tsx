@@ -180,9 +180,9 @@ const columns: ColumnDef<TableRow>[] = [
     accessorKey: "edit",
     header: "Edit",
     cell: () => (
-      
+      <div  className="ml-2">
         <Images src="/images/edit.svg" alt="edit" width={35} height={35} />
-      
+        </div>
     ),
   },
 
@@ -190,9 +190,9 @@ const columns: ColumnDef<TableRow>[] = [
     id: "delete",
     header: "Delete",
     cell: () => (
-     
-        <Images src="/images/delete.svg" alt="delete" width={35} height={35} />
-      
+     <div className="ml-5">
+        <Images  src="/images/delete.svg" alt="delete" width={35} height={35} />
+        </div>
     ),
   },
 ];

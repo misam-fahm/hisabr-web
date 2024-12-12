@@ -1,7 +1,7 @@
 "use client";
 import React, { FC, useState } from "react";
 import DateRange from "@/Components/drawer/DateRangePicker";
-import Images from "@/Components/ui/Common/Image";
+import Image from "next/image";
 import {
   useReactTable,
   getCoreRowModel,
@@ -169,7 +169,9 @@ const columns: ColumnDef<TableRow>[] = [
     id: "edit",
     header: () => <div className="text-center">Edit</div>,
     cell: () => (
-      <Image src="/images/edit.svg" alt="edit" width={35} height={35} />
+      <div className="flex justyify-center cursor-pointer ml-5">
+        <Image className="ml-3" src="/images/edit.svg" alt="edit" width={32} height={32} />
+      </div>
     ),
 
     size: 80,
@@ -178,7 +180,9 @@ const columns: ColumnDef<TableRow>[] = [
     id: "delete",
     header: () => <div className="text-center">Delete</div>,
     cell: () => (
-      <Image src="/images/delete.svg" alt="delete" width={35} height={35} />
+      <div className="flex justify-center cursor-pointer ml-5">
+        <Image className="ml-2" src="/images/delete.svg" alt="delete" width={32} height={32} />
+      </div>
     ),
 
     size: 80,

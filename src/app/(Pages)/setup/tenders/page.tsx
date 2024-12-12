@@ -127,9 +127,9 @@ const columns: ColumnDef<TableRow>[] = [
     id: "edit",
     header: () => <div className="text-center">Edit</div>,
     cell: () => (
-      
+      <div className="ml-10">
         <Images src="/images/edit.svg" alt="edit" width={35} height={35} />
-      
+        </div>
     ),
     size: 60,
   },
@@ -137,9 +137,9 @@ const columns: ColumnDef<TableRow>[] = [
     id: "delete",
     header: () => <div className="text-center">Delete</div>,
     cell: () => (
-     
-        <Images src="/images/delete.svg" alt="delete" width={35} height={35} />
-      
+     <div className="ml-12">
+        <Images  src="/images/delete.svg" alt="delete" width={35} height={35} />
+        </div>
     ),
     size: 60,
   },
