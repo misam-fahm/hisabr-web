@@ -58,7 +58,7 @@ const DonutChart = () => {
           Total Items
         </div>
         <div style={{ fontSize: "28px", fontWeight: "bold", color: "#0A0A0A" }}>
-          {total.toLocaleString()}
+          {new Intl.NumberFormat('en-US').format(total)}
         </div>
       </div>
     </div>
