@@ -74,19 +74,23 @@ const DetailsPage: React.FC = () => {
       className="max-h-[calc(100vh-70px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      {/* Top Navigation Bar */}
-      <div>
-        <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 pl-6 pr-6">
+      <img
+        onClick={handleBack}
+        src="/images/backIcon.svg"
+        className="fixed top-6 left-4 z-30 below-lg:hidden"
+      />
+      <div className="below-md:flex below-md:justify-center ">
+        <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
           Sales Details
         </p>
       </div>
 
       {/* Tabs Navigation */}
-      <div className="pt-20 pb-6 bg-[#f7f8f9] pl-6 pr-6">
+      <div className="pt-20 pb-6 bg-[#f7f8f9] pl-6 pr-6 below-md:px-4">
         <div className="flex flex-row justify-between items-center gap-6">
           {/* Tab Buttons */}
           <div className="w-full border-b-[2px] border-[#E1E0E0D1]">
-            <nav className="flex justify-start space-x-8 px-4">
+            <nav className="flex justify-start space-x-8 px-4 below-md:space-x-10 whitespace-nowrap overflow-x-auto below-md:overflow-auto">
               {tabs.map((tab) => (
                 <button
                   key={tab}
@@ -104,7 +108,7 @@ const DetailsPage: React.FC = () => {
           </div>
 
           {/* Back Button */}
-          <div>
+          <div className="below-md:hidden">
             <p
               onClick={handleBack}
               className="cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
@@ -115,7 +119,7 @@ const DetailsPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="px-6">{tabContent[activeTab]}</div>
+      <div className="px-6 below-md:px-4">{tabContent[activeTab]}</div>
     </main>
   );
 };

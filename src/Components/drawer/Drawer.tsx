@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import React, { ReactNode, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import Images from "../ui/Common/Image";
 
 interface DrawerProps {
   children: ReactNode;
@@ -62,13 +63,29 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
 
   const sidebarClass = open ? "w-[230px]" : "w-[70px] below-md:w-0";
 
+  const pathsToHideHamburger = [
+    "/sales/sales_view",
+    "/details1",
+    "/details2",
+    "/details4",
+    "/details5",
+    "/details6",
+    "/details7",
+    "/details8",
+  ];
+  const shouldHideHamburger = pathsToHideHamburger.some((path) =>
+    currentPath.includes(path)
+  );
+
   return (
     <main className="flex h-[100vh]">
-      <img
-        src="/images/hamburger.svg"
-        className={`fixed top-6 left-[1rem] below-lg:hidden cursor-pointer z-[40]`}
-        onClick={() => setOpen(!open)}
-      />
+      {!shouldHideHamburger && (
+        <img
+          src="/images/hamburger.svg"
+          className="fixed top-6 left-4 cursor-pointer z-40"
+          onClick={() => setOpen(!open)}
+        />
+      )}
       <div
         className={`${sidebarClass} duration-300 h-full bg-defaultblack text-defaultwhite sticky below-md:fixed top-0 left-0 z-40`}
       >
@@ -81,7 +98,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         <div
           className={`flex gap-x-4 mt-[13px] ${open ? "pl-10" : "pl-3"}  below-md:pl-5 ${open ? "ml-[13px]" : "ml-[3px]"}`}
         >
-          <img
+          <Images
             src={open ? "/images/logo.svg" : "/images/halflogo.png"}
             className={`cursor-pointer ${open ? "w-[136px]" : "w-[36px]"} h-auto`}
           />

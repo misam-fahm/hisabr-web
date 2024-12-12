@@ -31,7 +31,7 @@ const SalesKPI: FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-70px)] overflow-auto"
+      className="max-h-[calc(100vh-10px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="below-md:flex below-md:justify-center">
@@ -42,7 +42,7 @@ const SalesKPI: FC = () => {
 
       <div className=" mb-10">
         <div className="flex flex-row below-md:flex-col below-md:items-end sticky top-16 justify-between pt-6 below-md:px-3  pl-6 pr-6 pb-6 below-md:pb-3 bg-[#f7f8f9] ">
-          <div className="flex flex-row w-full gap-3">
+          <div className="flex flex-row below-md:flex-col w-full gap-3">
             <div className="w-[20%] below-md:w-full relative">
               {/* Dropdown Button */}
               <button
@@ -81,10 +81,12 @@ const SalesKPI: FC = () => {
             </div>
           </div>
           <div className="below-md:w-full below-md:flex below-md:justify-end below-md:pl-3">
-            <button
-              className="bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[133px] below-md:w-[50%]  h-[37px] rounded-md text-white text-[14px] font-semibold 
-             hover:shadow-lg transition-shadow duration-300"
-            >
+            <button className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300">
+              <img
+                src="/images/uploadIcon.svg"
+                alt="Upload Icon"
+                className="mr-2"
+              />
               PI Report
             </button>
           </div>

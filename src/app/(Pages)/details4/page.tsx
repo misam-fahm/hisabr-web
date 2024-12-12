@@ -2,7 +2,6 @@
 import React from "react";
 import { useState } from "react";
 import "../globals.css";
-import MultiLineChart from "@/Components/drawer/MultiLineChart";
 import BarChart4 from "@/Components/drawer/BarChart4";
 import PieChart3 from "@/Components/drawer/Piechart3";
 import { useRouter } from "next/navigation";
@@ -72,16 +71,23 @@ const DetailsPage: React.FC = () => {
       className="max-h-[calc(100vh-70px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div>
-        <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 pl-6 pr-6">
+      <img
+        onClick={handleBack}
+        src="/images/backIcon.svg"
+        className="fixed top-6 left-4 z-30 below-lg:hidden"
+      />
+      <div className="below-md:flex below-md:justify-center ">
+        <p className="text-[18px] below-md:text-[16px] below-md:mr-8 font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
           Customer Count Analysis
         </p>
       </div>
-      <div className="pt-6 pb-6 sticky z-10 top-16 bg-[#f7f8f9] pl-6 pr-6">
+      <div className="pt-6 pb-6 sticky z-10 top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row gap-3  w-full">
-            <div className="relative w-[30%]">
-              <p className="text-[#2D374880] text-[12px] mb-2">Select Store</p>
+          <div className="flex flex-row below-md:flex-col gap-3  w-full">
+            <div className="relative w-[30%] below-md:w-full">
+              <p className="text-[#2D374880] text-[12px] mb-2 below-md:hidden">
+                Select Store
+              </p>
               {/* Dropdown Button */}
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -117,8 +123,10 @@ const DetailsPage: React.FC = () => {
 
             {/*second dropdown */}
 
-            <div className="relative w-[30%]">
-              <p className="text-[#2D374880] text-[12px] mb-2">Select Period</p>
+            <div className="relative w-[30%]  below-md:w-full">
+              <p className="text-[#2D374880] text-[12px] mb-2 below-md:hidden">
+                Select Period
+              </p>
               {/* Dropdown Button */}
               <button
                 onClick={() => setIsOpen2(!isOpen2)}
@@ -155,7 +163,7 @@ const DetailsPage: React.FC = () => {
           <div>
             <p
               onClick={handleBack}
-              className="cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
+              className=" below-md:hidden cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
             >
               Back
             </p>
@@ -164,8 +172,8 @@ const DetailsPage: React.FC = () => {
         <div />
       </div>
 
-      <div className=" pl-6 pr-6">
-        <div className="flex flex-row w-full h-full gap-6 pt-16 ">
+      <div className=" pl-6 pr-6 below-md:px-3">
+        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 pt-16 ">
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full h-full min-h-[130px] p-4 justify-between">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
@@ -225,8 +233,8 @@ const DetailsPage: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-row w-full mt-6 mb-9">
-          <div className=" w-[70%]">
+        <div className="flex flex-row w-full mt-6 mb-9 below-md:flex-col below-md:mt-3">
+          <div className=" w-[70%] below-md:w-full">
             <div className="bg-white shadow-md rounded-md">
               <div className="flex flex-row justify-between mx-6 pt-5  mb-5">
                 <div>
@@ -274,7 +282,7 @@ const DetailsPage: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="w-[30%] bg-white ml-6 shadow-md rounded-md">
+          <div className="w-[30%] bg-white ml-6 shadow-md rounded-md below-md:w-full below-md:ml-0 below-md:mt-3 below-md:pb-9">
             <div className="flex flex-col ">
               <div>
                 <p className="text-[#393E47] font-bold text-[16px] px-4 pt-6">

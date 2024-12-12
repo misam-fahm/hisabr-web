@@ -1,5 +1,5 @@
 "use client";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -26,11 +26,21 @@ ChartJS.register(
 );
 
 const LineChart: FC = () => {
-  // Load your custom marker images
-  const blueMarker = new Image();
-  blueMarker.src = "/images/blue.svg"; // Image for first dataset
-  const greenMarker = new Image();
-  greenMarker.src = "/images/green_dot.svg"; // Image for second dataset
+  // State to store the images
+  const [blueMarker, setBlueMarker] = useState<HTMLImageElement | null>(null);
+  const [greenMarker, setGreenMarker] = useState<HTMLImageElement | null>(null);
+
+  // Load your custom marker images inside useEffect to ensure client-side execution
+  useEffect(() => {
+    const blue = new Image();
+    blue.src = "/images/blue.svg";
+    const green = new Image();
+    green.src = "/images/green_dot.svg";
+
+    // Set the images to state after loading
+    blue.onload = () => setBlueMarker(blue);
+    green.onload = () => setGreenMarker(green);
+  }, []);
 
   const data = {
     labels: [
@@ -137,8 +147,13 @@ const LineChart: FC = () => {
     },
   };
 
+  // Ensure markers are loaded before rendering the chart
+  if (!blueMarker || !greenMarker) {
+    return <div>Loading chart...</div>; // or a spinner, placeholder, etc.
+  }
+
   return (
-    <div className=" p-[8px] w-[100%] h-[100%]">
+    <div className="p-[8px] w-[100%] h-[100%]">
       <Line data={data} options={options} />
     </div>
   );

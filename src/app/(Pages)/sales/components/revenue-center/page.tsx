@@ -59,17 +59,17 @@ const PaymentTable: React.FC = () => {
               key={index}
               className={`${index % 2 === 0 ? "bg-[#F8F9FB]" : "bg-white"}`}
             >
-              <td className="px-4 py-2 text-[#636363] text-[14px]">
+              <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                 {row.name}
               </td>
-              <td className="px-8 py-2 text-[#636363] text-[14px]">
+              <td className="px-8 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                 {row.quantity}
               </td>
 
-              <td className="px-4 py-2 text-[#636363] text-[14px]">
+              <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                 {row.total}
               </td>
-              <td className="px-4 py-2 text-[#636363] text-[14px]">
+              <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                 {row.percent}
               </td>
             </tr>

@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Images from "@/Components/ui/Common/Image";
+import Pagination from "@/Components/ui/Common/Pagination";
 
 import {
   useReactTable,
@@ -113,19 +114,19 @@ const columns: ColumnDef<TableRow>[] = [
 
   {
     id: "pencil",
-    header: "pencil",
+    header: "Edit",
     cell: () => (
       <button className="bg-[#FFFFFF] p-[9px] rounded-full shadow-[inset_-2px_-2px_2px_#E2F3F780,inset_2px_2px_3px_#F3F6FFAD]">
-        <Image src="/images/pencil.svg" alt="pencil" width={14} height={14} />
+        <Images src="/images/pencil.svg" alt="pencil" width={14} height={14} />
       </button>
     ),
   },
   {
     id: "delete",
-    header: "delete",
+    header: "Delete",
     cell: () => (
       <button className="bg-[#FFFFFF] p-[9px] rounded-full shadow-[inset_-2px_-2px_2px_#F7E2E259,inset_2px_2px_3px_#FFF3F396]">
-        <Image src="/images/delete1.svg" alt="delete" width={14} height={14} />
+        <Images src="/images/delete1.svg" alt="delete" width={14} height={14} />
       </button>
     ),
   },
@@ -147,12 +148,6 @@ const DetailsPage: React.FC = () => {
     },
   });
 
-  //pagination range
-  const { pageIndex, pageSize } = table.getState().pagination;
-  const totalItems = table.getFilteredRowModel().rows.length;
-  const startItem = pageIndex * pageSize + 1;
-  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
-
   /**go back button */
   const router = useRouter();
   const handleBack = () => {
@@ -161,11 +156,6 @@ const DetailsPage: React.FC = () => {
     } else {
       router.push("/");
     }
-
-    const handleAddTenderClick = () => {
-      // Navigate to the desired page, e.g., "/add-tender" (you can change the path as needed)
-      router.push("/AddTender");
-    };
   };
 
   return (
@@ -173,28 +163,33 @@ const DetailsPage: React.FC = () => {
       className="max-h-[calc(100vh-70px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div>
-        <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 pl-6 pr-6">
+      <img
+        onClick={handleBack}
+        src="/images/backIcon.svg"
+        className="fixed top-6 left-4 z-30 below-lg:hidden"
+      />
+      <div className="below-md:flex below-md:justify-center ">
+        <p className="text-[18px] below-md:text-[16px] below-md:mr-8 font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
           Tender Analysis
         </p>
       </div>
 
-      <div className="flex flex-row justify-between items-center mt-24 mb-4 mx-6">
+      <div className="flex flex-row justify-between items-center mt-24 below-md:mt-16 below-md:mx-3 mb-4 mx-6">
         <div>
-          <p className="text-[16px] font-bold text-[#334155] ml-3"> Tender</p>
+          <p className="text-[16px] font-bold text-[#334155] ml-3 below-md:ml-0">
+            Tender
+          </p>
         </div>
         <div>
-          <button
-            className="bg-[#1AA47D] [box-shadow:0px_3px_8px_0px_#00000026] w-[133px] h-[37px] rounded-md text-white text-[14px] font-semibold 
-             hover:shadow-lg transition-shadow duration-300"
-          >
+          <button className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300">
+            <img src="/images/addIcon.svg" alt="add Icon" className="mr-2" />
             Add Tender
           </button>
         </div>
       </div>
 
       {/* Table remains visible as is */}
-      <div className="mb-10 mx-6">
+      <div className="mb-10 mx-6 below-md:mx-3">
         {/** Table */}
         <div>
           {/* Table */}
@@ -230,7 +225,7 @@ const DetailsPage: React.FC = () => {
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        className="px-4 py-1 text-[#636363] text-[14px]"
+                        className="px-4 py-1 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar"
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
@@ -245,78 +240,7 @@ const DetailsPage: React.FC = () => {
           </div>
 
           {/* Pagination */}
-          <div className="mt-4 flex gap-2 justify-between items-center">
-            {/* Page Range Display */}
-            <div>
-              <span className="text-[#8899A8] text-[12px] font-medium ml-3">
-                {startItem} - {endItem} of {totalItems}
-              </span>
-            </div>
-
-            {/* Pagination Numbers */}
-            <div className="flex flex-row gap-3">
-              <button
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-                className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
-                style={{ background: "#EBEFF6" }}
-              >
-                <img src="/images/left.svg" />
-              </button>
-
-              {Array.from({ length: table.getPageCount() }, (_, index) => {
-                const pageIndex = index;
-                return (
-                  <button
-                    key={pageIndex}
-                    onClick={() => table.setPageIndex(pageIndex)}
-                    className={`px-4 py-2 rounded-md text-[12px] ${
-                      table.getState().pagination.pageIndex === pageIndex
-                        ? "!important text-[#FFFFFF]"
-                        : " text-gray-700"
-                    }`}
-                    style={{
-                      backgroundColor:
-                        table.getState().pagination.pageIndex === pageIndex
-                          ? "#1AA47D"
-                          : "transparent",
-                    }}
-                  >
-                    {pageIndex + 1}
-                  </button>
-                );
-              })}
-
-              <button
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-                className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
-                style={{ background: "#EBEFF6" }}
-              >
-                <img src="/images/right.svg" />
-              </button>
-
-              <div>
-                <div className="w-full">
-                  {/* Dropdown for Page Selection */}
-                  <select
-                    value={table.getState().pagination.pageIndex} // Sync with current page index
-                    onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
-                    className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
-                  >
-                    {Array.from(
-                      { length: table.getPageCount() },
-                      (_, index) => (
-                        <option key={index} value={index}>
-                          Page {index + 1}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Pagination table={table} />
         </div>
       </div>
     </main>
