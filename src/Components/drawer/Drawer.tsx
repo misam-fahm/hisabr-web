@@ -16,6 +16,45 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null); // Track active submenu item
   const router = useRouter();
   const currentPath = usePathname();
+  const [isClient, setIsClient] = useState(false);
+  const [title, setTitle] = useState("");
+
+
+
+  useEffect(() => {
+    setIsClient(true); // Ensuring we are on the client side
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      const currentRoute = currentPath.replace("/", "");
+
+      let newTitle = "";
+      switch (currentRoute?.toLowerCase()) {
+        case "myprofile":
+          newTitle = "My Profile";
+          break;
+        case "editprofile":
+          newTitle = "Edit Profile";
+          break;
+        case "invoices":
+          newTitle = "Invoices";
+          break;
+        case "expenses":
+          newTitle = "Expenses";
+          break;
+        case "logout":
+          newTitle = "Logout";
+          break;
+        default:
+          newTitle = "Admin Panel";
+      }
+
+      setTitle(newTitle);
+      document.title = newTitle;
+    }
+  }, [isClient, currentPath]);
+
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 800px)");
@@ -79,13 +118,20 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
 
   return (
     <main className="flex h-[100vh]">
-      {!shouldHideHamburger && (
+      {title === "My Profile" || title === "Edit Profile" ?
+        <img src="/images/backIcon.svg"  
+        className="fixed top-6 left-4 cursor-pointer z-40" 
+        onClick={() =>  router.back()}
+        />
+       :
+      !shouldHideHamburger && (
         <img
           src="/images/hamburger.svg"
           className="fixed top-6 left-4 cursor-pointer z-40"
           onClick={() => setOpen(!open)}
         />
-      )}
+      )
+    }
       <div
         className={`${sidebarClass} duration-300 h-full bg-defaultblack text-defaultwhite sticky below-md:fixed top-0 left-0 z-40`}
       >
