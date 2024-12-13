@@ -1,209 +1,7 @@
-// "use client";
-
-// import React, { useState } from "react";
-// import DatePicker from "react-datepicker";
-// import "react-datepicker/dist/react-datepicker.css";
-
-// import AddCategories from "@/Components/Setup/AddCategories";
-// import AddNewItems from "@/Components/Setup/AddNewItems";
-
-// const page = () => {
-//   const data = [
-//     {
-//       name: "Milk Packet",
-//       category: "Dairy",
-//       price: "2 %",
-//       quantity: 100,
-//       weight: "1 litre",
-
-//       imgSrc: "/images/edit.svg",
-//       imgsrc: "/images/delete.svg",
-//     },
-//     {
-//       name: "Bread Loaf",
-//       category: " Bakery",
-//       price: "1.5 %",
-//       quantity: 100,
-//       weight: "300 gm",
-
-//       imgSrc: "/images/edit.svg",
-//       imgsrc: "/images/delete.svg",
-//     },
-//     {
-//       name: "Butter Stick",
-//       category: "Dairy  ",
-//       price: "3 %",
-//       quantity: 100,
-//       weight: "100 gm",
-
-//       imgSrc: "/images/edit.svg",
-//       imgsrc: "/images/delete.svg",
-//     },
-//     {
-//       name: "Chocolate ",
-//       category: " Bakery",
-//       price: "3.5 %",
-//       quantity: 100,
-//       weight: "200 gm",
-
-//       imgSrc: "/images/edit.svg",
-//       imgsrc: "/images/delete.svg",
-//     },
-//     {
-//       name: "Cheese Block",
-//       category: "Dairy",
-//       price: "10 %",
-//       quantity: 100,
-//       weight: "1 litre",
-
-//       imgSrc: "/images/edit.svg",
-//       imgsrc: "/images/delete.svg",
-//     },
-//     {
-//       name: "Chocolate",
-//       category: " Bakery",
-//       price: "12 %",
-//       quantity: 100,
-//       weight: "300 gm",
-
-//       imgSrc: "/images/edit.svg",
-//       imgsrc: "/images/delete.svg",
-//     },
-//     {
-//       name: "Cheese Block",
-//       category: "Dairy",
-//       price: "2.5 %",
-//       quantity: 100,
-//       weight: "1 litre",
-
-//       imgSrc: "/images/edit.svg",
-//       imgsrc: "/images/delete.svg",
-//     },
-//     {
-//       name: "Milk Packet",
-//       category: " Bakery",
-//       price: "6.2 %",
-//       quantity: 100,
-//       weight: "300 gm",
-//       imgSrc: "/images/edit.svg",
-//       imgsrc: "/images/delete.svg",
-//     },
-//   ];
-//   const [dateRange, setDateRange] = useState<
-//     [Date | undefined, Date | undefined]
-//   >([undefined, undefined]); // From and To Date
-//   const [startDate, endDate] = dateRange;
-//   const [isOpen, setIsOpen] = useState(false); //control pop up vivibility
-//   const togglePopup = () => {
-//     setIsOpen(!isOpen);
-//   };
-
-//   return (
-//     <main className="px-6 mt-20">
-//       <>
-//         <div className="flex flex-col mb-5">
-//           <div className="flex justify-between">
-//             <p className="font-bold text-[16px]">Items</p>
-//             <div className="fle space-x-4">
-//               <button className="font-semibold text-[14px] bg-[#1AA47D] hover:bg-[#168A68] px-5 h-[37px] text-[#FFFFFF] rounded-md">
-//                 {/* Add New Item */}
-//                 <AddNewItems />
-//               </button>
-
-//               <button className="font-semibold text-[14px] bg-[#1AA47D] px-6 hover:bg-[#168A68]  h-[37px] text-[#FFFFFF] rounded-md">
-//                 <AddCategories />
-//               </button>
-//             </div>
-//           </div>
-//         </div>
-//         {/* Items Table */}
-//         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-//           <div className="w-full">
-//             <table className="w-full border-collapse text-[12px] text-white">
-//               <thead className="bg-[#334155]">
-//                 <tr>
-//                   <th className="py-3 px-4 text-[15px] text-left text-xs font-medium text-[#FFFFFF] tracking-wider w-[20%]">
-//                     {" "}
-//                     Name
-//                   </th>
-//                   <th className="py-3 px-3 text-[15px] text-left text-xs font-medium text-[#FFFFFF] tracking-wider w-[15%]">
-//                     Category
-//                   </th>
-//                   <th className="py-3 px-3 text-[15px] text-left text-xs font-medium text-[#FFFFFF] tracking-wider w-[15%]">
-//                     Price
-//                   </th>
-//                   <th className="py-3 px-2 text-[15px] text-left text-xs font-medium text-[#FFFFFF] tracking-wider w-[15%]">
-//                     Quantity
-//                   </th>
-//                   <th className="py-3 px-2 text-[15px] text-left text-xs font-medium text-[#FFFFFF] tracking-wider w-[15%]">
-//                     Weight
-//                   </th>
-//                   <th className="py-3 px-2 text-left text-[15px] text-xs font-medium text-[#FFFFFF] tracking-wider w-[10%]">
-//                     Edit
-//                   </th>
-//                   <th className="py-3 px-2 text-left text-[15px] text-xs font-medium text-[#FFFFFF] tracking-wider w-[10%]">
-//                     Delete
-//                   </th>
-//                 </tr>
-//               </thead>
-//             </table>
-
-//             <div
-//               className="h-[340px] overflow-auto"
-//               style={{ scrollbarWidth: "thin" }}
-//             >
-//               <table className="min-w-full ">
-//                 <tbody>
-//                   {data.map((item, index) => (
-//                     <tr key={index} className="border-b border-gray-300">
-//                       <td className="py-3 px-4 text-sm text-left text-[#636363] w-[20%]">
-//                         {item.name}
-//                       </td>
-//                       <td className="py-3 px-4 text-sm text-left text-[#636363] w-[15%]">
-//                         {item.category}
-//                       </td>
-//                       <td className="py-3 px-4 text-left text-sm text-[#636363] w-[15%]">
-//                         {item.price}
-//                       </td>
-//                       <td className="py-3 px-4 text-left text-sm text-[#636363] w-[15%]">
-//                         {item.quantity}
-//                       </td>
-//                       <td className="py-3 px-4 text-left text-sm text-[#636363] w-[15%]">
-//                         {item.weight}
-//                       </td>
-//                       <td className="py-1 px-4 text-sm text-center text-[#636363] w-[10%]">
-//                         <img
-//                           src={item.imgSrc}
-//                           alt="Edit"
-//                         />
-//                       </td>
-//                       <td className="py-1 px-4 text-sm text-center text-[#636363] w-[10%]">
-//                         <img
-//                           src={item.imgsrc}
-//                           alt="Delete"
-                          
-//                         />
-//                       </td>
-//                     </tr>
-//                   ))}
-//                 </tbody>
-//               </table>
-//             </div>
-//           </div>
-//         </div>
-//       </>
-//     </main>
-//   );
-// };
-
-// export default page;
-
-
-
 "use client";
 import React, { FC, useState } from "react";
 import DateRange from "@/Components/drawer/DateRangePicker";
-import Images from "@/Components/ui/Common/Image";
+import Image from "next/image";
 import {
   useReactTable,
   getCoreRowModel,
@@ -218,10 +16,10 @@ import AddCategories from "@/Components/Setup/AddCategories";
 
 interface TableRow {
   name: string;
-  category:string;
+  category: string;
   price: number;
-  quantity:number;
-  weight:string;
+  quantity: number;
+  weight: string;
 }
 
 const data: TableRow[] = [
@@ -231,8 +29,6 @@ const data: TableRow[] = [
     price: 80,
     quantity: 100,
     weight: "1 litre",
-
-    
   },
   {
     name: "Bread Loaf",
@@ -240,7 +36,6 @@ const data: TableRow[] = [
     price: 100,
     quantity: 100,
     weight: "300 gm",
-
   },
   {
     name: "Butter Stick",
@@ -248,8 +43,6 @@ const data: TableRow[] = [
     price: 60,
     quantity: 100,
     weight: "100 gm",
-
-    
   },
   {
     name: "Chocolate ",
@@ -257,26 +50,27 @@ const data: TableRow[] = [
     price: 120,
     quantity: 100,
     weight: "200 gm",
-
-  
   },
   {
-    name: "Cheese Block",
-    category: "Dairy",
-    price: 800,
-    quantity: 100,
-    weight: "1 litre",
-
-  
-  },
-  {
-    name: "Chocolate",
+    name: "Chocolate ",
     category: " Bakery",
-    price: 300,
+    price: 120,
     quantity: 100,
-    weight: "300 gm",
-
- 
+    weight: "200 gm",
+  },
+  {
+    name: "Chocolate ",
+    category: " Bakery",
+    price: 120,
+    quantity: 100,
+    weight: "200 gm",
+  },
+  {
+    name: "Chocolate ",
+    category: " Bakery",
+    price: 120,
+    quantity: 100,
+    weight: "200 gm",
   },
   {
     name: "Cheese Block",
@@ -284,7 +78,6 @@ const data: TableRow[] = [
     price: 250,
     quantity: 100,
     weight: "1 litre",
-
   },
   {
     name: "Milk Packet",
@@ -292,48 +85,110 @@ const data: TableRow[] = [
     price: 320,
     quantity: 100,
     weight: "300 gm",
-    
+  },
+  {
+    name: "Chocolate ",
+    category: " Bakery",
+    price: 120,
+    quantity: 100,
+    weight: "200 gm",
+  },
+  {
+    name: "Cheese Block",
+    category: "Dairy",
+    price: 800,
+    quantity: 100,
+    weight: "1 litre",
+  },
+  {
+    name: "Chocolate",
+    category: " Bakery",
+    price: 300,
+    quantity: 100,
+    weight: "300 gm",
+  },
+  {
+    name: "Cheese Block",
+    category: "Dairy",
+    price: 250,
+    quantity: 100,
+    weight: "1 litre",
+  },
+  {
+    name: "Milk Packet",
+    category: " Bakery",
+    price: 320,
+    quantity: 100,
+    weight: "300 gm",
   },
 ];
 
 const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "name",
-    header: "Name",
+    header: () => <div className="text-left">Name</div>,
+    cell: (info) => <span>{info.getValue() as string}</span>,
+
+    size: 160, 
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: () => <div className="text-left">Category</div>,
+    cell: (info) => <span>{info.getValue() as string}</span>,
+
+    size: 120,
   },
   {
     accessorKey: "price",
-    header: "Price",
+    header: () => <div className="text-right">Price</div>,
+    cell: (info) => (
+      <div className="text-right">{info.getValue() as number}</div>
+    ),
+
+    size: 100,
   },
   {
     accessorKey: "quantity",
-    header: "Quantity",
+    header: () => <div className="text-right">Quantity</div>,
+    cell: (info) => (
+      <div className="text-right">{info.getValue() as string}</div>
+    ),
+
+    size: 120,
   },
   {
     accessorKey: "weight",
-    header: "Weight",
-  },
-
-  {
-    accessorKey: "edit",
-    header: "Edit",
-    cell: () => (
-      <Images src="/images/edit.svg" alt="edit" width={35} height={35} />
+    header: () => <div className="text-left ml-12">Weight</div>,
+    cell: (info) => (
+      <div className="text-left ml-14">{info.getValue() as string}</div>
     ),
-  },
 
+    size: 150,
+  },
+  {
+    id: "edit",
+    header: () => <div className="text-center">Edit</div>,
+    cell: () => (
+      <div className="flex justyify-center cursor-pointer ml-5">
+        <Image className="ml-3" src="/images/edit.svg" alt="edit" width={32} height={32} />
+      </div>
+    ),
+
+    size: 80,
+  },
   {
     id: "delete",
-    header: "Delete",
+    header: () => <div className="text-center">Delete</div>,
     cell: () => (
-      <Images src="/images/delete.svg" alt="delete" width={35} height={35} />
+      <div className="flex justify-center cursor-pointer ml-5">
+        <Image className="ml-2" src="/images/delete.svg" alt="delete" width={32} height={32} />
+      </div>
     ),
+
+    size: 80,
   },
 ];
+
 const Page: FC = () => {
   const [globalFilter, setGlobalFilter] = React.useState("");
   const table = useReactTable({
@@ -347,7 +202,7 @@ const Page: FC = () => {
     },
     initialState: {
       pagination: {
-        pageSize: 6,
+        pageSize: 10,
         pageIndex: 0,
       },
     },
@@ -359,141 +214,204 @@ const Page: FC = () => {
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <main
-    className="max-h-[calc(100vh-10px)] overflow-auto"
-    style={{ scrollbarWidth: "thin" }}>
-      <div className="my-24  mx-6 below-md:my-24">
+    <main className="w-full h-screen flex flex-col overflow-hidden">
+      <div className="mt-20 mx-6 flex-grow">
         <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
-          <div>
-            <p className="text-[16px] font-bold text-[#334155]">
-              Items
-            </p>
-          </div>
-          <div className="flex flex-row gap-2 ">
+          <p className="text-[16px] font-bold text-[#334155] below-md:hidden">
+            Items
+          </p>
+          <div className="flex flex-row gap-2">
             <AddNewItems />
-
             <AddCategories />
           </div>
         </div>
 
-        <div>
-          {/* Table */}
-          <div className="overflow-x-auto shadow-md rounded-lg">
-            <table className="w-full border-collapse border border-gray-200">
-              <thead className="bg-[#334155]">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <th
-                        key={header.id}
-                        className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px]"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={
-                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                    }
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="px-4 py-1 text-[#636363] text-[14px]"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <div className="overflow-hidden max-w-full ">
+          {/* Mobile view */}
+          <div
+            className="block md:hidden"
+            style={{
+              maxHeight: "calc(100vh - 270px)",
+              overflowY: "auto",
+              WebkitOverflowScrolling: "touch", // Enables smooth scrolling on mobile
+              scrollbarWidth: "none", // Hide scrollbar
+            }}
+          >
+            {table.getRowModel().rows.map((row) => (
+              <div
+                key={row.id}
+                className={`border-b border-gray-300 p-3 bg-white rounded-lg mb-2 shadow-sm`}
+              >
+                <div className="flex justify-between items-center">
+                  {/* Name */}
+                  <span className="font-medium text-[16px] text-[#334155]">
+                    {row.getValue("name")}
+                  </span>
+                  <div className="flex items-center gap-3">
+                    {/* Edit */}
+                    <Image
+                      src="/images/edit1.svg"
+                      alt="edit"
+                      width={16}
+                      height={16}
+                      className="cursor-pointer"
+                    />
+                    {/* Delete */}
+                    <Image
+                      src="/images/delete2.svg"
+                      alt="delete"
+                      width={16}
+                      height={16}
+                      className="cursor-pointer"
+                    />
+                  </div>
+                </div>
+
+                {/* Border */}
+                <div className="h-[1px] bg-gray-300 my-2"></div>
+
+                {/* Category */}
+                <div className="text-[14px]  flex justify-between">
+                  <span className=" text-[#636363]">Category</span>{" "}
+                  {row.getValue("category")}
+                </div>
+
+                {/* Price */}
+                <div className="text-[14px]  mt-1 flex justify-between">
+                  <span className=" text-[#636363]">Price</span>{" "}
+                  {row.getValue("price")}
+                </div>
+                {/* Quantity */}
+                <div className="text-[14px]  mt-1 flex justify-between">
+                  <span className=" text-[#636363]">Quantity</span>{" "}
+                  {row.getValue("quantity")}
+                </div>
+                {/* Weight */}
+                <div className="text-[14px]  mt-1 flex justify-between">
+                  <span className=" text-[#636363]">Weight</span>{" "}
+                  {row.getValue("weight")}
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* Pagination */}
-          <div className="mt-4 flex gap-2 justify-between items-center">
-            {/* Page Range Display */}
-            <div>
-              <span className="text-[#8899A8] text-[12px] font-medium ml-3">
-                {startItem} - {endItem} of {totalItems}
-              </span>
+          {/* Desktop View */}
+          <div className="overflow-x-auto shadow-md rounded-lg flex-grow hidden flex-col md:block">
+            <div className="overflow-hidden max-w-full">
+              <table className="w-full border-collapse border-gray-200 table-fixed">
+                <thead className="bg-[#334155] sticky top-0 z-10">
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <tr key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => (
+                        <th
+                          key={header.id}
+                          className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+                          style={{ width: `${header.column.getSize()}px` }} // Applying dynamic width
+                        >
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
+              </table>
+
+              <div
+                className="w-full overflow-y-auto scrollbar-thin flex-grow"
+                style={{ maxHeight: "calc(100vh - 270px)" }}
+              >
+                <table className="w-full border-collapse border-gray-200 table-fixed">
+                  <tbody>
+                    {table.getRowModel().rows.map((row) => (
+                      <tr
+                        key={row.id}
+                        className={
+                          row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <td
+                            key={cell.id}
+                            className="px-4 py-1.5 text-[#636363] text-[14px]"
+                            style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
+          </div>
+        </div>
 
-            {/* Pagination Numbers */}
-            <div className="flex flex-row gap-3">
-              <button
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-                className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
-                style={{ background: "#EBEFF6" }}
-              >
-                <img src="/images/left.svg" />
-              </button>
+        <div className="mt-4 flex gap-2 justify-between items-center">
+          {/* Page Range Display */}
+          <div>
+            <span className="text-[#8899A8] text-[12px] font-medium ml-3">
+              {startItem} - {endItem} of {totalItems}
+            </span>
+          </div>
 
-              {Array.from({ length: table.getPageCount() }, (_, index) => {
-                const pageIndex = index;
-                return (
-                  <button
-                    key={pageIndex}
-                    onClick={() => table.setPageIndex(pageIndex)}
-                    className={`px-4 py-2 rounded-md text-[12px] ${
-                      table.getState().pagination.pageIndex === pageIndex
-                        ? "!important text-[#FFFFFF]"
-                        : " text-gray-700"
-                    }`}
-                    style={{
-                      backgroundColor:
-                        table.getState().pagination.pageIndex === pageIndex
-                          ? "#1AA47D"
-                          : "transparent",
-                    }}
-                  >
-                    {pageIndex + 1}
-                  </button>
-                );
-              })}
+          {/* Pagination Numbers */}
+          <div className="flex flex-row gap-3">
+            <button
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+              className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
+            >
+              <img src="/images/left.svg" />
+            </button>
 
-              <button
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-                className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
-                style={{ background: "#EBEFF6" }}
-              >
-                <img src="/images/right.svg" />
-              </button>
+            {Array.from({ length: table.getPageCount() }, (_, index) => {
+              const pageIndex = index;
+              return (
+                <button
+                  key={pageIndex}
+                  onClick={() => table.setPageIndex(pageIndex)}
+                  className={`px-4 py-2 rounded-md text-[12px] ${
+                    table.getState().pagination.pageIndex === pageIndex
+                      ? "bg-[#1AA47D] text-[#FFFFFF]"
+                      : "text-gray-700"
+                  }`}
+                >
+                  {pageIndex + 1}
+                </button>
+              );
+            })}
 
-              <div>
-                <div className="w-full">
-                  {/* Dropdown for Page Selection */}
-                  <select
-                    value={table.getState().pagination.pageIndex} // Sync with current page index
-                    onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
-                    className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
-                  >
-                    {Array.from(
-                      { length: table.getPageCount() },
-                      (_, index) => (
-                        <option key={index} value={index}>
-                          Page {index + 1}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
+            <button
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
+            >
+              <img src="/images/right.svg" />
+            </button>
+
+            <div>
+              <div className="w-full">
+                {/* Dropdown for Page Selection */}
+                <select
+                  value={table.getState().pagination.pageIndex} // Sync with current page index
+                  onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
+                  className="pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
+                >
+                  {Array.from({ length: table.getPageCount() }, (_, index) => (
+                    <option key={index} value={index}>
+                      Page {index + 1}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>
