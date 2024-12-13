@@ -1,13 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "../globals.css";
 import MultiLineChart from "@/Components/drawer/MultiLineChart";
 import BarChart3 from "@/Components/drawer/BarChart3";
 import PieChart2 from "@/Components/drawer/Piechart2";
 import { useRouter } from "next/navigation";
 import Pagination from "@/Components/ui/Common/Pagination";
-
 import Dropdown from "@/Components/ui/Common/DropDown";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -200,7 +200,7 @@ const DetailsPage: React.FC = () => {
   const [isOpen3, setIsOpen3] = useState<boolean>(false);
   const [selectedOption4, setSelectedOption4] = useState<string>("2021");
   const [isOpen4, setIsOpen4] = useState<boolean>(false);
- 
+
   const table = useReactTable({
     data: formattedData,
     columns,
@@ -267,10 +267,11 @@ const DetailsPage: React.FC = () => {
           Gross Revenue Analysis
         </p>
       </div>
-      <div className="pt-6 pb-6 sticky z-10 top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
+      <div className="pt-6 pb-6 below-md:pb-3 sticky z-10 top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row gap-3 w-full">
+          <div className="flex flex-row below-md:flex-col gap-3 w-full">
             {/* First Dropdown */}
+
             <Dropdown
               label="Select Store"
               options={options}
@@ -281,6 +282,7 @@ const DetailsPage: React.FC = () => {
             />
 
             {/* Second Dropdown */}
+
             <Dropdown
               label="Select Period"
               options={options2}
@@ -302,8 +304,8 @@ const DetailsPage: React.FC = () => {
       </div>
 
       <div className=" pl-6 pr-6 below-md:px-3">
-        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 pt-16 ">
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full h-full min-h-[130px] p-4 justify-between">
+        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 pt-16 items-stretch">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full items-stretch p-4 justify-between">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Total Gross Revenue
@@ -318,7 +320,7 @@ const DetailsPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#947F914D] border-b-4 w-full h-full min-h-[130px] p-4 justify-between">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#947F914D] border-b-4 w-full items-stretch p-4 justify-between">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Revenue Growth
@@ -332,7 +334,7 @@ const DetailsPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#9E8F503B] border-b-4 w-full h-full min-h-[130px] p-4 justify-between">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#9E8F503B] border-b-4 w-full items-stretch p-4 justify-between">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Average Per Transaction
@@ -346,7 +348,7 @@ const DetailsPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-[#FFFFFF] rounded-lg shadow-sm border-[#9E8F503B] border-b-4 w-full h-full min-h-[130px] p-4 justify-between">
+          <div className="bg-[#FFFFFF] rounded-lg shadow-sm border-[#9E8F503B] border-b-4 w-full items-stretch p-4 justify-between">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Revenue Target Achievement
@@ -380,16 +382,16 @@ const DetailsPage: React.FC = () => {
                     Monthyl Revenue
                   </p>
                 </div>
-                <div>
-                <Dropdown
-                 className="relative w-full below-md:w-full"
-                 label="Select Option"
-                 options={options3}
-                 selectedOption={selectedOption3}
-                 onSelect={handleSelect3}
-                 isOpen={isOpen3}
-                 toggleOpen={toggleDropdown3}
-                 />
+                <div className="relative w-[23%] below-md:w-[35%]">
+                  <Dropdown
+                    className="relative w-full below-md:w-full"
+                    shadowclassName="shadow-sm"
+                    options={options3}
+                    selectedOption={selectedOption3}
+                    onSelect={handleSelect3}
+                    isOpen={isOpen3}
+                    toggleOpen={toggleDropdown3}
+                  />
                 </div>
               </div>
               <div>
@@ -405,16 +407,16 @@ const DetailsPage: React.FC = () => {
                     Product Revenue
                   </p>
                 </div>
-                <div>
-                <Dropdown
-                      className="relative w-full below-md:w-full"
-                      label="Select Option"
-                      options={options4}
-                      selectedOption={selectedOption4}
-                      onSelect={handleSelect4}
-                      isOpen={isOpen4}
-                     toggleOpen={toggleDropdown4}
-                 />
+                <div className="relative w-[35%]">
+                  <Dropdown
+                    className="relative w-full"
+                    shadowclassName="shadow-sm"
+                    options={options4}
+                    selectedOption={selectedOption4}
+                    onSelect={handleSelect4}
+                    isOpen={isOpen4}
+                    toggleOpen={toggleDropdown4}
+                  />
                 </div>
               </div>
               <div>
