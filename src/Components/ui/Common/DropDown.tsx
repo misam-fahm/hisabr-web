@@ -6,29 +6,39 @@ const Dropdown = ({
   options,
   selectedOption,
   className,
+  shadowclassName,
+  widthchange,
   onSelect,
   isOpen,
   toggleOpen,
 }: {
-  label: string;
+  label?: string;
   options: string[];
-  selectedOption: string;
-  className?: string ;
+  selectedOption?: string;
+  className?: string;
+  shadowclassName?: string;
+  widthchange?: string;
   onSelect: (option: string) => void;
   isOpen: boolean;
   toggleOpen: () => void;
 }) => (
-  <div className={`${className ? className : "relative w-[30%] below-md:w-full"}`}>
-    <p className="text-[#2D374880] text-[12px] mb-2">{label}</p>
+  <div
+    className={`${className || "relative below-md:w-full"} ${widthchange || "w-[30%]"}`}
+  >
+    <p
+      className={`text-[#2D374880] text-[12px] below-md:hidden ${label ? "mb-2" : ""}`}
+    >
+      {label}
+    </p>
     {/* Dropdown Button */}
     <button
       onClick={toggleOpen}
-      className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
+      className={`bg-[#ffffff] text-[#4B4B4B] ${shadowclassName ? shadowclassName : "shadow-md"} shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px] focus:outline-none`}
     >
-      <span>{selectedOption}</span>
+      <span>{selectedOption || "Year"}</span>
       <img
-        src="./images/icon.svg"
-        className={`w-4 h-4 ml-2 transition-transform duration-200 ${
+        src="./images/dropdown.svg"
+        className={`ml-2 transition-transform duration-200 ${
           isOpen ? "transform rotate-180" : ""
         }`}
       />
@@ -37,7 +47,7 @@ const Dropdown = ({
     {/* Dropdown Menu */}
     {isOpen && (
       <div
-        className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
+        className={`absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded ${shadowclassName ? shadowclassName : "shadow-md"} shadow-md`}
         style={{ zIndex: 50 }}
       >
         {options?.map((option, index) => (
@@ -54,4 +64,4 @@ const Dropdown = ({
   </div>
 );
 
-export default Dropdown
+export default Dropdown;

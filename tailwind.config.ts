@@ -22,7 +22,6 @@ export default {
         
         "below-md": { max: "800px" },
         "below-lg": { min: "801px" },
-        
       },
     },
   },

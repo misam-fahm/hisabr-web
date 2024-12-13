@@ -5,6 +5,7 @@ import Images from "@/Components/ui/Common/Image";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Pagination from "@/Components/ui/Common/Pagination";
+import Dropdown from "@/Components/ui/Common/DropDown";
 
 import {
   useReactTable,
@@ -266,6 +267,7 @@ const Sales: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
+  const toggleDropdown1 = () => setIsOpen(!isOpen);
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
@@ -285,42 +287,16 @@ const Sales: FC = () => {
       <div className="my-4 mx-6 mt-24 below-md:mx-3 below-md:mt-20">
         <div className="flex flex-row below-md:flex-col mb-6">
           <div className="flex flex-row below-md:flex-col  w-full gap-3">
-            <div className="w-[40%] below-md:w-full relative">
-              {/* Dropdown Button */}
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="bg-[#ffffff] text-[#636363] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
-              >
-                <span>{selectedOption}</span>
-                <Image
-                  src="/images/icon.svg" // Updated path (use `/` instead of `./`)
-                  alt="Dropdown Icon"
-                  width={16} // Adjusted size for consistency
-                  height={16}
-                  className={`transition-transform duration-200 ${
-                    isOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
+            {/* Dropdown Button */}
 
-              {/* Dropdown Menu */}
-              {isOpen && (
-                <div
-                  className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-                  style={{ zIndex: 20 }}
-                >
-                  {options.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleSelect(option)}
-                      className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                    >
-                      {option}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <Dropdown
+              options={options}
+              selectedOption={selectedOption}
+              onSelect={handleSelect}
+              isOpen={isOpen}
+              toggleOpen={toggleDropdown1}
+              widthchange="w-[40%]"
+            />
 
             <div className="w-[50%] below-md:w-full">
               <DateRange />

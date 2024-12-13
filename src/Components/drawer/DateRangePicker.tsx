@@ -23,7 +23,7 @@ const DateRangePicker = () => {
             ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
             : "Select Date Range"}
         </span>
-        <img src="/images/daterange.svg" alt="calendar" className="w-5 h-5" />
+        <img src="/images/daterange.svg" alt="calendar" />
       </div>
 
       {/* Datepicker */}

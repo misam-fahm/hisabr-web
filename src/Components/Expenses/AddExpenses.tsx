@@ -117,19 +117,32 @@ const AddExpenses = () => {
 
     return (
         <>
-            {/* Button to open dialog */}
-            <button
-                onClick={openModal}
-                className='bg-[#1AA47D] hover:bg-[#168A6F] text-white py-[10px] px-[35px] rounded-md font-normal text-[12px]'
-            >
-                Add Expense
-            </button>
+          
+          <button
+    onClick={openModal}
+    className="bg-[#1AA47D] hover:bg-[#168A6F] below-lg:hidden  hover:gap-2 text-white w-[40px] hover:w-[159px] h-[37px] rounded-md flex items-center justify-center overflow-hidden transition-all duration-10 group"
+>
+    <span className="">+</span>
+    <span className="hidden group-hover:block text-white transition-opacity duration-10">
+        Add Expenses
+    </span>
+</button>
+
+<button
+    onClick={openModal}
+    className="bg-[#1AA47D]  text-white below-md:hidden  w-[159px] h-[37px] rounded-md flex items-center justify-center  "
+>
+   
+        Add Expenses
+
+</button>
+
 
             {/* Dialog for the modal */}
             <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
                 <div className="fixed inset-0 bg-black bg-opacity-50" />
                 <div className="fixed inset-0 flex items-center justify-center p-4">
-                    <DialogPanel className="w-[410px] h-[518px] px-6 py-6 bg-white rounded-lg shadow-lg flex flex-col">
+                    <DialogPanel className="w-[410px] h-[518px] below-md:w-[94%] below-md:h-[450px] px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
                         <div className='flex items-center justify-between mb-5 mr-1'>
 
                             <DialogTitle as="h3" className="text-[16px]  font-medium leading-4 text-[#5E6366]">
@@ -160,12 +173,12 @@ const AddExpenses = () => {
                        
                             {/* AddExpense Form */}
                             <form onSubmit={handleSubmit}>
-                            <div className="overflow-y-auto h-[380px] overflow-x-hidden scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent" >
+                            <div className="overflow-y-auto h-[380px] below-md:h-[300px] overflow-x-hidden scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent" >
                                 {/* Store */}
-                                <div className="flex flex-col gap-1 mb-3">
+                                <div className="flex flex-col gap-1 mb-3"> 
                                     <label className="text-[13px] text-[#5E6366] mb-1 block">Store</label>
                                     <select name="store"
-                                        className={`border h-[40px] w-[345px] pl-2 text-[#8D98AA] text-[12px] rounded-lg ${errors.store ? "border-red-500" : "border-gray-300"
+                                        className={`border h-[40px] w-[345px] below-md:w-full pl-2 text-[#8D98AA] text-[12px]  rounded-lg ${errors.store ? "border-red-500" : "border-gray-300"
                                             }`}
                                         value={formData.store}
                                         onChange={handleChange}
@@ -183,7 +196,7 @@ const AddExpenses = () => {
                                     <div>
                                         <label className="text-[13px] text-[#5E6366] mb-2 block">Expense Type</label>
                                         <select name="expenseType"
-                                            className={`border h-[40px] w-[345px] pl-2 text-[#8D98AA] text-[12px] rounded-lg ${errors.expenseType ? "border-red-500" : "border-gray-300"
+                                            className={`border h-[40px] w-[345px] below-md:w-full pl-2 text-[#8D98AA] text-[12px] rounded-lg ${errors.expenseType ? "border-red-500" : "border-gray-300"
                                                 }`}
                                             value={formData.expenseType}
                                             onChange={handleChange}
@@ -203,7 +216,7 @@ const AddExpenses = () => {
                                         <input
                                             type="text"
                                             name="description"
-                                            className={`border h-[40px] w-[345px] pl-2 text-[#8D98AA] text-[12px] rounded-lg ${errors.description ? "border-red-500" : "border-gray-300"
+                                            className={`border h-[40px] w-[345px]  below-md:w-full pl-2 text-[#8D98AA] text-[12px] rounded-lg ${errors.description ? "border-red-500" : "border-gray-300"
                                                 }`}
                                             placeholder="Please enter Expense Description"
                                             value={formData.description}
@@ -218,7 +231,7 @@ const AddExpenses = () => {
                                         <input
                                             type="number"
                                             name="amount"
-                                            className={`border h-[40px] w-[345px] pl-2 text-[#8D98AA] text-[12px] rounded-lg ${errors.amount ? "border-red-500" : "border-gray-300"
+                                            className={`border h-[40px] w-[345px] below-md:w-full pl-2 text-[#8D98AA] text-[12px] rounded-lg ${errors.amount ? "border-red-500" : "border-gray-300"
                                                 }`}
                                             placeholder="Please enter Expense Amount"
                                             value={formData.amount}
@@ -228,15 +241,15 @@ const AddExpenses = () => {
                                     </div>
                                     <div className='flex flex-col mt-1 mb-2'>
                                         <label className="text-[13px] text-[#5E6366] mb-2 block">Date</label>
-                                        <div className='relative'>
+                                        <div className='relative '>
                                             <DatePicker
                                                 selected={formData.date}
                                                 onChange={(date : any) => setFormData({ ...formData, date })}
                                                 placeholderText="Please enter expense date"
-                                                className={`border h-[40px] w-[345px] pl-3 pr-10 text-[#8D98AA] text-[12px] rounded-lg ${errors.date ? 'border-red-500' : 'border-gray-300'
+                                                className={`border h-[40px] w-[345px] below-md:w-[100%]  pl-3 pr-10 text-[#8D98AA] text-[12px] rounded-lg ${errors.date ? 'border-red-500' : 'border-gray-300'
                                                     }`}
                                             />
-                                            <img className='absolute top-1/2 right-3 transform -translate-y-1/2 w-5 h-5 cursor-pointer ' src='/images/CalenderIcon.svg'
+                                            <img className='absolute top-1/2 right-3  transform -translate-y-1/2 w-5 h-5 below-md:w-4 below-md:h-4 cursor-pointer ' src='/images/CalenderIcon.svg'
                                                 alt="Calendar Icon"
                                             />
                                         </div>
@@ -245,16 +258,16 @@ const AddExpenses = () => {
                                     </div>
                                     </div>
                                     {/* Submit Button */}
-                                    <div className="flex items-center mt-3 justify-start gap-8">
+                                    <div className="flex items-center mt-3 justify-start md:gap-2 gap-8">
                                         <button type="button"
-                                            className="px-4 py-2 text-[14px] text-[#6F6F6F] w-[158px] h-[37px] bg-[#C8C8C8] rounded-md"
+                                            className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[36px] w-[158px] below-md:w-[150px] h-[37px] bg-[#C8C8C8] rounded-md"
                                             onClick={closeModal}
                                         >
                                             Cancel
                                         </button>
                                         <button
                                             type="submit"
-                                            className="px-4 py-2 text-white text-[14px] w-[156px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-green-700"
+                                            className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[36px] w-[158px]  below-md:w-[150px]  h-[37px] bg-[#1AA47D] rounded-md hover:bg-green-700"
                                         >
                                             Add Expense
                                         </button>
