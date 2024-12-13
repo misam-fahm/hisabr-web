@@ -21,8 +21,7 @@ export default {
       screens: {
         
         "below-md": { max: "800px" },
-        "below-lg": { min: "801px" },
-        
+        "below-lg": { min: "801px" },        
       },
     },
   },
