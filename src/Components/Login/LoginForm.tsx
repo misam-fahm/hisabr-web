@@ -17,22 +17,22 @@ const LoginForm = () => {
 
   return (
     <FormProvider {...methods}>
-      <div className="bg-[#334155] w-full h-[100vh] flex justify-center">
-        <div className="w-[50%] flex justify-center items-center h-full">
+      <div className="bg-[#334155] w-full h-[100vh] flex justify-center below-md:flex-col">
+        <div className="w-[50%] below-md:w-full flex justify-center items-center h-full below-md:h-auto">
           <img
-            className="w-auto h-[200px]"
+            className="w-auto h-[200px] below-md:h-[150px]"
             src="/images/HisabrFinalLogo.png"
             alt="Logo"
           />
         </div>
 
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center below-md:hidden">
           <div className="w-[1px] bg-[#FFFFFF] h-[60%]" />
         </div>
 
-        <div className="w-[50%] flex justify-center items-center">
-          <div className="w-[460px] h-[406px] flex justify-center flex-col">
-            <div className="flex flex-col w-[340px] h-[67px]">
+        <div className="w-[50%] below-md:w-full flex justify-center items-center">
+          <div className="w-[460px] below-md:w-full h-[406px] below-md:px-4 flex justify-center flex-col">
+            <div className="flex flex-col w-[340px] below-md:w-full h-[67px]">
               <p className="text-[25px] text-[#FFFFFF] font-medium">
                 Welcome Back
               </p>
@@ -45,7 +45,7 @@ const LoginForm = () => {
               onSubmit={methods.handleSubmit(onSubmit)}
               className="w-full mt-4 flex flex-col gap-8"
             >
-              <div className="w-[400px]">
+              <div className="w-[400px] below-md:w-full">
                 <Inputtext
                   label="Email"
                   {...methods.register("email", {
@@ -58,7 +58,7 @@ const LoginForm = () => {
                 />
               </div>
 
-              <div className="w-[400px]  ">
+              <div className="w-[400px] below-md:w-full ">
                 <Inputtext
                   label="Password"
                   {...methods.register("Password", {
@@ -91,7 +91,7 @@ const LoginForm = () => {
             
               <button
                 type="submit"
-                className="bg-[#1AA47D] w-[400px] text-white py-2 px-4 rounded "
+                className="bg-[#1AA47D] w-[400px] below-md:w-full text-white py-2 px-4 rounded "
               >
                 GET STARTED
               </button>
