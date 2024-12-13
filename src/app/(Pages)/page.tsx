@@ -622,7 +622,7 @@ const Home: FC = () => {
               </div>
             </div>
 
-            <div className="w-full overflow-hidden overflow-y-auto below-md:overflow-x-auto max-h-[100px] custom-scrollbar ">
+            <div className="w-full overflow-hidden overflow-y-auto below-md:overflow-x-auto  max-h-[100px] custom-scrollbar ">
               <table className="w-full bg-white border border-gray-200 mt-6 ">
                 <tbody>
                   {tableData2.map((row, index) => (
@@ -632,13 +632,13 @@ const Home: FC = () => {
                         index % 2 === 1 ? "bg-white" : "bg-[#FAFBFB]"
                       }`}
                     >
-                      <td className="px-3 py-2 border-b border-gray-200 text-gray-700">
+                      <td className="px-3 py-1 border-b border-gray-200 text-gray-700">
                         {row.name}
                       </td>
-                      <td className="px-3 py-2 border-b border-gray-200 text-[#334155] text-[15px] font-bold text-center">
+                      <td className="px-3 py-1 border-b border-gray-200 text-[#334155] text-[15px] font-bold text-center">
                         {row.revenue.toLocaleString()}
                       </td>
-                      <td className="px-3 py-2 border-b border-gray-200 text[15px] font-bold text-[#334155]">
+                      <td className="px-3 py-1 border-b border-gray-200 text[15px] font-bold text-[#334155]">
                         ${row.commission}
                       </td>
                     </tr>
@@ -646,14 +646,14 @@ const Home: FC = () => {
                 </tbody>
                 <tfoot className="bottom-0 bg-white">
                   <tr className="font-bold text-[#E31212]">
-                    <td className="px-3 py-2 border-t border-gray-200">
+                    <td className="px-3 py-1 border-t border-gray-200">
                       Total
                     </td>
-                    <td className="px-3 py-2 border-t border-gray-200">
+                    <td className="px-3 py-1 border-t border-gray-200">
                       ${totalRevenue.toLocaleString()}
                     </td>
 
-                    <td className="px-3 py-2 border-t border-gray-200">
+                    <td className="px-3 py-1 border-t border-gray-200">
                       ${totalAmount.toFixed(2)}
                     </td>
                   </tr>

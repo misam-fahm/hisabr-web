@@ -1,19 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const DateRangePicker = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [isOpen, setIsOpen] = useState(false); // Toggle calendar visibility
+  const [isOpen, setIsOpen] = useState(false);
+  const pickerRef = useRef<HTMLDivElement>(null);
 
-  const handleClickIcon = () => setIsOpen((prev) => !prev); // Toggle calendar
+  const handleClickIcon = () => setIsOpen((prev) => !prev);
+
+  // Close the date picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        pickerRef.current &&
+        !pickerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div className="relative">
-      {/* Clickable Area */}
+    <div className="relative" ref={pickerRef}>
       <div
         onClick={handleClickIcon}
         className="flex items-center justify-between rounded-md px-3 py-[9px] bg-white cursor-pointer shadow-md"
@@ -40,6 +57,7 @@ const DateRangePicker = () => {
             endDate={endDate}
             selectsRange
             inline
+            maxDate={new Date()} // Disable future dates
           />
         </div>
       )}
