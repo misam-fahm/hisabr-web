@@ -4,6 +4,7 @@ import { FC, useState } from "react";
 import Linechart from "@/Components/drawer/LineChart";
 import React from "react";
 import { useRouter } from "next/navigation";
+import Dropdown from "@/Components/ui/Common/DropDown";
 
 interface TableRow {
   name: string;
@@ -32,22 +33,21 @@ const tableData2: TableRow2[] = [
 ];
 
 const Home: FC = () => {
-  /**first dropdown */
   const [selectedOption, setSelectedOption] = useState<string>("All stores");
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedOption2, setSelectedOption2] = useState<string>("2021");
+  const [isOpen2, setIsOpen2] = useState<boolean>(false);
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
+  const options2 = ["2024", "2023", "2022", "2021"];
+
+  const toggleDropdown1 = () => setIsOpen(!isOpen);
+  const toggleDropdown2 = () => setIsOpen2(!isOpen2);
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false);
   };
-
-  /**second dropdown */
-  const [selectedOption2, setSelectedOption2] = useState<string>("2021");
-  const [isOpen2, setIsOpen2] = useState<boolean>(false);
-
-  const options2 = ["2024", "2023", "2022", "2021"];
 
   const handleSelect2 = (option2: string) => {
     setSelectedOption2(option2);
@@ -118,74 +118,26 @@ const Home: FC = () => {
         {/* Dropdowns grouped together */}
         <div className="flex flex-row gap-3 w-full below-md:flex-col">
           {/* Dropdown 1 */}
-          <div className="relative w-[30%] below-md:w-full">
-            <p className="text-[#2D374880] text-[12px] mb-2 below-md:hidden">
-              Select Store
-            </p>
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
-            >
-              <span>{selectedOption}</span>
-              <img
-                src="./images/icon.svg"
-                className={`w-4 h-4 ml-2 transition-transform duration-200 ${
-                  isOpen ? "transform rotate-180" : ""
-                }`}
-              />
-            </button>
-            {isOpen && (
-              <div
-                className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-                style={{ zIndex: 50 }}
-              >
-                {options.map((option, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleSelect(option)}
-                    className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                  >
-                    {option}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* First Dropdown */}
 
-          {/* Dropdown 2 */}
-          <div className="relative w-[30%] below-md:w-full">
-            <p className="text-[#2D374880] text-[12px] mb-2 below-md:hidden">
-              Select Period
-            </p>
-            <button
-              onClick={() => setIsOpen2(!isOpen2)}
-              className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
-            >
-              <span>{selectedOption2}</span>
-              <img
-                src="./images/icon.svg"
-                className={`w-4 h-4 ml-2 transition-transform duration-200 ${
-                  isOpen2 ? "transform rotate-180" : ""
-                }`}
-              />
-            </button>
-            {isOpen2 && (
-              <div
-                className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-                style={{ zIndex: 50 }}
-              >
-                {options2.map((option, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleSelect2(option)}
-                    className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                  >
-                    {option}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <Dropdown
+            label="Select Store"
+            options={options}
+            selectedOption={selectedOption}
+            onSelect={handleSelect}
+            isOpen={isOpen}
+            toggleOpen={toggleDropdown1}
+          />
+          {/* Second Dropdown */}
+
+          <Dropdown
+            label="Select Period"
+            options={options2}
+            selectedOption={selectedOption2}
+            onSelect={handleSelect2}
+            isOpen={isOpen2}
+            toggleOpen={toggleDropdown2}
+          />
         </div>
 
         {/* Tooltip positioned at the end of the screen */}
@@ -313,8 +265,8 @@ const Home: FC = () => {
 
         {/* grid 1*/}
 
-        <div className="flex flex-row gap-7 below-md:gap-0 below-md:flex-col">
-          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full  h-48 min-h-auto">
+        <div className="flex flex-row gap-7 below-md:gap-0 below-md:flex-col items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/groce.svg" />
@@ -356,7 +308,7 @@ const Home: FC = () => {
           </div>
 
           {/** second grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/plus.svg" />
@@ -397,7 +349,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/net.svg" />
@@ -437,8 +389,8 @@ const Home: FC = () => {
 
         {/* grid 2*/}
 
-        <div className="flex flex-row gap-7 below-md:gap-0 below-md:flex-col">
-          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  h-48 min-h-auto">
+        <div className="flex flex-row gap-7 below-md:gap-0 below-md:flex-col items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-1 ">
                 <img src="/images/operating.svg" />
@@ -483,7 +435,7 @@ const Home: FC = () => {
           </div>
 
           {/** second grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/cost.svg" />
@@ -527,7 +479,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/labor.svg" />
@@ -573,8 +525,8 @@ const Home: FC = () => {
 
         {/* grid 3*/}
 
-        <div className="flex flex-row gap-7 below-md:gap-0 mb-1 below-md:flex-col">
-          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  h-48 min-h-auto">
+        <div className="flex flex-row gap-7 below-md:gap-0 mb-1 below-md:flex-col items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-1 ">
                 <img src="/images/crown.svg" />
@@ -616,7 +568,7 @@ const Home: FC = () => {
           </div>
 
           {/** second grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/persentage.svg" />
@@ -657,7 +609,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md w-full pb-6 h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md w-full pb-6 items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/items.svg" />
@@ -670,7 +622,7 @@ const Home: FC = () => {
               </div>
             </div>
 
-            <div className="w-full overflow-hidden overflow-y-auto below-md:overflow-x-auto max-h-[135px] custom-scrollbar ">
+            <div className="w-full overflow-hidden overflow-y-auto below-md:overflow-x-auto max-h-[100px] custom-scrollbar ">
               <table className="w-full bg-white border border-gray-200 mt-6 ">
                 <tbody>
                   {tableData2.map((row, index) => (

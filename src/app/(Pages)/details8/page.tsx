@@ -5,6 +5,7 @@ import "../globals.css";
 import { useRouter } from "next/navigation";
 import Images from "@/Components/ui/Common/Image";
 import Pagination from "@/Components/ui/Common/Pagination";
+import Dropdown from "@/Components/ui/Common/DropDown";
 
 import {
   useReactTable,
@@ -208,48 +209,25 @@ const DetailsPage: React.FC = () => {
     }
   };
 
-  /**first dropdown */
   const [selectedOption, setSelectedOption] = useState<string>("All stores");
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedOption2, setSelectedOption2] = useState<string>("2021");
+  const [isOpen2, setIsOpen2] = useState<boolean>(false);
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
+  const options2 = ["2024", "2023", "2022", "2021"];
+
+  const toggleDropdown1 = () => setIsOpen(!isOpen);
+  const toggleDropdown2 = () => setIsOpen2(!isOpen2);
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false);
   };
 
-  /**second dropdown */
-  const [selectedOption2, setSelectedOption2] = useState<string>("2021");
-  const [isOpen2, setIsOpen2] = useState<boolean>(false);
-
-  const options2 = ["2024", "2023", "2022", "2021"];
-
   const handleSelect2 = (option2: string) => {
     setSelectedOption2(option2);
     setIsOpen2(false);
-  };
-
-  /**third dropdown */
-  const [selectedOption3, setSelectedOption3] = useState<string>("2021");
-  const [isOpen3, setIsOpen3] = useState<boolean>(false);
-
-  const options3 = ["2024", "2023", "2022", "2021"];
-
-  const handleSelect3 = (option3: string) => {
-    setSelectedOption3(option3);
-    setIsOpen3(false);
-  };
-
-  /**fourth dropdown */
-  const [selectedOption4, setSelectedOption4] = useState<string>("2021");
-  const [isOpen4, setIsOpen4] = useState<boolean>(false);
-
-  const options4 = ["2024", "2023", "2022", "2021"];
-
-  const handleSelect4 = (option4: string) => {
-    setSelectedOption4(option4);
-    setIsOpen4(false);
   };
 
   return (
@@ -270,81 +248,27 @@ const DetailsPage: React.FC = () => {
       <div className="pt-6 pb-6 below-md:pb-3 sticky z-10 top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row below-md:flex-col gap-3 w-full">
-            <div className="relative w-[30%] below-md:w-full">
-              <p className="text-[#2D374880] text-[12px] mb-2 below-md:hidden">
-                Select Store
-              </p>
-              {/* Dropdown Button */}
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
-              >
-                <span>{selectedOption}</span>
-                <img
-                  src="./images/icon.svg"
-                  className={`w-4 h-4 ml-2 transition-transform duration-200 ${
-                    isOpen ? "transform rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {/* Dropdown Menu */}
-              {isOpen && (
-                <div
-                  className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-                  style={{ zIndex: 50 }}
-                >
-                  {options.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleSelect(option)}
-                      className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                    >
-                      {option}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <Dropdown
+              label="Select Store"
+              options={options}
+              selectedOption={selectedOption}
+              onSelect={handleSelect}
+              isOpen={isOpen}
+              toggleOpen={toggleDropdown1}
+            />
 
             {/*second dropdown */}
 
-            <div className="relative w-[30%] below-md:w-full">
-              <p className="text-[#2D374880] text-[12px] mb-2 below-md:hidden">
-                Select Period
-              </p>
-              {/* Dropdown Button */}
-              <button
-                onClick={() => setIsOpen2(!isOpen2)}
-                className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
-              >
-                <span>{selectedOption2}</span>
-                <img
-                  src="./images/icon.svg"
-                  className={`w-4 h-4 ml-2 transition-transform duration-200 ${
-                    isOpen2 ? "transform rotate-180" : ""
-                  }`}
-                />
-              </button>
+            {/* Second Dropdown */}
 
-              {/* Dropdown Menu */}
-              {isOpen2 && (
-                <div
-                  className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-                  style={{ zIndex: 50 }}
-                >
-                  {options2.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleSelect2(option)}
-                      className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                    >
-                      {option}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <Dropdown
+              label="Select Period"
+              options={options2}
+              selectedOption={selectedOption2}
+              onSelect={handleSelect2}
+              isOpen={isOpen2}
+              toggleOpen={toggleDropdown2}
+            />
           </div>
           <div>
             <p

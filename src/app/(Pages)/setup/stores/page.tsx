@@ -96,6 +96,63 @@ const data: TableRow[] = [
     royalty:"MORTGAGE",
   
   },
+  {
+    store : "Store 1",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+    
+  },
+  {
+    store : "Store 2",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+
+  },
+  {
+    store : "Store 3",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+    
+  },
+  {
+    store : "Store 1",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+    
+  },
+  {
+    store : "Store 2",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+  
+  },
+  {
+    store : "Store 3",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+  
+  },
+  {
+    store : "13246",
+    timestamp: 13246,
+    location: "VatisinVille",
+    description:"MORTGAGE",
+    royalty:"MORTGAGE",
+    
+  },
+
 ];
 
 const columns: ColumnDef<TableRow>[] = [
@@ -123,9 +180,9 @@ const columns: ColumnDef<TableRow>[] = [
     accessorKey: "edit",
     header: "Edit",
     cell: () => (
-      
+      <div  className="ml-2">
         <Images src="/images/edit.svg" alt="edit" width={35} height={35} />
-      
+        </div>
     ),
   },
 
@@ -133,9 +190,9 @@ const columns: ColumnDef<TableRow>[] = [
     id: "delete",
     header: "Delete",
     cell: () => (
-     
-        <Images src="/images/delete.svg" alt="delete" width={35} height={35} />
-      
+     <div className="ml-5">
+        <Images  src="/images/delete.svg" alt="delete" width={35} height={35} />
+        </div>
     ),
   },
 ];
@@ -152,7 +209,7 @@ const Page: FC = () => {
     },
     initialState: {
       pagination: {
-        pageSize: 6,
+        pageSize: 10,
         pageIndex: 0,
       },
     },
@@ -164,59 +221,54 @@ const Page: FC = () => {
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <main  className="max-h-[calc(100vh-10px)] overflow-auto"
-    style={{ scrollbarWidth: "thin" }}>
-      <div className="my-24 mx-6">
-        <div className="flex flex-row justify-between items-center mt-4 mb-4">
-          <div>
-            <p className="text-[16px] font-bold text-[#334155]">Stores</p>
-          </div>
+  
+    <main className="w-full h-screen flex flex-col overflow-hidden">
+    <div className="mt-20 mx-6 flex-grow">
+      <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
+        <p className="text-[16px] font-bold text-[#334155]">Stores</p>
+               <div className="font-semibold text-[14px] bg-[#1AA47D] hover:bg-[#168A68] px-5 h-[37px] text-[#FFFFFF] rounded-md">
+           <AddStore/>
+           </div>
+      </div>
 
-          <div className="font-semibold text-[14px] bg-[#1AA47D] hover:bg-[#168A68] px-5 h-[37px] text-[#FFFFFF] rounded-md">
-          <AddStore/>
-          </div>
-        </div>
+      <div className="overflow-x-auto shadow-md rounded-lg flex-grow flex flex-col">
+        <div className="overflow-hidden max-w-full">
+          <table className="w-full border-collapse border-gray-200 table-fixed">
+            <thead className="bg-[#334155] sticky top-0 z-10">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      key={header.id}
+                      className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+          </table>
 
-        <div>
-          {/* Table */}
-          <div className="overflow-x-auto shadow-md rounded-lg">
-            <table className="w-full border-collapse border border-gray-200">
-              <thead className="bg-[#334155]">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <th
-                        key={header.id}
-                        className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px]"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
+          <div
+            className="w-full overflow-y-auto scrollbar-thin flex-grow"
+            style={{ maxHeight: "calc(100vh - 270px)" }}
+          >
+            <table className="w-full border-collapse border-gray-200 table-fixed">
               <tbody>
                 {table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
-                    className={
-                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                    }
+                    className={row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        className="px-4 py-1 text-[#636363] text-[14px]"
+                        className="px-4 py-1.5 text-[#636363] text-[14px] w-[100px]"
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     ))}
                   </tr>
@@ -224,83 +276,72 @@ const Page: FC = () => {
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
 
-          {/* Pagination */}
-          <div className="mt-4 flex gap-2 justify-between items-center">
-            {/* Page Range Display */}
-            <div>
-              <span className="text-[#8899A8] text-[12px] font-medium ml-3">
-                {startItem} - {endItem} of {totalItems}
-              </span>
-            </div>
+      <div className="mt-4 flex gap-2 justify-between items-center">
+      {/* Page Range Display */}
+      <div>
+        <span className="text-[#8899A8] text-[12px] font-medium ml-3">
+          {startItem} - {endItem} of {totalItems}
+        </span>
+      </div>
 
-            {/* Pagination Numbers */}
-            <div className="flex flex-row gap-3">
-              <button
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-                className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
-                style={{ background: "#EBEFF6" }}
-              >
-                <img src="/images/left.svg" />
-              </button>
+      {/* Pagination Numbers */}
+      <div className="flex flex-row gap-3">
+        <button
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+          className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
+        >
+          <img src="/images/left.svg" />
+        </button>
 
-              {Array.from({ length: table.getPageCount() }, (_, index) => {
-                const pageIndex = index;
-                return (
-                  <button
-                    key={pageIndex}
-                    onClick={() => table.setPageIndex(pageIndex)}
-                    className={`px-4 py-2 rounded-md text-[12px] ${
-                      table.getState().pagination.pageIndex === pageIndex
-                        ? "!important text-[#FFFFFF]"
-                        : " text-gray-700"
-                    }`}
-                    style={{
-                      backgroundColor:
-                        table.getState().pagination.pageIndex === pageIndex
-                          ? "#1AA47D"
-                          : "transparent",
-                    }}
-                  >
-                    {pageIndex + 1}
-                  </button>
-                );
-              })}
+        {Array.from({ length: table.getPageCount() }, (_, index) => {
+          const pageIndex = index;
+          return (
+            <button
+              key={pageIndex}
+              onClick={() => table.setPageIndex(pageIndex)}
+              className={`px-4 py-2 rounded-md text-[12px] ${
+                table.getState().pagination.pageIndex === pageIndex
+                  ? "bg-[#1AA47D] text-[#FFFFFF]"
+                  : "text-gray-700"
+              }`}
+            >
+              {pageIndex + 1}
+            </button>
+          );
+        })}
 
-              <button
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-                className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
-                style={{ background: "#EBEFF6" }}
-              >
-                <img src="/images/right.svg" />
-              </button>
+        <button
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+          className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
+        >
+          <img src="/images/right.svg" />
+        </button>
 
-              <div>
-                <div className="w-full">
-                  {/* Dropdown for Page Selection */}
-                  <select
-                    value={table.getState().pagination.pageIndex} // Sync with current page index
-                    onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
-                    className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
-                  >
-                    {Array.from(
-                      { length: table.getPageCount() },
-                      (_, index) => (
-                        <option key={index} value={index}>
-                          Page {index + 1}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-              </div>
-            </div>
+        <div>
+          <div className="w-full">
+            {/* Dropdown for Page Selection */}
+            <select
+              value={table.getState().pagination.pageIndex} // Sync with current page index
+              onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
+              className="pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
+            >
+              {Array.from({ length: table.getPageCount() }, (_, index) => (
+                <option key={index} value={index}>
+                  Page {index + 1}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
-    </main>
+    </div>
+    </div>
+  </main>
   );
 };
 export default Page;

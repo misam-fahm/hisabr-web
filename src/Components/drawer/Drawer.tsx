@@ -170,7 +170,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
                     ${menu?.gap ? "mt-11" : "mt-1"} 
                     ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""}`}
                 >
-                  <img src={`/images/${menu.src}.png`} />
+                  <img src={`/images/${menu.src}.svg`} />
                   <span
                     className={`${!open && "hidden"} origin-left duration-200`}
                   >
@@ -215,7 +215,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         </div>
 
         <div className="flex px-6 mt-10 gap-4">
-          <img src="/images/logout.png" />
+          <img src="/images/logout.svg" />
           {open && <p>Logout</p>}
         </div>
       </div>
