@@ -120,12 +120,21 @@ const AddExpenses = () => {
           
           <button
     onClick={openModal}
-    className="bg-[#1AA47D] hover:bg-[#168A6F] hover:gap-2 text-white w-[40px] hover:w-[159px] h-[37px] rounded-md flex items-center justify-center overflow-hidden transition-all duration-10 group"
+    className="bg-[#1AA47D] hover:bg-[#168A6F] below-lg:hidden  hover:gap-2 text-white w-[40px] hover:w-[159px] h-[37px] rounded-md flex items-center justify-center overflow-hidden transition-all duration-10 group"
 >
     <span className="">+</span>
     <span className="hidden group-hover:block text-white transition-opacity duration-10">
         Add Expenses
     </span>
+</button>
+
+<button
+    onClick={openModal}
+    className="bg-[#1AA47D]  text-white below-md:hidden  w-[159px] h-[37px] rounded-md flex items-center justify-center  "
+>
+   
+        Add Expenses
+
 </button>
 
 

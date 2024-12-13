@@ -140,8 +140,10 @@ const columns: ColumnDef<TableRow>[] = [
         ),
     },
 ];
+
+  
 const Expenses: FC = () => {
-    const [globalFilter, setGlobalFilter] = React.useState("");
+  const [globalFilter, setGlobalFilter] = React.useState("");
     const table = useReactTable({
         data,
         columns,
@@ -277,7 +279,6 @@ const Expenses: FC = () => {
     };
     /**dropdown */
     const [selectedOption, setSelectedOption] = useState<string>("All stores");
-    //const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
 
@@ -285,206 +286,291 @@ const Expenses: FC = () => {
     setSelectedOption(option);
     setIsOpen(false);
   };
+    return (
+        <main className="py-4 px-4 w-full mt-14 below-md:mt-12">
 
-  return (
-    <main className="my-4 mx-6 mt-24">
-      <>
-        <div className="flex flex-row w-full items-center gap-4 space-x-4 mt-4">
-          <div className="flex">
-            {/* Dropdown Button */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="bg-[#ffffff] text-[#636363] shadow px-4 py-[10px] rounded-md flex items-center justify-between w-[265px] h-[35px] text-[12px]"
-            >
-              <span>{selectedOption}</span>
-              <img
-                src="./images/icon.svg"
-                className={`w-3 h-3 ml-2 transition-transform duration-200 ${
-                  isOpen ? "transform rotate-180" : ""
-                }`}
-              />
-            </button>
-            {/* Dropdown Menu */}
-            {isOpen && (
-              <div
-                className="absolute left-[260px] w-[20%] mt-9 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-                style={{ zIndex: 50 }}
-              >
-                {options.map((option, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleSelect(option)}
-                    className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                  >
-                    {option}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+            <>
+                <div className='flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:space-y-1 gap-2 mt-4 my-4'>
+                    <div className='flex gap-2 w-full below-md:flex-col'>
 
-          <div className="flex shadow border rounded-lg w-[265px] h-[35px] text-[12px] bg-[#ffff] items-center ">
-            <DatePicker
-              selected={startDate}
-              onChange={(dates: [Date | null, Date | null]) => {
-                // Convert null values to undefined
-                const updatedDates: [Date | undefined, Date | undefined] = [
-                  dates[0] || undefined,
-                  dates[1] || undefined,
-                ];
-                setDateRange(updatedDates);
-              }}
-              startDate={startDate}
-              endDate={endDate}
-              selectsRange
-              placeholderText="Select date range"
-              className="w-[246px] h-[35px] pl-2 bg-transparent text-[12px] focus:outline-none"
-            />
-            <img
-              className="w-5 h-5 pr-2 cursor-pointer items-center "
-              src="/images/CalenderIcon.svg"
-            />
-          </div>
-
-          <div className="flex shadow border text-[12px] bg-[#ffff] items-center  rounded-lg w-[200px] h-[35px]">
-            <input
-              type="search"
-              placeholder="Search"
-              className="w-full h-[35px] bg-transparent rounded-lg px-3 text-[#636363] focus:outline-none"
-            ></input>
-            <img
-              className="w-5 h-5 pr-1 cursor-pointer items-center"
-              src="/images/searchicon.svg"
-            />
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between my-3">
-          <p className="text-[16px] font-bold text-[#334155] mt-2 ">Expenses</p>
-          <AddExpenses />
-        </div>
-
-        {/* Expenses Table */}
-        <div className="bg-white  shadow-lg rounded-lg overflow-hidden">
-          <div className="w-full">
-            <table className="w-full border-collapse text-[12px] text-white">
-              <thead className="bg-[#334155]">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <th
-                        key={header.id}
-                        className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px]"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
+                        <div className='flex'>
+                            {/* Dropdown Button */}
+                            <button
+                                onClick={() => setIsOpen(!isOpen)}
+                                className="bg-[#ffffff] text-[#636363] shadow  below-md:px-2 px-4 py-[10px] rounded-md flex items-center justify-between w-[265px] h-[35px] text-[12px] below-md:h-[35px] below-md:w-full below-md:text[11px] below-md:text[#474747]"
+                            >
+                                <span>{selectedOption}</span>
+                                <img
+                                    src="./images/icon.svg"
+                                    className={`w-3 h-3 ml-2 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""
+                                        }`}
+                                />
+                            </button>
+                            {/* Dropdown Menu */}
+                            {isOpen && (
+                                <div
+                                    className="absolute left-[260px] below-md:left-[16px] below-md:w-[90%] w-[20%] mt-9 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
+                                    style={{ zIndex: 50 }}
+                                >
+                                    {options.map((option, index) => (
+                                        <div
+                                            key={index}
+                                            onClick={() => handleSelect(option)}
+                                            className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
+                                        >
+                                            {option}
+                                        </div>
+                                    ))}
+                                </div>
                             )}
-                      </th>
+
+                        </div>
+
+
+
+                        <div className="relative flex below-md:w-full below-md:text-[11px] shadow rounded-md w-[265px] h-[35px] text-[12px] bg-[#ffff] items-center">
+                            <DatePicker
+                                selected={startDate}
+                                onChange={handleDateChange}
+                                startDate={startDate}
+                                endDate={endDate}
+                                filterDate={filterDate}
+                                dayClassName={dayClassName}//below-md:ml-[168px] pr-3 w-[246px] below-md:w-full h-[35px]
+                                selectsRange
+                                placeholderText="Select date range"
+                                className="flex-grow h-full pl-2 bg-transparent below-md:text-[11px] text-[12px] focus:outline-none "
+                                ref={calendarRef}// Add reference for the DatePicker
+                                // popperPlacement="bottom-end" // Position dropdown
+                                // popperModifiers={[
+                                //     {
+                                //         name: 'preventOverflow',
+                                //         options: {
+                                //             boundary: 'viewport',
+                                //         },
+                                //     },
+                                //     {
+                                //         name: 'offset',
+                                //         options: {
+                                //             offset: [0, 10], // Adjust dropdown offset
+                                //         },
+                                //     },
+                                // ]}
+                            />
+                            <img className='absolute right-2 cursor-pointer items-center' src='/images/CalenderIcon.svg'
+                                onClick={() => {
+                                    if (calendarRef.current) {
+                                        (calendarRef.current as any).setOpen(true); // Open the calendar on icon click
+                                    }
+                                }}
+                            />
+                        </div>
+                        {/* </div>  */}
+
+                        <div className='flex items-center justify-between below-md:flex-row below-md:gap-4'>
+                            <div className='flex shadow  text-[12px] bg-[#ffff] items-center  rounded-md w-[200px]  h-[35px] below-md:w-full below-md:h-[35px] below-md:text-[11px]'>
+                                <input type='search' ref={searchInputRef} placeholder='Search' className='w-full h-[35px] bg-transparent rounded-lg px-3 text-[#636363] focus:outline-none'>
+                                </input>
+                                <img className='pr-2 cursor-pointer items-center' src='/images/searchicon.svg'
+                                    onClick={handleClick} />
+
+                            </div>
+
+                            {/* <div className='below-md:h-[35px] below-md:w-[159px] below-md:text[13px] below-lg:hidden'>
+                                <AddExpenses />
+                            </div> */}
+                        </div>
+                    </div>
+                    <div className='below-md:hidden mt-1'><AddExpenses /></div>
+                </div>
+
+
+                {/* <div className='flex items-center justify-between my-3 below-md:hidden'>
+                    <p className='text-[16px] font-bold text-[#334155] mt-2  below-md:hidden'>Expenses</p>
+                    <AddExpenses />
+                </div> */}
+
+                {/* Card section */}
+                <div className=''>
+                    {cardData.map((card, index) => (
+                        <div key={index}
+                            className='flex flex-col h-[167px] w-full shadow rounded-md bg-white border border-[#E4E4EF] below-lg:hidden my-4'>
+                            <div className='flex justify-between items-start'>
+                                <div className='flex gap-4 px-3 py-4'>
+                                    <p className='text-[12px] font-semibold'>{card.date}</p>
+                                    <p className='text-[12px] font-semibold'>{card.type}</p>
+                                </div>
+
+                                <div className='flex gap-4 mb-1 px-3 py-4'>
+                                    <button className='text-[#109BDB] hover:text-blue-700'>
+                                        <img className='w-4 h-4' src='/images/editIcon.svg' />
+                                    </button>
+                                    <button className='text-[#BF4343] hover:text-red-700'>
+                                        <img className='w-4 h-4' src='/images/deleteicon(2).svg' />
+                                    </button>
+                                </div>
+                            </div>
+                            {/* Divider */}
+                            <div className="border-t border-gray-300 mb-2"> </div>
+                            {/* Content Area */}
+                            <div className='flex justify-between items-center mx-3 py-1'>
+                                <div className='flex flex-col text-[12px] space-y-2'>
+                                    <p className='text-[#636363]'>Store</p>
+                                    <p className='text-[#636363]'>Amount</p>
+                                    <p className='text-[#636363]'>Description</p>
+                                </div>
+                                <div className='flex flex-col text-[12px] text-right space-y-2'>
+                                    <p className='text-[#1A1A1A]'>{card.store}</p>
+                                    <p className='text-[#000000]'>{card.amount}</p>
+                                    <p className='text-[#1A1A1A]'>{card.description}</p>
+                                </div>
+                            </div>
+                        </div>
                     ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={
-                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                    }
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="px-4 py-1 text-[#636363] text-[14px]"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        {/* Pagination Numbers */}
-        <div className="mt-4 flex gap-2 justify-between items-center">
-          {/* Page Range Display */}
-          <div>
-            <span className="text-[#8899A8] text-[12px] font-medium ml-3">
-              {startItem} - {endItem} of {totalItems}
-            </span>
-          </div>
+                    <div className=' fixed bottom-[20px] below-lg:hidden right-3'> <AddExpenses /></div>
+                </div>
+                {/* <div className='below-lg:hidden'><AddExpenses /></div> */}
 
-          {/* Pagination Numbers */}
-          <div className="flex flex-row gap-3">
-            <button
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
-              style={{ background: "#EBEFF6" }}
-            >
-              <img src="/images/left.svg" />
-            </button>
 
-            {Array.from({ length: table.getPageCount() }, (_, index) => {
-              const pageIndex = index;
-              return (
-                <button
-                  key={pageIndex}
-                  onClick={() => table.setPageIndex(pageIndex)}
-                  className={`px-4 py-2 rounded-md text-[12px] ${
-                    table.getState().pagination.pageIndex === pageIndex
-                      ? "!important text-[#FFFFFF]"
-                      : " text-gray-700"
-                  }`}
-                  style={{
-                    backgroundColor:
-                      table.getState().pagination.pageIndex === pageIndex
-                        ? "#1AA47D"
-                        : "transparent",
-                  }}
-                >
-                  {pageIndex + 1}
-                </button>
-              );
-            })}
 
-            <button
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
-              style={{ background: "#EBEFF6" }}
-            >
-              <img src="/images/right.svg" />
-            </button>
 
-            <div>
-              <div className="w-full">
-                {/* Dropdown for Page Selection */}
-                <select
-                  value={table.getState().pagination.pageIndex} // Sync with current page index
-                  onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
-                  className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
-                >
-                  {Array.from({ length: table.getPageCount() }, (_, index) => (
-                    <option key={index} value={index}>
-                      Page {index + 1}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    </main>
-  );
-};
+
+
+                {/* Expenses Table */}
+                <div className='overflow-x-auto bg-white shadow-lg rounded-lg flex-grow flex flex-col below-md:hidden'>
+                    <div className='overflow-hidden max-w-full'>
+                        <table className='w-full border-collapse text-[12px] text-white table-fixed'>
+                            <thead className='bg-[#334155] top-0 z-10'>
+                                {table.getHeaderGroups().map((headerGroup) => (
+                                    <tr key={headerGroup.id}>
+                                        {headerGroup.headers.map((header) => (
+                                            <th
+                                                key={header.id}
+                                                className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+
+
+                                            >
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                            </th>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </thead>
+                        </table>
+                        <div className="w-full overflow-y-auto scrollbar-thin flex-grow"
+                            style={{ maxHeight: "calc(100vh - 270px)" }}>
+                            <table className='w-full border-collapse text-[12px] text-white table-fixed'>
+
+                                <tbody>
+                                    {table.getRowModel().rows.map((row) => (
+                                        <tr
+                                            key={row.id}
+                                            className={
+                                                row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                                            }
+                                        >
+                                            {row.getVisibleCells().map((cell) => (
+                                                <td
+                                                    key={cell.id}
+                                                    className="px-4 py-1 text-[#636363] text-[14px] w-[100px]"
+
+
+                                                >
+                                                    {flexRender(
+                                                        cell.column.columnDef.cell,
+                                                        cell.getContext()
+                                                    )}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {/* Pagination Numbers */}
+                <div className="mt-4 flex gap-2 justify-between items-center below-md:hidden">
+                    {/* Page Range Display */}
+                    <div>
+                        <span className="text-[#8899A8] text-[12px] font-medium ml-3">
+                            {startItem} - {endItem} of {totalItems}
+                        </span>
+                    </div>
+
+                    {/* Pagination Numbers */}
+                    <div className="flex flex-row gap-3">
+                        <button
+                            onClick={() => table.previousPage()}
+                            disabled={!table.getCanPreviousPage()}
+                            className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
+                            style={{ background: "#EBEFF6" }}
+                        >
+                            <img src="/images/left.svg" />
+                        </button>
+
+                        {Array.from({ length: table.getPageCount() }, (_, index) => {
+                            const pageIndex = index;
+                            return (
+                                <button
+                                    key={pageIndex}
+                                    onClick={() => table.setPageIndex(pageIndex)}
+                                    className={`px-4 py-2 rounded-md text-[12px] ${table.getState().pagination.pageIndex === pageIndex
+                                        ? "!important text-[#FFFFFF]"
+                                        : " text-gray-700"
+                                        }`}
+                                    style={{
+                                        backgroundColor:
+                                            table.getState().pagination.pageIndex === pageIndex
+                                                ? "#1AA47D"
+                                                : "transparent",
+                                    }}
+                                >
+                                    {pageIndex + 1}
+                                </button>
+                            );
+                        })}
+
+                        <button
+                            onClick={() => table.nextPage()}
+                            disabled={!table.getCanNextPage()}
+                            className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
+                            style={{ background: "#EBEFF6" }}
+                        >
+                            <img src="/images/right.svg" />
+                        </button>
+
+                        <div>
+                            <div className="w-full">
+                                {/* Dropdown for Page Selection */}
+                                <select
+                                    value={table.getState().pagination.pageIndex} // Sync with current page index
+                                    onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
+                                    className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
+                                >
+                                    {Array.from(
+                                        { length: table.getPageCount() },
+                                        (_, index) => (
+                                            <option key={index} value={index}>
+                                                Page {index + 1}
+                                            </option>
+                                        )
+                                    )}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+         
+            </>
+        </main>
+    )
+}
 
 export default Expenses;
+          
