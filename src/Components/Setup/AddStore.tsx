@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Dialog, DialogPanel, DialogTitle ,Button } from "@headlessui/react";
+import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -10,13 +10,15 @@ const AddStore = () => {
   const [formData, setFormData] = useState({
     storeName: "",
     location: "",
-    description: "",
+    user: "",
+    county: "",
     royalty: "",
   });
   const [errors, setErrors] = useState({
     storeName: "",
     location: "",
-    description: "",
+    user: "",
+    county: "",
     royalty: "",
   });
 
@@ -26,13 +28,15 @@ const AddStore = () => {
     setFormData({
       storeName: "",
       location: "",
-      description: "",
+      user: "",
+      county: "",
       royalty: "",
     });
     setErrors({
       storeName: "",
       location: "",
-      description: "",
+      user: "",
+      county: "",
       royalty: "",
     });
   };
@@ -59,7 +63,8 @@ const AddStore = () => {
     const newErrors = {
       storeName: "",
       location: "",
-      description: "",
+      county: "",
+      user: "",
       royalty: "",
     };
 
@@ -72,9 +77,13 @@ const AddStore = () => {
       newErrors.location = "Store location is required";
       isValid = false;
     }
+    if (!formData.county.trim()) {
+      newErrors.county = "Store county is required";
+      isValid = false;
+    }
 
-    if (!formData.description.trim()) {
-      newErrors.description = "Store description is required";
+    if (!formData.user.trim()) {
+      newErrors.user = "Store description is required";
       isValid = false;
     }
 
@@ -109,13 +118,19 @@ const AddStore = () => {
   return (
     <>
       {/* Button to open dialog */}
-      <div>
-     
-      <Button
+      <div
+        className="flex   justify-end sticky bottom-0 z-10 w-full below-lg:hidden"
+        onClick={openModal}
+      >
+        <img src="/images/addButton.svg" alt="Add Button" className="m-0 p-0" />
+      </div>
+
+      <div className=" below-md:hidden">
+        <Button
           onClick={openModal}
           className="flex items-center justify-center font-semibold text-[14px] bg-[#1AA47D] w-[140px] below-md:w-[150px] hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md gap-x-2"
         >
-          <img src="/images/plus1.svg" alt="Add icon" className="w-3 h-3" />
+          <img src="/images/plus1.svg" alt="Add icon" className="w-3 h-3  " />
           Add Store
         </Button>
       </div>
@@ -126,14 +141,22 @@ const AddStore = () => {
         className="relative z-50"
         onClose={closeModal}
       >
-        <div className="fixed inset-0 bg-black bg-opacity-50" />
+        <div className="fixed inset-0 bg-black bg-opacity-50 " />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[420px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
+          <DialogPanel className="w-[420px] below-md:w-[345px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
             <div className="flex justify-between mb-4">
-              <DialogTitle as="h3" className="font-medium text-gray-900">
+              <DialogTitle
+                as="h3"
+                className="font-medium border-none text-gray-900"
+              >
                 Add Store
               </DialogTitle>
-              <img onClick={closeModal} src="/images/cancelicon.svg" alt="" className="cursor-pointer"/>
+              <img
+                onClick={closeModal}
+                src="/images/cancelicon.svg"
+                alt=""
+                className="cursor-pointer"
+              />
             </div>
 
             <form onSubmit={handleSubmit}>
@@ -173,22 +196,38 @@ const AddStore = () => {
                 </div>
 
                 <div className="col-span-2">
-                  <label className="text-sm text-gray-600">Description</label>
+                  <label className="text-sm text-gray-600">User</label>
                   <input
                     type="text"
                     name="description"
-                    value={formData.description}
+                    value={formData.user}
                     onChange={handleInputChange}
                     className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
-                      errors.description ? "border-red-500" : "border-gray-300"
+                      errors.user ? "border-red-500" : "border-gray-300"
                     }`}
-                    placeholder="Please enter Store Description"
+                    placeholder="Please enter Store User"
                   />
-                  {errors.description && (
-                    <p className="text-xs text-red-500">{errors.description}</p>
+                  {errors.user && (
+                    <p className="text-xs text-red-500">{errors.user}</p>
                   )}
                 </div>
 
+                <div className="col-span-2">
+                  <label className="text-sm text-gray-600">County</label>
+                  <input
+                    type="text"
+                    name="royalty"
+                    value={formData.royalty}
+                    onChange={handleInputChange}
+                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                      errors.royalty ? "border-red-500" : "border-gray-300"
+                    }`}
+                    placeholder="Please enter Store County"
+                  />
+                  {errors.royalty && (
+                    <p className="text-xs text-red-500">{errors.county}</p>
+                  )}
+                </div>
                 <div className="col-span-2">
                   <label className="text-sm text-gray-600">Royalty</label>
                   <input
