@@ -3,7 +3,10 @@ import React from "react";
 import { useState } from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Images from "@/Components/ui/Common/Image";
+import Pagination from "@/Components/ui/Common/Pagination";
+import Dropdown from "@/Components/ui/Common/DropDown";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -129,6 +132,25 @@ const data: TableRow[] = [
   },
 ];
 
+const formattedData = data?.map((item) => {
+  const rawDate = new Date(item?.date);
+
+  // Format the date as MM-DD-YY
+  const formattedDate = `${(rawDate?.getMonth() + 1)
+    .toString()
+    .padStart(
+      2,
+      "0"
+    )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
+    .getFullYear()
+    .toString()
+    .slice(-2)}`;
+
+  return { ...item, date: formattedDate };
+});
+
+console.log(formattedData);
+
 const columns: ColumnDef<TableRow>[] = [
   { accessorKey: "date", header: "Date" },
   { accessorKey: "store", header: "Store" },
@@ -137,20 +159,19 @@ const columns: ColumnDef<TableRow>[] = [
   { accessorKey: "type", header: "Type" },
   {
     id: "pencil",
-    header: "Edit",
+    header: "pencil",
     cell: () => (
-      <button className="bg-white p-2 rounded-full shadow-inner">
-        <Image src="/images/pencil.svg" alt="Edit" width={14} height={14} />
+      <button className="bg-[#FFFFFF] p-[9px] rounded-full shadow-[inset_-2px_-2px_2px_#E2F3F780,inset_2px_2px_3px_#F3F6FFAD]">
+        <Images src="/images/pencil.svg" alt="pencil" width={14} height={14} />
       </button>
     ),
   },
-
   {
     id: "delete",
     header: "Delete",
     cell: () => (
       <button className="bg-white p-2 rounded-full shadow-inner">
-        <Image src="/images/delete1.svg" alt="Delete" width={14} height={14} />
+        <Images src="/images/delete1.svg" alt="Delete" width={14} height={14} />
       </button>
     ),
   },
@@ -158,7 +179,7 @@ const columns: ColumnDef<TableRow>[] = [
 
 const DetailsPage: React.FC = () => {
   const table = useReactTable({
-    data,
+    data: formattedData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -172,12 +193,6 @@ const DetailsPage: React.FC = () => {
     },
   });
 
-  //pagination range
-  const { pageIndex, pageSize } = table.getState().pagination;
-  const totalItems = table.getFilteredRowModel().rows.length;
-  const startItem = pageIndex * pageSize + 1;
-  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
-
   /**go back button */
   const router = useRouter();
   const handleBack = () => {
@@ -188,48 +203,25 @@ const DetailsPage: React.FC = () => {
     }
   };
 
-  /**first dropdown */
   const [selectedOption, setSelectedOption] = useState<string>("All stores");
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedOption2, setSelectedOption2] = useState<string>("2021");
+  const [isOpen2, setIsOpen2] = useState<boolean>(false);
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
+  const options2 = ["2024", "2023", "2022", "2021"];
+
+  const toggleDropdown1 = () => setIsOpen(!isOpen);
+  const toggleDropdown2 = () => setIsOpen2(!isOpen2);
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false);
   };
 
-  /**second dropdown */
-  const [selectedOption2, setSelectedOption2] = useState<string>("2021");
-  const [isOpen2, setIsOpen2] = useState<boolean>(false);
-
-  const options2 = ["2024", "2023", "2022", "2021"];
-
   const handleSelect2 = (option2: string) => {
     setSelectedOption2(option2);
     setIsOpen2(false);
-  };
-
-  /**third dropdown */
-  const [selectedOption3, setSelectedOption3] = useState<string>("2021");
-  const [isOpen3, setIsOpen3] = useState<boolean>(false);
-
-  const options3 = ["2024", "2023", "2022", "2021"];
-
-  const handleSelect3 = (option3: string) => {
-    setSelectedOption3(option3);
-    setIsOpen3(false);
-  };
-
-  /**fourth dropdown */
-  const [selectedOption4, setSelectedOption4] = useState<string>("2021");
-  const [isOpen4, setIsOpen4] = useState<boolean>(false);
-
-  const options4 = ["2024", "2023", "2022", "2021"];
-
-  const handleSelect4 = (option4: string) => {
-    setSelectedOption4(option4);
-    setIsOpen4(false);
   };
 
   return (
@@ -247,80 +239,30 @@ const DetailsPage: React.FC = () => {
           Operating Expense Analysis
         </p>
       </div>
-      <div className="pt-6 pb-6 below-md:px-3 sticky z-10 top-16 bg-[#f7f8f9] pl-6 pr-6">
+      <div className="pt-6 pb-6 below-md:pb-3 below-md:px-3 sticky z-10 top-16 bg-[#f7f8f9] pl-6 pr-6">
         <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row gap-3  w-full">
-            <div className="relative w-[30%] below-md:w-full">
-              <p className="text-[#2D374880] text-[12px] mb-2">Select Store</p>
-              {/* Dropdown Button */}
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
-              >
-                <span>{selectedOption}</span>
-                <img
-                  src="./images/icon.svg"
-                  className={`w-4 h-4 ml-2 transition-transform duration-200 ${
-                    isOpen ? "transform rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {/* Dropdown Menu */}
-              {isOpen && (
-                <div
-                  className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-                  style={{ zIndex: 50 }}
-                >
-                  {options.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleSelect(option)}
-                      className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                    >
-                      {option}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+          <div className="flex flex-row below-md:flex-col gap-3  w-full">
+            <Dropdown
+              label="Select Store"
+              options={options}
+              selectedOption={selectedOption}
+              onSelect={handleSelect}
+              isOpen={isOpen}
+              toggleOpen={toggleDropdown1}
+            />
 
             {/*second dropdown */}
 
-            <div className="relative w-[30%] below-md:w-full">
-              <p className="text-[#2D374880] text-[12px] mb-2">Select Period</p>
-              {/* Dropdown Button */}
-              <button
-                onClick={() => setIsOpen2(!isOpen2)}
-                className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
-              >
-                <span>{selectedOption2}</span>
-                <img
-                  src="./images/icon.svg"
-                  className={`w-4 h-4 ml-2 transition-transform duration-200 ${
-                    isOpen2 ? "transform rotate-180" : ""
-                  }`}
-                />
-              </button>
+            {/* Second Dropdown */}
 
-              {/* Dropdown Menu */}
-              {isOpen2 && (
-                <div
-                  className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-                  style={{ zIndex: 50 }}
-                >
-                  {options2.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleSelect2(option)}
-                      className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                    >
-                      {option}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <Dropdown
+              label="Select Period"
+              options={options2}
+              selectedOption={selectedOption2}
+              onSelect={handleSelect2}
+              isOpen={isOpen2}
+              toggleOpen={toggleDropdown2}
+            />
           </div>
           <div>
             <p
@@ -335,15 +277,16 @@ const DetailsPage: React.FC = () => {
       </div>
 
       {/* Table remains visible as is */}
-      <div className="flex flex-row justify-between items-center mt-16 mb-4 mx-6 below-md:mx-3">
+      <div className="flex flex-row justify-between items-center mt-16 below-md:mt-14 mb-4 mx-6 below-md:mx-3">
         <div>
-          <p className="text-[16px] font-bold text-[#334155] ml-3"> Expenses</p>
+          <p className="text-[16px] font-bold text-[#334155] ml-3 below-md:ml-0">
+            {" "}
+            Expenses
+          </p>
         </div>
         <div>
-          <button
-            className="bg-[#1AA47D] [box-shadow:0px_3px_8px_0px_#00000026] w-[133px] h-[37px] rounded-md text-white text-[14px] font-semibold 
-             hover:shadow-lg transition-shadow duration-300"
-          >
+          <button className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300">
+            <img src="/images/addIcon.svg" alt="add Icon" className="mr-2" />
             Add Expense
           </button>
         </div>
@@ -401,78 +344,7 @@ const DetailsPage: React.FC = () => {
           </div>
 
           {/* Pagination */}
-          <div className="mt-4 flex gap-2 justify-between items-center below-md:fixed below-md:bottom-5 below-md:right-5 below-md:left-0">
-            {/* Page Range Display */}
-            <div>
-              <span className="text-[#8899A8] text-[12px] font-medium ml-3 below-md:hidden">
-                {startItem} - {endItem} of {totalItems}
-              </span>
-            </div>
-
-            {/* Pagination Numbers */}
-            <div className="flex flex-row gap-3">
-              <button
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-                className="px-4 py-2 below-md:px-2 below-md:py-1 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
-                style={{ background: "#EBEFF6" }}
-              >
-                <img src="/images/left.svg" />
-              </button>
-
-              {Array.from({ length: table.getPageCount() }, (_, index) => {
-                const pageIndex = index;
-                return (
-                  <button
-                    key={pageIndex}
-                    onClick={() => table.setPageIndex(pageIndex)}
-                    className={`px-4 py-2 below-md:px-2 below-md:py-1  rounded-md text-[12px] ${
-                      table.getState().pagination.pageIndex === pageIndex
-                        ? "!important text-[#FFFFFF]"
-                        : " text-gray-700"
-                    }`}
-                    style={{
-                      backgroundColor:
-                        table.getState().pagination.pageIndex === pageIndex
-                          ? "#1AA47D"
-                          : "transparent",
-                    }}
-                  >
-                    {pageIndex + 1}
-                  </button>
-                );
-              })}
-
-              <button
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-                className="px-4 py-2 below-md:px-2 below-md:py-1  bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
-                style={{ background: "#EBEFF6" }}
-              >
-                <img src="/images/right.svg" />
-              </button>
-
-              <div>
-                <div className="w-full">
-                  {/* Dropdown for Page Selection */}
-                  <select
-                    value={table.getState().pagination.pageIndex} // Sync with current page index
-                    onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
-                    className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
-                  >
-                    {Array.from(
-                      { length: table.getPageCount() },
-                      (_, index) => (
-                        <option key={index} value={index}>
-                          Page {index + 1}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Pagination table={table} />
         </div>
       </div>
     </main>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import React, { ReactNode, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import Images from "../ui/Common/Image";
 
 interface DrawerProps {
   children: ReactNode;
@@ -15,6 +16,45 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null); // Track active submenu item
   const router = useRouter();
   const currentPath = usePathname();
+  const [isClient, setIsClient] = useState(false);
+  const [title, setTitle] = useState("");
+
+
+
+  useEffect(() => {
+    setIsClient(true); // Ensuring we are on the client side
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      const currentRoute = currentPath.replace("/", "");
+
+      let newTitle = "";
+      switch (currentRoute?.toLowerCase()) {
+        case "myprofile":
+          newTitle = "My Profile";
+          break;
+        case "editprofile":
+          newTitle = "Edit Profile";
+          break;
+        case "invoices":
+          newTitle = "Invoices";
+          break;
+        case "expenses":
+          newTitle = "Expenses";
+          break;
+        case "logout":
+          newTitle = "Logout";
+          break;
+        default:
+          newTitle = "Admin Panel";
+      }
+
+      setTitle(newTitle);
+      document.title = newTitle;
+    }
+  }, [isClient, currentPath]);
+
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 800px)");
@@ -78,13 +118,20 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
 
   return (
     <main className="flex h-[100vh]">
-      {!shouldHideHamburger && (
+      {title === "My Profile" || title === "Edit Profile" ?
+        <img src="/images/backIcon.svg"  
+        className="fixed top-6 left-4 cursor-pointer z-40" 
+        onClick={() =>  router.back()}
+        />
+       :
+      !shouldHideHamburger && (
         <img
           src="/images/hamburger.svg"
           className="fixed top-6 left-4 cursor-pointer z-40"
           onClick={() => setOpen(!open)}
         />
-      )}
+      )
+    }
       <div
         className={`${sidebarClass} duration-300 h-full bg-defaultblack text-defaultwhite sticky below-md:fixed top-0 left-0 z-40`}
       >
@@ -97,7 +144,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         <div
           className={`flex gap-x-4 mt-[13px] ${open ? "pl-10" : "pl-3"}  below-md:pl-5 ${open ? "ml-[13px]" : "ml-[3px]"}`}
         >
-          <img
+          <Images
             src={open ? "/images/logo.svg" : "/images/halflogo.png"}
             className={`cursor-pointer ${open ? "w-[136px]" : "w-[36px]"} h-auto`}
           />
@@ -123,7 +170,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
                     ${menu?.gap ? "mt-11" : "mt-1"} 
                     ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""}`}
                 >
-                  <img src={`/images/${menu.src}.png`} />
+                  <img src={`/images/${menu.src}.svg`} />
                   <span
                     className={`${!open && "hidden"} origin-left duration-200`}
                   >
@@ -168,7 +215,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         </div>
 
         <div className="flex px-6 mt-10 gap-4">
-          <img src="/images/logout.png" />
+          <img src="/images/logout.svg" />
           {open && <p>Logout</p>}
         </div>
       </div>

@@ -2,6 +2,7 @@
 import { FC, useState } from "react";
 import DonutChart from "@/Components/drawer/DonutChart";
 import DateRange from "@/Components/drawer/DateRangePicker";
+import Dropdown from "@/Components/ui/Common/DropDown";
 
 const SalesKPI: FC = () => {
   const tableData = [
@@ -24,6 +25,8 @@ const SalesKPI: FC = () => {
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
 
+  const toggleDropdown1 = () => setIsOpen(!isOpen);
+
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false);
@@ -31,7 +34,7 @@ const SalesKPI: FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-70px)] overflow-auto"
+      className="max-h-[calc(100vh-10px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="below-md:flex below-md:justify-center">
@@ -42,49 +45,27 @@ const SalesKPI: FC = () => {
 
       <div className=" mb-10">
         <div className="flex flex-row below-md:flex-col below-md:items-end sticky top-16 justify-between pt-6 below-md:px-3  pl-6 pr-6 pb-6 below-md:pb-3 bg-[#f7f8f9] ">
-          <div className="flex flex-row w-full gap-3">
-            <div className="w-[20%] below-md:w-full relative">
-              {/* Dropdown Button */}
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
-              >
-                <span>{selectedOption}</span>
-                <img
-                  src="./images/icon.svg"
-                  className={`w-4 h-4 ml-2 transition-transform duration-200 ${
-                    isOpen ? "transform rotate-180" : ""
-                  }`}
-                />
-              </button>
+          <div className="flex flex-row below-md:flex-col w-full gap-3">
+            <Dropdown
+              options={options}
+              widthchange="w-[22%]"
+              selectedOption={selectedOption}
+              onSelect={handleSelect}
+              isOpen={isOpen}
+              toggleOpen={toggleDropdown1}
+            />
 
-              {/* Dropdown Menu */}
-              {isOpen && (
-                <div
-                  className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-                  style={{ zIndex: 50 }}
-                >
-                  {options.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleSelect(option)}
-                      className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                    >
-                      {option}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
             <div className="w-[30%] below-md:w-full">
               <DateRange />
             </div>
           </div>
           <div className="below-md:w-full below-md:flex below-md:justify-end below-md:pl-3">
-            <button
-              className="bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[133px] below-md:w-[50%]  h-[37px] rounded-md text-white text-[14px] font-semibold 
-             hover:shadow-lg transition-shadow duration-300"
-            >
+            <button className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300">
+              <img
+                src="/images/uploadIcon.svg"
+                alt="Upload Icon"
+                className="mr-2"
+              />
               PI Report
             </button>
           </div>
@@ -92,11 +73,11 @@ const SalesKPI: FC = () => {
 
         {/* grid 1 */}
 
-        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 pt-16 pl-6 pr-6">
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full h-full min-h-[120px] p-4 justify-between">
+        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 pt-16 pl-6 pr-6 items-stretch">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">Sales</p>
-              <p className="text-[18px] text-[#2D3748]">$ 161,358</p>
+              <p className="text-[18px] text-[#2D3748]">$161,358</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 20%{" "}
                 <span className="text-[#575F6D] font-medium">
@@ -109,10 +90,10 @@ const SalesKPI: FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full h-full min-h-[120px] p-4 justify-between">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
-              <p className="text-[18px] text-[#2D3748]">$ 161,358</p>
+              <p className="text-[18px] text-[#2D3748]">$161,358</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 65.2%{" "}
                 <span className="text-[#575F6D] font-medium">
@@ -125,12 +106,12 @@ const SalesKPI: FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full h-full min-h-[120px] p-4 justify-between">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Customer Count
               </p>
-              <p className="text-[18px] text-[#2D3748]">$ 161,358</p>
+              <p className="text-[18px] text-[#2D3748]">$161,358</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 40%{" "}
                 <span className="text-[#575F6D] font-medium">
@@ -143,12 +124,12 @@ const SalesKPI: FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full h-full min-h-[120px] p-4 justify-between">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Labor Cost
               </p>
-              <p className="text-[18px] text-[#2D3748]">$ 161,358</p>
+              <p className="text-[18px] text-[#2D3748]">$161,358</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 16%{" "}
                 <span className="text-[#575F6D] font-medium">
@@ -163,13 +144,13 @@ const SalesKPI: FC = () => {
         </div>
 
         {/* grid 2 */}
-        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 below-md:px-3 mt-6 below-md:mt-3  pl-6 pr-6">
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full h-full min-h-[120px] p-4 justify-between">
+        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 below-md:px-3 mt-6 below-md:mt-3  pl-6 pr-6 items-stretch">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Sales Tax
               </p>
-              <p className="text-[18px] text-[#2D3748]">$ 161,358</p>
+              <p className="text-[18px] text-[#2D3748]">$161,358</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 <span className="text-[#575F6D] font-medium">
                   Estimated tax liablity
@@ -181,12 +162,12 @@ const SalesKPI: FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full h-full min-h-[120px] p-4 justify-between">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Royalty
               </p>
-              <p className="text-[18px] text-[#2D3748]">$ 161,358</p>
+              <p className="text-[18px] text-[#2D3748]">$161,358</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 9.0%{" "}
                 <span className="text-[#575F6D] font-medium">
@@ -199,12 +180,12 @@ const SalesKPI: FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full h-full min-h-[120px] p-4 justify-between">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Operating Expenses
               </p>
-              <p className="text-[18px] text-[#2D3748]">$ 161,358</p>
+              <p className="text-[18px] text-[#2D3748]">$161,358</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 0%{" "}
                 <span className="text-[#575F6D] font-medium">
@@ -217,10 +198,10 @@ const SalesKPI: FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full h-full min-h-[120px] p-4 justify-between">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">COGS</p>
-              <p className="text-[18px] text-[#2D3748]">$ 161,358</p>
+              <p className="text-[18px] text-[#2D3748]">$161,358</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 9.8%{" "}
                 <span className="text-[#575F6D] font-medium">

@@ -48,9 +48,10 @@ const AddCategories = () => {
       <div>
         <Button
           onClick={openModal}
-          className="font-semibold text-[14px] bg-[#1AA47D] w-[166px] below-md:w-[150px] hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md "
+          className="flex items-center justify-center font-semibold text-[14px] bg-[#1AA47D] w-[170px] below-md:w-[150px] hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md gap-x-2"
         >
-          Add New Category
+          <img src="/images/plus1.svg " alt="Add icon" className=" w-3 h-3 " />
+          Add Category
         </Button>
       </div>
       {/* Dialog for the modal */}
@@ -62,12 +63,17 @@ const AddCategories = () => {
       >
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[420px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
+          <DialogPanel className="w-[420px]  below-md:w-[345px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
             <div className="flex justify-between">
               <DialogTitle as="h3" className="font-medium text-gray-900">
                 Add Item Category
               </DialogTitle>
-              <img onClick={closeModal} src="/images/cancelicon.svg" alt="" />
+              <img
+                onClick={closeModal}
+                src="/images/cancelicon.svg"
+                alt=""
+                className="cursor-pointer"
+              />
             </div>
 
             <div className="mt-4">
@@ -86,7 +92,7 @@ const AddCategories = () => {
                           ? "border-red-500"
                           : "border-gray-300"
                       }`}
-                      placeholder="Please enter Category name"
+                      placeholder="Please enter Category Name"
                     />
                     {errors.categoryName && (
                       <p className="text-xs text-red-500">

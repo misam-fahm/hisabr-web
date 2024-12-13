@@ -1,4 +1,5 @@
-import React from "react";
+"use client"
+import React, { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -29,21 +30,31 @@ const yearData: Record<number, { category: string; value1: number }[]> = {
   ],
 };
 
-const getBarSize = () => {
-  if (window.innerWidth < 801) {
-    return 20; // Smaller bars for mobile view
-  }
-  return 35; // Default bar size for larger screens
-};
+
+
 
 const BarChart3: React.FC<{ selectedYear: number }> = ({ selectedYear }) => {
   const chartData = yearData[selectedYear] || [];
+
+  const [isMobile, setIsMobile] = useState(false);
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 801);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Set initial state based on current window size
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <ResponsiveContainer width="100%" height={330}>
       <BarChart
         data={chartData}
-        barSize={getBarSize()}
+        barSize={isMobile ? 20 : 35}
         barGap={8}
         barCategoryGap={12}
       >

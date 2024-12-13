@@ -235,7 +235,7 @@ const AddExpenses = () => {
                                         <div className='relative '>
                                             <DatePicker
                                                 selected={formData.date}
-                                                onChange={(date) => setFormData({ ...formData, date })}
+                                                onChange={(date : any) => setFormData({ ...formData, date })}
                                                 placeholderText="Please enter expense date"
                                                 className={`border h-[40px] w-[345px] below-md:w-[100%]  pl-3 pr-10 text-[#8D98AA] text-[12px] rounded-lg ${errors.date ? 'border-red-500' : 'border-gray-300'
                                                     }`}

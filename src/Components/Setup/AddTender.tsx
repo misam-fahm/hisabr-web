@@ -91,8 +91,9 @@ const AddTender = () => {
       <div>
         <Button
           onClick={openModal}
-          className="font-semibold text-[14px] bg-[#1AA47D] hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
+          className="flex items-center justify-center font-semibold text-[14px] bg-[#1AA47D] w-[140px] below-md:w-[150px] hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md gap-x-2"
         >
+          <img src="/images/plus1.svg" alt="Add icon" className="w-3 h-3" />
           Add Tender
         </Button>
       </div>
@@ -110,7 +111,7 @@ const AddTender = () => {
               <DialogTitle as="h3" className="font-medium text-gray-900 mb-4">
                 Add Tender
               </DialogTitle>
-              <img onClick={closeModal} src="/images/cancelicon.svg" alt="" />
+              <img onClick={closeModal} src="/images/cancelicon.svg" alt="" className="cursor-pointer"/>
             </div>
 
             <form onSubmit={handleSubmit}>

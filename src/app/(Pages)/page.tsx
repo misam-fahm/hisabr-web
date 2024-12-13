@@ -4,6 +4,7 @@ import { FC, useState } from "react";
 import Linechart from "@/Components/drawer/LineChart";
 import React from "react";
 import { useRouter } from "next/navigation";
+import Dropdown from "@/Components/ui/Common/DropDown";
 
 interface TableRow {
   name: string;
@@ -32,37 +33,25 @@ const tableData2: TableRow2[] = [
 ];
 
 const Home: FC = () => {
-  /**first dropdown */
   const [selectedOption, setSelectedOption] = useState<string>("All stores");
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedOption2, setSelectedOption2] = useState<string>("2021");
+  const [isOpen2, setIsOpen2] = useState<boolean>(false);
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
+  const options2 = ["2024", "2023", "2022", "2021"];
+
+  const toggleDropdown1 = () => setIsOpen(!isOpen);
+  const toggleDropdown2 = () => setIsOpen2(!isOpen2);
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false);
   };
 
-  /**second dropdown */
-  const [selectedOption2, setSelectedOption2] = useState<string>("2021");
-  const [isOpen2, setIsOpen2] = useState<boolean>(false);
-
-  const options2 = ["2024", "2023", "2022", "2021"];
-
   const handleSelect2 = (option2: string) => {
     setSelectedOption2(option2);
     setIsOpen2(false);
-  };
-
-  /**third dropdown */
-  const [selectedOption3, setSelectedOption3] = useState<string>("Summary");
-  const [isOpen3, setIsOpen3] = useState<boolean>(false);
-
-  const options3 = ["Summary", "Details", "Details", "Summary"];
-
-  const handleSelect3 = (option3: string) => {
-    setSelectedOption3(option3);
-    setIsOpen3(false);
   };
 
   const totalRevenue = tableData.reduce((sum, row) => sum + row.revenue, 0);
@@ -74,49 +63,49 @@ const Home: FC = () => {
   /**first link(gross revenue) */
   const router = useRouter();
 
-  const handleImageClick = () => {
+  const handleClick = () => {
     router.push("/details1"); // Navigates to the 'details' page
   };
 
   /**second link(tender) */
 
-  const handleImageClick2 = () => {
+  const handleClick2 = () => {
     router.push("/details2"); // Navigates to the 'details' page
   };
 
   //forth link(customer count)
 
-  const handleImageClick4 = () => {
+  const handleClick4 = () => {
     router.push("/details4"); // Navigates to the 'details' page
   };
 
   //fifth link(customer count)
 
-  const handleImageClick5 = () => {
+  const handleClick5 = () => {
     router.push("/details5"); // Navigates to the 'details' page
   };
 
   //sixth link(customer count)
 
-  const handleImageClick6 = () => {
+  const handleClick6 = () => {
     router.push("/details6"); // Navigates to the 'details' page
   };
 
   //seventh link(customer count)
 
-  const handleImageClick7 = () => {
+  const handleClick7 = () => {
     router.push("/details7"); // Navigates to the 'details' page
   };
 
   //eighth link(customer count)
 
-  const handleImageClick8 = () => {
+  const handleClick8 = () => {
     router.push("/details8"); // Navigates to the 'details' page
   };
 
   return (
     <main
-      className="max-h-[calc(100vh-70px)] overflow-auto"
+      className="max-h-[calc(100vh-10px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="below-md:flex below-md:justify-center ">
@@ -125,111 +114,34 @@ const Home: FC = () => {
         </p>
       </div>
 
-      <div className="flex flex-row items-center justify-center gap-3 pt-3 pb-3 sticky top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
-        <div className="relative w-full">
-          <p className="text-[#2D374880] text-[12px] mb-2">Select Store</p>
-          {/* Dropdown Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px] "
-          >
-            <span>{selectedOption}</span>
-            <img
-              src="./images/icon.svg"
-              className={`w-4 h-4 ml-2 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""}`}
-            />
-          </button>
+      <div className="flex flex-row items-center gap-3 pt-4 pb-3 sticky top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
+        {/* Dropdowns grouped together */}
+        <div className="flex flex-row gap-3 w-full below-md:flex-col">
+          {/* Dropdown 1 */}
+          {/* First Dropdown */}
 
-          {/* Dropdown Menu */}
-          {isOpen && (
-            <div
-              className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-              style={{ zIndex: 50 }}
-            >
-              {options.map((option, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleSelect(option)}
-                  className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                >
-                  {option}
-                </div>
-              ))}
-            </div>
-          )}
+          <Dropdown
+            label="Select Store"
+            options={options}
+            selectedOption={selectedOption}
+            onSelect={handleSelect}
+            isOpen={isOpen}
+            toggleOpen={toggleDropdown1}
+          />
+          {/* Second Dropdown */}
+
+          <Dropdown
+            label="Select Period"
+            options={options2}
+            selectedOption={selectedOption2}
+            onSelect={handleSelect2}
+            isOpen={isOpen2}
+            toggleOpen={toggleDropdown2}
+          />
         </div>
 
-        {/* Second dropdown */}
-        <div className="relative w-full">
-          <p className="text-[#2D374880] text-[12px] mb-2">Select Period</p>
-          {/* Dropdown Button */}
-          <button
-            onClick={() => setIsOpen2(!isOpen2)}
-            className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
-          >
-            <span>{selectedOption2}</span>
-            <img
-              src="./images/icon.svg"
-              className={`w-4 h-4 ml-2 transition-transform duration-200 ${isOpen2 ? "transform rotate-180" : ""}`}
-            />
-          </button>
-
-          {/* Dropdown Menu */}
-          {isOpen2 && (
-            <div
-              className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-              style={{ zIndex: 50 }}
-            >
-              {options2.map((option, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleSelect2(option)}
-                  className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                >
-                  {option}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Third dropdown */}
-        <div className="relative w-full below-md:hidden">
-          <p className="text-[#2D374880] text-[12px] mb-2">View</p>
-          {/* Dropdown Button */}
-          <button
-            onClick={() => setIsOpen3(!isOpen3)}
-            className="bg-[#ffffff] text-[#4B4B4B] shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px]"
-          >
-            <span>{selectedOption3}</span>
-            <img
-              src="./images/icon.svg"
-              className={`w-4 h-4 ml-2 transition-transform duration-200 ${isOpen3 ? "transform rotate-180" : ""}`}
-            />
-          </button>
-
-          {/* Dropdown Menu */}
-          {isOpen3 && (
-            <div
-              className="absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-              style={{ zIndex: 50 }}
-            >
-              {options3.map((option3, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleSelect3(option3)}
-                  className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                >
-                  {option3}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Tooltip image */}
-        <div className="relative w-[20%] mt-8 below-md:hidden">
-          {/* Tooltip Image with group class */}
+        {/* Tooltip positioned at the end of the screen */}
+        <div className="relative ml-auto mt-8 below-md:hidden">
           <div className="group relative">
             <img
               src="/images/tooltip.svg"
@@ -273,10 +185,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  src="/images/under_details.svg"
-                  onClick={handleImageClick}
-                />
+                <img src="/images/under_details.svg" onClick={handleClick} />
               </div>
             </div>
             <div>
@@ -293,10 +202,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  onClick={handleImageClick2}
-                  src="/images/under_details.svg"
-                />
+                <img onClick={handleClick2} src="/images/under_details.svg" />
               </div>
             </div>
             <div className=" overflow-hidden overflow-y-auto below-md:overflow-x-auto max-h-[42vh] below-md:max-h-[30vh] custom-scrollbar">
@@ -359,8 +265,8 @@ const Home: FC = () => {
 
         {/* grid 1*/}
 
-        <div className="flex flex-row gap-7 below-md:gap-0 below-md:flex-col">
-          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full  h-48 min-h-auto">
+        <div className="flex flex-row gap-7 below-md:gap-0 below-md:flex-col items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/groce.svg" />
@@ -369,10 +275,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  src="/images/under_details.svg"
-                  onClick={handleImageClick}
-                />
+                <img src="/images/under_details.svg" onClick={handleClick} />
               </div>
             </div>
 
@@ -405,7 +308,7 @@ const Home: FC = () => {
           </div>
 
           {/** second grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/plus.svg" />
@@ -414,10 +317,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  src="/images/under_details.svg"
-                  onClick={handleImageClick4}
-                />
+                <img src="/images/under_details.svg" onClick={handleClick4} />
               </div>
             </div>
             <div className="mt-4 mx-4">
@@ -449,7 +349,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/net.svg" />
@@ -489,8 +389,8 @@ const Home: FC = () => {
 
         {/* grid 2*/}
 
-        <div className="flex flex-row gap-7 below-md:gap-0 below-md:flex-col">
-          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  h-48 min-h-auto">
+        <div className="flex flex-row gap-7 below-md:gap-0 below-md:flex-col items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-1 ">
                 <img src="/images/operating.svg" />
@@ -502,10 +402,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  src="/images/under_details.svg"
-                  onClick={handleImageClick5}
-                />
+                <img src="/images/under_details.svg" onClick={handleClick5} />
               </div>
             </div>
 
@@ -538,7 +435,7 @@ const Home: FC = () => {
           </div>
 
           {/** second grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/cost.svg" />
@@ -550,10 +447,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  src="/images/under_details.svg"
-                  onClick={handleImageClick6}
-                />
+                <img src="/images/under_details.svg" onClick={handleClick6} />
               </div>
             </div>
             <div className="mt-4 mx-4">
@@ -585,7 +479,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/labor.svg" />
@@ -597,10 +491,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  src="/images/under_details.svg"
-                  onClick={handleImageClick7}
-                />
+                <img src="/images/under_details.svg" onClick={handleClick7} />
               </div>
             </div>
             <div className="mt-4 mx-4">
@@ -634,8 +525,8 @@ const Home: FC = () => {
 
         {/* grid 3*/}
 
-        <div className="flex flex-row gap-7 below-md:gap-0 mb-1 below-md:flex-col">
-          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  h-48 min-h-auto">
+        <div className="flex flex-row gap-7 below-md:gap-0 mb-1 below-md:flex-col items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-1 ">
                 <img src="/images/crown.svg" />
@@ -677,7 +568,7 @@ const Home: FC = () => {
           </div>
 
           {/** second grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/persentage.svg" />
@@ -718,7 +609,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md w-full pb-6 h-48 min-h-auto">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md w-full pb-6 items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/items.svg" />
@@ -727,14 +618,11 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img
-                  src="/images/under_details.svg"
-                  onClick={handleImageClick8}
-                />
+                <img src="/images/under_details.svg" onClick={handleClick8} />
               </div>
             </div>
 
-            <div className="w-full overflow-hidden overflow-y-auto below-md:overflow-x-auto max-h-[135px] custom-scrollbar ">
+            <div className="w-full overflow-hidden overflow-y-auto below-md:overflow-x-auto max-h-[100px] custom-scrollbar ">
               <table className="w-full bg-white border border-gray-200 mt-6 ">
                 <tbody>
                   {tableData2.map((row, index) => (

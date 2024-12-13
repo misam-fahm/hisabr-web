@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useState, useRef, useEffect } from "react";
+import Images from "../ui/Common/Image";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +31,7 @@ const Navbar: React.FC = () => {
   return (
     <main className="fixed top-0 left-0 right-0 z-20 bg-white shadow-md">
       <div className="flex justify-end items-center p-2 w-full">
-        <img
+        <Images
           className="w-12 h-12 mr-4 rounded-full"
           src="/images/admin.png"
           alt="Admin"
@@ -57,7 +58,7 @@ const Navbar: React.FC = () => {
               <ul className="py-2">
                 <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
                   <img
-                    src="/images/profile.svg"
+                    src="/images/Profile.svg"
                     className="inline-block mr-2"
                   />
                   My Profile
