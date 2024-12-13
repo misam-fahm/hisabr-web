@@ -211,7 +211,7 @@ const summary: FC = () => {
               <div className="mt-2 cursor-pointer below-md:hidden">
                 <img src="/images/download.svg" />
               </div>
-              <div className="mb-6 relative w-full max-w-[20%] below-md:max-w-[40%]">
+              <div className="mb-6 relative w-full max-w-[15%] below-md:max-w-[40%]">
                 <Dropdown
                   options={options2}
                   shadowclassName="shadow-sm"

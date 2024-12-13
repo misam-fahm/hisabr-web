@@ -175,8 +175,8 @@ const Home: FC = () => {
       </div>
 
       <div className=" pr-6 pl-6 below-md:px-3 mt-12">
-        <div className="flex flex-row gap-7 below-md:gap-0 w-full below-md:flex-col">
-          <div className=" bg-white mt-6 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full below-md:min-h-[213px] h-auto min-h-[51vh]">
+        <div className="flex flex-row gap-7 below-md:gap-0 w-full below-md:flex-col items-stretch">
+          <div className=" bg-white mt-6 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/groce.svg" />
@@ -193,7 +193,7 @@ const Home: FC = () => {
             </div>
           </div>
 
-          <div className="bg-white mt-6 below-md:mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full h-auto min-h-[51vh]  below-md:min-h-[213px]">
+          <div className="bg-white mt-6 below-md:mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full items-stretch ">
             <div className="flex flex-row mt-4 justify-between px-3 ">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/persentage.svg" />
@@ -273,6 +273,37 @@ const Home: FC = () => {
                 <p className="text-[#334155] text-[18px] font-extrabold">
                   Gross Revenue
                 </p>
+                <div className="relative below-lg:hidden">
+                  <div className="group relative">
+                    <img
+                      src="/images/tooltip.svg"
+                      className="max-w-[100%] max-h-[100%] mx-auto cursor-pointer"
+                    />
+
+                    {/* Tooltip Box */}
+                    <div className="absolute top-full left-[calc(50%-20px)] transform -translate-x-1/2 mt-2 w-[350px] h-fit bg-[white] text-[#2D3748B2] text-sm px-6 py-6 rounded-lg border-l-[5px] border-[#F2921599] opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg z-20 pointer-events-none group-hover:pointer-events-auto">
+                      {/* Tooltip Arrow */}
+                      <div className="absolute bottom-full left-[calc(50%+50px)] transform -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-b-white border-l-transparent border-r-transparent" />
+
+                      {/* Tooltip Content */}
+                      <p className="text-[12px]">
+                        <span className="text-[12px] font-semibold text-[#334155CC]">
+                          Year-To-Date (YTD)
+                        </span>
+                        The accumulated value from January 1 to today, providing
+                        insight into year’s current performance.
+                      </p>
+                      <br />
+                      <p className="text-[12px]">
+                        <span className="text-[12px] font-semibold text-[#334155CC]">
+                          One Year{" "}
+                        </span>
+                        The accumulated value from January 1 to today, providing
+                        insight into year’s current performance.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="cursor-pointer">
                 <img src="/images/under_details.svg" onClick={handleClick} />
