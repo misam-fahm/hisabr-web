@@ -57,7 +57,6 @@ const tabContent: Record<string, JSX.Element> = {
 const DetailsPage: React.FC = () => {
   const [activeTab, setActiveTab] =
     useState<keyof typeof tabContent>("Sales Details");
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const tabs = Object.keys(tabContent) as Array<keyof typeof tabContent>;
 
@@ -71,13 +70,20 @@ const DetailsPage: React.FC = () => {
     router.push("/sales");
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen); // Toggle the menu state
+  //mobile scroll
+  const scrollTabs = (direction) => {
+    const container = document.getElementById("tabContainer");
+    const scrollAmount = 150; // Adjust as needed
+    if (direction === "left") {
+      container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+    } else {
+      container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
   };
 
   return (
     <main
-      className="max-h-[calc(100vh-70px)] overflow-auto"
+      className="max-h-[calc(100vh-20px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <img
@@ -92,18 +98,29 @@ const DetailsPage: React.FC = () => {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="pt-20 pb-6 bg-[#f7f8f9] pl-6 pr-6 below-md:px-4">
+      <div className="pt-5 below-md:pb-4 pb-2 bg-[#f7f8f9] pl-6 pr-6 below-md:px-4 sticky top-16 z-10">
         <div className="flex flex-row justify-between items-center gap-6">
-          {/* Tab Buttons */}
-          <div className="below-md:w-full border-b-[2px] border-[#E1E0E0D1] relative">
-            <nav className="flex justify-start space-x-8 px-4 below-md:space-x-6 whitespace-nowrap">
-              {tabs.map((tab) => (
+          {/* Tab Buttons with Arrows */}
+          <div className="below-md:w-full border-b-[2px] border-[#E1E0E0D1] relative flex items-center">
+            {/* Left Arrow  */}
+            <img
+              onClick={() => scrollTabs("left")}
+              className={`below-md:block hidden ${activeTab === tabs[0] ? " " : "px-2"} text-[#334155] text-xl ${activeTab === tabs[0] ? "opacity-0 pointer-events-none" : ""}`}
+              src="/images/leftArrow.svg"
+            />
+
+            {/* Scrollable Tabs */}
+            <div
+              id="tabContainer"
+              className="flex-1 flex below-md:overflow-x-auto space-x-8 px-4 below-md:space-x-6 whitespace-nowrap scroll-smooth"
+            >
+              {tabs.map((tab, index) => (
                 <button
                   key={tab}
                   onClick={() => handleTabClick(tab)}
                   className={`relative py-2 px-[1px] outline-none font-medium ${
                     activeTab === tab
-                      ? "text-[#334155] text-[14px] after:content-[''] after:absolute after:w-full after:h-[2px] after:bg-[#334155] after:bottom-[-2px] after:left-0 after:rounded-full"
+                      ? "text-[#334155] text-[14px] after:content-[''] after:absolute after:w-full after:h-[2px] below-md:after:h-[3px] after:bg-[#334155] after:bottom-[-2px] after:left-0 after:rounded-full"
                       : "text-[#334155B2] text-[14px] hover:text-[#334155]"
                   }`}
                   style={{
@@ -114,7 +131,14 @@ const DetailsPage: React.FC = () => {
                   {tab}
                 </button>
               ))}
-            </nav>
+            </div>
+
+            {/* Right Arrow */}
+            <img
+              onClick={() => scrollTabs("right")}
+              className={`below-md:block hidden px-2 text-[#334155] text-xl ${activeTab === tabs[tabs.length - 1] ? "opacity-0 pointer-events-none" : ""}`}
+              src="/images/rightArrow.svg"
+            />
           </div>
 
           {/* Back Button */}

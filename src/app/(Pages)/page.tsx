@@ -114,9 +114,9 @@ const Home: FC = () => {
         </p>
       </div>
 
-      <div className="flex flex-row items-center gap-3 pt-4 pb-3 sticky top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
+      <div className=" z-10 flex flex-row items-center gap-3 pt-4 pb-3 sticky top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         {/* Dropdowns grouped together */}
-        <div className="flex flex-row gap-3 w-full below-md:flex-col">
+        <div className="flex flex-row gap-3 w-full below-md:flex-col ">
           {/* Dropdown 1 */}
           {/* First Dropdown */}
 
@@ -273,7 +273,7 @@ const Home: FC = () => {
                 <p className="text-[#334155] text-[18px] font-extrabold">
                   Gross Revenue
                 </p>
-                <div className="relative below-lg:hidden">
+                <div className="relative below-lg:hidden z-0">
                   <div className="group relative">
                     <img
                       src="/images/tooltip.svg"

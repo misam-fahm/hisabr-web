@@ -310,10 +310,33 @@ const Sales: FC = () => {
               </div>
 
               <div className="flex flex-row w-full gap-3">
-                <div className="w-[50%] below-md:w-full relative">
+                <div className="w-[50%] below-md:w-full relative below-md:hidden">
                   <input
                     value={globalFilter ?? ""}
                     onChange={(e) => setGlobalFilter(e.target.value)}
+                    placeholder="Search"
+                    className=" py-[10px] px-[8] w-full shadow-md rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                  />
+                  <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 text-[#636363]"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 21l-4.35-4.35m2.6-6.4a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                <div className="w-[50%] below-md:w-full relative below-lg:hidden">
+                  <input
                     placeholder="Search"
                     className=" py-[10px] px-[8] w-full shadow-md rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                   />
