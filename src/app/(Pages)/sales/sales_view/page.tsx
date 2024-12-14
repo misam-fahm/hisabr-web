@@ -57,6 +57,7 @@ const tabContent: Record<string, JSX.Element> = {
 const DetailsPage: React.FC = () => {
   const [activeTab, setActiveTab] =
     useState<keyof typeof tabContent>("Sales Details");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const tabs = Object.keys(tabContent) as Array<keyof typeof tabContent>;
 
@@ -69,6 +70,11 @@ const DetailsPage: React.FC = () => {
   const handleBack = () => {
     router.push("/sales");
   };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen); // Toggle the menu state
+  };
+
   return (
     <main
       className="max-h-[calc(100vh-70px)] overflow-auto"
@@ -89,17 +95,21 @@ const DetailsPage: React.FC = () => {
       <div className="pt-20 pb-6 bg-[#f7f8f9] pl-6 pr-6 below-md:px-4">
         <div className="flex flex-row justify-between items-center gap-6">
           {/* Tab Buttons */}
-          <div className="w-full border-b-[2px] border-[#E1E0E0D1]">
-            <nav className="flex justify-start space-x-8 px-4 below-md:space-x-10 whitespace-nowrap overflow-x-auto below-md:overflow-auto">
+          <div className="below-md:w-full border-b-[2px] border-[#E1E0E0D1] relative">
+            <nav className="flex justify-start space-x-8 px-4 below-md:space-x-6 whitespace-nowrap">
               {tabs.map((tab) => (
                 <button
                   key={tab}
                   onClick={() => handleTabClick(tab)}
-                  className={`py-2 outline-none font-medium ${
+                  className={`relative py-2 px-[1px] outline-none font-medium ${
                     activeTab === tab
-                      ? "text-[#334155] border-b-2 border-[#334155] text-[14px]"
+                      ? "text-[#334155] text-[14px] after:content-[''] after:absolute after:w-full after:h-[2px] after:bg-[#334155] after:bottom-[-2px] after:left-0 after:rounded-full"
                       : "text-[#334155B2] text-[14px] hover:text-[#334155]"
                   }`}
+                  style={{
+                    borderBottom:
+                      activeTab === tab ? "none" : "2px solid transparent",
+                  }}
                 >
                   {tab}
                 </button>
