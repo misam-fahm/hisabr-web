@@ -35,7 +35,7 @@ const SalesKPI: FC = () => {
   return (
     <main>
       <main
-        className="max-h-[calc(100vh-70px)] overflow-auto"
+        className="max-h-[calc(100vh-70px)] tablet:max-h-[calc(100vh-10px)] overflow-auto"
         style={{ scrollbarWidth: "thin" }}
       >
         <div className="below-md:flex below-md:justify-center">
@@ -49,18 +49,18 @@ const SalesKPI: FC = () => {
             <div className="flex flex-row below-md:flex-col w-full gap-3">
               <Dropdown
                 options={options}
-                widthchange="w-[22%]"
+                widthchange="w-[22%] tablet:w-full"
                 selectedOption={selectedOption}
                 onSelect={handleSelect}
                 isOpen={isOpen}
                 toggleOpen={toggleDropdown1}
               />
 
-              <div className="w-[30%] below-md:w-full">
+              <div className="w-[30%] tablet:w-full below-md:w-full">
                 <DateRange />
               </div>
             </div>
-            <div className="below-md:hidden">
+            <div className="below-md:hidden tablet:hidden">
               <button className="flex items-center justify-center bg-[#1AA47D] [box-shadow:0px_3px_8px_0px_#00000026] w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300">
                 <img
                   src="/images/uploadIcon.svg"
@@ -74,7 +74,7 @@ const SalesKPI: FC = () => {
 
           {/* grid 1 */}
 
-          <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 pt-16 pl-6 pr-6 items-stretch">
+          <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 pt-16 pl-6 pr-6 items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid tablet:gap-3">
             <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
               <div>
                 <p className="text-[14px] text-[#575F6DCC] font-medium">
@@ -149,7 +149,7 @@ const SalesKPI: FC = () => {
           </div>
 
           {/* grid 2 */}
-          <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 below-md:px-3 mt-6 below-md:mt-3  pl-6 pr-6 items-stretch">
+          <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 below-md:px-3 mt-6 below-md:mt-3  pl-6 pr-6 items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid tablet:gap-3 tablet:mt-3">
             <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
               <div>
                 <p className="text-[14px] text-[#575F6DCC] font-medium">
@@ -220,12 +220,12 @@ const SalesKPI: FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-row below-md:flex-col justify-between items-center rounded-lg bg-white mt-6 below-md:mt-3 below-md:mx-3 shadow-md px-10 ml-6 mr-6">
+          <div className="flex flex-row below-md:flex-col tablet:flex-col justify-between items-center rounded-lg bg-white mt-6 below-md:mt-3 below-md:mx-3 shadow-md px-10 ml-6 mr-6">
             <div>
               <DonutChart />
             </div>
             <div className="overflow-x-auto w-full custom-scrollbar">
-              <table className="items-center bg-transparent w-full below-md:mb-12">
+              <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
                 <thead>
                   <tr>
                     <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-left border border-solid border-blueGray-300 py-1 text-sm  border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium ">

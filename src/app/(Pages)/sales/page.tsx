@@ -291,8 +291,8 @@ const Sales: FC = () => {
             Sales
           </p>
         </div>
-        <div className="mx-6 mt-24 below-md:mx-3 below-md:mt-16">
-          <div className="flex flex-row below-md:flex-col pb-6 sticky top-16 below-md:pt-4 bg-[#f7f8f9] below-md:pb-4  ">
+        <div className="mx-6 mt-24 below-md:mx-3 below-md:mt-16 tablet:mt-16">
+          <div className="flex flex-row below-md:flex-col pb-6 sticky top-16 below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4  ">
             <div className="flex flex-row below-md:flex-col w-full gap-3">
               {/* Dropdown Button */}
 
@@ -302,15 +302,15 @@ const Sales: FC = () => {
                 onSelect={handleSelect}
                 isOpen={isOpen}
                 toggleOpen={toggleDropdown1}
-                widthchange="w-[40%]"
+                widthchange="w-[40%] tablet:w-full"
               />
 
-              <div className="w-[50%] below-md:w-full">
+              <div className="w-[50%] below-md:w-full tablet:w-full">
                 <DateRange />
               </div>
 
               <div className="flex flex-row w-full gap-3">
-                <div className="w-[50%] below-md:w-full relative below-md:hidden">
+                <div className="w-[50%] below-md:w-full relative below-md:hidden tablet:hidden">
                   <input
                     value={globalFilter ?? ""}
                     onChange={(e) => setGlobalFilter(e.target.value)}
@@ -335,7 +335,7 @@ const Sales: FC = () => {
                   </div>
                 </div>
 
-                <div className="w-[50%] below-md:w-full relative below-lg:hidden">
+                <div className="tablet:w-full below-md:w-full relative below-lg:hidden">
                   <input
                     placeholder="Search"
                     className=" py-[10px] px-[8] w-full shadow-md rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
@@ -362,7 +362,7 @@ const Sales: FC = () => {
 
             {/* button */}
             <div className=" below-md:w-full">
-              <div className="below-md:hidden">
+              <div className="below-md:hidden tablet:hidden">
                 <input
                   type="file"
                   id="fileInput"
@@ -387,7 +387,7 @@ const Sales: FC = () => {
 
           {/** Table */}
 
-          <div className="below-md:hidden">
+          <div className="below-md:hidden tablet:hidden">
             {/* Table */}
             <div className="overflow-x-auto shadow-md rounded-lg">
               <table className="w-full border-collapse border border-gray-200">
