@@ -20,7 +20,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
   const [title, setTitle] = useState("");
 
   useEffect(() => {
-    setIsClient(true); // Ensuring we are on the client side
+    setIsClient(true);
   }, []);
 
   useEffect(() => {
@@ -144,7 +144,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         >
           <Images
             src={open ? "/images/logo.svg" : "/images/halflogo.png"}
-            className={`cursor-pointer ${open ? "w-[136px]" : "w-[36px]"} h-auto`}
+            className={`cursor-pointer ${open ? "w-[136px]" : "w-[36px]"}  h-[45px]`}
           />
           <img
             src="/images/x.svg"
@@ -177,7 +177,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
                   {/* Dropdown Arrow for Setup */}
                   {menu.submenus && open && (
                     <img
-                      src={`/images/dropDown.png`}
+                      src={`/images/dropDown.svg`}
                       className={`ml-auto ${
                         setupOpen ? "rotate-180" : ""
                       } duration-300`}
@@ -212,7 +212,9 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
           </ul>
         </div>
 
-        <div className="flex px-6 mt-10 gap-4">
+        <div
+          className={`flex mt-10 gap-4 below-md:bg-transparent below-md:shadow-none below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px]  ${open ? "mr-8" : "mr-3"} ml-3 rounded-md`}
+        >
           <img src="/images/logout.svg" />
           {open && <p>Logout</p>}
         </div>
