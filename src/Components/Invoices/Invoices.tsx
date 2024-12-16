@@ -143,7 +143,7 @@ const Invoices = () => {
             {/* Dropdown Button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="bg-[#ffffff] text-[#636363] shadow below-md:px-2 px-4 py-[10px] rounded-md flex items-center justify-between w-[265px] h-[35px] text-[12px] below-md:h-[35px] below-md:w-full below-md:text[11px] below-md:text[#474747]"
+              className="bg-[#ffffff] text-[#636363] shadow below-md:px-2 px-4 py-[10px] rounded flex items-center justify-between w-[265px] h-[35px] text-[12px] below-md:h-[35px] below-md:w-full below-md:text[11px] below-md:text[#474747]"
             >
               <span>{selectedOption}</span>
               <img
@@ -175,7 +175,7 @@ const Invoices = () => {
 
 
 
-          <div className="relative flex below-md:w-full below-md:text-[11px] shadow  rounded-md w-[265px] h-[35px] text-[12px] bg-[#ffff] items-center ">
+          <div className="relative flex below-md:w-full below-md:text-[11px] shadow  rounded w-[265px] h-[35px] text-[12px] bg-[#ffff] items-center ">
             <DatePicker
               selected={startDate}
               onChange={(dates: [Date | null, Date | null]) => {
@@ -220,7 +220,7 @@ const Invoices = () => {
               }}
             />
           </div>
-          <div className='flex shadow  below-md:w-full below-md:text-[11px] text-[12px] bg-[#ffff] items-center rounded-md w-[200px] h-[35px]'>
+          <div className='flex shadow  below-md:w-full below-md:text-[11px] text-[12px] bg-[#ffff] items-center rounded w-[200px] h-[35px]'>
             <input type='search'
               onChange={(e) => setGlobalFilter(e.target.value)}
               ref={searchInputRef}
@@ -282,6 +282,13 @@ const Invoices = () => {
                             </div>
                         </div>
                     ))}
+                    <div className='fixed bottom-[20px] below-lg:hidden right-3'>
+                    <button className="w-[50px] h-[50px] bg-[#1AA47D] hover:bg-[#168A6F] text-white rounded-md text-[14px] flex items-center justify-center gap-1"
+                             onClick={handleButtonClick}>
+                     <img src="/images/uploadinvoiceIcon.svg" alt='Upload Invoice' className="transition-opacity duration-10"/>
+                    </button>
+
+                    </div>
                 
                 </div>
 

@@ -3,147 +3,159 @@
 import React, { FC, useState, useRef } from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import AddExpenses from "@/Components/Expenses/AddExpenses";
+import AddExpenses from "@/Components/Expenses/AddExpenses"; 
+import EditExpense from "@/Components/Expenses/EditExpense";
 import Image from "next/image";
 import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  flexRender,
-  ColumnDef,
+    useReactTable,
+    getCoreRowModel,
+    getPaginationRowModel,
+    getFilteredRowModel,
+    flexRender,
+    ColumnDef,
 } from "@tanstack/react-table";
 
 interface TableRow {
-  date: string;
-  store: number;
-  amount: string;
-  description: string;
-  type: string;
+    date: string;
+    store: number;
+    amount: string;
+    description: string;
+    type: string;
 }
 
 const data: TableRow[] = [
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
 ];
 const columns: ColumnDef<TableRow>[] = [
     {
         accessorKey: "date",
-        header: () => <div className='w-[100px]'>Date</div>,
-        cell: (info) => <span className="w-[100px]">{info.getValue() as string}</span>,
+        header: () => <div className='text-left'>Date</div>,
+        cell: (info) => <span>{info.getValue() as string}</span>,
+        size:100,
     },
     {
         accessorKey: "store",
-        header: () => <div className='w-[100px]'>Store</div>,
-        cell: (info) => <span className="w-[100px]">{info.getValue() as number}</span>,
+        header: () => <div className='text-left'>Store</div>,
+        cell: (info) => <span>{info.getValue() as number}</span>,
+        size:80,
     },
     {
         accessorKey: "amount",
-        header: () => <div className='w-[40px]'>Amount</div>,
-        cell: (info) => <span className="w-[80px] text-right">{info.getValue() as string}</span>,
+        header: () => <div className='text-left'>Amount</div>,
+        cell: (info) => <span className='text-right ml-5'>{info.getValue() as string}</span>,
+        size:100,
     },
     {
         accessorKey: "description",
-        header: () => <div className='w-[50px]'> Description</div>,
-        cell: (info) => <span className="w-[150px]">{info.getValue() as string}</span>,
+        header: () => <div className='text-left'> Description</div>,
+        cell: (info) => <span className="">{info.getValue() as string}</span>,
+        size:200,
     },
     {
         accessorKey: "type",
-        header: () => <div className='w-[100px]'>Type</div>,
-        cell: (info) => <span className="w-[140px]">{info.getValue() as string}</span>,
+        header: () => <div className='text-left'>Type</div>,
+        cell: (info) => <span className="">{info.getValue() as string}</span>,
+        size:80,
     },
     {
         id: "edit",
-        header: () => <div className="text-center w-[120px]">Edit</div>,
-
+        header: () => <div className="text-left">Edit</div>,
         cell: () => (
-            <div className='flex justify-center w-[95px] ml-4'>
-                <Image src="/images/EditIcon(2).svg" alt='Edit Icon' width={25} height={25} />
+            <div className="flex justify-center text-left mr-12">
+                    <Image
+                        src="/images/EditIcon(2).svg"
+                        alt="Edit Icon"
+                        width={25}
+                        height={25}
+                    />
             </div>
-        )
+        ),
+        size:60,
     },
     {
         id: "delete",
-        header: () => <div className="text-center w-[85px]">Delete</div>,
+        header: () => <div className="text-left">Delete</div>,
         cell: () => (
-            <div className='flex justify-center'>
+            <div className='flex justify-center text-left mr-10'>
                 <Image src="/images/DeleteIcon.svg" alt="Delete Icon" width={30} height={30} />
             </div>
         ),
+        size:60
     },
 ];
 
-  
+
 const Expenses: FC = () => {
-  const [globalFilter, setGlobalFilter] = React.useState("");
+    const [globalFilter, setGlobalFilter] = React.useState("");
     const table = useReactTable({
         data,
         columns,
@@ -280,12 +292,12 @@ const Expenses: FC = () => {
     /**dropdown */
     const [selectedOption, setSelectedOption] = useState<string>("All stores");
 
-  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
+    const options = ["Store 1", "Store 2", "Store 3", "All Store"];
 
-  const handleSelect = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
-  };
+    const handleSelect = (option: string) => {
+        setSelectedOption(option);
+        setIsOpen(false);
+    };
     return (
         <main className="py-4 px-4 w-full mt-14 below-md:mt-12">
 
@@ -297,7 +309,7 @@ const Expenses: FC = () => {
                             {/* Dropdown Button */}
                             <button
                                 onClick={() => setIsOpen(!isOpen)}
-                                className="bg-[#ffffff] text-[#636363] shadow  below-md:px-2 px-4 py-[10px] rounded-md flex items-center justify-between w-[265px] h-[35px] text-[12px] below-md:h-[35px] below-md:w-full below-md:text[11px] below-md:text[#474747]"
+                                className="bg-[#ffffff] text-[#636363] shadow below-md:px-2 px-4 py-[10px] rounded flex items-center justify-between w-[265px] h-[35px] text-[12px] below-md:h-[35px] below-md:w-full below-md:text[11px] below-md:text[#474747]"
                             >
                                 <span>{selectedOption}</span>
                                 <img
@@ -328,7 +340,7 @@ const Expenses: FC = () => {
 
 
 
-                        <div className="relative flex below-md:w-full below-md:text-[11px] shadow rounded-md w-[265px] h-[35px] text-[12px] bg-[#ffff] items-center">
+                        <div className="relative flex below-md:w-full  below-md:text-[11px] shadow rounded w-[265px] h-[35px] text-[12px] bg-[#ffff] items-center">
                             <DatePicker
                                 selected={startDate}
                                 onChange={handleDateChange}
@@ -340,21 +352,7 @@ const Expenses: FC = () => {
                                 placeholderText="Select date range"
                                 className="flex-grow h-full pl-2 bg-transparent below-md:text-[11px] text-[12px] focus:outline-none "
                                 ref={calendarRef}// Add reference for the DatePicker
-                                // popperPlacement="bottom-end" // Position dropdown
-                                // popperModifiers={[
-                                //     {
-                                //         name: 'preventOverflow',
-                                //         options: {
-                                //             boundary: 'viewport',
-                                //         },
-                                //     },
-                                //     {
-                                //         name: 'offset',
-                                //         options: {
-                                //             offset: [0, 10], // Adjust dropdown offset
-                                //         },
-                                //     },
-                                // ]}
+                                calendarClassName="custom-calendar"
                             />
                             <img className='absolute right-2 cursor-pointer items-center' src='/images/CalenderIcon.svg'
                                 onClick={() => {
@@ -367,7 +365,7 @@ const Expenses: FC = () => {
                         {/* </div>  */}
 
                         <div className='flex items-center justify-between below-md:flex-row below-md:gap-4'>
-                            <div className='flex shadow  text-[12px] bg-[#ffff] items-center  rounded-md w-[200px]  h-[35px] below-md:w-full below-md:h-[35px] below-md:text-[11px]'>
+                            <div className='flex shadow  text-[12px] bg-[#ffff] items-center  rounded w-[200px]  h-[35px] below-md:w-full below-md:h-[35px] below-md:text-[11px]'>
                                 <input type='search' ref={searchInputRef} placeholder='Search' className='w-full h-[35px] bg-transparent rounded-lg px-3 text-[#636363] focus:outline-none'>
                                 </input>
                                 <img className='pr-2 cursor-pointer items-center' src='/images/searchicon.svg'
@@ -393,7 +391,7 @@ const Expenses: FC = () => {
                 <div className=''>
                     {cardData.map((card, index) => (
                         <div key={index}
-                            className='flex flex-col h-[167px] w-full shadow rounded-md bg-white border border-[#E4E4EF] below-lg:hidden my-4'>
+                            className='flex flex-col h-[167px] w-full shadow rounded bg-white border border-[#E4E4EF] below-lg:hidden my-4'>
                             <div className='flex justify-between items-start'>
                                 <div className='flex gap-4 px-3 py-4'>
                                     <p className='text-[12px] font-semibold'>{card.date}</p>
@@ -564,13 +562,16 @@ const Expenses: FC = () => {
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
-         
+
             </>
         </main>
     )
 }
 
 export default Expenses;
-          
+
+// function openModal(original: TableRow): void {
+//     throw new Error('Function not implemented.');
+// }

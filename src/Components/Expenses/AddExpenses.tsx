@@ -120,19 +120,20 @@ const AddExpenses = () => {
           
           <button
     onClick={openModal}
-    className="bg-[#1AA47D] hover:bg-[#168A6F] below-lg:hidden  hover:gap-2 text-white w-[40px] hover:w-[159px] h-[37px] rounded-md flex items-center justify-center overflow-hidden transition-all duration-10 group"
+    className="bg-[#1AA47D] below-lg:hidden  hover:gap-2 text-white w-[50px] hover:w-[159px] h-[50px] rounded-md flex items-center justify-center overflow-hidden transition-all duration-10 group"
 >
-    <span className="">+</span>
-    <span className="hidden group-hover:block text-white transition-opacity duration-10">
+    <img src='/images/plusIcon.svg' alt='AddExpense' className='text-white transition-opacity duration-10'/>
+   
+    {/* <span className="hidden group-hover:block text-white transition-opacity duration-10">
         Add Expenses
-    </span>
+    </span> */}
 </button>
 
 <button
     onClick={openModal}
-    className="bg-[#1AA47D]  text-white below-md:hidden  w-[159px] h-[37px] rounded-md flex items-center justify-center  "
+    className="bg-[#1AA47D]  text-white below-md:hidden  w-[159px] h-[37px] rounded-md flex items-center justify-center gap-1 text-[14px]"
 >
-   
+       <img className ='' src="/images/addExpenses.svg" alt="" />
         Add Expenses
 
 </button>
@@ -241,12 +242,12 @@ const AddExpenses = () => {
                                     </div>
                                     <div className='flex flex-col mt-1 mb-2'>
                                         <label className="text-[13px] text-[#5E6366] mb-2 block">Date</label>
-                                        <div className='relative '>
+                                        <div className='relative w-full'>
                                             <DatePicker
                                                 selected={formData.date}
                                                 onChange={(date : any) => setFormData({ ...formData, date })}
                                                 placeholderText="Please enter expense date"
-                                                className={`border h-[40px] w-[345px] below-md:w-[100%]  pl-3 pr-10 text-[#8D98AA] text-[12px] rounded-lg ${errors.date ? 'border-red-500' : 'border-gray-300'
+                                                className={`border h-[40px] w-[345px] below-md:w-[128%]  pl-3 pr-10 text-[#8D98AA] text-[12px] rounded-lg ${errors.date ? 'border-red-500' : 'border-gray-300'
                                                     }`}
                                             />
                                             <img className='absolute top-1/2 right-3  transform -translate-y-1/2 w-5 h-5 below-md:w-4 below-md:h-4 cursor-pointer ' src='/images/CalenderIcon.svg'
@@ -258,7 +259,7 @@ const AddExpenses = () => {
                                     </div>
                                     </div>
                                     {/* Submit Button */}
-                                    <div className="flex items-center mt-3 justify-start md:gap-2 gap-8">
+                                    <div className="flex items-center mt-3 md:w-full justify-between md:gap-2 space-x-3">
                                         <button type="button"
                                             className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[36px] w-[158px] below-md:w-[150px] h-[37px] bg-[#C8C8C8] rounded-md"
                                             onClick={closeModal}
@@ -267,7 +268,7 @@ const AddExpenses = () => {
                                         </button>
                                         <button
                                             type="submit"
-                                            className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[36px] w-[158px]  below-md:w-[150px]  h-[37px] bg-[#1AA47D] rounded-md hover:bg-green-700"
+                                            className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[36px] w-[158px]  below-md:w-[150px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-green-700"
                                         >
                                             Add Expense
                                         </button>
