@@ -12,6 +12,8 @@ import {
 } from "@tanstack/react-table";
 import AddNewItems from "@/Components/Setup/AddNewItems";
 import AddCategories from "@/Components/Setup/AddCategories";
+import EditCategories from "@/Components/Setup/EditCategories";
+import DeleteCategories from "@/Components/Setup/DeleteCategories";
 
 interface TableRow {
   name: string;
@@ -76,19 +78,24 @@ const columns: ColumnDef<TableRow>[] = [
     id: "edit",
     header: () => <div className="text-center ">Edit</div>,
     cell: () => (
-      <Image className="ml-8" src="/images/edit.svg" alt="edit" width={35} height={35} />
+      <>
+        <EditCategories />
+      </>
     ),
 
-    size: 80,
+    size: 50,
   },
   {
     id: "delete",
     header: () => <div className="text-center">Delete</div>,
+
     cell: () => (
-      <Image className="ml-10" src="/images/delete.svg" alt="delete" width={35} height={35} />
+      <>
+        <DeleteCategories />
+      </>
     ),
 
-    size: 80,
+    size: 70,
   },
 ];
 
@@ -184,13 +191,15 @@ const Page: FC = () => {
                 </div>
               </div>
             ))}
-              {/* Add NewItem bottom */}
-          <div  className=' fixed bottom-[20px] below-lg:hidden right-3'>  <AddNewItems /></div>
+            {/* Add NewItem bottom */}
+            <div className=" fixed bottom-[20px] below-lg:hidden right-3">
+              <AddNewItems />
+            </div>
           </div>
 
           {/* Desktop View */}
-          <div className="overflow-x-auto shadow-md rounded-lg flex-grow hidden flex-col md:block">
-            <div className="overflow-hidden max-w-full">
+          <div className="overflow-x-auto rounded-lg flex-grow hidden flex-col md:block">
+            <div className="overflow-hidden max-w-full ">
               <table className="w-full border-collapse border-gray-200 table-fixed">
                 <thead className="bg-[#334155] sticky top-0 z-10">
                   {table.getHeaderGroups().map((headerGroup) => (
@@ -230,7 +239,7 @@ const Page: FC = () => {
                         {row.getVisibleCells().map((cell) => (
                           <td
                             key={cell.id}
-                            className="px-4 py-1.5 text-[#636363] text-[14px]"
+                            className="px-4 py-1 text-[#636363] text-[14px]"
                             style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
                           >
                             {flexRender(

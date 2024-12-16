@@ -124,7 +124,7 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     id: "edit",
-    header: () => <div className="text-center">Edit</div>,
+    header: () => <div className="text-center  ">Edit</div>,
     cell: () => (
       <div className="ml-10">
         <Images src="/images/edit.svg" alt="edit" width={35} height={35} />
@@ -134,7 +134,7 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     id: "delete",
-    header: () => <div className="text-center">Delete</div>,
+    header: () => <div className="text-center ">Delete</div>,
     cell: () => (
       <div className="ml-12">
         <Images src="/images/delete.svg" alt="delete" width={35} height={35} />
@@ -170,7 +170,7 @@ const Page: FC = () => {
 
   return (
     <main className="w-full h-screen flex flex-col overflow-hidden">
-      <div className="mt-20 mx-6 flex-grow below-md:mt-10 below-md:mx-3">
+      <div className=" mt-20 mx-6 flex-grow below-md:mt-10 below-md:mx-3 ">
         <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
           <p className="text-[16px] font-bold text-[#334155] below-md:hidden">
             Tender
@@ -233,14 +233,17 @@ const Page: FC = () => {
               </div>
             </div>
           ))}
-           {/* Add Tender bottom */}
-          <div  className=' fixed bottom-[20px] below-lg:hidden right-3'>  <AddTender /></div>
+          {/* Add Tender bottom */}
+          <div className=" fixed bottom-[20px] below-lg:hidden right-3">
+            {" "}
+            <AddTender />
+          </div>
         </div>
 
         {/* Desktop View */}
-        <div className="overflow-x-auto shadow-md rounded-lg flex-grow hidden flex-col md:block">
+        <div className="overflow-x-auto rounded-lg flex-grow hidden flex-col md:block shadow-lg">
           <div className="overflow-hidden max-w-full">
-            <table className="w-full border-collapse border-gray-200 table-fixed">
+            <table className="w-full border-collapse border-gray-200 table-fixed shadow-lg">
               <thead className="bg-[#334155] sticky top-0 z-10">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>

@@ -106,7 +106,7 @@ const Page = () => {
   };
 
   return (
-    <main className=" p-6">
+    <main className=" p-1">
       {/* Mobile View */}
       <div className="flex justify-center items-center my-16 p-4 md:hidden">
         <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-xl">
@@ -273,7 +273,7 @@ const Page = () => {
         </div>
       </div>
       {/* Web View */}
-      <div className=" justify-center items-center my-16 p-4 hidden md:block">
+      <div className=" justify-center items-center my-16 p-4 hidden md:block ">
         <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-5xl">
           <div>
             <p className="font-medium text-[#5E6366]">Add Configuration:</p>

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 
-const AddNewItems = () => {
+const EditCategories = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     itemName: "",
@@ -112,12 +112,14 @@ const AddNewItems = () => {
         />
       </button>
       <div>
-        <Button
-          onClick={openModal}
-          className=" below-md:hidden flex items-center justify-center font-semibold text-[14px] bg-[#1AA47D] w-[170px] below-md:w-[150px] hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md gap-x-2"
-        >
-          <img src="/images/plus1.svg" alt="Add icon" className="w-3 h-3" />
-          Add Item
+        <Button onClick={openModal}>
+          <img
+            src="/images/edit.svg"
+            alt="Add icon"
+            className="flex justify-center ml-5"
+            width={35}
+            height={35}
+          />
         </Button>
       </div>
       <Dialog
@@ -131,7 +133,7 @@ const AddNewItems = () => {
           <DialogPanel className="w-[420px]  below-md:w-[344px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
             <div className="flex justify-between">
               <DialogTitle as="h3" className="font-medium text-gray-900">
-                Add Item
+                Edit Category
               </DialogTitle>
               <img
                 onClick={closeModal}
@@ -156,9 +158,9 @@ const AddNewItems = () => {
                     Please select Tender Category
                   </option>
                   <option value="dairy">Dairy</option>
-                  <option value="	bakery">	Bakery</option>
+                  <option value="	bakery"> Bakery</option>
                   <option value="dairy">Dairy</option>
-                  <option value="	bakery">	Bakery</option>
+                  <option value="	bakery"> Bakery</option>
                 </select>
                 {errors.selectedType && (
                   <p className="text-xs text-red-500">{errors.selectedType}</p>
@@ -256,4 +258,4 @@ const AddNewItems = () => {
   );
 };
 
-export default AddNewItems;
+export default EditCategories;
