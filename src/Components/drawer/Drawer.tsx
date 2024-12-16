@@ -19,8 +19,6 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
   const [isClient, setIsClient] = useState(false);
   const [title, setTitle] = useState("");
 
-
-
   useEffect(() => {
     setIsClient(true); // Ensuring we are on the client side
   }, []);
@@ -54,7 +52,6 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
       document.title = newTitle;
     }
   }, [isClient, currentPath]);
-
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 800px)");
@@ -118,20 +115,21 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
 
   return (
     <main className="flex h-[100vh]">
-      {title === "My Profile" || title === "Edit Profile" ?
-        <img src="/images/backIcon.svg"  
-        className="fixed top-6 left-4 cursor-pointer z-40" 
-        onClick={() =>  router.back()}
-        />
-       :
-      !shouldHideHamburger && (
+      {title === "My Profile" || title === "Edit Profile" ? (
         <img
-          src="/images/hamburger.svg"
+          src="/images/backIcon.svg"
           className="fixed top-6 left-4 cursor-pointer z-40"
-          onClick={() => setOpen(!open)}
+          onClick={() => router.back()}
         />
-      )
-    }
+      ) : (
+        !shouldHideHamburger && (
+          <img
+            src="/images/hamburger.svg"
+            className="fixed top-6 left-4 cursor-pointer z-40"
+            onClick={() => setOpen(!open)}
+          />
+        )
+      )}
       <div
         className={`${sidebarClass} duration-300 h-full bg-defaultblack text-defaultwhite sticky below-md:fixed top-0 left-0 z-40`}
       >
@@ -151,7 +149,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
           <img
             src="/images/x.svg"
             onClick={() => setOpen(!open)}
-            className="below-lg:hidden sticky z-50"
+            className="below-lg:hidden tablet:hidden sticky z-50"
           />
         </div>
         <div className="max-h-[calc(100vh-160px)] py-4 overflow-auto scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent ">

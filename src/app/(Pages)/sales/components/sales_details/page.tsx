@@ -85,49 +85,245 @@ const data: TableData[] = [
 
 const TableComponent: React.FC = () => {
   return (
-
-    <div className="overflow-x-auto rounded-lg shadow-sm">
-      <div className="max-h-[360px] overflow-y-auto  scrollbar-hide">
-
-        <table className="min-w-full bg-white">
-          <thead className="bg-[#334155] text-white sticky top-0 z-10">
-            <tr>
-              <th className="px-4 py-2 text-left text-[15px] font-medium">
-                Category
-              </th>
-              <th className="px-4 py-2 text-left text-[15px] font-medium">
-                Description
-              </th>
-              <th className="px-4 py-2 text-left text-[15px] font-medium">
-                Value
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((section, index) => (
-              <React.Fragment key={index}>
-                {section.rows.map((row, rowIndex) => (
-                  <tr
-                    key={rowIndex}
-                    className={`${rowIndex === 0 ? "bg-[#F8F9FCFA]" : ""}`} // Apply a background color for the first row of each section
-                  >
-                    <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
-                      {rowIndex === 0 ? section.category : ""}
-                    </td>
-                    <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
-                      {row.description}
-                    </td>
-                    <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
-                      {row.value}
-                    </td>
-                  </tr>
-                ))}
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
+    <main>
+      <div className="below-md:hidden overflow-x-auto rounded-lg shadow-sm mt-20">
+        <div className="max-h-[600px] overflow-y-auto  scrollbar-hide ">
+          <table className="min-w-full bg-white ">
+            <thead className="bg-[#334155] text-white sticky top-0 z-[2]">
+              <tr>
+                <th className="px-4 py-2 text-left text-[15px] font-medium">
+                  Category
+                </th>
+                <th className="px-4 py-2 text-left text-[15px] font-medium">
+                  Description
+                </th>
+                <th className="px-4 py-2 text-left text-[15px] font-medium">
+                  Value
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((section, index) => (
+                <React.Fragment key={index}>
+                  {section.rows.map((row, rowIndex) => (
+                    <tr
+                      key={rowIndex}
+                      className={`${rowIndex === 0 ? "bg-[#F8F9FCFA]" : ""}`} // Apply a background color for the first row of each section
+                    >
+                      <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                        {rowIndex === 0 ? section.category : ""}
+                      </td>
+                      <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                        {row.description}
+                      </td>
+                      <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                        {row.value}
+                      </td>
+                    </tr>
+                  ))}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+
+      <div className="below-lg:hidden mt-[65px]">
+        <div className="flex flex-col">
+          <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+              <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                <span>Sales Summary</span>
+              </div>
+            </div>
+            <div className="space-y-3 mb-2 px-2">
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Date</p>
+                <p className="text-[#1A1A1A] text-[12px]">12-01-22</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Store ID</p>
+                <p className="text-[#1A1A1A] text-[12px]">DY</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Gross Sales</p>
+                <p className="text-[#1A1A1A] text-[12px]">213</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Net Sales</p>
+                <p className="text-[#1A1A1A] text-[12px]">CS</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Tax Collected</p>
+                <p className="text-[#1A1A1A] text-[12px]">4 x 2 LB</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Total Sales Count</p>
+                <p className="text-[#1A1A1A] text-[12px]">$ 36.37</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">
+                  Average Sales Count
+                </p>
+                <p className="text-[#1A1A1A] text-[12px]">$ 11.83</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Tax</p>
+                <p className="text-[#1A1A1A] text-[12px]">-</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Total</p>
+                <p className="text-[#1A1A1A] text-[12px]">$ 43.37</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+              <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                <span>Sales Summary</span>
+              </div>
+            </div>
+            <div className="space-y-3 mb-2 px-2">
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Date</p>
+                <p className="text-[#1A1A1A] text-[12px]">12-01-22</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Store ID</p>
+                <p className="text-[#1A1A1A] text-[12px]">DY</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Gross Sales</p>
+                <p className="text-[#1A1A1A] text-[12px]">213</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Net Sales</p>
+                <p className="text-[#1A1A1A] text-[12px]">CS</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Tax Collected</p>
+                <p className="text-[#1A1A1A] text-[12px]">4 x 2 LB</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Total Sales Count</p>
+                <p className="text-[#1A1A1A] text-[12px]">$ 36.37</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">
+                  Average Sales Count
+                </p>
+                <p className="text-[#1A1A1A] text-[12px]">$ 11.83</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Tax</p>
+                <p className="text-[#1A1A1A] text-[12px]">-</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Total</p>
+                <p className="text-[#1A1A1A] text-[12px]">$ 43.37</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+              <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                <span>Sales Summary</span>
+              </div>
+            </div>
+            <div className="space-y-3 mb-2 px-2">
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Date</p>
+                <p className="text-[#1A1A1A] text-[12px]">12-01-22</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Store ID</p>
+                <p className="text-[#1A1A1A] text-[12px]">DY</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Gross Sales</p>
+                <p className="text-[#1A1A1A] text-[12px]">213</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Net Sales</p>
+                <p className="text-[#1A1A1A] text-[12px]">CS</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Tax Collected</p>
+                <p className="text-[#1A1A1A] text-[12px]">4 x 2 LB</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Total Sales Count</p>
+                <p className="text-[#1A1A1A] text-[12px]">$ 36.37</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">
+                  Average Sales Count
+                </p>
+                <p className="text-[#1A1A1A] text-[12px]">$ 11.83</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Tax</p>
+                <p className="text-[#1A1A1A] text-[12px]">-</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Total</p>
+                <p className="text-[#1A1A1A] text-[12px]">$ 43.37</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+              <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                <span>Sales Summary</span>
+              </div>
+            </div>
+            <div className="space-y-3 mb-2 px-2">
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Date</p>
+                <p className="text-[#1A1A1A] text-[12px]">12-01-22</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Store ID</p>
+                <p className="text-[#1A1A1A] text-[12px]">DY</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Gross Sales</p>
+                <p className="text-[#1A1A1A] text-[12px]">213</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Net Sales</p>
+                <p className="text-[#1A1A1A] text-[12px]">CS</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Tax Collected</p>
+                <p className="text-[#1A1A1A] text-[12px]">4 x 2 LB</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Total Sales Count</p>
+                <p className="text-[#1A1A1A] text-[12px]">$ 36.37</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">
+                  Average Sales Count
+                </p>
+                <p className="text-[#1A1A1A] text-[12px]">$ 11.83</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Tax</p>
+                <p className="text-[#1A1A1A] text-[12px]">-</p>
+              </div>
+              <div className="flex justify-between text-sm">
+                <p className="text-[#808080] text-[14px]">Total</p>
+                <p className="text-[#1A1A1A] text-[12px]">$ 43.37</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 };
 

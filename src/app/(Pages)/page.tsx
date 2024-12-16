@@ -103,6 +103,59 @@ const Home: FC = () => {
     router.push("/details8"); // Navigates to the 'details' page
   };
 
+  const gridData = [
+    {
+      title: "Gross Revenue",
+      imgSrc: "/images/groce.svg",
+      stats: [
+        { label: "YTD", value: "10.5%", color: "#E31212" },
+        { label: "One Year", value: "20%", color: "#388E3C" },
+      ],
+      currentYear: { label: "Current Year", value: "$85,000" },
+      previousYear: { label: "Previous Year", value: "$95,000" },
+    },
+    {
+      title: "Customer Count",
+      imgSrc: "/images/plus.svg",
+      stats: [
+        { label: "YTD", value: "8.3%", color: "#388E3C" },
+        { label: "One Year", value: "6.7%", color: "#E31212" },
+      ],
+      currentYear: { label: "Current Year", value: "11,000" },
+      previousYear: { label: "Previous Year", value: "12,000" },
+    },
+    {
+      title: "Net Margin",
+      imgSrc: "/images/net.svg",
+      stats: [
+        { label: "YTD", value: "3.8%", color: "#E31212" },
+        { label: "One Year", value: "2.9%", color: "#388E3C" },
+      ],
+      currentYear: { label: "Current Year", value: "$60,000" },
+      previousYear: { label: "Previous Year", value: "$65,000" },
+    },
+    {
+      title: "Operating Expense",
+      imgSrc: "/images/operating.svg",
+      stats: [
+        { label: "YTD", value: "10.5%", color: "#388E3C" },
+        { label: "One Year", value: "20%", color: "#E31212" },
+      ],
+      currentYear: { label: "Current Year", value: "$85,000" },
+      previousYear: { label: "Previous Year", value: "$95,000" },
+    },
+    {
+      title: "Cost",
+      imgSrc: "/images/cost.svg",
+      stats: [
+        { label: "YTD", value: "8.3%", color: "#388E3C" },
+        { label: "One Year", value: "6.7%", color: "#E31212" },
+      ],
+      currentYear: { label: "Current Year", value: "$120,000" },
+      previousYear: { label: "Previous Year", value: "$100,000" },
+    },
+  ];
+
   return (
     <main
       className="max-h-[calc(100vh-60px)] overflow-auto"
@@ -116,7 +169,7 @@ const Home: FC = () => {
 
       <div className="flex flex-row items-center gap-3 py-3 sticky  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         {/* Dropdowns grouped together */}
-        <div className="flex flex-row gap-3 w-full below-md:flex-col">
+        <div className="flex flex-row gap-3 w-full below-md:flex-col ">
           {/* Dropdown 1 */}
           {/* First Dropdown */}
 
@@ -175,8 +228,8 @@ const Home: FC = () => {
       </div>
 
       <div className=" pr-6 pl-6 below-md:px-3 ">
-        <div className="flex flex-row gap-7 below-md:gap-0 w-full below-md:flex-col items-stretch">
-          <div className=" bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full  items-stretch">
+        <div className="flex flex-row gap-7 below-md:gap-0 w-full below-md:flex-col tablet:flex-col tablet:gap-0 items-stretch">
+          <div className=" bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full tablet:w-full  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/groce.svg" />
@@ -193,7 +246,7 @@ const Home: FC = () => {
             </div>
           </div>
 
-          <div className="bg-white mt-3 below-md:mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full items-stretch ">
+          <div className="bg-white mt-3 below-md:mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full tablet:w-full items-stretch ">
             <div className="flex flex-row mt-4 justify-between px-3 ">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/persentage.svg" />
@@ -265,7 +318,7 @@ const Home: FC = () => {
 
         {/* grid 1*/}
 
-        <div className="flex flex-row gap-7 below-md:gap-0 below-md:flex-col items-stretch">
+        <div className="flex flex-row gap-7 below-md:gap-0 tablet:gap-0 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
           <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
@@ -273,7 +326,7 @@ const Home: FC = () => {
                 <p className="text-[#334155] text-[18px] font-extrabold">
                   Gross Revenue
                 </p>
-                <div className="relative below-lg:hidden">
+                <div className="relative below-lg:hidden tablet:hidden z-0">
                   <div className="group relative">
                     <img
                       src="/images/tooltip.svg"
@@ -339,7 +392,7 @@ const Home: FC = () => {
           </div>
 
           {/** second grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6  items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6 items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/plus.svg" />
@@ -380,7 +433,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6  items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6 items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/net.svg" />
@@ -420,7 +473,7 @@ const Home: FC = () => {
 
         {/* grid 2*/}
 
-        <div className="flex flex-row gap-7 below-md:gap-0 below-md:flex-col items-stretch">
+        <div className="flex flex-row gap-7 below-md:gap-0 tablet:gap-0 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
           <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-1 ">
@@ -556,8 +609,8 @@ const Home: FC = () => {
 
         {/* grid 3*/}
 
-        <div className="flex flex-row gap-7 below-md:gap-0 mb-1 below-md:flex-col items-stretch">
-          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  items-stretch">
+        <div className="flex flex-row gap-7 below-md:gap-0 tablet:gap-0 mb-1 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
+          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-1 ">
                 <img src="/images/crown.svg" />
@@ -599,7 +652,7 @@ const Home: FC = () => {
           </div>
 
           {/** second grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6 items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/persentage.svg" />
