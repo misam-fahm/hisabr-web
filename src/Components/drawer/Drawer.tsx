@@ -125,7 +125,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         !shouldHideHamburger && (
           <img
             src="/images/hamburger.svg"
-            className="fixed top-6 left-4 cursor-pointer z-40"
+            className="fixed top-4 left-4 cursor-pointer z-40"
             onClick={() => setOpen(!open)}
           />
         )
@@ -212,7 +212,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
           </ul>
         </div>
 
-        <div className="flex px-6 mt-10 gap-4">
+        <div className="flex  px-6 mt-10 gap-4">
           <img src="/images/logout.svg" />
           {open && <p>Logout</p>}
         </div>
