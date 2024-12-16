@@ -1,22 +1,49 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const DateRangePicker = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [isOpen, setIsOpen] = useState(false); // Toggle calendar visibility
+  const [isOpen, setIsOpen] = useState(false);
+  const [visibleMonth, setVisibleMonth] = useState<number>(
+    new Date().getMonth()
+  );
+  const pickerRef = useRef<HTMLDivElement>(null);
 
-  const handleClickIcon = () => setIsOpen((prev) => !prev); // Toggle calendar
+  const handleClickIcon = () => setIsOpen((prev) => !prev);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        pickerRef.current &&
+        !pickerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleMonthChange = (date: Date) => {
+    setVisibleMonth(date.getMonth());
+  };
+
+  const filterDates = (date: Date): boolean => {
+    return date.getMonth() === visibleMonth;
+  };
 
   return (
-    <div className="relative">
-      {/* Clickable Area */}
+    <div className="relative" ref={pickerRef}>
       <div
         onClick={handleClickIcon}
-        className="flex items-center justify-between rounded-md px-3 py-[9px] bg-white cursor-pointer shadow-md"
+        className="flex items-center justify-between rounded px-3 py-[10px] bg-white cursor-pointer shadow-md"
       >
         <span className="text-[#636363] text-[12px]">
           {startDate && endDate
@@ -40,6 +67,9 @@ const DateRangePicker = () => {
             endDate={endDate}
             selectsRange
             inline
+            maxDate={new Date()}
+            onMonthChange={handleMonthChange}
+            filterDate={filterDates}
           />
         </div>
       )}
