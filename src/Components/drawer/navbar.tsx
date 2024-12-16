@@ -96,7 +96,7 @@ const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <main className="w-full  z-40 bg-white h-[50px] flex justify-center items-center shadow border">
+    <main className="w-full sticky z-30 bg-[#ffff] h-[50px] flex justify-center items-center shadow ">
       
        
       <div className="flex justify-between below-md:justify-center items-center  w-full">
