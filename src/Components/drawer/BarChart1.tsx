@@ -49,8 +49,8 @@ const SimpleBarChart: FC = () => {
           data={data}
           margin={
             isMobile
-              ? { right: 10, left: 12 }
-              : { top: 1, right: 25, left: 25, bottom: 20 }
+              ? { right: 10, left: 0 }
+              : { top: 1, right: 25, left: 30, bottom: 20 }
           }
         >
           {/* X-Axis */}

@@ -14,10 +14,10 @@ const Pagination: React.FC<PaginationProps> = ({ table }) => {
 
   return (
     <main>
-      <div className="mt-4 flex gap-2 justify-between items-center below-md:fixed below-md:bottom-5 below-md:left-0 below-md:right-5">
+      <div className="mt-4 flex gap-2 justify-between items-center below-md:hidden">
         {/* Page Range Display */}
         <div>
-          <span className="text-[#8899A8] text-[12px] font-medium ml-3 below-md:hidden">
+          <span className="text-[#8899A8] text-[12px] font-medium ml-3 ">
             {startItem} - {endItem} of {totalItems}
           </span>
         </div>
@@ -27,7 +27,7 @@ const Pagination: React.FC<PaginationProps> = ({ table }) => {
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className="px-4 py-2 below-md:px-2 below-md:py-1 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
+            className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
             style={{ background: "#EBEFF6" }}
           >
             <img src="/images/left.svg" />
@@ -39,7 +39,7 @@ const Pagination: React.FC<PaginationProps> = ({ table }) => {
               <button
                 key={pageIndex}
                 onClick={() => table.setPageIndex(pageIndex)}
-                className={`px-4 py-2 below-md:px-2 below-md:py-1 rounded-md text-[12px] ${
+                className={`px-4 py-2 rounded-md text-[12px] ${
                   table.getState().pagination.pageIndex === pageIndex
                     ? "!important text-[#FFFFFF]"
                     : " text-gray-700"
@@ -59,7 +59,7 @@ const Pagination: React.FC<PaginationProps> = ({ table }) => {
           <button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className="px-4 py-2 below-md:px-2 below-md:py-1 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
+            className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
             style={{ background: "#EBEFF6" }}
           >
             <img src="/images/right.svg" />

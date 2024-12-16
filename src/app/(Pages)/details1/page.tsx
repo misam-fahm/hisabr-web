@@ -453,7 +453,7 @@ const DetailsPage: React.FC = () => {
           </div>
         </div>
         {/**table */}
-        <div className="flex flex-row justify-between items-center mt-4 mb-4">
+        <div className="flex flex-row justify-between items-center mb-4 below-md:-mt-8">
           <div>
             <p className="text-[16px] font-bold text-[#334155] ml-3">
               Invoices
@@ -470,10 +470,10 @@ const DetailsPage: React.FC = () => {
             </button>
           </div>
         </div>
-        <div className="mb-10">
+        <div>
           {/** Table */}
 
-          <div>
+          <div className="below-md:hidden">
             {/* Table */}
             <div className="overflow-x-auto shadow-md rounded-lg">
               <table className="w-full border-collapse border border-gray-200">
@@ -523,6 +523,114 @@ const DetailsPage: React.FC = () => {
 
             {/* Pagination */}
             <Pagination table={table} />
+          </div>
+
+          <div className="below-lg:hidden">
+            <div className="flex flex-col">
+              <div className="w-full bg-white rounded-md p-3 mb-3">
+                <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+                  <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
+                    <span>12-20-24</span>
+                    <span>Gordon</span>
+                  </div>
+                  <div>
+                    <img src="/images/eye.svg" />
+                  </div>
+                </div>
+                <div className="space-y-3 mb-2 px-2">
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Store</p>
+                    <p className="text-[#1A1A1A] text-[12px]">13246</p>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Quantity</p>
+                    <p className="text-[#1A1A1A] text-[12px]">145</p>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Total</p>
+                    <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full bg-white rounded-md p-3 mb-3">
+                <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+                  <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
+                    <span>12-20-24</span>
+                    <span>Gordon</span>
+                  </div>
+                  <div>
+                    <img src="/images/eye.svg" />
+                  </div>
+                </div>
+                <div className="space-y-3 mb-2 px-2">
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Store</p>
+                    <p className="text-[#1A1A1A] text-[12px]">13246</p>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Quantity</p>
+                    <p className="text-[#1A1A1A] text-[12px]">145</p>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Total</p>
+                    <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full bg-white rounded-md p-3 mb-3">
+                <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+                  <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
+                    <span>12-20-24</span>
+                    <span>Gordon</span>
+                  </div>
+                  <div>
+                    <img src="/images/eye.svg" />
+                  </div>
+                </div>
+                <div className="space-y-3 mb-2 px-2">
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Store</p>
+                    <p className="text-[#1A1A1A] text-[12px]">13246</p>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Quantity</p>
+                    <p className="text-[#1A1A1A] text-[12px]">145</p>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Total</p>
+                    <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full bg-white rounded-md p-3 mb-3">
+                <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+                  <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
+                    <span>12-20-24</span>
+                    <span>Gordon</span>
+                  </div>
+                  <div>
+                    <img src="/images/eye.svg" />
+                  </div>
+                </div>
+                <div className="space-y-3 mb-2 px-2">
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Store</p>
+                    <p className="text-[#1A1A1A] text-[12px]">13246</p>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Quantity</p>
+                    <p className="text-[#1A1A1A] text-[12px]">145</p>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Total</p>
+                    <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
