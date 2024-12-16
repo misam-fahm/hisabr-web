@@ -173,7 +173,7 @@ const DonutChart: React.FC = () => {
   };
 
   return (
-    <div className="w-[90vh] h-[90vh] below-md:w-[55vh] below-md:h-[55vh]">
+    <div className="w-[90vh] h-[90vh] below-md:w-[55vh] below-md:h-[55vh] tablet:w-[55vh] tablet:h-[55vh]">
       <Doughnut data={data} options={options} plugins={[customArrowsPlugin]} />
     </div>
   );

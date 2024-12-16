@@ -137,20 +137,20 @@ const summary: FC = () => {
 
             <Dropdown
               options={options}
-              widthchange="w-[20%]"
+              widthchange="w-[20%] tablet:w-full"
               selectedOption={selectedOption}
               onSelect={handleSelect}
               isOpen={isOpen}
               toggleOpen={toggleDropdown}
             />
-            <div className="w-[25%] below-md:w-full">
+            <div className="w-[25%] below-md:w-full tablet:w-full">
               <DateRangePicker />
             </div>
           </div>
         </div>
 
-        <div className=" pl-6 pr-6 below-md:px-3">
-          <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 pt-16 items-stretch">
+        <div className=" pl-6 pr-6 below-md:px-3 ">
+          <div className="flex flex-row below-md:flex-col tablet:flex-col w-full h-full gap-6 below-md:gap-3 tablet:gap-3 pt-16 items-stretch">
             <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full  p-4 justify-between items-stretch">
               <div>
                 <p className="text-[14px] text-[#575F6DCC] font-medium">
@@ -226,8 +226,8 @@ const summary: FC = () => {
             <ComposedChart />
           </div>
 
-          <div className="flex flex-row below-md:flex-col w-full mt-6 below-md:mt-3 mb-9">
-            <div className="flex flex-col w-[65%] below-md:w-[100%]">
+          <div className="flex flex-row below-md:flex-col tablet:flex-col w-full mt-6 below-md:mt-3 mb-9">
+            <div className="flex flex-col w-[65%] below-md:w-[100%] tablet:w-[100%]">
               <div className="bg-white shadow-md rounded-md">
                 <div className="flex flex-row justify-between below-md:mx-3 mx-7 mt-6">
                   {/* Sales Text */}
@@ -318,7 +318,7 @@ const summary: FC = () => {
                 <BartChart1 />
               </div>
             </div>
-            <div className="w-[35%] below-md:w-[100%] bg-white ml-6 below-md:ml-0 below-md:mt-3 shadow-md rounded-md">
+            <div className="w-[35%] below-md:w-[100%] bg-white ml-6 below-md:ml-0 tablet:ml-0 tablet:mt-6 tablet:w-full below-md:mt-3 shadow-md rounded-md">
               <div className="flex flex-col">
                 {/* Header Section */}
                 <div className="flex flex-row justify-between px-6 pt-6 items-start">
@@ -362,7 +362,7 @@ const summary: FC = () => {
                 </div>
 
                 <div>
-                  <div className="w-full max-w-sm mx-auto px-6 below-md:pb-12">
+                  <div className="w-full max-w-sm mx-auto px-6 below-md:pb-12 tablet:pb-12">
                     <ul>
                       {data.map((item, index) => (
                         <li
