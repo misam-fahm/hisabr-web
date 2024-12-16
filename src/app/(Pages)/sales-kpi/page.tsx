@@ -33,28 +33,27 @@ const SalesKPI: FC = () => {
   };
 
   return (
-    <main>
-      <main
-        className="max-h-[calc(100vh-70px)] tablet:max-h-[calc(100vh-10px)] overflow-auto"
-        style={{ scrollbarWidth: "thin" }}
-      >
-        <div className="below-md:flex below-md:justify-center">
-          <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-20 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
-            Sales KPI
-          </p>
-        </div>
+    <main
+      className="max-h-[calc(100vh-60px)] overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
+      {/* <div className="below-md:flex below-md:justify-center">
+        <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-20 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
+          Sales KPI
+        </p>
+      </div> */}
 
-        <div className="mb-1">
-          <div className="flex flex-row below-md:flex-col below-md:items-end sticky top-16 justify-between pt-6 below-md:px-3  pl-6 pr-6 pb-6 below-md:pb-3 bg-[#f7f8f9] ">
-            <div className="flex flex-row below-md:flex-col w-full gap-3">
-              <Dropdown
-                options={options}
-                widthchange="w-[22%] tablet:w-full"
-                selectedOption={selectedOption}
-                onSelect={handleSelect}
-                isOpen={isOpen}
-                toggleOpen={toggleDropdown1}
-              />
+      <div className=" mb-10">
+        <div className="flex flex-row below-md:flex-col below-md:items-end sticky  justify-between pt-6 below-md:px-3  pl-6 pr-6 pb-6 below-md:pb-3 bg-[#f7f8f9] ">
+          <div className="flex flex-row below-md:flex-col w-full gap-3">
+            <Dropdown
+              options={options}
+              widthchange="w-[22%]"
+              selectedOption={selectedOption}
+              onSelect={handleSelect}
+              isOpen={isOpen}
+              toggleOpen={toggleDropdown1}
+            />
 
               <div className="w-[30%] tablet:w-full below-md:w-full">
                 <DateRange />
@@ -74,24 +73,22 @@ const SalesKPI: FC = () => {
 
           {/* grid 1 */}
 
-          <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 pt-16 pl-6 pr-6 items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid tablet:gap-3">
-            <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
-              <div>
-                <p className="text-[14px] text-[#575F6DCC] font-medium">
-                  Sales
-                </p>
-                <p className="text-[18px] text-[#2D3748]">$161,358</p>
-                <p className="text-[12px] text-[#388E3C] font-semibold">
-                  20%{" "}
-                  <span className="text-[#575F6D] font-medium">
-                    more than last year
-                  </span>
-                </p>
-              </div>
-              <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-                <img src="./images/dollar.svg" />
-              </div>
+        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3  pl-6 pr-6 items-stretch">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
+            <div>
+              <p className="text-[14px] text-[#575F6DCC] font-medium">Sales</p>
+              <p className="text-[18px] text-[#2D3748]">$161,358</p>
+              <p className="text-[12px] text-[#388E3C] font-semibold">
+                20%{" "}
+                <span className="text-[#575F6D] font-medium">
+                  more than last year
+                </span>
+              </p>
             </div>
+            <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+              <img src="./images/dollar.svg" />
+            </div>
+          </div>
 
             <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
               <div>
@@ -262,7 +259,7 @@ const SalesKPI: FC = () => {
             </div>
           </div>
         </div>
-      </main>
+     
       <div className="below-lg:hidden flex justify-end mr-3">
         <button className="group focus:outline-none flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[50px] hover:w-[170px] h-[50px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-all duration-300 overflow-hidden">
           <img
