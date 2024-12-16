@@ -45,7 +45,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
           newTitle = "Logout";
           break;
         default:
-          newTitle = "Admin Panel";
+          newTitle = "";
       }
 
       setTitle(newTitle);
