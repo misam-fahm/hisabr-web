@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 
-const DeleteCategories = () => {
+const DeleteTenders = () => {
   const [categoryName, setCategoryName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [errors, setErrors] = useState({ categoryName: "" });
@@ -117,4 +117,4 @@ const DeleteCategories = () => {
   );
 };
 
-export default DeleteCategories;
+export default DeleteTenders;

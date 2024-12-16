@@ -273,7 +273,7 @@ const Page = () => {
         </div>
       </div>
       {/* Web View */}
-      <div className=" justify-center items-center my-16 p-4 hidden md:block ">
+      <div className="justify-center items-center my-16 p-4 hidden md:block ">
         <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-5xl">
           <div>
             <p className="font-medium text-[#5E6366]">Add Configuration:</p>
@@ -406,14 +406,14 @@ const Page = () => {
                   )}
                 </div>
                 <div className=" flex gap-4 mt-3 p-2 px-4 ">
-                  <div>
+                  {/* <div>
                     <button
                       type="submit"
                       className=" w-[145px] bg-[#C8C8C8]  text-[#6F6F6F] font-medium py-2 px-4 rounded-md"
                     >
-                      Cancle
+                      Cancel
                     </button>
-                  </div>
+                  </div> */}
                   <div>
                     <button
                       type="submit"

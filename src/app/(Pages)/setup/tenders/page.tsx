@@ -11,6 +11,7 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import AddTender from "@/Components/Setup/AddTender";
+import DeleteTenders from "@/Components/Setup/DeleteTenders";
 
 interface TableRow {
   percent: string;
@@ -136,9 +137,8 @@ const columns: ColumnDef<TableRow>[] = [
     id: "delete",
     header: () => <div className="text-center ">Delete</div>,
     cell: () => (
-      <div className="ml-12">
-        <Images src="/images/delete.svg" alt="delete" width={35} height={35} />
-      </div>
+      <>
+      <DeleteTenders/></>
     ),
     size: 60,
   },
@@ -169,12 +169,12 @@ const Page: FC = () => {
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <main className="w-full h-screen flex flex-col overflow-hidden">
-      <div className=" mt-20 mx-6 flex-grow below-md:mt-10 below-md:mx-3 ">
-        <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
-          <p className="text-[16px] font-bold text-[#334155] below-md:hidden">
-            Tender
-          </p>
+    <main
+      className="max-h-[calc(100vh-60px)] overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
+      <div className=" mx-6 flex-grow  below-md:mx-3">
+        <div className="flex flex-col-reverse md:flex-row justify-end items-start  below-lg:mt-4 mb-4 gap-4">
           <div className="font-semibold text-[14px] bg-[#1AA47D] hover:bg-[#168A68] px-5 h-[37px] text-[#FFFFFF] rounded-md below-md:hidden">
             <AddTender />
           </div>
@@ -183,7 +183,7 @@ const Page: FC = () => {
         <div
           className="block md:hidden"
           style={{
-            maxHeight: "calc(100vh - 130px)",
+            maxHeight: "calc(100vh - 80px)",
             overflowY: "auto",
             WebkitOverflowScrolling: "touch", // Enables smooth scrolling on mobile
             scrollbarWidth: "none", // Hide scrollbar
@@ -282,7 +282,7 @@ const Page: FC = () => {
                       {row.getVisibleCells().map((cell) => (
                         <td
                           key={cell.id}
-                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          className="px-4 py-1 text-[#636363] text-[14px]"
                           style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
                         >
                           {flexRender(

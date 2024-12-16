@@ -13,6 +13,7 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
+import Pagination from '../ui/Common/Pagination';
 
 interface TableRow {
   date: string;
@@ -287,10 +288,10 @@ const Expenses: FC = () => {
     setIsOpen(false);
   };
     return (
-        <main className="py-4 px-4 w-full mt-14 below-md:mt-12">
+        <main className="py-3 px-4 w-full ">
 
             <>
-                <div className='flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:space-y-1 gap-2 mt-4 my-4'>
+                <div className='flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:space-y-1 gap-2  my-3'>
                     <div className='flex gap-2 w-full below-md:flex-col'>
 
                         <div className='flex'>
@@ -367,7 +368,7 @@ const Expenses: FC = () => {
                         {/* </div>  */}
 
                         <div className='flex items-center justify-between below-md:flex-row below-md:gap-4'>
-                            <div className='flex shadow  text-[12px] bg-[#ffff] items-center  rounded-md w-[200px]  h-[35px] below-md:w-full below-md:h-[35px] below-md:text-[11px]'>
+                            <div className='flex shadow  text-[12px] bg-[#ffff] items-center  rounded-md w-[300px]  h-[35px] below-md:w-full below-md:h-[35px] below-md:text-[11px]'>
                                 <input type='search' ref={searchInputRef} placeholder='Search' className='w-full h-[35px] bg-transparent rounded-lg px-3 text-[#636363] focus:outline-none'>
                                 </input>
                                 <img className='pr-2 cursor-pointer items-center' src='/images/searchicon.svg'
@@ -436,7 +437,7 @@ const Expenses: FC = () => {
 
 
                 {/* Expenses Table */}
-                <div className='overflow-x-auto bg-white shadow-lg rounded-lg flex-grow flex flex-col below-md:hidden'>
+                <div className='overflow-x-auto bg-white shadow-lg rounded-lg py-3 flex-grow flex flex-col below-md:hidden'>
                     <div className='overflow-hidden max-w-full'>
                         <table className='w-full border-collapse text-[12px] text-white table-fixed'>
                             <thead className='bg-[#334155] top-0 z-10'>
@@ -494,77 +495,8 @@ const Expenses: FC = () => {
                     </div>
                 </div>
                 {/* Pagination Numbers */}
-                <div className="mt-4 flex gap-2 justify-between items-center below-md:hidden">
-                    {/* Page Range Display */}
-                    <div>
-                        <span className="text-[#8899A8] text-[12px] font-medium ml-3">
-                            {startItem} - {endItem} of {totalItems}
-                        </span>
-                    </div>
-
-                    {/* Pagination Numbers */}
-                    <div className="flex flex-row gap-3">
-                        <button
-                            onClick={() => table.previousPage()}
-                            disabled={!table.getCanPreviousPage()}
-                            className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
-                            style={{ background: "#EBEFF6" }}
-                        >
-                            <img src="/images/left.svg" />
-                        </button>
-
-                        {Array.from({ length: table.getPageCount() }, (_, index) => {
-                            const pageIndex = index;
-                            return (
-                                <button
-                                    key={pageIndex}
-                                    onClick={() => table.setPageIndex(pageIndex)}
-                                    className={`px-4 py-2 rounded-md text-[12px] ${table.getState().pagination.pageIndex === pageIndex
-                                        ? "!important text-[#FFFFFF]"
-                                        : " text-gray-700"
-                                        }`}
-                                    style={{
-                                        backgroundColor:
-                                            table.getState().pagination.pageIndex === pageIndex
-                                                ? "#1AA47D"
-                                                : "transparent",
-                                    }}
-                                >
-                                    {pageIndex + 1}
-                                </button>
-                            );
-                        })}
-
-                        <button
-                            onClick={() => table.nextPage()}
-                            disabled={!table.getCanNextPage()}
-                            className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
-                            style={{ background: "#EBEFF6" }}
-                        >
-                            <img src="/images/right.svg" />
-                        </button>
-
-                        <div>
-                            <div className="w-full">
-                                {/* Dropdown for Page Selection */}
-                                <select
-                                    value={table.getState().pagination.pageIndex} // Sync with current page index
-                                    onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
-                                    className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
-                                >
-                                    {Array.from(
-                                        { length: table.getPageCount() },
-                                        (_, index) => (
-                                            <option key={index} value={index}>
-                                                Page {index + 1}
-                                            </option>
-                                        )
-                                    )}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
+                <div className="mt-4  below-md:hidden">
+                    <Pagination table={table}/>
                 </div>
          
             </>

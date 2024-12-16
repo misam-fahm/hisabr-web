@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useState } from "react";
-import DateRange from "@/Components/drawer/DateRangePicker";
+import Pagination from "@/Components/ui/Common/Pagination";
 import Image from "next/image";
 import {
   useReactTable,
@@ -124,13 +124,12 @@ const Page: FC = () => {
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <main className="w-full h-screen flex flex-col overflow-hidden">
-      <div className="mt-20 mx-6 flex-grow  below-md:mx-3">
-        <div className=" below-md:hidden flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
-          <p className="text-[16px] font-bold text-[#334155] hidden md:block">
-            Item Categories
-          </p>
-          <div className="flex flex-row gap-2">
+    <main className="max-h-[calc(100vh-60px)] overflow-auto"
+    style={{ scrollbarWidth: "thin" }}>
+      <div className=" mx-6 flex-grow  below-md:mx-3">
+        <div className="flex flex-col-reverse md:flex-row justify-end items-start   below-lg:mt-4 mb-4 gap-4">
+          
+          <div className="flex flex-row gap-2 below-md:hidden">
             <AddNewItems />
             <AddCategories />
           </div>
@@ -141,7 +140,7 @@ const Page: FC = () => {
           <div
             className="block md:hidden"
             style={{
-              maxHeight: "calc(100vh - 130px)",
+              maxHeight: "calc(100vh - 80px)",
               overflowY: "auto",
               WebkitOverflowScrolling: "touch", // Enables smooth scrolling on mobile
               scrollbarWidth: "none", // Hide scrollbar
@@ -257,62 +256,7 @@ const Page: FC = () => {
           </div>
         </div>
 
-        <div className="mt-4 flex gap-2 justify-between items-center below-md:hidden">
-          <div>
-            <span className="text-[#8899A8] text-[12px] font-medium ml-3">
-              {startItem} - {endItem} of {totalItems}
-            </span>
-          </div>
-
-          <div className="flex flex-row gap-3">
-            <button
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className="px-4 py-2 bg-[#EBEFF6] text-gray-700  rounded-md disabled:opacity-50"
-            >
-              <img src="/images/left.svg" />
-            </button>
-
-            {Array.from({ length: table.getPageCount() }, (_, index) => {
-              const pageIndex = index;
-              return (
-                <button
-                  key={pageIndex}
-                  onClick={() => table.setPageIndex(pageIndex)}
-                  className={`px-4 py-2 rounded-md text-[12px] ${
-                    table.getState().pagination.pageIndex === pageIndex
-                      ? "bg-[#1AA47D] text-[#FFFFFF]"
-                      : "text-gray-700"
-                  }`}
-                >
-                  {pageIndex + 1}
-                </button>
-              );
-            })}
-
-            <button
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
-            >
-              <img src="/images/right.svg" />
-            </button>
-
-            <div>
-              <select
-                value={table.getState().pagination.pageIndex}
-                onChange={(e) => table.setPageIndex(Number(e.target.value))}
-                className="pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
-              >
-                {Array.from({ length: table.getPageCount() }, (_, index) => (
-                  <option key={index} value={index}>
-                    Page {index + 1}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
+       <Pagination table={table}  />
       </div>
     </main>
   );

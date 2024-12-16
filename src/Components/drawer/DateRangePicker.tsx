@@ -8,11 +8,13 @@ const DateRangePicker = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [visibleMonth, setVisibleMonth] = useState<number>(
+    new Date().getMonth()
+  );
   const pickerRef = useRef<HTMLDivElement>(null);
 
   const handleClickIcon = () => setIsOpen((prev) => !prev);
 
-  // Close the date picker when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -28,6 +30,14 @@ const DateRangePicker = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const handleMonthChange = (date: Date) => {
+    setVisibleMonth(date.getMonth());
+  };
+
+  const filterDates = (date: Date): boolean => {
+    return date.getMonth() === visibleMonth;
+  };
 
   return (
     <div className="relative" ref={pickerRef}>
@@ -57,7 +67,9 @@ const DateRangePicker = () => {
             endDate={endDate}
             selectsRange
             inline
-            maxDate={new Date()} // Disable future dates
+            maxDate={new Date()}
+            onMonthChange={handleMonthChange}
+            filterDate={filterDates}
           />
         </div>
       )}
