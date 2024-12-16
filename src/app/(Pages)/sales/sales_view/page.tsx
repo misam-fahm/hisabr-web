@@ -85,14 +85,14 @@ const DetailsPage: React.FC = () => {
         src="/images/backIcon.svg"
         className="fixed top-6 left-4 z-30 below-lg:hidden"
       />
-      <div className="below-md:flex below-md:justify-center ">
+      {/* <div className="below-md:flex below-md:justify-center ">
         <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
           Sales Details
         </p>
-      </div>
+      </div> */}
 
       {/* Tabs Navigation */}
-      <div className="pt-20 pb-6 bg-[#f7f8f9] pl-6 pr-6 below-md:px-4">
+      <div className="py-3 pb-6 bg-[#f7f8f9] pl-6 pr-6 below-md:px-4">
         <div className="flex flex-row justify-between items-center gap-6">
           {/* Tab Buttons */}
           <div className="below-md:w-full border-b-[2px] border-[#E1E0E0D1] relative">

@@ -199,8 +199,11 @@ const Page: FC = () => {
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <main className="w-full h-screen flex flex-col overflow-hidden">
-      <div className="mt-20 mx-6 flex-grow below-md:mt-10 below-md:mx-3">
+    <main
+    className="max-h-[calc(100vh-60px)] overflow-auto"
+    style={{ scrollbarWidth: "thin" }}
+  >
+      <div className=" mx-6 flex-grow below-md:mt-2 below-md:mx-3">
         <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
           <p className="text-[16px] font-bold text-[#334155] below-md:hidden">
             Stores
@@ -214,7 +217,7 @@ const Page: FC = () => {
         <div
           className="block md:hidden"
           style={{
-            maxHeight: "calc(100vh - 130px)",
+            maxHeight: "calc(100vh - 100px)",
             overflowY: "auto",
             WebkitOverflowScrolling: "touch", // Enables smooth scrolling on mobile
             scrollbarWidth: "none", // Hide scrollbar

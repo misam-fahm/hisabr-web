@@ -283,16 +283,16 @@ const Sales: FC = () => {
   return (
     <main>
       <main
-        className="max-h-[calc(100vh-70px)] overflow-auto"
+        className="max-h-[calc(100vh-60px)] overflow-auto"
         style={{ scrollbarWidth: "thin" }}
       >
-        <div className="below-md:flex below-md:justify-center ">
+        {/* <div className="below-md:flex below-md:justify-center ">
           <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
             Sales
           </p>
-        </div>
-        <div className="mx-6 mt-24 below-md:mx-3 below-md:mt-16">
-          <div className="flex flex-row below-md:flex-col pb-6 sticky top-16 below-md:pt-4 bg-[#f7f8f9] below-md:pb-4  ">
+        </div> */}
+        <div className="mx-6 my-6 below-md:mx-3 below-md:mt-3">
+          <div className="flex flex-row below-md:flex-col pb-6 sticky  below-md:pt-4 bg-[#f7f8f9] below-md:pb-4  ">
             <div className="flex flex-row below-md:flex-col w-full gap-3">
               {/* Dropdown Button */}
 

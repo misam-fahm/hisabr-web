@@ -169,8 +169,11 @@ const Page: FC = () => {
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <main className="w-full h-screen flex flex-col overflow-hidden">
-      <div className="mt-20 mx-6 flex-grow">
+    <main
+      className="max-h-[calc(100vh-60px)] overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
+      <div className=" mx-6 flex-grow">
         <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
           <p className="text-[16px] font-bold text-[#334155] below-md:hidden">
             Tender

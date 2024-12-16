@@ -34,17 +34,17 @@ const SalesKPI: FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-10px)] overflow-auto"
+      className="max-h-[calc(100vh-60px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className="below-md:flex below-md:justify-center">
+      {/* <div className="below-md:flex below-md:justify-center">
         <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-20 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
           Sales KPI
         </p>
-      </div>
+      </div> */}
 
-      <div className=" mb-10">
-        <div className="flex flex-row below-md:flex-col below-md:items-end sticky top-16 justify-between pt-6 below-md:px-3  pl-6 pr-6 pb-6 below-md:pb-3 bg-[#f7f8f9] ">
+      <div className=" mb-3">
+        <div className="flex flex-row below-md:flex-col below-md:items-end sticky  justify-between pt-6 below-md:px-3  pl-6 pr-6 pb-6 below-md:pb-3 bg-[#f7f8f9] ">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
             <Dropdown
               options={options}
@@ -73,7 +73,7 @@ const SalesKPI: FC = () => {
 
         {/* grid 1 */}
 
-        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 pt-16 pl-6 pr-6 items-stretch">
+        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3  pl-6 pr-6 items-stretch">
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">Sales</p>

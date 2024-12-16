@@ -121,17 +121,17 @@ const summary: FC = () => {
   };
   return (
     <main
-      className="max-h-[calc(100vh-10px)] overflow-auto"
+      className="max-h-[calc(100vh-60px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className="below-md:flex below-md:justify-center">
+      {/* <div className="below-md:flex below-md:justify-center">
         <p className="text-[18px] below-md:pl-0 below-md:pr-0 font-bold text-defaultblack fixed top-0 z-20 mt-5 pl-6 pr-6">
           Summary
         </p>
-      </div>
+      </div> */}
 
       <div>
-        <div className="z-[11] pb-6 bg-[#f7f8f9] sticky top-16 pt-6 pl-6 pr-6 below-md:px-3">
+        <div className="z-[11] pb-6 bg-[#f7f8f9] sticky  pt-6 pl-6 pr-6 below-md:px-3">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
             {/* First Dropdown */}
 
@@ -150,7 +150,7 @@ const summary: FC = () => {
         </div>
 
         <div className=" pl-6 pr-6 below-md:px-3">
-          <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 pt-16 items-stretch">
+          <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3  items-stretch">
             <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full  p-4 justify-between items-stretch">
               <div>
                 <p className="text-[14px] text-[#575F6DCC] font-medium">
