@@ -14,6 +14,7 @@ import {
 import AddNewItems from "@/Components/Setup/AddNewItems";
 import AddCategories from "@/Components/Setup/AddCategories";
 import Pagination from "@/Components/ui/Common/Pagination";
+import DeleteItems from "@/Components/Setup/DeleteItems";
 
 interface TableRow {
   name: string;
@@ -181,9 +182,9 @@ const columns: ColumnDef<TableRow>[] = [
     id: "delete",
     header: () => <div className="text-center">Delete</div>,
     cell: () => (
-      <div className="flex justify-center cursor-pointer ml-5">
-        <Image className="ml-2" src="/images/delete.svg" alt="delete" width={32} height={32} />
-      </div>
+      <>
+      <DeleteItems />
+    </>
     ),
 
     size: 80,
@@ -217,12 +218,10 @@ const Page: FC = () => {
   return (
     <main className="max-h-[calc(100vh-60px)] overflow-auto"
     style={{ scrollbarWidth: "thin" }}>
-      <div className=" mx-6 flex-grow">
-        <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
-          <p className="text-[16px] font-bold text-[#334155] below-md:hidden">
-            Items
-          </p>
-          <div className="flex flex-row gap-2">
+      <div className=" mx-6 flex-grow  below-md:mx-3">
+        <div className="flex flex-col-reverse md:flex-row justify-end items-start  below-lg:mt-4 mb-4 gap-4">
+         
+          <div className="flex flex-row gap-2 below-md:hidden">
             <AddNewItems />
             <AddCategories />
           </div>
@@ -233,7 +232,7 @@ const Page: FC = () => {
           <div
             className="block md:hidden"
             style={{
-              maxHeight: "calc(100vh - 270px)",
+              maxHeight: "calc(100vh - 80px)",
               overflowY: "auto",
               WebkitOverflowScrolling: "touch", // Enables smooth scrolling on mobile
               scrollbarWidth: "none", // Hide scrollbar
@@ -295,6 +294,8 @@ const Page: FC = () => {
                 </div>
               </div>
             ))}
+              {/* Add NewItems bottom */}
+          <div  className=' fixed bottom-[20px] below-lg:hidden right-3'><AddNewItems /></div>
           </div>
 
           {/* Desktop View */}
@@ -339,7 +340,7 @@ const Page: FC = () => {
                         {row.getVisibleCells().map((cell) => (
                           <td
                             key={cell.id}
-                            className="px-4 py-1.5 text-[#636363] text-[14px]"
+                            className="px-4 py-1 text-[#636363] text-[14px]"
                             style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
                           >
                             {flexRender(
@@ -357,7 +358,7 @@ const Page: FC = () => {
           </div>
         </div>
 
-        <div className="mt-4 flex gap-2 justify-between items-center">
+        <div className="mt-4 flex gap-2 justify-between items-center  below-md:hidden">
           {/* Page Range Display */}
           <div>
             <span className="text-[#8899A8] text-[12px] font-medium ml-3">
