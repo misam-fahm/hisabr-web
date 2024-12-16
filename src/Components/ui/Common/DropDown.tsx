@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 
 // Dropdown Component
 const Dropdown = ({
@@ -59,8 +59,8 @@ const Dropdown = ({
       <button
         onClick={toggleOpen}
         className={`bg-[#ffffff] text-[#4B4B4B] ${
-          shadowclassName ? shadowclassName : "shadow-md"
-        } shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px] focus:outline-none`}
+          shadowclassName ? shadowclassName : "shadow"
+        } shadow px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px] focus:outline-none`}
       >
         <span>{selectedOption || "Year"}</span>
         <img
@@ -75,8 +75,8 @@ const Dropdown = ({
       {isOpen && (
         <div
           className={`absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded ${
-            shadowclassName ? shadowclassName : "shadow-md"
-          } shadow-md`}
+            shadowclassName ? shadowclassName : "shadow"
+          } shadow`}
           style={{ zIndex: 50 }}
         >
           {options?.map((option, index) => (

@@ -125,7 +125,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         !shouldHideHamburger && (
           <img
             src="/images/hamburger.svg"
-            className="fixed top-6 left-4 cursor-pointer z-40"
+            className="fixed top-6 left-4 cursor-pointer z-40 hidden below-md:block"
             onClick={() => setOpen(!open)}
           />
         )
@@ -140,7 +140,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         />
 
         <div
-          className={`flex gap-x-4 mt-[13px] ${open ? "pl-10" : "pl-3"}  below-md:pl-5 ${open ? "ml-[13px]" : "ml-[3px]"}`}
+          className={`flex gap-x-4 mt-[13px] ${open ? "pl-3" : "pl-3"}  below-md:pl-1 ${open ? "ml-[13px]" : "ml-[3px]"}`}
         >
           <Images
             src={open ? "/images/logo.svg" : "/images/halflogo.png"}
@@ -149,7 +149,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
           <img
             src="/images/x.svg"
             onClick={() => setOpen(!open)}
-            className="below-lg:hidden tablet:hidden sticky z-50"
+            className="below-lg:hidden tablet:hidden sticky z-50 pl-5"
           />
         </div>
         <div className="max-h-[calc(100vh-160px)] py-4 overflow-auto scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent ">
@@ -163,7 +163,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
                       ? setSetupOpen(!setupOpen)
                       : handleNavigation(menu.path!)
                   }
-                  className={`text-defaultwhite below-md:bg-transparent below-md:shadow-none text-[14px] flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#EEEEEE1A] below-md:hover:bg-[transparent] mr-5 rounded-tr-full rounded-br-full 
+                  className={`text-defaultwhite below-md:bg-transparent below-md:shadow-none text-[14px] flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#EEEEEE1A] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]  below-md:hover:bg-[transparent] mr-5 rounded-tr-full rounded-br-full 
                     ${currentPath === menu.path ? "bg-[#EEEEEE1A] below-md:bg-transparent shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]" : ""} 
                     ${menu?.gap ? "mt-11" : "mt-1"} 
                     ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""}`}

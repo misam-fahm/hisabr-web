@@ -280,331 +280,343 @@ const Sales: FC = () => {
       .includes(globalFilter?.toLowerCase() || "")
   );
 
-  return (
-    <main>
-      <main
-        className="max-h-[calc(100vh-70px)] overflow-auto"
-        style={{ scrollbarWidth: "thin" }}
-      >
-        <div className="below-md:flex below-md:justify-center ">
-          <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
-            Sales
-          </p>
-        </div>
-        <div className="mx-6 mt-24 below-md:mx-3 below-md:mt-16 tablet:mt-16">
-          <div className="flex flex-row below-md:flex-col pb-6 sticky top-16 below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4  ">
-            <div className="flex flex-row below-md:flex-col w-full gap-3">
-              {/* Dropdown Button */}
+  //tooltip for mobile
+  const [showTooltip, setShowTooltip] = useState(false);
 
-              <Dropdown
-                options={options}
-                selectedOption={selectedOption}
-                onSelect={handleSelect}
-                isOpen={isOpen}
-                toggleOpen={toggleDropdown1}
-                widthchange="w-[40%] tablet:w-full"
+  const handlePressStart = () => {
+    setShowTooltip(true);
+  };
+
+  const handlePressEnd = () => {
+    setShowTooltip(false);
+  };
+
+  return (
+    <main
+      className="max-h-[calc(100vh-70px)] below-md:max-h-[calc(100vh-1px)] tablet:max-h-[calc(100vh-1px)] below-md:mb-10 tablet:mb-10 overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
+      <div className="below-md:flex below-md:justify-center ">
+        <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
+          Sales
+        </p>
+      </div>
+      <div className="mx-6 mt-24 below-md:mx-3 below-md:mt-16 tablet:mt-16">
+        <div className="flex flex-row below-md:flex-col pb-6 sticky top-16 below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4  ">
+          <div className="flex flex-row below-md:flex-col w-full gap-3">
+            {/* Dropdown Button */}
+
+            <Dropdown
+              options={options}
+              selectedOption={selectedOption}
+              onSelect={handleSelect}
+              isOpen={isOpen}
+              toggleOpen={toggleDropdown1}
+              widthchange="w-[40%] tablet:w-full"
+            />
+
+            <div className="w-[50%] below-md:w-full tablet:w-full">
+              <DateRange />
+            </div>
+
+            <div className="flex flex-row w-full gap-3">
+              <div className="w-[50%] below-md:w-full relative below-md:hidden tablet:hidden">
+                <input
+                  value={globalFilter ?? ""}
+                  onChange={(e) => setGlobalFilter(e.target.value)}
+                  placeholder="Search"
+                  className=" py-[10px] px-[8] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                />
+                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-[#636363]"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 21l-4.35-4.35m2.6-6.4a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              <div className="tablet:w-full below-md:w-full relative below-lg:hidden">
+                <input
+                  placeholder="Search"
+                  className=" py-[10px] px-[8] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                />
+                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-[#636363]"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 21l-4.35-4.35m2.6-6.4a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* button */}
+          <div className=" below-md:w-full">
+            <div className="below-md:hidden tablet:hidden">
+              <input
+                type="file"
+                id="fileInput"
+                style={{ display: "none" }}
+                onChange={handleFileChange}
               />
 
-              <div className="w-[50%] below-md:w-full tablet:w-full">
-                <DateRange />
-              </div>
-
-              <div className="flex flex-row w-full gap-3">
-                <div className="w-[50%] below-md:w-full relative below-md:hidden tablet:hidden">
-                  <input
-                    value={globalFilter ?? ""}
-                    onChange={(e) => setGlobalFilter(e.target.value)}
-                    placeholder="Search"
-                    className=" py-[10px] px-[8] w-full shadow-md rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
-                  />
-                  <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-[#636363]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={3}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M21 21l-4.35-4.35m2.6-6.4a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-
-                <div className="tablet:w-full below-md:w-full relative below-lg:hidden">
-                  <input
-                    placeholder="Search"
-                    className=" py-[10px] px-[8] w-full shadow-md rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
-                  />
-                  <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-[#636363]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={3}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M21 21l-4.35-4.35m2.6-6.4a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* button */}
-            <div className=" below-md:w-full">
-              <div className="below-md:hidden tablet:hidden">
-                <input
-                  type="file"
-                  id="fileInput"
-                  style={{ display: "none" }}
-                  onChange={handleFileChange}
+              <button
+                onClick={handleUploadClick}
+                className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold"
+              >
+                <img
+                  src="/images/uploadIcon.svg"
+                  alt="Upload Icon"
+                  className="mr-2"
                 />
-
-                <button
-                  onClick={handleUploadClick}
-                  className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300"
-                >
-                  <img
-                    src="/images/uploadIcon.svg"
-                    alt="Upload Icon"
-                    className="mr-2"
-                  />
-                  Upload Sale
-                </button>
-              </div>
+                Upload Sale
+              </button>
             </div>
           </div>
+        </div>
 
-          {/** Table */}
+        {/** Table */}
 
-          <div className="below-md:hidden tablet:hidden">
-            {/* Table */}
-            <div className="overflow-x-auto shadow-md rounded-lg">
-              <table className="w-full border-collapse border border-gray-200">
-                <thead className="bg-[#334155]">
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => (
-                        <th
-                          key={header.id}
-                          className="text-left px-4 py-3 below-md:px-10 text-[#FFFFFF] font-medium text-[15px]"
-                        >
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                        </th>
-                      ))}
-                    </tr>
-                  ))}
-                </thead>
-                <tbody>
-                  {table.getRowModel().rows.map((row) => (
-                    <tr
-                      key={row.id}
-                      className={
-                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                      }
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <td
-                          key={cell.id}
-                          className="px-4 py-1 below-md:px-10 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar"
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Pagination */}
-            <Pagination table={table} />
+        <div className="below-md:hidden tablet:hidden">
+          {/* Table */}
+          <div className="overflow-x-auto shadow-md rounded-lg">
+            <table className="w-full border-collapse border border-gray-200">
+              <thead className="bg-[#334155]">
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        className="text-left px-4 py-3 below-md:px-10 text-[#FFFFFF] font-medium text-[15px]"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <tr
+                    key={row.id}
+                    className={
+                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                    }
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <td
+                        key={cell.id}
+                        className="px-4 py-1 below-md:px-10 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar"
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          <div className="below-lg:hidden">
-            <div className="flex flex-col">
-              <div className="w-full bg-white rounded-md p-3 mb-3">
-                <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                  <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                    <span>12-20-24</span>
-                  </div>
-                  <div>
-                    <img onClick={handleImageClick} src="/images/eye.svg" />
-                  </div>
+          {/* Pagination */}
+          <Pagination table={table} />
+        </div>
+
+        <div className="below-lg:hidden">
+          <div className="flex flex-col">
+            <div className="w-full bg-white rounded-md p-3 mb-3">
+              <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                  <span>12-20-24</span>
                 </div>
-                <div className="space-y-3 mb-2 px-2">
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Store</p>
-                    <p className="text-[#1A1A1A] text-[12px]">13246</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Orders</p>
-                    <p className="text-[#1A1A1A] text-[12px]">345</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Quantity</p>
-                    <p className="text-[#1A1A1A] text-[12px]">145</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Amount</p>
-                    <p className="text-[#1A1A1A] text-[12px]">$34,232</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Net</p>
-                    <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Average</p>
-                    <p className="text-[#1A1A1A] text-[12px]">$1,032</p>
-                  </div>
+                <div>
+                  <img onClick={handleImageClick} src="/images/eye.svg" />
                 </div>
               </div>
-
-              <div className="w-full bg-white rounded-md p-3 mb-3">
-                <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                  <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                    <span>12-20-24</span>
-                  </div>
-                  <div>
-                    <img onClick={handleImageClick} src="/images/eye.svg" />
-                  </div>
+              <div className="space-y-3 mb-2 px-2">
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Store</p>
+                  <p className="text-[#1A1A1A] text-[12px]">13246</p>
                 </div>
-                <div className="space-y-3 mb-2 px-2">
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Store</p>
-                    <p className="text-[#1A1A1A] text-[12px]">78910</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Orders</p>
-                    <p className="text-[#1A1A1A] text-[12px]">345</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Quantity</p>
-                    <p className="text-[#1A1A1A] text-[12px]">145</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Amount</p>
-                    <p className="text-[#1A1A1A] text-[12px]">$34,232</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Net</p>
-                    <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Average</p>
-                    <p className="text-[#1A1A1A] text-[12px]">$1,032</p>
-                  </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Orders</p>
+                  <p className="text-[#1A1A1A] text-[12px]">345</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Quantity</p>
+                  <p className="text-[#1A1A1A] text-[12px]">145</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Amount</p>
+                  <p className="text-[#1A1A1A] text-[12px]">$34,232</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Net</p>
+                  <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Average</p>
+                  <p className="text-[#1A1A1A] text-[12px]">$1,032</p>
                 </div>
               </div>
+            </div>
 
-              <div className="w-full bg-white rounded-md p-3 mb-3">
-                <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                  <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                    <span>12-20-24</span>
-                  </div>
-                  <div>
-                    <img onClick={handleImageClick} src="/images/eye.svg" />
-                  </div>
+            <div className="w-full bg-white rounded-md p-3 mb-3">
+              <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                  <span>12-20-24</span>
                 </div>
-                <div className="space-y-3 mb-2 px-2">
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Store</p>
-                    <p className="text-[#1A1A1A] text-[12px]">13246</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Orders</p>
-                    <p className="text-[#1A1A1A] text-[12px]">345</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Quantity</p>
-                    <p className="text-[#1A1A1A] text-[12px]">145</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Amount</p>
-                    <p className="text-[#1A1A1A] text-[12px]">$34,232</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Net</p>
-                    <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Average</p>
-                    <p className="text-[#1A1A1A] text-[12px]">$1,032</p>
-                  </div>
+                <div>
+                  <img onClick={handleImageClick} src="/images/eye.svg" />
                 </div>
               </div>
-
-              <div className="w-full bg-white rounded-md p-3 mb-3">
-                <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                  <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                    <span>12-20-24</span>
-                  </div>
-                  <div>
-                    <img onClick={handleImageClick} src="/images/eye.svg" />
-                  </div>
+              <div className="space-y-3 mb-2 px-2">
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Store</p>
+                  <p className="text-[#1A1A1A] text-[12px]">78910</p>
                 </div>
-                <div className="space-y-3 mb-2 px-2">
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Store</p>
-                    <p className="text-[#1A1A1A] text-[12px]">13246</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Orders</p>
-                    <p className="text-[#1A1A1A] text-[12px]">345</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Quantity</p>
-                    <p className="text-[#1A1A1A] text-[12px]">145</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Amount</p>
-                    <p className="text-[#1A1A1A] text-[12px]">$34,232</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Net</p>
-                    <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Average</p>
-                    <p className="text-[#1A1A1A] text-[12px]">$1,032</p>
-                  </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Orders</p>
+                  <p className="text-[#1A1A1A] text-[12px]">345</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Quantity</p>
+                  <p className="text-[#1A1A1A] text-[12px]">145</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Amount</p>
+                  <p className="text-[#1A1A1A] text-[12px]">$34,232</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Net</p>
+                  <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Average</p>
+                  <p className="text-[#1A1A1A] text-[12px]">$1,032</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full bg-white rounded-md p-3 mb-3">
+              <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                  <span>12-20-24</span>
+                </div>
+                <div>
+                  <img onClick={handleImageClick} src="/images/eye.svg" />
+                </div>
+              </div>
+              <div className="space-y-3 mb-2 px-2">
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Store</p>
+                  <p className="text-[#1A1A1A] text-[12px]">13246</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Orders</p>
+                  <p className="text-[#1A1A1A] text-[12px]">345</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Quantity</p>
+                  <p className="text-[#1A1A1A] text-[12px]">145</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Amount</p>
+                  <p className="text-[#1A1A1A] text-[12px]">$34,232</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Net</p>
+                  <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Average</p>
+                  <p className="text-[#1A1A1A] text-[12px]">$1,032</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full bg-white rounded-md p-3 mb-3">
+              <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                  <span>12-20-24</span>
+                </div>
+                <div>
+                  <img onClick={handleImageClick} src="/images/eye.svg" />
+                </div>
+              </div>
+              <div className="space-y-3 mb-2 px-2">
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Store</p>
+                  <p className="text-[#1A1A1A] text-[12px]">13246</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Orders</p>
+                  <p className="text-[#1A1A1A] text-[12px]">345</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Quantity</p>
+                  <p className="text-[#1A1A1A] text-[12px]">145</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Amount</p>
+                  <p className="text-[#1A1A1A] text-[12px]">$34,232</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Net</p>
+                  <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Average</p>
+                  <p className="text-[#1A1A1A] text-[12px]">$1,032</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </main>
-      <div className="below-lg:hidden flex justify-end mr-3">
-        <button className="group focus:outline-none flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[50px] hover:w-[170px] h-[50px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-all duration-300 overflow-hidden">
-          <img
-            src="/images/uploadIcon.svg"
-            alt="Upload Icon"
-            className="transition-all duration-300 group-hover:mr-2"
-          />
-          <span
-            onClick={handleUploadClick}
-            className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 group-hover:ml-[2px] -ml-[75px]"
-          >
-            Upload Sale
-          </span>
+      </div>
+
+      <div className="below-lg:hidden flex justify-end fixed bottom-3 right-6">
+        <button
+          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[50px] h-[50px] rounded-md relative"
+          onTouchStart={handlePressStart} // For mobile devices
+          onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
+          onClick={handleUploadClick}
+        >
+          <img src="/images/uploadIcon.svg" alt="Upload Icon" />
+          {showTooltip && (
+            <div className="absolute bottom-[70px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
+              Upload Sale
+              {/* Tooltip Pointer */}
+              <div className="absolute top-full right-[20%] transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#79747E]"></div>
+            </div>
+          )}
         </button>
       </div>
     </main>
