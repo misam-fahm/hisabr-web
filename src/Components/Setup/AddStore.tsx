@@ -117,13 +117,16 @@ const AddStore = () => {
 
   return (
     <>
-      {/* Button to open dialog */}
-      <div
-        className="flex   justify-end sticky bottom-0 z-10 w-full below-lg:hidden"
+      <button
         onClick={openModal}
+        className="below-lg:hidden  hover:gap-2  hover:w-[159px]  rounded-md flex items-center justify-center overflow-hidden transition-all duration-10 group"
       >
-        <img src="/images/addButton.svg" alt="Add Button" className="m-0 p-0" />
-      </div>
+        <img
+          src="/images/addButton.svg"
+          alt="Add Button"
+          className="transition-opacity duration-10"
+        />
+      </button>
 
       <div className=" below-md:hidden">
         <Button

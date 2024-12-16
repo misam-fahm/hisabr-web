@@ -118,8 +118,8 @@ const Page: FC = () => {
 
   return (
     <main className="w-full h-screen flex flex-col overflow-hidden">
-      <div className="mt-20 mx-6 flex-grow">
-        <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
+      <div className="mt-20 mx-6 flex-grow  below-md:mx-3">
+        <div className=" below-md:hidden flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
           <p className="text-[16px] font-bold text-[#334155] hidden md:block">
             Item Categories
           </p>
@@ -134,7 +134,7 @@ const Page: FC = () => {
           <div
             className="block md:hidden"
             style={{
-              maxHeight: "calc(100vh - 270px)",
+              maxHeight: "calc(100vh - 130px)",
               overflowY: "auto",
               WebkitOverflowScrolling: "touch", // Enables smooth scrolling on mobile
               scrollbarWidth: "none", // Hide scrollbar
@@ -184,6 +184,8 @@ const Page: FC = () => {
                 </div>
               </div>
             ))}
+              {/* Add NewItem bottom */}
+          <div  className=' fixed bottom-[20px] below-lg:hidden right-3'>  <AddNewItems /></div>
           </div>
 
           {/* Desktop View */}
@@ -246,7 +248,7 @@ const Page: FC = () => {
           </div>
         </div>
 
-        <div className="mt-4 flex gap-2 justify-between items-center">
+        <div className="mt-4 flex gap-2 justify-between items-center below-md:hidden">
           <div>
             <span className="text-[#8899A8] text-[12px] font-medium ml-3">
               {startItem} - {endItem} of {totalItems}

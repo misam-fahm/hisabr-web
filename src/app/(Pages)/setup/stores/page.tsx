@@ -268,9 +268,9 @@ const Page: FC = () => {
             </div>
           ))}
 
-          {/* Add Store Button at the bottom */}
-        
-            <AddStore />
+          {/* Add Store bottom */}
+        <div  className=' fixed bottom-[20px] below-lg:hidden right-3'>  <AddStore /></div>
+           
           
         </div>
 

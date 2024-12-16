@@ -170,12 +170,12 @@ const Page: FC = () => {
 
   return (
     <main className="w-full h-screen flex flex-col overflow-hidden">
-      <div className="mt-20 mx-6 flex-grow">
+      <div className="mt-20 mx-6 flex-grow below-md:mt-10 below-md:mx-3">
         <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
           <p className="text-[16px] font-bold text-[#334155] below-md:hidden">
             Tender
           </p>
-          <div className="font-semibold text-[14px] bg-[#1AA47D] hover:bg-[#168A68] px-5 h-[37px] text-[#FFFFFF] rounded-md">
+          <div className="font-semibold text-[14px] bg-[#1AA47D] hover:bg-[#168A68] px-5 h-[37px] text-[#FFFFFF] rounded-md below-md:hidden">
             <AddTender />
           </div>
         </div>
@@ -183,7 +183,7 @@ const Page: FC = () => {
         <div
           className="block md:hidden"
           style={{
-            maxHeight: "calc(100vh - 270px)",
+            maxHeight: "calc(100vh - 130px)",
             overflowY: "auto",
             WebkitOverflowScrolling: "touch", // Enables smooth scrolling on mobile
             scrollbarWidth: "none", // Hide scrollbar
@@ -233,6 +233,8 @@ const Page: FC = () => {
               </div>
             </div>
           ))}
+           {/* Add Tender bottom */}
+          <div  className=' fixed bottom-[20px] below-lg:hidden right-3'>  <AddTender /></div>
         </div>
 
         {/* Desktop View */}
@@ -294,7 +296,7 @@ const Page: FC = () => {
           </div>
         </div>
 
-        <div className="mt-4 flex gap-2 justify-between items-center">
+        <div className="mt-4 flex gap-2 justify-between items-center below-md:hidden">
           {/* Page Range Display */}
           <div>
             <span className="text-[#8899A8] text-[12px] font-medium ml-3">
