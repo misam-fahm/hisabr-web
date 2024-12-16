@@ -1,11 +1,10 @@
-'use client';
-
-import React, { useState } from 'react';
+'use client'
+import React, { useState } from 'react'
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const AddExpenses = () => {
+const EditExpense = () => {
     const [startDate, setStartDate] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -111,34 +110,17 @@ const AddExpenses = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-
-
-
-
     return (
         <>
-          
-          <button
-    onClick={openModal}
-    className="bg-[#1AA47D] below-lg:hidden  hover:gap-2 text-white w-[50px] hover:w-[159px] h-[50px] rounded-md flex items-center justify-center overflow-hidden transition-all duration-10 group"
->
-    <img src='/images/plusIcon.svg' alt='AddExpense' className='text-white transition-opacity duration-10'/>
-   
-    {/* <span className="hidden group-hover:block text-white transition-opacity duration-10">
-        Add Expenses
-    </span> */}
-</button>
-
-<button
-    onClick={openModal}
-    className="bg-[#1AA47D]  text-white below-md:hidden  w-[159px] h-[37px] rounded-md flex items-center justify-center gap-1 text-[14px]"
->
-       <img className ='' src="/images/addExpenses.svg" alt="" />
-        Add Expenses
-
-</button>
-
-
+        <div>
+            <button onClick={openModal}>
+                <img src="/images/EditIcon(2).svg"
+                     className="flex justify-center text-left mr-12"
+                     width={25}
+                     height={25}
+                    />
+            </button>
+        </div>
             {/* Dialog for the modal */}
             <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
                 <div className="fixed inset-0 bg-black bg-opacity-50" />
@@ -147,7 +129,7 @@ const AddExpenses = () => {
                         <div className='flex items-center justify-between mb-5 mr-1'>
 
                             <DialogTitle as="h3" className="text-[16px]  font-medium leading-4 text-[#5E6366]">
-                                Add Expense
+                                Edit Expense
 
                             </DialogTitle>
                             <button
@@ -171,12 +153,12 @@ const AddExpenses = () => {
                         </div>
 
 
-                       
-                            {/* AddExpense Form */}
-                            <form onSubmit={handleSubmit}>
+
+                        {/* AddExpense Form */}
+                        <form onSubmit={handleSubmit}>
                             <div className="overflow-y-auto h-[380px] below-md:h-[300px] overflow-x-hidden scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent" >
                                 {/* Store */}
-                                <div className="flex flex-col gap-1 mb-3"> 
+                                <div className="flex flex-col gap-1 mb-3">
                                     <label className="text-[13px] text-[#5E6366] mb-1 block">Store</label>
                                     <select name="store"
                                         className={`border h-[40px] w-[345px] below-md:w-full pl-2 text-[#8D98AA] text-[12px]  rounded-lg ${errors.store ? "border-red-500" : "border-gray-300"
@@ -245,7 +227,7 @@ const AddExpenses = () => {
                                         <div className='relative w-full'>
                                             <DatePicker
                                                 selected={formData.date}
-                                                onChange={(date : any) => setFormData({ ...formData, date })}
+                                                onChange={(date: any) => setFormData({ ...formData, date })}
                                                 placeholderText="Please enter expense date"
                                                 className={`border h-[40px] w-[345px] below-md:w-[128%]  pl-3 pr-10 text-[#8D98AA] text-[12px] rounded-lg ${errors.date ? 'border-red-500' : 'border-gray-300'
                                                     }`}
@@ -256,31 +238,32 @@ const AddExpenses = () => {
                                         </div>
                                         {errors.date && <p className="text-red-500 text-[12px]">{errors.date}</p>}
                                     </div>
-                                    </div>
-                                    </div>
-                                    {/* Submit Button */}
-                                    <div className="flex items-center mt-3 md:w-full justify-between md:gap-2 space-x-3">
-                                        <button type="button"
-                                            className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[36px] w-[158px] below-md:w-[150px] h-[37px] bg-[#C8C8C8] rounded-md"
-                                            onClick={closeModal}
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[36px] w-[158px]  below-md:w-[150px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-green-700"
-                                        >
-                                            Add Expense
-                                        </button>
-                                    </div>
-                                
-                            </form>
-                      
+                                </div>
+                            </div>
+                            {/* Submit Button */}
+                            <div className="flex items-center mt-3 md:w-full justify-between md:gap-2 space-x-3">
+                                <button type="button"
+                                    className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[36px] w-[158px] below-md:w-[150px] h-[37px] bg-[#C8C8C8] rounded-md"
+                                    onClick={closeModal}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[36px] w-[158px]  below-md:w-[150px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-green-700"
+                                >
+                                    Save
+                                </button>
+                            </div>
+
+                        </form>
+
                     </DialogPanel>
                 </div>
             </Dialog>
         </>
-    );
-};
 
-export default AddExpenses;
+    )
+}
+
+export default EditExpense
