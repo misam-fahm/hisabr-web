@@ -101,7 +101,7 @@ const AddNewItems = () => {
 
   return (
     <>
-     <button
+      <button
         onClick={openModal}
         className="below-lg:hidden  hover:gap-2  h  rounded-md flex items-center justify-center overflow-hidden transition-all duration-10 group"
       >
@@ -128,8 +128,7 @@ const AddNewItems = () => {
       >
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-        <DialogPanel className="w-[420px]  below-md:w-[320px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
-
+          <DialogPanel className="w-[420px]  below-md:w-[320px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
             <div className="flex justify-between">
               <DialogTitle as="h3" className="font-medium text-gray-900">
                 Add Item
