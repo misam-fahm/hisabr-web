@@ -4,6 +4,7 @@ import React, { FC, useState, useRef } from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/Expenses/AddExpenses"; 
+import DateRange from "@/Components/drawer/DateRangePicker";
 
 import Image from "next/image";
 import {
@@ -131,7 +132,7 @@ const columns: ColumnDef<TableRow>[] = [
     },
     {
         id: "edit",
-        header: () => <div className="text-left">Edit</div>,
+        header: () => <div className="text-left mr-3">Edit</div>,
         cell: () => (
             <>
             <EditExpense/>
@@ -142,7 +143,7 @@ const columns: ColumnDef<TableRow>[] = [
     },
     {
         id: "delete",
-        header: () => <div className="text-left">Delete</div>,
+        header: () => <div className="text-left mr-4">Delete</div>,
         cell: () => (
             <>
             <DeleteExpense/>
@@ -304,7 +305,7 @@ const Expenses: FC = () => {
     >
 
             <>
-                <div className='flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:space-y-1 gap-2  my-3'>
+                <div className='flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:space-y-1 gap-2 mt-6 my-3'>
                     <div className='flex gap-2 w-full below-md:flex-col'>
 
                         <div className='flex'>
@@ -340,32 +341,10 @@ const Expenses: FC = () => {
 
                         </div>
 
-
-
-                        <div className="relative flex below-md:w-full  below-md:text-[11px] shadow rounded w-[265px] h-[35px] text-[12px] bg-[#ffff] items-center">
-                            <DatePicker
-                                selected={startDate}
-                                onChange={handleDateChange}
-                                startDate={startDate}
-                                endDate={endDate}
-                                filterDate={filterDate}
-                                dayClassName={dayClassName}//below-md:ml-[168px] pr-3 w-[246px] below-md:w-full h-[35px]
-                                selectsRange
-                                placeholderText="Select date range"
-                                className="flex-grow h-full pl-2 bg-transparent below-md:text-[11px] text-[12px] focus:outline-none "
-                                ref={calendarRef}// Add reference for the DatePicker
-                                calendarClassName="custom-calendar"
-                            />
-                            <img className='absolute right-2 cursor-pointer items-center' src='/images/CalenderIcon.svg'
-                                onClick={() => {
-                                    if (calendarRef.current) {
-                                        (calendarRef.current as any).setOpen(true); // Open the calendar on icon click
-                                    }
-                                }}
-                            />
+                        <div className="w-[30%] tablet:w-full below-md:w-full h-[35px]">
+                            <DateRange />
                         </div>
-                        {/* </div>  */}
-
+                 
                         <div className='flex items-center justify-between below-md:flex-row below-md:gap-4'>
                             <div className='flex shadow  text-[12px] bg-[#ffff] items-center  rounded-md w-[300px]  h-[35px] below-md:w-full below-md:h-[35px] below-md:text-[11px]'>
                                 <input type='search' ref={searchInputRef} placeholder='Search' className='w-full h-[35px] bg-transparent rounded-lg px-3 text-[#636363] focus:outline-none'>
@@ -375,19 +354,14 @@ const Expenses: FC = () => {
 
                             </div>
 
-                            {/* <div className='below-md:h-[35px] below-md:w-[159px] below-md:text[13px] below-lg:hidden'>
-                                <AddExpenses />
-                            </div> */}
+                         
                         </div>
                     </div>
-                    <div className='below-md:hidden mt-1'><AddExpenses /></div>
+                    <div className=' block below-md:hidden mt-1'><AddExpenses /></div>
                 </div>
 
 
-                {/* <div className='flex items-center justify-between my-3 below-md:hidden'>
-                    <p className='text-[16px] font-bold text-[#334155] mt-2  below-md:hidden'>Expenses</p>
-                    <AddExpenses />
-                </div> */}
+                
 
                 {/* Card section */}
                 <div className=''>
@@ -426,7 +400,7 @@ const Expenses: FC = () => {
                             </div>
                         </div>
                     ))}
-                    <div className=' fixed bottom-[20px] below-lg:hidden right-3'> <AddExpenses /></div>
+                    <div className=' fixed bottom-[20px] hidden below-md:block right-3'> <AddExpenses /></div>
                 </div>
                
 
@@ -436,7 +410,7 @@ const Expenses: FC = () => {
 
 
                 {/* Expenses Table */}
-                <div className='overflow-x-auto bg-white shadow-lg rounded-lg py-3 flex-grow flex flex-col below-md:hidden'>
+                <div className='overflow-x-auto shadow-lg rounded-lg py-3 flex-grow flex flex-col below-md:hidden'>
                     <div className='overflow-hidden max-w-full'>
                         <table className='w-full border-collapse text-[12px] text-white table-fixed'>
                             <thead className='bg-[#334155] top-0 z-10'>
