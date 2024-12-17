@@ -61,7 +61,7 @@ const DetailsPage: React.FC = () => {
       <img
         onClick={handleBack}
         src="/images/backIcon.svg"
-        className="fixed top-6 left-4 z-30 below-lg:hidden"
+        className="fixed top-4 left-4 z-30 below-lg:hidden"
       />
       {/* <div className="below-md:flex below-md:justify-center ">
         <p className="text-[18px] below-md:text-[16px] below-md:mr-8 font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
@@ -108,7 +108,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Total Customer Count
               </p>
-              <p className="text-[18px] text-[#2D3748] font-bold">50,000</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">50,000</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 20%{" "}
                 <span className="text-[#575F6D] font-medium">
@@ -123,7 +123,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 New Customers
               </p>
-              <p className="text-[18px] text-[#2D3748] font-bold">33,000</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">33,000</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 13%{" "}
                 <span className="text-[#575F6D] font-medium">
@@ -138,7 +138,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Returning Customers
               </p>
-              <p className="text-[18px] text-[#2D3748] font-bold">12,000</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">12,000</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 35%{" "}
                 <span className="text-[#575F6D] font-medium">
@@ -153,7 +153,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Customer Retention Rate
               </p>
-              <p className="text-[18px] text-[#2D3748] font-bold">52% </p>
+              <p className="text-[16px] text-[#2D3748] font-bold">52% </p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 <span className="text-[#575F6D] font-medium">
                   of target met

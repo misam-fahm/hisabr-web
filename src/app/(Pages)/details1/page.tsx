@@ -7,6 +7,7 @@ import PieChart2 from "@/Components/drawer/Piechart2";
 import { useRouter } from "next/navigation";
 import Pagination from "@/Components/ui/Common/Pagination";
 import Dropdown from "@/Components/ui/Common/DropDown";
+import header from "@/Components/drawer/Drawer";
 
 import {
   useReactTable,
@@ -200,6 +201,7 @@ const DetailsPage: React.FC = () => {
   const [isOpen3, setIsOpen3] = useState<boolean>(false);
   const [selectedOption4, setSelectedOption4] = useState<string>("2021");
   const [isOpen4, setIsOpen4] = useState<boolean>(false);
+  const title = "Details1";
 
   const table = useReactTable({
     data: formattedData,
@@ -260,7 +262,7 @@ const DetailsPage: React.FC = () => {
       <img
         onClick={handleBack}
         src="/images/backIcon.svg"
-        className="fixed top-6 left-4 z-30 below-lg:hidden"
+        className="fixed top-4 left-4 z-50 below-lg:hidden"
       />
       {/* <div className="below-md:flex below-md:justify-center ">
         <p className="text-[18px] below-md:text-[16px] below-md:mr-8 font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
@@ -308,7 +310,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Total Gross Revenue
               </p>
-              <p className="text-[18px] text-[#2D3748] font-bold">
+              <p className="text-[16px] text-[#2D3748] font-bold">
                 $ 2,680,153
               </p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
@@ -325,7 +327,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Revenue Growth
               </p>
-              <p className="text-[18px] text-[#2D3748] font-bold">+ 15.3%</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">+ 15.3%</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 <span className="text-[#575F6D] font-medium">
                   Increased compared to last year
@@ -339,7 +341,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Average Per Transaction
               </p>
-              <p className="text-[18px] text-[#2D3748] font-bold">$ 161,358</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">$ 161,358</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 <span className="text-[#575F6D] font-medium">
                   Average revenue earned per sale
@@ -353,7 +355,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Revenue Target Achievement
               </p>
-              <p className="text-[18px] text-[#2D3748] font-bold">$ 161,358</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">$ 161,358</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 92%
                 <span className="text-[#575F6D] font-medium">

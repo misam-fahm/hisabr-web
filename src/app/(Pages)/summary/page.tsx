@@ -156,7 +156,7 @@ const summary: FC = () => {
                 <p className="text-[14px] text-[#575F6DCC] font-medium">
                   Total Sales
                 </p>
-                <p className="text-[18px] text-[#2D3748] font-bold">
+                <p className="text-[16px] text-[#2D3748] font-bold">
                   $2,680,153
                 </p>
                 <p className="text-[12px] text-[#388E3C] font-semibold">
@@ -176,7 +176,7 @@ const summary: FC = () => {
                 <p className="text-[14px] text-[#575F6DCC] font-medium">
                   Total Expenses
                 </p>
-                <p className="text-[18px] text-[#2D3748] font-bold">$861,148</p>
+                <p className="text-[16px] text-[#2D3748] font-bold">$861,148</p>
                 <p className="text-[12px] text-[#388E3C] font-semibold">
                   12%{" "}
                   <span className="text-[#575F6D] font-medium">
@@ -194,7 +194,7 @@ const summary: FC = () => {
                 <p className="text-[14px] text-[#575F6DCC] font-medium">
                   Total Profits
                 </p>
-                <p className="text-[18px] text-[#2D3748] font-bold">$161,358</p>
+                <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
                 <p className="text-[12px] text-[#388E3C] font-semibold">
                   40%{" "}
                   <span className="text-[#575F6D] font-medium">
