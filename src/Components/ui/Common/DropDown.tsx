@@ -46,7 +46,7 @@ const Dropdown = ({
   return (
     <div
       ref={dropdownRef}
-      className={`${className || "relative below-md:w-full"} ${widthchange || "w-[30%] ]"}`}
+      className={`${className || "relative below-md:w-full"} ${widthchange || "below-md:w-[100%] below-lg:w-[260px]"}`}
     >
       <p
         className={`text-[#2D374880] text-[12px] below-md:hidden ${
@@ -60,7 +60,7 @@ const Dropdown = ({
         onClick={toggleOpen}
         className={`bg-[#ffffff] text-[#4B4B4B] ${
           shadowclassName ? shadowclassName : "shadow"
-        } shadow px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px] focus:outline-none`}
+        } shadow px-4 py-[10px] h-[35px] w-[260px] ${widthchange || "below-md:w-[100%] below-lg:w-[260px]"} rounded flex items-center justify-between below-md:w-full text-[12px] focus:outline-none`}
       >
         <span>{selectedOption || "Year"}</span>
         <img

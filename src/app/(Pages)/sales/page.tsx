@@ -311,15 +311,15 @@ const Sales: FC = () => {
               onSelect={handleSelect}
               isOpen={isOpen}
               toggleOpen={toggleDropdown1}
-              widthchange="w-[40%] tablet:w-full"
+              widthchange="tablet:w-full"
             />
 
-            <div className="w-[50%] below-md:w-full tablet:w-full">
+            <div className="below-md:w-full tablet:w-full">
               <DateRange />
             </div>
 
-            <div className="flex flex-row w-full gap-3">
-              <div className="w-[50%] below-md:w-full relative below-md:hidden tablet:hidden">
+            <div className="flex flex-row gap-3">
+              <div className=" w-[260px] below-md:w-full relative below-md:hidden tablet:hidden">
                 <input
                   value={globalFilter ?? ""}
                   onChange={(e) => setGlobalFilter(e.target.value)}
