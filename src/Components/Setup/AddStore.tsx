@@ -117,16 +117,18 @@ const AddStore = () => {
 
   return (
     <>
-      <button
-        onClick={openModal}
-        className="below-lg:hidden  hover:gap-2  hover:w-[159px]  rounded-md flex items-center justify-center overflow-hidden transition-all duration-10 group"
-      >
-        <img
-          src="/images/addButton.svg"
-          alt="Add Button"
-          className="transition-opacity duration-10"
-        />
-      </button>
+      <div className="hidden below-md:block   ">
+        <button
+          onClick={openModal}
+          className=" hover:gap-2 text-white w-[50px] hover:w-[159px] h-[50px] rounded-md  items-center justify-center overflow-hidden transition-all duration-10 group"
+        >
+          <img
+            src="/images/addButton.svg"
+            alt="Add Button"
+            className="transition-opacity duration-10"
+          />
+        </button>
+      </div>
 
       <div className=" below-md:hidden">
         <Button
@@ -253,7 +255,7 @@ const AddStore = () => {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="mr-4 px-4 py-2 h-[37px] w-[165px] bg-[#c8c8c8] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
+                  className="mr-4 px-4 py-2 h-[37px] w-[165px] bg-[#E4E4E4] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
                 >
                   Cancel
                 </button>
