@@ -62,6 +62,27 @@ const Navbar: React.FC = () => {
         case "setup/configuration":
           newTitle = "Configuration";
           break;
+          case "details1":
+          newTitle = "Gross Revenue Analysis";
+          break;
+          case "details2":
+            newTitle = " Tender Analysis";
+            break;
+            case "details4":
+              newTitle = "Customer Count Analysis";
+              break;
+              case "details5":
+                newTitle = "Operating Expense Analysis";
+                break;
+                case "details6":
+                  newTitle = " Cost Analysis";
+                  break;
+                  case "details7":
+                  newTitle = "Labor Analysis";
+                  break;
+                  case "details8":
+                  newTitle = "Items Analysis";
+                  break;
 
         case "logout":
           newTitle = "Logout";
