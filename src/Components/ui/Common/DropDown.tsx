@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 
 // Dropdown Component
 const Dropdown = ({
@@ -46,7 +46,7 @@ const Dropdown = ({
   return (
     <div
       ref={dropdownRef}
-      className={`${className || "relative below-md:w-full"} ${widthchange || "w-[30%]"}`}
+      className={`${className || "relative below-md:w-full"} ${widthchange || "w-[30%] ]"}`}
     >
       <p
         className={`text-[#2D374880] text-[12px] below-md:hidden ${
@@ -59,12 +59,12 @@ const Dropdown = ({
       <button
         onClick={toggleOpen}
         className={`bg-[#ffffff] text-[#4B4B4B] ${
-          shadowclassName ? shadowclassName : "shadow-md"
-        } shadow-md px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px] focus:outline-none`}
+          shadowclassName ? shadowclassName : "shadow"
+        } shadow px-4 py-[10px] rounded flex items-center justify-between w-full text-[12px] focus:outline-none`}
       >
         <span>{selectedOption || "Year"}</span>
         <img
-          src="./images/dropdown.svg"
+          src="./images/dropdown1.svg"
           className={`ml-2 transition-transform duration-200 ${
             isOpen ? "transform rotate-180" : ""
           }`}
@@ -75,8 +75,8 @@ const Dropdown = ({
       {isOpen && (
         <div
           className={`absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded ${
-            shadowclassName ? shadowclassName : "shadow-md"
-          } shadow-md`}
+            shadowclassName ? shadowclassName : "shadow"
+          } shadow`}
           style={{ zIndex: 50 }}
         >
           {options?.map((option, index) => (

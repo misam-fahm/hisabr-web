@@ -310,7 +310,9 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Total Gross Revenue
               </p>
-              <p className="text-[18px] text-[#2D3748]">$ 2,680,153</p>
+              <p className="text-[18px] text-[#2D3748] font-bold">
+                $ 2,680,153
+              </p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 20%{" "}
                 <span className="text-[#575F6D] font-medium">
@@ -325,7 +327,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Revenue Growth
               </p>
-              <p className="text-[18px] text-[#2D3748]">+ 15.3%</p>
+              <p className="text-[18px] text-[#2D3748] font-bold">+ 15.3%</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 <span className="text-[#575F6D] font-medium">
                   Increased compared to last year
@@ -339,7 +341,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Average Per Transaction
               </p>
-              <p className="text-[18px] text-[#2D3748]">$ 161,358</p>
+              <p className="text-[18px] text-[#2D3748] font-bold">$ 161,358</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 <span className="text-[#575F6D] font-medium">
                   Average revenue earned per sale
@@ -353,7 +355,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Revenue Target Achievement
               </p>
-              <p className="text-[18px] text-[#2D3748]">$ 161,358</p>
+              <p className="text-[18px] text-[#2D3748] font-bold">$ 161,358</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 92%
                 <span className="text-[#575F6D] font-medium">

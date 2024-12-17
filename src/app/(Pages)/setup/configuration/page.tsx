@@ -192,7 +192,9 @@ const Page = () => {
                   errors.rent ? "border-red-500" : ""
                 }`}
               />
-              {errors.rent && <p className="text-xs text-red-500">{errors.rent}</p>}
+              {errors.rent && (
+                <p className="text-xs text-red-500">{errors.rent}</p>
+              )}
             </div>
 
             {/* Electricity */}
@@ -273,8 +275,8 @@ const Page = () => {
         </div>
       </div>
       {/* Web View */}
-      <div className="justify-center items-center my-16 p-4 hidden md:block ">
-        <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-5xl">
+      <div className="justify-center items-center my-16 p-8 hidden md:block">
+        <div className="bg-white shadow-md rounded-lg p-6 w-full px-7">
           <div>
             <p className="font-medium text-[#5E6366]">Add Configuration:</p>
             <form onSubmit={handleSubmit}>
@@ -287,25 +289,27 @@ const Page = () => {
                     name="selectedStore"
                     value={formData.selectedStore}
                     onChange={handleInputChange}
-                    className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm sm:text-sm ${
+                    className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow sm:text-sm ${
                       !formData.selectedStore
                         ? "text-gray-400"
                         : "text-gray-700"
                     } ${errors.selectedStore ? "border-red-500" : ""}`}
                   >
-                    <option value="" disabled>
+                    <option value="" disabled hidden>
                       Please select Store name
                     </option>
                     <option value="Store1">Store 1</option>
                     <option value="Store2">Store 2</option>
                     <option value="Store3">Store 3</option>
                   </select>
+
                   {errors.selectedStore && (
                     <p className="text-xs text-red-500">
                       {errors.selectedStore}
                     </p>
                   )}
                 </div>
+
                 {[
                   {
                     name: "monthlyRoyalty",
@@ -328,7 +332,7 @@ const Page = () => {
                       value={formData[name as keyof typeof formData]}
                       onChange={handleInputChange}
                       placeholder={placeholder}
-                      className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm  sm:text-sm ${
+                      className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm sm:text-sm ${
                         errors[name as keyof typeof errors]
                           ? "border-red-500"
                           : ""
@@ -342,7 +346,8 @@ const Page = () => {
                   </div>
                 ))}
               </div>
-              <div className="flex gap-10  py-4">
+
+              <div className="flex gap-10 py-4">
                 {[
                   {
                     name: "rent",
@@ -370,7 +375,7 @@ const Page = () => {
                       value={formData[name as keyof typeof formData]}
                       onChange={handleInputChange}
                       placeholder={placeholder}
-                      className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm  sm:text-sm ${
+                      className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm sm:text-sm ${
                         errors[name as keyof typeof errors]
                           ? "border-red-500"
                           : ""
@@ -384,6 +389,7 @@ const Page = () => {
                   </div>
                 ))}
               </div>
+
               <div className="flex justify-between py-4">
                 <div className="w-[30%]">
                   <label className="block text-sm font-medium text-[#5E6366]">
@@ -395,7 +401,7 @@ const Page = () => {
                     value={formData.otherExpenses}
                     onChange={handleInputChange}
                     placeholder="Please enter Other Expenses"
-                    className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm  sm:text-sm ${
+                    className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm sm:text-sm ${
                       errors.otherExpenses ? "border-red-500" : ""
                     }`}
                   />
@@ -405,19 +411,11 @@ const Page = () => {
                     </p>
                   )}
                 </div>
-                <div className=" flex gap-4 mt-3 p-2 px-4 ">
-                  {/* <div>
-                    <button
-                      type="submit"
-                      className=" w-[145px] bg-[#C8C8C8]  text-[#6F6F6F] font-medium py-2 px-4 rounded-md"
-                    >
-                      Cancel
-                    </button>
-                  </div> */}
+                <div className="flex gap-4 mt-3 p-2 px-4">
                   <div>
                     <button
                       type="submit"
-                      className=" w-[145px] bg-[#1AA47D]  hover:bg-[#168A68] text-white font-medium py-2 px-4 rounded-md"
+                      className="w-[145px] bg-[#1AA47D] hover:bg-[#168A68] text-white font-medium py-2 px-4 rounded-md"
                     >
                       Save
                     </button>

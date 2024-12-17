@@ -13,8 +13,6 @@ const Navbar: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
   const [title, setTitle] = useState("");
 
-
-
   useEffect(() => {
     setIsClient(true); // Ensuring we are on the client side
   }, []);
@@ -31,36 +29,40 @@ const Navbar: React.FC = () => {
         case "editprofile":
           newTitle = "Edit Profile";
           break;
-          case "sales-kpi":
-            newTitle = "Sales Kpi";
-            break;
-            case "summary":
-            newTitle = "Summary";
-            break;
-            case "sales":
-              newTitle = "Sales";
-              break;
-              case "sales/sales_view":
-                newTitle = "Sales Details";
-                break;
+        case "sales-kpi":
+          newTitle = "Sales Kpi";
+          break;
+        case "summary":
+          newTitle = "Summary";
+          break;
+        case "sales":
+          newTitle = "Sales";
+          break;
+        case "sales/sales_view":
+          newTitle = "Sales Details";
+          break;
         case "invoices":
           newTitle = "Invoices";
           break;
         case "expenses":
           newTitle = "Expenses";
           break;
-          case "setup/categories":
-            newTitle = "Item Categories";
-            break;
-            case "setup/items":
-            newTitle = "Items";
-            break;
-            case "setup/tenders":
-            newTitle = "Tenders";
-            break;
-            case "setup/stores":
-              newTitle = "Stores";
-              break;
+        case "setup/categories":
+          newTitle = "Item Categories";
+          break;
+        case "setup/items":
+          newTitle = "Items";
+          break;
+        case "setup/tenders":
+          newTitle = "Tenders";
+          break;
+        case "setup/stores":
+          newTitle = "Stores";
+          break;
+        case "setup/configuration":
+          newTitle = "Configuration";
+          break;
+
         case "logout":
           newTitle = "Logout";
           break;
@@ -72,7 +74,6 @@ const Navbar: React.FC = () => {
       document.title = newTitle;
     }
   }, [isClient, currentPath]);
-
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
@@ -97,55 +98,58 @@ const Navbar: React.FC = () => {
 
   return (
     <main className="w-full sticky z-30 bg-[#ffff] h-[50px] flex justify-center items-center shadow ">
-      
-       
       <div className="flex justify-between below-md:justify-center items-center  w-full">
-     <div className=" flex justify-center items-center pl-8 below-md:pl-0"> <text className="text-[18px] font-bold text-defaultblack ">{title}</text></div>
-      <div className="flex justify-end  items-center  below-md:absolute  below-md:right-0">
-        <Images
-          className="w-10 h-10 mr-4 rounded-full"
-          src="/images/admin.png"
-          alt="Admin"
-        />
-        <div className="flex flex-col below-md:hidden">
-          <p className="text-[14px] font-semibold text-right">Saheel</p>
-          <p className="text-[12px] font-medium">Admin</p>
+        <div className=" flex justify-center items-center pl-8 below-md:pl-0">
+          {" "}
+          <text className="text-[18px] font-bold text-defaultblack ">
+            {title}
+          </text>
         </div>
+        <div className="flex justify-end  items-center  below-md:absolute  below-md:right-0">
+          <Images
+            className="w-10 h-10 mr-4 rounded-full"
+            src="/images/admin.png"
+            alt="Admin"
+          />
+          <div className="flex flex-col below-md:hidden">
+            <p className="text-[14px] font-semibold text-right">Saheel</p>
+            <p className="text-[12px] font-medium">Admin</p>
+          </div>
 
-        <div
-          className="ml-8 mr-4 cursor-pointer below-md:hidden"
-          ref={dropdownRef}
-        >
-          <p
-            onClick={handleToggle}
-            className="w-10 h-10 flex items-center justify-center"
+          <div
+            className="ml-8 mr-4 cursor-pointer below-md:hidden"
+            ref={dropdownRef}
           >
-            <img src="/images/More.svg" alt="Menu Icon" />
-          </p>
+            <p
+              onClick={handleToggle}
+              className="w-10 h-10 flex items-center justify-center"
+            >
+              <img src="/images/More.svg" alt="Menu Icon" />
+            </p>
 
-          {/* Dropdown Menu */}
-          {isOpen && (
-            <div className="absolute right-0 mt-5 mr-2 pl-4 w-52 bg-white shadow-lg rounded-lg">
-              <ul className="py-2">
-                <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
-                  <img
-                    src="/images/Profile.svg"
-                    className="inline-block mr-2"
-                  />
-                  My Profile
-                </li>
-                <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
-                  <img
-                    src="/images/logout2.svg"
-                    className="inline-block mr-2"
-                  />
-                  Logout
-                </li>
-              </ul>
-            </div>
-          )}
+            {/* Dropdown Menu */}
+            {isOpen && (
+              <div className="absolute right-0 mt-5 mr-2 pl-4 w-52 bg-white shadow-lg rounded-lg">
+                <ul className="py-2">
+                  <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
+                    <img
+                      src="/images/Profile.svg"
+                      className="inline-block mr-2"
+                    />
+                    My Profile
+                  </li>
+                  <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
+                    <img
+                      src="/images/logout2.svg"
+                      className="inline-block mr-2"
+                    />
+                    Logout
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
       </div>
     </main>
   );
