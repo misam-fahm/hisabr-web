@@ -117,10 +117,10 @@ const AddExpenses = () => {
 
     return (
         <>
-          
+          <div className='hidden below-md:block   '>
           <button
     onClick={openModal}
-    className="bg-[#1AA47D] below-lg:hidden  hover:gap-2 text-white w-[50px] hover:w-[159px] h-[50px] rounded-md flex items-center justify-center overflow-hidden transition-all duration-10 group"
+    className="  hover:gap-2 text-white w-[50px] hover:w-[159px] h-[50px] rounded-md  items-center justify-center overflow-hidden transition-all duration-10 group"
 >
     <img src='/images/plusIcon.svg' alt='AddExpense' className='text-white transition-opacity duration-10'/>
    
@@ -128,16 +128,17 @@ const AddExpenses = () => {
         Add Expenses
     </span> */}
 </button>
-
+</div>
+<div className='block below-md:hidden'>
 <button
     onClick={openModal}
-    className="bg-[#1AA47D]  text-white below-md:hidden  w-[159px] h-[37px] rounded-md flex items-center justify-center gap-1 text-[14px]"
+    className="bg-[#1AA47D]  text-white  w-[159px] h-[37px] rounded-md flex items-center justify-center gap-1 text-[14px]"
 >
        <img className ='' src="/images/addExpenses.svg" alt="" />
         Add Expenses
 
 </button>
-
+</div>
 
             {/* Dialog for the modal */}
             <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
