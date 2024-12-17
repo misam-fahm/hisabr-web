@@ -43,7 +43,7 @@ const DateRangePicker = () => {
     <div className="relative" ref={pickerRef}>
       <div
         onClick={handleClickIcon}
-        className="flex items-center justify-between rounded px-3 py-[10px] bg-white cursor-pointer shadow-md"
+        className="flex items-center justify-between rounded px-3 py-[10px] bg-white cursor-pointer shadow"
       >
         <span className="text-[#636363] text-[12px]">
           {startDate && endDate
