@@ -2,10 +2,77 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
 import Images from "../ui/Common/Image";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const currentPath = usePathname();
+  const [isClient, setIsClient] = useState(false);
+  const [title, setTitle] = useState("");
+
+
+
+  useEffect(() => {
+    setIsClient(true); // Ensuring we are on the client side
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      const currentRoute = currentPath.replace("/", "");
+
+      let newTitle = "";
+      switch (currentRoute?.toLowerCase()) {
+        case "myprofile":
+          newTitle = "My Profile";
+          break;
+        case "editprofile":
+          newTitle = "Edit Profile";
+          break;
+          case "sales-kpi":
+            newTitle = "Sales Kpi";
+            break;
+            case "summary":
+            newTitle = "Summary";
+            break;
+            case "sales":
+              newTitle = "Sales";
+              break;
+              case "sales/sales_view":
+                newTitle = "Sales Details";
+                break;
+        case "invoices":
+          newTitle = "Invoices";
+          break;
+        case "expenses":
+          newTitle = "Expenses";
+          break;
+          case "setup/categories":
+            newTitle = "Item Categories";
+            break;
+            case "setup/items":
+            newTitle = "Items";
+            break;
+            case "setup/tenders":
+            newTitle = "Tenders";
+            break;
+            case "setup/stores":
+              newTitle = "Stores";
+              break;
+        case "logout":
+          newTitle = "Logout";
+          break;
+        default:
+          newTitle = "Home";
+      }
+
+      setTitle(newTitle);
+      document.title = newTitle;
+    }
+  }, [isClient, currentPath]);
+
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
@@ -29,10 +96,14 @@ const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <main className="fixed top-0 left-0 right-0 z-20 bg-white shadow-md">
-      <div className="flex justify-end items-center p-2 w-full">
+    <main className="w-full sticky z-30 bg-[#ffff] h-[50px] flex justify-center items-center shadow ">
+      
+       
+      <div className="flex justify-between below-md:justify-center items-center  w-full">
+     <div className=" flex justify-center items-center pl-8 below-md:pl-0"> <text className="text-[18px] font-bold text-defaultblack ">{title}</text></div>
+      <div className="flex justify-end  items-center  below-md:absolute  below-md:right-0">
         <Images
-          className="w-12 h-12 mr-4 rounded-full"
+          className="w-10 h-10 mr-4 rounded-full"
           src="/images/admin.png"
           alt="Admin"
         />
@@ -74,6 +145,7 @@ const Navbar: React.FC = () => {
             </div>
           )}
         </div>
+      </div>
       </div>
     </main>
   );

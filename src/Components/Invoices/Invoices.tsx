@@ -13,6 +13,7 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
+import Pagination from "../ui/Common/Pagination";
 
 interface TableRow {
   date: string;
@@ -136,14 +137,17 @@ const Invoices = () => {
 
 
   return (
-    <main className="my-4 mx-6 mt-20 ">
-      <div className='flex justify-between below-md:flex-col items-center w-full below-md:item-start below-md:space-y-1 gap-2 mt-4 my-4'>
+    <main
+      className="max-h-[calc(100vh-50px)] px-3 overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
+      <div className='flex justify-between below-md:flex-col items-center w-full below-md:item-start below-md:space-y-1 gap-2 mt-6 my-4'>
         <div className="flex  gap-2 w-full below-md:flex-col">
           <div className="flex">
             {/* Dropdown Button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="bg-[#ffffff] text-[#636363] shadow below-md:px-2 px-4 py-[10px] rounded-md flex items-center justify-between w-[265px] h-[35px] text-[12px] below-md:h-[35px] below-md:w-full below-md:text[11px] below-md:text[#474747]"
+              className="bg-[#ffffff] text-[#636363] shadow below-md:px-2 px-4 py-[10px] rounded flex items-center justify-between w-[265px] h-[35px] text-[12px] below-md:h-[35px] below-md:w-full below-md:text[11px] below-md:text[#474747]"
             >
               <span>{selectedOption}</span>
               <img
@@ -175,7 +179,7 @@ const Invoices = () => {
 
 
 
-          <div className="relative flex below-md:w-full below-md:text-[11px] shadow  rounded-md w-[265px] h-[35px] text-[12px] bg-[#ffff] items-center ">
+          <div className="relative flex below-md:w-full below-md:text-[11px] shadow  rounded w-[265px] h-[35px] text-[12px] bg-[#ffff] items-center ">
             <DatePicker
               selected={startDate}
               onChange={(dates: [Date | null, Date | null]) => {
@@ -220,7 +224,7 @@ const Invoices = () => {
               }}
             />
           </div>
-          <div className='flex shadow  below-md:w-full below-md:text-[11px] text-[12px] bg-[#ffff] items-center rounded-md w-[200px] h-[35px]'>
+          <div className='flex shadow  below-md:w-full below-md:text-[11px] text-[12px] bg-[#ffff] items-center rounded w-[200px] h-[35px]'>
             <input type='search'
               onChange={(e) => setGlobalFilter(e.target.value)}
               ref={searchInputRef}
@@ -282,13 +286,20 @@ const Invoices = () => {
                             </div>
                         </div>
                     ))}
+                    <div className='fixed bottom-[20px] below-lg:hidden right-3'>
+                    <button className="w-[50px] h-[50px] bg-[#1AA47D] hover:bg-[#168A6F] text-white rounded-md text-[14px] flex items-center justify-center gap-1"
+                             onClick={handleButtonClick}>
+                     <img src="/images/uploadinvoiceIcon.svg" alt='Upload Invoice' className="transition-opacity duration-10"/>
+                    </button>
+
+                    </div>
                 
                 </div>
 
 
 
       {/* Invoice Table */}
-      <div className='overflow-x-auto bg-white shadow-lg rounded-lg flex-grow flex flex-col below-md:hidden'>
+      <div className='overflow-x-auto bg-white shadow-lg rounded-lg py-3 flex-grow flex flex-col below-md:hidden'>
         <div className='overflow-hidden max-w-full' >
           <table className='w-full border-collapse text-[12px] text-white table-fixed'>
             <thead className='bg-[#334155] top-0 z-10'>
@@ -341,76 +352,8 @@ const Invoices = () => {
         </div>
       </div>
       {/* Pagination Numbers */}
-      <div className="mt-4 flex gap-2 justify-between items-center below-md:hidden">
-        {/* Page Range Display */}
-        <div>
-          <span className="text-[#8899A8] text-[12px] font-medium ml-3">
-            {startItem} - {endItem} of {totalItems}
-          </span>
-        </div>
-
-        {/* Pagination Numbers */}
-        <div className="flex flex-row gap-3">
-          <button
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-            className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
-            style={{ background: "#EBEFF6" }}
-          >
-            <img src="/images/left.svg" />
-          </button>
-
-          {Array.from({ length: table.getPageCount() }, (_, index) => {
-            const pageIndex = index;
-            return (
-              <button
-                key={pageIndex}
-                onClick={() => table.setPageIndex(pageIndex)}
-                className={`px-4 py-2 rounded-md text-[12px] ${table.getState().pagination.pageIndex === pageIndex
-                  ? "!important text-[#FFFFFF]"
-                  : " text-gray-700"
-                  }`}
-                style={{
-                  backgroundColor:
-                    table.getState().pagination.pageIndex === pageIndex
-                      ? "#1AA47D"
-                      : "transparent",
-                }}
-              >
-                {pageIndex + 1}
-              </button>
-            );
-          })}
-
-          <button
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-            className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
-            style={{ background: "#EBEFF6" }}
-          >
-            <img src="/images/right.svg" />
-          </button>
-
-          <div>
-            <div className="w-full">
-              {/* Dropdown for Page Selection */}
-              <select
-                value={table.getState().pagination.pageIndex} // Sync with current page index
-                onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
-                className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
-              >
-                {Array.from(
-                  { length: table.getPageCount() },
-                  (_, index) => (
-                    <option key={index} value={index}>
-                      Page {index + 1}
-                    </option>
-                  )
-                )}
-              </select>
-            </div>
-          </div>
-        </div>
+      <div className="mt-4  below-md:hidden">
+       <Pagination table={table}/>
       </div>
 
 

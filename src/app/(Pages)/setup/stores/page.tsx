@@ -199,12 +199,13 @@ const Page: FC = () => {
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <main className="w-full h-screen flex flex-col overflow-hidden">
-      <div className="mt-20 mx-6 flex-grow below-md:mt-10 below-md:mx-3">
-        <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
-          <p className="text-[16px] font-bold text-[#334155] below-md:hidden">
-            Stores
-          </p>
+    <main
+    className="max-h-[calc(100vh-60px)] overflow-auto"
+    style={{ scrollbarWidth: "thin" }}
+  >
+      <div className=" mx-6 flex-grow  below-md:mx-3">
+        <div className="flex flex-col-reverse md:flex-row justify-end items-start  below-lg:mt-4 mb-4 gap-4">
+         
           <div className="font-semibold below-md:hidden text-[14px] bg-[#1AA47D] hover:bg-[#168A68] px-5 h-[37px] text-[#FFFFFF] rounded-md">
             <AddStore />
           </div>
@@ -214,7 +215,7 @@ const Page: FC = () => {
         <div
           className="block md:hidden"
           style={{
-            maxHeight: "calc(100vh - 130px)",
+            maxHeight: "calc(100vh - 80px)",
             overflowY: "auto",
             WebkitOverflowScrolling: "touch", // Enables smooth scrolling on mobile
             scrollbarWidth: "none", // Hide scrollbar
@@ -268,9 +269,9 @@ const Page: FC = () => {
             </div>
           ))}
 
-          {/* Add Store Button at the bottom */}
-        
-            <AddStore />
+          {/* Add Store bottom */}
+        <div  className=' fixed bottom-[20px] below-lg:hidden right-3'>  <AddStore /></div>
+           
           
         </div>
 
@@ -316,7 +317,7 @@ const Page: FC = () => {
                       {row.getVisibleCells().map((cell) => (
                         <td
                           key={cell.id}
-                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          className="px-4 py-1 text-[#636363] text-[14px]"
                           style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
                         >
                           {flexRender(

@@ -11,6 +11,7 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import AddTender from "@/Components/Setup/AddTender";
+import DeleteTenders from "@/Components/Setup/DeleteTenders";
 
 interface TableRow {
   percent: string;
@@ -124,7 +125,7 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     id: "edit",
-    header: () => <div className="text-center">Edit</div>,
+    header: () => <div className="text-center  ">Edit</div>,
     cell: () => (
       <div className="ml-10">
         <Images src="/images/edit.svg" alt="edit" width={35} height={35} />
@@ -134,11 +135,10 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     id: "delete",
-    header: () => <div className="text-center">Delete</div>,
+    header: () => <div className="text-center ">Delete</div>,
     cell: () => (
-      <div className="ml-12">
-        <Images src="/images/delete.svg" alt="delete" width={35} height={35} />
-      </div>
+      <>
+      <DeleteTenders/></>
     ),
     size: 60,
   },
@@ -169,13 +169,13 @@ const Page: FC = () => {
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <main className="w-full h-screen flex flex-col overflow-hidden">
-      <div className="mt-20 mx-6 flex-grow">
-        <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4 mb-4 gap-4">
-          <p className="text-[16px] font-bold text-[#334155] below-md:hidden">
-            Tender
-          </p>
-          <div className="font-semibold text-[14px] bg-[#1AA47D] hover:bg-[#168A68] px-5 h-[37px] text-[#FFFFFF] rounded-md">
+    <main
+      className="max-h-[calc(100vh-60px)] overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
+      <div className=" mx-6 flex-grow  below-md:mx-3">
+        <div className="flex flex-col-reverse md:flex-row justify-end items-start  below-lg:mt-4 mb-4 gap-4">
+          <div className="font-semibold text-[14px] bg-[#1AA47D] hover:bg-[#168A68] px-5 h-[37px] text-[#FFFFFF] rounded-md below-md:hidden">
             <AddTender />
           </div>
         </div>
@@ -183,7 +183,7 @@ const Page: FC = () => {
         <div
           className="block md:hidden"
           style={{
-            maxHeight: "calc(100vh - 270px)",
+            maxHeight: "calc(100vh - 80px)",
             overflowY: "auto",
             WebkitOverflowScrolling: "touch", // Enables smooth scrolling on mobile
             scrollbarWidth: "none", // Hide scrollbar
@@ -233,12 +233,17 @@ const Page: FC = () => {
               </div>
             </div>
           ))}
+          {/* Add Tender bottom */}
+          <div className=" fixed bottom-[20px] below-lg:hidden right-3">
+            {" "}
+            <AddTender />
+          </div>
         </div>
 
         {/* Desktop View */}
-        <div className="overflow-x-auto shadow-md rounded-lg flex-grow hidden flex-col md:block">
+        <div className="overflow-x-auto rounded-lg flex-grow hidden flex-col md:block shadow-lg">
           <div className="overflow-hidden max-w-full">
-            <table className="w-full border-collapse border-gray-200 table-fixed">
+            <table className="w-full border-collapse border-gray-200 table-fixed shadow-lg">
               <thead className="bg-[#334155] sticky top-0 z-10">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
@@ -277,7 +282,7 @@ const Page: FC = () => {
                       {row.getVisibleCells().map((cell) => (
                         <td
                           key={cell.id}
-                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          className="px-4 py-1 text-[#636363] text-[14px]"
                           style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
                         >
                           {flexRender(
@@ -294,7 +299,7 @@ const Page: FC = () => {
           </div>
         </div>
 
-        <div className="mt-4 flex gap-2 justify-between items-center">
+        <div className="mt-4 flex gap-2 justify-between items-center below-md:hidden">
           {/* Page Range Display */}
           <div>
             <span className="text-[#8899A8] text-[12px] font-medium ml-3">

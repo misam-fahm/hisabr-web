@@ -158,16 +158,16 @@ const Home: FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-10px)] overflow-auto"
+      className="max-h-[calc(100vh-60px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className="below-md:flex below-md:justify-center ">
+      {/* <div className="below-md:flex below-md:justify-center ">
         <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
           Home
         </p>
-      </div>
+      </div> */}
 
-      <div className=" z-10 flex flex-row items-center gap-3 pt-4 pb-3 sticky top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
+      <div className="flex flex-row items-center gap-3 py-3 sticky  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         {/* Dropdowns grouped together */}
         <div className="flex flex-row gap-3 w-full below-md:flex-col ">
           {/* Dropdown 1 */}
@@ -227,9 +227,9 @@ const Home: FC = () => {
         </div>
       </div>
 
-      <div className=" pr-6 pl-6 below-md:px-3 mt-12">
+      <div className=" pr-6 pl-6 below-md:px-3 ">
         <div className="flex flex-row gap-7 below-md:gap-0 w-full below-md:flex-col tablet:flex-col tablet:gap-0 items-stretch">
-          <div className=" bg-white mt-6 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full tablet:w-full  items-stretch">
+          <div className=" bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full tablet:w-full  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/groce.svg" />
@@ -246,7 +246,7 @@ const Home: FC = () => {
             </div>
           </div>
 
-          <div className="bg-white mt-6 below-md:mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full tablet:w-full items-stretch ">
+          <div className="bg-white mt-3 below-md:mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full tablet:w-full items-stretch ">
             <div className="flex flex-row mt-4 justify-between px-3 ">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/persentage.svg" />

@@ -305,7 +305,6 @@ const Sales: FC = () => {
         <div className="flex flex-row below-md:flex-col pb-6 sticky top-16 below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4  ">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
             {/* Dropdown Button */}
-
             <Dropdown
               options={options}
               selectedOption={selectedOption}

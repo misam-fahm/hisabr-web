@@ -3,147 +3,158 @@
 import React, { FC, useState, useRef } from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import AddExpenses from "@/Components/Expenses/AddExpenses";
+import AddExpenses from "@/Components/Expenses/AddExpenses"; 
+
 import Image from "next/image";
 import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  flexRender,
-  ColumnDef,
+    useReactTable,
+    getCoreRowModel,
+    getPaginationRowModel,
+    getFilteredRowModel,
+    flexRender,
+    ColumnDef,
 } from "@tanstack/react-table";
+import Pagination from '../ui/Common/Pagination';
+import DeleteExpense from './DeleteExpense';
+import EditExpense from './EditExpense';
 
 interface TableRow {
-  date: string;
-  store: number;
-  amount: string;
-  description: string;
-  type: string;
+    date: string;
+    store: number;
+    amount: string;
+    description: string;
+    type: string;
 }
 
 const data: TableRow[] = [
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    amount: "11,800",
-    description: "Mortgage",
-    type: "Mortgage",
-  },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
+    {
+        date: "2022-01-01",
+        store: 13246,
+        amount: "11,800",
+        description: "Mortgage",
+        type: "Mortgage",
+    },
 ];
 const columns: ColumnDef<TableRow>[] = [
     {
         accessorKey: "date",
-        header: () => <div className='w-[100px]'>Date</div>,
-        cell: (info) => <span className="w-[100px]">{info.getValue() as string}</span>,
+        header: () => <div className='text-left'>Date</div>,
+        cell: (info) => <span>{info.getValue() as string}</span>,
+        size:100,
     },
     {
         accessorKey: "store",
-        header: () => <div className='w-[100px]'>Store</div>,
-        cell: (info) => <span className="w-[100px]">{info.getValue() as number}</span>,
+        header: () => <div className='text-left'>Store</div>,
+        cell: (info) => <span>{info.getValue() as number}</span>,
+        size:80,
     },
     {
         accessorKey: "amount",
-        header: () => <div className='w-[40px]'>Amount</div>,
-        cell: (info) => <span className="w-[80px] text-right">{info.getValue() as string}</span>,
+        header: () => <div className='text-left'>Amount</div>,
+        cell: (info) => <span className='text-right ml-5'>{info.getValue() as string}</span>,
+        size:100,
     },
     {
         accessorKey: "description",
-        header: () => <div className='w-[50px]'> Description</div>,
-        cell: (info) => <span className="w-[150px]">{info.getValue() as string}</span>,
+        header: () => <div className='text-left'> Description</div>,
+        cell: (info) => <span className="">{info.getValue() as string}</span>,
+        size:200,
     },
     {
         accessorKey: "type",
-        header: () => <div className='w-[100px]'>Type</div>,
-        cell: (info) => <span className="w-[140px]">{info.getValue() as string}</span>,
+        header: () => <div className='text-left'>Type</div>,
+        cell: (info) => <span className="">{info.getValue() as string}</span>,
+        size:80,
     },
     {
         id: "edit",
-        header: () => <div className="text-center w-[120px]">Edit</div>,
-
+        header: () => <div className="text-left">Edit</div>,
         cell: () => (
-            <div className='flex justify-center w-[95px] ml-4'>
-                <Image src="/images/EditIcon(2).svg" alt='Edit Icon' width={25} height={25} />
-            </div>
-        )
+            <>
+            <EditExpense/>
+            </>
+            
+        ),
+        size:60,
     },
     {
         id: "delete",
-        header: () => <div className="text-center w-[85px]">Delete</div>,
+        header: () => <div className="text-left">Delete</div>,
         cell: () => (
-            <div className='flex justify-center'>
-                <Image src="/images/DeleteIcon.svg" alt="Delete Icon" width={30} height={30} />
-            </div>
+            <>
+            <DeleteExpense/>
+            </>
         ),
+        size:60
     },
 ];
 
-  
+
 const Expenses: FC = () => {
-  const [globalFilter, setGlobalFilter] = React.useState("");
+    const [globalFilter, setGlobalFilter] = React.useState("");
     const table = useReactTable({
         data,
         columns,
@@ -280,24 +291,27 @@ const Expenses: FC = () => {
     /**dropdown */
     const [selectedOption, setSelectedOption] = useState<string>("All stores");
 
-  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
+    const options = ["Store 1", "Store 2", "Store 3", "All Store"];
 
-  const handleSelect = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
-  };
+    const handleSelect = (option: string) => {
+        setSelectedOption(option);
+        setIsOpen(false);
+    };
     return (
-        <main className="py-4 px-4 w-full mt-14 below-md:mt-12">
+        <main
+      className="max-h-[calc(100vh-50px)] px-3 overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
 
             <>
-                <div className='flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:space-y-1 gap-2 mt-4 my-4'>
+                <div className='flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:space-y-1 gap-2  my-3'>
                     <div className='flex gap-2 w-full below-md:flex-col'>
 
                         <div className='flex'>
                             {/* Dropdown Button */}
                             <button
                                 onClick={() => setIsOpen(!isOpen)}
-                                className="bg-[#ffffff] text-[#636363] shadow  below-md:px-2 px-4 py-[10px] rounded-md flex items-center justify-between w-[265px] h-[35px] text-[12px] below-md:h-[35px] below-md:w-full below-md:text[11px] below-md:text[#474747]"
+                                className="bg-[#ffffff] text-[#636363] shadow below-md:px-2 px-4 py-[10px] rounded flex items-center justify-between w-[265px] h-[35px] text-[12px] below-md:h-[35px] below-md:w-full below-md:text[11px] below-md:text[#474747]"
                             >
                                 <span>{selectedOption}</span>
                                 <img
@@ -328,7 +342,7 @@ const Expenses: FC = () => {
 
 
 
-                        <div className="relative flex below-md:w-full below-md:text-[11px] shadow rounded-md w-[265px] h-[35px] text-[12px] bg-[#ffff] items-center">
+                        <div className="relative flex below-md:w-full  below-md:text-[11px] shadow rounded w-[265px] h-[35px] text-[12px] bg-[#ffff] items-center">
                             <DatePicker
                                 selected={startDate}
                                 onChange={handleDateChange}
@@ -340,21 +354,7 @@ const Expenses: FC = () => {
                                 placeholderText="Select date range"
                                 className="flex-grow h-full pl-2 bg-transparent below-md:text-[11px] text-[12px] focus:outline-none "
                                 ref={calendarRef}// Add reference for the DatePicker
-                                // popperPlacement="bottom-end" // Position dropdown
-                                // popperModifiers={[
-                                //     {
-                                //         name: 'preventOverflow',
-                                //         options: {
-                                //             boundary: 'viewport',
-                                //         },
-                                //     },
-                                //     {
-                                //         name: 'offset',
-                                //         options: {
-                                //             offset: [0, 10], // Adjust dropdown offset
-                                //         },
-                                //     },
-                                // ]}
+                                calendarClassName="custom-calendar"
                             />
                             <img className='absolute right-2 cursor-pointer items-center' src='/images/CalenderIcon.svg'
                                 onClick={() => {
@@ -367,7 +367,7 @@ const Expenses: FC = () => {
                         {/* </div>  */}
 
                         <div className='flex items-center justify-between below-md:flex-row below-md:gap-4'>
-                            <div className='flex shadow  text-[12px] bg-[#ffff] items-center  rounded-md w-[200px]  h-[35px] below-md:w-full below-md:h-[35px] below-md:text-[11px]'>
+                            <div className='flex shadow  text-[12px] bg-[#ffff] items-center  rounded-md w-[300px]  h-[35px] below-md:w-full below-md:h-[35px] below-md:text-[11px]'>
                                 <input type='search' ref={searchInputRef} placeholder='Search' className='w-full h-[35px] bg-transparent rounded-lg px-3 text-[#636363] focus:outline-none'>
                                 </input>
                                 <img className='pr-2 cursor-pointer items-center' src='/images/searchicon.svg'
@@ -393,7 +393,7 @@ const Expenses: FC = () => {
                 <div className=''>
                     {cardData.map((card, index) => (
                         <div key={index}
-                            className='flex flex-col h-[167px] w-full shadow rounded-md bg-white border border-[#E4E4EF] below-lg:hidden my-4'>
+                            className='flex flex-col  w-full shadow rounded bg-white border border-[#E4E4EF] below-lg:hidden my-4'>
                             <div className='flex justify-between items-start'>
                                 <div className='flex gap-4 px-3 py-4'>
                                     <p className='text-[12px] font-semibold'>{card.date}</p>
@@ -428,7 +428,7 @@ const Expenses: FC = () => {
                     ))}
                     <div className=' fixed bottom-[20px] below-lg:hidden right-3'> <AddExpenses /></div>
                 </div>
-                {/* <div className='below-lg:hidden'><AddExpenses /></div> */}
+               
 
 
 
@@ -436,7 +436,7 @@ const Expenses: FC = () => {
 
 
                 {/* Expenses Table */}
-                <div className='overflow-x-auto bg-white shadow-lg rounded-lg flex-grow flex flex-col below-md:hidden'>
+                <div className='overflow-x-auto bg-white shadow-lg rounded-lg py-3 flex-grow flex flex-col below-md:hidden'>
                     <div className='overflow-hidden max-w-full'>
                         <table className='w-full border-collapse text-[12px] text-white table-fixed'>
                             <thead className='bg-[#334155] top-0 z-10'>
@@ -494,83 +494,15 @@ const Expenses: FC = () => {
                     </div>
                 </div>
                 {/* Pagination Numbers */}
-                <div className="mt-4 flex gap-2 justify-between items-center below-md:hidden">
-                    {/* Page Range Display */}
-                    <div>
-                        <span className="text-[#8899A8] text-[12px] font-medium ml-3">
-                            {startItem} - {endItem} of {totalItems}
-                        </span>
-                    </div>
-
-                    {/* Pagination Numbers */}
-                    <div className="flex flex-row gap-3">
-                        <button
-                            onClick={() => table.previousPage()}
-                            disabled={!table.getCanPreviousPage()}
-                            className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
-                            style={{ background: "#EBEFF6" }}
-                        >
-                            <img src="/images/left.svg" />
-                        </button>
-
-                        {Array.from({ length: table.getPageCount() }, (_, index) => {
-                            const pageIndex = index;
-                            return (
-                                <button
-                                    key={pageIndex}
-                                    onClick={() => table.setPageIndex(pageIndex)}
-                                    className={`px-4 py-2 rounded-md text-[12px] ${table.getState().pagination.pageIndex === pageIndex
-                                        ? "!important text-[#FFFFFF]"
-                                        : " text-gray-700"
-                                        }`}
-                                    style={{
-                                        backgroundColor:
-                                            table.getState().pagination.pageIndex === pageIndex
-                                                ? "#1AA47D"
-                                                : "transparent",
-                                    }}
-                                >
-                                    {pageIndex + 1}
-                                </button>
-                            );
-                        })}
-
-                        <button
-                            onClick={() => table.nextPage()}
-                            disabled={!table.getCanNextPage()}
-                            className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
-                            style={{ background: "#EBEFF6" }}
-                        >
-                            <img src="/images/right.svg" />
-                        </button>
-
-                        <div>
-                            <div className="w-full">
-                                {/* Dropdown for Page Selection */}
-                                <select
-                                    value={table.getState().pagination.pageIndex} // Sync with current page index
-                                    onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
-                                    className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
-                                >
-                                    {Array.from(
-                                        { length: table.getPageCount() },
-                                        (_, index) => (
-                                            <option key={index} value={index}>
-                                                Page {index + 1}
-                                            </option>
-                                        )
-                                    )}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
+                <div className="mt-4  below-md:hidden">
+                    <Pagination table={table}/>
                 </div>
-         
+
             </>
         </main>
     )
 }
 
 export default Expenses;
-          
+
+
