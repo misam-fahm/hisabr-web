@@ -237,7 +237,7 @@ const DetailsPage: React.FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-70px)] below-md:max-h-[calc(100vh-1px)] tablet:max-h-[calc(100vh-1px)] below-md:mb-10 tablet:mb-10 overflow-auto"
+      className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-1px)] tablet:max-h-[calc(100vh-1px)] below-md:mb-10 tablet:mb-10 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <img
@@ -245,12 +245,12 @@ const DetailsPage: React.FC = () => {
         src="/images/backIcon.svg"
         className="fixed top-6 left-4 z-30 below-lg:hidden"
       />
-      <div className="below-md:flex below-md:justify-center ">
+      {/* <div className="below-md:flex below-md:justify-center ">
         <p className="text-[18px] below-md:text-[16px] below-md:mr-8 font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
           Operating Expense Analysis
         </p>
-      </div>
-      <div className="pt-6 pb-6 below-md:pb-3 below-md:px-3 sticky z-10 top-16 bg-[#f7f8f9] pl-6 pr-6">
+      </div> */}
+      <div className="pt-6 pb-6 below-md:pb-3 below-md:px-3 sticky z-10  bg-[#f7f8f9] pl-6 pr-6">
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row below-md:flex-col gap-3  w-full">
             <Dropdown
@@ -288,7 +288,7 @@ const DetailsPage: React.FC = () => {
       </div>
 
       {/* Table remains visible as is */}
-      <div className="flex flex-row justify-between items-center mt-16 mb-4 mx-6 below-md:mx-3">
+      <div className="flex flex-row justify-between items-center  mb-4 mx-6 below-md:mx-3">
         <div>
           <p className="text-[16px] font-bold text-[#334155] ml-3 below-md:ml-1">
             Expenses

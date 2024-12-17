@@ -55,7 +55,7 @@ const DetailsPage: React.FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-70px)] overflow-auto"
+      className="max-h-[calc(100vh-60px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <img
@@ -63,12 +63,12 @@ const DetailsPage: React.FC = () => {
         src="/images/backIcon.svg"
         className="fixed top-6 left-4 z-30 below-lg:hidden"
       />
-      <div className="below-md:flex below-md:justify-center ">
+      {/* <div className="below-md:flex below-md:justify-center ">
         <p className="text-[18px] below-md:text-[16px] below-md:mr-8 font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
           Customer Count Analysis
         </p>
-      </div>
-      <div className="pt-6 pb-6 below-md:pb-3 sticky z-10 top-16 bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
+      </div> */}
+      <div className="pt-6 pb-6 below-md:pb-3 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row below-md:flex-col gap-3 w-full">
             <Dropdown
@@ -104,7 +104,7 @@ const DetailsPage: React.FC = () => {
       </div>
 
       <div className=" pl-6 pr-6 below-md:px-3">
-        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 pt-16 items-stretch">
+        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3  items-stretch">
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full items-stretch p-4 justify-between">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">

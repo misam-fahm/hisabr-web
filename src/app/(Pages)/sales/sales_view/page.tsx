@@ -83,7 +83,7 @@ const DetailsPage: React.FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-20px)] overflow-auto"
+      className="max-h-[calc(100vh-80px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <img
