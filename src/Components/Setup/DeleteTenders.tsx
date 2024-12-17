@@ -66,14 +66,14 @@ const DeleteTenders = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[420px]  below-md:w-[345px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
-            <div className="flex justify-end">
+            {/* <div className="flex justify-end">
               <img
                 onClick={closeModal}
                 src="/images/cancelicon.svg"
                 alt=""
                 className="cursor-pointer"
               />
-            </div>
+            </div> */}
             <div>
               <DialogTitle
                 as="h3"
