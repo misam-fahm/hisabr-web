@@ -46,7 +46,7 @@ const Dropdown = ({
   return (
     <div
       ref={dropdownRef}
-      className={`${className || "relative below-md:w-full"} ${widthchange || "w-[30%]"}`}
+      className={`${className || "relative below-md:w-full"} ${widthchange || "w-[30%] ]"}`}
     >
       <p
         className={`text-[#2D374880] text-[12px] below-md:hidden ${
