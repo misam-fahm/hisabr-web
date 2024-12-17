@@ -174,7 +174,6 @@ const Home: FC = () => {
           {/* First Dropdown */}
 
           <Dropdown
-            label="Select Store"
             options={options}
             selectedOption={selectedOption}
             onSelect={handleSelect}
@@ -184,7 +183,6 @@ const Home: FC = () => {
           {/* Second Dropdown */}
 
           <Dropdown
-            label="Select Period"
             options={options2}
             selectedOption={selectedOption2}
             onSelect={handleSelect2}

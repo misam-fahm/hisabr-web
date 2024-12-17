@@ -273,7 +273,6 @@ const DetailsPage: React.FC = () => {
             {/* First Dropdown */}
 
             <Dropdown
-              label="Select Store"
               options={options}
               selectedOption={selectedOption}
               onSelect={handleSelect}
@@ -284,7 +283,6 @@ const DetailsPage: React.FC = () => {
             {/* Second Dropdown */}
 
             <Dropdown
-              label="Select Period"
               options={options2}
               selectedOption={selectedOption2}
               onSelect={handleSelect2}
@@ -384,15 +382,16 @@ const DetailsPage: React.FC = () => {
                     Monthyl Revenue
                   </p>
                 </div>
-                <div className="relative w-[23%] below-md:w-[35%]">
+                <div className="relative below-md:w-[35%]">
                   <Dropdown
-                    className="relative w-full below-md:w-full"
+                    className="relative below-md:w-full"
                     shadowclassName="shadow-sm"
                     options={options3}
                     selectedOption={selectedOption3}
                     onSelect={handleSelect3}
                     isOpen={isOpen3}
                     toggleOpen={toggleDropdown3}
+                    widthchange="below-lg:w-[130px]"
                   />
                 </div>
               </div>
@@ -409,7 +408,7 @@ const DetailsPage: React.FC = () => {
                     Product Revenue
                   </p>
                 </div>
-                <div className="relative w-[35%]">
+                <div className="relative below-md:w-[35%]">
                   <Dropdown
                     className="relative w-full"
                     shadowclassName="shadow-sm"
@@ -418,6 +417,7 @@ const DetailsPage: React.FC = () => {
                     onSelect={handleSelect4}
                     isOpen={isOpen4}
                     toggleOpen={toggleDropdown4}
+                    widthchange="below-lg:w-[130px]"
                   />
                 </div>
               </div>

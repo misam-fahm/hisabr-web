@@ -59,14 +59,13 @@ const SalesKPI: FC = () => {
           <div className="flex flex-row below-md:flex-col w-full gap-3">
             <Dropdown
               options={options}
-              widthchange="w-[22%] tablet:w-full"
               selectedOption={selectedOption}
               onSelect={handleSelect}
               isOpen={isOpen}
               toggleOpen={toggleDropdown1}
             />
 
-            <div className="w-[30%] tablet:w-full below-md:w-full">
+            <div className="tablet:w-full below-md:w-full">
               <DateRange />
             </div>
           </div>

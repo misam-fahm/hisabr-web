@@ -72,7 +72,6 @@ const DetailsPage: React.FC = () => {
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row below-md:flex-col gap-3 w-full">
             <Dropdown
-              label="  Select Store"
               options={options}
               selectedOption={selectedOption}
               onSelect={handleSelect}
@@ -83,7 +82,6 @@ const DetailsPage: React.FC = () => {
             {/* Second Dropdown */}
 
             <Dropdown
-              label="Select Period"
               options={options2}
               selectedOption={selectedOption2}
               onSelect={handleSelect2}
@@ -174,15 +172,16 @@ const DetailsPage: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="relative w-[20%]">
+                <div className="relative below-md:w-[20%]">
                   <Dropdown
-                    className="relative w-full below-md:w-full"
+                    className="relative below-md:w-full"
                     shadowclassName="shadow-sm"
                     options={options3}
                     selectedOption={selectedOption3}
                     onSelect={handleSelect3}
                     isOpen={isOpen3}
                     toggleOpen={toggleDropdown3}
+                    widthchange="below-lg:w-[130px]"
                   />
                 </div>
               </div>
