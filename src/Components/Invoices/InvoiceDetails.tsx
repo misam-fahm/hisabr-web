@@ -34,8 +34,11 @@ const InvoiceDetails = () => {
 
 
   return (
-    <main className="mt-20 mx-6 ">
-      <div className="flex gap-8 pt-2 pb-5">
+    <main
+      className="max-h-[calc(100vh-50px)] px-5 py-3  overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
+      <div className="flex gap-8 pt-2 pb-5 ">
         {/* Left Panel - Invoice Details */}
         <div className="space-y-2 shadow border rounded-lg w-[299px] p-4 items-start">
           <div className="flex flex-col justify-between gap-[4px]">
@@ -86,7 +89,7 @@ const InvoiceDetails = () => {
           <div className="flex justify-end items-start mb-6 mt-1">
             <button
               onClick={() => window.history.back()}
-              className=" py-2 w-[104px] h-[37px] text-[14px] text-[#6F6F6F] bg-[#C8C8C8] rounded-lg"
+              className=" py-2 w-[104px] h-[37px] text-[14px] text-[#6F6F6F] bg-[#E4E4E4] rounded-lg"
             >
               Back
             </button>
@@ -102,7 +105,7 @@ const InvoiceDetails = () => {
             <thead className='bg-[#334155]'>
               <tr>
                 <th className="py-2 px-4 text-left w-[10%]">Item Code</th>
-                <th className="py-2 px-4 text-left break-words whitespace-normal w-[10%]">Description</th>
+                <th className="py-2 px-4 text-left  w-[10%]">Description</th>
                 <th className="py-2 px-4 text-center">Brand</th>
                 <th className="py-2 px-4 text-left w-[10%]">Category</th>
                 <th className="py-2 px-4 text-center w-[6%]">Quantity</th>
@@ -122,7 +125,7 @@ const InvoiceDetails = () => {
                   <tr key={index}
                     className={index % 2 === 0 ? 'bg-white' : 'bg-[#F8F9FB]'}>
                     <td className="py-2 px-4 w-[10%]">{row.itemCode}</td>
-                    <td className="py-2 px-4 w-[10%]">{row.description}</td>
+                    <td className="py-2 px-4 w-[22%]">{row.description}</td>
                     <td className="py-2 px-4 text-center w-[10%]">{row.brand}</td>
                     <td className="py-2 px-4 w-[10%] text-center">{row.category}</td>
                     <td className="py-2 px-4 text-right w-[9%] pr-8">{row.quantity}</td>
