@@ -74,7 +74,7 @@ const DiscountTable: React.FC = () => {
         </table>
       </div>
 
-      <div className="below-lg:hidden mt-16">
+      <div className="below-lg:hidden">
         <div className="flex flex-col">
           <div className="w-full bg-white rounded-md p-3 mb-3">
             <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
