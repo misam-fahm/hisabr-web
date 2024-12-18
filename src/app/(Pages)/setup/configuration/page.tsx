@@ -275,7 +275,7 @@ const Page = () => {
         </div>
       </div>
       {/* Web View */}
-      <div className="justify-center items-center my-16 p-8 hidden md:block">
+      <div className="justify-center items-center  p-8 hidden md:block">
         <div className="bg-white shadow-md rounded-lg p-6 w-full px-7">
           <div>
             <p className="font-medium text-[#5E6366]">Add Configuration:</p>
@@ -289,7 +289,7 @@ const Page = () => {
                     name="selectedStore"
                     value={formData.selectedStore}
                     onChange={handleInputChange}
-                    className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow sm:text-sm ${
+                    className={`mt-1 block w-full border p-2 border-gray-300 rounded-md  sm:text-sm ${
                       !formData.selectedStore
                         ? "text-gray-400"
                         : "text-gray-700"

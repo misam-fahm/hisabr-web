@@ -101,23 +101,23 @@ const AddNewItems = () => {
 
   return (
     <>
-    <div className="hidden below-md:block   ">
-      <button
-        onClick={openModal}
-        className="hover:gap-2 text-white w-[50px] hover:w-[159px] h-[50px] rounded-md  items-center justify-center overflow-hidden transition-all duration-10 group"
-      >
-        <img
-          src="/images/addButton.svg"
-          alt="Add Button"
-          className="transition-opacity duration-10"
-        />
-      </button>
-    </div>
-  
+      <div className="hidden below-md:block   ">
+        <button
+          onClick={openModal}
+          className="hover:gap-2 text-white w-[50px] hover:w-[159px] h-[50px] rounded-md  items-center justify-center overflow-hidden transition-all duration-10 group"
+        >
+          <img
+            src="/images/addButton.svg"
+            alt="Add Button"
+            className="transition-opacity duration-10"
+          />
+        </button>
+      </div>
+
       <div>
         <Button
           onClick={openModal}
-          className=" below-md:hidden flex items-center justify-center font-semibold text-[14px] bg-[#1AA47D] w-[170px] below-md:w-[150px] hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md gap-x-2"
+          className=" below-md:hidden flex items-center justify-center font-medium text-[14px] bg-[#1AA47D] w-[170px] below-md:w-[150px] hover:bg-[#168A68] h-[35px] text-[#FFFFFF] rounded-md gap-x-2"
         >
           <img src="/images/plus1.svg" alt="Add icon" className="w-3 h-3" />
           Add Item
@@ -159,9 +159,9 @@ const AddNewItems = () => {
                     Please select Tender Category
                   </option>
                   <option value="dairy">Dairy</option>
-                  <option value="	bakery">	Bakery</option>
+                  <option value="	bakery"> Bakery</option>
                   <option value="dairy">Dairy</option>
-                  <option value="	bakery">	Bakery</option>
+                  <option value="	bakery"> Bakery</option>
                 </select>
                 {errors.selectedType && (
                   <p className="text-xs text-red-500">{errors.selectedType}</p>

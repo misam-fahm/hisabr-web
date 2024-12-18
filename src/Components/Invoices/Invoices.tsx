@@ -4,6 +4,7 @@ import React from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import DateRange from "@/Components/drawer/DateRangePicker";
+import { useRouter } from "next/navigation";
 
 // import Image from "next/image"
 import {
@@ -24,66 +25,68 @@ interface TableRow {
   name: string;
 }
 const data: TableRow[] = [
-  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
+  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
 ];
 const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "date",
     header: () => <div className='text-left'>Date</div>,
     cell: (info) => <span>{info.getValue() as string}</span>,
-    size:100,
+    size:60,
    
   },
   {
     accessorKey: "store",
     header: () => <div className='text-left'>Store</div>,
     cell: (info) => <span>{info.getValue() as number}</span>,
-    size:80,
+    size:30,
   },
   {
     accessorKey: "quantity",
-    header: () => <div className='text-left mr-2'>Quantity</div>,
-    cell: (info) => <span className='text-right ml-8'>{info.getValue() as string}</span>,
-    size:100,
+    header: () => <div className='text-right'>Quantity</div>,
+    cell: (info) => <span className='flex justify-end '>{info.getValue() as string}</span>,
+    size:50,
   },
   {
     accessorKey: "total",
-    header: () => <div className='text-left'>Total</div>,
-    cell: (info) => <span className='text-right ml-3'>{info.getValue() as string}</span>,
-    size:100,
+    header: () => <div className='text-right pr-8'>Total</div>,
+    cell: (info) => <span className='flex justify-end pr-8'>{info.getValue() as string}</span>,
+    size:70,
   },
   {
     accessorKey: "name",
     header: () => <div className='text-left'>Name</div>,
-    cell: (info) => <span className='text-center ml-2'>{info.getValue() as string}</span>,
-    size:100,
+    cell: (info) => <span className='text-left '>{info.getValue() as string}</span>,
+    size:80,
   },
   {
     id: "view",
     header: () => <div className='text-left'>View</div>,
     cell: () => (
-      <button onClick={() => (window.location.href = "/InvoiceDetails")} className="text-green-500 hover:text-green-700 text-center ml-2">
+      <button onClick={() => (window.location.href = "/invoicedetails")} className="text-green-500 hover:text-green-700 text-center ml-2">
         <img src="/images/View_duotone.svg" alt='View Icon'/>
       </button>
     ),
-    size:100,
+    size:30,
   },
 ];
 const Invoices = () => {
+
+  const router = useRouter();
   const [globalFilter, setGlobalFilter] = React.useState("");
   const table = useReactTable({
     data,
@@ -151,10 +154,10 @@ const Invoices = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-50px)] px-3 overflow-auto"
+      className="max-h-[calc(100vh-50px)] px-6 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className='flex justify-between below-md:flex-col items-center w-full below-md:item-start below-md:space-y-1 gap-2 mt-6 my-4'>
+      <div className='flex justify-between below-md:flex-col items-center w-full below-md:item-start below-md:space-y-1 gap-2 mt-6 mb-6'>
         <div className="flex  gap-2 w-full below-md:flex-col">
           <div className="flex">
             {/* Dropdown Button */}
@@ -207,7 +210,7 @@ const Invoices = () => {
           </div>
         </div>
         <div className='below-md:hidden mt-1'>
-          <button className="w-[170px] h-[35px] bg-[#1AA47D] hover:bg-[#168A6F] text-white rounded-md text-[14px] flex items-center justify-center gap-1"
+          <button className="w-[170px] h-[35px] bg-[#1AA47D] hover:bg-[#168A6F] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
             onClick={handleButtonClick}
           >
              <img className ='' src="/images/UploadInvoice.svg" alt="" />
@@ -270,9 +273,9 @@ const Invoices = () => {
 
 
       {/* Invoice Table */}
-      <div className='overflow-x-auto  shadow-lg rounded-lg py-3 flex-grow flex flex-col below-md:hidden'>
-        <div className='overflow-hidden max-w-full' >
-          <table className='w-full border-collapse text-[12px] text-white table-fixed'>
+      <div className='overflow-x-auto  shadow-md border-collapse border border-gray-200 rounded-lg  flex-grow flex flex-col below-md:hidden'>
+        <div className='overflow-hidden max-w-full rounded-md' >
+          <table className='w-full border-collapse text-[12px] rounded-md text-white table-fixed'>
             <thead className='bg-[#334155] top-0 z-10'>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
@@ -280,6 +283,7 @@ const Invoices = () => {
                     <th
                       key={header.id}
                       className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[14px]  w-[100px]"
+                      style={{ width: `${header.column.getSize()}px` }}
                     >
                       {header.isPlaceholder
                         ? null
@@ -307,7 +311,8 @@ const Invoices = () => {
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        className="px-4 py-1 text-[#636363] text-[14px]  w-[100px]"
+                        className="px-4 py-1 text-[#636363] text-[14px]  "
+                        style={{ width: `${cell.column.getSize()}px` }}
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
