@@ -137,13 +137,13 @@ const summary: FC = () => {
 
             <Dropdown
               options={options}
-              widthchange="w-[20%] tablet:w-full"
+              widthchange=" tablet:w-full"
               selectedOption={selectedOption}
               onSelect={handleSelect}
               isOpen={isOpen}
               toggleOpen={toggleDropdown}
             />
-            <div className="w-[25%] below-md:w-full tablet:w-full">
+            <div className="below-md:w-full tablet:w-full">
               <DateRangePicker />
             </div>
           </div>
@@ -156,7 +156,9 @@ const summary: FC = () => {
                 <p className="text-[14px] text-[#575F6DCC] font-medium">
                   Total Sales
                 </p>
-                <p className="text-[18px] text-[#2D3748]">$2,680,153</p>
+                <p className="text-[16px] text-[#2D3748] font-bold">
+                  $2,680,153
+                </p>
                 <p className="text-[12px] text-[#388E3C] font-semibold">
                   20%{" "}
                   <span className="text-[#575F6D] font-medium">
@@ -174,7 +176,7 @@ const summary: FC = () => {
                 <p className="text-[14px] text-[#575F6DCC] font-medium">
                   Total Expenses
                 </p>
-                <p className="text-[18px] text-[#2D3748]">$861,148</p>
+                <p className="text-[16px] text-[#2D3748] font-bold">$861,148</p>
                 <p className="text-[12px] text-[#388E3C] font-semibold">
                   12%{" "}
                   <span className="text-[#575F6D] font-medium">
@@ -192,7 +194,7 @@ const summary: FC = () => {
                 <p className="text-[14px] text-[#575F6DCC] font-medium">
                   Total Profits
                 </p>
-                <p className="text-[18px] text-[#2D3748]">$161,358</p>
+                <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
                 <p className="text-[12px] text-[#388E3C] font-semibold">
                   40%{" "}
                   <span className="text-[#575F6D] font-medium">
@@ -211,7 +213,7 @@ const summary: FC = () => {
               <div className="mt-2 cursor-pointer below-md:hidden">
                 <img src="/images/download.svg" />
               </div>
-              <div className="mb-6 relative w-full max-w-[15%] below-md:max-w-[40%]">
+              <div className="mb-6 relative below-md:w-full below-md:max-w-[40%]">
                 <Dropdown
                   options={options2}
                   shadowclassName="shadow-sm"
@@ -219,7 +221,8 @@ const summary: FC = () => {
                   onSelect={handleSelect2}
                   isOpen={isOpen2}
                   toggleOpen={toggleDropdown2}
-                  className="w-full"
+                  className="below-md:w-full"
+                  widthchange="below-lg:w-[130px]"
                 />
               </div>
             </div>
@@ -245,20 +248,21 @@ const summary: FC = () => {
                     </div>
 
                     {/* Period Dropdown */}
-                    <div className="relative w-[35%] below-md:w-full">
+                    <div className="relative below-md:w-full">
                       <Dropdown
-                        className="relative w-full below-md:w-full"
+                        className="relative below-md:w-full"
                         shadowclassName="shadow-sm"
                         options={options4}
                         selectedOption={selectedOption4}
                         onSelect={handleSelect4}
                         isOpen={isOpen4}
                         toggleOpen={toggleDropdown4}
+                        widthchange="below-lg:w-[130px]"
                       />
                     </div>
 
                     {/* Year Dropdown */}
-                    <div className="relative w-[35%] below-md:w-full">
+                    <div className="relative below-md:w-full">
                       <Dropdown
                         className="relative w-full below-md:w-full"
                         shadowclassName="shadow-sm"
@@ -267,6 +271,7 @@ const summary: FC = () => {
                         onSelect={handleSelect3}
                         isOpen={isOpen3}
                         toggleOpen={toggleDropdown3}
+                        widthchange="below-lg:w-[130px]"
                       />
                     </div>
                   </div>
@@ -288,20 +293,21 @@ const summary: FC = () => {
                       <img src="/images/download.svg" />
                     </div>
                     {/* Period Dropdown */}
-                    <div className="relative w-[35%] below-md:w-full">
+                    <div className="relative below-md:w-full">
                       <Dropdown
-                        className="relative w-full below-md:w-full"
+                        className="relative below-md:w-full"
                         shadowclassName="shadow-sm"
                         options={options6}
                         selectedOption={selectedOption6}
                         onSelect={handleSelect6}
                         isOpen={isOpen6}
                         toggleOpen={toggleDropdown6}
+                        widthchange="below-lg:w-[130px]"
                       />
                     </div>
 
                     {/* Year Dropdown */}
-                    <div className="relative w-[35%] below-md:w-full">
+                    <div className="relative below-md:w-full">
                       <Dropdown
                         className="relative w-full below-md:w-full"
                         shadowclassName="shadow-sm"
@@ -310,6 +316,7 @@ const summary: FC = () => {
                         onSelect={handleSelect5}
                         isOpen={isOpen5}
                         toggleOpen={toggleDropdown5}
+                        widthchange="below-lg:w-[130px]"
                       />
                     </div>
                   </div>
@@ -343,15 +350,16 @@ const summary: FC = () => {
                   </div>
 
                   {/* Dropdown */}
-                  <div className="mb-6 relative w-[100%] max-w-[35%]">
+                  <div className="mb-6 relative below-md:w-[100%] below-md:max-w-[35%]">
                     <Dropdown
-                      className="relative w-full below-md:w-full"
+                      className="relative below-md:w-full"
                       shadowclassName="shadow-sm"
                       options={options7}
                       selectedOption={selectedOption7}
                       onSelect={handleSelect7}
                       isOpen={isOpen7}
                       toggleOpen={toggleDropdown7}
+                      widthchange="below-lg:w-[130px]"
                     />
                   </div>
                 </div>

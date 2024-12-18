@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import React from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import DateRange from "@/Components/drawer/DateRangePicker";
 
 // import Image from "next/image"
 import {
@@ -42,32 +43,44 @@ const data: TableRow[] = [
 const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "date",
-    header: "Date",
+    header: () => <div className='text-left'>Date</div>,
+    cell: (info) => <span>{info.getValue() as string}</span>,
+    size:100,
+   
   },
   {
     accessorKey: "store",
-    header: "Store",
+    header: () => <div className='text-left'>Store</div>,
+    cell: (info) => <span>{info.getValue() as number}</span>,
+    size:80,
   },
   {
     accessorKey: "quantity",
-    header: "Quantity",
+    header: () => <div className='text-left mr-2'>Quantity</div>,
+    cell: (info) => <span className='text-right ml-8'>{info.getValue() as string}</span>,
+    size:100,
   },
   {
     accessorKey: "total",
-    header: "Total",
+    header: () => <div className='text-left'>Total</div>,
+    cell: (info) => <span className='text-right ml-3'>{info.getValue() as string}</span>,
+    size:100,
   },
   {
     accessorKey: "name",
-    header: "Name",
+    header: () => <div className='text-left'>Name</div>,
+    cell: (info) => <span className='text-center ml-2'>{info.getValue() as string}</span>,
+    size:100,
   },
   {
     id: "view",
-    header: "View",
+    header: () => <div className='text-left'>View</div>,
     cell: () => (
-      <button onClick={() => (window.location.href = "/invoicedetails")} className="text-green-500 hover:text-green-700">
-        <img src="/images/viewIcon.svg" alt='View Icon' width={35} height={35} />
+      <button onClick={() => (window.location.href = "/InvoiceDetails")} className="text-green-500 hover:text-green-700 text-center ml-2">
+        <img src="/images/View_duotone.svg" alt='View Icon'/>
       </button>
-    )
+    ),
+    size:100,
   },
 ];
 const Invoices = () => {
@@ -159,7 +172,7 @@ const Invoices = () => {
             {/* Dropdown Menu */}
             {isOpen && (
               <div
-                className="absolute left-[260px] below-md:left-[16px] below-md:w-[90%] w-[20%] mt-9 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded-md shadow"
+                className="absolute left-[248px] below-md:left-[16px] below-md:w-[90%] w-[20%] mt-9 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded-md shadow"
                 style={{ zIndex: 50 }}
               >
                 {options.map((option, index) => (
@@ -177,53 +190,11 @@ const Invoices = () => {
 
 
 
-
-
-          <div className="relative flex below-md:w-full below-md:text-[11px] shadow  rounded w-[265px] h-[35px] text-[12px] bg-[#ffff] items-center ">
-            <DatePicker
-              selected={startDate}
-              onChange={(dates: [Date | null, Date | null]) => {
-                // Convert null values to undefined
-                const updatedDates: [Date | undefined, Date | undefined] = [
-                  dates[0] || undefined,
-                  dates[1] || undefined,
-                ];
-                setDateRange(updatedDates);
-              }}
-              startDate={startDate}
-              endDate={endDate}
-              selectsRange
-              placeholderText="Select date range"
-              className="flex-grow h-full below-md:text-[11px] pl-2 bg-transparent text-[12px] focus:outline-none"
-              ref={calendarRef}// Add reference for the DatePicker
-              maxDate={new Date()} // Prevent selecting future dates
-              filterDate={(date) => {
-                const today = new Date();
-                const isFuture = date <= today; // Ensure no future dates
-
-                // Disable the previous month's dates only when viewing the current month
-                const isPreviousMonthInCurrentView =
-                  date.getMonth() === today.getMonth() - 1 && date.getFullYear() === today.getFullYear();
-                // Ensure dates are valid and not from the previous month
-                return isFuture && !isPreviousMonthInCurrentView;
-              }}
-              dayClassName={(date) => {
-                if (startDate && endDate) {
-                  if (date >= startDate && date <= endDate) {
-                    return "bg-blue-500 text-white"; // Highlight selected range
-                  }
-                }
-                return "bg-gray-200 text-gray-600"; // Default style for other dates
-              }}
-            />
-            <img className='absolute right-2 cursor-pointer items-center ' src='/images/CalenderIcon.svg'
-              onClick={() => {
-                if (calendarRef.current) {
-                  (calendarRef.current as any).setOpen(true); // Open the calendar on icon click
-                }
-              }}
-            />
+          <div className="w-[30%] tablet:w-full below-md:w-full">
+            <DateRange />
           </div>
+
+
           <div className='flex shadow  below-md:w-full below-md:text-[11px] text-[12px] bg-[#ffff] items-center rounded w-[200px] h-[35px]'>
             <input type='search'
               onChange={(e) => setGlobalFilter(e.target.value)}
@@ -287,7 +258,7 @@ const Invoices = () => {
                         </div>
                     ))}
                     <div className='fixed bottom-[20px] below-lg:hidden right-3'>
-                    <button className="w-[50px] h-[50px] bg-[#1AA47D] hover:bg-[#168A6F] text-white rounded-md text-[14px] flex items-center justify-center gap-1"
+                    <button className="w-[50px] h-[50px]  hover:bg-[#168A6F] text-white rounded-md text-[14px] flex items-center justify-center gap-1"
                              onClick={handleButtonClick}>
                      <img src="/images/uploadinvoiceIcon.svg" alt='Upload Invoice' className="transition-opacity duration-10"/>
                     </button>
@@ -299,7 +270,7 @@ const Invoices = () => {
 
 
       {/* Invoice Table */}
-      <div className='overflow-x-auto bg-white shadow-lg rounded-lg py-3 flex-grow flex flex-col below-md:hidden'>
+      <div className='overflow-x-auto  shadow-lg rounded-lg py-3 flex-grow flex flex-col below-md:hidden'>
         <div className='overflow-hidden max-w-full' >
           <table className='w-full border-collapse text-[12px] text-white table-fixed'>
             <thead className='bg-[#334155] top-0 z-10'>

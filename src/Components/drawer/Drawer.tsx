@@ -20,7 +20,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
   const [title, setTitle] = useState("");
 
   useEffect(() => {
-    setIsClient(true); // Ensuring we are on the client side
+    setIsClient(true);
   }, []);
 
   useEffect(() => {
@@ -118,14 +118,14 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
       {title === "My Profile" || title === "Edit Profile" ? (
         <img
           src="/images/backIcon.svg"
-          className="fixed top-6 left-4 cursor-pointer z-40"
+          className="fixed top-4 left-4 cursor-pointer z-50"
           onClick={() => router.back()}
         />
       ) : (
         !shouldHideHamburger && (
           <img
             src="/images/hamburger.svg"
-            className="fixed top-4 left-4 cursor-pointer z-40"
+            className="fixed top-4 left-4 cursor-pointer z-40 below-lg:hidden below-md:block"
             onClick={() => setOpen(!open)}
           />
         )
@@ -140,16 +140,16 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         />
 
         <div
-          className={`flex gap-x-4 mt-[13px] ${open ? "pl-10" : "pl-3"}  below-md:pl-5 ${open ? "ml-[13px]" : "ml-[3px]"}`}
+          className={`flex gap-x-4 mt-[13px] ${open ? "pl-3" : "pl-3"}  below-md:pl-1 ${open ? "ml-[13px]" : "ml-[3px]"}`}
         >
           <Images
             src={open ? "/images/logo.svg" : "/images/halflogo.png"}
-            className={`cursor-pointer ${open ? "w-[136px]" : "w-[36px]"} h-auto`}
+            className={`cursor-pointer ${open ? "w-[136px]" : "w-[36px]"}  h-[45px]`}
           />
           <img
             src="/images/x.svg"
             onClick={() => setOpen(!open)}
-            className="below-lg:hidden tablet:hidden sticky z-50"
+            className="below-lg:hidden tablet:hidden sticky z-50 pl-5"
           />
         </div>
         <div className="max-h-[calc(100vh-160px)] py-4 overflow-auto scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent ">
@@ -163,7 +163,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
                       ? setSetupOpen(!setupOpen)
                       : handleNavigation(menu.path!)
                   }
-                  className={`text-defaultwhite below-md:bg-transparent below-md:shadow-none text-[14px] flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#EEEEEE1A] below-md:hover:bg-[transparent] mr-5 rounded-tr-full rounded-br-full 
+                  className={`text-defaultwhite below-md:bg-transparent below-md:shadow-none text-[14px] flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#EEEEEE1A] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]  below-md:hover:bg-[transparent] mr-5 rounded-tr-full rounded-br-full 
                     ${currentPath === menu.path ? "bg-[#EEEEEE1A] below-md:bg-transparent shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]" : ""} 
                     ${menu?.gap ? "mt-11" : "mt-1"} 
                     ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""}`}
@@ -177,7 +177,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
                   {/* Dropdown Arrow for Setup */}
                   {menu.submenus && open && (
                     <img
-                      src={`/images/dropDown.png`}
+                      src={`/images/dropDown.svg`}
                       className={`ml-auto ${
                         setupOpen ? "rotate-180" : ""
                       } duration-300`}
@@ -212,9 +212,11 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
           </ul>
         </div>
 
-        <div className="flex  px-6 mt-10 gap-4">
+        <div
+          className={`flex mt-10 gap-4 below-md:bg-transparent below-md:shadow-none below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px]  ${open ? "mr-8" : "mr-3"} ml-3 rounded-md`}
+        >
           <img src="/images/logout.svg" />
-          {open && <p>Logout</p>}
+          {open && <p className="text-[14px]">Logout</p>}
         </div>
       </div>
     </main>

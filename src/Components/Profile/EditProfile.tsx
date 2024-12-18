@@ -8,7 +8,7 @@ const EditProfile = () => {
 
   return (
    
-    <main className= 'w-full  mt-[80px] below-md:mt-[100px]'>
+    <main className= 'w-full below-md:mt-[100px]'>
       <div className='py-4 flex justify-end below-md:hidden '>
         <button className='bg-[#C8C8C87A] w-[104px] h-[37px] text-[#6F6F6F] border rounded-md ' onClick={() => router.back()}>Back
             </button>

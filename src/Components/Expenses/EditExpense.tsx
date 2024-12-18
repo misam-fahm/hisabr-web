@@ -114,10 +114,9 @@ const EditExpense = () => {
         <>
         <div>
             <button onClick={openModal}>
-                <img src="/images/EditIcon(2).svg"
-                     className="flex justify-center text-left mr-12"
-                     width={25}
-                     height={25}
+                <img src="/images/editIcon(1).svg"
+                     className="flex justify-center text-left"
+                    
                     />
             </button>
         </div>
@@ -243,7 +242,7 @@ const EditExpense = () => {
                             {/* Submit Button */}
                             <div className="flex items-center mt-3 md:w-full justify-between md:gap-2 space-x-3">
                                 <button type="button"
-                                    className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[36px] w-[158px] below-md:w-[150px] h-[37px] bg-[#C8C8C8] rounded-md"
+                                    className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[36px] w-[158px] below-md:w-[150px] h-[37px] bg-[#E4E4E4] rounded-md"
                                     onClick={closeModal}
                                 >
                                     Cancel

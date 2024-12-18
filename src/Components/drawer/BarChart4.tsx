@@ -42,6 +42,30 @@ const yearData: Record<number, { month: string; value1: number }[]> = {
   ],
 };
 
+const CustomLegend = () => (
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 10,
+      marginBottom: 5,
+    }}
+  >
+    {/* Circle for legend */}
+    <div
+      style={{
+        width: 12,
+        height: 12,
+        borderRadius: "50%",
+        backgroundColor: "rgba(127, 97, 125, 0.8)",
+        marginRight: 6,
+      }}
+    ></div>
+    <span style={{ color: "#000000B2", fontSize: "12px" }}>Customer count</span>
+  </div>
+);
+
 const BarChart3: React.FC<{ selectedYear: number }> = ({ selectedYear }) => {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -91,13 +115,7 @@ const BarChart3: React.FC<{ selectedYear: number }> = ({ selectedYear }) => {
           ticks={[0, 5000, 10000, 15000, 20000, 25000]}
         />
         <Tooltip />
-        <Legend
-          formatter={() => (
-            <span style={{ color: "#000000B2", fontSize: "12px" }}>
-              Customer count
-            </span>
-          )}
-        />
+        <Legend content={<CustomLegend />} />
         <Bar
           dataKey="value1"
           stackId="a"

@@ -62,6 +62,27 @@ const Navbar: React.FC = () => {
         case "setup/configuration":
           newTitle = "Configuration";
           break;
+        case "details1":
+          newTitle = "Gross Revenue Analysis";
+          break;
+        case "details2":
+          newTitle = " Tender Analysis";
+          break;
+        case "details4":
+          newTitle = "Customer Count Analysis";
+          break;
+        case "details5":
+          newTitle = "Operating Expense Analysis";
+          break;
+        case "details6":
+          newTitle = " Cost Analysis";
+          break;
+        case "details7":
+          newTitle = "Labor Analysis";
+          break;
+        case "details8":
+          newTitle = "Items Analysis";
+          break;
 
         case "logout":
           newTitle = "Logout";
@@ -129,7 +150,7 @@ const Navbar: React.FC = () => {
 
             {/* Dropdown Menu */}
             {isOpen && (
-              <div className="absolute right-0 mt-5 mr-2 pl-4 w-52 bg-white shadow-lg rounded-lg">
+              <div className="absolute right-0 mt-3 mr-2 pl-4 w-52 bg-white shadow-lg rounded-lg">
                 <ul className="py-2">
                   <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
                     <img

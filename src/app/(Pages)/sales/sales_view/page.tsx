@@ -83,13 +83,13 @@ const DetailsPage: React.FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-20px)] overflow-auto"
+      className="max-h-[calc(100vh-80px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <img
         onClick={handleBack}
         src="/images/backIcon.svg"
-        className="fixed top-6 left-4 z-30 below-lg:hidden"
+        className="fixed top-4 left-4 z-30 below-lg:hidden"
       />
       {/* <div className="below-md:flex below-md:justify-center ">
         <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
