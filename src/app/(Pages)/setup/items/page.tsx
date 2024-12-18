@@ -131,7 +131,7 @@ const columns: ColumnDef<TableRow>[] = [
     header: () => <div className="text-left">Name</div>,
     cell: (info) => <span>{info.getValue() as string}</span>,
 
-    size: 160, 
+    size: 160,
   },
   {
     accessorKey: "category",
@@ -171,23 +171,24 @@ const columns: ColumnDef<TableRow>[] = [
     id: "edit",
     header: () => <div className="text-center">Edit</div>,
     cell: () => (
-      <div className="flex justyify-center cursor-pointer ml-5">
-        <Image className="ml-3" src="/images/edit.svg" alt="edit" width={32} height={32} />
+      <div className="flex justyify-center cursor-pointer h-5 w-5">
+        <img src="/images/edit-pencil.svg" alt="" />
       </div>
     ),
 
-    size: 80,
-  },
+    size: 50,
+  },  
   {
+    
     id: "delete",
     header: () => <div className="text-center">Delete</div>,
     cell: () => (
-      <>
-      <DeleteItems />
-    </>
+      <span className="flex justify-center">
+        <DeleteItems />
+      </span>
     ),
 
-    size: 80,
+    size: 60,
   },
 ];
 
@@ -216,16 +217,17 @@ const Page: FC = () => {
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <main className="max-h-[calc(100vh-60px)] overflow-auto"
-    style={{ scrollbarWidth: "thin" }}>
-      <div className=" mx-6 flex-grow  below-md:mx-3">
-        <div className="flex flex-col-reverse md:flex-row justify-end items-start  below-lg:mt-4 mb-4 gap-4">
-         
-          <div className="flex flex-row gap-2 below-md:hidden">
+    <main
+      className="max-h-[calc(100vh-60px)] px-6 below-md:px-3 below-md:py-2 overflow-auto "
+      style={{ scrollbarWidth: "thin" }}
+    >
+     
+       
+          <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
             <AddNewItems />
             <AddCategories />
           </div>
-        </div>
+       
 
         <div className="overflow-hidden max-w-full ">
           {/* Mobile view */}
@@ -248,7 +250,7 @@ const Page: FC = () => {
                   <span className="font-medium text-[16px] text-[#334155]">
                     {row.getValue("name")}
                   </span>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center">
                     {/* Edit */}
                     <Image
                       src="/images/edit1.svg"
@@ -258,13 +260,9 @@ const Page: FC = () => {
                       className="cursor-pointer"
                     />
                     {/* Delete */}
-                    <Image
-                      src="/images/delete2.svg"
-                      alt="delete"
-                      width={16}
-                      height={16}
-                      className="cursor-pointer"
-                    />
+                    <>
+                      <DeleteItems />
+                    </>
                   </div>
                 </div>
 
@@ -294,21 +292,23 @@ const Page: FC = () => {
                 </div>
               </div>
             ))}
-              {/* Add NewItems bottom */}
-          <div  className=' fixed bottom-[20px] below-lg:hidden right-3'><AddNewItems /></div>
+            {/* Add NewItems bottom */}
+            <div className=" fixed bottom-[20px] below-lg:hidden right-3">
+              <AddNewItems />
+            </div>
           </div>
 
           {/* Desktop View */}
-          <div className="overflow-x-auto shadow-md rounded-lg flex-grow hidden flex-col md:block">
+          <div className="overflow-x-auto shadow-md border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block">
             <div className="overflow-hidden max-w-full">
-              <table className="w-full border-collapse border-gray-200 table-fixed">
+              <table className="w-full  table-fixed">
                 <thead className="bg-[#334155] sticky top-0 z-10">
                   {table.getHeaderGroups().map((headerGroup) => (
                     <tr key={headerGroup.id}>
                       {headerGroup.headers.map((header) => (
                         <th
                           key={header.id}
-                          className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+                          className="text-left px-4 py-2.5 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
                           style={{ width: `${header.column.getSize()}px` }} // Applying dynamic width
                         >
                           {header.isPlaceholder
@@ -328,7 +328,7 @@ const Page: FC = () => {
                 className="w-full overflow-y-auto scrollbar-thin flex-grow"
                 style={{ maxHeight: "calc(100vh - 270px)" }}
               >
-                <table className="w-full border-collapse border-gray-200 table-fixed">
+                <table className="w-full table-fixed">
                   <tbody>
                     {table.getRowModel().rows.map((row) => (
                       <tr
@@ -340,7 +340,7 @@ const Page: FC = () => {
                         {row.getVisibleCells().map((cell) => (
                           <td
                             key={cell.id}
-                            className="px-4 py-1 text-[#636363] text-[14px]"
+                            className="px-4 py-1.5 text-[#636363] text-[14px]"
                             style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
                           >
                             {flexRender(
@@ -358,17 +358,17 @@ const Page: FC = () => {
           </div>
         </div>
 
-        <div className="mt-4 flex gap-2 justify-between items-center  below-md:hidden">
+        <div className="mt-4   below-md:hidden">
           {/* Page Range Display */}
-          <div>
+          {/* <div>
             <span className="text-[#8899A8] text-[12px] font-medium ml-3">
               {startItem} - {endItem} of {totalItems}
             </span>
-          </div>
+          </div> */}
 
-          <Pagination table={table}  />   
+          <Pagination table={table} />
         </div>
-      </div>
+     
     </main>
   );
 };

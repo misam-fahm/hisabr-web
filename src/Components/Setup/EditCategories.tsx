@@ -101,7 +101,7 @@ const EditCategories = () => {
 
   return (
     <>
-      <div className="hidden below-md:block   ">
+      {/* <div className="hidden below-md:block ">
         <button
           onClick={openModal}
           className=" hover:gap-2 text-white w-[50px] hover:w-[159px] h-[50px] rounded-md  items-center justify-center overflow-hidden transition-all duration-10 group"
@@ -112,16 +112,14 @@ const EditCategories = () => {
             className="transition-opacity duration-10"
           />
         </button>
-      </div>
+      </div> */}
 
       <div>
         <Button onClick={openModal}>
           <img
-            src="/images/edit.svg"
+            src="/images/edit-pencil.svg"
             alt="Add icon"
-            className="flex justify-center ml-5"
-            width={35}
-            height={35}
+            className="flex justify-center items-center w-5 h-5"
           />
         </Button>
       </div>

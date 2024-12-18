@@ -46,13 +46,12 @@ const DeleteTenders = () => {
   return (
     <>
       <div>
-        <Button onClick={openModal}>
+        <Button>
           <img
-            src="/images/delete.svg"
+            onClick={openModal}
+            src="/images/delete-bin.svg"
             alt="Add icon"
-            className="flex justify-center ml-5"
-            width={35}
-            height={35}
+            className="flex justify-center  below-md:ml-5 h-5 w-5"
           />
         </Button>
       </div>
@@ -65,15 +64,7 @@ const DeleteTenders = () => {
       >
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[420px]  below-md:w-[345px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
-            {/* <div className="flex justify-end">
-              <img
-                onClick={closeModal}
-                src="/images/cancelicon.svg"
-                alt=""
-                className="cursor-pointer"
-              />
-            </div> */}
+          <DialogPanel className="w-[420px]  below-md:w-[335px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
             <div>
               <DialogTitle
                 as="h3"
@@ -82,15 +73,17 @@ const DeleteTenders = () => {
                 Delete Item
               </DialogTitle>
               <div className="flex flex-col mt-4 justify-center items-center text-[#5E6366] font-medium text-[15px]">
-                <p>Are you sure you want to delete this item?</p>
-                <p>This action cannot be undone.</p>
+                <p className=" below-md:text-[14px]">
+                  Are you sure you want to delete this item?
+                </p>
+                <p className=" below-md:text-[14px]">
+                  This action cannot be undone.
+                </p>
               </div>
             </div>
 
             <div className="mt-4">
               <form onSubmit={handleSubmit}>
-                
-
                 {/* Submit Button */}
                 <div className="flex mt-7 justify-between">
                   <button
