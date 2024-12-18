@@ -61,7 +61,7 @@ const DetailsPage: React.FC = () => {
       <img
         onClick={handleBack}
         src="/images/backIcon.svg"
-        className="fixed top-6 left-4 z-30 below-lg:hidden"
+        className="fixed top-4 left-4 z-30 below-lg:hidden"
       />
       {/* <div className="below-md:flex below-md:justify-center ">
         <p className="text-[18px] below-md:text-[16px] below-md:mr-8 font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
@@ -72,7 +72,6 @@ const DetailsPage: React.FC = () => {
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row below-md:flex-col gap-3 w-full">
             <Dropdown
-              label="  Select Store"
               options={options}
               selectedOption={selectedOption}
               onSelect={handleSelect}
@@ -83,7 +82,6 @@ const DetailsPage: React.FC = () => {
             {/* Second Dropdown */}
 
             <Dropdown
-              label="Select Period"
               options={options2}
               selectedOption={selectedOption2}
               onSelect={handleSelect2}
@@ -110,7 +108,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Total Customer Count
               </p>
-              <p className="text-[18px] text-[#2D3748] font-bold">50,000</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">50,000</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 20%{" "}
                 <span className="text-[#575F6D] font-medium">
@@ -125,7 +123,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 New Customers
               </p>
-              <p className="text-[18px] text-[#2D3748] font-bold">33,000</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">33,000</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 13%{" "}
                 <span className="text-[#575F6D] font-medium">
@@ -140,7 +138,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Returning Customers
               </p>
-              <p className="text-[18px] text-[#2D3748] font-bold">12,000</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">12,000</p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 35%{" "}
                 <span className="text-[#575F6D] font-medium">
@@ -155,7 +153,7 @@ const DetailsPage: React.FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Customer Retention Rate
               </p>
-              <p className="text-[18px] text-[#2D3748] font-bold">52% </p>
+              <p className="text-[16px] text-[#2D3748] font-bold">52% </p>
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 <span className="text-[#575F6D] font-medium">
                   of target met
@@ -174,15 +172,16 @@ const DetailsPage: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="relative w-[20%]">
+                <div className="relative below-md:w-[20%]">
                   <Dropdown
-                    className="relative w-full below-md:w-full"
+                    className="relative below-md:w-full"
                     shadowclassName="shadow-sm"
                     options={options3}
                     selectedOption={selectedOption3}
                     onSelect={handleSelect3}
                     isOpen={isOpen3}
                     toggleOpen={toggleDropdown3}
+                    widthchange="below-lg:w-[130px]"
                   />
                 </div>
               </div>

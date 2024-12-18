@@ -174,7 +174,6 @@ const Home: FC = () => {
           {/* First Dropdown */}
 
           <Dropdown
-            label="Select Store"
             options={options}
             selectedOption={selectedOption}
             onSelect={handleSelect}
@@ -184,7 +183,6 @@ const Home: FC = () => {
           {/* Second Dropdown */}
 
           <Dropdown
-            label="Select Period"
             options={options2}
             selectedOption={selectedOption2}
             onSelect={handleSelect2}
@@ -233,7 +231,7 @@ const Home: FC = () => {
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/groce.svg" />
-                <p className="text-[#334155] text-[18px] font-extrabold">
+                <p className="text-[#334155] text-[16px] font-bold">
                   Gross Revenue
                 </p>
               </div>
@@ -250,9 +248,7 @@ const Home: FC = () => {
             <div className="flex flex-row mt-4 justify-between px-3 ">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/persentage.svg" />
-                <p className="text-[#334155] text-[18px] font-extrabold">
-                  Tender
-                </p>
+                <p className="text-[#334155]  text-[16px] font-bold">Tender</p>
               </div>
               <div className="cursor-pointer">
                 <img onClick={handleClick2} src="/images/under_details.svg" />
@@ -282,31 +278,31 @@ const Home: FC = () => {
                         index % 2 === 0 ? "bg-white" : "bg-[#FAFBFB]"
                       }`}
                     >
-                      <td className="px-4 py-2 border-b border-gray-200 text-gray-700">
+                      <td className="px-4 py-2 text-[14px] border-b border-gray-200 text-gray-700">
                         {row.name}
                       </td>
-                      <td className="px-4 py-2 border-b border-gray-200 text-[#334155] text-[15px] font-semibold">
+                      <td className="px-4 py-2 text-[14px] border-b border-gray-200 text-[#334155]  font-semibold">
                         ${row.revenue.toLocaleString()}
                       </td>
-                      <td className="px-4 py-2 border-b border-gray-200 text-[#202224B2] text-[15px] font-semibold text-center">
+                      <td className="px-4 py-2 border-b border-gray-200 text-[#202224B2] text-[14px] font-semibold text-center">
                         {row.commission}
                       </td>
-                      <td className="px-4 py-2 border-b border-gray-200 text-[#3F526D] text-[15px] font-semibold">
+                      <td className="px-4 py-2 border-b border-gray-200 text-[#3F526D] text-[14px] font-semibold">
                         {row.amount ? `$${row.amount.toFixed(2)}` : ""}
                       </td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot className="bottom-0 bg-white">
-                  <tr className="font-semibold text-[#E31212] text-[15px]">
+                  <tr className="font-semibold text-[#E31212] text-[14px]">
                     <td className="px-4 py-2 border-t border-gray-200">
                       Total
                     </td>
-                    <td className="px-4 py-2 border-t border-gray-200">
+                    <td className="px-4 py-2 border-t border-gray-200 text-[14px]">
                       ${totalRevenue.toLocaleString()}
                     </td>
-                    <td className="px-4 py-2 border-t border-gray-200"></td>
-                    <td className="px-4 py-2 border-t border-gray-200">
+                    <td className="px-4 py-2 border-t border-gray-200 text-[14px]"></td>
+                    <td className="px-4 py-2 border-t border-gray-200 text-[14px]">
                       ${totalAmount.toFixed(2)}
                     </td>
                   </tr>
@@ -320,10 +316,10 @@ const Home: FC = () => {
 
         <div className="flex flex-row gap-7 below-md:gap-0 tablet:gap-0 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
           <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full items-stretch">
-            <div className="flex flex-row mt-4 justify-between px-3">
+            <div className="flex flex-row mt-4 justify-between px-2">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/groce.svg" />
-                <p className="text-[#334155] text-[18px] font-extrabold">
+                <p className="text-[#334155]  text-[16px] font-bold">
                   Gross Revenue
                 </p>
                 <div className="relative below-lg:hidden tablet:hidden z-0">
@@ -378,13 +374,13 @@ const Home: FC = () => {
               </div>
 
               <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600">Current Year</div>
+                <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">$85,000</div>
                 <div className="font-bold text-gray-800">$120,000</div>
               </div>
 
               <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600">Previous Year</div>
+                <div className="text-gray-600 text-[14px]">Previous Year</div>
                 <div className="font-bold text-gray-800">$95,000</div>
                 <div className="font-bold text-gray-800">$100,000</div>
               </div>
@@ -396,7 +392,7 @@ const Home: FC = () => {
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/plus.svg" />
-                <p className="text-[#334155] text-[18px] font-extrabold">
+                <p className="text-[#334155]  text-[16px] font-bold">
                   Customer Count
                 </p>
               </div>
@@ -419,13 +415,13 @@ const Home: FC = () => {
               </div>
 
               <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600">Current Year</div>
+                <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">11,000</div>
                 <div className="font-bold text-gray-800">16,000</div>
               </div>
 
               <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600">Previous Year</div>
+                <div className="text-gray-600 text-[14px]">Previous Year</div>
                 <div className="font-bold text-gray-800">12,000</div>
                 <div className="font-bold text-gray-800">15,000</div>
               </div>
@@ -437,7 +433,7 @@ const Home: FC = () => {
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/net.svg" />
-                <p className="text-[#334155] text-[18px] font-extrabold">
+                <p className="text-[#334155]  text-[16px] font-bold">
                   Net Margin
                 </p>
               </div>
@@ -457,13 +453,13 @@ const Home: FC = () => {
               </div>
 
               <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600">Current Year</div>
+                <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">$60,000</div>
                 <div className="font-bold text-gray-800">$90,000</div>
               </div>
 
               <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600">Previous Year</div>
+                <div className="text-gray-600 text-[14px]">Previous Year</div>
                 <div className="font-bold text-gray-800">$65,000</div>
                 <div className="font-bold text-gray-800">$85,000</div>
               </div>
@@ -478,7 +474,7 @@ const Home: FC = () => {
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-1 ">
                 <img src="/images/operating.svg" />
-                <p className="text-[#334155] text-[16px] font-extrabold">
+                <p className="text-[#334155]  text-[16px] font-bold">
                   Operating Expense{" "}
                   <span className="text-[12px] font-semibold text-[#B25209] ">
                     29% of total
@@ -505,13 +501,13 @@ const Home: FC = () => {
               </div>
 
               <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600">Current Year</div>
+                <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">$85,000</div>
                 <div className="font-bold text-gray-800">$120,000</div>
               </div>
 
               <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600">Previous Year</div>
+                <div className="text-gray-600 text-[14px]">Previous Year</div>
                 <div className="font-bold text-gray-800">$95,000</div>
                 <div className="font-bold text-gray-800">$100,000</div>
               </div>
@@ -523,7 +519,7 @@ const Home: FC = () => {
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/cost.svg" />
-                <p className="text-[#334155] text-[18px] font-extrabold">
+                <p className="text-[#334155]  text-[16px] font-bold">
                   Cost{" "}
                   <span className="text-[12px] font-semibold text-[#B25209] ">
                     31% of total cost
@@ -549,13 +545,13 @@ const Home: FC = () => {
               </div>
 
               <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600">Current Year</div>
+                <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">11,000</div>
                 <div className="font-bold text-gray-800">16,000</div>
               </div>
 
               <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600">Previous Year</div>
+                <div className="text-gray-600 text-[14px]">Previous Year</div>
                 <div className="font-bold text-gray-800">12,000</div>
                 <div className="font-bold text-gray-800">15,000</div>
               </div>
@@ -567,7 +563,7 @@ const Home: FC = () => {
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/labor.svg" />
-                <p className="text-[#334155] text-[18px] font-extrabold">
+                <p className="text-[#334155]  text-[16px] font-bold">
                   Labor{" "}
                   <span className="text-[12px] font-semibold text-[#B25209] ">
                     13% of total cost
@@ -593,13 +589,13 @@ const Home: FC = () => {
               </div>
 
               <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600">Current Year</div>
+                <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">$60,000</div>
                 <div className="font-bold text-gray-800">$90,000</div>
               </div>
 
               <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600">Previous Year</div>
+                <div className="text-gray-600 text-[14px]">Previous Year</div>
                 <div className="font-bold text-gray-800">$65,000</div>
                 <div className="font-bold text-gray-800">$85,000</div>
               </div>
@@ -614,7 +610,7 @@ const Home: FC = () => {
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-1 ">
                 <img src="/images/crown.svg" />
-                <p className="text-[#334155] text-[16px] font-extrabold">
+                <p className="text-[#334155]  text-[16px] font-bold">
                   Royalties{" "}
                   <span className="text-[12px] font-semibold text-[#B25209] ">
                     19% of total cost
@@ -638,13 +634,13 @@ const Home: FC = () => {
               </div>
 
               <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600">Current Year</div>
+                <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">$85,000</div>
                 <div className="font-bold text-gray-800">$120,000</div>
               </div>
 
               <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600">Previous Year</div>
+                <div className="text-gray-600 text-[14px]">Previous Year</div>
                 <div className="font-bold text-gray-800">$95,000</div>
                 <div className="font-bold text-gray-800">$100,000</div>
               </div>
@@ -656,7 +652,7 @@ const Home: FC = () => {
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/persentage.svg" />
-                <p className="text-[#334155] text-[18px] font-extrabold">
+                <p className="text-[#334155]  text-[16px] font-bold">
                   Sales Tax{" "}
                   <span className="text-[12px] font-semibold text-[#B25209] ">
                     8% of total cost
@@ -679,13 +675,13 @@ const Home: FC = () => {
               </div>
 
               <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600">Current Year</div>
+                <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">11,000</div>
                 <div className="font-bold text-gray-800">16,000</div>
               </div>
 
               <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600">Previous Year</div>
+                <div className="text-gray-600 text-[14px]">Previous Year</div>
                 <div className="font-bold text-gray-800">12,000</div>
                 <div className="font-bold text-gray-800">15,000</div>
               </div>
@@ -697,9 +693,7 @@ const Home: FC = () => {
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/items.svg" />
-                <p className="text-[#334155] text-[18px] font-extrabold">
-                  Items
-                </p>
+                <p className="text-[#334155]  text-[16px] font-bold">Items</p>
               </div>
               <div className="cursor-pointer">
                 <img src="/images/under_details.svg" onClick={handleClick8} />
@@ -713,31 +707,33 @@ const Home: FC = () => {
                     <tr
                       key={index}
                       className={`${
-                        index % 2 === 1 ? "bg-white" : "bg-[#FAFBFB]"
+                        index % 2 === 1
+                          ? "bg-white"
+                          : "bg-[#FAFBFB] text-[14px]"
                       }`}
                     >
-                      <td className="px-3 py-1 border-b border-gray-200 text-gray-700">
+                      <td className="px-3 py-1 border-b border-gray-200 text-gray-700 text-[14px]">
                         {row.name}
                       </td>
-                      <td className="px-3 py-1 border-b border-gray-200 text-[#334155] text-[15px] font-bold text-center">
+                      <td className="px-3 py-1 border-b border-gray-200 text-[#334155] text-[14px] font-bold text-center">
                         {row.revenue.toLocaleString()}
                       </td>
-                      <td className="px-3 py-1 border-b border-gray-200 text[15px] font-bold text-[#334155]">
+                      <td className="px-3 py-1 border-b border-gray-200 text-[14px] font-bold text-[#334155]">
                         ${row.commission}
                       </td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot className="bottom-0 bg-white">
-                  <tr className="font-bold text-[#E31212]">
+                  <tr className="font-bold text-[#E31212] text-[14px]">
                     <td className="px-3 py-1 border-t border-gray-200">
                       Total
                     </td>
-                    <td className="px-3 py-1 border-t border-gray-200">
+                    <td className="px-3 py-1 border-t border-gray-200 text-[14px]">
                       ${totalRevenue.toLocaleString()}
                     </td>
 
-                    <td className="px-3 py-1 border-t border-gray-200">
+                    <td className="px-3 py-1 border-t border-gray-200 text-[14px]">
                       ${totalAmount.toFixed(2)}
                     </td>
                   </tr>

@@ -44,19 +44,22 @@ const DateRangePicker = () => {
     <div className="relative" ref={pickerRef}>
       <div
         onClick={handleClickIcon}
-        className="flex items-center justify-between rounded h-[35px] px-3 bg-white cursor-pointer shadow"
+        className="flex items-center justify-between rounded h-[35px] w-[260px] below-md:w-full px-3 bg-white cursor-pointer shadow"
       >
         <span className="text-[#636363] text-[12px]">
           {startDate && endDate
             ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
             : "Select Date Range"}
         </span>
-        <img src="/images/daterange.svg" alt="calendar" 
-        onClick={() => {
-          if (calendarRef.current) {
+        <img
+          src="/images/daterange.svg"
+          alt="calendar"
+          onClick={() => {
+            if (calendarRef.current) {
               (calendarRef.current as any).setOpen(true); // Open the calendar on icon click
-          }
-      }}/>
+            }
+          }}
+        />
       </div>
 
       {/* Datepicker */}
@@ -76,7 +79,7 @@ const DateRangePicker = () => {
             maxDate={new Date()}
             onMonthChange={handleMonthChange}
             filterDate={filterDates}
-            ref={calendarRef}// Add reference for the DatePicker
+            ref={calendarRef} // Add reference for the DatePicker
           />
         </div>
       )}

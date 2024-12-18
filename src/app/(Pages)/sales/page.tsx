@@ -311,20 +311,20 @@ const Sales: FC = () => {
               onSelect={handleSelect}
               isOpen={isOpen}
               toggleOpen={toggleDropdown1}
-              widthchange="w-[40%] tablet:w-full"
+              widthchange="tablet:w-full"
             />
 
-            <div className="w-[50%] below-md:w-full tablet:w-full">
+            <div className="below-md:w-full tablet:w-full">
               <DateRange />
             </div>
 
-            <div className="flex flex-row w-full gap-3">
-              <div className="w-[50%] below-md:w-full relative below-md:hidden tablet:hidden">
+            <div className="flex flex-row gap-3">
+              <div className=" w-[260px] below-md:w-full relative below-md:hidden tablet:hidden">
                 <input
                   value={globalFilter ?? ""}
                   onChange={(e) => setGlobalFilter(e.target.value)}
                   placeholder="Search"
-                  className=" py-[10px] px-[8] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                  className=" py-[10px] px-[8] h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
                 <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
                   <svg
@@ -347,7 +347,7 @@ const Sales: FC = () => {
               <div className="tablet:w-full below-md:w-full relative below-lg:hidden">
                 <input
                   placeholder="Search"
-                  className=" py-[10px] px-[8] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                  className=" py-[10px] px-[8] h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
                 <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
                   <svg
@@ -381,12 +381,12 @@ const Sales: FC = () => {
 
               <button
                 onClick={handleUploadClick}
-                className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold"
+                className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium"
               >
                 <img
                   src="/images/uploadIcon.svg"
                   alt="Upload Icon"
-                  className="mr-2"
+                  className="mr-1"
                 />
                 Upload Sale
               </button>

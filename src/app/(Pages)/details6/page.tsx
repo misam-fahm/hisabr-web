@@ -234,7 +234,7 @@ const DetailsPage: React.FC = () => {
       <img
         onClick={handleBack}
         src="/images/backIcon.svg"
-        className="fixed top-6 left-4 z-30 below-lg:hidden"
+        className="fixed top-4 left-4 z-30 below-lg:hidden"
       />
       {/* <div className="below-md:flex below-md:justify-center ">
         <p className="text-[18px] below-md:text-[16px] below-md:mr-8 font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
@@ -245,7 +245,6 @@ const DetailsPage: React.FC = () => {
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row gap-3 below-md:flex-col w-full">
             <Dropdown
-              label="Select Store"
               options={options}
               selectedOption={selectedOption}
               onSelect={handleSelect}
@@ -258,7 +257,6 @@ const DetailsPage: React.FC = () => {
             {/* Second Dropdown */}
 
             <Dropdown
-              label="Select Period"
               options={options2}
               selectedOption={selectedOption2}
               onSelect={handleSelect2}
@@ -286,11 +284,11 @@ const DetailsPage: React.FC = () => {
           </p>
         </div>
         <div>
-          <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold">
+          <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
             <img
               src="/images/uploadIcon.svg"
               alt="Upload Icon"
-              className="mr-2"
+              className="mr-1"
             />
             Upload Invoice
           </button>
