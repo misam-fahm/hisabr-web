@@ -118,14 +118,14 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
       {title === "My Profile" || title === "Edit Profile" ? (
         <img
           src="/images/backIcon.svg"
-          className="fixed top-6 left-4 cursor-pointer z-40"
+          className="fixed top-4 left-4 cursor-pointer z-50"
           onClick={() => router.back()}
         />
       ) : (
         !shouldHideHamburger && (
           <img
             src="/images/hamburger.svg"
-            className="fixed top-6 left-4 cursor-pointer z-40 hidden below-md:block"
+            className="fixed top-4 left-4 cursor-pointer z-40 below-lg:hidden below-md:block"
             onClick={() => setOpen(!open)}
           />
         )
@@ -216,7 +216,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
           className={`flex mt-10 gap-4 below-md:bg-transparent below-md:shadow-none below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px]  ${open ? "mr-8" : "mr-3"} ml-3 rounded-md`}
         >
           <img src="/images/logout.svg" />
-          {open && <p>Logout</p>}
+          {open && <p className="text-[14px]">Logout</p>}
         </div>
       </div>
     </main>
