@@ -286,9 +286,9 @@ const DetailsPage: React.FC = () => {
       </div>
 
       {/* Table remains visible as is */}
-      <div className="flex flex-row justify-between items-center  mb-4 mx-6 below-md:mx-3">
+      <div className="flex flex-row justify-between items-center  mb-6 below-md:mb-3 mx-6 below-md:mx-3">
         <div>
-          <p className="text-[16px] font-bold text-[#334155] ml-3 below-md:ml-1">
+          <p className="text-[16px] font-bold text-[#334155] ml-3 below-md:ml-2">
             Expenses
           </p>
         </div>
