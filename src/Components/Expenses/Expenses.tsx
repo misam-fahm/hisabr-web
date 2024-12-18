@@ -32,77 +32,77 @@ const data: TableRow[] = [
         date: "2022-01-01",
         store: 13246,
         amount: "11,800",
-        description: "Mortgage",
+        description: "Mortgage Mortgage Mortgage Mortgage",
         type: "Mortgage",
     },
     {
         date: "2022-01-01",
         store: 13246,
         amount: "11,800",
-        description: "Mortgage",
+        description: "Mortgage Mortgage Mortgage Mortgage",
         type: "Mortgage",
     },
     {
         date: "2022-01-01",
         store: 13246,
         amount: "11,800",
-        description: "Mortgage",
+        description: "Mortgage Mortgage Mortgage Mortgage",
         type: "Mortgage",
     },
     {
         date: "2022-01-01",
         store: 13246,
         amount: "11,800",
-        description: "Mortgage",
+        description: "Mortgage Mortgage Mortgage Mortgage",
         type: "Mortgage",
     },
     {
         date: "2022-01-01",
         store: 13246,
         amount: "11,800",
-        description: "Mortgage",
+        description: "Mortgage Mortgage Mortgage Mortgage",
         type: "Mortgage",
     },
     {
         date: "2022-01-01",
         store: 13246,
         amount: "11,800",
-        description: "Mortgage",
+        description: "Mortgage Mortgage Mortgage Mortgage",
         type: "Mortgage",
     },
     {
         date: "2022-01-01",
         store: 13246,
         amount: "11,800",
-        description: "Mortgage",
+        description: "Mortgage Mortgage Mortgage Mortgage",
         type: "Mortgage",
     },
     {
         date: "2022-01-01",
         store: 13246,
         amount: "11,800",
-        description: "Mortgage",
+        description: "Mortgage Mortgage Mortgage Mortgage",
         type: "Mortgage",
     },
     {
         date: "2022-01-01",
         store: 13246,
         amount: "11,800",
-        description: "Mortgage",
+        description: "Mortgage Mortgage Mortgage Mortgage",
         type: "Mortgage",
     },
     {
         date: "2022-01-01",
         store: 13246,
         amount: "11,800",
-        description: "Mortgage",
+        description: "Mortgage Mortgage Mortgage Mortgage",
         type: "Mortgage",
     },
 ];
 const columns: ColumnDef<TableRow>[] = [
     {
         accessorKey: "date",
-        header: () => <div className='text-left'>Date</div>,
+        header: () => <div className='text-left '>Date</div>,
         cell: (info) => <span>{info.getValue() as string}</span>,
         size:100,
     },
@@ -132,24 +132,24 @@ const columns: ColumnDef<TableRow>[] = [
     },
     {
         id: "edit",
-        header: () => <div className="text-left mr-3">Edit</div>,
+        header: () => <div className="text-center ">Edit</div>,
         cell: () => (
             <>
-            <EditExpense/>
+          <span className="flex justify-center">  <EditExpense/></span>
             </>
             
         ),
-        size:60,
+        size:50,
     },
     {
         id: "delete",
-        header: () => <div className="text-left mr-4">Delete</div>,
+        header: () => <div className="text-center">Delete</div>,
         cell: () => (
             <>
-            <DeleteExpense/>
+           <span className="flex justify-center"> <DeleteExpense/></span> 
             </>
         ),
-        size:60
+        size:50
     },
 ];
 
@@ -174,17 +174,17 @@ const Expenses: FC = () => {
     });
     //Card data
     const cardData = [
-        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456 ", description: "Mortgage" },
-        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage" },
-        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage" },
-        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage" },
-        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage" },
-        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage" },
-        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage" },
-        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage" },
-        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage" },
-        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage" },
-        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage" },
+        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456 ", description: "Mortgage Mortgage Mortgage" },
+        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage Mortgage Mortgage" },
+        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage Mortgage Mortgage" },
+        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage Mortgage Mortgage" },
+        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage Mortgage Mortgage" },
+        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage Mortgage Mortgage" },
+        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage Mortgage Mortgage" },
+        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage Mortgage Mortgage" },
+        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage Mortgage Mortgage" },
+        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage Mortgage Mortgage " },
+        { date: "2022-01-01", type: "Mortgage", store: 13246, amount: "11,456", description: "Mortgage Mortgage Mortgage" },
 
     ];
     //pagination range
@@ -300,12 +300,12 @@ const Expenses: FC = () => {
     };
     return (
         <main
-      className="max-h-[calc(100vh-50px)] px-3 overflow-auto"
+      className="max-h-[calc(100vh-50px)] px-6 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
 
             <>
-                <div className='flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:space-y-1 gap-2 mt-6 my-3'>
+                <div className='flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:space-y-1 gap-2 mt-6 mb-6'>
                     <div className='flex gap-2 w-full below-md:flex-col'>
 
                         <div className='flex'>
@@ -410,9 +410,9 @@ const Expenses: FC = () => {
 
 
                 {/* Expenses Table */}
-                <div className='overflow-x-auto shadow-lg rounded-lg py-3 flex-grow flex flex-col below-md:hidden'>
-                    <div className='overflow-hidden max-w-full'>
-                        <table className='w-full border-collapse text-[12px] text-white table-fixed'>
+                <div className='overflow-x-auto shadow-md border-collapse border border-gray-200  rounded-lg  flex-grow flex flex-col below-md:hidden'>
+                    <div className='overflow-hidden max-w-full rounded-md'>
+                        <table className='w-full border-collapse text-[12px] text-white table-fixed rounded-md'>
                             <thead className='bg-[#334155] top-0 z-10'>
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <tr key={headerGroup.id}>
@@ -420,7 +420,7 @@ const Expenses: FC = () => {
                                             <th
                                                 key={header.id}
                                                 className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
-
+                                                style={{ width: `${header.column.getSize()}px` }}
 
                                             >
                                                 {header.isPlaceholder
@@ -450,8 +450,8 @@ const Expenses: FC = () => {
                                             {row.getVisibleCells().map((cell) => (
                                                 <td
                                                     key={cell.id}
-                                                    className="px-4 py-1 text-[#636363] text-[14px] w-[100px]"
-
+                                                    className="px-4  py-1.5 text-[#636363] text-[14px]"
+                                                    style={{ width: `${cell.column.getSize()}px` }} 
 
                                                 >
                                                     {flexRender(
