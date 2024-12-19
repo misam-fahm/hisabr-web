@@ -172,7 +172,7 @@ const DetailsPage: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="relative below-md:w-[20%]">
+                <div className="relative below-md:w-[35%]">
                   <Dropdown
                     className="relative below-md:w-full"
                     shadowclassName="shadow-sm"

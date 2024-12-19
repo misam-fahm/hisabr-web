@@ -326,7 +326,7 @@ const Home: FC = () => {
                   <div className="group relative">
                     <img
                       src="/images/tooltip.svg"
-                      className="max-w-[100%] max-h-[100%] mx-auto cursor-pointer"
+                      className="max-w-[62%] mt-1 max-h-[62%] mx-auto cursor-pointer"
                     />
 
                     {/* Tooltip Box */}
