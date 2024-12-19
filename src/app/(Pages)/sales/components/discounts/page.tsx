@@ -94,7 +94,7 @@ const DiscountTable: React.FC = () => {
 
       <div className="below-lg:hidden">
         <div className="flex flex-col">
-          <div className="w-full bg-white rounded-md p-3 mb-3">
+          <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
             <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
               <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                 <span>American Express</span>
@@ -116,7 +116,7 @@ const DiscountTable: React.FC = () => {
             </div>
           </div>
 
-          <div className="w-full bg-white rounded-md p-3 mb-3">
+          <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
             <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
               <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                 <span>American Express</span>
@@ -138,7 +138,7 @@ const DiscountTable: React.FC = () => {
             </div>
           </div>
 
-          <div className="w-full bg-white rounded-md p-3 mb-3">
+          <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
             <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
               <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                 <span>American Express</span>
@@ -160,7 +160,7 @@ const DiscountTable: React.FC = () => {
             </div>
           </div>
 
-          <div className="w-full bg-white rounded-md p-3 mb-3">
+          <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
             <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
               <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                 <span>American Express</span>

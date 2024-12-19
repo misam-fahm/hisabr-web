@@ -225,45 +225,50 @@ const SalesKPI: FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-row below-md:flex-col tablet:flex-col justify-between items-center rounded-lg bg-white mt-6 below-md:mt-3 below-md:mx-3 shadow-md px-10 ml-6 mr-6">
-          <div>
-            <DonutChart />
+        <div className="flex flex-col below-md:flex-col tablet:flex-col justify-between rounded-lg bg-white mt-6 below-md:mt-3 below-md:mx-3 shadow-md ml-6 mr-6">
+          <div className="w-full text-left font-bold ml-6 mt-3 text-[16px] text-[#334155] mb-4">
+            Expense Distribution
           </div>
-          <div className="overflow-x-auto w-full custom-scrollbar">
-            <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
-              <thead>
-                <tr>
-                  <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-left border border-solid border-blueGray-300 py-1 text-sm  border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium ">
-                    Label
-                  </th>
-                  <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-center border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium ">
-                    Amount
-                  </th>
-                  <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-center border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
-                    %
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {tableData.map((row, index) => (
-                  <tr key={index}>
-                    <td className="border-t-0 px-6 below-md:px-2 text-left border-l-0 border-r-0 text-xs whitespace-nowrap p-2 flex items-center text-[#404040] text-[13px]">
-                      <div
-                        className="w-3 h-3 rounded-full mr-2"
-                        style={{ backgroundColor: row.color }}
-                      ></div>
-                      {row.label}
-                    </td>
-                    <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-center border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-                      $ {row.amount}
-                    </td>
-                    <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-center border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-                      {row.per}
-                    </td>
+          <div className="flex flex-row items-center below-md:flex-col tablet:flex-col mx-3">
+            <div>
+              <DonutChart />
+            </div>
+            <div className="overflow-x-auto w-full custom-scrollbar">
+              <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
+                <thead>
+                  <tr>
+                    <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-left border border-solid border-blueGray-300 py-1 text-sm  border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium ">
+                      Label
+                    </th>
+                    <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-center border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium ">
+                      Amount
+                    </th>
+                    <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-center border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
+                      %
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {tableData.map((row, index) => (
+                    <tr key={index}>
+                      <td className="border-t-0 px-6 below-md:px-2 text-left border-l-0 border-r-0 text-xs whitespace-nowrap p-2 flex items-center text-[#404040] text-[13px]">
+                        <div
+                          className="w-3 h-3 rounded-full mr-2"
+                          style={{ backgroundColor: row.color }}
+                        ></div>
+                        {row.label}
+                      </td>
+                      <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-center border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+                        $ {row.amount}
+                      </td>
+                      <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-center border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+                        {row.per}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

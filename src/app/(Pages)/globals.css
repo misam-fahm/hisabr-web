@@ -29,11 +29,12 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #00000059;
+  background-color: #00000024;
   border-radius: 10px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
+
 /* sales/sales_view */
 .scrollbar-hide {
   -ms-overflow-style: none; /* For Internet Explorer and Edge */

@@ -352,14 +352,14 @@ const DetailsPage: React.FC = () => {
 
         <div className="below-lg:hidden">
           <div className="flex flex-col">
-            <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                 <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
                   <span>12-20-24</span>
                   <span>Gordon</span>
                 </div>
                 <div>
-                  <img src="/images/eye.svg" />
+                  <img src="/images/eye.svg" width={26} />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -378,14 +378,14 @@ const DetailsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                 <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
                   <span>12-20-24</span>
                   <span>Gordon</span>
                 </div>
                 <div>
-                  <img src="/images/eye.svg" />
+                  <img src="/images/eye.svg" width={26} />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -404,14 +404,14 @@ const DetailsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                 <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
                   <span>12-20-24</span>
                   <span>Gordon</span>
                 </div>
                 <div>
-                  <img src="/images/eye.svg" />
+                  <img src="/images/eye.svg" width={26} />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -430,14 +430,14 @@ const DetailsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                 <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
                   <span>12-20-24</span>
                   <span>Gordon</span>
                 </div>
                 <div>
-                  <img src="/images/eye.svg" />
+                  <img src="/images/eye.svg" width={26} />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">

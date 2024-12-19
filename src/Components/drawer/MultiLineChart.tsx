@@ -13,7 +13,7 @@ import {
 } from "recharts";
 
 // Data for the chart
-const data : any  = [
+const data: any = [
   { month: "Jan", "2021": 20000, "2022": 30000, "2023": 40000, "2024": 60000 },
   { month: "Feb", "2021": 1000, "2022": 2000, "2023": 45000, "2024": 6000 },
   { month: "Mar", "2021": 15000, "2022": 40000, "2023": 50000, "2024": 70000 },
@@ -119,7 +119,7 @@ const CustomLegend: React.FC = () => {
               padding: "5px",
             }}
           />
-          <span style={{ marginTop: "5px" }}>{year}</span>
+          <span style={{ marginTop: "5px", fontSize: "12px" }}>{year}</span>
         </div>
       ))}
     </div>
