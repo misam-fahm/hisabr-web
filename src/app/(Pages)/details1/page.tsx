@@ -365,7 +365,7 @@ const DetailsPage: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-row below-md:flex-col w-full mt-6 below-md:mt-3 mb-9">
+        <div className="flex flex-row below-md:flex-col w-full mt-6 below-md:mt-3 mb-6 below-md:mb-3">
           <div className="flex flex-col w-[70%] below-md:w-full">
             <div className="bg-white shadow-md rounded-md">
               <div>
@@ -457,7 +457,7 @@ const DetailsPage: React.FC = () => {
           </div>
         </div>
         {/**table */}
-        <div className="flex flex-row justify-between items-center mb-4 below-md:-mt-8">
+        <div className="flex flex-row justify-between items-center mb-6 below-md:mb-3">
           <div>
             <p className="text-[16px] font-bold text-[#334155] ml-3">
               Invoices

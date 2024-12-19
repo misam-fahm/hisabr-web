@@ -83,13 +83,13 @@ const DetailsPage: React.FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-80px)] overflow-auto"
+      className="max-h-[calc(100vh-80px)] tablet:max-h-[calc(100vh-10px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <img
         onClick={handleBack}
         src="/images/backIcon.svg"
-        className="fixed top-4 left-4 z-30 below-lg:hidden"
+        className="fixed top-4 left-4 z-30 below-lg:hidden tablet:hidden"
       />
       {/* <div className="below-md:flex below-md:justify-center ">
         <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
@@ -105,14 +105,14 @@ const DetailsPage: React.FC = () => {
             {/* Left Arrow  */}
             <img
               onClick={() => scrollTabs("left")}
-              className={`below-md:block hidden ${activeTab === tabs[0] ? " " : "px-2"} text-[#334155] text-xl ${activeTab === tabs[0] ? "opacity-0 pointer-events-none" : ""}`}
+              className={`below-md:block tablet:block hidden ${activeTab === tabs[0] ? " " : "px-2"} text-[#334155] text-xl ${activeTab === tabs[0] ? "opacity-0 pointer-events-none" : ""}`}
               src="/images/leftArrow.svg"
             />
 
             {/* Scrollable Tabs */}
             <div
               id="tabContainer"
-              className="flex-1 flex below-md:overflow-x-auto space-x-8 px-4 below-md:space-x-6 whitespace-nowrap scroll-smooth"
+              className="flex-1 flex below-md:overflow-x-auto tablet:overflow-x-auto space-x-8 px-0 below-md:space-x-6 tablet:space-x-6 whitespace-nowrap scroll-smooth"
             >
               {tabs.map((tab, index) => (
                 <button
@@ -120,7 +120,7 @@ const DetailsPage: React.FC = () => {
                   onClick={() => handleTabClick(tab)}
                   className={`relative py-2 px-[1px] outline-none font-medium ${
                     activeTab === tab
-                      ? "text-[#334155] text-[14px] after:content-[''] after:absolute after:w-full after:h-[2px] below-md:after:h-[3px] after:bg-[#334155] after:bottom-[-2px] after:left-0 after:rounded-full"
+                      ? "text-[#334155] text-[14px] after:content-[''] after:absolute after:w-full after:h-[2px] below-md:after:h-[3px] tablet:after:h-[3px] after:bg-[#334155] after:bottom-[-2px] after:left-0 after:rounded-full"
                       : "text-[#334155B2] text-[14px] hover:text-[#334155]"
                   }`}
                   style={{
@@ -136,16 +136,16 @@ const DetailsPage: React.FC = () => {
             {/* Right Arrow */}
             <img
               onClick={() => scrollTabs("right")}
-              className={`below-md:block hidden px-2 text-[#334155] text-xl ${activeTab === tabs[tabs.length - 1] ? "opacity-0 pointer-events-none" : ""}`}
+              className={`below-md:block tablet:block hidden px-2 text-[#334155] text-xl ${activeTab === tabs[tabs.length - 1] ? "opacity-0 pointer-events-none" : ""}`}
               src="/images/rightArrow.svg"
             />
           </div>
 
           {/* Back Button */}
-          <div className="below-md:hidden">
+          <div className="below-md:hidden tablet:hidden">
             <p
               onClick={handleBack}
-              className="cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
+              className=" cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
             >
               Back
             </p>
