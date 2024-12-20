@@ -106,9 +106,10 @@ const Page = () => {
   };
 
   return (
-    <main className=" p-1">
+    <main  className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-2 overflow-auto"
+    style={{ scrollbarWidth: "thin" }}>
       {/* Mobile View */}
-      <div className="flex justify-center items-center my-16 p-4 md:hidden">
+      <div className="flex justify-center items-center p-3 md:hidden">
         <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-xl">
           <p className="font-medium text-[#5E6366]">Add Configuration:</p>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -257,16 +258,16 @@ const Page = () => {
               )}
             </div>
 
-            <div className="flex justify-end gap-4">
-              <button
+            <div className="flex justify-start">
+              {/* <button
                 type="button"
                 className="w-full sm:w-auto bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md"
               >
                 Cancel
-              </button>
+              </button> */}
               <button
                 type="submit"
-                className="w-full sm:w-auto bg-[#1AA47D] hover:bg-[#168A68] text-white font-medium py-2 px-4 rounded-md"
+                className="sm:w-auto bg-[#1AA47D] hover:bg-[#168A68] text-white font-medium py-2 px-10 rounded-md"
               >
                 Save
               </button>

@@ -15,6 +15,7 @@ import AddNewItems from "@/Components/Setup/AddNewItems";
 import AddCategories from "@/Components/Setup/AddCategories";
 import Pagination from "@/Components/ui/Common/Pagination";
 import DeleteItems from "@/Components/Setup/DeleteItems";
+import EditItem from "@/Components/Setup/EditItem";
 
 interface TableRow {
   name: string;
@@ -171,15 +172,14 @@ const columns: ColumnDef<TableRow>[] = [
     id: "edit",
     header: () => <div className="text-center">Edit</div>,
     cell: () => (
-      <div className="flex justyify-center cursor-pointer h-5 w-5">
-        <img src="/images/edit-pencil.svg" alt="" />
-      </div>
+      <span className="flex justify-center">
+        <EditItem />
+      </span>
     ),
 
     size: 50,
-  },  
+  },
   {
-    
     id: "delete",
     header: () => <div className="text-center">Delete</div>,
     cell: () => (
@@ -221,154 +221,145 @@ const Page: FC = () => {
       className="max-h-[calc(100vh-60px)] px-6 below-md:px-3 below-md:py-2 overflow-auto "
       style={{ scrollbarWidth: "thin" }}
     >
-     
-       
-          <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
+      <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
+        <AddNewItems />
+        <AddCategories />
+      </div>
+
+      <div className="overflow-hidden max-w-full ">
+        {/* Mobile view */}
+        <div
+          className="block md:hidden"
+          style={{
+            maxHeight: "calc(100vh - 80px)",
+            overflowY: "auto",
+            WebkitOverflowScrolling: "touch", // Enables smooth scrolling on mobile
+            scrollbarWidth: "none", // Hide scrollbar
+          }}
+        >
+          {table.getRowModel().rows.map((row) => (
+            <div
+              key={row.id}
+              className={`border-b border-gray-300 p-3 bg-white rounded-lg mb-2 shadow-sm`}
+            >
+              <div className="flex justify-between items-center">
+                {/* Name */}
+                <span className="font-medium text-[16px] text-[#334155]">
+                  {row.getValue("name")}
+                </span>
+                <div className="flex items-center">
+                  <>
+                    <EditItem />
+                  </>
+                  {/* Delete */}
+                  <>
+                    <DeleteItems />
+                  </>
+                </div>
+              </div>
+
+              {/* Border */}
+              <div className="h-[1px] bg-gray-300 my-2"></div>
+
+              {/* Category */}
+              <div className="text-[14px]  flex justify-between">
+                <span className=" text-[#636363]">Category</span>{" "}
+                {row.getValue("category")}
+              </div>
+
+              {/* Price */}
+              <div className="text-[14px]  mt-1 flex justify-between">
+                <span className=" text-[#636363]">Price</span>{" "}
+                {row.getValue("price")}
+              </div>
+              {/* Quantity */}
+              <div className="text-[14px]  mt-1 flex justify-between">
+                <span className=" text-[#636363]">Quantity</span>{" "}
+                {row.getValue("quantity")}
+              </div>
+              {/* Weight */}
+              <div className="text-[14px]  mt-1 flex justify-between">
+                <span className=" text-[#636363]">Weight</span>{" "}
+                {row.getValue("weight")}
+              </div>
+            </div>
+          ))}
+          {/* Add NewItems bottom */}
+          <div className=" fixed bottom-[20px] below-lg:hidden right-3">
             <AddNewItems />
-            <AddCategories />
-          </div>
-       
-
-        <div className="overflow-hidden max-w-full ">
-          {/* Mobile view */}
-          <div
-            className="block md:hidden"
-            style={{
-              maxHeight: "calc(100vh - 80px)",
-              overflowY: "auto",
-              WebkitOverflowScrolling: "touch", // Enables smooth scrolling on mobile
-              scrollbarWidth: "none", // Hide scrollbar
-            }}
-          >
-            {table.getRowModel().rows.map((row) => (
-              <div
-                key={row.id}
-                className={`border-b border-gray-300 p-3 bg-white rounded-lg mb-2 shadow-sm`}
-              >
-                <div className="flex justify-between items-center">
-                  {/* Name */}
-                  <span className="font-medium text-[16px] text-[#334155]">
-                    {row.getValue("name")}
-                  </span>
-                  <div className="flex items-center">
-                    {/* Edit */}
-                    <Image
-                      src="/images/edit1.svg"
-                      alt="edit"
-                      width={16}
-                      height={16}
-                      className="cursor-pointer"
-                    />
-                    {/* Delete */}
-                    <>
-                      <DeleteItems />
-                    </>
-                  </div>
-                </div>
-
-                {/* Border */}
-                <div className="h-[1px] bg-gray-300 my-2"></div>
-
-                {/* Category */}
-                <div className="text-[14px]  flex justify-between">
-                  <span className=" text-[#636363]">Category</span>{" "}
-                  {row.getValue("category")}
-                </div>
-
-                {/* Price */}
-                <div className="text-[14px]  mt-1 flex justify-between">
-                  <span className=" text-[#636363]">Price</span>{" "}
-                  {row.getValue("price")}
-                </div>
-                {/* Quantity */}
-                <div className="text-[14px]  mt-1 flex justify-between">
-                  <span className=" text-[#636363]">Quantity</span>{" "}
-                  {row.getValue("quantity")}
-                </div>
-                {/* Weight */}
-                <div className="text-[14px]  mt-1 flex justify-between">
-                  <span className=" text-[#636363]">Weight</span>{" "}
-                  {row.getValue("weight")}
-                </div>
-              </div>
-            ))}
-            {/* Add NewItems bottom */}
-            <div className=" fixed bottom-[20px] below-lg:hidden right-3">
-              <AddNewItems />
-            </div>
-          </div>
-
-          {/* Desktop View */}
-          <div className="overflow-x-auto shadow-md border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block">
-            <div className="overflow-hidden max-w-full">
-              <table className="w-full  table-fixed">
-                <thead className="bg-[#334155] sticky top-0 z-10">
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => (
-                        <th
-                          key={header.id}
-                          className="text-left px-4 py-2.5 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
-                          style={{ width: `${header.column.getSize()}px` }} // Applying dynamic width
-                        >
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                        </th>
-                      ))}
-                    </tr>
-                  ))}
-                </thead>
-              </table>
-
-              <div
-                className="w-full overflow-y-auto scrollbar-thin flex-grow"
-                style={{ maxHeight: "calc(100vh - 270px)" }}
-              >
-                <table className="w-full table-fixed">
-                  <tbody>
-                    {table.getRowModel().rows.map((row) => (
-                      <tr
-                        key={row.id}
-                        className={
-                          row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                        }
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <td
-                            key={cell.id}
-                            className="px-4 py-1.5 text-[#636363] text-[14px]"
-                            style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
-                          >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
           </div>
         </div>
 
-        <div className="mt-4   below-md:hidden">
-          {/* Page Range Display */}
-          {/* <div>
+        {/* Desktop View */}
+        <div className="overflow-x-auto shadow-md border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block">
+          <div className="overflow-hidden max-w-full">
+            <table className="w-full  table-fixed">
+              <thead className="bg-[#334155] sticky top-0 z-10">
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        className="text-left px-4 py-2.5 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+                        style={{ width: `${header.column.getSize()}px` }} // Applying dynamic width
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+            </table>
+
+            <div
+              className="w-full overflow-y-auto scrollbar-thin flex-grow"
+              style={{ maxHeight: "calc(100vh - 270px)" }}
+            >
+              <table className="w-full table-fixed">
+                <tbody>
+                  {table.getRowModel().rows.map((row) => (
+                    <tr
+                      key={row.id}
+                      className={
+                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                      }
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          key={cell.id}
+                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4   below-md:hidden">
+        {/* Page Range Display */}
+        {/* <div>
             <span className="text-[#8899A8] text-[12px] font-medium ml-3">
               {startItem} - {endItem} of {totalItems}
             </span>
           </div> */}
 
-          <Pagination table={table} />
-        </div>
-     
+        <Pagination table={table} />
+      </div>
     </main>
   );
 };

@@ -193,43 +193,72 @@ const Sales: FC = () => {
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "date",
-      header: "Date",
+      header: () => <div className="text-left">Date</div>,
+      cell: (info) => <span>{info.getValue() as string}</span>,
+      size: 160,
     },
     {
       accessorKey: "store",
-      header: "Store ",
+      header: () => <div className="text-left">Store</div>,
+      cell: (info) => <span>{info.getValue() as string}</span>,
+      size: 160,
     },
     {
       accessorKey: "orders",
-      header: "Orders",
+      header: () => <div className="text-right mr-16">Orders</div>,
+      cell: (info) => (
+        <div className="text-right mr-14">{info.getValue() as number}</div>
+      ),
+      size: 120,
     },
     {
       accessorKey: "quantity",
-      header: "Quantity",
+      header: () => <div className="text-right mr-16">Quantity</div>,
+      cell: (info) => (
+        <div className="text-right mr-14">{info.getValue() as number}</div>
+      ),
+      size: 120,
     },
     {
       accessorKey: "amount",
-      header: "Amount",
+      header: () => <div className="text-right mr-16">Amount</div>,
+      cell: (info) => (
+        <div className="text-right mr-14">{info.getValue() as number}</div>
+      ),
+      size: 120,
     },
     {
       accessorKey: "net",
-      header: "Net",
+      header: () => <div className="text-right mr-16">Net</div>,
+      cell: (info) => (
+        <div className="text-right mr-14">{info.getValue() as number}</div>
+      ),
+      size: 120,
     },
     {
       accessorKey: "average",
-      header: "Average",
+      header: () => <div className="text-right mr-16">Average</div>,
+      cell: (info) => (
+        <div className="text-right mr-14">{info.getValue() as number}</div>
+      ),
+      size: 120,
     },
     {
       id: "view",
-      header: "View",
+      header: () => <div className="text-center">View</div>,
       cell: () => (
-        <button
-          onClick={handleImageClick}
-          className="bg-[#FFFFFF] p-[7px] rounded-full shadow-[inset_-2px_-2px_2px_#F3FFF3,inset_2px_2px_3px_#E2F7E380]"
-        >
-          <Images src="/images/eye.svg" alt="Eye Icon" width={20} height={20} />
-        </button>
+        <span className="flex justify-center">
+          <button onClick={handleImageClick}>
+            <Images
+              src="/images/View_duotone.svg"
+              alt="Eye Icon"
+              width={20}
+              height={20}
+            />
+          </button>
+        </span>
       ),
+      size: 60,
     },
   ];
 
@@ -256,7 +285,7 @@ const Sales: FC = () => {
     },
     initialState: {
       pagination: {
-        pageSize: 5,
+        pageSize: 10,
         pageIndex: 0,
       },
     },
@@ -296,11 +325,6 @@ const Sales: FC = () => {
       className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-1px)] tablet:max-h-[calc(100vh-1px)] below-md:mb-10 tablet:mb-10 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      {/* <div className="below-md:flex below-md:justify-center ">
-        <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
-          Sales
-        </p>
-      </div> */}
       <div className="mx-6 mt-6 below-md:mx-3 below-md:mt-3 tablet:mt-4">
         <div className="flex flex-row below-md:flex-col pb-6 sticky  below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4  ">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
@@ -396,17 +420,19 @@ const Sales: FC = () => {
 
         {/** Table */}
 
-        <div className="below-md:hidden tablet:hidden">
-          {/* Table */}
-          <div className="overflow-x-auto shadow-md rounded-lg">
-            <table className="w-full border-collapse border border-gray-200">
-              <thead className="bg-[#334155]">
+        {/* Table */}
+        {/* Desktop View */}
+        <div className="overflow-x-auto border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block shadow-md">
+          <div className="overflow-hidden max-w-full">
+            <table className="w-full border-collapse border-gray-200 table-fixed shadow-lg">
+              <thead className="bg-[#334155] sticky top-0 z-10">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className="text-left px-4 py-3 below-md:px-10 text-[#FFFFFF] font-medium text-[15px]"
+                        className="text-left px-4 py-2.5 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+                        style={{ width: `${header.column.getSize()}px` }} // Applying dynamic width
                       >
                         {header.isPlaceholder
                           ? null
@@ -419,34 +445,43 @@ const Sales: FC = () => {
                   </tr>
                 ))}
               </thead>
-              <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={
-                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                    }
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="px-4 py-1 below-md:px-10 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
             </table>
-          </div>
 
-          {/* Pagination */}
-          <Pagination table={table} />
+            <div
+              className="w-full overflow-y-auto scrollbar-thin flex-grow"
+              style={{ maxHeight: "calc(100vh - 270px)" }}
+            >
+              <table className="w-full border-collapse border-gray-200 table-fixed">
+                <tbody>
+                  {table.getRowModel().rows.map((row) => (
+                    <tr
+                      key={row.id}
+                      className={
+                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                      }
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          key={cell.id}
+                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
+
+        {/* Pagination */}
+        <Pagination table={table} />
 
         <div className="below-lg:hidden">
           <div className="flex flex-col">
