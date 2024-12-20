@@ -324,7 +324,7 @@ const Sales: FC = () => {
                   value={globalFilter ?? ""}
                   onChange={(e) => setGlobalFilter(e.target.value)}
                   placeholder="Search"
-                  className=" py-[10px] px-[8] h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                  className=" py-[10px] pl-[8] h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
                 <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
                   <svg
@@ -347,7 +347,7 @@ const Sales: FC = () => {
               <div className="tablet:w-full below-md:w-full relative below-lg:hidden">
                 <input
                   placeholder="Search"
-                  className=" py-[10px] px-[8] h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                  className=" py-[10px] pl-[8] h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
                 <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
                   <svg
@@ -450,13 +450,17 @@ const Sales: FC = () => {
 
         <div className="below-lg:hidden">
           <div className="flex flex-col">
-            <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                 <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                   <span>12-20-24</span>
                 </div>
                 <div>
-                  <img onClick={handleImageClick} src="/images/eye.svg" />
+                  <img
+                    onClick={handleImageClick}
+                    src="/images/eye.svg"
+                    width={26}
+                  />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -487,13 +491,17 @@ const Sales: FC = () => {
               </div>
             </div>
 
-            <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                 <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                   <span>12-20-24</span>
                 </div>
                 <div>
-                  <img onClick={handleImageClick} src="/images/eye.svg" />
+                  <img
+                    onClick={handleImageClick}
+                    src="/images/eye.svg"
+                    width={26}
+                  />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -524,13 +532,17 @@ const Sales: FC = () => {
               </div>
             </div>
 
-            <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                 <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                   <span>12-20-24</span>
                 </div>
                 <div>
-                  <img onClick={handleImageClick} src="/images/eye.svg" />
+                  <img
+                    onClick={handleImageClick}
+                    src="/images/eye.svg"
+                    width={26}
+                  />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -561,13 +573,17 @@ const Sales: FC = () => {
               </div>
             </div>
 
-            <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                 <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                   <span>12-20-24</span>
                 </div>
                 <div>
-                  <img onClick={handleImageClick} src="/images/eye.svg" />
+                  <img
+                    onClick={handleImageClick}
+                    src="/images/eye.svg"
+                    width={26}
+                  />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
