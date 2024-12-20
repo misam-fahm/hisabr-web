@@ -185,17 +185,20 @@ const DetailsPage: React.FC = () => {
         </p>
       </div> */}
 
-      <div className="flex flex-row justify-between items-center mt-6 below-md:mt-2 below-md:mx-3 mb-4 mx-6">
-        <div>
-          <p className="below-md:hidden text-[16px] font-bold text-[#334155] ml-3 below-md:ml-0">
-            Tender
-          </p>
-        </div>
+      <div className="flex flex-row gap-3 justify-end items-center mt-6 below-md:mt-2 below-md:mx-3 mb-6 mx-6">
         <div>
           <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold ">
             <img src="/images/addIcon.svg" alt="add Icon" className="mr-2" />
             Add Tender
           </button>
+        </div>
+        <div>
+          <p
+            onClick={handleBack}
+            className="below-md:hidden cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
+          >
+            Back
+          </p>
         </div>
       </div>
 
@@ -256,14 +259,14 @@ const DetailsPage: React.FC = () => {
 
         <div className="below-lg:hidden">
           <div className="flex flex-col">
-            <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                 <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                   <span>VISA</span>
                 </div>
-                <div className="flex gap-4">
-                  <img src="/images/pencil.svg" />
-                  <img src="/images/delete1.svg" />
+                <div className="flex gap-7">
+                  <img src="/images/pencil.svg" className="w-4 h-4" />
+                  <img src="/images/delete1.svg" className="w-4 h-4" />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -278,14 +281,14 @@ const DetailsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                 <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                   <span>VISA</span>
                 </div>
-                <div className="flex gap-4">
-                  <img src="/images/pencil.svg" />
-                  <img src="/images/delete1.svg" />
+                <div className="flex gap-7">
+                  <img src="/images/pencil.svg" className="w-4 h-4" />
+                  <img src="/images/delete1.svg" className="w-4 h-4" />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -300,14 +303,14 @@ const DetailsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                 <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                   <span>VISA</span>
                 </div>
-                <div className="flex gap-4">
-                  <img src="/images/pencil.svg" />
-                  <img src="/images/delete1.svg" />
+                <div className="flex gap-7">
+                  <img src="/images/pencil.svg" className="w-4 h-4" />
+                  <img src="/images/delete1.svg" className="w-4 h-4" />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -322,14 +325,14 @@ const DetailsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                 <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                   <span>VISA</span>
                 </div>
-                <div className="flex gap-4">
-                  <img src="/images/pencil.svg" />
-                  <img src="/images/delete1.svg" />
+                <div className="flex gap-7">
+                  <img src="/images/pencil.svg" className="w-4 h-4" />
+                  <img src="/images/delete1.svg" className="w-4 h-4" />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -344,14 +347,14 @@ const DetailsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="w-full bg-white rounded-md p-3 mb-3">
+            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                 <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                   <span>VISA</span>
                 </div>
-                <div className="flex gap-4">
-                  <img src="/images/pencil.svg" />
-                  <img src="/images/delete1.svg" />
+                <div className="flex gap-7">
+                  <img src="/images/pencil.svg" className="w-4 h-4" />
+                  <img src="/images/delete1.svg" className="w-4 h-4" />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">

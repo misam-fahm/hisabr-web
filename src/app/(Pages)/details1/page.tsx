@@ -365,7 +365,7 @@ const DetailsPage: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-row below-md:flex-col w-full mt-6 below-md:mt-3 mb-9">
+        <div className="flex flex-row below-md:flex-col w-full mt-6 below-md:mt-3 mb-6 below-md:mb-3">
           <div className="flex flex-col w-[70%] below-md:w-full">
             <div className="bg-white shadow-md rounded-md">
               <div>
@@ -457,7 +457,7 @@ const DetailsPage: React.FC = () => {
           </div>
         </div>
         {/**table */}
-        <div className="flex flex-row justify-between items-center mb-4 below-md:-mt-8">
+        <div className="flex flex-row justify-between  items-end mb-6 below-md:mb-3">
           <div>
             <p className="text-[16px] font-bold text-[#334155] ml-3">
               Invoices
@@ -531,14 +531,14 @@ const DetailsPage: React.FC = () => {
 
           <div className="below-lg:hidden">
             <div className="flex flex-col">
-              <div className="w-full bg-white rounded-md p-3 mb-3">
+              <div className="border-[#E4E4EF] border w-full bg-white rounded-md p-3 mb-3">
                 <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                   <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
                     <span>12-20-24</span>
                     <span>Gordon</span>
                   </div>
                   <div>
-                    <img src="/images/eye.svg" />
+                    <img src="/images/eye.svg" width={26} />
                   </div>
                 </div>
                 <div className="space-y-3 mb-2 px-2">
@@ -557,14 +557,14 @@ const DetailsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="w-full bg-white rounded-md p-3 mb-3">
+              <div className="border-[#E4E4EF] border w-full bg-white rounded-md p-3 mb-3">
                 <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                   <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
                     <span>12-20-24</span>
                     <span>Gordon</span>
                   </div>
                   <div>
-                    <img src="/images/eye.svg" />
+                    <img src="/images/eye.svg" width={26} />
                   </div>
                 </div>
                 <div className="space-y-3 mb-2 px-2">
@@ -583,14 +583,14 @@ const DetailsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="w-full bg-white rounded-md p-3 mb-3">
+              <div className="border-[#E4E4EF] border w-full bg-white rounded-md p-3 mb-3">
                 <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                   <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
                     <span>12-20-24</span>
                     <span>Gordon</span>
                   </div>
                   <div>
-                    <img src="/images/eye.svg" />
+                    <img src="/images/eye.svg" width={26} />
                   </div>
                 </div>
                 <div className="space-y-3 mb-2 px-2">
@@ -609,14 +609,14 @@ const DetailsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="w-full bg-white rounded-md p-3 mb-3">
+              <div className="border-[#E4E4EF] border w-full bg-white rounded-md p-3 mb-3">
                 <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
                   <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
                     <span>12-20-24</span>
                     <span>Gordon</span>
                   </div>
                   <div>
-                    <img src="/images/eye.svg" />
+                    <img src="/images/eye.svg" width={26} />
                   </div>
                 </div>
                 <div className="space-y-3 mb-2 px-2">
