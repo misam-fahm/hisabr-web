@@ -119,14 +119,14 @@ const Navbar: React.FC = () => {
 
   return (
     <main className="w-full sticky z-30 bg-[#ffff] h-[50px] flex justify-center items-center shadow ">
-      <div className="flex justify-between below-md:justify-center items-center  w-full">
-        <div className=" flex justify-center items-center pl-8 below-md:pl-0">
+      <div className="flex justify-between below-md:justify-center  items-center  w-full">
+        <div className=" flex justify-center items-center pl-8 below-md:pl-0 ">
           {" "}
           <text className="text-[18px] font-bold text-defaultblack ">
             {title}
           </text>
         </div>
-        <div className="flex justify-end  items-center  below-md:absolute  below-md:right-0">
+        <div className="flex justify-end  items-center  below-md:absolute  below-md:right-0 ">
           <Images
             className="w-10 h-10 mr-4 rounded-full"
             src="/images/admin.png"
