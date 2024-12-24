@@ -12,6 +12,7 @@ import {
 } from "@tanstack/react-table";
 
 import AddStore from "@/Components/Setup/AddStore";
+import EditStore from "@/Components/Setup/EditStore";
 
 interface TableRow {
   store: string;
@@ -158,7 +159,7 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     accessorKey: "royalty",
-    header: () => <div className="text-left">Royalty</div>,
+    header: () => <div className="text-left">Royalty</div>, 
     cell: (info) => <div className="ml-2">{info.getValue() as number}</div>,
     size: 80,
   },
@@ -166,9 +167,9 @@ const columns: ColumnDef<TableRow>[] = [
     id: "edit",
     header: () => <div className="text-center">Edit</div>,
     cell: () => (
-      <div className="flex justify-center">
-        <img src="/images/edit-pencil.svg" alt=""  className="w-5 h-5"/>
-      </div>
+      <span className="flex justify-center">
+      <EditStore/>
+      </span>
     ),
     size: 70,
   },

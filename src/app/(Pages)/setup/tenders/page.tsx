@@ -12,6 +12,7 @@ import {
 } from "@tanstack/react-table";
 import AddTender from "@/Components/Setup/AddTender";
 import DeleteTenders from "@/Components/Setup/DeleteTenders";
+import EditTenders from "@/Components/Setup/EditTenders";
 
 interface TableRow {
   percent: string;
@@ -127,9 +128,9 @@ const columns: ColumnDef<TableRow>[] = [
     id: "edit",
     header: () => <div className="text-center  ">Edit</div>,
     cell: () => (
-      <div className="ml-10">
-        <img src="/images/edit-pencil.svg" alt=""  className="h-5 w-5"/>
-      </div>
+      <span className="flex justify-center">
+        <EditTenders />
+      </span>
     ),
     size: 50,
   },
@@ -200,13 +201,9 @@ const Page: FC = () => {
               </span>
               <div className="flex items-center">
                 {/* Edit */}
-                <Images
-                  src="/images/edit1.svg"
-                  alt="edit"
-                  width={16}
-                  height={16}
-                  className="cursor-pointer"
-                />
+                <>
+                  <EditTenders />
+                </>
                 {/* Delete */}
                 <>
                   <DeleteTenders />
