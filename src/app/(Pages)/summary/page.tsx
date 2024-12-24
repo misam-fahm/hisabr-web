@@ -131,13 +131,12 @@ const summary: FC = () => {
       </div> */}
 
       <div>
-        <div className="z-[11] pb-6 bg-[#f7f8f9] sticky  pt-6 pl-6 pr-6 below-md:px-3">
+        <div className="z-[11] pb-6 below-md:pb-3 bg-[#f7f8f9] sticky pt-6 below-md:pt-3 pl-6 pr-6 below-md:px-3">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
             {/* First Dropdown */}
 
             <Dropdown
               options={options}
-              widthchange=" tablet:w-full"
               selectedOption={selectedOption}
               onSelect={handleSelect}
               isOpen={isOpen}
@@ -222,7 +221,7 @@ const summary: FC = () => {
                   isOpen={isOpen2}
                   toggleOpen={toggleDropdown2}
                   className="below-md:w-full"
-                  widthchange="below-lg:w-[130px]"
+                  widthchange="below-lg:w-[130px] tablet:w-[130px]"
                 />
               </div>
             </div>
@@ -257,7 +256,7 @@ const summary: FC = () => {
                         onSelect={handleSelect4}
                         isOpen={isOpen4}
                         toggleOpen={toggleDropdown4}
-                        widthchange="below-lg:w-[130px]"
+                        widthchange="below-lg:w-[130px] tablet:w-[130px]"
                       />
                     </div>
 
@@ -271,7 +270,7 @@ const summary: FC = () => {
                         onSelect={handleSelect3}
                         isOpen={isOpen3}
                         toggleOpen={toggleDropdown3}
-                        widthchange="below-lg:w-[130px]"
+                        widthchange="below-lg:w-[130px] tablet:w-[130px]"
                       />
                     </div>
                   </div>
@@ -302,7 +301,7 @@ const summary: FC = () => {
                         onSelect={handleSelect6}
                         isOpen={isOpen6}
                         toggleOpen={toggleDropdown6}
-                        widthchange="below-lg:w-[130px]"
+                        widthchange="below-lg:w-[130px] tablet:w-[130px]"
                       />
                     </div>
 
@@ -316,7 +315,7 @@ const summary: FC = () => {
                         onSelect={handleSelect5}
                         isOpen={isOpen5}
                         toggleOpen={toggleDropdown5}
-                        widthchange="below-lg:w-[130px]"
+                        widthchange="below-lg:w-[130px] tablet:w-[130px]"
                       />
                     </div>
                   </div>
@@ -359,7 +358,7 @@ const summary: FC = () => {
                       onSelect={handleSelect7}
                       isOpen={isOpen7}
                       toggleOpen={toggleDropdown7}
-                      widthchange="below-lg:w-[130px]"
+                      widthchange="below-lg:w-[130px] tablet:w-[130px]"
                     />
                   </div>
                 </div>
@@ -370,7 +369,7 @@ const summary: FC = () => {
                 </div>
 
                 <div>
-                  <div className="w-full max-w-sm mx-auto px-6 below-md:pb-12 tablet:pb-12">
+                  <div className="w-full px-6 below-md:pb-12 tablet:pb-12">
                     <ul>
                       {data.map((item, index) => (
                         <li
@@ -381,7 +380,7 @@ const summary: FC = () => {
                           <div className="flex items-center">
                             <span
                               className="inline-block w-3 h-3 rounded-full mr-3"
-                              style={{ backgroundColor: item.color }} // Apply dynamic hex color
+                              style={{ backgroundColor: item.color }}
                             ></span>
                             <span className="text-[#000000B2] text-[12px]">
                               {item.label}

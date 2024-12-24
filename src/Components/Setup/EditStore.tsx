@@ -5,7 +5,7 @@ import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-const AddStore = () => {
+const EditStore = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     storeName: "",
@@ -117,26 +117,13 @@ const AddStore = () => {
 
   return (
     <>
-      <div className="hidden below-md:block   ">
-        <button
-          onClick={openModal}
-          className="hover:gap-2 text-white w-[80px]  h-[80px] rounded-md  items-center justify-center overflow-hidden"
-        >
+   <div>
+        <Button onClick={openModal}>
           <img
-            src="/images/addButton.svg"
-            alt="Add Button"
-            className="transition-opacity duration-10"
+            src="/images/edit-pencil.svg"
+            alt="Add icon"
+            className="flex justify-center items-center w-5 h-5"
           />
-        </button>
-      </div>
-
-      <div className=" below-md:hidden">
-        <Button
-          onClick={openModal}
-          className="flex items-center justify-center font-semibold text-[14px] bg-[#1AA47D] w-[140px] below-md:w-[150px] hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md gap-x-2"
-        >
-          <img src="/images/plus1.svg" alt="Add icon" className="w-3 h-3  " />
-          Add Store
         </Button>
       </div>
       {/* Dialog for the modal */}
@@ -154,7 +141,7 @@ const AddStore = () => {
                 as="h3"
                 className="font-medium border-none text-gray-900"
               >
-                Add Store
+                Edit Store
               </DialogTitle>
               <img
                 onClick={closeModal}
@@ -263,7 +250,7 @@ const AddStore = () => {
                   type="submit"
                   className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
                 >
-                  Add Item
+                  Save
                 </button>
               </div>
             </form>
@@ -274,4 +261,4 @@ const AddStore = () => {
   );
 };
 
-export default AddStore;
+export default EditStore;

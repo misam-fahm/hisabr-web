@@ -167,7 +167,7 @@ const Home: FC = () => {
         </p>
       </div> */}
 
-      <div className="flex flex-row items-center gap-3 pt-6 sticky  bg-[#f7f8f9] px-6 below-md:px-3">
+      <div className="flex flex-row items-center gap-3 pt-6 below-md:pt-3 sticky  bg-[#f7f8f9] px-6 below-md:px-3">
         {/* Dropdowns grouped together */}
         <div className="flex flex-row gap-3 w-full below-md:flex-col ">
           {/* Dropdown 1 */}
@@ -192,7 +192,7 @@ const Home: FC = () => {
         </div>
 
         {/* Tooltip positioned at the end of the screen */}
-        <div className="relative ml-auto below-md:hidden">
+        <div className="relative ml-auto below-md:hidden tablet:hidden">
           <div className="group relative">
             <img
               src="/images/tooltip.svg"
@@ -226,7 +226,7 @@ const Home: FC = () => {
       </div>
 
       <div className=" px-6 below-md:px-3 pt-3 below-md:pt-0">
-        <div className="flex flex-row gap-7 below-md:gap-0 w-full below-md:flex-col tablet:flex-col tablet:gap-0 items-stretch">
+        <div className="flex flex-row gap-7 below-md:gap-0 w-full below-md:flex-col tablet:flex-col tablet:gap-3 items-stretch">
           <div className=" bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full tablet:w-full  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
@@ -322,11 +322,11 @@ const Home: FC = () => {
                 <p className="text-[#334155]  text-[16px] font-bold">
                   Gross Revenue
                 </p>
-                <div className="relative below-lg:hidden tablet:hidden z-0">
+                <div className="relative below-lg:hidden z-0">
                   <div className="group relative">
                     <img
                       src="/images/tooltip.svg"
-                      className="max-w-[62%] mt-1 max-h-[62%] mx-auto cursor-pointer"
+                      className="max-w-[65%] mt-1 max-h-[62%] mx-auto cursor-pointer"
                     />
 
                     {/* Tooltip Box */}

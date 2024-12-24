@@ -40,8 +40,8 @@ const DonutChart: React.FC = () => {
     cutout: "70%", // Donut hole size
     layout: {
       padding: {
-        left: 150,
-        right: 130,
+        left: 105,
+        right: 85,
       },
     },
   };
@@ -173,7 +173,7 @@ const DonutChart: React.FC = () => {
   };
 
   return (
-    <div className="w-[90vh] h-[90vh] below-md:w-[55vh] below-md:h-[55vh] tablet:w-[55vh] tablet:h-[55vh]">
+    <div className="w-[90vh] h-[80vh] below-md:w-[43vh] below-md:h-[43vh] tablet:w-[55vh] tablet:h-[55vh]">
       <Doughnut data={data} options={options} plugins={[customArrowsPlugin]} />
     </div>
   );
