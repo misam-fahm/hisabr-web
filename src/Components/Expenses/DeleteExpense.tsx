@@ -105,10 +105,6 @@ const DeleteExpense = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
 
 
 
@@ -127,20 +123,12 @@ const DeleteExpense = () => {
       <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[410px] h-auto below-md:w-[330px] below-md:h-[213px] px-6 below-md:px-3 below-md:py-8 py-6 bg-white rounded-lg shadow-lg flex flex-col">
-            {/* <div className="flex justify-end">
-              <img
-                onClick={closeModal}
-                src="/images/cancelicon.svg"
-                alt=""
-                className="cursor-pointer"
-              />
-            </div> */}
+          <DialogPanel className="w-[410px] h-auto below-md:w-[310px] below-md:h-[213px] px-6 below-md:px-3 below-md:py-8 py-6 bg-white rounded-lg shadow-lg flex flex-col">
             <div>
-              <DialogTitle as="h3" className=" flex justify-center text-[20px]  font-bold leading-4 text-[#5E6366] ">
+              <DialogTitle as="h3" className=" flex justify-center below-md:text-[18px] text-[20px]  font-bold leading-4 text-[#5E6366] ">
                 Delete Item
               </DialogTitle>
-              <div className="flex flex-col mt-4 justify-center items-center text-[#5E6366] font-medium text-[15px]">
+              <div className="flex flex-col mt-4 justify-center items-center text-[#5E6366] font-medium below-md:text-[12px] text-[15px]">
                 <p>Are you sure you want to delete this item?</p>
                 <p>This action cannot be undone.</p>
               </div>
@@ -148,17 +136,17 @@ const DeleteExpense = () => {
             <div className="mt-4">
               <form onSubmit={handleSubmit}>
                 {/* Submit Button */}
-                <div className="flex mt-7 justify-between ">
+                <div className="flex mt-7 justify-between below-md:mx-3">
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="mr-4 px-4 py-2 h-[37px] w-[165px] bg-[#E4E4E4] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
+                    className="mr-2 px-4 py-2 h-[37px] below-md:w-[120px] w-[165px] bg-[#E4E4E4] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="font-semibold text-[14px]  bg-[#CD6D6D] w-[165px] px-6  h-[37px] text-[#FFFFFF] rounded-md"
+                    className="font-semibold text-[14px] below-md:w-[120px]  bg-[#CD6D6D] w-[165px] px-6  h-[37px] text-[#FFFFFF] rounded-md"
                   >
                     Delete
                   </button>

@@ -5,6 +5,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import DateRange from "@/Components/drawer/DateRangePicker";
 import { useRouter } from "next/navigation";
+// import Tooltip from 'react-tooltip'
+
 
 // import Image from "next/image"
 import {
@@ -46,42 +48,42 @@ const columns: ColumnDef<TableRow>[] = [
     accessorKey: "date",
     header: () => <div className='text-left'>Date</div>,
     cell: (info) => <span>{info.getValue() as string}</span>,
-    size:60,
-   
+    size: 60,
+
   },
   {
     accessorKey: "store",
     header: () => <div className='text-left'>Store</div>,
     cell: (info) => <span>{info.getValue() as number}</span>,
-    size:30,
+    size: 30,
   },
   {
     accessorKey: "quantity",
     header: () => <div className='text-right'>Quantity</div>,
     cell: (info) => <span className='flex justify-end '>{info.getValue() as string}</span>,
-    size:50,
+    size: 50,
   },
   {
     accessorKey: "total",
     header: () => <div className='text-right pr-8'>Total</div>,
     cell: (info) => <span className='flex justify-end pr-8'>{info.getValue() as string}</span>,
-    size:70,
+    size: 70,
   },
   {
     accessorKey: "name",
     header: () => <div className='text-left'>Name</div>,
     cell: (info) => <span className='text-left '>{info.getValue() as string}</span>,
-    size:80,
+    size: 80,
   },
   {
     id: "view",
     header: () => <div className='text-left'>View</div>,
     cell: () => (
       <button onClick={() => (window.location.href = "/invoicedetails")} className="text-green-500 hover:text-green-700 text-center ml-2">
-        <img src="/images/View_duotone.svg" alt='View Icon'/>
+        <img src="/images/View_duotone.svg" alt='View Icon' />
       </button>
     ),
-    size:30,
+    size: 30,
   },
 ];
 const Invoices = () => {
@@ -151,6 +153,22 @@ const Invoices = () => {
     }
   };
 
+  //tooltip for mobile
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const handlePressStart = () => {
+    setShowTooltip(true);
+  };
+
+  const handlePressEnd = () => {
+    setShowTooltip(false);
+  };
+
+
+
+
+
+
 
   return (
     <main
@@ -175,7 +193,7 @@ const Invoices = () => {
             {/* Dropdown Menu */}
             {isOpen && (
               <div
-                className="absolute left-[248px] below-md:left-[16px] below-md:w-[90%] w-[20%] mt-9 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded-md shadow"
+                className="absolute left-[260px] below-md:left-[16px] below-md:w-[90%] w-[20%] mt-9 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded-md shadow"
                 style={{ zIndex: 50 }}
               >
                 {options.map((option, index) => (
@@ -193,7 +211,7 @@ const Invoices = () => {
 
 
 
-          <div className="w-[30%] tablet:w-full below-md:w-full">
+          <div className="w-[261px] tablet:w-full below-md:w-full">
             <DateRange />
           </div>
 
@@ -213,62 +231,74 @@ const Invoices = () => {
           <button className="w-[170px] h-[35px] bg-[#1AA47D] hover:bg-[#168A6F] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
             onClick={handleButtonClick}
           >
-             <img className ='' src="/images/UploadInvoice.svg" alt="" />
+            <img className='' src="/images/UploadInvoice.svg" alt="" />
             Upload Invoice
           </button>
           <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          className="hidden"
-        />
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+          />
 
         </div>
 
       </div>
       {/* Card section */}
       <div>
-                    {cardData.map((card, index) => (
-                        <div key={index}
-                            className='flex flex-col h-[167px] w-full shadow rounded-md bg-white border border-[#E4E4EF] below-lg:hidden my-4'>
-                            <div className='flex justify-between items-start'>
-                                <div className='flex gap-4 px-3 py-4'>
-                                    <p className='text-[12px] font-semibold'>{card.date}</p>
-                                    <p className='text-[12px] font-semibold'>{card.name}</p>
-                                </div>
+        {cardData.map((card, index) => (
+          <div key={index}
+            className='flex flex-col h-[167px] w-full shadow rounded-md bg-white border border-[#E4E4EF] below-lg:hidden my-4'>
+            <div className='flex justify-between items-start'>
+              <div className='flex gap-4 px-3 py-4'>
+                <p className='text-[12px] font-semibold'>{card.date}</p>
+                <p className='text-[12px] font-semibold'>{card.name}</p>
+              </div>
 
-                                <div className='flex gap-4 mb-1 px-3 py-4'>
-                                    <button className='text-green-500 hover:text-green-700'>
-                                        <img className='below-md:w-5 below-md:h-5 h-4 w-4' src='/images/ViewIcon(1).svg' />
-                                    </button>
-                                </div>
-                            </div>
-                            {/* Divider */}
-                            <div className="border-t border-gray-300 mb-2"> </div>
-                            {/* Content Area */}
-                            <div className='flex justify-between items-center mx-3 py-1'>
-                                <div className='flex flex-col text-[12px] space-y-2'>
-                                    <p className='text-[#636363]'>Store</p>
-                                    <p className='text-[#636363]'>quantity</p>
-                                    <p className='text-[#636363]'>total</p>
-                                </div>
-                                <div className='flex flex-col text-[12px] text-right space-y-2'>
-                                    <p className='text-[#1A1A1A]'>{card.store}</p>
-                                    <p className='text-[#000000]'>{card.quantity}</p>
-                                    <p className='text-[#1A1A1A]'>{card.total}</p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                    <div className='fixed bottom-[20px] below-lg:hidden right-3'>
-                    <button className="w-[50px] h-[50px]  hover:bg-[#168A6F] text-white rounded-md text-[14px] flex items-center justify-center gap-1"
-                             onClick={handleButtonClick}>
-                     <img src="/images/uploadinvoiceIcon.svg" alt='Upload Invoice' className="transition-opacity duration-10"/>
-                    </button>
+              <div className='flex gap-4 mb-1 px-3 py-4'>
+                <button onClick={() => (window.location.href = "/invoicedetails")} className='text-green-500 hover:text-green-700'>
+                  <img className='below-md:w-5 below-md:h-5 h-4 w-4' src='/images/ViewIcon(1).svg' />
+                </button>
+              </div>
+            </div>
+            {/* Divider */}
+            <div className="border-t border-gray-300 mb-2"> </div>
+            {/* Content Area */}
+            <div className='flex justify-between items-center mx-3 py-1'>
+              <div className='flex flex-col text-[12px] space-y-2'>
+                <p className='text-[#636363]'>Store</p>
+                <p className='text-[#636363]'>quantity</p>
+                <p className='text-[#636363]'>total</p>
+              </div>
+              <div className='flex flex-col text-[12px] text-right space-y-2'>
+                <p className='text-[#1A1A1A]'>{card.store}</p>
+                <p className='text-[#000000]'>{card.quantity}</p>
+                <p className='text-[#1A1A1A]'>{card.total}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+        <div className='below-lg:hidden flex justify-end fixed bottom-3 right-6'>
 
-                    </div>
-                
-                </div>
+          <button className="focus:outline-none w-[80px] h-[80px] text-white rounded-md text-[14px] flex items-center justify-center relative"
+            onTouchStart={handlePressStart} // For mobile devices
+            onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
+            onClick={handleButtonClick}
+
+          >
+            <img src="/images/uploadinvoiceIcon.svg" alt='Upload Invoice'/>
+            {showTooltip && (
+              <div className="absolute bottom-[70px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
+                Upload Invoice
+                {/* Tooltip Pointer */}
+                <div className="absolute top-full right-[20%] transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#79747E]"></div>
+              </div>
+            )}
+          </button>
+         
+        </div>
+
+      </div>
 
 
 
@@ -329,7 +359,7 @@ const Invoices = () => {
       </div>
       {/* Pagination Numbers */}
       <div className="mt-4  below-md:hidden">
-       <Pagination table={table}/>
+        <Pagination table={table} />
       </div>
 
 

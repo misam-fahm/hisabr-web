@@ -3,7 +3,7 @@
 import React, { FC, useState, useRef } from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import AddExpenses from "@/Components/Expenses/AddExpenses"; 
+import AddExpenses from "@/Components/Expenses/AddExpenses";
 import DateRange from "@/Components/drawer/DateRangePicker";
 
 import Image from "next/image";
@@ -104,57 +104,71 @@ const columns: ColumnDef<TableRow>[] = [
         accessorKey: "date",
         header: () => <div className='text-left '>Date</div>,
         cell: (info) => <span>{info.getValue() as string}</span>,
-        size:100,
+        size: 100,
     },
     {
         accessorKey: "store",
         header: () => <div className='text-left'>Store</div>,
         cell: (info) => <span>{info.getValue() as number}</span>,
-        size:80,
+        size: 80,
     },
     {
         accessorKey: "amount",
         header: () => <div className='text-left'>Amount</div>,
         cell: (info) => <span className='text-right ml-5'>{info.getValue() as string}</span>,
-        size:100,
+        size: 100,
     },
     {
         accessorKey: "description",
         header: () => <div className='text-left'> Description</div>,
         cell: (info) => <span className="">{info.getValue() as string}</span>,
-        size:200,
+        size: 200,
     },
     {
         accessorKey: "type",
         header: () => <div className='text-left'>Type</div>,
         cell: (info) => <span className="">{info.getValue() as string}</span>,
-        size:80,
+        size: 80,
     },
     {
         id: "edit",
         header: () => <div className="text-center ">Edit</div>,
         cell: () => (
             <>
-          <span className="flex justify-center">  <EditExpense/></span>
+                <span className="flex justify-center">  <EditExpense expenseData={expenseData}
+                    onUpdate={(updatedData) => {
+                        console.log("Updated Data: ", updatedData);
+                        // Example: update the state or send the updated data to an API
+                    }} /></span>
             </>
-            
+
         ),
-        size:50,
+        size: 50,
     },
     {
         id: "delete",
         header: () => <div className="text-center">Delete</div>,
         cell: () => (
             <>
-           <span className="flex justify-center"> <DeleteExpense/></span> 
+                <span className="flex justify-center"> <DeleteExpense /></span>
             </>
         ),
-        size:50
+        size: 50
     },
 ];
+const expenseData = {
+    store: "Store 1",
+    expenseType: "Type 1",
+    description: "Expense description",
+    amount: 100,
+    date: new Date(),
+};
 
 
 const Expenses: FC = () => {
+    // const[selectedExpense,setSelectedExpense]=useState<Expense || null>({
+
+    // })
     const [globalFilter, setGlobalFilter] = React.useState("");
     const table = useReactTable({
         data,
@@ -193,89 +207,7 @@ const Expenses: FC = () => {
     const startItem = pageIndex * pageSize + 1;
     const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
-    const [dateRange, setDateRange] = useState<[Date | undefined, Date | undefined]>([undefined, undefined]);
-    const [startDate, endDate] = dateRange;
-    // Utility to check if a date is within the same month as the selected startDate
-    const isWithinSameMonth = (date: Date) => {
-        if (!startDate) return true; // Allow all dates if no startDate is selected
-        return date.getMonth() === startDate.getMonth() && date.getFullYear() === startDate.getFullYear();
-    };
-    // Helper function to determine if a date is from the next month
-    const isNextMonth = (date: Date) => {
-        const today = new Date();
-        const visibleMonth = today.getMonth(); // Replace with actual visible calendar month logic
-        return date.getMonth() > visibleMonth || date.getFullYear() > today.getFullYear();
-    };
-
-    // Custom day styling based on selected range
-    const dayClassName = (date: Date) => {
-        const today = new Date();
-        // If there's no range selected, don't apply any custom styling
-        if (!startDate || !endDate) return "";
-
-        // Style future dates as disabled
-        if (date > today) {
-            return "text-gray-400"; // Light gray for future dates
-        }
-
-
-        // If date is within the selected range, apply a highlight color
-        if (startDate && endDate && date >= startDate && date <= endDate) {
-            return "bg-blue-500 text-white"; // Highlight dates in the selected range
-        }
-
-
-        // Apply same color for dates before the start date and after the end date in the same month
-        if (date < startDate && date.getMonth() === startDate.getMonth() && date.getFullYear() === startDate.getFullYear()) {
-            return "bg-gray-200 text-black"; // Yellow background for dates before the selected range
-        }
-        if (date > endDate && date.getMonth() === startDate.getMonth() && date.getFullYear() === startDate.getFullYear()) {
-            return "bg-gray-200 text-black"; // Yellow background for dates after the selected range
-        }
-
-        // Disable next month's dates (December in this case) by hiding them
-        if (date.getMonth() !== startDate.getMonth() || date.getFullYear() !== startDate.getFullYear()) {
-            return "hidden"; // Hides other month dates
-        }
-
-        return "";
-    };
-
-    // Disable dates in the next month and all future dates
-    const filterDate = (date: Date) => {
-        const today = new Date();
-        // Disallow future dates
-        if (date > today) {
-            return false;
-        }
-
-        if (startDate) {
-            return (
-                date.getMonth() === startDate.getMonth() &&
-                date.getFullYear() === startDate.getFullYear()
-            );
-        }
-
-
-
-        return true; // Disable future dates// Only past/present dates in the same month
-    };
-
-
-
-    const handleDateChange = (dates: [Date | null, Date | null]) => {
-        // Update the dateRange state with start and end date
-        const updatedDates: [Date | undefined, Date | undefined] = [
-            dates[0] || undefined,  // Convert null to undefined
-            dates[1] || undefined,
-        ];
-        setDateRange(updatedDates);  // Update the state
-    };
-
-
-
-
-    const calendarRef = useRef<DatePicker | null>(null);
+    // const calendarRef = useRef<DatePicker | null>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
 
     const handleClick = () => {
@@ -300,13 +232,13 @@ const Expenses: FC = () => {
     };
     return (
         <main
-      className="max-h-[calc(100vh-50px)] px-6 overflow-auto"
-      style={{ scrollbarWidth: "thin" }}
-    >
+            className="max-h-[calc(100vh-50px)] px-6 overflow-auto"
+            style={{ scrollbarWidth: "thin" }}
+        >
 
             <>
                 <div className='flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:space-y-1 gap-2 mt-6 mb-6'>
-                    <div className='flex gap-2 w-full below-md:flex-col'>
+                    <div className='flex gap-3 w-full below-md:flex-col'>
 
                         <div className='flex'>
                             {/* Dropdown Button */}
@@ -341,12 +273,12 @@ const Expenses: FC = () => {
 
                         </div>
 
-                        <div className="w-[30%] tablet:w-full below-md:w-full h-[35px]">
+                        <div className="w-[261px] tablet:w-full below-md:w-full h-[35px]">
                             <DateRange />
                         </div>
-                 
+
                         <div className='flex items-center justify-between below-md:flex-row below-md:gap-4'>
-                            <div className='flex shadow  text-[12px] bg-[#ffff] items-center  rounded-md w-[300px]  h-[35px] below-md:w-full below-md:h-[35px] below-md:text-[11px]'>
+                            <div className='flex shadow  text-[12px] bg-[#ffff] items-center  rounded-md w-[200px]  h-[35px] below-md:w-full below-md:h-[35px] below-md:text-[11px]'>
                                 <input type='search' ref={searchInputRef} placeholder='Search' className='w-full h-[35px] bg-transparent rounded-lg px-3 text-[#636363] focus:outline-none'>
                                 </input>
                                 <img className='pr-2 cursor-pointer items-center' src='/images/searchicon.svg'
@@ -354,14 +286,14 @@ const Expenses: FC = () => {
 
                             </div>
 
-                         
+
                         </div>
                     </div>
                     <div className=' block below-md:hidden mt-1'><AddExpenses /></div>
                 </div>
 
 
-                
+
 
                 {/* Card section */}
                 <div className=''>
@@ -375,12 +307,14 @@ const Expenses: FC = () => {
                                 </div>
 
                                 <div className='flex gap-4 mb-1 px-3 py-4'>
-                                    <button className='text-[#109BDB] hover:text-blue-700'>
-                                        <img className='w-4 h-4' src='/images/editIcon.svg' />
-                                    </button>
-                                    <button className='text-[#BF4343] hover:text-red-700'>
-                                        <img className='w-4 h-4' src='/images/deleteicon(2).svg' />
-                                    </button>
+                                    <>
+                                        <EditExpense expenseData={expenseData}
+                                            onUpdate={(updatedData) => {
+                                                console.log("Updated Data: ", updatedData);
+                                                // Example: update the state or send the updated data to an API
+                                            }} />
+                                        <DeleteExpense />
+                                    </>
                                 </div>
                             </div>
                             {/* Divider */}
@@ -400,9 +334,11 @@ const Expenses: FC = () => {
                             </div>
                         </div>
                     ))}
-                    <div className=' fixed bottom-[20px] hidden below-md:block right-3'> <AddExpenses /></div>
+                    <div className='fixed bottom-[20px] hidden below-md:block right-3'><AddExpenses /></div> 
                 </div>
-               
+                
+                
+
 
 
 
@@ -451,7 +387,7 @@ const Expenses: FC = () => {
                                                 <td
                                                     key={cell.id}
                                                     className="px-4  py-1.5 text-[#636363] text-[14px]"
-                                                    style={{ width: `${cell.column.getSize()}px` }} 
+                                                    style={{ width: `${cell.column.getSize()}px` }}
 
                                                 >
                                                     {flexRender(
@@ -469,7 +405,7 @@ const Expenses: FC = () => {
                 </div>
                 {/* Pagination Numbers */}
                 <div className="mt-4  below-md:hidden">
-                    <Pagination table={table}/>
+                    <Pagination table={table} />
                 </div>
 
             </>

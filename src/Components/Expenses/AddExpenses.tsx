@@ -110,6 +110,17 @@ const AddExpenses = () => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
+    //tooltip for mobile
+    const [showTooltip, setShowTooltip] = useState(false);
+    
+    const handlePressStart = () => {
+        setShowTooltip(true);
+      };
+    
+    const handlePressEnd = () => {
+        setShowTooltip(false);
+      };
+    
 
 
 
@@ -117,22 +128,31 @@ const AddExpenses = () => {
 
     return (
         <>
-          <div className='hidden below-md:block   '>
+          <div className='hidden below-md:block'>
+         
           <button
     onClick={openModal}
-    className="  hover:gap-2 text-white w-[50px] hover:w-[159px] h-[50px] rounded-md  items-center justify-center overflow-hidden transition-all duration-10 group"
+    onTouchStart={handlePressStart} // For mobile devices
+    onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
+    className="hover:gap-2 text-white w-[80px] h-[80px] rounded-md  items-center justify-center overflow-hidden transition-all duration-10 group"
 >
-    <img src='/images/plusIcon.svg' alt='AddExpense' className='text-white transition-opacity duration-10'/>
+    <img src='/images/plusIcon.svg' alt='AddExpense' className=' text-white transition-opacity duration-10'/>
+     {showTooltip && (
+              <div className="absolute bottom-[70px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
+                Add Expenses
+                {/* Tooltip Pointer */}
+                <div className="absolute top-full right-[20%] transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#79747E]"></div>
+              </div>
+            )}
+
+   </button>
    
-    {/* <span className="hidden group-hover:block text-white transition-opacity duration-10">
-        Add Expenses
-    </span> */}
-</button>
+
 </div>
 <div className='block below-md:hidden'>
 <button
     onClick={openModal}
-    className="bg-[#1AA47D]  text-white  w-[159px] text-[14px] gap-[0.25rem]  font-medium h-[35px] rounded-md flex items-center justify-center "
+    className="bg-[#1AA47D] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
 >
        <img className ='' src="/images/addExpenses.svg" alt="" />
         Add Expenses
