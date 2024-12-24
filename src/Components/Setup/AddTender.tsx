@@ -126,7 +126,7 @@ const AddTender = () => {
           <DialogPanel className="w-[420px]  below-md:w-[344px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
             <div className="flex justify-between">
               <DialogTitle as="h3" className="font-medium text-gray-900">
-                Add Item
+                Add Tender
               </DialogTitle>
               <img
                 onClick={closeModal}

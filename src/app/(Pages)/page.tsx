@@ -70,7 +70,7 @@ const Home: FC = () => {
   /**second link(tender) */
 
   const handleClick2 = () => {
-    router.push("/details2"); // Navigates to the 'details' page
+    router.push("/setup/tenders"); // Navigates to the 'details' page
   };
 
   //forth link(customer count)

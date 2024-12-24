@@ -159,7 +159,7 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     accessorKey: "royalty",
-    header: () => <div className="text-left">Royalty</div>, 
+    header: () => <div className="text-left">Royalty</div>,
     cell: (info) => <div className="ml-2">{info.getValue() as number}</div>,
     size: 80,
   },
@@ -168,7 +168,7 @@ const columns: ColumnDef<TableRow>[] = [
     header: () => <div className="text-center">Edit</div>,
     cell: () => (
       <span className="flex justify-center">
-      <EditStore/>
+        <EditStore />
       </span>
     ),
     size: 70,
@@ -230,13 +230,7 @@ const Page: FC = () => {
               </span>
               <div className="flex items-center gap-3">
                 {/* Edit */}
-                <Images
-                  src="/images/edit1.svg"
-                  alt="edit"
-                  width={16}
-                  height={16}
-                  className="cursor-pointer"
-                />
+                <EditStore />
               </div>
             </div>
 
