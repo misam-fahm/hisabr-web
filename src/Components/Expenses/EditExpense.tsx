@@ -1,22 +1,23 @@
-'use client'
-import React, { useState } from 'react'
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const EditExpense = () => {
-    const [startDate, setStartDate] = useState(null);
+const EditExpense = ({ expenseData, onUpdate }: { expenseData: any, onUpdate: (updatedData: any) => void }) => {
+    const [startDate, setStartDate] = useState<Date | null>(expenseData.date || null);
     const [isOpen, setIsOpen] = useState(false);
 
     const openModal = () => setIsOpen(true);
     const closeModal = () => {
         setIsOpen(false);
         setFormData({
-            store: "",
-            expenseType: "",
-            description: "",
-            amount: "",
-            date: null,
+            store: expenseData.store || "",
+            expenseType: expenseData.expenseType || "",
+            description: expenseData.description || "",
+            amount: expenseData.amount || "",
+            date: expenseData.date || null,
         });// Reset form data
         setErrors({
             store: "",
@@ -25,8 +26,8 @@ const EditExpense = () => {
             amount: "",
             date: "",
         }); // Clear validation errors
-
     };
+
     type FormData = {
         store: string;
         date: Date | null;
@@ -36,11 +37,11 @@ const EditExpense = () => {
     };
 
     const [formData, setFormData] = useState<FormData>({
-        store: "",
-        expenseType: "",
-        description: "",
-        amount: "",
-        date: null,
+        store: expenseData.store || "",
+        expenseType: expenseData.expenseType || "",
+        description: expenseData.description || "",
+        amount: expenseData.amount || "",
+        date: expenseData.date || null,
     });
     const [errors, setErrors] = useState({
         store: "",
@@ -100,7 +101,8 @@ const EditExpense = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (handleValidation()) {
-            console.log("Form submitted successfully:", formData);
+            console.log("Form updated successfully:", formData);
+            onUpdate(formData); // Call the onUpdate function passed as prop
             closeModal(); // Close modal if validation passes
         }
     };
@@ -110,8 +112,19 @@ const EditExpense = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+    useEffect(() => {
+        setFormData({
+            store: expenseData.store || "",
+            expenseType: expenseData.expenseType || "",
+            description: expenseData.description || "",
+            amount: expenseData.amount || "",
+            date: expenseData.date || null,
+        });
+    }, [expenseData]);
+
     return (
         <>
+            
         <div>
             <button onClick={openModal}>
                 <img src="/images/editIcon(1).svg"
@@ -120,48 +133,32 @@ const EditExpense = () => {
                     />
             </button>
         </div>
+
+
             {/* Dialog for the modal */}
             <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
                 <div className="fixed inset-0 bg-black bg-opacity-50" />
                 <div className="fixed inset-0 flex items-center justify-center p-4">
                     <DialogPanel className="w-[410px] h-[518px] below-md:w-[94%] below-md:h-[450px] px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
                         <div className='flex items-center justify-between mb-5 mr-1'>
-
-                            <DialogTitle as="h3" className="text-[16px]  font-medium leading-4 text-[#5E6366]">
+                            <DialogTitle as="h3" className="text-[16px] font-medium leading-4 text-[#5E6366]">
                                 Edit Expense
-
                             </DialogTitle>
-                            <button
-                                type="button"
-                                onClick={closeModal}
-                                className="text-[#5E6366] focus:outline-none"
-                            >
-                                <svg
-                                    xmlns="/images/CancelIcon.svg"
-                                    className="h-5 w-5"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                        clipRule="evenodd"
-                                    />
+                            <button type="button" onClick={closeModal} className="text-[#5E6366] focus:outline-none">
+                                <svg xmlns="/images/CancelIcon.svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                                 </svg>
                             </button>
                         </div>
 
-
-
-                        {/* AddExpense Form */}
+                        {/* EditExpense Form */}
                         <form onSubmit={handleSubmit}>
-                            <div className="overflow-y-auto h-[380px] below-md:h-[300px] overflow-x-hidden scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent" >
+                            <div className="overflow-y-auto h-[380px] below-md:h-[300px] overflow-x-hidden scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent">
                                 {/* Store */}
                                 <div className="flex flex-col gap-1 mb-3">
                                     <label className="text-[13px] text-[#5E6366] mb-1 block">Store</label>
                                     <select name="store"
-                                        className={`border h-[40px] w-[345px] below-md:w-full pl-2 text-[#8D98AA] text-[12px]  rounded-lg ${errors.store ? "border-red-500" : "border-gray-300"
-                                            }`}
+                                        className={`border h-[40px] w-[345px] below-md:w-full pl-2 text-[#8D98AA] text-[12px] rounded-lg ${errors.store ? "border-red-500" : "border-gray-300"}`}
                                         value={formData.store}
                                         onChange={handleChange}
                                     >
@@ -170,7 +167,6 @@ const EditExpense = () => {
                                         <option>Store 2</option>
                                     </select>
                                     {errors.store && <p className="text-red-500 text-[12px]">{errors.store}</p>}
-
                                 </div>
 
                                 {/* Expense Type and Description */}
@@ -178,43 +174,34 @@ const EditExpense = () => {
                                     <div>
                                         <label className="text-[13px] text-[#5E6366] mb-2 block">Expense Type</label>
                                         <select name="expenseType"
-                                            className={`border h-[40px] w-[345px] below-md:w-full pl-2 text-[#8D98AA] text-[12px] rounded-lg ${errors.expenseType ? "border-red-500" : "border-gray-300"
-                                                }`}
+                                            className={`border h-[40px] w-[345px] below-md:w-full pl-2 text-[#8D98AA] text-[12px] rounded-lg ${errors.expenseType ? "border-red-500" : "border-gray-300"}`}
                                             value={formData.expenseType}
                                             onChange={handleChange}
                                         >
-                                            <option value="" disabled hidden>
-                                                Please Select Expense Type
-                                            </option>
+                                            <option value="" disabled hidden>Please Select Expense Type</option>
                                             <option>Type 1</option>
                                             <option>Type 2</option>
                                         </select>
-                                        {errors.expenseType && (
-                                            <p className="text-red-500 text-[12px]">{errors.expenseType}</p>
-                                        )}
+                                        {errors.expenseType && <p className="text-red-500 text-[12px]">{errors.expenseType}</p>}
                                     </div>
                                     <div>
                                         <label className="text-[13px] text-[#5E6366] mb-2 block">Description</label>
                                         <input
                                             type="text"
                                             name="description"
-                                            className={`border h-[40px] w-[345px]  below-md:w-full pl-2 text-[#8D98AA] text-[12px] rounded-lg ${errors.description ? "border-red-500" : "border-gray-300"
-                                                }`}
+                                            className={`border h-[40px] w-[345px] below-md:w-full pl-2 text-[#8D98AA] text-[12px] rounded-lg ${errors.description ? "border-red-500" : "border-gray-300"}`}
                                             placeholder="Please enter Expense Description"
                                             value={formData.description}
                                             onChange={handleChange}
                                         />
-                                        {errors.description && (
-                                            <p className="text-red-500 text-[12px]">{errors.description}</p>
-                                        )}
+                                        {errors.description && <p className="text-red-500 text-[12px]">{errors.description}</p>}
                                     </div>
                                     <div>
                                         <label className="text-[13px] text-[#5E6366] mb-2 block">Amount</label>
                                         <input
                                             type="number"
                                             name="amount"
-                                            className={`border h-[40px] w-[345px] below-md:w-full pl-2 text-[#8D98AA] text-[12px] rounded-lg ${errors.amount ? "border-red-500" : "border-gray-300"
-                                                }`}
+                                            className={`border h-[40px] w-[345px] below-md:w-full pl-2 text-[#8D98AA] text-[12px] rounded-lg ${errors.amount ? "border-red-500" : "border-gray-300"}`}
                                             placeholder="Please enter Expense Amount"
                                             value={formData.amount}
                                             onChange={handleChange}
@@ -228,41 +215,36 @@ const EditExpense = () => {
                                                 selected={formData.date}
                                                 onChange={(date: any) => setFormData({ ...formData, date })}
                                                 placeholderText="Please enter expense date"
-                                                className={`border h-[40px] w-[345px] below-md:w-[128%]  pl-3 pr-10 text-[#8D98AA] text-[12px] rounded-lg ${errors.date ? 'border-red-500' : 'border-gray-300'
-                                                    }`}
+                                                className={`border h-[40px] w-[345px] below-md:w-[128%] pl-3 pr-10 text-[#8D98AA] text-[12px] rounded-lg ${errors.date ? 'border-red-500' : 'border-gray-300'}`}
                                             />
-                                            <img className='absolute top-1/2 right-3  transform -translate-y-1/2 w-5 h-5 below-md:w-4 below-md:h-4 cursor-pointer ' src='/images/CalenderIcon.svg'
-                                                alt="Calendar Icon"
-                                            />
+                                            <img className='absolute top-1/2 right-3 transform -translate-y-1/2 w-5 h-5 below-md:w-4 below-md:h-4 cursor-pointer' src='/images/CalenderIcon.svg' alt="Calendar Icon" />
                                         </div>
                                         {errors.date && <p className="text-red-500 text-[12px]">{errors.date}</p>}
                                     </div>
                                 </div>
                             </div>
+
                             {/* Submit Button */}
                             <div className="flex items-center mt-3 md:w-full justify-between md:gap-2 space-x-3">
-                                <button type="button"
-                                    className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[36px] w-[158px] below-md:w-[150px] h-[37px] bg-[#E4E4E4] rounded-md"
-                                    onClick={closeModal}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[36px] w-[158px]  below-md:w-[150px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-green-700"
-                                >
-                                    Save
-                                </button>
-                            </div>
-
+                                        <button type="button"
+                                            className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[36px] w-[158px] below-md:w-[150px] h-[37px] bg-[#C8C8C8] rounded-md"
+                                            onClick={closeModal}
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[36px] w-[158px]  below-md:w-[150px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-green-700"
+                                        >
+                                            Save
+                                        </button>
+                                    </div>
                         </form>
-
                     </DialogPanel>
                 </div>
             </Dialog>
         </>
+    );
+};
 
-    )
-}
-
-export default EditExpense
+export default EditExpense;

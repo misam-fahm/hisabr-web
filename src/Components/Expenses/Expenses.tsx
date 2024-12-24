@@ -29,6 +29,38 @@ interface TableRow {
 
 const data: TableRow[] = [
   {
+    date: "2022…
+"use client";
+
+import React, { FC, useState, useRef } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import AddExpenses from "@/Components/Expenses/AddExpenses";
+import DateRange from "@/Components/drawer/DateRangePicker";
+
+import Image from "next/image";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getFilteredRowModel,
+  flexRender,
+  ColumnDef,
+} from "@tanstack/react-table";
+import Pagination from "../ui/Common/Pagination";
+import DeleteExpense from "./DeleteExpense";
+import EditExpense from "./EditExpense";
+
+interface TableRow {
+  date: string;
+  store: number;
+  amount: string;
+  description: string;
+  type: string;
+}
+
+const data: TableRow[] = [
+  {
     date: "2022-01-01",
     store: 13246,
     amount: "11,800",
@@ -137,10 +169,11 @@ const columns: ColumnDef<TableRow>[] = [
     header: () => <div className="text-center ">Edit</div>,
     cell: () => (
       <>
-        <span className="flex justify-center">
-          {" "}
-          <EditExpense />
-        </span>
+                <span className="flex justify-center">  <EditExpense expenseData={expenseData}
+                    onUpdate={(updatedData) => {
+                        console.log("Updated Data: ", updatedData);
+                        // Example: update the state or send the updated data to an API
+                    }} /></span>
       </>
     ),
     size: 50,
@@ -159,6 +192,13 @@ const columns: ColumnDef<TableRow>[] = [
     size: 50,
   },
 ];
+const expenseData = {
+    store: "Store 1",
+    expenseType: "Type 1",
+    description: "Expense description",
+    amount: 100,
+    date: new Date(),
+};
 
 const Expenses: FC = () => {
   const [globalFilter, setGlobalFilter] = React.useState("");
@@ -457,13 +497,15 @@ const Expenses: FC = () => {
                   <p className="text-[12px] font-semibold">{card.type}</p>
                 </div>
 
-                <div className="flex gap-4 mb-1 px-3 py-4">
-                  <button className="text-[#109BDB] hover:text-blue-700">
-                    <img className="w-4 h-4" src="/images/editIcon.svg" />
-                  </button>
-                  <button className="text-[#BF4343] hover:text-red-700">
-                    <img className="w-4 h-4" src="/images/deleteicon(2).svg" />
-                  </button>
+                                <div className='flex gap-4 mb-1 px-3 py-4'>
+                                    <>
+                                        <EditExpense expenseData={expenseData}
+                                            onUpdate={(updatedData) => {
+                                                console.log("Updated Data: ", updatedData);
+                                                // Example: update the state or send the updated data to an API
+                                            }} />
+                                        <DeleteExpense />
+                                    </>
                 </div>
               </div>
               {/* Divider */}
@@ -500,7 +542,7 @@ const Expenses: FC = () => {
                       <th
                         key={header.id}
                         className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
-                        style={{ width: `${header.column.getSize()}px` }}
+                        style={{ width: ${header.column.getSize()}px }}
                       >
                         {header.isPlaceholder
                           ? null
@@ -531,7 +573,7 @@ const Expenses: FC = () => {
                         <td
                           key={cell.id}
                           className="px-4  py-1.5 text-[#636363] text-[14px]"
-                          style={{ width: `${cell.column.getSize()}px` }}
+                          style={{ width: ${cell.column.getSize()}px }}
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
