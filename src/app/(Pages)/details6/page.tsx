@@ -152,19 +152,40 @@ const formattedData = data?.map((item) => {
 console.log(formattedData);
 
 const columns: ColumnDef<TableRow>[] = [
-  { accessorKey: "date", header: "Date" },
-  { accessorKey: "store", header: "Store" },
-  { accessorKey: "quantity", header: "Quantity" },
-  { accessorKey: "total", header: "Total" },
-  { accessorKey: "name", header: "Name" },
+  {
+    accessorKey: "date",
+    header: "Date",
+    size: 100,
+  },
+  {
+    accessorKey: "store",
+    header: "Store",
+    size: 100,
+  },
+  {
+    accessorKey: "quantity",
+    header: "Quantity",
+    size: 100,
+  },
+  {
+    accessorKey: "total",
+    header: "Total",
+    size: 100,
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
+    size: 160,
+  },
   {
     id: "view",
-    header: "View",
+    header: () => <div className="text-center">View</div>,
     cell: () => (
-      <button className="bg-[#FFFFFF] p-[7px] rounded-full shadow-[inset_-2px_-2px_2px_#F3FFF3,inset_2px_2px_3px_#E2F7E380]">
-        <Images src="/images/eye.svg" alt="Eye Icon" width={20} height={20} />
-      </button>
+      <span className="flex justify-center">
+        <Images src="/images/eye.svg" alt="Eye Icon" width={25} height={25} />
+      </span>
     ),
+    size: 60,
   },
 ];
 
@@ -178,7 +199,7 @@ const DetailsPage: React.FC = () => {
 
     initialState: {
       pagination: {
-        pageSize: 5,
+        pageSize: 10,
         pageIndex: 0,
       },
     },
@@ -308,7 +329,8 @@ const DetailsPage: React.FC = () => {
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px]"
+                        className="text-left px-4 py-2.5 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+                        style={{ width: `${header.column.getSize()}px` }} // Applying dynamic width
                       >
                         {header.isPlaceholder
                           ? null
@@ -321,34 +343,42 @@ const DetailsPage: React.FC = () => {
                   </tr>
                 ))}
               </thead>
-              <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={
-                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                    }
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="px-4 py-1 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
             </table>
+            <div
+              className="w-full overflow-y-auto scrollbar-thin flex-grow"
+              style={{ maxHeight: "calc(100vh - 270px)" }}
+            >
+              <table className="w-full border-collapse border-gray-200 table-fixed">
+                <tbody>
+                  {table.getRowModel().rows.map((row) => (
+                    <tr
+                      key={row.id}
+                      className={
+                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                      }
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          key={cell.id}
+                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-
-          {/* Pagination */}
-          <Pagination table={table} />
         </div>
+
+        {/* Pagination */}
+        <Pagination table={table} />
 
         <div className="below-lg:hidden tablet:hidden">
           <div className="flex flex-col">
