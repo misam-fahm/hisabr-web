@@ -262,14 +262,14 @@ const DetailsPage: React.FC = () => {
       <img
         onClick={handleBack}
         src="/images/backIcon.svg"
-        className="fixed top-4 left-4 z-50 below-lg:hidden"
+        className="fixed top-4 left-4 z-50 below-lg:hidden tablet:hidden"
       />
       {/* <div className="below-md:flex below-md:justify-center ">
         <p className="text-[18px] below-md:text-[16px] below-md:mr-8 font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
           Gross Revenue Analysis
         </p>
       </div> */}
-      <div className="pt-6 pb-6 below-md:pb-3 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
+      <div className="pt-6 pb-6 below-md:pt-3 below-md:pb-3 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row below-md:flex-col gap-3 w-full">
             {/* First Dropdown */}
@@ -393,7 +393,7 @@ const DetailsPage: React.FC = () => {
                     onSelect={handleSelect3}
                     isOpen={isOpen3}
                     toggleOpen={toggleDropdown3}
-                    widthchange="below-lg:w-[130px]"
+                    widthchange="below-lg:w-[130px] tablet:w-[130px]"
                   />
                 </div>
               </div>
@@ -410,7 +410,7 @@ const DetailsPage: React.FC = () => {
                     Product Revenue
                   </p>
                 </div>
-                <div className="relative below-md:w-[35%]">
+                <div className="relative below-md:w-[35%] ">
                   <Dropdown
                     className="relative w-full"
                     shadowclassName="shadow-sm"
@@ -419,7 +419,7 @@ const DetailsPage: React.FC = () => {
                     onSelect={handleSelect4}
                     isOpen={isOpen4}
                     toggleOpen={toggleDropdown4}
-                    widthchange="below-lg:w-[130px]"
+                    widthchange="below-lg:w-[130px] tablet:w-[85px]"
                   />
                 </div>
               </div>
@@ -529,7 +529,7 @@ const DetailsPage: React.FC = () => {
             <Pagination table={table} />
           </div>
 
-          <div className="below-lg:hidden">
+          <div className="below-lg:hidden tablet:hidden">
             <div className="flex flex-col">
               <div className="border-[#E4E4EF] border w-full bg-white rounded-md p-3 mb-3">
                 <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
