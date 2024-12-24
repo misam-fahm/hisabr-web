@@ -29,38 +29,6 @@ interface TableRow {
 
 const data: TableRow[] = [
   {
-    date: "2022…
-"use client";
-
-import React, { FC, useState, useRef } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import AddExpenses from "@/Components/Expenses/AddExpenses";
-import DateRange from "@/Components/drawer/DateRangePicker";
-
-import Image from "next/image";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  flexRender,
-  ColumnDef,
-} from "@tanstack/react-table";
-import Pagination from "../ui/Common/Pagination";
-import DeleteExpense from "./DeleteExpense";
-import EditExpense from "./EditExpense";
-
-interface TableRow {
-  date: string;
-  store: number;
-  amount: string;
-  description: string;
-  type: string;
-}
-
-const data: TableRow[] = [
-  {
     date: "2022-01-01",
     store: 13246,
     amount: "11,800",
@@ -459,12 +427,12 @@ const Expenses: FC = () => {
               )}
             </div>
 
-            <div className="w-[30%] tablet:w-full below-md:w-full h-[35px]">
+            <div className="w-[261px] tablet:w-full below-md:w-full h-[35px]">
               <DateRange />
             </div>
 
             <div className="flex items-center justify-between below-md:flex-row below-md:gap-4">
-              <div className="flex shadow  text-[12px] bg-[#ffff] items-center  rounded-md w-[300px]  h-[35px] below-md:w-full below-md:h-[35px] below-md:text-[11px]">
+              <div className="flex shadow  text-[12px] bg-[#ffff] items-center  rounded-md w-[200px]  h-[35px] below-md:w-full below-md:h-[35px] below-md:text-[11px]">
                 <input
                   type="search"
                   ref={searchInputRef}
@@ -542,7 +510,7 @@ const Expenses: FC = () => {
                       <th
                         key={header.id}
                         className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
-                        style={{ width: ${header.column.getSize()}px }}
+                        style={{ width: `${header.column.getSize()}px` }}
                       >
                         {header.isPlaceholder
                           ? null
@@ -573,7 +541,7 @@ const Expenses: FC = () => {
                         <td
                           key={cell.id}
                           className="px-4  py-1.5 text-[#636363] text-[14px]"
-                          style={{ width: ${cell.column.getSize()}px }}
+                          style={{ width: `${cell.column.getSize()}px` }}
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
