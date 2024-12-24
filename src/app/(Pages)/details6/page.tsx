@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
 import Images from "@/Components/ui/Common/Image";
@@ -247,6 +247,18 @@ const DetailsPage: React.FC = () => {
     setShowTooltip(false);
   };
 
+  const fileInputRef: any = useRef(null);
+  const handleButtonClick = () => {
+    // Programmatically trigger the hidden file input
+    fileInputRef.current.click();
+  };
+  const handleFileChange = (event: any) => {
+    const file = event.target.files[0];
+    if (file) {
+      console.log("Selected file:", file.name);
+    }
+  };
+
   return (
     <main
       className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-1px)] tablet:max-h-[calc(100vh-1px)] below-md:mb-10 tablet:mb-10 overflow-auto"
@@ -305,7 +317,10 @@ const DetailsPage: React.FC = () => {
           </p>
         </div>
         <div>
-          <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
+          <button
+            className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium"
+            onClick={handleButtonClick}
+          >
             <img
               src="/images/uploadIcon.svg"
               alt="Upload Icon"
@@ -313,6 +328,12 @@ const DetailsPage: React.FC = () => {
             />
             Upload Invoice
           </button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+          />
         </div>
       </div>
 
@@ -389,7 +410,11 @@ const DetailsPage: React.FC = () => {
                   <span>Gordon</span>
                 </div>
                 <div>
-                  <img src="/images/eye.svg" width={26} />
+                  <button
+                    onClick={() => (window.location.href = "/invoicedetails")}
+                  >
+                    <img src="/images/eye.svg" width={26} />
+                  </button>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -415,7 +440,11 @@ const DetailsPage: React.FC = () => {
                   <span>Gordon</span>
                 </div>
                 <div>
-                  <img src="/images/eye.svg" width={26} />
+                  <button
+                    onClick={() => (window.location.href = "/invoicedetails")}
+                  >
+                    <img src="/images/eye.svg" width={26} />
+                  </button>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -441,7 +470,11 @@ const DetailsPage: React.FC = () => {
                   <span>Gordon</span>
                 </div>
                 <div>
-                  <img src="/images/eye.svg" width={26} />
+                  <button
+                    onClick={() => (window.location.href = "/invoicedetails")}
+                  >
+                    <img src="/images/eye.svg" width={26} />
+                  </button>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -467,7 +500,11 @@ const DetailsPage: React.FC = () => {
                   <span>Gordon</span>
                 </div>
                 <div>
-                  <img src="/images/eye.svg" width={26} />
+                  <button
+                    onClick={() => (window.location.href = "/invoicedetails")}
+                  >
+                    <img src="/images/eye.svg" width={26} />
+                  </button>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">

@@ -15,6 +15,7 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
+import AddExpenses from "@/Components/Expenses/AddExpenses";
 
 interface TableRow {
   date: string;
@@ -158,8 +159,8 @@ const columns: ColumnDef<TableRow>[] = [
   { accessorKey: "description", header: "Description", size: 160 },
   { accessorKey: "type", header: "Type", size: 140 },
   {
-    id: "pencil",
-    header: "pencil",
+    id: "edit",
+    header: "Edit",
     cell: () => (
       <button>
         <Images src="/images/pencil.svg" alt="pencil" width={15} height={15} />
@@ -294,11 +295,12 @@ const DetailsPage: React.FC = () => {
             Expenses
           </p>
         </div>
-        <div>
-          <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
+        <div className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
+        <AddExpenses />
+          {/* <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
             <img src="/images/addIcon.svg" alt="add Icon" className="mr-1" />
             Add Expense
-          </button>
+          </button> */}
         </div>
       </div>
 
