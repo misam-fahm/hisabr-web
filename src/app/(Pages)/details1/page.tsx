@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef,useState } from "react";
 import "../globals.css";
 import MultiLineChart from "@/Components/drawer/MultiLineChart";
 import BarChart3 from "@/Components/drawer/BarChart3";
@@ -176,7 +176,8 @@ const columns: ColumnDef<TableRow>[] = [
     id: "view",
     header: "View",
     cell: () => (
-      <button className="bg-[#FFFFFF] p-[7px] rounded-full shadow-[inset_-2px_-2px_2px_#F3FFF3,inset_2px_2px_3px_#E2F7E380]">
+      <button onClick={() => (window.location.href = "/invoicedetails")} 
+               className="bg-[#FFFFFF] p-[7px] rounded-full shadow-[inset_-2px_-2px_2px_#F3FFF3,inset_2px_2px_3px_#E2F7E380]">
         <img src="/images/eye.svg" alt="Eye Icon" width={25} height={25} />
       </button>
     ),
@@ -252,6 +253,17 @@ const DetailsPage: React.FC = () => {
   const handleSelect4 = (option4: string) => {
     setSelectedOption4(option4);
     setIsOpen4(false);
+  };
+  const fileInputRef: any = useRef(null);
+  const handleButtonClick = () => {
+    // Programmatically trigger the hidden file input
+    fileInputRef.current.click();
+  };
+  const handleFileChange = (event: any) => {
+    const file = event.target.files[0];
+    if (file) {
+      console.log("Selected file:", file.name);
+    }
   };
 
   return (
@@ -464,7 +476,8 @@ const DetailsPage: React.FC = () => {
             </p>
           </div>
           <div>
-            <button className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px]  h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300">
+            <button className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px]  h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300"
+             onClick={handleButtonClick}>
               <img
                 src="/images/uploadIcon.svg"
                 alt="Upload Icon"
@@ -472,6 +485,12 @@ const DetailsPage: React.FC = () => {
               />
               Upload Invoice
             </button>
+            <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+          />
           </div>
         </div>
         <div>
@@ -538,7 +557,9 @@ const DetailsPage: React.FC = () => {
                     <span>Gordon</span>
                   </div>
                   <div>
+                    <button onClick={() => (window.location.href = "/invoicedetails")}>
                     <img src="/images/eye.svg" width={26} />
+                    </button>
                   </div>
                 </div>
                 <div className="space-y-3 mb-2 px-2">

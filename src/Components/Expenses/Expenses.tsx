@@ -137,7 +137,8 @@ const columns: ColumnDef<TableRow>[] = [
     header: () => <div className="text-center ">Edit</div>,
     cell: () => (
       <>
-                <span className="flex justify-center">  <EditExpense expenseData={expenseData}
+                <span className="flex justify-center">
+                    <EditExpense expenseData={expenseData}
                     onUpdate={(updatedData) => {
                         console.log("Updated Data: ", updatedData);
                         // Example: update the state or send the updated data to an API
