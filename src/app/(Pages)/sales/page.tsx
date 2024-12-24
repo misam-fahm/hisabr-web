@@ -337,18 +337,16 @@ const Sales: FC = () => {
               toggleOpen={toggleDropdown1}
               widthchange="tablet:w-full"
             />
-
-            <div className="below-md:w-full tablet:w-full">
-              <DateRange />
+            <div className="tablet:w-full below-lg:w-[260px]">
+              <DateRange widthchang="tablet:w-full" />
             </div>
-
-            <div className="flex flex-row gap-3">
-              <div className=" w-[260px] below-md:w-full relative below-md:hidden tablet:hidden">
+            <div className="flex flex-row gap-3 tablet:w-full">
+              <div className=" w-[260px] below-md:w-full relative below-md:hidden tablet:w-full">
                 <input
                   value={globalFilter ?? ""}
                   onChange={(e) => setGlobalFilter(e.target.value)}
                   placeholder="Search"
-                  className=" py-[10px] pl-[8] h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                  className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
                 <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
                   <svg
@@ -368,10 +366,10 @@ const Sales: FC = () => {
                 </div>
               </div>
 
-              <div className="tablet:w-full below-md:w-full relative below-lg:hidden">
+              <div className="tablet:hidden below-md:w-full relative below-lg:hidden">
                 <input
                   placeholder="Search"
-                  className=" py-[10px] pl-[8] h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                  className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
                 <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
                   <svg

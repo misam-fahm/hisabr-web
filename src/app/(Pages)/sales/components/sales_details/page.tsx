@@ -86,7 +86,7 @@ const data: TableData[] = [
 const TableComponent: React.FC = () => {
   return (
     <main>
-      <div className="below-md:hidden tablet:hidden overflow-x-auto rounded-lg shadow-sm ">
+      <div className="below-md:hidden  overflow-x-auto rounded-lg shadow-sm ">
         <div className="max-h-[600px] overflow-y-auto  scrollbar-hide ">
           <table className="min-w-full bg-white ">
             <thead className="bg-[#334155] text-white sticky top-0 z-[2]">
@@ -128,7 +128,7 @@ const TableComponent: React.FC = () => {
         </div>
       </div>
 
-      <div className="below-lg:hidden ">
+      <div className="below-lg:hidden tablet:hidden">
         <div className="flex flex-col">
           <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
             <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">

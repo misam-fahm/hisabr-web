@@ -114,7 +114,13 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
   );
 
   return (
-    <main className="flex h-[100vh]">
+    <main
+      className={`flex h-[100vh] ${
+        pathsToHideHamburger.some((path) => currentPath.includes(path))
+          ? "tablet:hidden"
+          : ""
+      }`}
+    >
       {title === "My Profile" || title === "Edit Profile" ? (
         <img
           src="/images/backIcon.svg"
@@ -163,8 +169,8 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
                       ? setSetupOpen(!setupOpen)
                       : handleNavigation(menu.path!)
                   }
-                  className={`text-defaultwhite below-md:bg-transparent below-md:shadow-none text-[14px] flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#EEEEEE1A] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]  below-md:hover:bg-[transparent] mr-5 rounded-tr-full rounded-br-full 
-                    ${currentPath === menu.path ? "bg-[#EEEEEE1A] below-md:bg-transparent shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]" : ""} 
+                  className={`text-defaultwhite  text-[14px] flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#EEEEEE1A] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]   mr-5 rounded-tr-full rounded-br-full 
+                    ${currentPath === menu.path ? "bg-[#EEEEEE1A]  shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]" : ""} 
                     ${menu?.gap ? "mt-11" : "mt-1"} 
                     ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""}`}
                 >
@@ -177,7 +183,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
                   {/* Dropdown Arrow for Setup */}
                   {menu.submenus && open && (
                     <img
-                      src={`/images/dropDown.svg`}
+                      src={`/images/dropdown.svg`}
                       className={`ml-auto ${
                         setupOpen ? "rotate-180" : ""
                       } duration-300`}
@@ -213,7 +219,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         </div>
 
         <div
-          className={`flex mt-10 gap-4 below-md:bg-transparent below-md:shadow-none below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px]  ${open ? "mr-8" : "mr-3"} ml-3 rounded-md`}
+          className={`flex mt-10 gap-4 below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px]  ${open ? "mr-8" : "mr-3 below-md:bg-transparent below-md:shadow-none"} ml-3 rounded-md`}
         >
           <img src="/images/logout.svg" />
           {open && <p className="text-[14px]">Logout</p>}
