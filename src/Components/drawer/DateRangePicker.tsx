@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const DateRangePicker = () => {
+const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -44,7 +44,8 @@ const DateRangePicker = () => {
     <div className="relative" ref={pickerRef}>
       <div
         onClick={handleClickIcon}
-        className="flex items-center justify-between rounded h-[35px] w-[260px] below-md:w-full px-3 bg-white cursor-pointer shadow"
+        className={`flex items-center justify-between  rounded h-[35px]  px-3 bg-white cursor-pointer shadow 
+          ${widthchang ? " " : "below-md:w-full w-[260px]"}`}
       >
         <span className="text-[#636363] text-[12px]">
           {startDate && endDate

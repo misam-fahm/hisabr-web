@@ -61,14 +61,14 @@ const DetailsPage: React.FC = () => {
       <img
         onClick={handleBack}
         src="/images/backIcon.svg"
-        className="fixed top-4 left-4 z-30 below-lg:hidden"
+        className="fixed top-4 left-4 z-30 below-lg:hidden tablet:hidden"
       />
       {/* <div className="below-md:flex below-md:justify-center ">
         <p className="text-[18px] below-md:text-[16px] below-md:mr-8 font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
           Customer Count Analysis
         </p>
       </div> */}
-      <div className="pt-6 pb-6 below-md:pb-3 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
+      <div className="pt-6 pb-6 below-md:pb-3 below-md:pt-3 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row below-md:flex-col gap-3 w-full">
             <Dropdown
@@ -163,7 +163,7 @@ const DetailsPage: React.FC = () => {
           </div>
         </div>
         <div className="flex flex-row w-full mt-6 mb-9 below-md:flex-col below-md:mt-3">
-          <div className=" w-[70%] below-md:w-full">
+          <div className=" w-[70%] tablet:w-[60%] below-md:w-full">
             <div className="bg-white shadow-md rounded-md">
               <div className="flex flex-row justify-between mx-6 pt-5  mb-5">
                 <div>
@@ -190,7 +190,7 @@ const DetailsPage: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="w-[30%] bg-white ml-6 shadow-md rounded-md below-md:w-full below-md:ml-0 below-md:mt-3 below-md:pb-9">
+          <div className="w-[30%] tablet:w-[40%] bg-white ml-6 shadow-md rounded-md below-md:w-full below-md:ml-0 below-md:mt-3 below-md:pb-9">
             <div className="flex flex-col ">
               <div>
                 <p className="text-[#393E47] font-bold text-[16px] px-4 pt-6">

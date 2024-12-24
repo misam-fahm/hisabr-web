@@ -4,85 +4,37 @@ import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 
 const EditCategories = () => {
+  const [categoryName, setCategoryName] = useState("");
+  const [description, setDescription] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    itemName: "",
-    price: "",
-    quantity: "",
-    weight: "",
-    selectedType: "",
-  });
-
-  const [errors, setErrors] = useState({
-    itemName: "",
-    price: "",
-    quantity: "",
-    weight: "",
-    selectedType: "",
-  });
+  const [errors, setErrors] = useState({ categoryName: "", description: "" });
 
   const openModal = () => setIsOpen(true);
-  const closeModal = () => {
-    setIsOpen(false);
-    setFormData({
-      itemName: "",
-      price: "",
-      quantity: "",
-      weight: "",
-      selectedType: "",
-    });
-    setErrors({
-      itemName: "",
-      price: "",
-      quantity: "",
-      weight: "",
-      selectedType: "",
-    });
-  };
+  const closeModal = () => setIsOpen(false);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
+    const { value } = e.target;
 
-    if (value) {
-      setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+    if (field === "categoryName") {
+      setCategoryName(value);
+      if (value.trim()) setErrors((prevErrors) => ({ ...prevErrors, categoryName: "" }));
+    } else if (field === "description") {
+      setDescription(value);
+      if (value.trim()) setErrors((prevErrors) => ({ ...prevErrors, description: "" }));
     }
   };
 
   const validateForm = () => {
-    const newErrors = {
-      itemName: "",
-      price: "",
-      quantity: "",
-      weight: "",
-      selectedType: "",
-    };
     let isValid = true;
+    const newErrors = { categoryName: "", description: "" };
 
-    if (!formData.itemName) {
-      newErrors.itemName = "Item name is required";
+    if (!categoryName.trim()) {
+      newErrors.categoryName = "Category name is required";
       isValid = false;
     }
 
-    if (!formData.price || isNaN(Number(formData.price))) {
-      newErrors.price = "Valid price is required";
-      isValid = false;
-    }
-
-    if (!formData.quantity || isNaN(Number(formData.quantity))) {
-      newErrors.quantity = "Valid quantity is required";
-      isValid = false;
-    }
-
-    if (!formData.weight || isNaN(Number(formData.weight))) {
-      newErrors.weight = "Valid weight is required";
-      isValid = false;
-    }
-
-    if (!formData.selectedType) {
-      newErrors.selectedType = "Tender type is required";
+    if (!description.trim()) {
+      newErrors.description = "Description is required";
       isValid = false;
     }
 
@@ -92,166 +44,97 @@ const EditCategories = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (validateForm()) {
-      console.log("Form submitted:", formData);
+      console.log("Category added:", { categoryName, description });
+      setCategoryName("");
+      setDescription("");
+      setErrors({ categoryName: "", description: "" });
       closeModal();
     }
   };
 
   return (
     <>
-      {/* <div className="hidden below-md:block ">
-        <button
-          onClick={openModal}
-          className=" hover:gap-2 text-white w-[50px] hover:w-[159px] h-[50px] rounded-md  items-center justify-center overflow-hidden transition-all duration-10 group"
-        >
-          <img
-            src="/images/addButton.svg"
-            alt="Add Button"
-            className="transition-opacity duration-10"
-          />
-        </button>
-      </div> */}
+       <div>
+            <Button onClick={openModal}>
+              <img
+                src="/images/edit-pencil.svg"
+                alt="Add icon"
+                className="flex justify-center items-center w-5 h-5"
+              />
+            </Button>
+          </div>
 
-      <div>
-        <Button onClick={openModal}>
-          <img
-            src="/images/edit-pencil.svg"
-            alt="Add icon"
-            className="flex justify-center items-center w-5 h-5"
-          />
-        </Button>
-      </div>
-      <Dialog
-        open={isOpen}
-        as="div"
-        className="relative z-50"
-        onClose={closeModal}
-      >
+      {/* Dialog for the modal */}
+      <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[420px]  below-md:w-[344px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
+          <DialogPanel className="w-[420px] below-md:w-[345px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
             <div className="flex justify-between">
               <DialogTitle as="h3" className="font-medium text-gray-900">
-                Edit Category
+                Edit  Category
               </DialogTitle>
               <img
                 onClick={closeModal}
                 src="/images/cancelicon.svg"
-                alt="Close"
+                alt=""
                 className="cursor-pointer"
               />
             </div>
 
-            <form onSubmit={handleSubmit} className="mt-4">
-              <div className="mb-2">
-                <label className="text-sm text-gray-600">Category</label>
-                <select
-                  name="selectedType"
-                  value={formData.selectedType}
-                  onChange={handleInputChange}
-                  className={`h-[42px] mt-1 pl-2 w-full text-sm font-medium rounded-lg border ${
-                    errors.selectedType ? "border-red-500" : "border-gray-300"
-                  }`}
-                >
-                  <option value="" disabled>
-                    Please select Tender Category
-                  </option>
-                  <option value="dairy">Dairy</option>
-                  <option value="	bakery"> Bakery</option>
-                  <option value="dairy">Dairy</option>
-                  <option value="	bakery"> Bakery</option>
-                </select>
-                {errors.selectedType && (
-                  <p className="text-xs text-red-500">{errors.selectedType}</p>
-                )}
-              </div>
+            <div className="mt-4">
+              <form onSubmit={handleSubmit}>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="col-span-2">
+                    <label className="text-sm text-gray-600">Category Name</label>
+                    <input
+                      type="text"
+                      value={categoryName}
+                      onChange={(e) => handleInputChange(e, "categoryName")}
+                      className={`h-[42px] mt-2 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                        errors.categoryName ? "border-red-500" : "border-gray-300"
+                      }`}
+                      placeholder="Please enter Category Name"
+                    />
+                    {errors.categoryName && (
+                      <p className="text-xs text-red-500">{errors.categoryName}</p>
+                    )}
+                  </div>
 
-              <div className="mb-2">
-                <label className="text-sm text-gray-600">Item Name</label>
-                <input
-                  type="text"
-                  name="itemName"
-                  value={formData.itemName}
-                  onChange={handleInputChange}
-                  className={`h-[42px] mt-1 pl-2 w-full text-sm font-medium rounded-lg border ${
-                    errors.itemName ? "border-red-500" : "border-gray-300"
-                  }`}
-                  placeholder="Please enter Item Name"
-                />
-                {errors.itemName && (
-                  <p className="text-xs text-red-500">{errors.itemName}</p>
-                )}
-              </div>
+                  <div className="col-span-2">
+                    <label className="text-sm text-gray-600">Description</label>
+                    <input
+                      type="text"
+                      value={description}
+                      onChange={(e) => handleInputChange(e, "description")}
+                      className={`h-[42px] mt-2 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                        errors.description ? "border-red-500" : "border-gray-300"
+                      }`}
+                      placeholder="Please enter Description"
+                    />
+                    {errors.description && (
+                      <p className="text-xs text-red-500">{errors.description}</p>
+                    )}
+                  </div>
+                </div>
 
-              <div className="mb-2">
-                <label className="text-sm text-gray-600">Price</label>
-                <input
-                  type="text"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleInputChange}
-                  className={`h-[42px] mt-1 pl-2 w-full text-sm font-medium rounded-lg border ${
-                    errors.price ? "border-red-500" : "border-gray-300"
-                  }`}
-                  placeholder="Please enter Price"
-                />
-                {errors.price && (
-                  <p className="text-xs text-red-500">{errors.price}</p>
-                )}
-              </div>
-
-              <div className="mb-2">
-                <label className="text-sm text-gray-600">Quantity</label>
-                <input
-                  type="text"
-                  name="quantity"
-                  value={formData.quantity}
-                  onChange={handleInputChange}
-                  className={`h-[42px] mt-1 pl-2 w-full text-sm font-medium rounded-lg border ${
-                    errors.quantity ? "border-red-500" : "border-gray-300"
-                  }`}
-                  placeholder="Please enter Quantity"
-                />
-                {errors.quantity && (
-                  <p className="text-xs text-red-500">{errors.quantity}</p>
-                )}
-              </div>
-
-              <div className="mb-2">
-                <label className="text-sm text-gray-600">Weight</label>
-                <input
-                  type="text"
-                  name="weight"
-                  value={formData.weight}
-                  onChange={handleInputChange}
-                  className={`h-[42px] mt-1 pl-2 w-full text-sm font-medium rounded-lg border ${
-                    errors.weight ? "border-red-500" : "border-gray-300"
-                  }`}
-                  placeholder="Please enter Weight"
-                />
-                {errors.weight && (
-                  <p className="text-xs text-red-500">{errors.weight}</p>
-                )}
-              </div>
-
-              <div className="flex mt-5 justify-between">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="mr-4 px-4 py-2 h-[37px] w-[165px] bg-[#E4E4E4] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
-                >
-                  Add Item
-                </button>
-              </div>
-            </form>
+                <div className="flex mt-7 justify-between">
+                  <button
+                    type="button"
+                    onClick={closeModal}
+                    className="mr-4 px-4 py-2 h-[37px] w-[165px] bg-[#E4E4E4] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
+                  >
+                    Save
+                  </button>
+                </div>
+              </form>
+            </div>
           </DialogPanel>
         </div>
       </Dialog>

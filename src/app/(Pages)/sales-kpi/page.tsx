@@ -45,7 +45,7 @@ const SalesKPI: FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-10px)] tablet:max-h-[calc(100vh-10px)] overflow-auto"
+      className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-10px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       {/* <div className="below-md:flex below-md:justify-center">
@@ -55,7 +55,7 @@ const SalesKPI: FC = () => {
       </div> */}
 
       <div className="mb-1 below-md:mb-6 tablet:mb-6">
-        <div className="flex flex-row below-md:flex-col below-md:items-end sticky  justify-between pt-6 below-md:px-3  pl-6 pr-6 pb-6 below-md:pb-3 bg-[#f7f8f9] ">
+        <div className="flex flex-row below-md:flex-col below-md:items-end sticky  justify-between pt-6 below-md:pt-3 below-md:px-3  pl-6 pr-6 pb-6 below-md:pb-3 bg-[#f7f8f9] ">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
             <Dropdown
               options={options}
@@ -226,11 +226,11 @@ const SalesKPI: FC = () => {
         </div>
 
         <div className="flex flex-col below-md:flex-col tablet:flex-col justify-between rounded-lg bg-white mt-6 below-md:mt-3 below-md:mx-3 shadow-md ml-6 mr-6">
-          <div className="w-full text-left font-bold ml-6 mt-3 text-[16px] text-[#334155] mb-4">
+          <div className="w-full text-left font-bold ml-6 mt-3 text-[16px] text-[#334155]">
             Expense Distribution
           </div>
           <div className="flex flex-row items-center below-md:flex-col tablet:flex-col mx-3">
-            <div>
+            <div className="-my-12">
               <DonutChart />
             </div>
             <div className="overflow-x-auto w-full custom-scrollbar">

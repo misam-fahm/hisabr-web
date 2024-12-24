@@ -177,7 +177,7 @@ const DetailsPage: React.FC = () => {
       <img
         onClick={handleBack}
         src="/images/backIcon.svg"
-        className="fixed top-4 left-4 z-30 below-lg:hidden"
+        className="fixed top-4 left-4 z-30 below-lg:hidden tablet:hidden"
       />
       {/* <div className="below-md:flex below-md:justify-center ">
         <p className="text-[18px] below-md:text-[16px] below-md:mr-8 font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
@@ -185,7 +185,7 @@ const DetailsPage: React.FC = () => {
         </p>
       </div> */}
 
-      <div className="flex flex-row gap-3 justify-end items-center mt-6 below-md:mt-2 below-md:mx-3 mb-6 mx-6">
+      <div className="flex flex-row gap-3 justify-end items-center mt-6 below-md:mt-0 below-md:mx-3 mb-6 mx-6">
         <div>
           <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold ">
             <img src="/images/addIcon.svg" alt="add Icon" className="mr-2" />
@@ -257,7 +257,7 @@ const DetailsPage: React.FC = () => {
           <Pagination table={table} />
         </div>
 
-        <div className="below-lg:hidden">
+        <div className="below-lg:hidden tablet:hidden">
           <div className="flex flex-col">
             <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
@@ -372,7 +372,7 @@ const DetailsPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="below-lg:hidden flex justify-end fixed bottom-3 right-6">
+      <div className="below-lg:hidden flex justify-end fixed bottom-3 right-6 tablet:hidden">
         <button
           className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[50px] h-[50px] rounded-md relative"
           onTouchStart={handlePressStart} // For mobile devices

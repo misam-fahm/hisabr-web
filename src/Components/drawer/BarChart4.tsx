@@ -72,7 +72,7 @@ const BarChart3: React.FC<{ selectedYear: number }> = ({ selectedYear }) => {
   // Check if screen size is less than 801px
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 801);
+      setIsMobile(window.innerWidth < 1025);
     };
 
     window.addEventListener("resize", handleResize);
