@@ -15,6 +15,7 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
+import AddExpenses from "@/Components/Expenses/AddExpenses";
 
 interface TableRow {
   date: string;
@@ -158,8 +159,8 @@ const columns: ColumnDef<TableRow>[] = [
   { accessorKey: "description", header: "Description" },
   { accessorKey: "type", header: "Type" },
   {
-    id: "pencil",
-    header: "pencil",
+    id: "edit",
+    header: "Edit",
     cell: () => (
       <button className="bg-[#FFFFFF] p-[9px] rounded-full shadow-[inset_-2px_-2px_2px_#E2F3F780,inset_2px_2px_3px_#F3F6FFAD]">
         <Images src="/images/pencil.svg" alt="pencil" width={14} height={14} />
@@ -292,11 +293,12 @@ const DetailsPage: React.FC = () => {
             Expenses
           </p>
         </div>
-        <div>
-          <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
+        <div className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
+        <AddExpenses />
+          {/* <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
             <img src="/images/addIcon.svg" alt="add Icon" className="mr-1" />
             Add Expense
-          </button>
+          </button> */}
         </div>
       </div>
 
