@@ -181,7 +181,7 @@ const columns: ColumnDef<TableRow>[] = [
     id: "view",
     header: () => <div className="text-center">View</div>,
     cell: () => (
-      <span className="flex justify-center">
+      <span onClick={() => (window.location.href = "/invoicedetails")} className="flex justify-center">
         <Images src="/images/eye.svg" alt="Eye Icon" width={25} height={25} />
       </span>
     ),
