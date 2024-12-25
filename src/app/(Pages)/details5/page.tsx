@@ -153,28 +153,30 @@ const formattedData = data?.map((item) => {
 console.log(formattedData);
 
 const columns: ColumnDef<TableRow>[] = [
-  { accessorKey: "date", header: "Date" },
-  { accessorKey: "store", header: "Store" },
-  { accessorKey: "amount", header: "Amount" },
-  { accessorKey: "description", header: "Description" },
-  { accessorKey: "type", header: "Type" },
+  { accessorKey: "date", header: "Date", size: 100 },
+  { accessorKey: "store", header: "Store", size: 80 },
+  { accessorKey: "amount", header: "Amount", size: 80 },
+  { accessorKey: "description", header: "Description", size: 160 },
+  { accessorKey: "type", header: "Type", size: 140 },
   {
     id: "edit",
     header: "Edit",
     cell: () => (
-      <button className="bg-[#FFFFFF] p-[9px] rounded-full shadow-[inset_-2px_-2px_2px_#E2F3F780,inset_2px_2px_3px_#F3F6FFAD]">
-        <Images src="/images/pencil.svg" alt="pencil" width={14} height={14} />
+      <button>
+        <Images src="/images/pencil.svg" alt="pencil" width={15} height={15} />
       </button>
     ),
+    size: 70,
   },
   {
     id: "delete",
     header: "Delete",
     cell: () => (
-      <button className="bg-white p-2 rounded-full shadow-inner">
-        <Images src="/images/delete1.svg" alt="Delete" width={14} height={14} />
+      <button>
+        <Images src="/images/delete1.svg" alt="Delete" width={15} height={15} />
       </button>
     ),
+    size: 70,
   },
 ];
 
@@ -188,7 +190,7 @@ const DetailsPage: React.FC = () => {
 
     initialState: {
       pagination: {
-        pageSize: 5,
+        pageSize: 10,
         pageIndex: 0,
       },
     },
@@ -308,14 +310,15 @@ const DetailsPage: React.FC = () => {
         <div className="below-md:hidden">
           {/* Table */}
           <div className="overflow-x-auto shadow-md rounded-lg">
-            <table className="w-full border-collapse border border-gray-200 ">
+            <table className="w-full border-collapse border border-gray-200">
               <thead className="bg-[#334155]">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px]"
+                        className="text-left px-4 py-2.5 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+                        style={{ width: `${header.column.getSize()}px` }} // Applying dynamic width
                       >
                         {header.isPlaceholder
                           ? null
@@ -328,34 +331,42 @@ const DetailsPage: React.FC = () => {
                   </tr>
                 ))}
               </thead>
-              <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={
-                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                    }
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="px-4 py-1 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
             </table>
+            <div
+              className="w-full overflow-y-auto scrollbar-thin flex-grow"
+              style={{ maxHeight: "calc(100vh - 270px)" }}
+            >
+              <table className="w-full border-collapse border-gray-200 table-fixed">
+                <tbody>
+                  {table.getRowModel().rows.map((row) => (
+                    <tr
+                      key={row.id}
+                      className={
+                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                      }
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          key={cell.id}
+                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-
-          {/* Pagination */}
-          <Pagination table={table} />
         </div>
+
+        {/* Pagination */}
+        <Pagination table={table} />
 
         <div className="below-lg:hidden tablet:hidden">
           <div className="flex flex-col">

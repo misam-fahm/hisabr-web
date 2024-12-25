@@ -3,7 +3,6 @@ import React, { FC, useState } from "react";
 import DateRange from "@/Components/drawer/DateRangePicker";
 import Images from "@/Components/ui/Common/Image";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import Pagination from "@/Components/ui/Common/Pagination";
 import Dropdown from "@/Components/ui/Common/DropDown";
 
@@ -250,10 +249,10 @@ const Sales: FC = () => {
         <span className="flex justify-center">
           <button onClick={handleImageClick}>
             <Images
-              src="/images/View_duotone.svg"
+              src="/images/eye.svg"
               alt="Eye Icon"
-              width={20}
-              height={20}
+              width={25}
+              height={25}
             />
           </button>
         </span>
@@ -325,7 +324,7 @@ const Sales: FC = () => {
       className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-1px)] tablet:max-h-[calc(100vh-1px)] below-md:mb-10 tablet:mb-10 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className="mx-6 mt-6 below-md:mx-3 below-md:mt-3 tablet:mt-4">
+      <div className="mx-6 mt-6 below-md:mx-3 below-md:mt-0 tablet:mt-4">
         <div className="flex flex-row below-md:flex-col pb-6 sticky  below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4  ">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
             {/* Dropdown Button */}
@@ -420,7 +419,7 @@ const Sales: FC = () => {
 
         {/* Table */}
         {/* Desktop View */}
-        <div className="overflow-x-auto border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block shadow-md">
+        <div className="tablet:hidden overflow-x-auto border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block shadow-md">
           <div className="overflow-hidden max-w-full">
             <table className="w-full border-collapse border-gray-200 table-fixed shadow-lg">
               <thead className="bg-[#334155] sticky top-0 z-10">
@@ -479,7 +478,9 @@ const Sales: FC = () => {
         </div>
 
         {/* Pagination */}
-        <Pagination table={table} />
+        <div className="tablet:hidden">
+          <Pagination table={table} />
+        </div>
 
         <div className="below-lg:hidden">
           <div className="flex flex-col">
