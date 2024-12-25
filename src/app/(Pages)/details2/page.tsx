@@ -4,6 +4,9 @@ import "../globals.css";
 import { useRouter } from "next/navigation";
 import Images from "@/Components/ui/Common/Image";
 import Pagination from "@/Components/ui/Common/Pagination";
+import AddTender from "@/Components/Setup/AddTender";
+import DeleteTenders from "@/Components/Setup/DeleteTenders";
+import EditTenders from "@/Components/Setup/EditTenders";
 
 import {
   useReactTable,
@@ -116,22 +119,22 @@ const columns: ColumnDef<TableRow>[] = [
   },
 
   {
-    id: "pencil",
-    header: "Edit",
+    id: "edit",
+    header: () => <div className="text-center  ">Edit</div>,
     cell: () => (
-      <button>
-        <Images src="/images/pencil.svg" alt="pencil" width={15} height={15} />
-      </button>
+      <span className="flex justify-center">
+        <EditTenders />
+      </span>
     ),
     size: 65,
   },
   {
     id: "delete",
-    header: "Delete",
+    header: () => <div className="text-center ">Delete</div>,
     cell: () => (
-      <button>
-        <Images src="/images/delete1.svg" alt="delete" width={15} height={15} />
-      </button>
+      <span className="flex justify-center">
+        <DeleteTenders />
+      </span>
     ),
     size: 65,
   },
@@ -191,11 +194,8 @@ const DetailsPage: React.FC = () => {
       </div> */}
 
       <div className="flex flex-row gap-3 justify-end items-center mt-6 below-md:mt-0 below-md:mx-3 mb-6 mx-6">
-        <div>
-          <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[37px] rounded-md text-white text-[13px] font-semibold ">
-            <img src="/images/addIcon.svg" alt="add Icon" className="mr-2" />
-            Add Tender
-          </button>
+        <div className="below-md:hidden">
+          <AddTender />
         </div>
         <div>
           <p
@@ -278,9 +278,9 @@ const DetailsPage: React.FC = () => {
                 <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                   <span>VISA</span>
                 </div>
-                <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+                <div className="flex ">
+                  <EditTenders />
+                  <DeleteTenders />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -300,9 +300,9 @@ const DetailsPage: React.FC = () => {
                 <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                   <span>VISA</span>
                 </div>
-                <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+                <div className="flex">
+                  <EditTenders />
+                  <DeleteTenders />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -322,9 +322,9 @@ const DetailsPage: React.FC = () => {
                 <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                   <span>VISA</span>
                 </div>
-                <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+                <div className="flex ">
+                  <EditTenders />
+                  <DeleteTenders />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -344,9 +344,9 @@ const DetailsPage: React.FC = () => {
                 <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                   <span>VISA</span>
                 </div>
-                <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+                <div className="flex">
+                  <EditTenders />
+                  <DeleteTenders />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -366,9 +366,9 @@ const DetailsPage: React.FC = () => {
                 <div className="flex text-[#1A1A1A] text-[14px] font-bold">
                   <span>VISA</span>
                 </div>
-                <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+                <div className="flex">
+                  <EditTenders />
+                  <DeleteTenders />
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -386,21 +386,8 @@ const DetailsPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="below-lg:hidden flex justify-end fixed bottom-3 right-6 tablet:hidden">
-        <button
-          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[50px] h-[50px] rounded-md relative"
-          onTouchStart={handlePressStart} // For mobile devices
-          onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
-        >
-          <img src="/images/addIcon.svg" />
-          {showTooltip && (
-            <div className="absolute bottom-[70px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
-              Add Tender
-              {/* Tooltip Pointer */}
-              <div className="absolute top-full right-[20%] transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#79747E]"></div>
-            </div>
-          )}
-        </button>
+      <div className="below-lg:hidden flex justify-end fixed bottom-0 right-0 tablet:hidden">
+        <AddTender />
       </div>
     </main>
   );

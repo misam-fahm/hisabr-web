@@ -145,9 +145,9 @@ const formattedData = data?.map((item) => {
       2,
       "0"
     )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
-      .getFullYear()
-      .toString()
-      .slice(-2)}`;
+    .getFullYear()
+    .toString()
+    .slice(-2)}`;
 
   return { ...item, date: formattedDate };
 });
@@ -169,11 +169,14 @@ const columns: ColumnDef<TableRow>[] = [
       // </button>
       <>
         <span className="flex justify-center">
-          <EditExpense expenseData={expenseData}
+          <EditExpense
+            expenseData={expenseData}
             onUpdate={(updatedData) => {
               console.log("Updated Data: ", updatedData);
               // Example: update the state or send the updated data to an API
-            }} /></span>
+            }}
+          />
+        </span>
       </>
     ),
     size: 70,
@@ -202,7 +205,6 @@ const expenseData = {
   amount: 100,
   date: new Date(),
 };
-
 
 const DetailsPage: React.FC = () => {
   const table = useReactTable({
@@ -347,9 +349,9 @@ const DetailsPage: React.FC = () => {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </th>
                     ))}
                   </tr>
@@ -402,11 +404,13 @@ const DetailsPage: React.FC = () => {
                 </div>
                 <div className="flex gap-7">
                   <>
-                    <EditExpense expenseData={expenseData}
+                    <EditExpense
+                      expenseData={expenseData}
                       onUpdate={(updatedData) => {
                         console.log("Updated Data: ", updatedData);
                         // Example: update the state or send the updated data to an API
-                      }} />
+                      }}
+                    />
                     <DeleteExpense />
                   </>
                 </div>
@@ -538,21 +542,8 @@ const DetailsPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="below-lg:hidden flex justify-end fixed bottom-3 right-6 tablet:hidden">
-        <button
-          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[50px] h-[50px] rounded-md relative"
-          onTouchStart={handlePressStart} // For mobile devices
-          onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
-        >
-          <img src="/images/addIcon.svg" />
-          {showTooltip && (
-            <div className="absolute bottom-[70px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
-              Add Expense
-              {/* Tooltip Pointer */}
-              <div className="absolute top-full right-[20%] transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#79747E]"></div>
-            </div>
-          )}
-        </button>
+      <div className="below-lg:hidden flex justify-end fixed bottom-0 right-0 tablet:hidden">
+        <AddExpenses />
       </div>
     </main>
   );
