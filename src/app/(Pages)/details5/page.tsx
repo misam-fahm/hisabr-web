@@ -16,6 +16,8 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import AddExpenses from "@/Components/Expenses/AddExpenses";
+import DeleteExpense from "@/Components/Expenses/DeleteExpense";
+import EditExpense from "@/Components/Expenses/EditExpense";
 
 interface TableRow {
   date: string;
@@ -143,9 +145,9 @@ const formattedData = data?.map((item) => {
       2,
       "0"
     )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
-    .getFullYear()
-    .toString()
-    .slice(-2)}`;
+      .getFullYear()
+      .toString()
+      .slice(-2)}`;
 
   return { ...item, date: formattedDate };
 });
@@ -160,11 +162,19 @@ const columns: ColumnDef<TableRow>[] = [
   { accessorKey: "type", header: "Type", size: 140 },
   {
     id: "edit",
-    header: "Edit",
+    header: () => <div className="text-center">Edit</div>,
     cell: () => (
-      <button>
-        <Images src="/images/pencil.svg" alt="pencil" width={15} height={15} />
-      </button>
+      // <button>
+      //   <Images src="/images/pencil.svg" alt="pencil" width={15} height={15} />
+      // </button>
+      <>
+        <span className="flex justify-center">
+          <EditExpense expenseData={expenseData}
+            onUpdate={(updatedData) => {
+              console.log("Updated Data: ", updatedData);
+              // Example: update the state or send the updated data to an API
+            }} /></span>
+      </>
     ),
     size: 70,
   },
@@ -172,13 +182,27 @@ const columns: ColumnDef<TableRow>[] = [
     id: "delete",
     header: "Delete",
     cell: () => (
-      <button>
-        <Images src="/images/delete1.svg" alt="Delete" width={15} height={15} />
-      </button>
+      // <button>
+      //   <Images src="/images/delete1.svg" alt="Delete" width={15} height={15} />
+      // </button>
+      <>
+        <span className="flex justify-center">
+          {" "}
+          <DeleteExpense />
+        </span>
+      </>
     ),
     size: 70,
   },
 ];
+const expenseData = {
+  store: "Store 1",
+  expenseType: "Type 1",
+  description: "Expense description",
+  amount: 100,
+  date: new Date(),
+};
+
 
 const DetailsPage: React.FC = () => {
   const table = useReactTable({
@@ -296,7 +320,7 @@ const DetailsPage: React.FC = () => {
           </p>
         </div>
         <div className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
-        <AddExpenses />
+          <AddExpenses />
           {/* <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
             <img src="/images/addIcon.svg" alt="add Icon" className="mr-1" />
             Add Expense
@@ -323,9 +347,9 @@ const DetailsPage: React.FC = () => {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                       </th>
                     ))}
                   </tr>
@@ -334,7 +358,7 @@ const DetailsPage: React.FC = () => {
             </table>
             <div
               className="w-full overflow-y-auto scrollbar-thin flex-grow"
-              style={{ maxHeight: "calc(100vh - 270px)" }}
+              style={{ maxHeight: "calc(100vh - 320px)" }}
             >
               <table className="w-full border-collapse border-gray-200 table-fixed">
                 <tbody>
@@ -377,8 +401,14 @@ const DetailsPage: React.FC = () => {
                   <span>Mortgage</span>
                 </div>
                 <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+                  <>
+                    <EditExpense expenseData={expenseData}
+                      onUpdate={(updatedData) => {
+                        console.log("Updated Data: ", updatedData);
+                        // Example: update the state or send the updated data to an API
+                      }} />
+                    <DeleteExpense />
+                  </>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">

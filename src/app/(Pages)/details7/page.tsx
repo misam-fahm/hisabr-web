@@ -15,6 +15,9 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
+import EditExpense from "@/Components/Expenses/EditExpense";
+import DeleteExpense from "@/Components/Expenses/DeleteExpense";
+import AddExpenses from "@/Components/Expenses/AddExpenses";
 
 interface TableRow {
   date: string;
@@ -158,12 +161,17 @@ const columns: ColumnDef<TableRow>[] = [
   { accessorKey: "description", header: "Description", size: 160 },
   { accessorKey: "type", header: "Type", size: 140 },
   {
-    id: "pencil",
-    header: "pencil",
+    id: "edit",
+    header: () => <div className="text-center">Edit</div>,
     cell: () => (
-      <button>
-        <Images src="/images/pencil.svg" alt="pencil" width={15} height={15} />
-      </button>
+      <>
+      <span className="flex justify-center">
+        <EditExpense expenseData={expenseData}
+          onUpdate={(updatedData) => {
+            console.log("Updated Data: ", updatedData);
+            // Example: update the state or send the updated data to an API
+          }} /></span>
+    </>
     ),
     size: 70,
   },
@@ -171,13 +179,23 @@ const columns: ColumnDef<TableRow>[] = [
     id: "delete",
     header: "Delete",
     cell: () => (
-      <button>
-        <Images src="/images/delete1.svg" alt="Delete" width={15} height={15} />
-      </button>
+      <>
+      <span className="flex justify-center">
+        {" "}
+        <DeleteExpense />
+      </span>
+    </>
     ),
     size: 70,
   },
 ];
+const expenseData = {
+  store: "Store 1",
+  expenseType: "Type 1",
+  description: "Expense description",
+  amount: 100,
+  date: new Date(),
+};
 
 const DetailsPage: React.FC = () => {
   const table = useReactTable({
@@ -294,11 +312,12 @@ const DetailsPage: React.FC = () => {
             Expenses
           </p>
         </div>
-        <div>
-          <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
+        <div className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
+        <AddExpenses />
+          {/* <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
             <img src="/images/addIcon.svg" alt="add Icon" className="mr-1" />
             Add Expense
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -332,7 +351,7 @@ const DetailsPage: React.FC = () => {
             </table>
             <div
               className="w-full overflow-y-auto scrollbar-thin flex-grow"
-              style={{ maxHeight: "calc(100vh - 270px)" }}
+              style={{ maxHeight: "calc(100vh - 320px)" }}
             >
               <table className="w-full border-collapse border-gray-200 table-fixed">
                 <tbody>
@@ -374,8 +393,14 @@ const DetailsPage: React.FC = () => {
                   <span>Mortgage</span>
                 </div>
                 <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+                <>
+                    <EditExpense expenseData={expenseData}
+                      onUpdate={(updatedData) => {
+                        console.log("Updated Data: ", updatedData);
+                        // Example: update the state or send the updated data to an API
+                      }} />
+                    <DeleteExpense />
+                  </>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -401,8 +426,14 @@ const DetailsPage: React.FC = () => {
                   <span>Mortgage</span>
                 </div>
                 <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+                <>
+                    <EditExpense expenseData={expenseData}
+                      onUpdate={(updatedData) => {
+                        console.log("Updated Data: ", updatedData);
+                        // Example: update the state or send the updated data to an API
+                      }} />
+                    <DeleteExpense />
+                  </>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -428,8 +459,14 @@ const DetailsPage: React.FC = () => {
                   <span>Mortgage</span>
                 </div>
                 <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+                <>
+                    <EditExpense expenseData={expenseData}
+                      onUpdate={(updatedData) => {
+                        console.log("Updated Data: ", updatedData);
+                        // Example: update the state or send the updated data to an API
+                      }} />
+                    <DeleteExpense />
+                  </>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -455,8 +492,14 @@ const DetailsPage: React.FC = () => {
                   <span>Mortgage</span>
                 </div>
                 <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+                <>
+                    <EditExpense expenseData={expenseData}
+                      onUpdate={(updatedData) => {
+                        console.log("Updated Data: ", updatedData);
+                        // Example: update the state or send the updated data to an API
+                      }} />
+                    <DeleteExpense />
+                  </>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -482,8 +525,14 @@ const DetailsPage: React.FC = () => {
                   <span>Mortgage</span>
                 </div>
                 <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+                <>
+                    <EditExpense expenseData={expenseData}
+                      onUpdate={(updatedData) => {
+                        console.log("Updated Data: ", updatedData);
+                        // Example: update the state or send the updated data to an API
+                      }} />
+                    <DeleteExpense />
+                  </>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">

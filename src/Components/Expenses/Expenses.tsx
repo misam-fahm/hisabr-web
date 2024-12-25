@@ -277,94 +277,9 @@ const Expenses: FC = () => {
     [Date | undefined, Date | undefined]
   >([undefined, undefined]);
   const [startDate, endDate] = dateRange;
-  // Utility to check if a date is within the same month as the selected startDate
-  const isWithinSameMonth = (date: Date) => {
-    if (!startDate) return true; // Allow all dates if no startDate is selected
-    return (
-      date.getMonth() === startDate.getMonth() &&
-      date.getFullYear() === startDate.getFullYear()
-    );
-  };
-  // Helper function to determine if a date is from the next month
-  const isNextMonth = (date: Date) => {
-    const today = new Date();
-    const visibleMonth = today.getMonth(); // Replace with actual visible calendar month logic
-    return (
-      date.getMonth() > visibleMonth || date.getFullYear() > today.getFullYear()
-    );
-  };
+  
 
-  // Custom day styling based on selected range
-  const dayClassName = (date: Date) => {
-    const today = new Date();
-    // If there's no range selected, don't apply any custom styling
-    if (!startDate || !endDate) return "";
-
-    // Style future dates as disabled
-    if (date > today) {
-      return "text-gray-400"; // Light gray for future dates
-    }
-
-    // If date is within the selected range, apply a highlight color
-    if (startDate && endDate && date >= startDate && date <= endDate) {
-      return "bg-blue-500 text-white"; // Highlight dates in the selected range
-    }
-
-    // Apply same color for dates before the start date and after the end date in the same month
-    if (
-      date < startDate &&
-      date.getMonth() === startDate.getMonth() &&
-      date.getFullYear() === startDate.getFullYear()
-    ) {
-      return "bg-gray-200 text-black"; // Yellow background for dates before the selected range
-    }
-    if (
-      date > endDate &&
-      date.getMonth() === startDate.getMonth() &&
-      date.getFullYear() === startDate.getFullYear()
-    ) {
-      return "bg-gray-200 text-black"; // Yellow background for dates after the selected range
-    }
-
-    // Disable next month's dates (December in this case) by hiding them
-    if (
-      date.getMonth() !== startDate.getMonth() ||
-      date.getFullYear() !== startDate.getFullYear()
-    ) {
-      return "hidden"; // Hides other month dates
-    }
-
-    return "";
-  };
-
-  // Disable dates in the next month and all future dates
-  const filterDate = (date: Date) => {
-    const today = new Date();
-    // Disallow future dates
-    if (date > today) {
-      return false;
-    }
-
-    if (startDate) {
-      return (
-        date.getMonth() === startDate.getMonth() &&
-        date.getFullYear() === startDate.getFullYear()
-      );
-    }
-
-    return true; // Disable future dates// Only past/present dates in the same month
-  };
-
-  const handleDateChange = (dates: [Date | null, Date | null]) => {
-    // Update the dateRange state with start and end date
-    const updatedDates: [Date | undefined, Date | undefined] = [
-      dates[0] || undefined, // Convert null to undefined
-      dates[1] || undefined,
-    ];
-    setDateRange(updatedDates); // Update the state
-  };
-
-  const calendarRef = useRef<DatePicker | null>(null);
+  // const calendarRef = useRef<DatePicker | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
@@ -412,7 +327,7 @@ const Expenses: FC = () => {
               {/* Dropdown Menu */}
               {isOpen && (
                 <div
-                  className="absolute left-[260px] below-md:left-[16px] below-md:w-[90%] w-[20%] mt-9 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
+                  className="absolute left-[253px] below-md:left-[16px] below-md:w-[90%] w-[265px] mt-9 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
                   style={{ zIndex: 50 }}
                 >
                   {options.map((option, index) => (
