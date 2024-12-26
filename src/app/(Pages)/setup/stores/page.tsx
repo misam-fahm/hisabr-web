@@ -140,13 +140,13 @@ const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "location",
     header: () => <div className="text-left">Location</div>,
-    cell: (info) => <div className="ml-1">{info.getValue() as string}</div>,
+    cell: (info) => <div>{info.getValue() as string}</div>,
     size: 120,
   },
   {
     accessorKey: "user",
     header: () => <div className="text-left ">User</div>,
-    cell: (info) => <div className="ml-2">{info.getValue() as string}</div>,
+    cell: (info) => <div>{info.getValue() as string}</div>,
     size: 100,
   },
   {
@@ -160,7 +160,7 @@ const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "royalty",
     header: () => <div className="text-left">Royalty</div>,
-    cell: (info) => <div className="ml-2">{info.getValue() as number}</div>,
+    cell: (info) => <div >{info.getValue() as number}</div>,
     size: 80,
   },
   {
@@ -221,11 +221,11 @@ const Page: FC = () => {
         {table.getRowModel().rows.map((row) => (
           <div
             key={row.id}
-            className={`border-b border-gray-300 p-3 bg-white rounded-lg mb-2 shadow-sm`}
+            className={`border border-gray-200 p-5 bg-white rounded-lg mb-2`}
           >
             <div className="flex justify-between items-center">
               {/* Name */}
-              <span className="font-medium text-[16px] text-[#334155]">
+              <span className="font-bold text-[14px] text-[#334155]">
                 {row.getValue("store")}
               </span>
               <div className="flex items-center gap-3">
@@ -235,27 +235,27 @@ const Page: FC = () => {
             </div>
 
             {/* Border */}
-            <div className="h-[1px] bg-gray-300 my-2"></div>
+            <div className="h-[1px] bg-gray-300 my-3"></div>
             <div className="text-[14px] mt-1 flex justify-between">
-              <span className="text-[#636363]">Date</span>{" "}
-              {row.getValue("date")}
+              <span className="text-[#636363] text-[13px] mb-2">Date</span>
+              <span className="text-[14px]"> {row.getValue("date")}</span>
             </div>
 
-            <div className="text-[14px] mt-1 flex justify-between">
-              <span className="text-[#636363]">Location</span>{" "}
-              {row.getValue("location")}
+            <div className=" mt-1 flex justify-between">
+              <span className="text-[#636363] text-[13px] mb-2">Location</span>{" "}
+              <span className="text-[14px]">{row.getValue("location")}</span>
             </div>
-            <div className="text-[14px] mt-1 flex justify-between">
-              <span className="text-[#636363]">User</span>{" "}
-              {row.getValue("user")}
+            <div className="mt-1 flex justify-between">
+              <span className="text-[#636363] text-[13px] mb-2">User</span>{" "}
+              <span className="text-[14px]">{row.getValue("user")}</span>
             </div>
-            <div className="text-[14px] mt-1 flex justify-between">
-              <span className="text-[#636363]">County</span>{" "}
-              {row.getValue("county")}
+            <div className=" mt-1 flex justify-between">
+              <span className="text-[#636363] text-[13px] mb-2">County</span>{" "}
+              <span className="text-[14px]">{row.getValue("county")}</span>
             </div>
-            <div className="text-[14px] mt-1 flex justify-between">
-              <span className="text-[#636363]">Royalty</span>{" "}
-              {row.getValue("royalty")}
+            <div className="mt-1 flex justify-between">
+              <span className="text-[#636363] text-[13px] mb-2">Royalty</span>{" "}
+              <span className="text-[14px]">{row.getValue("royalty")}</span>
             </div>
           </div>
         ))}

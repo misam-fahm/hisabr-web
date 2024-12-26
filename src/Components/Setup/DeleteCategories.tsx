@@ -51,7 +51,7 @@ const DeleteCategories = () => {
             onClick={openModal}
             src="/images/delete-bin.svg"
             alt="Add icon"
-            className="flex justify-center items-center w-5 h-5   below-md:ml-5"
+            className="flex justify-center items-center w-4 h-4   below-md:ml-5"
           />
         </Button>
       </div>
