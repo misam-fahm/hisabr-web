@@ -181,7 +181,10 @@ const columns: ColumnDef<TableRow>[] = [
     id: "view",
     header: () => <div className="text-center">View</div>,
     cell: () => (
-      <span onClick={() => (window.location.href = "/invoicedetails")} className="flex justify-center">
+      <span
+        onClick={() => (window.location.href = "/invoicedetails")}
+        className="flex justify-center"
+      >
         <Images src="/images/eye.svg" alt="Eye Icon" width={25} height={25} />
       </span>
     ),
@@ -367,7 +370,7 @@ const DetailsPage: React.FC = () => {
             </table>
             <div
               className="w-full overflow-y-auto scrollbar-thin flex-grow"
-              style={{ maxHeight: "calc(100vh - 270px)" }}
+              style={{ maxHeight: "calc(100vh - 320px)" }}
             >
               <table className="w-full border-collapse border-gray-200 table-fixed">
                 <tbody>
@@ -531,6 +534,7 @@ const DetailsPage: React.FC = () => {
           className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[50px] h-[50px] rounded-md relative"
           onTouchStart={handlePressStart} // For mobile devices
           onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
+          onClick={handleButtonClick}
         >
           <img src="/images/uploadIcon.svg" />
           {showTooltip && (
@@ -541,6 +545,12 @@ const DetailsPage: React.FC = () => {
             </div>
           )}
         </button>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+        />
       </div>
     </main>
   );

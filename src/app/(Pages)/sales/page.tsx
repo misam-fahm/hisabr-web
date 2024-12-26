@@ -198,23 +198,23 @@ const Sales: FC = () => {
     },
     {
       accessorKey: "store",
-      header: () => <div className="text-left">Store</div>,
+      header: () => <div>Store</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
-      size: 160,
+      size: 100,
     },
     {
       accessorKey: "orders",
-      header: () => <div className="text-right mr-16">Orders</div>,
+      header: () => <div className="text-right mr-10">Orders</div>,
       cell: (info) => (
-        <div className="text-right mr-14">{info.getValue() as number}</div>
+        <div className="text-right mr-10">{info.getValue() as number}</div>
       ),
       size: 120,
     },
     {
       accessorKey: "quantity",
-      header: () => <div className="text-right mr-16">Quantity</div>,
+      header: () => <div className="text-right mr-10">Quantity</div>,
       cell: (info) => (
-        <div className="text-right mr-14">{info.getValue() as number}</div>
+        <div className="text-right mr-10">{info.getValue() as number}</div>
       ),
       size: 120,
     },
@@ -228,17 +228,17 @@ const Sales: FC = () => {
     },
     {
       accessorKey: "net",
-      header: () => <div className="text-right mr-16">Net</div>,
+      header: () => <div className="text-right mr-12">Net</div>,
       cell: (info) => (
-        <div className="text-right mr-14">{info.getValue() as number}</div>
+        <div className="text-right mr-12">{info.getValue() as number}</div>
       ),
       size: 120,
     },
     {
       accessorKey: "average",
-      header: () => <div className="text-right mr-16">Average</div>,
+      header: () => <div className="text-right mr-10">Average</div>,
       cell: (info) => (
-        <div className="text-right mr-14">{info.getValue() as number}</div>
+        <div className="text-right mr-10">{info.getValue() as number}</div>
       ),
       size: 120,
     },
