@@ -3,7 +3,6 @@ import React from "react";
 import { useState } from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
-import Images from "@/Components/ui/Common/Image";
 import Pagination from "@/Components/ui/Common/Pagination";
 import Dropdown from "@/Components/ui/Common/DropDown";
 
@@ -165,13 +164,16 @@ const columns: ColumnDef<TableRow>[] = [
     header: () => <div className="text-center">Edit</div>,
     cell: () => (
       <>
-      <span className="flex justify-center">
-        <EditExpense expenseData={expenseData}
-          onUpdate={(updatedData) => {
-            console.log("Updated Data: ", updatedData);
-            // Example: update the state or send the updated data to an API
-          }} /></span>
-    </>
+        <span className="flex justify-center">
+          <EditExpense
+            expenseData={expenseData}
+            onUpdate={(updatedData) => {
+              console.log("Updated Data: ", updatedData);
+              // Example: update the state or send the updated data to an API
+            }}
+          />
+        </span>
+      </>
     ),
     size: 70,
   },
@@ -180,11 +182,11 @@ const columns: ColumnDef<TableRow>[] = [
     header: "Delete",
     cell: () => (
       <>
-      <span className="flex justify-center">
-        {" "}
-        <DeleteExpense />
-      </span>
-    </>
+        <span className="flex justify-center">
+          {" "}
+          <DeleteExpense />
+        </span>
+      </>
     ),
     size: 70,
   },
@@ -313,7 +315,7 @@ const DetailsPage: React.FC = () => {
           </p>
         </div>
         <div className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
-        <AddExpenses />
+          <AddExpenses />
           {/* <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
             <img src="/images/addIcon.svg" alt="add Icon" className="mr-1" />
             Add Expense
@@ -393,12 +395,14 @@ const DetailsPage: React.FC = () => {
                   <span>Mortgage</span>
                 </div>
                 <div className="flex gap-7">
-                <>
-                    <EditExpense expenseData={expenseData}
+                  <>
+                    <EditExpense
+                      expenseData={expenseData}
                       onUpdate={(updatedData) => {
                         console.log("Updated Data: ", updatedData);
                         // Example: update the state or send the updated data to an API
-                      }} />
+                      }}
+                    />
                     <DeleteExpense />
                   </>
                 </div>
@@ -426,12 +430,14 @@ const DetailsPage: React.FC = () => {
                   <span>Mortgage</span>
                 </div>
                 <div className="flex gap-7">
-                <>
-                    <EditExpense expenseData={expenseData}
+                  <>
+                    <EditExpense
+                      expenseData={expenseData}
                       onUpdate={(updatedData) => {
                         console.log("Updated Data: ", updatedData);
                         // Example: update the state or send the updated data to an API
-                      }} />
+                      }}
+                    />
                     <DeleteExpense />
                   </>
                 </div>
@@ -459,12 +465,14 @@ const DetailsPage: React.FC = () => {
                   <span>Mortgage</span>
                 </div>
                 <div className="flex gap-7">
-                <>
-                    <EditExpense expenseData={expenseData}
+                  <>
+                    <EditExpense
+                      expenseData={expenseData}
                       onUpdate={(updatedData) => {
                         console.log("Updated Data: ", updatedData);
                         // Example: update the state or send the updated data to an API
-                      }} />
+                      }}
+                    />
                     <DeleteExpense />
                   </>
                 </div>
@@ -492,12 +500,14 @@ const DetailsPage: React.FC = () => {
                   <span>Mortgage</span>
                 </div>
                 <div className="flex gap-7">
-                <>
-                    <EditExpense expenseData={expenseData}
+                  <>
+                    <EditExpense
+                      expenseData={expenseData}
                       onUpdate={(updatedData) => {
                         console.log("Updated Data: ", updatedData);
                         // Example: update the state or send the updated data to an API
-                      }} />
+                      }}
+                    />
                     <DeleteExpense />
                   </>
                 </div>
@@ -525,12 +535,14 @@ const DetailsPage: React.FC = () => {
                   <span>Mortgage</span>
                 </div>
                 <div className="flex gap-7">
-                <>
-                    <EditExpense expenseData={expenseData}
+                  <>
+                    <EditExpense
+                      expenseData={expenseData}
                       onUpdate={(updatedData) => {
                         console.log("Updated Data: ", updatedData);
                         // Example: update the state or send the updated data to an API
-                      }} />
+                      }}
+                    />
                     <DeleteExpense />
                   </>
                 </div>
@@ -554,21 +566,8 @@ const DetailsPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="below-lg:hidden flex justify-end fixed bottom-3 right-6 tablet:hidden">
-        <button
-          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[50px] h-[50px] rounded-md relative"
-          onTouchStart={handlePressStart} // For mobile devices
-          onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
-        >
-          <img src="/images/addIcon.svg" />
-          {showTooltip && (
-            <div className="absolute bottom-[70px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
-              Add Expense
-              {/* Tooltip Pointer */}
-              <div className="absolute top-full right-[20%] transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#79747E]"></div>
-            </div>
-          )}
-        </button>
+      <div className="below-lg:hidden flex justify-end fixed bottom-0 right-0 tablet:hidden">
+        <AddExpenses />
       </div>
     </main>
   );

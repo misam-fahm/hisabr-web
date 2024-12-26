@@ -198,23 +198,23 @@ const Sales: FC = () => {
     },
     {
       accessorKey: "store",
-      header: () => <div className="text-left">Store</div>,
+      header: () => <div>Store</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
-      size: 160,
+      size: 100,
     },
     {
       accessorKey: "orders",
-      header: () => <div className="text-right mr-16">Orders</div>,
+      header: () => <div className="text-right mr-10">Orders</div>,
       cell: (info) => (
-        <div className="text-right mr-14">{info.getValue() as number}</div>
+        <div className="text-right mr-10">{info.getValue() as number}</div>
       ),
       size: 120,
     },
     {
       accessorKey: "quantity",
-      header: () => <div className="text-right mr-16">Quantity</div>,
+      header: () => <div className="text-right mr-10">Quantity</div>,
       cell: (info) => (
-        <div className="text-right mr-14">{info.getValue() as number}</div>
+        <div className="text-right mr-10">{info.getValue() as number}</div>
       ),
       size: 120,
     },
@@ -228,17 +228,17 @@ const Sales: FC = () => {
     },
     {
       accessorKey: "net",
-      header: () => <div className="text-right mr-16">Net</div>,
+      header: () => <div className="text-right mr-12">Net</div>,
       cell: (info) => (
-        <div className="text-right mr-14">{info.getValue() as number}</div>
+        <div className="text-right mr-12">{info.getValue() as number}</div>
       ),
       size: 120,
     },
     {
       accessorKey: "average",
-      header: () => <div className="text-right mr-16">Average</div>,
+      header: () => <div className="text-right mr-10">Average</div>,
       cell: (info) => (
-        <div className="text-right mr-14">{info.getValue() as number}</div>
+        <div className="text-right mr-10">{info.getValue() as number}</div>
       ),
       size: 120,
     },
@@ -325,7 +325,7 @@ const Sales: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="mx-6 mt-6 below-md:mx-3 below-md:mt-0 tablet:mt-4">
-        <div className="flex flex-row below-md:flex-col pb-6 sticky  below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4  ">
+        <div className="flex flex-row below-md:flex-col pb-6 sticky z-20 below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4  ">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
             {/* Dropdown Button */}
             <Dropdown
