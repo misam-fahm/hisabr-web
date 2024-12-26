@@ -15,6 +15,9 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
+import AddExpenses from "@/Components/Expenses/AddExpenses";
+import DeleteExpense from "@/Components/Expenses/DeleteExpense";
+import EditExpense from "@/Components/Expenses/EditExpense";
 
 interface TableRow {
   date: string;
@@ -152,30 +155,56 @@ const formattedData = data?.map((item) => {
 console.log(formattedData);
 
 const columns: ColumnDef<TableRow>[] = [
-  { accessorKey: "date", header: "Date" },
-  { accessorKey: "store", header: "Store" },
-  { accessorKey: "amount", header: "Amount" },
-  { accessorKey: "description", header: "Description" },
-  { accessorKey: "type", header: "Type" },
+  { accessorKey: "date", header: "Date", size: 100 },
+  { accessorKey: "store", header: "Store", size: 80 },
+  { accessorKey: "amount", header: "Amount", size: 80 },
+  { accessorKey: "description", header: "Description", size: 160 },
+  { accessorKey: "type", header: "Type", size: 140 },
   {
-    id: "pencil",
-    header: "pencil",
+    id: "edit",
+    header: () => <div className="text-center">Edit</div>,
     cell: () => (
-      <button className="bg-[#FFFFFF] p-[9px] rounded-full shadow-[inset_-2px_-2px_2px_#E2F3F780,inset_2px_2px_3px_#F3F6FFAD]">
-        <Images src="/images/pencil.svg" alt="pencil" width={14} height={14} />
-      </button>
+      // <button>
+      //   <Images src="/images/pencil.svg" alt="pencil" width={15} height={15} />
+      // </button>
+      <>
+        <span className="flex justify-center">
+          <EditExpense
+            expenseData={expenseData}
+            onUpdate={(updatedData) => {
+              console.log("Updated Data: ", updatedData);
+              // Example: update the state or send the updated data to an API
+            }}
+          />
+        </span>
+      </>
     ),
+    size: 70,
   },
   {
     id: "delete",
     header: "Delete",
     cell: () => (
-      <button className="bg-white p-2 rounded-full shadow-inner">
-        <Images src="/images/delete1.svg" alt="Delete" width={14} height={14} />
-      </button>
+      // <button>
+      //   <Images src="/images/delete1.svg" alt="Delete" width={15} height={15} />
+      // </button>
+      <>
+        <span className="flex justify-center">
+          {" "}
+          <DeleteExpense />
+        </span>
+      </>
     ),
+    size: 70,
   },
 ];
+const expenseData = {
+  store: "Store 1",
+  expenseType: "Type 1",
+  description: "Expense description",
+  amount: 100,
+  date: new Date(),
+};
 
 const DetailsPage: React.FC = () => {
   const table = useReactTable({
@@ -187,7 +216,7 @@ const DetailsPage: React.FC = () => {
 
     initialState: {
       pagination: {
-        pageSize: 5,
+        pageSize: 10,
         pageIndex: 0,
       },
     },
@@ -292,11 +321,12 @@ const DetailsPage: React.FC = () => {
             Expenses
           </p>
         </div>
-        <div>
-          <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
+        <div className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
+          <AddExpenses />
+          {/* <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
             <img src="/images/addIcon.svg" alt="add Icon" className="mr-1" />
             Add Expense
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -306,14 +336,15 @@ const DetailsPage: React.FC = () => {
         <div className="below-md:hidden">
           {/* Table */}
           <div className="overflow-x-auto shadow-md rounded-lg">
-            <table className="w-full border-collapse border border-gray-200 ">
+            <table className="w-full border-collapse border border-gray-200">
               <thead className="bg-[#334155]">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px]"
+                        className="text-left px-4 py-2.5 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+                        style={{ width: `${header.column.getSize()}px` }} // Applying dynamic width
                       >
                         {header.isPlaceholder
                           ? null
@@ -326,34 +357,42 @@ const DetailsPage: React.FC = () => {
                   </tr>
                 ))}
               </thead>
-              <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={
-                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                    }
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="px-4 py-1 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
             </table>
+            <div
+              className="w-full overflow-y-auto scrollbar-thin flex-grow"
+              style={{ maxHeight: "calc(100vh - 320px)" }}
+            >
+              <table className="w-full border-collapse border-gray-200 table-fixed">
+                <tbody>
+                  {table.getRowModel().rows.map((row) => (
+                    <tr
+                      key={row.id}
+                      className={
+                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                      }
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          key={cell.id}
+                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-
-          {/* Pagination */}
-          <Pagination table={table} />
         </div>
+
+        {/* Pagination */}
+        <Pagination table={table} />
 
         <div className="below-lg:hidden tablet:hidden">
           <div className="flex flex-col">
@@ -364,8 +403,16 @@ const DetailsPage: React.FC = () => {
                   <span>Mortgage</span>
                 </div>
                 <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+                  <>
+                    <EditExpense
+                      expenseData={expenseData}
+                      onUpdate={(updatedData) => {
+                        console.log("Updated Data: ", updatedData);
+                        // Example: update the state or send the updated data to an API
+                      }}
+                    />
+                    <DeleteExpense />
+                  </>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -495,21 +542,8 @@ const DetailsPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="below-lg:hidden flex justify-end fixed bottom-3 right-6 tablet:hidden">
-        <button
-          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[50px] h-[50px] rounded-md relative"
-          onTouchStart={handlePressStart} // For mobile devices
-          onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
-        >
-          <img src="/images/addIcon.svg" />
-          {showTooltip && (
-            <div className="absolute bottom-[70px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
-              Add Expense
-              {/* Tooltip Pointer */}
-              <div className="absolute top-full right-[20%] transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#79747E]"></div>
-            </div>
-          )}
-        </button>
+      <div className="below-lg:hidden flex justify-end fixed bottom-0 right-0 tablet:hidden">
+        <AddExpenses />
       </div>
     </main>
   );

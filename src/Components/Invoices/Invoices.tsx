@@ -144,7 +144,7 @@ const Invoices = () => {
     setIsOpen(false);
   };
 
-  const calendarRef = useRef<DatePicker | null>(null);
+  // const calendarRef = useRef<DatePicker | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const handleClick = () => {
     // Focus the input field when the image is clicked
