@@ -325,7 +325,7 @@ const Sales: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="mx-6 mt-6 below-md:mx-3 below-md:mt-0 tablet:mt-4">
-        <div className="flex flex-row below-md:flex-col pb-6 sticky  below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4  ">
+        <div className="flex flex-row below-md:flex-col pb-6 sticky  below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
             {/* Dropdown Button */}
             <Dropdown
@@ -499,28 +499,28 @@ const Sales: FC = () => {
               </div>
               <div className="space-y-3 mb-2 px-2">
                 <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Store</p>
-                  <p className="text-[#1A1A1A] text-[12px]">13246</p>
+                  <p className="text-[#808080] text-[13px]">Store</p>
+                  <p className="text-[#1A1A1A] text-[14px]">13246</p>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Orders</p>
-                  <p className="text-[#1A1A1A] text-[12px]">345</p>
+                  <p className="text-[#808080] text-[13px]">Orders</p>
+                  <p className="text-[#1A1A1A] text-[14px]">345</p>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Quantity</p>
-                  <p className="text-[#1A1A1A] text-[12px]">145</p>
+                  <p className="text-[#808080] text-[13px]">Quantity</p>
+                  <p className="text-[#1A1A1A] text-[14px]">145</p>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Amount</p>
-                  <p className="text-[#1A1A1A] text-[12px]">$34,232</p>
+                  <p className="text-[#808080] text-[13px]">Amount</p>
+                  <p className="text-[#1A1A1A] text-[14px]">$34,232</p>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Net</p>
-                  <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
+                  <p className="text-[#808080] text-[13px]">Net</p>
+                  <p className="text-[#1A1A1A] text-[14px]">$3,484.37</p>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Average</p>
-                  <p className="text-[#1A1A1A] text-[12px]">$1,032</p>
+                  <p className="text-[#808080] text-[13px]">Average</p>
+                  <p className="text-[#1A1A1A] text-[14px]">$1,032</p>
                 </div>
               </div>
             </div>

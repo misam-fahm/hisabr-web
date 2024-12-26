@@ -172,28 +172,28 @@ const Invoices = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-50px)] px-6 overflow-auto"
+      className="max-h-[calc(100vh-50px)] px-6 below-md:px-3 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className='flex justify-between below-md:flex-col items-center w-full below-md:item-start below-md:space-y-1 gap-2 mt-6 mb-6'>
-        <div className="flex  gap-2 w-full below-md:flex-col">
+      <div className='flex justify-between below-md:flex-col items-center w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6'>
+        <div className="flex  gap-2 below-md:space-y-1 w-full below-md:flex-col">
           <div className="flex">
             {/* Dropdown Button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="bg-[#ffffff] text-[#636363] shadow below-md:px-2 px-4 py-[10px] rounded flex items-center justify-between w-[265px] h-[35px] text-[12px] below-md:h-[35px] below-md:w-full below-md:text[11px] below-md:text[#474747]"
+              className="bg-[#ffffff] text-[#636363] shadow px-3  rounded flex items-center justify-between w-[265px] h-[35px] text-[12px] below-md:h-[35px] below-md:w-full below-md:text[11px] below-md:text[#474747]"
             >
               <span>{selectedOption}</span>
               <img
                 src="./images/icon.svg"
-                className={`w-3 h-3 ml-2 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""
+                className={`w-3 h-3 ml-3 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""
                   }`}
               />
             </button>
             {/* Dropdown Menu */}
             {isOpen && (
               <div
-                className="absolute left-[260px] below-md:left-[16px] below-md:w-[90%] w-[20%] mt-9 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded-md shadow"
+                className="absolute left-[260px] below-md:left-[14px] below-md:w-[92%] w-[20%] mt-9 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded-md shadow"
                 style={{ zIndex: 50 }}
               >
                 {options.map((option, index) => (
@@ -216,12 +216,12 @@ const Invoices = () => {
           </div>
 
 
-          <div className='flex shadow  below-md:w-full below-md:text-[11px] text-[12px] bg-[#ffff] items-center rounded w-[200px] h-[35px]'>
+          <div className='flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-[260px] h-[35px]'>
             <input type='search'
               onChange={(e) => setGlobalFilter(e.target.value)}
               ref={searchInputRef}
               placeholder='Search'
-              className='w-full h-[35px] bg-transparent rounded-lg px-3 text-[#636363] focus:outline-none'>
+              className='w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none'>
             </input>
             <img className='pr-2 cursor-pointer items-center' src='/images/searchicon.svg'
               onClick={handleClick} />
@@ -248,34 +248,39 @@ const Invoices = () => {
       <div>
         {cardData.map((card, index) => (
           <div key={index}
-            className='flex flex-col h-[167px] w-full shadow rounded-md bg-white border border-[#E4E4EF] below-lg:hidden my-4'>
+            className='flex flex-col w-full  rounded-md bg-white border-b border-[#E4E4EF] below-lg:hidden my-4'>
             <div className='flex justify-between items-start'>
               <div className='flex gap-4 px-3 py-4'>
-                <p className='text-[12px] font-semibold'>{card.date}</p>
-                <p className='text-[12px] font-semibold'>{card.name}</p>
+                <p className='text-[14px] font-bold'>{card.date}</p>
+                <p className='text-[14px] font-bold'>{card.name}</p>
               </div>
 
               <div className='flex gap-4 mb-1 px-3 py-4'>
                 <button onClick={() => (window.location.href = "/invoicedetails")} className='text-green-500 hover:text-green-700'>
-                  <img className='below-md:w-5 below-md:h-5 h-4 w-4' src='/images/ViewIcon(1).svg' />
+                  <img className='below-md:w-7 below-md:h-7 h-4 w-4' src='/images/ViewIcon(1).svg' />
                 </button>
               </div>
             </div>
             {/* Divider */}
-            <div className="border-t border-gray-300 mb-2"> </div>
+            <div className="flex items-center px-3 -mt-4">
+              <div className="border-t border-gray-200 w-full"></div>
+            </div>
+
+
             {/* Content Area */}
-            <div className='flex justify-between items-center mx-3 py-1'>
-              <div className='flex flex-col text-[12px] space-y-2'>
+            <div className='flex justify-between items-center px-3 py-4'>
+              <div className='flex flex-col text-[13px] space-y-3'>
                 <p className='text-[#636363]'>Store</p>
                 <p className='text-[#636363]'>quantity</p>
                 <p className='text-[#636363]'>total</p>
               </div>
-              <div className='flex flex-col text-[12px] text-right space-y-2'>
+              <div className='flex flex-col text-[14px] text-right space-y-3'>
                 <p className='text-[#1A1A1A]'>{card.store}</p>
                 <p className='text-[#000000]'>{card.quantity}</p>
                 <p className='text-[#1A1A1A]'>{card.total}</p>
               </div>
             </div>
+
           </div>
         ))}
         <div className='below-lg:hidden flex justify-end fixed bottom-3 right-6'>
@@ -286,7 +291,7 @@ const Invoices = () => {
             onClick={handleButtonClick}
 
           >
-            <img src="/images/uploadinvoiceIcon.svg" alt='Upload Invoice'/>
+            <img src="/images/uploadinvoiceIcon.svg" alt='Upload Invoice' />
             {showTooltip && (
               <div className="absolute bottom-[70px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
                 Upload Invoice
@@ -295,7 +300,7 @@ const Invoices = () => {
               </div>
             )}
           </button>
-         
+
         </div>
 
       </div>
