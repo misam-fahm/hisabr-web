@@ -77,9 +77,11 @@ const DiscountTable: React.FC = () => {
       <div className="below-lg:hidden tablet:hidden">
         <div className="flex flex-col">
           <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-            <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-              <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                <span>American Express</span>
+            <div className=" items-center mb-4 mt-2 px-2">
+              <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                  <span>American Express</span>
+                </div>
               </div>
             </div>
             <div className="space-y-3 mb-2 px-2">
@@ -99,9 +101,11 @@ const DiscountTable: React.FC = () => {
           </div>
 
           <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-            <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-              <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                <span>American Express</span>
+            <div className=" items-center mb-4 mt-2 px-2">
+              <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                  <span>American Express</span>
+                </div>
               </div>
             </div>
             <div className="space-y-3 mb-2 px-2">
@@ -121,9 +125,11 @@ const DiscountTable: React.FC = () => {
           </div>
 
           <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-            <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-              <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                <span>American Express</span>
+            <div className=" items-center mb-4 mt-2 px-2">
+              <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                  <span>American Express</span>
+                </div>
               </div>
             </div>
             <div className="space-y-3 mb-2 px-2">
@@ -143,9 +149,11 @@ const DiscountTable: React.FC = () => {
           </div>
 
           <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-            <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-              <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                <span>American Express</span>
+            <div className=" items-center mb-4 mt-2 px-2">
+              <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                  <span>American Express</span>
+                </div>
               </div>
             </div>
             <div className="space-y-3 mb-2 px-2">

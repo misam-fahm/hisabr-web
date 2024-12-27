@@ -227,7 +227,7 @@ const Home: FC = () => {
 
       <div className=" px-6 below-md:px-3 pt-3 below-md:pt-0">
         <div className="flex flex-row gap-7 below-md:gap-0 w-full below-md:flex-col tablet:flex-col tablet:gap-3 items-stretch">
-          <div className=" bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full tablet:w-full  items-stretch">
+          <div className=" bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-[50%] below-md:w-full tablet:w-full  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/groce.svg" />
@@ -244,7 +244,7 @@ const Home: FC = () => {
             </div>
           </div>
 
-          <div className="bg-white mt-3 below-md:mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md w-[50%] below-md:w-full tablet:w-full items-stretch ">
+          <div className="bg-white mt-3 below-md:mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-[50%] below-md:w-full tablet:w-full items-stretch ">
             <div className="flex flex-row mt-4 justify-between px-3 ">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/persentage.svg" />
@@ -315,7 +315,7 @@ const Home: FC = () => {
         {/* grid 1*/}
 
         <div className="flex flex-row gap-7 below-md:gap-0 tablet:gap-0 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
-          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md below-md:shadow-none w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/groce.svg" />
@@ -330,9 +330,8 @@ const Home: FC = () => {
                     />
 
                     {/* Tooltip Box */}
-                    <div className="absolute top-full left-[calc(50%-20px)] transform -translate-x-1/2 mt-2 w-[350px] h-fit bg-[white] text-[#2D3748B2] text-sm px-6 py-6 rounded-lg border-l-[5px] border-[#F2921599] opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg z-20 pointer-events-none group-hover:pointer-events-auto">
+                    <div className="absolute border-r-[1px] border-t-[1px] border-b-[1px] border-r-[#E4E4EF] border-t-[#E4E4EF] border-b-[#E4E4EF] top-full left-[calc(50%-20px)] transform -translate-x-1/2 mt-2 w-[350px] h-fit bg-[white] text-[#2D3748B2] text-sm px-6 py-6 rounded-lg border-l-[5px] border-[#F2921599] opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg z-20 pointer-events-none group-hover:pointer-events-auto">
                       {/* Tooltip Arrow */}
-                      <div className="absolute bottom-full left-[calc(50%+50px)] transform -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-b-white border-l-transparent border-r-transparent" />
 
                       {/* Tooltip Content */}
                       <p className="text-[12px]">
@@ -388,7 +387,7 @@ const Home: FC = () => {
           </div>
 
           {/** second grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6 items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md below-md:shadow-none w-full pb-6 items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2">
                 <img src="/images/plus.svg" />
@@ -429,7 +428,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md w-full pb-6 items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md below-md:shadow-none w-full pb-6 items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/net.svg" />
@@ -470,9 +469,9 @@ const Home: FC = () => {
         {/* grid 2*/}
 
         <div className="flex flex-row gap-7 below-md:gap-0 tablet:gap-0 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
-          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full  items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md below-md:shadow-none w-full  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
-              <div className="flex flex-row gap-1 ">
+              <div className="flex flex-row gap-2 ">
                 <img src="/images/operating.svg" />
                 <p className="text-[#334155]  text-[16px] font-bold">
                   Operating Expense{" "}
@@ -515,7 +514,7 @@ const Home: FC = () => {
           </div>
 
           {/** second grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md below-md:shadow-none w-full pb-6  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/cost.svg" />
@@ -559,7 +558,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6  items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md below-md:shadow-none w-full pb-6  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/labor.svg" />
@@ -606,9 +605,9 @@ const Home: FC = () => {
         {/* grid 3*/}
 
         <div className="flex flex-row gap-7 below-md:gap-0 tablet:gap-0 mb-1 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
-          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md below-md:shadow-none w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
-              <div className="flex flex-row gap-1 ">
+              <div className="flex flex-row gap-2 ">
                 <img src="/images/crown.svg" />
                 <p className="text-[#334155]  text-[16px] font-bold">
                   Royalties{" "}
@@ -648,7 +647,7 @@ const Home: FC = () => {
           </div>
 
           {/** second grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md w-full pb-6 items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md below-md:shadow-none w-full pb-6 items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/persentage.svg" />
@@ -689,7 +688,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md w-full pb-6 items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-full pb-6 items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/items.svg" />
