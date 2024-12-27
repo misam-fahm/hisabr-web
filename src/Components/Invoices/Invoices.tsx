@@ -181,7 +181,7 @@ const Invoices = () => {
             {/* Dropdown Button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="bg-[#ffffff] text-[#636363] shadow below-md:px-2 px-4 py-[10px] rounded flex items-center justify-between w-[265px] h-[35px] text-[12px] below-md:h-[35px] below-md:w-full below-md:text[11px] below-md:text[#474747]"
+              className="bg-[#ffffff] text-[#636363] shadow below-md:px-2 px-4 py-[10px] rounded flex items-center justify-between w-[260px] h-[35px] text-[12px] below-md:h-[35px] below-md:w-full below-md:text[11px] below-md:text[#474747]"
             >
               <span>{selectedOption}</span>
               <img
@@ -216,7 +216,7 @@ const Invoices = () => {
           </div>
 
 
-          <div className='flex shadow  below-md:w-full below-md:text-[11px] text-[12px] bg-[#ffff] items-center rounded w-[200px] h-[35px]'>
+          <div className='flex shadow  below-md:w-full below-md:text-[11px] text-[12px] bg-[#ffff] items-center rounded w-[260px] h-[35px]'>
             <input type='search'
               onChange={(e) => setGlobalFilter(e.target.value)}
               ref={searchInputRef}

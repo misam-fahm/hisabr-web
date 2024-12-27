@@ -38,6 +38,9 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         case "invoices":
           newTitle = "Invoices";
           break;
+          case "invoicedetails":
+            newTitle = "Invoice Details";
+            break;
         case "expenses":
           newTitle = "Expenses";
           break;
@@ -121,7 +124,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
           : ""
       }`}
     >
-      {title === "My Profile" || title === "Edit Profile" ? (
+      {title === "My Profile" || title === "Edit Profile" || title === "Invoice Details" ? (
         <img
           src="/images/backIcon.svg"
           className="fixed top-4 left-4 cursor-pointer z-50"
