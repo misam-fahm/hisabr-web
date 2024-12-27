@@ -74,46 +74,46 @@ const InvoiceDetails = () => {
       <div className="flex gap-8 pt-4 pb-4  below-md:flex below-md:flex-col below-md:gap-3">
         
         {/* Left Panel - Invoice Details */}
-        <div className="space-y-2 shadow border rounded-lg w-[299px] below-md:w-full p-4 items-start">
+        <div className="space-y-2 shadow border bg-[#FFFFFF] rounded-lg w-[299px] below-md:w-full p-4 items-start">
           <div className="flex flex-col below-md:flex-row justify-between gap-[4px]">
             <p className="text-[#636363] text-[12px]">Date</p>
-            <p className="text-[#636363] text-[14px]">2023/01/09</p>
+            <p className="text-[#636363] text-[13px] font-semibold">2023/01/09</p>
           </div>
           <div className="flex flex-col below-md:flex-row justify-between gap-[4px]">
             <span className="text-[#636363] text-[12px]">Invoice Number</span>
-            <span className="text-[#636363] text-[14px]">9003185975</span>
+            <span className="text-[#636363] text-[13px] font-semibold">9003185975</span>
           </div>
           <div className="flex  flex-col below-md:flex-row justify-between gap-[4px]">
             <span className="text-[#636363] text-[12px]">Store Name</span>
-            <span className="text-[#636363]  text-[14px]">13246</span>
+            <span className="text-[#636363]  text-[13px] font-semibold">13246</span>
           </div>
           <div className="flex flex-col below-md:flex-row justify-between gap-[4px]">
             <span className="text-[12px] text-[#636363]">Due Date</span>
-            <span className="text-[14px] text-[#636363]">2023/08/30</span>
+            <span className="text-[13px] text-[#636363] font-semibold">2023/08/30</span>
           </div>
         </div>
         <div className='flex justify-between w-full'>
           {/* Right Panel - Totals */}
-          <div className="shadow border rounded-lg w-[369px]  below-md:w-full px-4 flex flex-col py-3 gap-3">
+          <div className="shadow border rounded-lg w-[369px] bg-[#FFFFFF] below-md:w-full px-4 flex flex-col py-3 gap-3">
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Product Total</span>
-              <span className="text-[#636363] text-[14px]">$8,068.89</span>
+              <span className="text-[#636363] text-[13px] font-semibold">$8,068.89</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Sub Total</span>
-              <span className="text-[#636363] text-[14px]">$8,076.39</span>
+              <span className="text-[#636363] text-[13px] font-semibold">$8,076.39</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Tax 1</span>
-              <span className="text-[#636363] text-[14px]">$1.52</span>
+              <span className="text-[#636363] text-[13px] font-semibold">$1.52</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Tax 2</span>
-              <span className="text-[#636363] text-[14px]">$1.52</span>
+              <span className="text-[#636363] text-[13px] font-semibold">$1.52</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Miscellaneous</span>
-              <span className="text-[#636363] text-[14px]">$0</span>
+              <span className="text-[#636363] text-[13px] font-semibold">$0</span>
             </div>
             <div className="flex justify-between border-t pt-2 mt-2">
               <span className="text-[#636363] text-[14px] font-semibold">Total</span>
