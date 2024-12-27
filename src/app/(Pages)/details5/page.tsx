@@ -397,49 +397,24 @@ const DetailsPage: React.FC = () => {
         <div className="below-lg:hidden tablet:hidden">
           <div className="flex flex-col">
             <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-              <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
-                  <span>12-20-24</span>
-                  <span>Mortgage</span>
-                </div>
-                <div className="flex gap-7">
-                  <>
-                    <EditExpense
-                      expenseData={expenseData}
-                      onUpdate={(updatedData) => {
-                        console.log("Updated Data: ", updatedData);
-                        // Example: update the state or send the updated data to an API
-                      }}
-                    />
-                    <DeleteExpense />
-                  </>
-                </div>
-              </div>
-              <div className="space-y-3 mb-2 px-2">
-                <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Store</p>
-                  <p className="text-[#1A1A1A] text-[12px]">13246</p>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Amount</p>
-                  <p className="text-[#1A1A1A] text-[12px]">11,345</p>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Description</p>
-                  <p className="text-[#1A1A1A] text-[12px]">Mortgage</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-              <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
-                  <span>12-20-24</span>
-                  <span>Mortgage</span>
-                </div>
-                <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+              <div className=" items-center mb-4 mt-2 px-2">
+                <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                  <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
+                    <span>12-20-24</span>
+                    <span>Mortgage</span>
+                  </div>
+                  <div className="flex gap-7">
+                    <>
+                      <EditExpense
+                        expenseData={expenseData}
+                        onUpdate={(updatedData) => {
+                          console.log("Updated Data: ", updatedData);
+                          // Example: update the state or send the updated data to an API
+                        }}
+                      />
+                      <DeleteExpense />
+                    </>
+                  </div>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -459,41 +434,24 @@ const DetailsPage: React.FC = () => {
             </div>
 
             <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-              <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
-                  <span>12-20-24</span>
-                  <span>Mortgage</span>
-                </div>
-                <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
-                </div>
-              </div>
-              <div className="space-y-3 mb-2 px-2">
-                <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Store</p>
-                  <p className="text-[#1A1A1A] text-[12px]">13246</p>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Amount</p>
-                  <p className="text-[#1A1A1A] text-[12px]">11,345</p>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Description</p>
-                  <p className="text-[#1A1A1A] text-[12px]">Mortgage</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-              <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
-                  <span>12-20-24</span>
-                  <span>Mortgage</span>
-                </div>
-                <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+              <div className=" items-center mb-4 mt-2 px-2">
+                <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                  <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
+                    <span>12-20-24</span>
+                    <span>Mortgage</span>
+                  </div>
+                  <div className="flex gap-7">
+                    <>
+                      <EditExpense
+                        expenseData={expenseData}
+                        onUpdate={(updatedData) => {
+                          console.log("Updated Data: ", updatedData);
+                          // Example: update the state or send the updated data to an API
+                        }}
+                      />
+                      <DeleteExpense />
+                    </>
+                  </div>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -513,14 +471,61 @@ const DetailsPage: React.FC = () => {
             </div>
 
             <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-              <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
-                  <span>12-20-24</span>
-                  <span>Mortgage</span>
+              <div className=" items-center mb-4 mt-2 px-2">
+                <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                  <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
+                    <span>12-20-24</span>
+                    <span>Mortgage</span>
+                  </div>
+                  <div className="flex gap-7">
+                    <>
+                      <EditExpense
+                        expenseData={expenseData}
+                        onUpdate={(updatedData) => {
+                          console.log("Updated Data: ", updatedData);
+                          // Example: update the state or send the updated data to an API
+                        }}
+                      />
+                      <DeleteExpense />
+                    </>
+                  </div>
                 </div>
-                <div className="flex gap-7">
-                  <img src="/images/pencil.svg" className="w-4 h-4" />
-                  <img src="/images/delete1.svg" className="w-4 h-4" />
+              </div>
+              <div className="space-y-3 mb-2 px-2">
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Store</p>
+                  <p className="text-[#1A1A1A] text-[12px]">13246</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Amount</p>
+                  <p className="text-[#1A1A1A] text-[12px]">11,345</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[14px]">Description</p>
+                  <p className="text-[#1A1A1A] text-[12px]">Mortgage</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
+              <div className=" items-center mb-4 mt-2 px-2">
+                <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                  <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
+                    <span>12-20-24</span>
+                    <span>Mortgage</span>
+                  </div>
+                  <div className="flex gap-7">
+                    <>
+                      <EditExpense
+                        expenseData={expenseData}
+                        onUpdate={(updatedData) => {
+                          console.log("Updated Data: ", updatedData);
+                          // Example: update the state or send the updated data to an API
+                        }}
+                      />
+                      <DeleteExpense />
+                    </>
+                  </div>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
