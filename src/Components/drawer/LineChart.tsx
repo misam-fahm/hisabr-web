@@ -11,6 +11,10 @@ import {
   Tooltip,
   Legend,
   Filler,
+  ChartData,
+  ChartOptions,
+  Point,
+  BubbleDataPoint,
 } from "chart.js";
 
 // Register necessary components
@@ -42,7 +46,7 @@ const LineChart: FC = () => {
     green.onload = () => setGreenMarker(green);
   }, []);
 
-  const data = {
+  const data: ChartData<"line", (number | [number, number] | Point | BubbleDataPoint | null)[], unknown> = {
     labels: [
       "Jan",
       "Feb",
@@ -68,7 +72,7 @@ const LineChart: FC = () => {
         backgroundColor: "rgba(37, 99, 235, 0.1)", // Adjusted for better transparency
         fill: true,
         tension: 0.4,
-        pointStyle: blueMarker,
+        pointStyle: blueMarker ? blueMarker : "circle",
         pointRadius: 10,
         pointHoverRadius: 12,
       },
@@ -82,14 +86,14 @@ const LineChart: FC = () => {
         backgroundColor: "rgba(111, 209, 149, 0.1)", // Adjusted for better transparency
         fill: true,
         tension: 0.4,
-        pointStyle: greenMarker,
+        pointStyle: greenMarker ? greenMarker : "circle",
         pointRadius: 10,
         pointHoverRadius: 12,
       },
     ],
   };
 
-  const options = {
+  const options: ChartOptions<"line"> = {
     responsive: true,
     plugins: {
       legend: {
@@ -116,7 +120,7 @@ const LineChart: FC = () => {
           display: true,
           color: "#F7F8F9",
           borderDash: [5, 5], // Dotted lines
-        },
+        } as any,
         ticks: {
           font: {
             size: 12,
@@ -128,7 +132,7 @@ const LineChart: FC = () => {
           display: true,
           color: "#F7F8F9",
           borderDash: [5, 5], // Dotted lines
-        },
+        } as any,
         ticks: {
           callback: (value: number) => `$${value / 1000}k`,
           font: {

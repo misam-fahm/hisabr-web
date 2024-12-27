@@ -5,8 +5,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
   const [visibleMonth, setVisibleMonth] = useState<number>(
     new Date().getMonth()
@@ -69,7 +69,7 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
           <DatePicker
             selected={startDate}
             onChange={(dates) => {
-              const [start, end] = dates as [Date | null, Date | null];
+              const [start, end] = dates as [Date | undefined, Date | undefined];
               setStartDate(start);
               setEndDate(end);
             }}

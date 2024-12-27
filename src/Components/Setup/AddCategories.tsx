@@ -2,6 +2,19 @@
 
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
+import { sendApiRequest } from '../../utils/apiUtils';
+import ToastNotification from "../ui/ToastNotification/ToastNotification";
+
+interface JsonData {
+  mode: string;
+  categoryname: string;
+  description: string;
+}
+
+interface CustomToast {
+  toastMessage: string;
+  toastType: string;
+}
 
 const AddCategories = () => {
   const [categoryName, setCategoryName] = useState("");
@@ -11,6 +24,7 @@ const AddCategories = () => {
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
+  const [customToast, setCustomToast] = useState<CustomToast>({ toastMessage: "", toastType: "" });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
     const { value } = e.target;
@@ -42,19 +56,29 @@ const AddCategories = () => {
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Category added:", { categoryName, description });
+      // Prepare JSON object to send
+    const jsonData: JsonData = {
+      mode: "insertcategory",
+      categoryname: categoryName.trim(),
+      description: description.trim(),
+    };
+
+    const result: any = await sendApiRequest(jsonData);
+    result?.status === 200 ?
+      setCustomToast({ ...customToast, toastMessage: "Category added successfully!", toastType: "success" }) :
+      setCustomToast({ ...customToast, toastMessage: "Failed to add category.", toastType: "error" });
       setCategoryName("");
       setDescription("");
-      setErrors({ categoryName: "", description: "" });
       closeModal();
     }
   };
 
   return (
     <>
+      <ToastNotification message={customToast.toastMessage} type={customToast.toastType} />
       <div>
         <Button
           onClick={openModal}

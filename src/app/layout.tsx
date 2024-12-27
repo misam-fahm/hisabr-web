@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import Navbar from "@/Components/drawer/navbar";
 import Drawer from "@/Components/drawer/Drawer";
 import { usePathname } from "next/navigation";
+import { ToastContainer } from 'react-toastify';
 
 // export const metadata: Metadata = {
 //   title: "Dashboard",
@@ -33,6 +34,7 @@ export default function RootLayout({
         <div  className="flex w-full flex-col">
         {!shouldHideSidebar && <div ><Navbar /></div> }
         <main  >{children}</main>
+        <ToastContainer/>
         </div>
         </div>
       </body>

@@ -71,13 +71,18 @@ const DetailsPage: React.FC = () => {
   };
 
   //mobile scroll
-  const scrollTabs = (direction) => {
+  const scrollTabs = (direction: 'left' | 'right') => {
     const container = document.getElementById("tabContainer");
-    const scrollAmount = 150; // Adjust as needed
-    if (direction === "left") {
-      container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+
+    if (container) {  // This check ensures container is not null
+      const scrollAmount = 150; // Adjust as needed
+      if (direction === "left") {
+        container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+      } else {
+        container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      }
     } else {
-      container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      console.error('Element with id "tabContainer" not found.');
     }
   };
 

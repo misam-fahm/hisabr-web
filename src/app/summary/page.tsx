@@ -47,7 +47,7 @@ const summary: FC = () => {
 
   /**year composed chart*/
 
-  const [selectedOption2, setSelectedOption2] = useState<string | null>(null);
+  const [selectedOption2, setSelectedOption2] = useState<string | undefined>(undefined);
   const [isOpen2, setIsOpen2] = useState<boolean>(false);
 
   const options2 = ["2024", "2023", "2022", "2021"];
