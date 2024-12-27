@@ -438,7 +438,7 @@ const DetailsPage: React.FC = () => {
                   />
                 </div>
               </div>
-              <div>
+              <div className="-my-8">
                 <PieChart2 />
               </div>
               <div>
@@ -447,7 +447,7 @@ const DetailsPage: React.FC = () => {
                     {dat?.map((item, index) => (
                       <li
                         key={index}
-                        className="flex items-center justify-between py-2"
+                        className="flex px-[12%] items-center justify-between py-2"
                       >
                         {/* Color Circle */}
                         <div className="flex items-center">

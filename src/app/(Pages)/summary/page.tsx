@@ -366,7 +366,7 @@ const summary: FC = () => {
                 </div>
 
                 {/* Pie Chart Section */}
-                <div className="-my-4 px-6">
+                <div className="-my-5">
                   <PieChart />
                 </div>
 
