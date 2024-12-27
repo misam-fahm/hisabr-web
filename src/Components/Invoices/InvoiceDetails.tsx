@@ -66,7 +66,13 @@ const InvoiceDetails = () => {
     className="max-h-[calc(100vh-60px)] overflow-auto px-6"
     style={{ scrollbarWidth: "thin" }}
   >
-      <div className="flex gap-8 pt-5 pb-5  below-md:flex below-md:flex-col below-md:gap-3">
+     <div className='block below-md:hidden'>
+    <div className='flex items-start pt-4 cursor-pointer' onClick={() => window.history.back()}>
+          <img src='/images/backArrow.svg' alt='Back Arrow' className='w-8 h-8'/>
+          </div>
+          </div>
+      <div className="flex gap-8 pt-4 pb-4  below-md:flex below-md:flex-col below-md:gap-3">
+        
         {/* Left Panel - Invoice Details */}
         <div className="space-y-2 shadow border rounded-lg w-[299px] below-md:w-full p-4 items-start">
           <div className="flex flex-col below-md:flex-row justify-between gap-[4px]">
@@ -114,7 +120,7 @@ const InvoiceDetails = () => {
               <span className="text-[#636363] text-[14px] font-semibold">$8,079.43</span>
             </div>
           </div>
-          <div className='block below-md:hidden'>
+          {/* <div className='block below-md:hidden'>
           <div className="flex justify-end items-start mb-6 mt-1">
             <button
               onClick={() => window.history.back()}
@@ -123,7 +129,7 @@ const InvoiceDetails = () => {
               Back
             </button>
           </div>
-          </div>
+          </div> */}
         </div>
 
 
@@ -149,7 +155,7 @@ const InvoiceDetails = () => {
               </tr>
             </thead>
             </table>
-            <div className='max-h-[calc(100vh-380px)] rounded-md shadow overflow-auto' style={{ scrollbarWidth: "thin" }}>
+            <div className='max-h-[calc(100vh-420px)] rounded-md shadow overflow-auto' style={{ scrollbarWidth: "thin" }}>
             <table className='w-full text-[12px] table-auto shadow rounded-md '>
               <tbody>
                 {tableData.map((row, index) => (

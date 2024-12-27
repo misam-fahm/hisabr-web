@@ -347,7 +347,7 @@ const Expenses: FC = () => {
             </div>
 
             <div className="flex items-center justify-between below-md:flex-row below-md:gap-4">
-              <div className="flex shadow text-[12px] bg-[#ffff] items-center  rounded-md w-[260px]  h-[35px] below-md:w-full below-md:h-[35px]">
+              <div className="flex shadow  text-[12px] bg-[#ffff] items-center  rounded-md w-[260px]  h-[35px] below-md:w-full below-md:h-[35px] below-md:text-[11px]">
                 <input
                   type="search"
                   ref={searchInputRef}
