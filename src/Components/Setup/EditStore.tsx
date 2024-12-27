@@ -117,12 +117,12 @@ const EditStore = () => {
 
   return (
     <>
-   <div>
+      <div>
         <Button onClick={openModal}>
           <img
             src="/images/edit-pencil.svg"
             alt="Add icon"
-            className="flex justify-center items-center w-5 h-5"
+            className="flex justify-center items-center w-4 h-4"
           />
         </Button>
       </div>
