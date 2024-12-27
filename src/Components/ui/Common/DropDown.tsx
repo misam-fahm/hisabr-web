@@ -65,7 +65,7 @@ const Dropdown = ({
         <span>{selectedOption || "Year"}</span>
         <img
           src="./images/dropdown1.svg"
-          className={`ml-3 transition-transform duration-200 ${
+          className={`-mr-1.5 transition-transform duration-200 ${
             isOpen ? "transform rotate-180" : ""
           }`}
         />

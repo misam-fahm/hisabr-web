@@ -347,21 +347,11 @@ const Sales: FC = () => {
                   placeholder="Search"
                   className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
-                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-[#636363]"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={3}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-4.35-4.35m2.6-6.4a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z"
-                    />
-                  </svg>
+                <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                  <img
+                    className="cursor-pointer items-center"
+                    src="/images/searchicon.svg"
+                  />
                 </div>
               </div>
 
@@ -370,21 +360,11 @@ const Sales: FC = () => {
                   placeholder="Search"
                   className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
-                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-[#636363]"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={3}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-4.35-4.35m2.6-6.4a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z"
-                    />
-                  </svg>
+                <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                  <img
+                    className="cursor-pointer items-center"
+                    src="/images/searchicon.svg"
+                  />
                 </div>
               </div>
             </div>

@@ -173,17 +173,22 @@ const Home: FC = () => {
       </div>
 
       <div className=" px-6 below-md:px-3 pt-3 below-md:pt-0">
-        <div className="flex flex-row gap-7 below-md:gap-1 w-full below-md:flex-col tablet:flex-col tablet:gap-3 items-stretch">
-          <div className=" bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-[50%] below-md:w-full tablet:w-full  items-stretch ">
+        <div className="grid grid-cols-2 gap-7 below-md:grid-cols-1 tablet:grid-cols-1 tablet:gap-3 tablet:grid-rows-2 below-md:grid-rows-2 below-md:gap-1 below-md:mt-1 w-full items-stretch ">
+          {/* Gross Revenue Card */}
+          <div className="bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
-              <div className="flex flex-row gap-2 ">
-                <img src="/images/groce.svg" />
+              <div className="flex flex-row gap-2">
+                <img src="/images/groce.svg" alt="Gross Revenue" />
                 <p className="text-[#334155] text-[16px] font-bold">
                   Gross Revenue
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img src="/images/under_details.svg" onClick={handleClick} />
+                <img
+                  src="/images/under_details.svg"
+                  onClick={handleClick}
+                  alt="Details"
+                />
               </div>
             </div>
             <div>
@@ -191,19 +196,24 @@ const Home: FC = () => {
             </div>
           </div>
 
-          <div className="bg-white mt-3 below-md:mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-[50%] below-md:w-full tablet:w-full items-stretch">
-            <div className="flex flex-row mt-4 justify-between px-3 ">
-              <div className="flex flex-row gap-2 ">
-                <img src="/images/persentage.svg" />
-                <p className="text-[#334155]  text-[16px] font-bold">Tender</p>
+          {/* Tender Table */}
+          <div className="bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-full items-stretch">
+            <div className="flex flex-row mt-4 justify-between px-3">
+              <div className="flex flex-row gap-2">
+                <img src="/images/persentage.svg" alt="Tender" />
+                <p className="text-[#334155] text-[16px] font-bold">Tender</p>
               </div>
               <div className="cursor-pointer">
-                <img onClick={handleClick2} src="/images/under_details.svg" />
+                <img
+                  onClick={handleClick2}
+                  src="/images/under_details.svg"
+                  alt="Details"
+                />
               </div>
             </div>
-            <div className=" overflow-hidden overflow-y-auto below-md:overflow-x-auto max-h-[42vh] below-md:max-h-[30vh] custom-scrollbar items-stretch">
-              <table className="w-full bg-white border border-gray-200 mt-6 ">
-                <thead className="top-0 bg-[#FAFBFB] shadow-md">
+            <div className="overflow-hidden overflow-x-auto overflow-y-auto max-h-[42vh] below-md:max-h-[27vh] custom-scrollbar">
+              <table className="w-full bg-white border border-gray-200 mt-6">
+                <thead className="bg-[#FAFBFB] shadow-md">
                   <tr className="text-left text-gray-600 font-semibold">
                     <th className="px-4 py-1.5 border-b border-gray-200 text-[14px]">
                       Name
@@ -223,14 +233,12 @@ const Home: FC = () => {
                   {tableData.map((row, index) => (
                     <tr
                       key={index}
-                      className={`${
-                        index % 2 === 0 ? "bg-white" : "bg-[#FAFBFB]"
-                      }`}
+                      className={index % 2 === 0 ? "bg-white" : "bg-[#FAFBFB]"}
                     >
                       <td className="px-4 py-1.5 text-[14px] border-b border-gray-200 text-gray-700">
                         {row.name}
                       </td>
-                      <td className="px-4 py-1.5 text-[14px] border-b border-gray-200 text-[#334155]  font-medium">
+                      <td className="px-4 py-1.5 text-[14px] border-b border-gray-200 text-[#334155] font-medium">
                         ${row.revenue.toLocaleString()}
                       </td>
                       <td className="px-4 py-1.5 border-b border-gray-200 text-[#202224B2] text-[14px] font-medium text-center">
@@ -242,16 +250,16 @@ const Home: FC = () => {
                     </tr>
                   ))}
                 </tbody>
-                <tfoot className="bottom-0 bg-white">
+                <tfoot className="bg-white">
                   <tr className="font-medium text-[#E31212] text-[14px]">
                     <td className="px-4 py-1.5 border-t border-gray-200">
                       Total
                     </td>
-                    <td className="px-4 py-1.5 border-t border-gray-200 text-[14px]">
+                    <td className="px-4 py-1.5 border-t border-gray-200">
                       ${totalRevenue.toLocaleString()}
                     </td>
-                    <td className="px-4 py-1.5 border-t border-gray-200 text-[14px]"></td>
-                    <td className="px-4 py-1.5 border-t border-gray-200 text-[14px]">
+                    <td className="px-4 py-1.5 border-t border-gray-200"></td>
+                    <td className="px-4 py-1.5 border-t border-gray-200">
                       ${totalAmount.toFixed(2)}
                     </td>
                   </tr>
@@ -263,7 +271,7 @@ const Home: FC = () => {
 
         {/* grid 1*/}
 
-        <div className="flex flex-row gap-7 below-md:gap-1 tablet:gap-1 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
+        <div className="flex flex-row gap-7 below-md:gap-1 below-md:mt-1 tablet:gap-1 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
           <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md below-md:shadow-none w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">

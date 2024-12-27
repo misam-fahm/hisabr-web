@@ -111,11 +111,9 @@ const DonutChart: React.FC = () => {
 
         // Check if it's the 'Labor Cost' index and make it vertical with a horizontal line outside the chart
         if (chartData.labels![index] === "Labor Cost") {
-          // Move label and percentage slightly to the left
-          labelX = centerX + Math.cos(angle) * (outerRadius * 1.5); // Adjust to position slightly left
+          labelX = centerX + Math.cos(angle) * (outerRadius * 1.5);
           labelY = centerY + Math.sin(angle) * (outerRadius * 1);
 
-          // Draw lines as before
           ctx.beginPath();
           ctx.moveTo(startX, startY);
           ctx.lineTo(midX, midY);
@@ -125,17 +123,14 @@ const DonutChart: React.FC = () => {
 
           ctx.beginPath();
           ctx.moveTo(midX, midY);
-          ctx.lineTo(labelX, labelY); // Horizontal line to label position
+          ctx.lineTo(labelX, labelY);
           ctx.strokeStyle = lineColors[index];
           ctx.lineWidth = 1;
           ctx.stroke();
         } else {
-          // Default positioning for other sections
-
-          // Default behavior for other labels
           labelX = midX + (angle > Math.PI ? -50 : 50);
           labelY = midY;
-          // Draw lines and labels for other sections
+
           ctx.beginPath();
           ctx.moveTo(startX, startY);
           ctx.lineTo(midX, midY);
@@ -151,7 +146,6 @@ const DonutChart: React.FC = () => {
           ctx.stroke();
         }
 
-        // Draw dots, label, and percentage (same as before)
         ctx.beginPath();
         ctx.arc(startX, startY, 3, 0, 2 * Math.PI);
         ctx.fillStyle = lineColors[index];
@@ -167,7 +161,7 @@ const DonutChart: React.FC = () => {
         ctx.fillStyle = labelColors[index];
         ctx.textAlign = angle > Math.PI ? "right" : "left";
         ctx.fillText(
-          chartData.labels![index] as string, // Assert the type as string
+          chartData.labels![index] as string,
           labelX + (angle > Math.PI ? -5 : 5),
           labelY - 5
         );
@@ -190,7 +184,11 @@ const DonutChart: React.FC = () => {
 
   return (
     <div className="w-[90vh] h-[80vh] below-md:w-[43vh] below-md:h-[43vh] tablet:w-[55vh] tablet:h-[55vh]">
-      <Doughnut data={data} options={options} plugins={[customArrowsPlugin]} />
+      <Doughnut
+        data={data}
+        options={options}
+        plugins={isMobile ? [] : [customArrowsPlugin]} // Remove plugin for mobile
+      />
     </div>
   );
 };
