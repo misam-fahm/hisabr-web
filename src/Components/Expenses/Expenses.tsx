@@ -1,10 +1,11 @@
 "use client";
 
-import React, { FC, useState, useRef } from "react";
+import React, { FC, useState, useRef,useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/Expenses/AddExpenses";
 import DateRange from "@/Components/drawer/DateRangePicker";
+import Dropdown from "@/Components/ui/Common/DropDown";
 
 import Image from "next/image";
 import {
@@ -273,10 +274,7 @@ const Expenses: FC = () => {
   const startItem = pageIndex * pageSize + 1;
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
-  const [dateRange, setDateRange] = useState<
-    [Date | undefined, Date | undefined]
-  >([undefined, undefined]);
-  const [startDate, endDate] = dateRange;
+ 
 
 
   // const calendarRef = useRef<DatePicker | null>(null);
@@ -294,13 +292,18 @@ const Expenses: FC = () => {
     setIsOpen(!isOpen);
   };
   /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("All stores");
+  const [selectedOption, setSelectedOption] = useState<string>("Select an option");
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
+  const toggleDropdown1 = () => setIsOpen(!isOpen);
+  
+
+  
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
-    setIsOpen(false);
+    setIsOpen(false); // Close dropdown after selection
+    handleSelect(option); // Call the passed handler
   };
   return (
     <main
@@ -309,37 +312,17 @@ const Expenses: FC = () => {
     >
       <>
         <div className="flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:mt-4 below-md:mb-4 mt-6 mb-6">
-          <div className="flex gap-2 below-md:space-y-1 w-full below-md:flex-col">
+          <div className="flex gap-3 below-md:space-y-1 w-full below-md:flex-col">
             <div className="flex">
-              {/* Dropdown Button */}
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="bg-[#ffffff] text-[#636363] shadow px-3  rounded flex items-center justify-between w-[265px] h-[35px] text-[12px] below-md:h-[35px] below-md:w-full below-md:text[11px] below-md:text[#474747]"
-              >
-                <span>{selectedOption}</span>
-                <img
-                  src="./images/icon.svg"
-                  className={`w-3 h-3 ml-3 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""
-                    }`}
-                />
-              </button>
-              {/* Dropdown Menu */}
-              {isOpen && (
-                <div
-                  className="absolute left-[253px] below-md:left-[16px] below-md:w-[90%] w-[265px] mt-9 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded shadow-md"
-                  style={{ zIndex: 50 }}
-                >
-                  {options.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleSelect(option)}
-                      className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-                    >
-                      {option}
-                    </div>
-                  ))}
-                </div>
-              )}
+            <Dropdown
+              options={options}
+              selectedOption={selectedOption}
+              onSelect={handleSelect}
+              isOpen={isOpen}
+              toggleOpen={toggleDropdown1}
+              widthchange="tablet:w-full"
+            />
+              
             </div>
 
             <div className="w-[260px] tablet:w-full below-md:w-full h-[35px]">
