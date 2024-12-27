@@ -44,15 +44,16 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
     <div className="relative" ref={pickerRef}>
       <div
         onClick={handleClickIcon}
-        className={`flex items-center justify-between  rounded h-[35px]  px-3 bg-white cursor-pointer shadow 
+        className={`flex items-center justify-between  rounded h-[35px] bg-white cursor-pointer shadow 
           ${widthchang ? " " : "below-md:w-full w-[260px]"}`}
       >
-        <span className="text-[#636363] text-[12px]">
+        <span className="text-[#636363] text-[12px] px-3">
           {startDate && endDate
             ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
             : "Select Date Range"}
         </span>
         <img
+          className="pr-2"
           src="/images/daterange.svg"
           alt="calendar"
           onClick={() => {
