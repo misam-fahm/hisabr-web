@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -12,6 +12,21 @@ import {
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const DonutChart: React.FC = () => {
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
+
   const data = {
     labels: ["Profit", "Labor Cost", "Sales Tax", "ROYALTY", "COGS"],
     datasets: [
@@ -24,7 +39,6 @@ const DonutChart: React.FC = () => {
           "#79AFC7", // Royalty
           "#AC8892", // Cogs
         ],
-
         borderWidth: 2,
       },
     ],
@@ -50,6 +64,8 @@ const DonutChart: React.FC = () => {
   const customArrowsPlugin: Plugin<"doughnut"> = {
     id: "customArrowsPlugin",
     afterDatasetDraw(chart) {
+      if (isMobile) return; // Skip drawing on mobile
+
       const { ctx, chartArea, data: chartData } = chart;
       const meta = chart.getDatasetMeta(0);
 

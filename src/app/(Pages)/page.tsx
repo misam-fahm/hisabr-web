@@ -103,59 +103,6 @@ const Home: FC = () => {
     router.push("/details8"); // Navigates to the 'details' page
   };
 
-  const gridData = [
-    {
-      title: "Gross Revenue",
-      imgSrc: "/images/groce.svg",
-      stats: [
-        { label: "YTD", value: "10.5%", color: "#E31212" },
-        { label: "One Year", value: "20%", color: "#388E3C" },
-      ],
-      currentYear: { label: "Current Year", value: "$85,000" },
-      previousYear: { label: "Previous Year", value: "$95,000" },
-    },
-    {
-      title: "Customer Count",
-      imgSrc: "/images/plus.svg",
-      stats: [
-        { label: "YTD", value: "8.3%", color: "#388E3C" },
-        { label: "One Year", value: "6.7%", color: "#E31212" },
-      ],
-      currentYear: { label: "Current Year", value: "11,000" },
-      previousYear: { label: "Previous Year", value: "12,000" },
-    },
-    {
-      title: "Net Margin",
-      imgSrc: "/images/net.svg",
-      stats: [
-        { label: "YTD", value: "3.8%", color: "#E31212" },
-        { label: "One Year", value: "2.9%", color: "#388E3C" },
-      ],
-      currentYear: { label: "Current Year", value: "$60,000" },
-      previousYear: { label: "Previous Year", value: "$65,000" },
-    },
-    {
-      title: "Operating Expense",
-      imgSrc: "/images/operating.svg",
-      stats: [
-        { label: "YTD", value: "10.5%", color: "#388E3C" },
-        { label: "One Year", value: "20%", color: "#E31212" },
-      ],
-      currentYear: { label: "Current Year", value: "$85,000" },
-      previousYear: { label: "Previous Year", value: "$95,000" },
-    },
-    {
-      title: "Cost",
-      imgSrc: "/images/cost.svg",
-      stats: [
-        { label: "YTD", value: "8.3%", color: "#388E3C" },
-        { label: "One Year", value: "6.7%", color: "#E31212" },
-      ],
-      currentYear: { label: "Current Year", value: "$120,000" },
-      previousYear: { label: "Previous Year", value: "$100,000" },
-    },
-  ];
-
   return (
     <main
       className="max-h-[calc(100vh-60px)] overflow-auto"
@@ -226,8 +173,8 @@ const Home: FC = () => {
       </div>
 
       <div className=" px-6 below-md:px-3 pt-3 below-md:pt-0">
-        <div className="flex flex-row gap-7 below-md:gap-0 w-full below-md:flex-col tablet:flex-col tablet:gap-3 items-stretch">
-          <div className=" bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-[50%] below-md:w-full tablet:w-full  items-stretch">
+        <div className="flex flex-row gap-7 below-md:gap-1 w-full below-md:flex-col tablet:flex-col tablet:gap-3 items-stretch">
+          <div className=" bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-[50%] below-md:w-full tablet:w-full  items-stretch ">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/groce.svg" />
@@ -244,7 +191,7 @@ const Home: FC = () => {
             </div>
           </div>
 
-          <div className="bg-white mt-3 below-md:mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-[50%] below-md:w-full tablet:w-full items-stretch ">
+          <div className="bg-white mt-3 below-md:mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-[50%] below-md:w-full tablet:w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3 ">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/persentage.svg" />
@@ -254,18 +201,20 @@ const Home: FC = () => {
                 <img onClick={handleClick2} src="/images/under_details.svg" />
               </div>
             </div>
-            <div className=" overflow-hidden overflow-y-auto below-md:overflow-x-auto max-h-[42vh] below-md:max-h-[30vh] custom-scrollbar">
+            <div className=" overflow-hidden overflow-y-auto below-md:overflow-x-auto max-h-[42vh] below-md:max-h-[30vh] custom-scrollbar items-stretch">
               <table className="w-full bg-white border border-gray-200 mt-6 ">
                 <thead className="top-0 bg-[#FAFBFB] shadow-md">
                   <tr className="text-left text-gray-600 font-semibold">
-                    <th className="px-4 py-2 border-b border-gray-200">Name</th>
-                    <th className="px-4 py-2 border-b border-gray-200">
+                    <th className="px-4 py-1.5 border-b border-gray-200 text-[14px]">
+                      Name
+                    </th>
+                    <th className="px-4 py-1.5 border-b border-gray-200 text-[14px]">
                       Revenue
                     </th>
-                    <th className="px-4 py-2 border-b border-gray-200">
+                    <th className="px-4 py-1.5 border-b border-gray-200 text-[14px]">
                       Commission
                     </th>
-                    <th className="px-4 py-2 border-b border-gray-200">
+                    <th className="px-4 py-1.5 border-b border-gray-200 text-[14px]">
                       Amount
                     </th>
                   </tr>
@@ -278,31 +227,31 @@ const Home: FC = () => {
                         index % 2 === 0 ? "bg-white" : "bg-[#FAFBFB]"
                       }`}
                     >
-                      <td className="px-4 py-2 text-[14px] border-b border-gray-200 text-gray-700">
+                      <td className="px-4 py-1.5 text-[14px] border-b border-gray-200 text-gray-700">
                         {row.name}
                       </td>
-                      <td className="px-4 py-2 text-[14px] border-b border-gray-200 text-[#334155]  font-semibold">
+                      <td className="px-4 py-1.5 text-[14px] border-b border-gray-200 text-[#334155]  font-medium">
                         ${row.revenue.toLocaleString()}
                       </td>
-                      <td className="px-4 py-2 border-b border-gray-200 text-[#202224B2] text-[14px] font-semibold text-center">
+                      <td className="px-4 py-1.5 border-b border-gray-200 text-[#202224B2] text-[14px] font-medium text-center">
                         {row.commission}
                       </td>
-                      <td className="px-4 py-2 border-b border-gray-200 text-[#3F526D] text-[14px] font-semibold">
+                      <td className="px-4 py-1.5 border-b border-gray-200 text-[#3F526D] text-[14px] font-medium">
                         {row.amount ? `$${row.amount.toFixed(2)}` : ""}
                       </td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot className="bottom-0 bg-white">
-                  <tr className="font-semibold text-[#E31212] text-[14px]">
-                    <td className="px-4 py-2 border-t border-gray-200">
+                  <tr className="font-medium text-[#E31212] text-[14px]">
+                    <td className="px-4 py-1.5 border-t border-gray-200">
                       Total
                     </td>
-                    <td className="px-4 py-2 border-t border-gray-200 text-[14px]">
+                    <td className="px-4 py-1.5 border-t border-gray-200 text-[14px]">
                       ${totalRevenue.toLocaleString()}
                     </td>
-                    <td className="px-4 py-2 border-t border-gray-200 text-[14px]"></td>
-                    <td className="px-4 py-2 border-t border-gray-200 text-[14px]">
+                    <td className="px-4 py-1.5 border-t border-gray-200 text-[14px]"></td>
+                    <td className="px-4 py-1.5 border-t border-gray-200 text-[14px]">
                       ${totalAmount.toFixed(2)}
                     </td>
                   </tr>
@@ -314,7 +263,7 @@ const Home: FC = () => {
 
         {/* grid 1*/}
 
-        <div className="flex flex-row gap-7 below-md:gap-0 tablet:gap-0 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
+        <div className="flex flex-row gap-7 below-md:gap-1 tablet:gap-1 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
           <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md below-md:shadow-none w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
@@ -372,7 +321,7 @@ const Home: FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
+              <div className="flex justify-between items-center mb-3 gap-[2px]">
                 <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">$85,000</div>
                 <div className="font-bold text-gray-800">$120,000</div>
@@ -413,7 +362,7 @@ const Home: FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
+              <div className="flex justify-between items-center mb-3 gap-[2px]">
                 <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">11,000</div>
                 <div className="font-bold text-gray-800">16,000</div>
@@ -451,7 +400,7 @@ const Home: FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
+              <div className="flex justify-between items-center mb-3 gap-[2px]">
                 <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">$60,000</div>
                 <div className="font-bold text-gray-800">$90,000</div>
@@ -468,7 +417,7 @@ const Home: FC = () => {
 
         {/* grid 2*/}
 
-        <div className="flex flex-row gap-7 below-md:gap-0 tablet:gap-0 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
+        <div className="flex flex-row gap-7 below-md:gap-1 tablet:gap-1 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
           <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md below-md:shadow-none w-full  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
@@ -499,7 +448,7 @@ const Home: FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
+              <div className="flex justify-between items-center mb-3 gap-[2px]">
                 <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">$85,000</div>
                 <div className="font-bold text-gray-800">$120,000</div>
@@ -543,7 +492,7 @@ const Home: FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
+              <div className="flex justify-between items-center mb-3 gap-[2px]">
                 <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">11,000</div>
                 <div className="font-bold text-gray-800">16,000</div>
@@ -587,7 +536,7 @@ const Home: FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
+              <div className="flex justify-between items-center mb-3 gap-[2px]">
                 <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">$60,000</div>
                 <div className="font-bold text-gray-800">$90,000</div>
@@ -604,7 +553,7 @@ const Home: FC = () => {
 
         {/* grid 3*/}
 
-        <div className="flex flex-row gap-7 below-md:gap-0 tablet:gap-0 mb-1 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
+        <div className="flex flex-row gap-7 below-md:gap-1 tablet:gap-1 mb-1 below-md:flex-col items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid">
           <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#E5D5D5]  rounded-md shadow-md below-md:shadow-none w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
@@ -627,12 +576,12 @@ const Home: FC = () => {
                   YTD <span className="text-[#388E3C] text-[12px]">10.5%</span>
                 </div>
                 <div className="font-bold text-[#2D3748B2] text-[14px]">
-                  One Year{" "}
+                  One Year
                   <span className="text-[#E31212] text-[12px]">20%</span>
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
+              <div className="flex justify-between items-center mb-3 gap-[2px]">
                 <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">$85,000</div>
                 <div className="font-bold text-gray-800">$120,000</div>
@@ -673,7 +622,7 @@ const Home: FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
+              <div className="flex justify-between items-center mb-3 gap-[2px]">
                 <div className="text-gray-600 text-[14px]">Current Year</div>
                 <div className="font-bold text-gray-800">11,000</div>
                 <div className="font-bold text-gray-800">16,000</div>
@@ -688,7 +637,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-full pb-6 items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-full pb-0 items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/items.svg" />
@@ -699,7 +648,7 @@ const Home: FC = () => {
               </div>
             </div>
 
-            <div className="w-full overflow-hidden overflow-y-auto below-md:overflow-x-auto  max-h-[100px] custom-scrollbar ">
+            <div className="w-full overflow-hidden overflow-y-auto below-md:overflow-x-auto  max-h-[130px] custom-scrollbar ">
               <table className="w-full bg-white border border-gray-200 mt-6 ">
                 <tbody>
                   {tableData2.map((row, index) => (

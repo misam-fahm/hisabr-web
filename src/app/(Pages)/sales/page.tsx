@@ -325,7 +325,7 @@ const Sales: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="mx-6 mt-6 below-md:mx-3 below-md:mt-0 tablet:mt-4">
-        <div className="flex flex-row below-md:flex-col pb-6 sticky  below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
+        <div className="flex flex-row below-md:flex-col pb-6 sticky z-20  below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
             {/* Dropdown Button */}
             <Dropdown
