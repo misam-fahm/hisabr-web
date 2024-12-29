@@ -183,13 +183,22 @@ const DonutChart: React.FC = () => {
   };
 
   return (
-    <div className="w-[90vh] h-[80vh] below-md:w-[43vh] below-md:h-[43vh] tablet:w-[55vh] tablet:h-[55vh]">
-      <Doughnut
-        data={data}
-        options={options}
-        plugins={isMobile ? [] : [customArrowsPlugin]} // Remove plugin for mobile
-      />
-    </div>
+    <main>
+      <div className="below-md:hidden w-[90vh] h-[80vh] tablet:w-[55vh] tablet:h-[55vh]">
+        <Doughnut
+          data={data}
+          options={options}
+          plugins={[customArrowsPlugin]}
+        />
+      </div>
+      <div className="below-lg:hidden tablet:hidden below-md:w-[60vh] below-md:h-[60vh]">
+        <Doughnut
+          data={data}
+          options={options}
+          plugins={isMobile ? [customArrowsPlugin] : []}
+        />
+      </div>
+    </main>
   );
 };
 

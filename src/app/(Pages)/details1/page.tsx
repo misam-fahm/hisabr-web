@@ -438,7 +438,7 @@ const DetailsPage: React.FC = () => {
                   />
                 </div>
               </div>
-              <div className="-my-8">
+              <div>
                 <PieChart2 />
               </div>
               <div>
