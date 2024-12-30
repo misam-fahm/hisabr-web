@@ -114,7 +114,7 @@ const DeleteExpense = () => {
       <div>
         <Button onClick={openModal}>
           <img
-            src="/images/deleteIcon(1).svg"
+            src="/images/DeleteBinIcon.svg"
             className="flex justify-center w-4 h-4 text-left"
           />
         </Button>

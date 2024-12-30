@@ -54,7 +54,7 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
         </span>
         <img
           className="pr-2"
-          src="/images/daterange.svg"
+          src="/images/CalenderIcon.svg"
           alt="calendar"
           onClick={() => {
             if (calendarRef.current) {
