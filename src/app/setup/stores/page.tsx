@@ -201,7 +201,7 @@ const Page: FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-2 overflow-auto"
+      className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-4 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
@@ -235,7 +235,7 @@ const Page: FC = () => {
             </div>
 
             {/* Border */}
-            <div className="h-[1px] bg-gray-300 my-3"></div>
+            <div className=" border-b bg-gray-200 my-3"></div>
             <div className="text-[14px] mt-1 flex justify-between">
               <span className="text-[#636363] text-[13px] mb-2">Date</span>
               <span className="text-[14px]"> {row.getValue("date")}</span>
