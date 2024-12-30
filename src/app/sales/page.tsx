@@ -325,7 +325,7 @@ const Sales: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="mx-6 mt-6 below-md:mx-3 below-md:mt-0 tablet:mt-4">
-        <div className="flex flex-row below-md:flex-col pb-6 sticky z-20 below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4  ">
+        <div className="flex flex-row below-md:flex-col pb-6 sticky z-20  below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
             {/* Dropdown Button */}
             <Dropdown
@@ -347,21 +347,11 @@ const Sales: FC = () => {
                   placeholder="Search"
                   className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
-                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-[#636363]"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={3}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-4.35-4.35m2.6-6.4a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z"
-                    />
-                  </svg>
+                <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                  <img
+                    className="cursor-pointer items-center"
+                    src="/images/searchicon.svg"
+                  />
                 </div>
               </div>
 
@@ -370,21 +360,11 @@ const Sales: FC = () => {
                   placeholder="Search"
                   className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
-                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-[#636363]"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={3}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-4.35-4.35m2.6-6.4a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z"
-                    />
-                  </svg>
+                <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                  <img
+                    className="cursor-pointer items-center"
+                    src="/images/searchicon.svg"
+                  />
                 </div>
               </div>
             </div>
@@ -485,57 +465,61 @@ const Sales: FC = () => {
         <div className="below-lg:hidden">
           <div className="flex flex-col">
             <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-              <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                  <span>12-20-24</span>
-                </div>
-                <div>
-                  <img
-                    onClick={handleImageClick}
-                    src="/images/eye.svg"
-                    width={26}
-                  />
+              <div className=" items-center mb-4 mt-2 px-2">
+                <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                  <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                    <span>12-20-24</span>
+                  </div>
+                  <div>
+                    <img
+                      onClick={handleImageClick}
+                      src="/images/eye.svg"
+                      width={26}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
                 <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Store</p>
-                  <p className="text-[#1A1A1A] text-[12px]">13246</p>
+                  <p className="text-[#808080] text-[13px]">Store</p>
+                  <p className="text-[#1A1A1A] text-[14px]">13246</p>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Orders</p>
-                  <p className="text-[#1A1A1A] text-[12px]">345</p>
+                  <p className="text-[#808080] text-[13px]">Orders</p>
+                  <p className="text-[#1A1A1A] text-[14px]">345</p>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Quantity</p>
-                  <p className="text-[#1A1A1A] text-[12px]">145</p>
+                  <p className="text-[#808080] text-[13px]">Quantity</p>
+                  <p className="text-[#1A1A1A] text-[14px]">145</p>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Amount</p>
-                  <p className="text-[#1A1A1A] text-[12px]">$34,232</p>
+                  <p className="text-[#808080] text-[13px]">Amount</p>
+                  <p className="text-[#1A1A1A] text-[14px]">$34,232</p>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Net</p>
-                  <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
+                  <p className="text-[#808080] text-[13px]">Net</p>
+                  <p className="text-[#1A1A1A] text-[14px]">$3,484.37</p>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[14px]">Average</p>
-                  <p className="text-[#1A1A1A] text-[12px]">$1,032</p>
+                  <p className="text-[#808080] text-[13px]">Average</p>
+                  <p className="text-[#1A1A1A] text-[14px]">$1,032</p>
                 </div>
               </div>
             </div>
 
             <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-              <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                  <span>12-20-24</span>
-                </div>
-                <div>
-                  <img
-                    onClick={handleImageClick}
-                    src="/images/eye.svg"
-                    width={26}
-                  />
+              <div className=" items-center mb-4 mt-2 px-2">
+                <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                  <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                    <span>12-20-24</span>
+                  </div>
+                  <div>
+                    <img
+                      onClick={handleImageClick}
+                      src="/images/eye.svg"
+                      width={26}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -567,16 +551,18 @@ const Sales: FC = () => {
             </div>
 
             <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-              <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                  <span>12-20-24</span>
-                </div>
-                <div>
-                  <img
-                    onClick={handleImageClick}
-                    src="/images/eye.svg"
-                    width={26}
-                  />
+              <div className=" items-center mb-4 mt-2 px-2">
+                <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                  <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                    <span>12-20-24</span>
+                  </div>
+                  <div>
+                    <img
+                      onClick={handleImageClick}
+                      src="/images/eye.svg"
+                      width={26}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">
@@ -608,16 +594,18 @@ const Sales: FC = () => {
             </div>
 
             <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-              <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                  <span>12-20-24</span>
-                </div>
-                <div>
-                  <img
-                    onClick={handleImageClick}
-                    src="/images/eye.svg"
-                    width={26}
-                  />
+              <div className=" items-center mb-4 mt-2 px-2">
+                <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                  <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                    <span>12-20-24</span>
+                  </div>
+                  <div>
+                    <img
+                      onClick={handleImageClick}
+                      src="/images/eye.svg"
+                      width={26}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="space-y-3 mb-2 px-2">

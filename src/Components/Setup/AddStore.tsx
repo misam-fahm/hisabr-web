@@ -130,14 +130,15 @@ const AddStore = () => {
         </button>
       </div>
 
-      <div className=" below-md:hidden">
-        <Button
+
+       <div className="block below-md:hidden">
+        <button
           onClick={openModal}
-          className="flex items-center justify-center font-semibold text-[14px] bg-[#1AA47D] w-[140px] below-md:w-[150px] hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md gap-x-2"
+          className="bg-[#1AA47D] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
-          <img src="/images/plus1.svg" alt="Add icon" className="w-3 h-3  " />
+          <img src="/images/plus1.svg" alt="Add icon" />
           Add Store
-        </Button>
+        </button>
       </div>
       {/* Dialog for the modal */}
       <Dialog

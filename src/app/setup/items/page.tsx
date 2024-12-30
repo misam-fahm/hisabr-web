@@ -222,8 +222,8 @@ const Page: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
-        <AddNewItems />
-        <AddCategories />
+        <AddNewItems/>
+        <AddCategories/>
       </div>
 
       <div className="overflow-hidden max-w-full ">
@@ -240,11 +240,11 @@ const Page: FC = () => {
           {table.getRowModel().rows.map((row) => (
             <div
               key={row.id}
-              className={`border-b border-gray-300 p-3 bg-white rounded-lg mb-2 shadow-sm`}
+              className={`border border-gray-200 p-5 bg-white rounded-lg mb-2`}
             >
               <div className="flex justify-between items-center">
                 {/* Name */}
-                <span className="font-medium text-[16px] text-[#334155]">
+                <span className="font-bold text-[14px] text-[#334155]">
                   {row.getValue("name")}
                 </span>
                 <div className="flex items-center">
@@ -259,28 +259,36 @@ const Page: FC = () => {
               </div>
 
               {/* Border */}
-              <div className="h-[1px] bg-gray-300 my-2"></div>
+              <div className="h-[1px] bg-gray-200 my-3"></div>
 
               {/* Category */}
-              <div className="text-[14px]  flex justify-between">
-                <span className=" text-[#636363]">Category</span>{" "}
+              <div className="flex justify-between">
+                <span className=" text-[#636363] text-[13px] mb-2">Category</span>{" "}
+                <span className="text-[14px]">
                 {row.getValue("category")}
+                </span>
               </div>
 
               {/* Price */}
-              <div className="text-[14px]  mt-1 flex justify-between">
-                <span className=" text-[#636363]">Price</span>{" "}
+              <div className="mt-1 flex justify-between">
+                <span className=" text-[#636363] text-[13px] mb-2">Price</span>{" "}
+                <span className="text-[14px]">
                 {row.getValue("price")}
+                </span>
               </div>
               {/* Quantity */}
-              <div className="text-[14px]  mt-1 flex justify-between">
-                <span className=" text-[#636363]">Quantity</span>{" "}
+              <div className=" mt-1 flex justify-between">
+                <span className=" text-[#636363] text-[13px] mb-2">Quantity</span>{" "}
+                <span className="text-[14px]">
                 {row.getValue("quantity")}
+                </span>
               </div>
               {/* Weight */}
-              <div className="text-[14px]  mt-1 flex justify-between">
-                <span className=" text-[#636363]">Weight</span>{" "}
+              <div className=" mt-1 flex justify-between">
+                <span className=" text-[#636363] text-[13px] mb-2">Weight</span>{" "}
+                <span className="text-[14px]">
                 {row.getValue("weight")}
+                </span>
               </div>
             </div>
           ))}

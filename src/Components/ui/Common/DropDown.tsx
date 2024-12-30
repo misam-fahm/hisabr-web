@@ -65,7 +65,7 @@ const Dropdown = ({
         <span>{selectedOption || "Year"}</span>
         <img
           src="./images/dropdown1.svg"
-          className={`ml-2 transition-transform duration-200 ${
+          className={`-mr-1.5 transition-transform duration-200 ${
             isOpen ? "transform rotate-180" : ""
           }`}
         />
@@ -74,7 +74,7 @@ const Dropdown = ({
       {/* Dropdown Menu */}
       {isOpen && (
         <div
-          className={`absolute left-0 w-full mt-2 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded ${
+          className={`absolute left-0 w-full mt-1 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded ${
             shadowclassName ? shadowclassName : "shadow"
           } shadow`}
           style={{ zIndex: 50 }}

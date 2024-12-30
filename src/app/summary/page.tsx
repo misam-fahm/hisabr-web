@@ -231,7 +231,7 @@ const summary: FC = () => {
           <div className="flex flex-row below-md:flex-col tablet:flex-col w-full mt-6 below-md:mt-3 mb-9">
             <div className="flex flex-col w-[65%] below-md:w-[100%] tablet:w-[100%]">
               <div className="bg-white shadow-md rounded-md">
-                <div className="flex flex-row justify-between below-md:mx-3 mx-7 mt-6">
+                <div className="flex flex-row justify-between below-md:mx-3 mx-7 mt-6 mb-2">
                   {/* Sales Text */}
                   <div>
                     <p className="text-[#2D3748] text-[16px] font-bold">
@@ -275,11 +275,12 @@ const summary: FC = () => {
                     </div>
                   </div>
                 </div>
-
-                <BartChart2 />
+                <div className="below-md:mb-2">
+                  <BartChart2 />
+                </div>
               </div>
               <div className="bg-white shadow-md rounded-md mt-6  below-md:mt-3">
-                <div className="flex flex-row justify-between mx-7 below-md:mx-3 mt-6">
+                <div className="flex flex-row justify-between mx-7 below-md:mx-3 mt-6 mb-2">
                   <div>
                     <p className="text-[#2D3748] text-[16px] font-bold">
                       Invoices
@@ -320,8 +321,9 @@ const summary: FC = () => {
                     </div>
                   </div>
                 </div>
-
-                <BartChart1 />
+                <div className="below-md:mb-2">
+                  <BartChart1 />
+                </div>
               </div>
             </div>
             <div className="w-[35%] below-md:w-[100%] bg-white ml-6 below-md:ml-0 tablet:ml-0 tablet:mt-6 tablet:w-full below-md:mt-3 shadow-md rounded-md">
@@ -364,7 +366,7 @@ const summary: FC = () => {
                 </div>
 
                 {/* Pie Chart Section */}
-                <div className="mt-4 px-6">
+                <div className="-my-5">
                   <PieChart />
                 </div>
 
@@ -374,7 +376,7 @@ const summary: FC = () => {
                       {data.map((item, index) => (
                         <li
                           key={index}
-                          className="flex items-center justify-between py-2"
+                          className="flex px-[18%] items-center justify-between py-2"
                         >
                           {/* Color Circle */}
                           <div className="flex items-center">

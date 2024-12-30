@@ -104,7 +104,7 @@ const AddNewItems = () => {
       <div className="hidden below-md:block   ">
         <button
           onClick={openModal}
-           className="hover:gap-2 text-white w-[80px]  h-[80px] rounded-md  items-center justify-center overflow-hidden"
+          className="hover:gap-2 text-white w-[80px]  h-[80px] rounded-md  items-center justify-center overflow-hidden"
         >
           <img
             src="/images/addButton.svg"
@@ -114,14 +114,14 @@ const AddNewItems = () => {
         </button>
       </div>
 
-      <div>
-        <Button
+      <div className="block below-md:hidden">
+        <button
           onClick={openModal}
-          className=" below-md:hidden flex items-center justify-center font-medium text-[14px] bg-[#1AA47D] w-[170px] below-md:w-[150px] hover:bg-[#168A68] h-[35px] text-[#FFFFFF] rounded-md gap-x-2"
+          className="bg-[#1AA47D] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
-          <img src="/images/plus1.svg" alt="Add icon" className="w-3 h-3" />
+          <img src="/images/plus1.svg" alt="Add icon" />
           Add Item
-        </Button>
+        </button>
       </div>
       <Dialog
         open={isOpen}
