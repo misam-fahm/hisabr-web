@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
   const currentPath = usePathname();
   const [isClient, setIsClient] = useState(false);
   const [title, setTitle] = useState("");
@@ -44,7 +43,7 @@ const Navbar: React.FC = () => {
         case "invoices":
           newTitle = "Invoices";
           break;
-          case "invoicedetails":
+        case "invoicedetails":
           newTitle = "Invoices/Invoice Details/store 13246";
           break;
         case "expenses":

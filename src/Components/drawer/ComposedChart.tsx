@@ -118,12 +118,13 @@ const CustomChart: FC = () => {
                           }}
                         />
                       ) : (
-                        // Default color legend for others
+                        // Fully Rounded Indicator for Expense and Sale
                         <div
                           style={{
-                            width: 10,
-                            height: 10,
+                            width: 11,
+                            height: 11,
                             backgroundColor: entry.color,
+                            borderRadius: "50%", // Makes the indicator circular
                             marginRight: 5,
                           }}
                         ></div>
