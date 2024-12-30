@@ -260,6 +260,7 @@ const Page: FC = () => {
 
               {/* Border */}
               <div className=" border-b bg-gray-200 my-3"></div>
+              
 
               {/* Category */}
               <div className="flex justify-between">

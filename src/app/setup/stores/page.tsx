@@ -26,7 +26,7 @@ interface TableRow {
 const data: TableRow[] = [
   {
     store: "Store 1",
-    date: "13-12-24",
+    date: "12-10-24",
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
@@ -34,7 +34,7 @@ const data: TableRow[] = [
   },
   {
     store: "Store 2",
-    date: "13-12-24",
+    date: "12-10-24",
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
@@ -42,7 +42,7 @@ const data: TableRow[] = [
   },
   {
     store: "Store 3",
-    date: "13-12-24",
+    date: "12-10-24",
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
@@ -50,7 +50,7 @@ const data: TableRow[] = [
   },
   {
     store: "13246",
-    date: "13-12-24",
+    date: "12-10-24",
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
@@ -59,7 +59,7 @@ const data: TableRow[] = [
   },
   {
     store: "Store 2",
-    date: "13-12-24",
+    date: "12-10-24",
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
@@ -67,7 +67,7 @@ const data: TableRow[] = [
   },
   {
     store: "Store 1",
-    date: "13-12-24",
+    date: "12-10-24",
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
@@ -75,7 +75,7 @@ const data: TableRow[] = [
   },
   {
     store: "Store 2",
-    date: "13-12-24",
+    date: "12-10-24",
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
@@ -83,7 +83,7 @@ const data: TableRow[] = [
   },
   {
     store: "Store 3",
-    date: "13-12-24",
+    date: "12-10-24",
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
@@ -91,7 +91,7 @@ const data: TableRow[] = [
   },
   {
     store: "Store 1",
-    date: "13-12-24",
+    date: "12-10-24",
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
@@ -99,7 +99,7 @@ const data: TableRow[] = [
   },
   {
     store: "Store 2",
-    date: "13-12-24",
+    date: "12-10-24",
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
@@ -107,7 +107,7 @@ const data: TableRow[] = [
   },
   {
     store: "Store 3",
-    date: "13-12-24",
+    date: "12-10-24",
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
@@ -115,7 +115,7 @@ const data: TableRow[] = [
   },
   {
     store: "13246",
-    date: "13-12-24",
+    date: "12-10-24",
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
