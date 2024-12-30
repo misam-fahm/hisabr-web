@@ -149,11 +149,11 @@ const Page: FC = () => {
           {table.getRowModel().rows.map((row) => (
             <div
               key={row.id}
-              className={`border-b border-gray-300 p-3 bg-white rounded-lg mb-2 shadow-sm`}
+              className={`border border-gray-200 p-5 bg-white rounded-lg mb-2`}
             >
               <div className="flex justify-between items-center">
                 {/* Name */}
-                <span className="font-medium text-[16px] text-[#334155]">
+                <span className="font-bold text-[14px] text-[#334155]">
                   {row.getValue("name")}
                 </span>
                 <div className="flex items-center ">
@@ -167,16 +167,26 @@ const Page: FC = () => {
               </div>
 
               {/* Border */}
-              <div className="h-[1px] bg-gray-300 my-2"></div>
+              <div className=" border-b bg-gray-200 my-3"></div>
 
-              <div className="text-[14px]  flex justify-between">
-                <span className=" text-[#636363]">Description</span>{" "}
-                {row.getValue("description")}
+              <div className=" flex justify-between ">
+                <span className=" text-[#636363] text-[13px] mb-2">
+                  Description
+                </span>{" "}
+                <span className="text-[14px]">
+                  {" "}
+                  {row.getValue("description")}
+                </span>
               </div>
 
-              <div className="text-[14px]  mt-1 flex justify-between">
-                <span className=" text-[#636363]">No. of Items</span>{" "}
-                {row.getValue("noOfItems")}
+              <div className="mt-1 flex justify-between">
+                <span className=" text-[#636363] text-[13px] mb-2">
+                  No. of Items
+                </span>{" "}
+                <span className="text-[14px]">
+                  {" "}
+                  {row.getValue("noOfItems")}
+                </span>
               </div>
             </div>
           ))}

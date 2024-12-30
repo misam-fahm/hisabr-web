@@ -128,7 +128,7 @@ const EditExpense = ({ expenseData, onUpdate }: { expenseData: any, onUpdate: (u
         <div>
             <button onClick={openModal}>
                 <img src="/images/editIcon(1).svg"
-                     className="flex justify-center w-5 h-5 text-left"
+                     className="flex justify-center w-4 h-4 text-left"
                     
                     />
             </button>

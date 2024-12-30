@@ -28,6 +28,12 @@ body {
   height: 11px;
 }
 
+@media (max-width: 768px) {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 0;
+  }
+}
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #00000024;
   border-radius: 10px;

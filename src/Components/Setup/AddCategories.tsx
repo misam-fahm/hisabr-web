@@ -26,15 +26,20 @@ const AddCategories = () => {
   const closeModal = () => setIsOpen(false);
   const [customToast, setCustomToast] = useState<CustomToast>({ toastMessage: "", toastType: "" });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: string
+  ) => {
     const { value } = e.target;
 
     if (field === "categoryName") {
       setCategoryName(value);
-      if (value.trim()) setErrors((prevErrors) => ({ ...prevErrors, categoryName: "" }));
+      if (value.trim())
+        setErrors((prevErrors) => ({ ...prevErrors, categoryName: "" }));
     } else if (field === "description") {
       setDescription(value);
-      if (value.trim()) setErrors((prevErrors) => ({ ...prevErrors, description: "" }));
+      if (value.trim())
+        setErrors((prevErrors) => ({ ...prevErrors, description: "" }));
     }
   };
 
@@ -78,19 +83,24 @@ const AddCategories = () => {
 
   return (
     <>
-      <ToastNotification message={customToast.toastMessage} type={customToast.toastType} />
-      <div>
-        <Button
+    <ToastNotification message={customToast.toastMessage} type={customToast.toastType} />
+      <div className="block below-md:hidden">
+        <button
           onClick={openModal}
-          className="flex items-center justify-center font-semibold text-[14px] bg-[#1AA47D] w-[170px] hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md gap-x-2"
+          className="bg-[#1AA47D] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
-          <img src="/images/plus1.svg" alt="Add icon" className="w-3 h-3" />
+          <img src="/images/plus1.svg" alt="Add icon" />
           Add Category
-        </Button>
+        </button>
       </div>
 
       {/* Dialog for the modal */}
-      <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
+      <Dialog
+        open={isOpen}
+        as="div"
+        className="relative z-50"
+        onClose={closeModal}
+      >
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[420px] below-md:w-[345px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
@@ -110,18 +120,24 @@ const AddCategories = () => {
               <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2">
-                    <label className="text-sm text-gray-600">Category Name</label>
+                    <label className="text-sm text-gray-600">
+                      Category Name
+                    </label>
                     <input
                       type="text"
                       value={categoryName}
                       onChange={(e) => handleInputChange(e, "categoryName")}
                       className={`h-[42px] mt-2 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
-                        errors.categoryName ? "border-red-500" : "border-gray-300"
+                        errors.categoryName
+                          ? "border-red-500"
+                          : "border-gray-300"
                       }`}
                       placeholder="Please enter Category Name"
                     />
                     {errors.categoryName && (
-                      <p className="text-xs text-red-500">{errors.categoryName}</p>
+                      <p className="text-xs text-red-500">
+                        {errors.categoryName}
+                      </p>
                     )}
                   </div>
 
@@ -132,12 +148,16 @@ const AddCategories = () => {
                       value={description}
                       onChange={(e) => handleInputChange(e, "description")}
                       className={`h-[42px] mt-2 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
-                        errors.description ? "border-red-500" : "border-gray-300"
+                        errors.description
+                          ? "border-red-500"
+                          : "border-gray-300"
                       }`}
                       placeholder="Please enter Description"
                     />
                     {errors.description && (
-                      <p className="text-xs text-red-500">{errors.description}</p>
+                      <p className="text-xs text-red-500">
+                        {errors.description}
+                      </p>
                     )}
                   </div>
                 </div>

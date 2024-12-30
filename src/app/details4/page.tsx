@@ -6,6 +6,7 @@ import BarChart4 from "@/Components/drawer/BarChart4";
 import PieChart3 from "@/Components/drawer/Piechart3";
 import { useRouter } from "next/navigation";
 import Dropdown from "@/Components/ui/Common/DropDown";
+import Images from "@/Components/ui/Common/Image";
 
 const dat = [
   { label: "New Customers", value: 10836, per: "2%", color: "#376066CC" },
@@ -69,6 +70,13 @@ const DetailsPage: React.FC = () => {
         </p>
       </div> */}
       <div className="pt-6 pb-6 below-md:pb-3 below-md:pt-3 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
+        <div>
+          <Images
+            className="below-md:hidden cursor-pointer h-5 w-5 bg-white rounded-full p-1 mb-3"
+            onClick={handleBack}
+            src="./images/back-arrow.svg"
+          />
+        </div>
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row below-md:flex-col gap-3 w-full">
             <Dropdown
@@ -88,14 +96,6 @@ const DetailsPage: React.FC = () => {
               isOpen={isOpen2}
               toggleOpen={toggleDropdown2}
             />
-          </div>
-          <div>
-            <p
-              onClick={handleBack}
-              className=" below-md:hidden cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
-            >
-              Back
-            </p>
           </div>
         </div>
         <div />

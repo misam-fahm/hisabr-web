@@ -71,8 +71,6 @@ const AddTender = () => {
       isValid = false;
     }
 
-   
-
     if (!formData.selectedType) {
       newErrors.selectedType = "Tender type is required";
       isValid = false;
@@ -96,7 +94,7 @@ const AddTender = () => {
       <div className="hidden below-md:block   ">
         <button
           onClick={openModal}
-           className="hover:gap-2 text-white w-[80px]  h-[80px] rounded-md  items-center justify-center overflow-hidden"
+          className="hover:gap-2 text-white w-[80px]  h-[80px] rounded-md  items-center justify-center overflow-hidden"
         >
           <img
             src="/images/addButton.svg"
@@ -106,14 +104,14 @@ const AddTender = () => {
         </button>
       </div>
 
-      <div>
-        <Button
+      <div className="block below-md:hidden">
+        <button
           onClick={openModal}
-          className=" below-md:hidden flex items-center justify-center font-medium text-[14px] bg-[#1AA47D] w-[170px] below-md:w-[150px] hover:bg-[#168A68] h-[35px] text-[#FFFFFF] rounded-md gap-x-2"
+          className="bg-[#1AA47D] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
-          <img src="/images/plus1.svg" alt="Add icon" className="w-3 h-3" />
+          <img src="/images/plus1.svg" alt="Add icon"/>
           Add Tender
-        </Button>
+        </button>
       </div>
       <Dialog
         open={isOpen}
@@ -121,12 +119,12 @@ const AddTender = () => {
         className="relative z-50"
         onClose={closeModal}
       >
-        <div className="fixed inset-0 bg-black bg-opacity-50" />
+        <div className="fixed inset-0 bg-black bg-opacity-50"/>
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[420px]  below-md:w-[344px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
             <div className="flex justify-between">
               <DialogTitle as="h3" className="font-medium text-gray-900">
-                Add Item
+                Add Tender
               </DialogTitle>
               <img
                 onClick={closeModal}
@@ -137,8 +135,6 @@ const AddTender = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="mt-4">
-             
-
               <div className="mb-2">
                 <label className="text-sm text-gray-600">Name</label>
                 <input
@@ -194,10 +190,6 @@ const AddTender = () => {
                   <p className="text-xs text-red-500">{errors.price}</p>
                 )}
               </div>
-
-             
-
-             
 
               <div className="flex mt-5 justify-between">
                 <button

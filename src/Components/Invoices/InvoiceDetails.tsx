@@ -66,55 +66,61 @@ const InvoiceDetails = () => {
     className="max-h-[calc(100vh-60px)] overflow-auto px-6"
     style={{ scrollbarWidth: "thin" }}
   >
-      <div className="flex gap-8 pt-5 pb-5  below-md:flex below-md:flex-col below-md:gap-3">
+     <div className='block below-md:hidden'>
+    <div className='flex items-start pt-4 cursor-pointer' onClick={() => window.history.back()}>
+          <img src='/images/backArrow.svg' alt='Back Arrow' className='w-8 h-8'/>
+          </div>
+          </div>
+      <div className="flex gap-8 pt-4 pb-4  below-md:flex below-md:flex-col below-md:gap-3">
+        
         {/* Left Panel - Invoice Details */}
-        <div className="space-y-2 shadow border rounded-lg w-[299px] below-md:w-full p-4 items-start">
+        <div className="space-y-2 shadow border bg-[#FFFFFF] rounded-lg w-[299px] below-md:w-full p-4 items-start">
           <div className="flex flex-col below-md:flex-row justify-between gap-[4px]">
             <p className="text-[#636363] text-[12px]">Date</p>
-            <p className="text-[#636363] text-[14px]">2023/01/09</p>
+            <p className="text-[#636363] text-[13px] font-semibold">2023/01/09</p>
           </div>
           <div className="flex flex-col below-md:flex-row justify-between gap-[4px]">
             <span className="text-[#636363] text-[12px]">Invoice Number</span>
-            <span className="text-[#636363] text-[14px]">9003185975</span>
+            <span className="text-[#636363] text-[13px] font-semibold">9003185975</span>
           </div>
           <div className="flex  flex-col below-md:flex-row justify-between gap-[4px]">
             <span className="text-[#636363] text-[12px]">Store Name</span>
-            <span className="text-[#636363]  text-[14px]">13246</span>
+            <span className="text-[#636363]  text-[13px] font-semibold">13246</span>
           </div>
           <div className="flex flex-col below-md:flex-row justify-between gap-[4px]">
             <span className="text-[12px] text-[#636363]">Due Date</span>
-            <span className="text-[14px] text-[#636363]">2023/08/30</span>
+            <span className="text-[13px] text-[#636363] font-semibold">2023/08/30</span>
           </div>
         </div>
         <div className='flex justify-between w-full'>
           {/* Right Panel - Totals */}
-          <div className="shadow border rounded-lg w-[369px]  below-md:w-full px-4 flex flex-col py-3 gap-3">
+          <div className="shadow border rounded-lg w-[369px] bg-[#FFFFFF] below-md:w-full px-4 flex flex-col py-3 gap-3">
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Product Total</span>
-              <span className="text-[#636363] text-[14px]">$8,068.89</span>
+              <span className="text-[#636363] text-[13px] font-semibold">$8,068.89</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Sub Total</span>
-              <span className="text-[#636363] text-[14px]">$8,076.39</span>
+              <span className="text-[#636363] text-[13px] font-semibold">$8,076.39</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Tax 1</span>
-              <span className="text-[#636363] text-[14px]">$1.52</span>
+              <span className="text-[#636363] text-[13px] font-semibold">$1.52</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Tax 2</span>
-              <span className="text-[#636363] text-[14px]">$1.52</span>
+              <span className="text-[#636363] text-[13px] font-semibold">$1.52</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Miscellaneous</span>
-              <span className="text-[#636363] text-[14px]">$0</span>
+              <span className="text-[#636363] text-[13px] font-semibold">$0</span>
             </div>
             <div className="flex justify-between border-t pt-2 mt-2">
               <span className="text-[#636363] text-[14px] font-semibold">Total</span>
               <span className="text-[#636363] text-[14px] font-semibold">$8,079.43</span>
             </div>
           </div>
-          <div className='block below-md:hidden'>
+          {/* <div className='block below-md:hidden'>
           <div className="flex justify-end items-start mb-6 mt-1">
             <button
               onClick={() => window.history.back()}
@@ -123,7 +129,7 @@ const InvoiceDetails = () => {
               Back
             </button>
           </div>
-          </div>
+          </div> */}
         </div>
 
 
@@ -149,7 +155,7 @@ const InvoiceDetails = () => {
               </tr>
             </thead>
             </table>
-            <div className='max-h-[calc(100vh-380px)] rounded-md shadow overflow-auto' style={{ scrollbarWidth: "thin" }}>
+            <div className='max-h-[calc(100vh-420px)] rounded-md shadow overflow-auto' style={{ scrollbarWidth: "thin" }}>
             <table className='w-full text-[12px] table-auto shadow rounded-md '>
               <tbody>
                 {tableData.map((row, index) => (

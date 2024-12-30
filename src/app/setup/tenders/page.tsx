@@ -192,11 +192,11 @@ const Page: FC = () => {
         {table.getRowModel().rows.map((row) => (
           <div
             key={row.id}
-            className={`border-b border-gray-300 p-3 bg-white rounded-lg mb-2 shadow-sm`}
+            className={`border border-gray-200 p-5 bg-white rounded-lg mb-2`}
           >
             <div className="flex justify-between items-center">
               {/* Name */}
-              <span className="font-medium text-[16px] text-[#334155]">
+              <span className="font-bold text-[14px] text-[#334155]">
                 {row.getValue("name")}
               </span>
               <div className="flex items-center">
@@ -212,16 +212,16 @@ const Page: FC = () => {
             </div>
 
             {/* Border */}
-            <div className="h-[1px] bg-gray-300 my-2"></div>
+            <div className="h-[1px] bg-gray-200 my-3"></div>
 
-            <div className="text-[14px]  flex justify-between">
-              <span className=" text-[#636363]">Type</span>{" "}
-              {row.getValue("type")}
-            </div>
+            <div className="  flex justify-between">
+              <span className=" text-[#636363] text-[13px] mb-2">Type</span>{" "}
+              <span className=" text-[14px]">{row.getValue("type")}</span>
+            </div> 
 
-            <div className="text-[14px]  mt-1 flex justify-between">
-              <span className=" text-[#636363]">Percent</span>{" "}
-              {row.getValue("percent")}
+            <div className=" mt-1 flex justify-between">
+              <span className=" text-[#636363] text-[13px] mb-2">Percent</span>{" "}
+              <span className=" text-[14px]">{row.getValue("percent")}</span>
             </div>
           </div>
         ))}

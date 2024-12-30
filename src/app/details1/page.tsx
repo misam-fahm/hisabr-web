@@ -286,6 +286,13 @@ const DetailsPage: React.FC = () => {
         </p>
       </div> */}
       <div className="pt-6 pb-6 below-md:pt-3 below-md:pb-3 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
+        <div>
+          <Images
+            className="below-md:hidden cursor-pointer h-5 w-5 bg-white rounded-full p-1 mb-3"
+            onClick={handleBack}
+            src="./images/back-arrow.svg"
+          />
+        </div>
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row below-md:flex-col gap-3 w-full">
             {/* First Dropdown */}
@@ -307,14 +314,6 @@ const DetailsPage: React.FC = () => {
               isOpen={isOpen2}
               toggleOpen={toggleDropdown2}
             />
-          </div>
-          <div>
-            <p
-              onClick={handleBack}
-              className="below-md:hidden cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
-            >
-              Back
-            </p>
           </div>
         </div>
       </div>
@@ -448,7 +447,7 @@ const DetailsPage: React.FC = () => {
                     {dat?.map((item, index) => (
                       <li
                         key={index}
-                        className="flex items-center justify-between py-2"
+                        className="flex px-[12%] items-center justify-between py-2"
                       >
                         {/* Color Circle */}
                         <div className="flex items-center">
@@ -566,17 +565,15 @@ const DetailsPage: React.FC = () => {
           <div className="below-lg:hidden tablet:hidden">
             <div className="flex flex-col">
               <div className="border-[#E4E4EF] border w-full bg-white rounded-md p-3 mb-3">
-                <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                  <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
-                    <span>12-20-24</span>
-                    <span>Gordon</span>
-                  </div>
-                  <div>
-                    <button
-                      onClick={() => (window.location.href = "/invoicedetails")}
-                    >
+                <div className=" items-center mb-4 mt-2 px-2">
+                  <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                    <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
+                      <span>12-20-24</span>
+                      <span>Gordon</span>
+                    </div>
+                    <div>
                       <img src="/images/eye.svg" width={26} />
-                    </button>
+                    </div>
                   </div>
                 </div>
                 <div className="space-y-3 mb-2 px-2">
@@ -596,39 +593,15 @@ const DetailsPage: React.FC = () => {
               </div>
 
               <div className="border-[#E4E4EF] border w-full bg-white rounded-md p-3 mb-3">
-                <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                  <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
-                    <span>12-20-24</span>
-                    <span>Gordon</span>
-                  </div>
-                  <div>
-                    <img src="/images/eye.svg" width={26} />
-                  </div>
-                </div>
-                <div className="space-y-3 mb-2 px-2">
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Store</p>
-                    <p className="text-[#1A1A1A] text-[12px]">13246</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Quantity</p>
-                    <p className="text-[#1A1A1A] text-[12px]">145</p>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[14px]">Total</p>
-                    <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-[#E4E4EF] border w-full bg-white rounded-md p-3 mb-3">
-                <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                  <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
-                    <span>12-20-24</span>
-                    <span>Gordon</span>
-                  </div>
-                  <div>
-                    <img src="/images/eye.svg" width={26} />
+                <div className=" items-center mb-4 mt-2 px-2">
+                  <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                    <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
+                      <span>12-20-24</span>
+                      <span>Gordon</span>
+                    </div>
+                    <div>
+                      <img src="/images/eye.svg" width={26} />
+                    </div>
                   </div>
                 </div>
                 <div className="space-y-3 mb-2 px-2">
@@ -648,13 +621,43 @@ const DetailsPage: React.FC = () => {
               </div>
 
               <div className="border-[#E4E4EF] border w-full bg-white rounded-md p-3 mb-3">
-                <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
-                  <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
-                    <span>12-20-24</span>
-                    <span>Gordon</span>
+                <div className=" items-center mb-4 mt-2 px-2">
+                  <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                    <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
+                      <span>12-20-24</span>
+                      <span>Gordon</span>
+                    </div>
+                    <div>
+                      <img src="/images/eye.svg" width={26} />
+                    </div>
                   </div>
-                  <div>
-                    <img src="/images/eye.svg" width={26} />
+                </div>
+                <div className="space-y-3 mb-2 px-2">
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Store</p>
+                    <p className="text-[#1A1A1A] text-[12px]">13246</p>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Quantity</p>
+                    <p className="text-[#1A1A1A] text-[12px]">145</p>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[14px]">Total</p>
+                    <p className="text-[#1A1A1A] text-[12px]">$3,484.37</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-[#E4E4EF] border w-full bg-white rounded-md p-3 mb-3">
+                <div className=" items-center mb-4 mt-2 px-2">
+                  <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                    <div className="flex gap-3 text-[#1A1A1A] text-[14px] font-bold">
+                      <span>12-20-24</span>
+                      <span>Gordon</span>
+                    </div>
+                    <div>
+                      <img src="/images/eye.svg" width={26} />
+                    </div>
                   </div>
                 </div>
                 <div className="space-y-3 mb-2 px-2">

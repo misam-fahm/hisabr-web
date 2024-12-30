@@ -226,7 +226,7 @@ const SalesKPI: FC = () => {
         </div>
 
         <div className="flex flex-col below-md:flex-col tablet:flex-col justify-between rounded-lg bg-white mt-6 below-md:mt-3 below-md:mx-3 shadow-md ml-6 mr-6">
-          <div className="w-full text-left font-bold ml-6 mt-3 text-[16px] text-[#334155]">
+          <div className="w-full text-left font-bold mx-6 below-md:ml-3 mt-6 text-[16px] text-[#334155]">
             Expense Distribution
           </div>
           <div className="flex flex-row items-center below-md:flex-col tablet:flex-col mx-3">
