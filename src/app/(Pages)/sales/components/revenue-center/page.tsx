@@ -47,11 +47,11 @@ const PaymentTable: React.FC = () => {
       <div className="overflow-x-auto below-md:hidden rounded-lg  shadow-md ">
         <table className="min-w-full">
           <thead className="bg-[#334155] text-white">
-            <tr className=" text-[15px] font-medium">
+            <tr className="text-[15px] font-medium">
               <th className="px-4 py-2 text-left font-medium">Name</th>
-              <th className="px-4 py-2 text-left font-medium">Quantity</th>
-              <th className="px-4 py-2 text-left font-medium">Total</th>
-              <th className="px-4 py-2 text-left font-medium">Percent</th>
+              <th className="px-4 py-2 text-right font-medium">Quantity</th>
+              <th className="px-4 py-2 text-right font-medium">Total</th>
+              <th className="px-4 py-2 text-right font-medium">Percent</th>
             </tr>
           </thead>
           <tbody>
@@ -60,17 +60,19 @@ const PaymentTable: React.FC = () => {
                 key={index}
                 className={`${index % 2 === 0 ? "bg-[#F8F9FB]" : "bg-white"}`}
               >
-                <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                {/* Left-Aligned Text */}
+                <td className="px-4 py-2 text-left text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                   {row.name}
                 </td>
-                <td className="px-8 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+
+                {/* Right-Aligned Numeric Values */}
+                <td className="px-8 py-2 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                   {row.quantity}
                 </td>
-
-                <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                <td className="px-4 py-2 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                   {row.total}
                 </td>
-                <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                <td className="px-4 py-2 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                   {row.percent}
                 </td>
               </tr>

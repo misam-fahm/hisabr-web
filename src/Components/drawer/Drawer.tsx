@@ -38,9 +38,9 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         case "invoices":
           newTitle = "Invoices";
           break;
-          case "invoicedetails":
-            newTitle = "Invoice Details";
-            break;
+        case "invoicedetails":
+          newTitle = "Invoice Details";
+          break;
         case "expenses":
           newTitle = "Expenses";
           break;
@@ -124,7 +124,9 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
           : ""
       }`}
     >
-      {title === "My Profile" || title === "Edit Profile" || title === "Invoice Details" ? (
+      {title === "My Profile" ||
+      title === "Edit Profile" ||
+      title === "Invoice Details" ? (
         <img
           src="/images/backIcon.svg"
           className="fixed top-4 left-4 cursor-pointer z-50"
@@ -155,11 +157,23 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
             src={open ? "/images/logo.svg" : "/images/halflogo.png"}
             className={`cursor-pointer ${open ? "w-[136px]" : "w-[36px]"}  h-[45px]`}
           />
-          <img
-            src="/images/x.svg"
-            onClick={() => setOpen(!open)}
-            className="below-lg:hidden tablet:hidden sticky z-50 pl-5"
-          />
+          {title === "My Profile" ||
+          title === "Edit Profile" ||
+          title === "Invoice Details" ? (
+            <img
+              src="/images/backIcon.svg"
+              className="fixed top-4 left-4 cursor-pointer z-50"
+              onClick={() => router.back()}
+            />
+          ) : (
+            !shouldHideHamburger && (
+              <img
+                src="/images/x.svg"
+                onClick={() => setOpen(!open)}
+                className="below-lg:hidden tablet:hidden sticky z-40 pl-5"
+              />
+            )
+          )}
         </div>
         <div className="max-h-[calc(100vh-160px)] py-4 overflow-auto scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent ">
           <ul className="">

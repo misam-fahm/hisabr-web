@@ -115,12 +115,51 @@ const BarChart3: React.FC<{ selectedYear: number }> = ({ selectedYear }) => {
         />
         <Tooltip />
         <Legend
-          formatter={() => (
-            <span style={{ color: "#000000B2", fontSize: "12px" }}>
-              {selectedYear}
-            </span>
+          content={({ payload }) => (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {payload?.map((entry, index) => (
+                <div
+                  key={`item-${index}`}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    margin: "0 10px",
+                  }}
+                >
+                  {/* Rounded box */}
+                  <span
+                    style={{
+                      display: "inline-block",
+                      width: "12px",
+                      height: "12px",
+                      borderRadius: "50%", // Rounded box
+                      backgroundColor: entry.color, // Bar color
+                      marginRight: "8px",
+                      marginTop: "10px",
+                    }}
+                  ></span>
+                  {/* Category name */}
+                  <span
+                    style={{
+                      color: "#000000B2",
+                      fontSize: "14px",
+                      marginTop: "10px",
+                    }}
+                  >
+                    {selectedYear}
+                  </span>
+                </div>
+              ))}
+            </div>
           )}
         />
+
         <Bar
           dataKey="value1"
           stackId="a"
