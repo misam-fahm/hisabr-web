@@ -134,7 +134,7 @@ const Invoices = () => {
     }
   };
   /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("Select an options");
+  const [selectedOption, setSelectedOption] = useState<string>("Select Stores");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
@@ -177,7 +177,7 @@ const Invoices = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <div className='flex justify-between below-md:flex-col items-center w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6'>
-        <div className="flex  gap-3 below-md:space-y-1 w-full below-md:flex-col">
+        <div className="flex gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
           <div className="flex">
           <Dropdown
               options={options}
@@ -228,7 +228,7 @@ const Invoices = () => {
       <div>
         {cardData.map((card, index) => (
           <div key={index}
-            className='flex flex-col w-full  rounded-md bg-white border-b border-[#E4E4EF] below-lg:hidden my-4'>
+            className='flex flex-col w-full  rounded-md bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3'>
             <div className='flex justify-between items-start'>
               <div className='flex gap-4 px-3 py-4'>
                 <p className='text-[14px] font-bold'>{card.date}</p>
@@ -263,7 +263,7 @@ const Invoices = () => {
 
           </div>
         ))}
-        <div className='below-lg:hidden flex justify-end fixed bottom-3 right-6'>
+        <div className='below-lg:hidden flex justify-end fixed bottom-1 right-1'>
 
           <button className="focus:outline-none w-[80px] h-[80px] text-white rounded-md text-[14px] flex items-center justify-center relative"
             onTouchStart={handlePressStart} // For mobile devices
@@ -273,7 +273,7 @@ const Invoices = () => {
           >
             <img src="/images/uploadinvoiceIcon.svg" alt='Upload Invoice' />
             {showTooltip && (
-              <div className="absolute bottom-[70px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
+              <div className="absolute bottom-[75px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
                 Upload Invoice
                 {/* Tooltip Pointer */}
                 <div className="absolute top-full right-[20%] transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#79747E]"></div>

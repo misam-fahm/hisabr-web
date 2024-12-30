@@ -292,7 +292,7 @@ const Expenses: FC = () => {
     setIsOpen(!isOpen);
   };
   /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("Select an option");
+  const [selectedOption, setSelectedOption] = useState<string>("Select Stores");
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
   const toggleDropdown1 = () => setIsOpen(!isOpen);
@@ -312,7 +312,7 @@ const Expenses: FC = () => {
     >
       <>
         <div className="flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:mt-4 below-md:mb-4 mt-6 mb-6">
-          <div className="flex gap-3 below-md:space-y-1 w-full below-md:flex-col">
+          <div className="flex gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
             <div className="flex">
             <Dropdown
               options={options}
@@ -355,7 +355,7 @@ const Expenses: FC = () => {
           {cardData.map((card, index) => (
             <div
               key={index}
-              className="flex flex-col w-full rounded bg-white border-b border-[#E4E4EF] below-lg:hidden my-4"
+              className="flex flex-col w-full rounded bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3"
             >
               <div className="flex justify-between items-start">
                 <div className="flex gap-4 px-3 py-4">
@@ -393,7 +393,7 @@ const Expenses: FC = () => {
               </div>
             </div>
           ))}
-          <div className=" fixed bottom-[5px] hidden below-md:block right-1">
+          <div className=" fixed bottom-1 hidden below-md:block right-1">
             {" "}
             <AddExpenses />
           </div>
