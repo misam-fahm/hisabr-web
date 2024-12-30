@@ -82,7 +82,7 @@ const Home: FC = () => {
   //fifth link(customer count)
 
   const handleClick5 = () => {
-    router.push("/details5"); // Navigates to the 'details' page
+    router.push("/expenses"); // Navigates to the 'details' page
   };
 
   //sixth link(customer count)

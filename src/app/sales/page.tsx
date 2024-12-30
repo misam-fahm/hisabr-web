@@ -350,7 +350,7 @@ const Sales: FC = () => {
                 <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
                   <img
                     className="cursor-pointer items-center"
-                    src="/images/searchicon.svg"
+                    src="/images/SearchIcon.svg"
                   />
                 </div>
               </div>

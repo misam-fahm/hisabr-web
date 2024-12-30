@@ -128,7 +128,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
       title === "Edit Profile" ||
       title === "Invoice Details" ? (
         <img
-          src="/images/backIcon.svg"
+          src="/images/MobileBackIcon.svg"
           className="fixed top-4 left-4 cursor-pointer z-50"
           onClick={() => router.back()}
         />
@@ -161,7 +161,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
           title === "Edit Profile" ||
           title === "Invoice Details" ? (
             <img
-              src="/images/backIcon.svg"
+              src="/images/MobileBackIcon.svg"
               className="fixed top-4 left-4 cursor-pointer z-50"
               onClick={() => router.back()}
             />

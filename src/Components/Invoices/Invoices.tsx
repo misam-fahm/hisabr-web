@@ -80,7 +80,7 @@ const columns: ColumnDef<TableRow>[] = [
     header: () => <div className='text-left'>View</div>,
     cell: () => (
       <button onClick={() => (window.location.href = "/invoicedetails")} className="text-green-500 hover:text-green-700 text-center ml-2">
-        <img src="/images/View_duotone.svg" alt='View Icon' />
+        <img src="/images/ViewEyeIcon.svg" alt='View Icon' />
       </button>
     ),
     size: 30,
@@ -203,7 +203,7 @@ const Invoices = () => {
               placeholder='Search'
               className='w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none'>
             </input>
-            <img className='pr-2 cursor-pointer items-center' src='/images/searchicon.svg'
+            <img className='pr-2 cursor-pointer items-center' src='/images/SearchIcon.svg'
               onClick={handleClick} />
           </div>
         </div>
@@ -211,7 +211,7 @@ const Invoices = () => {
           <button className="w-[170px] h-[35px] bg-[#1AA47D] hover:bg-[#168A6F] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
             onClick={handleButtonClick}
           >
-            <img className='' src="/images/UploadInvoice.svg" alt="" />
+            <img className='' src="/images/WebUploadIcon.svg" alt="" />
             Upload Invoice
           </button>
           <input
@@ -237,7 +237,7 @@ const Invoices = () => {
 
               <div className='flex gap-4 mb-1 px-3 py-4'>
                 <button onClick={() => (window.location.href = "/invoicedetails")} className='text-green-500 hover:text-green-700'>
-                  <img className='below-md:w-7 below-md:h-7 h-4 w-4' src='/images/ViewIcon(1).svg' />
+                  <img className='below-md:w-7 below-md:h-7 h-4 w-4' src='/images/ViewEyeIcon.svg' />
                 </button>
               </div>
             </div>
@@ -271,7 +271,7 @@ const Invoices = () => {
             onClick={handleButtonClick}
 
           >
-            <img src="/images/uploadinvoiceIcon.svg" alt='Upload Invoice' />
+            <img src="/images/MobileUploadIcon.svg" alt='Upload Invoice' />
             {showTooltip && (
               <div className="absolute bottom-[75px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
                 Upload Invoice
