@@ -83,7 +83,10 @@ const AddCategories = () => {
 
   return (
     <>
+<<<<<<< HEAD
     <ToastNotification message={customToast.toastMessage} type={customToast.toastType} />
+=======
+>>>>>>> main
       <div className="block below-md:hidden">
         <button
           onClick={openModal}

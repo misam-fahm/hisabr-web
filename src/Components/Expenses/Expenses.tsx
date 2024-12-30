@@ -339,7 +339,7 @@ const Expenses: FC = () => {
                 ></input>
                 <img
                   className="pr-2 cursor-pointer items-center"
-                  src="/images/searchicon.svg"
+                  src="/images/SearchIcon.svg"
                   onClick={handleClick}
                 />
               </div>

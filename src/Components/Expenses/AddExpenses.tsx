@@ -136,7 +136,7 @@ const AddExpenses = () => {
     onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
     className="hover:gap-2 text-white w-[80px] h-[80px] rounded-md items-center justify-center overflow-hidden transition-all duration-10 group"
 >
-    <img src='/images/plusIcon.svg' alt='AddExpense' className=' text-white transition-opacity duration-10'/>
+    <img src='/images/MobileAddIcon.svg' alt='AddExpense' className=' text-white transition-opacity duration-10'/>
      {showTooltip && (
               <div className="absolute bottom-[75px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
                 Add Expenses
@@ -154,7 +154,7 @@ const AddExpenses = () => {
     onClick={openModal}
     className="bg-[#1AA47D] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
 >
-       <img className ='' src="/images/addExpenses.svg" alt="" />
+       <img className ='' src="/images/WebAddIcon.svg" alt="" />
         Add Expenses
 
 </button>
