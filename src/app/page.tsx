@@ -114,7 +114,7 @@ const Home: FC = () => {
         </p>
       </div> */}
 
-      <div className="flex flex-row items-center gap-3 pt-6 below-md:pt-3 sticky  bg-[#f7f8f9] px-6 below-md:px-3">
+      <div className="flex flex-row items-center gap-3 pt-6 below-md:pt-4 sticky  bg-[#f7f8f9] px-6 below-md:px-3">
         {/* Dropdowns grouped together */}
         <div className="flex flex-row gap-3 w-full below-md:flex-col ">
           {/* Dropdown 1 */}
