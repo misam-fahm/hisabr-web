@@ -44,7 +44,7 @@ const DiscountTable: React.FC = () => {
                 </td>
 
                 {/* Quantity Column (Right-Aligned) */}
-                <td className="px-9 py-2 text-right text-[#636363] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                <td className="px-5 py-2 text-right text-[#636363] whitespace-nowrap overflow-x-auto custom-scrollbar">
                   {row.quantity}
                 </td>
 

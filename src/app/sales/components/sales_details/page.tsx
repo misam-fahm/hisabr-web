@@ -97,7 +97,7 @@ const TableComponent: React.FC = () => {
                 <th className="px-4 py-2 text-left text-[15px] font-medium">
                   Description
                 </th>
-                <th className="px-4 py-2 text-left text-[15px] font-medium">
+                <th className="px-4 py-2 text-right text-[15px] font-medium">
                   Value
                 </th>
               </tr>
@@ -116,7 +116,7 @@ const TableComponent: React.FC = () => {
                       <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                         {row.description}
                       </td>
-                      <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                      <td className="px-4 py-2 text-[#636363] text-[14px] text-right whitespace-nowrap overflow-x-auto custom-scrollbar">
                         {row.value}
                       </td>
                     </tr>
