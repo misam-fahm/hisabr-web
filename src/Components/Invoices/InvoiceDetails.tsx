@@ -68,7 +68,7 @@ const InvoiceDetails = () => {
   >
      <div className='block below-md:hidden'>
     <div className='flex items-start pt-4 cursor-pointer' onClick={() => window.history.back()}>
-          <img src='/images/backArrow.svg' alt='Back Arrow' className='w-8 h-8'/>
+          <img src='/images/backarrow(2).svg' alt='Back Arrow' className='w-8 h-8'/>
           </div>
           </div>
       <div className="flex gap-8 pt-4 pb-4  below-md:flex below-md:flex-col below-md:gap-3">
