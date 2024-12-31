@@ -459,7 +459,7 @@ const Sales: FC = () => {
 
         {/* Pagination */}
         <div className="tablet:hidden">
-          <Pagination table={table} />
+          <Pagination table={table} totalItems={0}/>
         </div>
 
         <div className="below-lg:hidden">

@@ -399,7 +399,7 @@ const DetailsPage: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <Pagination table={table} />
+        <Pagination table={table} totalItems={0} />
         <div className="below-lg:hidden tablet:hidden">
           <div className="flex flex-col">
             <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
