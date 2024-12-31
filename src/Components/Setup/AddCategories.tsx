@@ -127,7 +127,7 @@ const AddCategories = () => {
                       type="text"
                       value={categoryName}
                       onChange={(e) => handleInputChange(e, "categoryName")}
-                      className={`h-[42px] mt-2 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                      className={`h-[42px] mt-2 pl-2 w-full text-gray-700 text-sm  font-normal rounded-lg border ${
                         errors.categoryName
                           ? "border-red-500"
                           : "border-gray-300"
@@ -147,7 +147,7 @@ const AddCategories = () => {
                       type="text"
                       value={description}
                       onChange={(e) => handleInputChange(e, "description")}
-                      className={`h-[42px] mt-2 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                      className={`h-[42px] mt-2 pl-2 w-full text-gray-700 text-sm  font-normal rounded-lg border ${
                         errors.description
                           ? "border-red-500"
                           : "border-gray-300"

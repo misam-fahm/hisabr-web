@@ -160,7 +160,7 @@ const EditStore = () => {
                     name="storeName"
                     value={formData.storeName}
                     onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm  font-normal rounded-lg border ${
                       errors.storeName ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Please enter Store name"
@@ -177,7 +177,7 @@ const EditStore = () => {
                     name="location"
                     value={formData.location}
                     onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-normal rounded-lg border ${
                       errors.location ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Please enter Store Location"
@@ -194,7 +194,7 @@ const EditStore = () => {
                     name="description"
                     value={formData.user}
                     onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-normal rounded-lg border ${
                       errors.user ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Please enter Store User"
@@ -211,7 +211,7 @@ const EditStore = () => {
                     name="royalty"
                     value={formData.royalty}
                     onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-normal rounded-lg border ${
                       errors.royalty ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Please enter Store County"
@@ -227,7 +227,7 @@ const EditStore = () => {
                     name="royalty"
                     value={formData.royalty}
                     onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-normal rounded-lg border ${
                       errors.royalty ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Please enter Store Royalty"

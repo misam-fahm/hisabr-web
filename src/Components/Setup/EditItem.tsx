@@ -21,6 +21,8 @@ const EditItems = () => {
     selectedType: "",
   });
 
+  const [dropdownOpen, setDropdownOpen] = useState(false); // Added state for dropdown visibility
+
   const openModal = () => setIsOpen(true);
   const closeModal = () => {
     setIsOpen(false);
@@ -38,6 +40,7 @@ const EditItems = () => {
       weight: "",
       selectedType: "",
     });
+    setDropdownOpen(false); // Reset dropdown visibility when closing the modal
   };
 
   const handleInputChange = (
@@ -82,7 +85,7 @@ const EditItems = () => {
     }
 
     if (!formData.selectedType) {
-      newErrors.selectedType = "Tender type is required";
+      newErrors.selectedType = " Categories is required";
       isValid = false;
     }
 
@@ -110,6 +113,7 @@ const EditItems = () => {
           />
         </Button>
       </div>
+
       <Dialog
         open={isOpen}
         as="div"
@@ -118,9 +122,9 @@ const EditItems = () => {
       >
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[420px]  below-md:w-[344px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
+          <DialogPanel className="w-[420px] below-md:w-[344px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
             <div className="flex justify-between">
-              <DialogTitle as="h3" className="font-medium text-gray-900">
+              <DialogTitle as="h3" className=" font-semibold text-gray-900">
                 Edit Item
               </DialogTitle>
               <img
@@ -131,30 +135,51 @@ const EditItems = () => {
               />
             </div>
 
-            <form onSubmit={handleSubmit} className="mt-4">
-              <div className="mb-2">
+            <form onSubmit={handleSubmit} className="pt-5">
+              {/* Category dropdown */}
+              <div className="mb-2 relative">
                 <label className="text-sm text-gray-600">Category</label>
-                <select
-                  name="selectedType"
-                  value={formData.selectedType}
-                  onChange={handleInputChange}
-                  className={`h-[42px] mt-1 pl-2 w-full text-sm font-medium rounded-lg border ${
+                <button
+                  type="button"
+                  onClick={() => setDropdownOpen((prev) => !prev)}
+                  className={`h-[42px] mt-1 pl-2 pr-4 w-full text-sm font-normal rounded-lg border ${
                     errors.selectedType ? "border-red-500" : "border-gray-300"
-                  }`}
+                  } bg-white text-[#8D98AA] flex justify-between items-center`}
                 >
-                  <option value="" disabled>
-                    Please select Tender Category
-                  </option>
-                  <option value="dairy">Dairy</option>
-                  <option value="	bakery"> Bakery</option>
-                  <option value="dairy">Dairy</option>
-                  <option value="	bakery"> Bakery</option>
-                </select>
+                  {formData.selectedType || "Please select  Category"}
+                  <img src="/images/dropdown1.svg" alt="dropdown1" />
+                </button>
+                {dropdownOpen && (
+                  <ul className="absolute z-10 w-full text-[#8D98AA] mt-1 bg-white border  border-gray-300 rounded-lg shadow-lg">
+                    {["Dairy", "Bakery", "Beverages", "Frozen Foods"].map(
+                      (category) => (
+                        <li
+                          key={category}
+                          onClick={() => {
+                            setFormData((prevData) => ({
+                              ...prevData,
+                              selectedType: category,
+                            }));
+                            setErrors((prevErrors) => ({
+                              ...prevErrors,
+                              selectedType: "",
+                            }));
+                            setDropdownOpen(false);
+                          }}
+                          className="px-4 py-2 cursor-pointer border-b text-sm hover:text-white hover:bg-[#334155]"
+                        >
+                          {category}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                )}
                 {errors.selectedType && (
                   <p className="text-xs text-red-500">{errors.selectedType}</p>
                 )}
               </div>
 
+              {/* Item Name */}
               <div className="mb-2">
                 <label className="text-sm text-gray-600">Item Name</label>
                 <input
@@ -162,7 +187,7 @@ const EditItems = () => {
                   name="itemName"
                   value={formData.itemName}
                   onChange={handleInputChange}
-                  className={`h-[42px] mt-1 pl-2 w-full text-sm font-medium rounded-lg border ${
+                  className={`h-[42px] mt-1 pl-2 w-full text-sm  font-normal rounded-lg border ${
                     errors.itemName ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Please enter Item Name"
@@ -172,6 +197,7 @@ const EditItems = () => {
                 )}
               </div>
 
+              {/* Price */}
               <div className="mb-2">
                 <label className="text-sm text-gray-600">Price</label>
                 <input
@@ -179,7 +205,7 @@ const EditItems = () => {
                   name="price"
                   value={formData.price}
                   onChange={handleInputChange}
-                  className={`h-[42px] mt-1 pl-2 w-full text-sm font-medium rounded-lg border ${
+                  className={`h-[42px] mt-1 pl-2 w-full text-sm font-normal rounded-lg border ${
                     errors.price ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Please enter Price"
@@ -189,6 +215,7 @@ const EditItems = () => {
                 )}
               </div>
 
+              {/* Quantity */}
               <div className="mb-2">
                 <label className="text-sm text-gray-600">Quantity</label>
                 <input
@@ -196,7 +223,7 @@ const EditItems = () => {
                   name="quantity"
                   value={formData.quantity}
                   onChange={handleInputChange}
-                  className={`h-[42px] mt-1 pl-2 w-full text-sm font-medium rounded-lg border ${
+                  className={`h-[42px] mt-1 pl-2 w-full text-sm font-normal rounded-lg border ${
                     errors.quantity ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Please enter Quantity"
@@ -206,6 +233,7 @@ const EditItems = () => {
                 )}
               </div>
 
+              {/* Weight */}
               <div className="mb-2">
                 <label className="text-sm text-gray-600">Weight</label>
                 <input
@@ -213,7 +241,7 @@ const EditItems = () => {
                   name="weight"
                   value={formData.weight}
                   onChange={handleInputChange}
-                  className={`h-[42px] mt-1 pl-2 w-full text-sm font-medium rounded-lg border ${
+                  className={`h-[42px] mt-1 pl-2 w-full text-sm font-normal rounded-lg border ${
                     errors.weight ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Please enter Weight"
@@ -223,7 +251,8 @@ const EditItems = () => {
                 )}
               </div>
 
-              <div className="flex mt-5 justify-between">
+              {/* Buttons */}
+              <div className="flex mt-8 justify-between">
                 <button
                   type="button"
                   onClick={closeModal}
@@ -235,7 +264,7 @@ const EditItems = () => {
                   type="submit"
                   className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
                 >
-                  Save
+                 Save
                 </button>
               </div>
             </form>
