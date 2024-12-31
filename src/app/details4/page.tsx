@@ -61,7 +61,7 @@ const DetailsPage: React.FC = () => {
     >
       <img
         onClick={handleBack}
-        src="/images/backIcon.svg"
+        src="/images/MobileBackIcon.svg"
         className="fixed top-4 left-4 z-30 below-lg:hidden tablet:hidden"
       />
       {/* <div className="below-md:flex below-md:justify-center ">
@@ -69,7 +69,7 @@ const DetailsPage: React.FC = () => {
           Customer Count Analysis
         </p>
       </div> */}
-      <div className="pt-6 pb-6 below-md:pb-3 below-md:pt-3 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
+      <div className="pt-6 pb-6 below-md:pb-4 below-md:pt-4 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div>
           <Images
             className="below-md:hidden cursor-pointer h-5 w-5 bg-white rounded-full p-1 mb-3"

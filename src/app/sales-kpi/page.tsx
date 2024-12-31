@@ -37,6 +37,10 @@ const SalesKPI: FC = () => {
 
   const handlePressStart = () => {
     setShowTooltip(true);
+
+    setTimeout(() => {
+      setShowTooltip(false);
+    }, 2000);
   };
 
   const handlePressEnd = () => {
@@ -45,7 +49,7 @@ const SalesKPI: FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-10px)] overflow-auto"
+      className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       {/* <div className="below-md:flex below-md:justify-center">
@@ -54,8 +58,8 @@ const SalesKPI: FC = () => {
         </p>
       </div> */}
 
-      <div className="mb-1 below-md:mb-6 tablet:mb-6">
-        <div className="flex flex-row below-md:flex-col below-md:items-end sticky  justify-between pt-6 below-md:pt-3 below-md:px-3  pl-6 pr-6 pb-6 below-md:pb-3 bg-[#f7f8f9] ">
+      <div>
+        <div className="flex flex-row below-md:flex-col below-md:items-end sticky  justify-between pt-6 below-md:pt-4 below-md:px-3  pl-6 pr-6 pb-6 below-md:pb-4 bg-[#f7f8f9] ">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
             <Dropdown
               options={options}
