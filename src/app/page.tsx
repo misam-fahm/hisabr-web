@@ -5,6 +5,7 @@ import Linechart from "@/Components/drawer/LineChart";
 import React from "react";
 import { useRouter } from "next/navigation";
 import Dropdown from "@/Components/ui/Common/DropDown";
+import { useEffect } from 'react';
 
 interface TableRow {
   name: string;
@@ -60,8 +61,14 @@ const Home: FC = () => {
     0
   );
 
+
   /**first link(gross revenue) */
   const router = useRouter();
+
+  useEffect(() => {
+    // Ensure the back icon is hidden on the home page
+    sessionStorage.setItem('showBackIcon', 'false');
+}, []);
 
   const handleClick = () => {
     router.push("/details1"); // Navigates to the 'details' page
@@ -82,7 +89,8 @@ const Home: FC = () => {
   //fifth link(customer count)
 
   const handleClick5 = () => {
-    // localStorage.setItem('showBackIcon', 'true');
+    // Set the flag to show the back icon on the next page
+     sessionStorage.setItem('showBackIcon', 'true');
     router.push("/expenses")
   
    
