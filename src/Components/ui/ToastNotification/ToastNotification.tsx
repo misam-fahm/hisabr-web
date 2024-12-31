@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { toast, ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-interface ToastNotificationProps {
+export interface ToastNotificationProps {
   message: string;
   type?: string;
 }

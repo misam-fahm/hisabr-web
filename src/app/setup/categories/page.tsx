@@ -1,7 +1,6 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import Pagination from "@/Components/ui/Common/Pagination";
-import Image from "next/image";
 import {
   useReactTable,
   getCoreRowModel,
@@ -14,64 +13,36 @@ import AddNewItems from "@/Components/Setup/AddNewItems";
 import AddCategories from "@/Components/Setup/AddCategories";
 import EditCategories from "@/Components/Setup/EditCategories";
 import DeleteCategories from "@/Components/Setup/DeleteCategories";
+import { sendApiRequest } from "@/utils/apiUtils";
+import ToastNotification, {
+  ToastNotificationProps,
+} from "@/Components/ui/ToastNotification/ToastNotification";
 
 interface TableRow {
-  name: string;
+  categoryname: string;
   description: string;
-  noOfItems: number;
+  itemcount: number;
 }
-
-const data: TableRow[] = [
-  { name: "Beverage", description: "Soft Drinks, Juices", noOfItems: 7327 },
-  { name: "Bakery", description: "Cold drinks, Juices", noOfItems: 43643 },
-  { name: "Dairy", description: "Chips, Cookies, Biscuits", noOfItems: 8979 },
-  { name: "Snacks", description: "Soft Drinks, Juices", noOfItems: 7327 },
-  { name: "Soft Serve", description: "Cold drinks, Juices", noOfItems: 7327 },
-  {
-    name: "Beverage",
-    description: "Chips, Cookies, Biscuits",
-    noOfItems: 76486,
-  },
-  { name: "Snacks", description: "Bread, Cakes, Pastries", noOfItems: 54787 },
-  { name: "Soft Serve", description: "Milk, Butter, Cheese", noOfItems: 899 },
-  { name: "Beverage", description: "Soft Drinks, Juices", noOfItems: 7327 },
-  { name: "Bakery", description: "Cold drinks, Juices", noOfItems: 43643 },
-  { name: "Dairy", description: "Chips, Cookies, Biscuits", noOfItems: 8979 },
-  { name: "Snacks", description: "Soft Drinks, Juices", noOfItems: 7327 },
-  { name: "Soft Serve", description: "Cold drinks, Juices", noOfItems: 7327 },
-  {
-    name: "Beverage",
-    description: "Chips, Cookies, Biscuits",
-    noOfItems: 76486,
-  },
-  { name: "Snacks", description: "Bread, Cakes, Pastries", noOfItems: 54787 },
-  { name: "Soft Serve", description: "Milk, Butter, Cheese", noOfItems: 899 },
-  { name: "Snacks", description: "Soft Drinks, Juices", noOfItems: 4214 },
-  { name: "Snacks", description: "Soft Drinks, Juices", noOfItems: 4214 },
-];
 
 const columns: ColumnDef<TableRow>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "categoryname",
     header: () => <div className="text-left">Name</div>,
     cell: (info) => <span>{info.getValue() as string}</span>,
-
     size: 200,
   },
   {
     accessorKey: "description",
     header: () => <div className="text-left">Description</div>,
     cell: (info) => <span>{info.getValue() as string}</span>,
-
     size: 250,
   },
   {
-    accessorKey: "noOfItems",
+    accessorKey: "itemcount",
     header: () => <div className="text-right mr-14">No. of Items</div>,
     cell: (info) => (
       <div className="text-right mr-14">{info.getValue() as number}</div>
     ),
-
     size: 150,
   },
   {
@@ -82,7 +53,6 @@ const columns: ColumnDef<TableRow>[] = [
         <EditCategories />
       </span>
     ),
-
     size: 40,
   },
   {
@@ -90,46 +60,87 @@ const columns: ColumnDef<TableRow>[] = [
     header: () => (
       <div className="flex justify-center items-center">Delete</div>
     ),
-
     cell: () => (
       <span className="flex justify-center ml-2">
         <DeleteCategories />
       </span>
     ),
-
     size: 60,
   },
 ];
 
 const Page: FC = () => {
-  const [globalFilter, setGlobalFilter] = React.useState("");
+  // const [globalFilter, setGlobalFilter] = React.useState("");
+  const [data, setData] = useState<TableRow[]>([]); // Data state for table rows
+  const [totalItems, setTotalItems] = useState<number>(0); // Total number of items from the API
+  const [loading, setLoading] = useState<boolean>(true); // Loading state for API call
+  const [globalFilter, setGlobalFilter] = useState("");
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      globalFilter,
-    },
+    state: { globalFilter },
     initialState: {
       pagination: {
         pageSize: 10,
         pageIndex: 0,
       },
     },
+    manualPagination: true, // Enable manual pagination
+    pageCount: Math.ceil(totalItems / 10), // Calculate page count based on totalItems
   });
 
   const { pageIndex, pageSize } = table.getState().pagination;
-  const totalItems = table.getFilteredRowModel().rows.length;
+  // const totalItems = table.getFilteredRowModel().rows.length;
   const startItem = pageIndex * pageSize + 1;
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response: any = await sendApiRequest({
+          mode: "getcategories",
+          page: table.getState().pagination.pageIndex + 1,
+          limit: table.getState().pagination.pageSize,
+        });
+
+        if (response?.status === 200) {
+          setData(response?.data?.categories || []);
+          response?.data?.total > 0 &&
+            setTotalItems(response?.data?.total || 0);
+        } else {
+          setCustomToast({
+            ...customToast,
+            message: response?.message,
+            type: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [pageIndex, pageSize]);
 
   return (
     <main
       className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-2 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
+      <ToastNotification
+        message={customToast.message}
+        type={customToast.type}
+      />
       <div className="flex justify-end gap-2 below-md:hidden my-6">
         <AddNewItems />
         <AddCategories />
@@ -146,50 +157,48 @@ const Page: FC = () => {
             scrollbarWidth: "none", // Hide scrollbar
           }}
         >
-          {table.getRowModel().rows.map((row) => (
-            <div
-              key={row.id}
-              className={`border border-gray-200 p-5 bg-white rounded-lg mb-2`}
-            >
-              <div className="flex justify-between items-center">
-                {/* Name */}
-                <span className="font-bold text-[14px] text-[#334155]">
-                  {row.getValue("name")}
-                </span>
-                <div className="flex items-center ">
-                  {/* Edit */}
-                  <EditCategories />
-                  {/* Delete */}
-                  <>
-                    <DeleteCategories />
-                  </>
+          {data && data?.length > 0 ? (
+            data?.map((row: any) => (
+              <div
+                key={row?.categoryid}
+                className={`border border-gray-200 p-5 bg-white rounded-lg mb-2`}
+              >
+                <div className="flex justify-between items-center">
+                  {/* Name */}
+                  <span className="font-bold text-[14px] text-[#334155]">
+                    {row?.categoryname}
+                  </span>
+                  <div className="flex items-center ">
+                    {/* Edit */}
+                    <EditCategories />
+                    {/* Delete */}
+                    <>
+                      <DeleteCategories />
+                    </>
+                  </div>
+                </div>
+
+                {/* Border */}
+                <div className=" border-b bg-gray-200 my-3"></div>
+
+                <div className=" flex justify-between ">
+                  <span className=" text-[#636363] text-[13px] mb-2">
+                    Description
+                  </span>{" "}
+                  <span className="text-[14px]"> {row?.description}</span>
+                </div>
+
+                <div className="mt-1 flex justify-between">
+                  <span className=" text-[#636363] text-[13px] mb-2">
+                    No. of Items
+                  </span>{" "}
+                  <span className="text-[14px]"> {row?.noOfItems}</span>
                 </div>
               </div>
-
-              {/* Border */}
-              <div className=" border-b bg-gray-200 my-3"></div>
-
-              <div className=" flex justify-between ">
-                <span className=" text-[#636363] text-[13px] mb-2">
-                  Description
-                </span>{" "}
-                <span className="text-[14px]">
-                  {" "}
-                  {row.getValue("description")}
-                </span>
-              </div>
-
-              <div className="mt-1 flex justify-between">
-                <span className=" text-[#636363] text-[13px] mb-2">
-                  No. of Items
-                </span>{" "}
-                <span className="text-[14px]">
-                  {" "}
-                  {row.getValue("noOfItems")}
-                </span>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div>No data available</div>
+          )}
           {/* Add NewItem bottom */}
           <div className=" fixed bottom-[20px] below-lg:hidden right-3">
             <AddNewItems />
@@ -228,27 +237,37 @@ const Page: FC = () => {
             >
               <table className="w-full border-collapse border-gray-200 table-fixed">
                 <tbody>
-                  {table.getRowModel().rows.map((row) => (
-                    <tr
-                      key={row.id}
-                      className={
-                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                      }
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <td
-                          key={cell.id}
-                          className="px-4 py-1.5 text-[#636363] text-[14px]"
-                          style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      ))}
+                  {loading ? (
+                    <tr>
+                      <td>Loading...</td>
                     </tr>
-                  ))}
+                  ) : data && data.length > 0 ? (
+                    table.getRowModel().rows.map((row) => (
+                      <tr
+                        key={row?.id}
+                        className={
+                          row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <td
+                            key={cell?.id}
+                            className="px-4 py-1.5 text-[#636363] text-[14px]"
+                            style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td>No data available</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -256,7 +275,7 @@ const Page: FC = () => {
         </div>
       </div>
 
-      <Pagination table={table} />
+      <Pagination table={table} totalItems={totalItems} />
     </main>
   );
 };
