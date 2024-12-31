@@ -290,7 +290,7 @@ const Home: FC = () => {
               </div>
             </div>
 
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -331,7 +331,7 @@ const Home: FC = () => {
                 <img src="/images/under_details.svg" onClick={handleClick4} />
               </div>
             </div>
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -369,7 +369,7 @@ const Home: FC = () => {
                 </p>
               </div>
             </div>
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -417,7 +417,7 @@ const Home: FC = () => {
               </div>
             </div>
 
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -461,7 +461,7 @@ const Home: FC = () => {
                 <img src="/images/under_details.svg" onClick={handleClick6} />
               </div>
             </div>
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -505,7 +505,7 @@ const Home: FC = () => {
                 <img src="/images/under_details.svg" onClick={handleClick7} />
               </div>
             </div>
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -550,7 +550,7 @@ const Home: FC = () => {
               </div>
             </div>
 
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -591,7 +591,7 @@ const Home: FC = () => {
                 </p>
               </div>
             </div>
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -620,7 +620,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-full pb-0 items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/items.svg" />
@@ -632,7 +632,7 @@ const Home: FC = () => {
             </div>
 
             <div className="w-full overflow-hidden overflow-y-auto below-md:overflow-x-auto  max-h-[130px] custom-scrollbar ">
-              <table className="w-full bg-white border border-gray-200 mt-6 ">
+              <table className="w-full bg-white border border-gray-200 mt-6">
                 <tbody>
                   {tableData2.map((row, index) => (
                     <tr
@@ -643,7 +643,7 @@ const Home: FC = () => {
                           : "bg-[#FAFBFB] text-[14px]"
                       }`}
                     >
-                      <td className="px-2 py-1 border-b border-gray-200 text-gray-700 text-[14px]">
+                      <td className="pl-6 px-2 py-1 border-b border-gray-200 text-gray-700 text-[14px]">
                         {row.name}
                       </td>
                       <td className="px-2 py-1 border-b border-gray-200 text-[#334155] text-[14px] font-bold text-center">
@@ -657,10 +657,10 @@ const Home: FC = () => {
                 </tbody>
                 <tfoot className="bottom-0 bg-white">
                   <tr className="font-bold text-[#E31212] text-[14px]">
-                    <td className="px-2 py-1 border-t border-gray-200">
+                    <td className="pl-6 px-2 py-1 border-t border-gray-200">
                       Total
                     </td>
-                    <td className="px-2 py-1 border-t border-gray-200 text-[14px]">
+                    <td className=" px-2 py-1 border-t border-gray-200 text-[14px]">
                       ${totalRevenue.toLocaleString()}
                     </td>
 

@@ -17,61 +17,56 @@ const Pagination: React.FC<PaginationProps> = ({ table }) => {
       <div className="mt-4 flex gap-2 justify-between items-center below-md:hidden">
         {/* Page Range Display */}
         <div>
-          <span className="text-[#8899A8] text-[12px] font-medium ml-3 ">
+          <span className="text-[#8899A8] text-[12px] font-medium ml-3">
             {startItem} - {endItem} of {totalItems}
           </span>
         </div>
 
         {/* Pagination Numbers */}
         <div className="flex flex-row gap-3">
+          {/* Previous Button */}
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
-            style={{ background: "#EBEFF6" }}
+            className="w-8 h-8 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50 flex items-center justify-center"
           >
             <img src="/images/left.svg" />
           </button>
 
+          {/* Page Numbers */}
           {Array.from({ length: table.getPageCount() }, (_, index) => {
             const pageIndex = index;
             return (
               <button
                 key={pageIndex}
                 onClick={() => table.setPageIndex(pageIndex)}
-                className={`px-4 py-2 rounded-md text-[12px] ${
+                className={`w-8 h-8 rounded-md text-[12px] flex items-center justify-center ${
                   table.getState().pagination.pageIndex === pageIndex
-                    ? "!important text-[#FFFFFF]"
-                    : " text-gray-700"
+                    ? "text-white bg-[#1AA47D]" // Green for active
+                    : "text-gray-700 bg-[#EBEFF6]" // Grey for inactive
                 }`}
-                style={{
-                  backgroundColor:
-                    table.getState().pagination.pageIndex === pageIndex
-                      ? "#1AA47D"
-                      : "transparent",
-                }}
               >
                 {pageIndex + 1}
               </button>
             );
           })}
 
+          {/* Next Button */}
           <button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
-            style={{ background: "#EBEFF6" }}
+            className="w-8 h-8 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50 flex items-center justify-center"
           >
             <img src="/images/right.svg" />
           </button>
 
+          {/* Dropdown for Page Selection */}
           <div>
             <div className="w-full">
-              {/* Dropdown for Page Selection */}
               <select
-                value={table.getState().pagination.pageIndex} // Sync with current page index
-                onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
-                className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
+                value={table.getState().pagination.pageIndex}
+                onChange={(e) => table.setPageIndex(Number(e.target.value))}
+                className="pl-3 pr-8 py-[6px] w-full rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
               >
                 {Array.from({ length: table.getPageCount() }, (_, index) => (
                   <option key={index} value={index}>

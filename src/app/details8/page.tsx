@@ -324,7 +324,7 @@ const DetailsPage: React.FC = () => {
         </div>
         <div>
           <button
-            className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium"
+            className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold"
             onClick={handleButtonClick}
           >
             <img
@@ -417,7 +417,7 @@ const DetailsPage: React.FC = () => {
                     <button
                       onClick={() => (window.location.href = "/invoicedetails")}
                     >
-                      <img src="/images/eye.svg" width={26} />
+                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
                     </button>
                   </div>
                 </div>
@@ -449,7 +449,7 @@ const DetailsPage: React.FC = () => {
                     <button
                       onClick={() => (window.location.href = "/invoicedetails")}
                     >
-                      <img src="/images/eye.svg" width={26} />
+                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
                     </button>
                   </div>
                 </div>
@@ -481,7 +481,7 @@ const DetailsPage: React.FC = () => {
                     <button
                       onClick={() => (window.location.href = "/invoicedetails")}
                     >
-                      <img src="/images/eye.svg" width={26} />
+                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
                     </button>
                   </div>
                 </div>
@@ -513,7 +513,7 @@ const DetailsPage: React.FC = () => {
                     <button
                       onClick={() => (window.location.href = "/invoicedetails")}
                     >
-                      <img src="/images/eye.svg" width={26} />
+                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
                     </button>
                   </div>
                 </div>
@@ -537,14 +537,14 @@ const DetailsPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="below-lg:hidden flex justify-end fixed bottom-3 right-6 tablet:hidden">
+      <div className="below-lg:hidden flex justify-end fixed bottom-5 right-5 tablet:hidden">
         <button
-          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[50px] h-[50px] rounded-md relative"
+          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[56px] h-[56px] rounded-lg relative"
           onTouchStart={handlePressStart} // For mobile devices
           onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
           onClick={handleButtonClick}
         >
-          <img src="/images/uploadIcon.svg" />
+          <img src="/images/uploadIcon.svg" className="w-[18px]" />
           {showTooltip && (
             <div className="absolute bottom-[70px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
               Upload Invoice

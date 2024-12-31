@@ -157,7 +157,7 @@ const Navbar: React.FC = () => {
                 src="/images/More.svg"
                 alt="Menu Icon"
                 className={`transition-transform duration-300 ${
-                  isRotated ? "rotate-0" : "rotate-180"
+                  isRotated ? "rotate-180" : "rotate-0"
                 }`}
                 onClick={handleRotate}
               />

@@ -1,12 +1,11 @@
-'use client';
+"use client";
 import { useRef, useState } from "react";
-import React from 'react'
+import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import DateRange from "@/Components/drawer/DateRangePicker";
 import { useRouter } from "next/navigation";
 import Dropdown from "@/Components/ui/Common/DropDown";
-
 
 // import Image from "next/image"
 import {
@@ -27,67 +26,164 @@ interface TableRow {
   name: string;
 }
 const data: TableRow[] = [
-  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
-  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
-  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
-  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
-  { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
-  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
-  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
-  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
-  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
-  { date: "2023-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
-  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
-  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
-  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
-  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
-  { date: "2024-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon Gordon Gordon" },
+  {
+    date: "2022-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
+  {
+    date: "2022-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
+  {
+    date: "2022-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
+  {
+    date: "2022-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
+  {
+    date: "2022-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
+  {
+    date: "2023-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
+  {
+    date: "2023-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
+  {
+    date: "2023-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
+  {
+    date: "2023-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
+  {
+    date: "2023-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
+  {
+    date: "2024-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
+  {
+    date: "2024-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
+  {
+    date: "2024-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
+  {
+    date: "2024-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
+  {
+    date: "2024-01-01",
+    store: 13246,
+    quantity: 176,
+    total: "$3,484.47",
+    name: "Gordon Gordon Gordon",
+  },
 ];
 const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "date",
-    header: () => <div className='text-left'>Date</div>,
+    header: () => <div className="text-left">Date</div>,
     cell: (info) => <span>{info.getValue() as string}</span>,
     size: 60,
-
   },
   {
     accessorKey: "store",
-    header: () => <div className='text-left'>Store</div>,
+    header: () => <div className="text-left">Store</div>,
     cell: (info) => <span>{info.getValue() as number}</span>,
     size: 30,
   },
   {
     accessorKey: "quantity",
-    header: () => <div className='text-right'>Quantity</div>,
-    cell: (info) => <span className='flex justify-end '>{info.getValue() as string}</span>,
+    header: () => <div className="text-right">Quantity</div>,
+    cell: (info) => (
+      <span className="flex justify-end ">{info.getValue() as string}</span>
+    ),
     size: 50,
   },
   {
     accessorKey: "total",
-    header: () => <div className='text-right pr-8'>Total</div>,
-    cell: (info) => <span className='flex justify-end pr-8'>{info.getValue() as string}</span>,
+    header: () => <div className="text-right pr-8">Total</div>,
+    cell: (info) => (
+      <span className="flex justify-end pr-8">{info.getValue() as string}</span>
+    ),
     size: 70,
   },
   {
     accessorKey: "name",
-    header: () => <div className='text-left'>Name</div>,
-    cell: (info) => <span className='text-left '>{info.getValue() as string}</span>,
+    header: () => <div className="text-left">Name</div>,
+    cell: (info) => (
+      <span className="text-left ">{info.getValue() as string}</span>
+    ),
     size: 80,
   },
   {
     id: "view",
-    header: () => <div className='text-left'>View</div>,
+    header: () => <div className="text-left">View</div>,
     cell: () => (
-      <button onClick={() => (window.location.href = "/invoicedetails")} className="text-green-500 hover:text-green-700 text-center ml-2">
-        <img src="/images/ViewEyeIcon.svg" alt='View Icon' />
+      <button
+        onClick={() => (window.location.href = "/invoicedetails")}
+        className="text-green-500 hover:text-green-700 text-center ml-2"
+      >
+        <img src="/images/ViewEyeIcon.svg" alt="View Icon" />
       </button>
     ),
     size: 30,
   },
 ];
 const Invoices = () => {
-
   const router = useRouter();
   const [globalFilter, setGlobalFilter] = React.useState("");
   const table = useReactTable({
@@ -108,19 +204,51 @@ const Invoices = () => {
   });
   //Card data
   const cardData = [
-    { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-    { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-    { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-    { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-    { date: "2022-01-01", store: 13246, quantity: 176, total: "$3,484.47", name: "Gordon" },
-  ]
+    {
+      date: "2022-01-01",
+      store: 13246,
+      quantity: 176,
+      total: "$3,484.47",
+      name: "Gordon",
+    },
+    {
+      date: "2022-01-01",
+      store: 13246,
+      quantity: 176,
+      total: "$3,484.47",
+      name: "Gordon",
+    },
+    {
+      date: "2022-01-01",
+      store: 13246,
+      quantity: 176,
+      total: "$3,484.47",
+      name: "Gordon",
+    },
+    {
+      date: "2022-01-01",
+      store: 13246,
+      quantity: 176,
+      total: "$3,484.47",
+      name: "Gordon",
+    },
+    {
+      date: "2022-01-01",
+      store: 13246,
+      quantity: 176,
+      total: "$3,484.47",
+      name: "Gordon",
+    },
+  ];
   //pagination range
   const { pageIndex, pageSize } = table.getState().pagination;
   const totalItems = table.getFilteredRowModel().rows.length;
   const startItem = pageIndex * pageSize + 1;
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
-  const [dateRange, setDateRange] = useState<[Date | undefined, Date | undefined]>([undefined, undefined]); // From and To Date
+  const [dateRange, setDateRange] = useState<
+    [Date | undefined, Date | undefined]
+  >([undefined, undefined]); // From and To Date
   const [startDate, endDate] = dateRange;
   const fileInputRef: any = useRef(null);
   const handleButtonClick = () => {
@@ -159,7 +287,7 @@ const Invoices = () => {
 
   const handlePressStart = () => {
     setShowTooltip(true);
-    
+
     setTimeout(() => {
       setShowTooltip(false);
     }, 2000);
@@ -169,21 +297,15 @@ const Invoices = () => {
     setShowTooltip(false);
   };
 
-
-
-
-
-
-
   return (
     <main
       className="max-h-[calc(100vh-50px)] px-6 below-md:px-3 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className='flex justify-between below-md:flex-col items-center w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6'>
+      <div className="flex justify-between below-md:flex-col items-center w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
         <div className="flex gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
           <div className="flex">
-          <Dropdown
+            <Dropdown
               options={options}
               selectedOption={selectedOption}
               onSelect={handleSelect}
@@ -193,29 +315,31 @@ const Invoices = () => {
             />
           </div>
 
-
-
           <div className="w-[261px] tablet:w-full below-md:w-full">
             <DateRange />
           </div>
 
-
-          <div className='flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-[260px] h-[35px]'>
-            <input type='search'
+          <div className="flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-[260px] h-[35px]">
+            <input
+              type="search"
               onChange={(e) => setGlobalFilter(e.target.value)}
               ref={searchInputRef}
-              placeholder='Search'
-              className='w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none'>
-            </input>
-            <img className='pr-2 cursor-pointer items-center' src='/images/SearchIcon.svg'
-              onClick={handleClick} />
+              placeholder="Search"
+              className="w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none"
+            ></input>
+            <img
+              className="pr-2 cursor-pointer items-center"
+              src="/images/SearchIcon.svg"
+              onClick={handleClick}
+            />
           </div>
         </div>
-        <div className='below-md:hidden mt-1'>
-          <button className="w-[170px] h-[35px] bg-[#1AA47D] hover:bg-[#168A6F] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
+        <div className="below-md:hidden mt-1">
+          <button
+            className="w-[170px] h-[35px] bg-[#1AA47D] hover:bg-[#168A6F] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
             onClick={handleButtonClick}
           >
-            <img className='' src="/images/WebUploadIcon.svg" alt="" />
+            <img className="" src="/images/WebUploadIcon.svg" alt="" />
             Upload Invoice
           </button>
           <input
@@ -224,24 +348,30 @@ const Invoices = () => {
             onChange={handleFileChange}
             className="hidden"
           />
-
         </div>
-
       </div>
       {/* Card section */}
       <div className="block md:hidden">
         {cardData.map((card, index) => (
-          <div key={index}
-            className='flex flex-col w-full  rounded-md bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3'>
-            <div className='flex justify-between items-start'>
-              <div className='flex gap-4 px-3 py-4'>
-                <p className='text-[14px] font-bold'>{card.date}</p>
-                <p className='text-[14px] font-bold'>{card.name}</p>
+          <div
+            key={index}
+            className="flex flex-col w-full  rounded-md bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3"
+          >
+            <div className="flex justify-between items-start">
+              <div className="flex gap-4 px-3 py-4">
+                <p className="text-[14px] font-bold">{card.date}</p>
+                <p className="text-[14px] font-bold">{card.name}</p>
               </div>
 
-              <div className='flex gap-4 mb-1 px-3 py-4'>
-                <button onClick={() => (window.location.href = "/invoicedetails")} className='text-green-500 hover:text-green-700'>
-                  <img className='below-md:w-7 below-md:h-7 h-4 w-4' src='/images/ViewEyeIcon.svg' />
+              <div className="flex gap-4 mb-1 px-3 py-4">
+                <button
+                  onClick={() => (window.location.href = "/invoicedetails")}
+                  className="text-green-500 hover:text-green-700"
+                >
+                  <img
+                    className="below-md:w-7 below-md:h-7 h-4 w-4"
+                    src="/images/ViewEyeIcon.svg"
+                  />
                 </button>
               </div>
             </div>
@@ -250,32 +380,29 @@ const Invoices = () => {
               <div className="border-t border-gray-200 w-full"></div>
             </div>
 
-
             {/* Content Area */}
-            <div className='flex justify-between items-center px-3 py-4'>
-              <div className='flex flex-col text-[13px] space-y-3'>
-                <p className='text-[#636363]'>Store</p>
-                <p className='text-[#636363]'>quantity</p>
-                <p className='text-[#636363]'>total</p>
+            <div className="flex justify-between items-center px-3 py-4">
+              <div className="flex flex-col text-[13px] space-y-3">
+                <p className="text-[#636363]">Store</p>
+                <p className="text-[#636363]">quantity</p>
+                <p className="text-[#636363]">total</p>
               </div>
-              <div className='flex flex-col text-[14px] text-right space-y-3'>
-                <p className='text-[#1A1A1A]'>{card.store}</p>
-                <p className='text-[#000000]'>{card.quantity}</p>
-                <p className='text-[#1A1A1A]'>{card.total}</p>
+              <div className="flex flex-col text-[14px] text-right space-y-3">
+                <p className="text-[#1A1A1A]">{card.store}</p>
+                <p className="text-[#000000]">{card.quantity}</p>
+                <p className="text-[#1A1A1A]">{card.total}</p>
               </div>
             </div>
-
           </div>
         ))}
-        <div className='hidden below-md:block justify-end fixed bottom-5 right-5'>
-
-          <button className="focus:outline-none flex items-center bg-[#1AA47D]  justify-center  w-[50px] h-[50px] rounded-lg relative"
+        <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
+          <button
+            className="focus:outline-none flex items-center bg-[#1AA47D]  justify-center  w-[50px] h-[50px] rounded-lg relative"
             onTouchStart={handlePressStart} // For mobile devices
             onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
             onClick={handleButtonClick}
-
           >
-            <img src="/images/MobileUploadIcon.svg" alt='Upload Invoice' />
+            <img src="/images/MobileUploadIcon.svg" alt="Upload Invoice" />
             {showTooltip && (
               <div className="absolute bottom-[75px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
                 Upload Invoice
@@ -284,18 +411,14 @@ const Invoices = () => {
               </div>
             )}
           </button>
-
         </div>
-
       </div>
 
-
-
       {/* Invoice Table */}
-      <div className='overflow-x-auto  shadow-md border-collapse border border-gray-200 rounded-lg  flex-grow flex flex-col below-md:hidden'>
-        <div className='overflow-hidden max-w-full rounded-md' >
-          <table className='w-full border-collapse text-[12px] rounded-md text-white table-fixed'>
-            <thead className='bg-[#334155] top-0 z-10'>
+      <div className="overflow-x-auto  shadow-md border-collapse border border-gray-200 rounded-lg  flex-grow flex flex-col below-md:hidden">
+        <div className="overflow-hidden max-w-full rounded-md">
+          <table className="w-full border-collapse text-[12px] rounded-md text-white table-fixed">
+            <thead className="bg-[#334155] top-0 z-10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
@@ -307,18 +430,20 @@ const Invoices = () => {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </th>
                   ))}
                 </tr>
               ))}
             </thead>
           </table>
-          <div className="w-full overflow-y-auto scrollbar-thin flex-grow"
-            style={{ maxHeight: "calc(100vh - 270px)" }}>
-            <table className='w-full border-collapse text-[12px] text-white table-fixed'>
+          <div
+            className="w-full overflow-y-auto scrollbar-thin flex-grow"
+            style={{ maxHeight: "calc(100vh - 270px)" }}
+          >
+            <table className="w-full border-collapse text-[12px] text-white table-fixed">
               <tbody>
                 {table.getRowModel().rows.map((row) => (
                   <tr
@@ -350,10 +475,8 @@ const Invoices = () => {
       <div className="mt-4  below-md:hidden">
         <Pagination table={table} />
       </div>
-
-
     </main>
-  )
-}
+  );
+};
 
-export default Invoices
+export default Invoices;
