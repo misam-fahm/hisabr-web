@@ -37,6 +37,10 @@ const SalesKPI: FC = () => {
 
   const handlePressStart = () => {
     setShowTooltip(true);
+
+    setTimeout(() => {
+      setShowTooltip(false);
+    }, 2000);
   };
 
   const handlePressEnd = () => {
