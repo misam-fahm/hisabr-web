@@ -47,7 +47,9 @@ const summary: FC = () => {
 
   /**year composed chart*/
 
-  const [selectedOption2, setSelectedOption2] = useState<string | undefined>(undefined);
+  const [selectedOption2, setSelectedOption2] = useState<string | undefined>(
+    undefined
+  );
   const [isOpen2, setIsOpen2] = useState<boolean>(false);
 
   const options2 = ["2024", "2023", "2022", "2021"];
@@ -131,7 +133,7 @@ const summary: FC = () => {
       </div> */}
 
       <div>
-        <div className="z-[11] pb-6 below-md:pb-3 bg-[#f7f8f9] sticky pt-6 below-md:pt-3 pl-6 pr-6 below-md:px-3">
+        <div className="z-[11] pb-6 below-md:pb-4 bg-[#f7f8f9] sticky pt-6 below-md:pt-4 pl-6 pr-6 below-md:px-3">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
             {/* First Dropdown */}
 
