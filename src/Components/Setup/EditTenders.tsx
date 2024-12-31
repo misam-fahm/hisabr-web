@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -72,8 +71,6 @@ const EditTender = () => {
       isValid = false;
     }
 
-   
-
     if (!formData.selectedType) {
       newErrors.selectedType = "Tender type is required";
       isValid = false;
@@ -90,20 +87,20 @@ const EditTender = () => {
       console.log("Form submitted:", formData);
       closeModal();
     }
-  };
+  }; 
 
   return (
     <>
       <div>
         <Button onClick={openModal}>
           <img
-             src="/images/edit-pencil.svg"
-             alt="Add icon"
-             className="flex justify-center items-center w-4 h-4"
-           />
-         </Button>
-       </div> 
-    
+            src="/images/EditPencilIcon.svg"
+            alt="Add icon"
+            className="flex justify-center items-center w-4 h-4"
+          />
+        </Button>
+      </div>
+
       <Dialog
         open={isOpen}
         as="div"
@@ -126,8 +123,6 @@ const EditTender = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="mt-4">
-             
-
               <div className="mb-2">
                 <label className="text-sm text-gray-600">Name</label>
                 <input
@@ -184,10 +179,6 @@ const EditTender = () => {
                 )}
               </div>
 
-             
-
-             
-
               <div className="flex mt-5 justify-between">
                 <button
                   type="button"
@@ -200,7 +191,7 @@ const EditTender = () => {
                   type="submit"
                   className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
                 >
-                Save
+                  Save
                 </button>
               </div>
             </form>
