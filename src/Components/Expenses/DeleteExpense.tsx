@@ -114,7 +114,7 @@ const DeleteExpense = () => {
       <div>
         <Button onClick={openModal}>
           <img
-            src="/images/deleteIcon(1).svg"
+            src="/images/DeleteBinIcon.svg"
             className="flex justify-center w-4 h-4 text-left"
           />
         </Button>
@@ -125,7 +125,7 @@ const DeleteExpense = () => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[410px] h-auto below-md:w-[310px] below-md:h-[213px] px-6 below-md:px-3 below-md:py-8 py-6 bg-white rounded-lg shadow-lg flex flex-col">
             <div>
-              <DialogTitle as="h3" className=" flex justify-center below-md:text-[18px] text-[20px]  font-bold leading-4 text-[#5E6366] ">
+              <DialogTitle as="h3" className=" flex justify-center below-md:text-[16px] text-[20px]  font-semibold leading-4 text-[#5E6366] ">
                 Delete Item
               </DialogTitle>
               <div className="flex flex-col mt-4 justify-center items-center text-[#5E6366] font-medium below-md:text-[12px] text-[15px]">
@@ -136,7 +136,7 @@ const DeleteExpense = () => {
             <div className="mt-4">
               <form onSubmit={handleSubmit}>
                 {/* Submit Button */}
-                <div className="flex mt-7 justify-between below-md:mx-3">
+                <div className="flex mt-7 justify-between below-md:mx-3 md:gap-2 space-x-3">
                   <button
                     type="button"
                     onClick={closeModal}

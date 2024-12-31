@@ -218,7 +218,7 @@ const Page: FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-60px)] px-6 below-md:px-3 below-md:py-2 overflow-auto "
+      className="max-h-[calc(100vh-60px)] px-6 below-md:px-3 below-md:py-4 overflow-auto "
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
@@ -240,7 +240,7 @@ const Page: FC = () => {
           {table.getRowModel().rows.map((row) => (
             <div
               key={row.id}
-              className={`border border-gray-200 p-5 bg-white rounded-lg mb-2`}
+              className={`border border-gray-200 p-5 bg-white rounded-lg mb-3`}
             >
               <div className="flex justify-between items-center">
                 {/* Name */}
@@ -259,7 +259,8 @@ const Page: FC = () => {
               </div>
 
               {/* Border */}
-              <div className="h-[1px] bg-gray-200 my-3"></div>
+              <div className=" border-b bg-gray-200 my-3"></div>
+              
 
               {/* Category */}
               <div className="flex justify-between">

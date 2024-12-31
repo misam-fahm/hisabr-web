@@ -128,7 +128,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
       title === "Edit Profile" ||
       title === "Invoice Details" ? (
         <img
-          src="/images/backIcon.svg"
+          src="/images/MobileBackIcon.svg"
           className="fixed top-4 left-4 cursor-pointer z-50"
           onClick={() => router.back()}
         />
@@ -146,7 +146,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
       >
         <img
           src="/images/Arrow.svg"
-          className={`absolute cursor-pointer rounded-full -right-[0.7rem] below-md:hidden top-5 opacity-[0.73] ${!open && "rotate-180"}`}
+          className={`absolute cursor-pointer rounded-full -right-[0.7rem] below-md:hidden top-3 opacity-[0.73] ${!open && "rotate-180"}`}
           onClick={() => setOpen(!open)}
         />
 
@@ -161,7 +161,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
           title === "Edit Profile" ||
           title === "Invoice Details" ? (
             <img
-              src="/images/backIcon.svg"
+              src="/images/MobileBackIcon.svg"
               className="fixed top-4 left-4 cursor-pointer z-50"
               onClick={() => router.back()}
             />
