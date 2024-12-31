@@ -313,6 +313,10 @@ const Sales: FC = () => {
 
   const handlePressStart = () => {
     setShowTooltip(true);
+
+    setTimeout(() => {
+      setShowTooltip(false);
+    }, 2000);
   };
 
   const handlePressEnd = () => {
@@ -321,7 +325,7 @@ const Sales: FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-1px)] tablet:max-h-[calc(100vh-1px)] below-md:mb-10 tablet:mb-10 overflow-auto"
+      className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] tablet:max-h-[calc(100vh-0)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="mx-6 mt-6 below-md:mx-3 below-md:mt-0 tablet:mt-4">
@@ -350,7 +354,7 @@ const Sales: FC = () => {
                 <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
                   <img
                     className="cursor-pointer items-center"
-                    src="/images/searchicon.svg"
+                    src="/images/SearchIcon.svg"
                   />
                 </div>
               </div>
@@ -462,7 +466,7 @@ const Sales: FC = () => {
           <Pagination table={table} />
         </div>
 
-        <div className="below-lg:hidden">
+        <div className="below-lg:hidden mb-7">
           <div className="flex flex-col">
             <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className=" items-center mb-4 mt-2 px-2">

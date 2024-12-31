@@ -134,7 +134,7 @@ const Page: FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-2 overflow-auto"
+      className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-4 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <ToastNotification
@@ -161,7 +161,7 @@ const Page: FC = () => {
             data?.map((row: any) => (
               <div
                 key={row?.categoryid}
-                className={`border border-gray-200 p-5 bg-white rounded-lg mb-2`}
+                className={`border border-gray-200 p-5 bg-white rounded-lg mb-3`}
               >
                 <div className="flex justify-between items-center">
                   {/* Name */}

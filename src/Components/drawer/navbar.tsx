@@ -44,7 +44,7 @@ const Navbar: React.FC = () => {
           newTitle = "Invoices";
           break;
         case "invoicedetails":
-          newTitle = "Invoices/Invoice Details/store 13246";
+          newTitle = "Invoices/Invoice Details";
           break;
         case "expenses":
           newTitle = "Expenses";
