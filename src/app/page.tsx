@@ -83,10 +83,8 @@ const Home: FC = () => {
 
   const handleClick5 = () => {
     // localStorage.setItem('showBackIcon', 'true');
-    router.push("/expenses")
-  
-   
-  }
+    router.push("/expenses");
+  };
 
   //sixth link(customer count)
 
@@ -139,39 +137,6 @@ const Home: FC = () => {
             isOpen={isOpen2}
             toggleOpen={toggleDropdown2}
           />
-        </div>
-
-        {/* Tooltip positioned at the end of the screen */}
-        <div className="relative ml-auto below-md:hidden tablet:hidden">
-          <div className="group relative">
-            <img
-              src="/images/tooltip.svg"
-              className="max-w-[100%] max-h-[100%] mx-auto cursor-pointer"
-            />
-
-            {/* Tooltip Box */}
-            <div className="absolute top-full left-[calc(50%-180px)] transform -translate-x-1/2 mt-2 w-[419px] h-fit bg-[white] text-[#2D3748B2] text-sm px-6 py-6 rounded-lg border-l-[5px] border-[#F2921599] opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg z-20 pointer-events-none group-hover:pointer-events-auto">
-              {/* Tooltip Arrow */}
-              <div className="absolute bottom-full left-[calc(50%+180px)] transform -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-b-white border-l-transparent border-r-transparent" />
-
-              {/* Tooltip Content */}
-              <p className="text-[12px]">
-                <span className="text-[12px] font-semibold text-[#334155CC]">
-                  Year-To-Date (YTD){" "}
-                </span>
-                The accumulated value from January 1 to today, providing insight
-                into year’s current performance.
-              </p>
-              <br />
-              <p className="text-[12px]">
-                <span className="text-[12px] font-semibold text-[#334155CC]">
-                  One Year{" "}
-                </span>
-                The accumulated value from January 1 to today, providing insight
-                into year’s current performance.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -282,7 +247,8 @@ const Home: FC = () => {
                 <p className="text-[#334155]  text-[16px] font-bold">
                   Gross Revenue
                 </p>
-                <div className="relative below-lg:hidden z-0">
+
+                <div className="relative z-0">
                   <div className="group relative">
                     <img
                       src="/images/tooltip.svg"

@@ -111,6 +111,12 @@ const Navbar: React.FC = () => {
     }
   };
 
+  const [isRotated, setIsRotated] = useState(false);
+
+  const handleRotate = () => {
+    setIsRotated(!isRotated);
+  };
+
   // Close dropdown on outside click
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -147,7 +153,14 @@ const Navbar: React.FC = () => {
               onClick={handleToggle}
               className="w-10 h-10 flex items-center justify-center"
             >
-              <img src="/images/More.svg" alt="Menu Icon" />
+              <img
+                src="/images/More.svg"
+                alt="Menu Icon"
+                className={`transition-transform duration-300 ${
+                  isRotated ? "rotate-0" : "rotate-180"
+                }`}
+                onClick={handleRotate}
+              />
             </p>
 
             {/* Dropdown Menu */}
