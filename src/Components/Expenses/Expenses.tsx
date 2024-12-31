@@ -1,11 +1,11 @@
 "use client";
 
 import React, { FC, useState, useRef,useEffect } from "react";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/Expenses/AddExpenses";
 import DateRange from "@/Components/drawer/DateRangePicker";
 import Dropdown from "@/Components/ui/Common/DropDown";
+
 
 import Image from "next/image";
 import {
@@ -311,6 +311,7 @@ const Expenses: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <>
+
         <div className="flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:mt-4 below-md:mb-4 mt-6 mb-6">
           <div className="flex gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
             <div className="flex">

@@ -82,8 +82,11 @@ const Home: FC = () => {
   //fifth link(customer count)
 
   const handleClick5 = () => {
-    router.push("/expenses"); // Navigates to the 'details' page
-  };
+    // localStorage.setItem('showBackIcon', 'true');
+    router.push("/expenses")
+  
+   
+  }
 
   //sixth link(customer count)
 
