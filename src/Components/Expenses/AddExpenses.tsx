@@ -138,9 +138,13 @@ const AddExpenses = () => {
           onClick={openModal}
           onTouchStart={handlePressStart} // For mobile devices
           onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
-          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[50px] h-[50px] rounded-lg relative"
+          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[56px] h-[56px] rounded-lg relative"
         >
-          <img src="/images/WebAddIcon.svg" alt="AddExpense" />
+          <img
+            src="/images/WebAddIcon.svg"
+            alt="AddExpense"
+            className="w-[18px]"
+          />
           {showTooltip && (
             <div className="absolute bottom-[75px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
               Add Expenses
@@ -153,7 +157,7 @@ const AddExpenses = () => {
       <div className="block below-md:hidden">
         <button
           onClick={openModal}
-          className="bg-[#1AA47D] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
+          className="bg-[#1AA47D] text-white  w-[159px] text-[14px] gap-[0.25rem] font-semibold h-[35px] rounded-md flex items-center justify-center "
         >
           <img className="" src="/images/WebAddIcon.svg" alt="" />
           Add Expenses
@@ -208,8 +212,9 @@ const AddExpenses = () => {
                   <button
                     type="button"
                     onClick={() => setDropdownOpen((prev) => !prev)}
-                    className={`h-[42px] mt-1 pl-2 pr-4 w-full text-[13px] font-normal rounded-lg border ${errors.selectedType ? "border-red-500" : "border-gray-300"
-                      } bg-white text-[#8D98AA] flex justify-between items-center`}
+                    className={`h-[42px] mt-1 pl-2 pr-4 w-full text-[13px] font-normal rounded-lg border ${
+                      errors.selectedType ? "border-red-500" : "border-gray-300"
+                    } bg-white text-[#8D98AA] flex justify-between items-center`}
                   >
                     {formData.selectedType || "Please select store"}
                     <img src="/images/dropdown1.svg" alt="dropdown1" />
@@ -240,7 +245,9 @@ const AddExpenses = () => {
                     </ul>
                   )}
                   {errors.selectedType && (
-                    <p className="text-red-500 text-[12px]">{errors.selectedType}</p>
+                    <p className="text-red-500 text-[12px]">
+                      {errors.selectedType}
+                    </p>
                   )}
                 </div>
 
@@ -253,33 +260,38 @@ const AddExpenses = () => {
                     <button
                       type="button"
                       onClick={() => setExpenseDropdownOpen((prev) => !prev)}
-                      className={`h-[40px] mt-1 pl-2 pr-4 w-full text-[13px] font-normal rounded-lg border ${errors.expenseType ? "border-red-500" : "border-gray-300"
-                        } bg-white text-[#8D98AA] flex justify-between items-center`}
+                      className={`h-[40px] mt-1 pl-2 pr-4 w-full text-[13px] font-normal rounded-lg border ${
+                        errors.expenseType
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      } bg-white text-[#8D98AA] flex justify-between items-center`}
                     >
                       {formData.expenseType || "Please Select Expense Type"}
                       <img src="/images/dropdown1.svg" alt="dropdown icon" />
                     </button>
                     {expenseDropdownOpen && (
                       <ul className="absolute z-10 w-full mt-2 text-[13px] text-[#8D98AA] bg-white border border-gray-300 rounded-lg shadow-lg">
-                        {["Type 1", "Type 2", "Type 3", "Type 4"].map((type) => (
-                          <li
-                            key={type}
-                            onClick={() => {
-                              setFormData((prevData) => ({
-                                ...prevData,
-                                expenseType: type,
-                              }));
-                              setErrors((prevErrors) => ({
-                                ...prevErrors,
-                                expenseType: "",
-                              }));
-                              setExpenseDropdownOpen(false);
-                            }}
-                            className="px-4 py-2 cursor-pointer border-b text-sm hover:text-white hover:bg-[#334155]"
-                          >
-                            {type}
-                          </li>
-                        ))}
+                        {["Type 1", "Type 2", "Type 3", "Type 4"].map(
+                          (type) => (
+                            <li
+                              key={type}
+                              onClick={() => {
+                                setFormData((prevData) => ({
+                                  ...prevData,
+                                  expenseType: type,
+                                }));
+                                setErrors((prevErrors) => ({
+                                  ...prevErrors,
+                                  expenseType: "",
+                                }));
+                                setExpenseDropdownOpen(false);
+                              }}
+                              className="px-4 py-2 cursor-pointer border-b text-sm hover:text-white hover:bg-[#334155]"
+                            >
+                              {type}
+                            </li>
+                          )
+                        )}
                       </ul>
                     )}
                     {errors.expenseType && (
@@ -295,10 +307,11 @@ const AddExpenses = () => {
                     <input
                       type="text"
                       name="description"
-                      className={`border h-[40px] w-full  below-md:w-full pl-2 text-[#8D98AA] text-[13px] rounded-lg ${errors.description
+                      className={`border h-[40px] w-full  below-md:w-full pl-2 text-[#8D98AA] text-[13px] rounded-lg ${
+                        errors.description
                           ? "border-red-500"
                           : "border-gray-300"
-                        }`}
+                      }`}
                       placeholder="Please enter Expense Description"
                       value={formData.description}
                       onChange={handleChange}
@@ -316,8 +329,9 @@ const AddExpenses = () => {
                     <input
                       type="number"
                       name="amount"
-                      className={`border h-[40px] w-full below-md:w-full pl-2 text-[#8D98AA] text-[13px] rounded-lg ${errors.amount ? "border-red-500" : "border-gray-300"
-                        }`}
+                      className={`border h-[40px] w-full below-md:w-full pl-2 text-[#8D98AA] text-[13px] rounded-lg ${
+                        errors.amount ? "border-red-500" : "border-gray-300"
+                      }`}
                       placeholder="Please enter Expense Amount"
                       value={formData.amount}
                       onChange={handleChange}
@@ -339,8 +353,9 @@ const AddExpenses = () => {
                           setFormData({ ...formData, date })
                         }
                         placeholderText="Please enter expense date"
-                        className={`border h-[40px] w-[350px] below-md:w-[124%]  pl-3 pr-10 text-[#8D98AA] text-[13px] rounded-lg ${errors.date ? "border-red-500" : "border-gray-300"
-                          }`}
+                        className={`border h-[40px] w-[350px] below-md:w-[124%]  pl-3 pr-10 text-[#8D98AA] text-[13px] rounded-lg ${
+                          errors.date ? "border-red-500" : "border-gray-300"
+                        }`}
                       />
                       <img
                         className="absolute top-1/2 right-3 transform -translate-y-1/2 w-4 h-4  cursor-pointer "

@@ -5,7 +5,7 @@ import Linechart from "@/Components/drawer/LineChart";
 import React from "react";
 import { useRouter } from "next/navigation";
 import Dropdown from "@/Components/ui/Common/DropDown";
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 interface TableRow {
   name: string;
@@ -61,14 +61,13 @@ const Home: FC = () => {
     0
   );
 
-
   /**first link(gross revenue) */
   const router = useRouter();
 
   useEffect(() => {
     // Ensure the back icon is hidden on the home page
-    sessionStorage.setItem('showBackIcon', 'false');
-}, []);
+    sessionStorage.setItem("showBackIcon", "false");
+  }, []);
 
   const handleClick = () => {
     router.push("/details1"); // Navigates to the 'details' page
@@ -89,12 +88,9 @@ const Home: FC = () => {
   //fifth link(customer count)
 
   const handleClick5 = () => {
-    // Set the flag to show the back icon on the next page
-     sessionStorage.setItem('showBackIcon', 'true');
-    router.push("/expenses")
-  
-   
-  }
+    // localStorage.setItem('showBackIcon', 'true');
+    router.push("/expenses");
+  };
 
   //sixth link(customer count)
 
@@ -147,39 +143,6 @@ const Home: FC = () => {
             isOpen={isOpen2}
             toggleOpen={toggleDropdown2}
           />
-        </div>
-
-        {/* Tooltip positioned at the end of the screen */}
-        <div className="relative ml-auto below-md:hidden tablet:hidden">
-          <div className="group relative">
-            <img
-              src="/images/tooltip.svg"
-              className="max-w-[100%] max-h-[100%] mx-auto cursor-pointer"
-            />
-
-            {/* Tooltip Box */}
-            <div className="absolute top-full left-[calc(50%-180px)] transform -translate-x-1/2 mt-2 w-[419px] h-fit bg-[white] text-[#2D3748B2] text-sm px-6 py-6 rounded-lg border-l-[5px] border-[#F2921599] opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg z-20 pointer-events-none group-hover:pointer-events-auto">
-              {/* Tooltip Arrow */}
-              <div className="absolute bottom-full left-[calc(50%+180px)] transform -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-b-white border-l-transparent border-r-transparent" />
-
-              {/* Tooltip Content */}
-              <p className="text-[12px]">
-                <span className="text-[12px] font-semibold text-[#334155CC]">
-                  Year-To-Date (YTD){" "}
-                </span>
-                The accumulated value from January 1 to today, providing insight
-                into year’s current performance.
-              </p>
-              <br />
-              <p className="text-[12px]">
-                <span className="text-[12px] font-semibold text-[#334155CC]">
-                  One Year{" "}
-                </span>
-                The accumulated value from January 1 to today, providing insight
-                into year’s current performance.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -290,7 +253,8 @@ const Home: FC = () => {
                 <p className="text-[#334155]  text-[16px] font-bold">
                   Gross Revenue
                 </p>
-                <div className="relative below-lg:hidden z-0">
+
+                <div className="relative z-0">
                   <div className="group relative">
                     <img
                       src="/images/tooltip.svg"
@@ -326,7 +290,7 @@ const Home: FC = () => {
               </div>
             </div>
 
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -367,7 +331,7 @@ const Home: FC = () => {
                 <img src="/images/under_details.svg" onClick={handleClick4} />
               </div>
             </div>
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -405,7 +369,7 @@ const Home: FC = () => {
                 </p>
               </div>
             </div>
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -453,7 +417,7 @@ const Home: FC = () => {
               </div>
             </div>
 
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -497,7 +461,7 @@ const Home: FC = () => {
                 <img src="/images/under_details.svg" onClick={handleClick6} />
               </div>
             </div>
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -541,7 +505,7 @@ const Home: FC = () => {
                 <img src="/images/under_details.svg" onClick={handleClick7} />
               </div>
             </div>
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -586,7 +550,7 @@ const Home: FC = () => {
               </div>
             </div>
 
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -627,7 +591,7 @@ const Home: FC = () => {
                 </p>
               </div>
             </div>
-            <div className="mt-4 mx-6">
+            <div className="mt-5 mx-6">
               <div className="flex justify-between items-center mb-2 gap-[2px]">
                 <div className="text-gray-600 text-transparent">
                   Current year
@@ -656,7 +620,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-full pb-0 items-stretch">
+          <div className=" bg-white mt-6 below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/items.svg" />
@@ -668,7 +632,7 @@ const Home: FC = () => {
             </div>
 
             <div className="w-full overflow-hidden overflow-y-auto below-md:overflow-x-auto  max-h-[130px] custom-scrollbar ">
-              <table className="w-full bg-white border border-gray-200 mt-6 ">
+              <table className="w-full bg-white border border-gray-200 mt-6">
                 <tbody>
                   {tableData2.map((row, index) => (
                     <tr
@@ -679,7 +643,7 @@ const Home: FC = () => {
                           : "bg-[#FAFBFB] text-[14px]"
                       }`}
                     >
-                      <td className="px-2 py-1 border-b border-gray-200 text-gray-700 text-[14px]">
+                      <td className="pl-6 px-2 py-1 border-b border-gray-200 text-gray-700 text-[14px]">
                         {row.name}
                       </td>
                       <td className="px-2 py-1 border-b border-gray-200 text-[#334155] text-[14px] font-bold text-center">
@@ -693,10 +657,10 @@ const Home: FC = () => {
                 </tbody>
                 <tfoot className="bottom-0 bg-white">
                   <tr className="font-bold text-[#E31212] text-[14px]">
-                    <td className="px-2 py-1 border-t border-gray-200">
+                    <td className="pl-6 px-2 py-1 border-t border-gray-200">
                       Total
                     </td>
-                    <td className="px-2 py-1 border-t border-gray-200 text-[14px]">
+                    <td className=" px-2 py-1 border-t border-gray-200 text-[14px]">
                       ${totalRevenue.toLocaleString()}
                     </td>
 

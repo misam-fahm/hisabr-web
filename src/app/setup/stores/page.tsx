@@ -160,7 +160,7 @@ const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "royalty",
     header: () => <div className="text-left">Royalty</div>,
-    cell: (info) => <div >{info.getValue() as number}</div>,
+    cell: (info) => <div>{info.getValue() as number}</div>,
     size: 80,
   },
   {
