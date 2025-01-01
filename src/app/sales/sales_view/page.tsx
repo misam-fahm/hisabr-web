@@ -71,10 +71,11 @@ const DetailsPage: React.FC = () => {
   };
 
   //mobile scroll
-  const scrollTabs = (direction: 'left' | 'right') => {
+  const scrollTabs = (direction: "left" | "right") => {
     const container = document.getElementById("tabContainer");
 
-    if (container) {  // This check ensures container is not null
+    if (container) {
+      // This check ensures container is not null
       const scrollAmount = 150; // Adjust as needed
       if (direction === "left") {
         container.scrollBy({ left: -scrollAmount, behavior: "smooth" });

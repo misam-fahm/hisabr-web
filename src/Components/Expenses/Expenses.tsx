@@ -1,11 +1,12 @@
 "use client";
 
 import React, { FC, useState, useRef,useEffect } from "react";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/Expenses/AddExpenses";
 import DateRange from "@/Components/drawer/DateRangePicker";
 import Dropdown from "@/Components/ui/Common/DropDown";
+import { useRouter } from 'next/router';
+
 
 import Image from "next/image";
 import {
@@ -296,21 +297,33 @@ const Expenses: FC = () => {
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
   const toggleDropdown1 = () => setIsOpen(!isOpen);
-  
-
-  
-
+ 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false); // Close dropdown after selection
     handleSelect(option); // Call the passed handler
   };
+//   const router = useRouter();
+//   const [showBackIcon, setShowBackIcon] = useState(false);
+//   useEffect(() => {
+//     // Check the flag to determine if the back icon should be shown
+//     const shouldShowBackIcon = sessionStorage.getItem('showBackIcon') === 'true';
+//     setShowBackIcon(shouldShowBackIcon);
+// }, []);
+
+//   const handleBack = () => {
+//     router.back(); // Navigate back to the previous page
+// };
+
+
   return (
     <main
       className="max-h-[calc(100vh-50px)] px-6 below-md:px-3 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <>
+
+
         <div className="flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:mt-4 below-md:mb-4 mt-6 mb-6">
           <div className="flex gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
             <div className="flex">
@@ -351,7 +364,7 @@ const Expenses: FC = () => {
         </div>
 
         {/* Card section */}
-        <div className="">
+        <div className="block md:hidden">
           {cardData.map((card, index) => (
             <div
               key={index}
@@ -393,7 +406,7 @@ const Expenses: FC = () => {
               </div>
             </div>
           ))}
-          <div className=" fixed bottom-1 hidden below-md:block right-1">
+          <div className=" fixed hidden below-md:block">
             {" "}
             <AddExpenses />
           </div>
@@ -458,7 +471,7 @@ const Expenses: FC = () => {
         </div>
         {/* Pagination Numbers */}
         <div className="mt-4  below-md:hidden">
-          <Pagination table={table} />
+          <Pagination table={table}  totalItems={0}/>
         </div>
       </>
     </main>

@@ -259,12 +259,12 @@ const DetailsPage: React.FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-70px)] below-md:max-h-[calc(100vh-1px)] tablet:max-h-[calc(100vh-1px)] below-md:mb-10 tablet:mb-10 overflow-auto"
+      className="max-h-[calc(100vh-70px)] below-md:max-h-[calc(100vh-0)] tablet:max-h-[calc(100vh-0)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <img
         onClick={handleBack}
-        src="/images/backIcon.svg"
+        src="/images/MobileBackIcon.svg"
         className="fixed top-4 left-4 z-30 below-lg:hidden tablet:hidden"
       />
       {/* <div className="below-md:flex below-md:justify-center ">
@@ -272,7 +272,7 @@ const DetailsPage: React.FC = () => {
           Labor Analysis
         </p>
       </div> */}
-      <div className="pt-6 pb-6 below-md:pb-3 below-md:pt-3 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
+      <div className="pt-6 pb-6 below-md:pb-4 below-md:pt-4 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row below-md:flex-col gap-3  w-full">
             <Dropdown
@@ -384,7 +384,7 @@ const DetailsPage: React.FC = () => {
           </div>
         </div>
         {/* Pagination */}
-        <Pagination table={table} />
+        <Pagination table={table} totalItems={0} />
 
         <div className="below-lg:hidden tablet:hidden">
           <div className="flex flex-col">

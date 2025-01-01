@@ -7,7 +7,7 @@ import Navbar from "@/Components/drawer/navbar";
 import { AuthProvider } from "@/context/authContext";
 import Drawer from "@/Components/drawer/Drawer";
 import { usePathname } from "next/navigation";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 
 // export const metadata: Metadata = {
 //   title: "Dashboard",
@@ -19,10 +19,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname:any = usePathname();
+  const pathname: any = usePathname();
 
   // Define routes where Navbar and Drawer should not be displayed
-  const hideSidebarRoutes = ["/login", "/register" , "/forgotpassword"];
+  const hideSidebarRoutes = ["/login", "/register", "/forgotpassword"];
 
   const shouldHideSidebar = hideSidebarRoutes.includes(pathname);
 
@@ -31,20 +31,23 @@ export default function RootLayout({
        <body className="w-full" >
        <AuthProvider>
         <div className="flex w-full ">
-       
-        {!shouldHideSidebar && <div className="w-auto" ><Drawer children={undefined} /></div> }
-        <div  className="flex w-full flex-col">
-        {!shouldHideSidebar && <div ><Navbar /></div> }
-        <main  >{children}</main>
-        <ToastContainer/>
-        </div>
+          {!shouldHideSidebar && (
+            <div className="w-auto">
+              <Drawer children={undefined} />
+            </div>
+          )}
+          <div className="flex w-full flex-col">
+            {!shouldHideSidebar && (
+              <div>
+                <Navbar />
+              </div>
+            )}
+            <main>{children}</main>
+            <ToastContainer />
+          </div>
         </div>
         </AuthProvider>
       </body>
-      
     </html>
   );
 }
-
-
-

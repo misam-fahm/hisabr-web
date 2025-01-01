@@ -159,6 +159,10 @@ const Invoices = () => {
 
   const handlePressStart = () => {
     setShowTooltip(true);
+    
+    setTimeout(() => {
+      setShowTooltip(false);
+    }, 2000);
   };
 
   const handlePressEnd = () => {
@@ -225,7 +229,7 @@ const Invoices = () => {
 
       </div>
       {/* Card section */}
-      <div>
+      <div className="block md:hidden">
         {cardData.map((card, index) => (
           <div key={index}
             className='flex flex-col w-full  rounded-md bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3'>
@@ -263,9 +267,9 @@ const Invoices = () => {
 
           </div>
         ))}
-        <div className='below-lg:hidden flex justify-end fixed bottom-1 right-1'>
+        <div className='hidden below-md:block justify-end fixed bottom-5 right-5'>
 
-          <button className="focus:outline-none w-[80px] h-[80px] text-white rounded-md text-[14px] flex items-center justify-center relative"
+          <button className="focus:outline-none flex items-center bg-[#1AA47D]  justify-center  w-[50px] h-[50px] rounded-lg relative"
             onTouchStart={handlePressStart} // For mobile devices
             onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
             onClick={handleButtonClick}
@@ -344,7 +348,7 @@ const Invoices = () => {
       </div>
       {/* Pagination Numbers */}
       <div className="mt-4  below-md:hidden">
-        <Pagination table={table} />
+        <Pagination table={table} totalItems={0} />
       </div>
 
 

@@ -7,6 +7,7 @@ import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import Dropdown from "@/Components/ui/Common/DropDown";
 
+
 interface TableRow {
   name: string;
   revenue: number;
@@ -61,9 +62,15 @@ const Home: FC = () => {
     0
   );
 
+
   /**first link(gross revenue) */
   const router = useRouter();
 const  {user}:any  = useAuth();
+
+  useEffect(() => {
+    // Ensure the back icon is hidden on the home page
+    sessionStorage.setItem('showBackIcon', 'false');
+}, []);
 
   const handleClick = () => {
     router.push("/details1"); // Navigates to the 'details' page
@@ -84,8 +91,12 @@ const  {user}:any  = useAuth();
   //fifth link(customer count)
 
   const handleClick5 = () => {
-    router.push("/expenses"); // Navigates to the 'details' page
-  };
+    // Set the flag to show the back icon on the next page
+     sessionStorage.setItem('showBackIcon', 'true');
+    router.push("/expenses")
+  
+   
+  }
 
   //sixth link(customer count)
 
@@ -122,7 +133,7 @@ const  {user}:any  = useAuth();
         </p>
       </div> */}
 
-      <div className="flex flex-row items-center gap-3 pt-6 below-md:pt-3 sticky  bg-[#f7f8f9] px-6 below-md:px-3">
+      <div className="flex flex-row items-center gap-3 pt-6 below-md:pt-4 sticky  bg-[#f7f8f9] px-6 below-md:px-3">
         {/* Dropdowns grouped together */}
         <div className="flex flex-row gap-3 w-full below-md:flex-col ">
           {/* Dropdown 1 */}

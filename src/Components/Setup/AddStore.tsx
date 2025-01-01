@@ -134,7 +134,7 @@ const AddStore = () => {
        <div className="block below-md:hidden">
         <button
           onClick={openModal}
-          className="bg-[#1AA47D] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
+          className="bg-[#1AA47D] hover:bg-[#168A68] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
           <img src="/images/plus1.svg" alt="Add icon" />
           Add Store
@@ -174,7 +174,7 @@ const AddStore = () => {
                     name="storeName"
                     value={formData.storeName}
                     onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm  font-normal rounded-lg border ${
                       errors.storeName ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Please enter Store name"
@@ -191,7 +191,7 @@ const AddStore = () => {
                     name="location"
                     value={formData.location}
                     onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-normal rounded-lg border ${
                       errors.location ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Please enter Store Location"
@@ -208,7 +208,7 @@ const AddStore = () => {
                     name="description"
                     value={formData.user}
                     onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-normal rounded-lg border ${
                       errors.user ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Please enter Store User"
@@ -225,7 +225,7 @@ const AddStore = () => {
                     name="royalty"
                     value={formData.royalty}
                     onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-normal rounded-lg border ${
                       errors.royalty ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Please enter Store County"
@@ -241,7 +241,7 @@ const AddStore = () => {
                     name="royalty"
                     value={formData.royalty}
                     onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-medium rounded-lg border ${
+                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-normal rounded-lg border ${
                       errors.royalty ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Please enter Store Royalty"

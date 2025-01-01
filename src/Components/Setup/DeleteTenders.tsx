@@ -49,9 +49,9 @@ const DeleteTenders = () => {
         <Button>
           <img
             onClick={openModal}
-            src="/images/delete-bin.svg"
+            src="/images/DeleteBinIcon.svg"
             alt="Add icon"
-            className="flex justify-center  below-md:ml-5 h-4 w-4"
+            className="flex justify-center  below-md:ml-5 h-5 w-5"
           />
         </Button>
       </div>
@@ -68,15 +68,15 @@ const DeleteTenders = () => {
             <div>
               <DialogTitle
                 as="h3"
-                className=" flex justify-center text-[#5E6366] font font-bold text-[20px]"
+                className=" flex justify-center text-[#5E6366] font font-semibold text-[16px]"
               >
                 Delete Item
               </DialogTitle>
               <div className="flex flex-col mt-4 justify-center items-center text-[#5E6366] font-medium text-[15px]">
-                <p className=" below-md:text-[14px]">
+                <p className=" below-md:text-[12px] below-md:font-normal">
                   Are you sure you want to delete this item?
                 </p>
-                <p className=" below-md:text-[14px]">
+                <p className=" below-md:text-[12px] below-md:font-normal">
                   This action cannot be undone.
                 </p>
               </div>
@@ -89,7 +89,7 @@ const DeleteTenders = () => {
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="mr-4 px-4 py-2 h-[37px] w-[165px] bg-[#c8c8c8] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
+                    className="mr-4 px-4 py-2 h-[37px] w-[165px] bg-[#E4E4E4] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
                   >
                     Cancel
                   </button>
