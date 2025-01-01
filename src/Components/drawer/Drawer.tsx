@@ -5,12 +5,17 @@ import { useRouter } from "next/navigation";
 import React, { ReactNode, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Images from "../ui/Common/Image";
+import { useAuth } from "@/context/authContext";
+import Image from "next/image";
 
 interface DrawerProps {
   children: ReactNode;
 }
 
 const Drawer: React.FC<DrawerProps> = ({ children }) => {
+
+  const  {logout}:any  = useAuth();
+
   const [open, setOpen] = useState(true);
   const [setupOpen, setSetupOpen] = useState(false); // State to toggle the dropdown
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null); // Track active submenu item
@@ -116,6 +121,10 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
     currentPath.includes(path)
   );
 
+  const handlelogout = () => {
+   logout()
+  };
+
   return (
     <main
       className={`flex h-[100vh] ${
@@ -186,12 +195,12 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
                       ? setSetupOpen(!setupOpen)
                       : handleNavigation(menu.path!)
                   }
-                  className={`text-defaultwhite  text-[14px] flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#EEEEEE1A] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]   mr-5 rounded-tr-full rounded-br-full 
+                  className={`text-defaultwhite  text-[14px] flex items-center gap-x-4 cursor-pointer p-3 px-5 hover:bg-[#EEEEEE1A] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]  rounded-tr-full rounded-br-full 
                     ${currentPath === menu.path ? "bg-[#EEEEEE1A]  shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]" : ""} 
                     ${menu?.gap ? "mt-11" : "mt-1"} 
                     ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""}`}
                 >
-                  <img src={`/images/${menu.src}.svg`} />
+                  <Image width={18} height={18} src={`/images/${menu.src}.svg`} alt={""} />
                   <span
                     className={`${!open && "hidden"} origin-left duration-200`}
                   >
@@ -236,9 +245,10 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         </div>
 
         <div
-          className={`flex mt-10 gap-4 below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px]  ${open ? "mr-8" : "mr-3 below-md:bg-transparent below-md:shadow-none"} ml-3 rounded-md`}
+          className={`flex mt-10 gap-4 below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px] cursor-pointer  ${open ? "mr-8" : "mr-3 below-md:bg-transparent below-md:shadow-none"} ml-3 rounded-md`}
+          onClick={handlelogout}
         >
-          <img src="/images/logout.svg" />
+          <img src="/images/logout.svg"  />
           {open && <p className="text-[14px]">Logout</p>}
         </div>
       </div>

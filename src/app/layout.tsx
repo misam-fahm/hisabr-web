@@ -4,6 +4,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Navbar from "@/Components/drawer/navbar";
+import { AuthProvider } from "@/context/authContext";
 import Drawer from "@/Components/drawer/Drawer";
 import { usePathname } from "next/navigation";
 import { ToastContainer } from 'react-toastify';
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
        <body className="w-full" >
+       <AuthProvider>
         <div className="flex w-full ">
        
         {!shouldHideSidebar && <div className="w-auto" ><Drawer children={undefined} /></div> }
@@ -37,6 +39,7 @@ export default function RootLayout({
         <ToastContainer/>
         </div>
         </div>
+        </AuthProvider>
       </body>
       
     </html>

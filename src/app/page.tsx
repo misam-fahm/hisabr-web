@@ -1,8 +1,9 @@
 "use client";
 import "./globals.css";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Linechart from "@/Components/drawer/LineChart";
 import React from "react";
+import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import Dropdown from "@/Components/ui/Common/DropDown";
 
@@ -62,6 +63,7 @@ const Home: FC = () => {
 
   /**first link(gross revenue) */
   const router = useRouter();
+const  {user}:any  = useAuth();
 
   const handleClick = () => {
     router.push("/details1"); // Navigates to the 'details' page
@@ -102,6 +104,12 @@ const Home: FC = () => {
   const handleClick8 = () => {
     router.push("/details8"); // Navigates to the 'details' page
   };
+
+  // useEffect(() => {
+  //   if (!user) {
+  //     router.push("/login");
+  //   }
+  // }, [user, router]);
 
   return (
     <main

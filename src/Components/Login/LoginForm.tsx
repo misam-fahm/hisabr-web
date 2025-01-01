@@ -1,19 +1,22 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Inputtext } from "../ui/InputText"; 
-import { Text } from "../ui/Common/Text";
+import { Inputtext } from "../ui/InputText";
+import { useAuth } from "@/context/authContext";
+import { useRouter } from "next/navigation";
 
 
 const LoginForm = () => {
+  const methods = useForm();
 
-  const methods = useForm(); 
- 
+  const { login }: any = useAuth();
+  const router = useRouter();
+
   const onSubmit = (data: any) => {
-    console.log(data);
+    login(data);
+    console.log("89000", data?.Password);
   };
-
-
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <FormProvider {...methods}>
@@ -78,20 +81,36 @@ const LoginForm = () => {
                         "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
                     },
                   })}
-                  errors={methods.formState.errors.Password}
+                  errors={methods.formState.errors.Password} 
                   placeholder="Enter Password"
                   variant="outline"
+                  
+                  type={showPassword ? "text" : "password"} // Toggle type here
+                  rightIcon={
+                    <img
+                      className=" px-3 absolute right-0 cursor-pointer"
+                      src={
+                        showPassword
+                          ? "/images/disable.svg" // Icon when password is visible
+                          : "/images/InputFieldEyeicon.svg" // Icon when password is hidden
+                      }
+                      onClick={() => setShowPassword((data) => !data)}
+                    />
+                  }
                 />
                 <div className="flex justify-end mt-2">
-              <p className=" text-[#3BFCC6] font-normal text-[14px] cursor-pointer"   onClick={() => (window.location.href = "/forgotpassword")} >
-              Forgot Password?
-              </p>
-              </div> 
+                  <p
+                    className=" text-[#3BFCC6] font-normal text-[14px] cursor-pointer"
+                    onClick={() => router.push("/forgotpassword")}
+                  >
+                    Forgot Password?
+                  </p>
+                </div>
               </div>
-            
+
               <button
                 type="submit"
-                className="bg-[#1AA47D] w-[400px] below-md:w-full text-white py-2 px-4 rounded "
+                className="bg-[#1AA47D] h-[45px] w-[400px] font-semibold below-md:w-full text-white py-2 px-4 rounded "
               >
                 GET STARTED
               </button>

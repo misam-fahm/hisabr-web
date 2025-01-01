@@ -1,6 +1,15 @@
 "use client";
 
 import React from "react";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getFilteredRowModel,
+  flexRender,
+  ColumnDef,
+} from "@tanstack/react-table";
+
 
 interface TableData {
   category: string;
@@ -84,24 +93,104 @@ const data: TableData[] = [
 ];
 
 const TableComponent: React.FC = () => {
+
+  const formattedData = data?.map((item:any) => {
+    const rawDate = new Date(item?.date);
+  
+    // Format the date as MM-DD-YY
+    const formattedDate = `${(rawDate?.getMonth() + 1)
+      .toString()
+      .padStart(
+        2,
+        "0"
+      )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
+      .getFullYear()
+      .toString()
+      .slice(-2)}`;
+  
+    return { ...item, date: formattedDate };
+  });
+
+
+  const columns: ColumnDef<any>[] = [
+    {
+      accessorKey: "category",
+      header: () => <div className="text-left">  Category</div>,
+      cell: (info) => <span>{info.getValue() as string}</span>,
+      size: 160,
+    },
+    {
+      accessorKey: "description",
+      header: () => <div className="text-left">Description</div>,
+      cell: (info) => <span>{info.getValue() as string}</span>,
+      size:160,
+    },
+    {
+      accessorKey: "value",
+      header: () => <div className="text-right mr-2">Value</div>,
+      cell: (info) => (
+        <div className="text-right">{info.getValue() as number}</div>
+      ),
+      size: 160,
+    },
+    
+    
+  ];
+
+  const [globalFilter, setGlobalFilter] = React.useState("");
+  
+  const table = useReactTable({
+    data: formattedData,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      globalFilter,
+    },
+    initialState: {
+      pagination: {
+        pageSize: 10,
+        pageIndex: 0,
+      },
+    },
+  });
+  
   return (
-    <main>
-      <div className="below-md:hidden  overflow-x-auto rounded-lg shadow-sm ">
-        <div className="max-h-[600px] overflow-y-auto  scrollbar-hide ">
-          <table className="min-w-full bg-white ">
-            <thead className="bg-[#334155] text-white sticky top-0 z-[2]">
-              <tr>
-                <th className="px-4 py-2 text-left text-[15px] font-medium">
-                  Category
-                </th>
-                <th className="px-4 py-2 text-left text-[15px] font-medium">
-                  Description
-                </th>
-                <th className="px-4 py-2 text-right text-[15px] font-medium">
-                  Value
-                </th>
-              </tr>
-            </thead>
+    <main
+    className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-1px)] tablet:max-h-[calc(100vh-1px)] below-md:mb-10 tablet:mb-10 overflow-auto"
+    style={{ scrollbarWidth: "thin" }}
+  >
+      <div className="tablet:hidden overflow-x-auto border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block shadow-md">
+      <div className="overflow-hidden max-w-full">
+        <table className="w-full border-collapse border-gray-200 table-fixed shadow-lg px-3">
+              <thead className="bg-[#334155]  top-0 z-10">
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        className="text-left px-4 py-2.5 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+                        style={{ width: `${header.column.getSize()}px` }} // Applying dynamic width
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+            </table>
+          
+            <div
+              className="w-full overflow-y-auto scrollbar-thin flex-grow"
+              style={{ maxHeight: "calc(100vh - 240px)" }}
+            >
+              <table className="w-full border-collapse border-gray-200 shadow table-fixed px-3">
             <tbody>
               {data.map((section, index) => (
                 <React.Fragment key={index}>
@@ -125,17 +214,16 @@ const TableComponent: React.FC = () => {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
 
       <div className="below-lg:hidden tablet:hidden">
         <div className="flex flex-col">
           <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-            <div className=" items-center mb-4 mt-2 px-2">
-              <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
-                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                  <span>Sales Summary</span>
-                </div>
+            <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+              <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                <span>Sales Summary</span>
               </div>
             </div>
             <div className="space-y-3 mb-2 px-2">
@@ -181,11 +269,9 @@ const TableComponent: React.FC = () => {
           </div>
 
           <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-            <div className=" items-center mb-4 mt-2 px-2">
-              <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
-                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                  <span>Sales Summary</span>
-                </div>
+            <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+              <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                <span>Sales Summary</span>
               </div>
             </div>
             <div className="space-y-3 mb-2 px-2">
@@ -231,11 +317,9 @@ const TableComponent: React.FC = () => {
           </div>
 
           <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-            <div className=" items-center mb-4 mt-2 px-2">
-              <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
-                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                  <span>Sales Summary</span>
-                </div>
+            <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+              <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                <span>Sales Summary</span>
               </div>
             </div>
             <div className="space-y-3 mb-2 px-2">
@@ -281,11 +365,9 @@ const TableComponent: React.FC = () => {
           </div>
 
           <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-            <div className=" items-center mb-4 mt-2 px-2">
-              <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
-                <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                  <span>Sales Summary</span>
-                </div>
+            <div className="flex justify-between items-center border-b border-[#E4E4EF] pb-2 mb-4 mt-2 px-2 text-sm">
+              <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                <span>Sales Summary</span>
               </div>
             </div>
             <div className="space-y-3 mb-2 px-2">

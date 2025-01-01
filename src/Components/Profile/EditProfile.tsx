@@ -9,9 +9,10 @@ const EditProfile = () => {
   return (
    
     <main className= 'w-full below-md:mt-[100px]'>
-      <div className='py-4 flex justify-end below-md:hidden '>
-        <button className='bg-[#C8C8C87A] w-[104px] h-[37px] text-[#6F6F6F] border rounded-md ' onClick={() => router.back()}>Back
-            </button>
+      <div className='py-4 flex justify-start below-md:hidden '>
+     
+          <img src='/images/WebBackIcon.svg' alt='Back Arrow' className='w-8 cursor-pointer h-8' onClick={() => router.back()} />
+        
       </div>
  
       <div className='w-full max-h-[calc(100vh-10px)] overflow-auto  below-md:h-auto border rounded-md shadow bg-white px-8 below-md:px-0 py-5 '>

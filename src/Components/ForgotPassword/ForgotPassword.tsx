@@ -61,7 +61,7 @@ const LoginForm = () => {
 
               <button
                 type="submit"
-                className="bg-[#1AA47D] w-[400px] below-md:w-full text-white py-2 px-4 rounded "
+                className="bg-[#1AA47D] w-[400px]  h-[45px] font-semibold below-md:w-full text-white py-2 px-4 rounded "
               >
                     SEND RESET LINK
               </button>
