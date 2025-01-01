@@ -281,14 +281,14 @@ const EditExpense = ({ expenseData, onUpdate }: { expenseData: any, onUpdate: (u
                             {/* Submit Button */}
                             <div className="flex items-center mt-3 md:w-full justify-between md:gap-2 space-x-3">
                                 <button type="button"
-                                    className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[36px] w-[158px] below-md:w-[150px] h-[37px] bg-[#E4E4E4] rounded-md"
+                                    className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
                                     onClick={closeModal}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[36px] w-[158px]  below-md:w-[150px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-green-700"
+                                    className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#1AA47D] rounded-md hover:bg-green-700"
                                 >
                                     Save
                                 </button>
