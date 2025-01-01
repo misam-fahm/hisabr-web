@@ -277,6 +277,9 @@ const Expenses: FC = () => {
   const startItem = pageIndex * pageSize + 1;
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
+
+
+
   // const calendarRef = useRef<DatePicker | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -302,13 +305,6 @@ const Expenses: FC = () => {
     setIsOpen(false); // Close dropdown after selection
     handleSelect(option); // Call the passed handler
   };
-  //   const router = useRouter();
-  //   const [showBackIcon, setShowBackIcon] = useState(false);
-  //   useEffect(() => {
-  //     // Check the flag to determine if the back icon should be shown
-  //     const shouldShowBackIcon = sessionStorage.getItem('showBackIcon') === 'true';
-  //     setShowBackIcon(shouldShowBackIcon);
-  // }, []);
 
   //   const handleBack = () => {
   //     router.back(); // Navigate back to the previous page
@@ -317,45 +313,45 @@ const Expenses: FC = () => {
   return (
     <main
       className="max-h-[calc(100vh-50px)] px-6 below-md:px-3 overflow-auto"
-      style={{ scrollbarWidth: "thin" }}
+      style={{  scrollbarWidth: "thin" }}
     >
       <>
-        <div className="flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:mt-4 below-md:mb-4 mt-6 mb-6">
-          <div className="flex gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
-            <div className="flex">
-              <Dropdown
-                options={options}
-                selectedOption={selectedOption}
-                onSelect={handleSelect}
-                isOpen={isOpen}
-                toggleOpen={toggleDropdown1}
-                widthchange="tablet:w-full"
-              />
-            </div>
 
-            <div className="w-[260px] tablet:w-full below-md:w-full h-[35px]">
+
+        <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
+          <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
+            <Dropdown
+              options={options}
+              selectedOption={selectedOption}
+              onSelect={handleSelect}
+              isOpen={isOpen}
+              toggleOpen={toggleDropdown1}
+              widthchange="w-full"
+            />
+
+            <div className="w-full tablet:w-full below-md:w-full h-[35px]">
               <DateRange />
             </div>
 
-            <div className="flex items-center justify-between below-md:flex-row below-md:gap-4">
-              <div className="flex shadow  text-[12px] bg-[#ffff] items-center  rounded-md w-[260px]  h-[35px] below-md:w-full below-md:h-[35px] below-md:text-[11px]">
-                <input
-                  type="search"
-                  ref={searchInputRef}
-                  placeholder="Search"
-                  className="w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none"
-                ></input>
-                <img
-                  className="pr-2 cursor-pointer items-center"
-                  src="/images/SearchIcon.svg"
-                  onClick={handleClick}
-                />
-              </div>
+
+            <div className="flex shadow text-[12px]  below-md:flex-row below-md:gap-4 bg-[#ffff] items-center  rounded-md w-full  h-[35px] below-md:w-full  below-md:text-[11px]">
+              <input
+                type="search"
+                ref={searchInputRef}
+                placeholder="Search"
+                className="w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none"
+              ></input>
+              <img
+                className="pr-2 cursor-pointer items-center"
+                src="/images/searchIcon.svg"
+                onClick={handleClick}
+              />
             </div>
           </div>
-          <div className=" block below-md:hidden mt-1">
+          <div className="block pl-24 below-md:hidden">
             <AddExpenses />
           </div>
+
         </div>
 
         {/* Card section */}
@@ -468,7 +464,7 @@ const Expenses: FC = () => {
         </div>
         {/* Pagination Numbers */}
         <div className="mt-4  below-md:hidden">
-          <Pagination table={table}  totalItems={0}/>
+          <Pagination table={table} totalItems={0} />
         </div>
       </>
     </main>

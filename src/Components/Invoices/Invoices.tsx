@@ -299,27 +299,25 @@ const Invoices = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-50px)] px-6 below-md:px-3 overflow-auto"
+      className="max-h-[calc(100vh-80px)] px-6 below-md:px-3 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className="flex justify-between below-md:flex-col items-center w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
-        <div className="flex gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
-          <div className="flex">
-            <Dropdown
-              options={options}
-              selectedOption={selectedOption}
-              onSelect={handleSelect}
-              isOpen={isOpen}
-              toggleOpen={toggleDropdown1}
-              widthchange="tablet:w-full"
-            />
-          </div>
+      <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
+        <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
+          <Dropdown
+            options={options}
+            selectedOption={selectedOption}
+            onSelect={handleSelect}
+            isOpen={isOpen}
+            toggleOpen={toggleDropdown1}
+            widthchange="w-full"
+          />
 
-          <div className="w-[261px] tablet:w-full below-md:w-full">
+          <div className="below-lg:w-full tablet:w-full below-md:w-full">
             <DateRange />
           </div>
 
-          <div className="flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-[260px] h-[35px]">
+          <div className="flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
             <input
               type="search"
               onChange={(e) => setGlobalFilter(e.target.value)}
@@ -329,14 +327,14 @@ const Invoices = () => {
             ></input>
             <img
               className="pr-2 cursor-pointer items-center"
-              src="/images/SearchIcon.svg"
+              src="/images/searchIcon.svg"
               onClick={handleClick}
             />
           </div>
         </div>
-        <div className="below-md:hidden mt-1">
+        <div className=" pl-24 below-md:hidden">
           <button
-            className="w-[170px] h-[35px] bg-[#1AA47D] shadow-lg hover:bg-[#168A6F] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
+            className="w-[159px] h-[35px] bg-[#1AA47D] hover:bg-[#168A6F] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
             onClick={handleButtonClick}
           >
             <img className="" src="/images/WebUploadIcon.svg" alt="" />

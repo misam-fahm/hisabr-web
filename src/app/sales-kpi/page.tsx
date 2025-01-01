@@ -69,7 +69,7 @@ const SalesKPI: FC = () => {
               toggleOpen={toggleDropdown1}
             />
 
-            <div className="tablet:w-full below-md:w-full">
+            <div className="w-[260px] tablet:w-full below-md:w-full">
               <DateRange />
             </div>
           </div>

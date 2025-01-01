@@ -175,8 +175,15 @@ const Page: FC = () => {
       className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-4 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className="flex justify-end gap-2 below-md:hidden my-6">
-        <AddTender />
+      <div className="flex  justify-between my-6">
+      <div className="flex items-start cursor-pointer ">
+        <img
+          src="/images/WebBackIcon.svg"
+          alt="Back Arrow"
+          className="w-8 h-8"
+        />
+      </div>
+       <div className="gap-2 below-md:hidden"> <AddTender /></div>
       </div>
 
       {/* mobile view */}
