@@ -338,13 +338,13 @@ const Sales: FC = () => {
               onSelect={handleSelect}
               isOpen={isOpen}
               toggleOpen={toggleDropdown1}
-              widthchange="tablet:w-full"
+              widthchange="w-full"
             />
-            <div className="tablet:w-full below-lg:w-[260px]">
-              <DateRange widthchang="tablet:w-full" />
+            <div className="w-full">
+              <DateRange widthchang="w-full" />
             </div>
-            <div className="flex flex-row gap-3 tablet:w-full">
-              <div className=" w-[260px] below-md:w-full relative below-md:hidden tablet:w-full">
+            <div className="flex flex-row gap-3 w-full">
+              <div className=" w-full below-md:w-full relative below-md:hidden tablet:w-full">
                 <input
                   value={globalFilter ?? ""}
                   onChange={(e) => setGlobalFilter(e.target.value)}
@@ -375,7 +375,7 @@ const Sales: FC = () => {
           </div>
 
           {/* button */}
-          <div className=" below-md:w-full">
+          <div className="pl-24  below-md:w-full">
             <div className="below-md:hidden tablet:hidden">
               <input
                 type="file"

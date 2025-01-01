@@ -157,7 +157,7 @@ const AddExpenses = () => {
       <div className="block below-md:hidden">
         <button
           onClick={openModal}
-          className="bg-[#1AA47D] text-white  w-[159px] text-[14px] gap-[0.25rem] font-semibold h-[35px] rounded-md flex items-center justify-center "
+          className="bg-[#1AA47D] text-white w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
           <img className="" src="/images/WebAddIcon.svg" alt="" />
           Add Expenses
@@ -373,14 +373,14 @@ const AddExpenses = () => {
               <div className="flex items-center mt-3 w-full md:w-full justify-between md:gap-2 space-x-3">
                 <button
                   type="button"
-                  className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] hover:bg-[#E3E3E3] text-[#6F6F6F] md:h-[36px] w-[158px] below-md:w-[150px] h-[37px] bg-[#E4E4E4] rounded-md"
+                  className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] font-semibold hover:bg-[#C9C9C9] text-[#6F6F6F] md:h-[35px] w-[165px]  bg-[#E4E4E4] rounded-md"
                   onClick={closeModal}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-white  shadow-lg text-[14px] md:h-[36px] w-[158px]  below-md:w-[150px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-[#168A6F]"
+                  className="px-4 py-2 text-white  shadow-lg text-[14px] md:h-[35px] w-[165px] font-semibold  bg-[#1AA47D] rounded-md hover:bg-[#168A6F]"
                 >
                   Add Expense
                 </button>

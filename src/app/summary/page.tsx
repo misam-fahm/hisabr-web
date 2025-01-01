@@ -150,7 +150,7 @@ const summary: FC = () => {
               isOpen={isOpen}
               toggleOpen={toggleDropdown}
             />
-            <div className="below-md:w-full tablet:w-full">
+            <div className=" w-[260px] below-md:w-full tablet:w-full">
               <DateRangePicker />
             </div>
           </div>

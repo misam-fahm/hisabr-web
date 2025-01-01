@@ -123,30 +123,34 @@ const DeleteExpense = () => {
       <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[410px] h-auto below-md:w-[310px] below-md:h-[213px] px-6 below-md:px-3 below-md:py-8 py-6 bg-white rounded-lg shadow-lg flex flex-col">
+          <DialogPanel className="w-[420px] h-auto below-md:w-[335px]  px-6 py-6 bg-white rounded-lg shadow-lg flex flex-col">
             <div>
-              <DialogTitle as="h3" className=" flex justify-center below-md:text-[16px] text-[20px]  font-semibold leading-4 text-[#5E6366] ">
+              <DialogTitle as="h3" className=" flex justify-center text-[16px] font font-semibold leading-4 text-[#5E6366] ">
                 Delete Item
               </DialogTitle>
-              <div className="flex flex-col mt-4 justify-center items-center text-[#5E6366] font-medium below-md:text-[12px] text-[15px]">
-                <p>Are you sure you want to delete this item?</p>
-                <p>This action cannot be undone.</p>
+              <div className="flex flex-col mt-4 justify-center items-center text-[#5E6366] font-medium  text-[15px]">
+                <p className=" below-md:text-[12px]  below-md:font-normal">
+                  Are you sure you want to delete this item?
+                </p>
+                <p className=" below-md:text-[12px] below-md:font-normal">
+                  This action cannot be undone.
+                  </p>
               </div>
             </div>
             <div className="mt-4">
               <form onSubmit={handleSubmit}>
                 {/* Submit Button */}
-                <div className="flex mt-7 justify-between below-md:mx-3 md:gap-2 space-x-3">
+                <div className="flex mt-7 justify-between">
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="mr-2 px-4 py-2 h-[37px] below-md:w-[120px] w-[165px] bg-[#E4E4E4] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
+                    className="mr-4 px-4 py-2 h-[35px] w-[165px] bg-[#E4E4E4] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="font-semibold text-[14px] below-md:w-[120px]  bg-[#CD6D6D] w-[165px] px-6  h-[37px] text-[#FFFFFF] rounded-md"
+                    className="font-semibold text-[14px]  bg-[#CD6D6D] w-[165px] px-6 h-[35px] text-[#FFFFFF] rounded-md"
                   >
                     Delete
                   </button>
