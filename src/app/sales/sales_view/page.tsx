@@ -10,115 +10,86 @@ import CashSkims from "../components/cash-skims/page";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-// Define the tabs and their corresponding content
 const tabContent: Record<string, JSX.Element> = {
-  "Sales Details": (
-    <div>
-      <SalesDetails />
-    </div>
-  ),
-  Tenders: (
-    <div>
-      <Tenders />
-    </div>
-  ),
-  "Revenue Center": (
-    <div>
-      <Revenue />
-    </div>
-  ),
-  Taxes: (
-    <div>
-      <Taxes />
-    </div>
-  ),
-  Discounts: (
-    <div>
-      <Discounts />
-    </div>
-  ),
-  Destinations: (
-    <div>
-      <Destinations />
-    </div>
-  ),
-  Promotions: (
-    <div>
-      <Promotions />
-    </div>
-  ),
-  "Cash Skims": (
-    <div>
-      <CashSkims />
-    </div>
-  ),
+  "Sales Details": <SalesDetails />,
+  Tenders: <Tenders />,
+  "Revenue Center": <Revenue />,
+  Taxes: <Taxes />,
+  Discounts: <Discounts />,
+  Destinations: <Destinations />,
+  Promotions: <Promotions />,
+  "Cash Skims": <CashSkims />,
 };
 
 const DetailsPage: React.FC = () => {
   const [activeTab, setActiveTab] =
     useState<keyof typeof tabContent>("Sales Details");
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
 
   const tabs = Object.keys(tabContent) as Array<keyof typeof tabContent>;
+  const router = useRouter();
 
   const handleTabClick = (tab: keyof typeof tabContent) => {
-    setActiveTab(tab); // Set the active tab
+    setActiveTab(tab);
   };
-
-  const router = useRouter();
 
   const handleBack = () => {
     router.push("/sales");
   };
 
-  //mobile scroll
   const scrollTabs = (direction: "left" | "right") => {
     const container = document.getElementById("tabContainer");
 
     if (container) {
-      // This check ensures container is not null
-      const scrollAmount = 150; // Adjust as needed
+      const scrollAmount = 150;
+      const maxScrollLeft = container.scrollWidth - container.clientWidth;
+
       if (direction === "left") {
         container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-      } else {
-        container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+
+        if (container.scrollLeft - scrollAmount <= 0) {
+          setShowLeftArrow(false);
+        }
+      } else if (direction === "right") {
+        if (container.scrollLeft + scrollAmount < maxScrollLeft) {
+          container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+          setShowLeftArrow(true);
+        } else {
+          container.scrollBy({
+            left: maxScrollLeft - container.scrollLeft,
+            behavior: "smooth",
+          });
+        }
       }
-    } else {
-      console.error('Element with id "tabContainer" not found.');
     }
   };
 
   return (
-    <main
-      className="max-h-[calc(100vh-80px)] tablet:max-h-[calc(100vh-10px)] overflow-auto"
-      style={{ scrollbarWidth: "thin" }}
-    >
+    <main className="max-h-[calc(100vh-80px)] tablet:max-h-[calc(100vh-10px)] overflow-auto">
       <img
         onClick={handleBack}
         src="/images/MobileBackIcon.svg"
         className="fixed top-4 left-4 z-30 below-lg:hidden tablet:hidden"
       />
-      {/* <div className="below-md:flex below-md:justify-center ">
-        <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
-          Sales Details
-        </p>
-      </div> */}
 
-      {/* Tabs Navigation */}
       <div className="py-3 pb-6 bg-[#f7f8f9] pl-6 pr-6 below-md:px-4">
         <div className="flex flex-row justify-between items-center gap-6 tablet:pr-32">
-          {/* Tab Buttons with Arrows */}
           <div className="below-md:w-full tablet:w-full border-b-[2px] border-[#E1E0E0D1] relative flex items-center">
-            {/* Left Arrow  */}
-            <img
-              onClick={() => scrollTabs("left")}
-              className={`below-md:block tablet:block hidden ${activeTab === tabs[0] ? " " : "px-2"} text-[#334155] text-xl ${activeTab === tabs[0] ? "opacity-0 pointer-events-none" : ""}`}
-              src="/images/leftArrow.svg"
-            />
+            {/* Left Arrow */}
+            {showLeftArrow && (
+              <img
+                onClick={() => scrollTabs("left")}
+                className={`below-md:block tablet:block hidden px-2 text-[#334155] text-xl`}
+                src="/images/leftArrow.svg"
+              />
+            )}
 
             {/* Scrollable Tabs */}
             <div
               id="tabContainer"
-              className="flex-1  flex below-md:overflow-x-auto tablet:overflow-x-auto space-x-8 px-0 below-md:space-x-6 tablet:space-x-6 whitespace-nowrap scroll-smooth"
+              className="flex-1 flex below-md:overflow-x-hidden tablet:overflow-x-auto 
+             below-md:overflow-y-hidden tablet:overflow-y-hidden space-x-8 
+             px-0 below-md:space-x-6 tablet:space-x-6 whitespace-nowrap scroll-smooth"
             >
               {tabs.map((tab, index) => (
                 <button
@@ -142,16 +113,15 @@ const DetailsPage: React.FC = () => {
             {/* Right Arrow */}
             <img
               onClick={() => scrollTabs("right")}
-              className={`below-md:block tablet:block hidden px-2 text-[#334155] text-xl ${activeTab === tabs[tabs.length - 1] ? "opacity-0 pointer-events-none" : ""}`}
+              className={`below-md:block tablet:block hidden px-2 text-[#334155] text-xl`}
               src="/images/rightArrow.svg"
             />
           </div>
 
-          {/* Back Button */}
-          <div className="below-md:hidden ">
+          <div className="below-md:hidden">
             <p
               onClick={handleBack}
-              className=" cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
+              className="cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
             >
               Back
             </p>
@@ -159,7 +129,7 @@ const DetailsPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="px-6 below-md:px-4 ">{tabContent[activeTab]}</div>
+      <div className="px-6 below-md:px-4">{tabContent[activeTab]}</div>
     </main>
   );
 };

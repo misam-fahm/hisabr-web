@@ -1,12 +1,11 @@
 "use client";
 
-import React, { FC, useState, useRef,useEffect } from "react";
+import React, { FC, useState, useRef, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/Expenses/AddExpenses";
 import DateRange from "@/Components/drawer/DateRangePicker";
 import Dropdown from "@/Components/ui/Common/DropDown";
-import { useRouter } from 'next/router';
-
+import { useRouter } from "next/router";
 
 import Image from "next/image";
 import {
@@ -140,11 +139,14 @@ const columns: ColumnDef<TableRow>[] = [
     cell: () => (
       <>
         <span className="flex justify-center">
-          <EditExpense expenseData={expenseData}
+          <EditExpense
+            expenseData={expenseData}
             onUpdate={(updatedData) => {
               console.log("Updated Data: ", updatedData);
               // Example: update the state or send the updated data to an API
-            }} /></span>
+            }}
+          />
+        </span>
       </>
     ),
     size: 50,
@@ -275,9 +277,6 @@ const Expenses: FC = () => {
   const startItem = pageIndex * pageSize + 1;
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
- 
-
-
   // const calendarRef = useRef<DatePicker | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -297,24 +296,23 @@ const Expenses: FC = () => {
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
   const toggleDropdown1 = () => setIsOpen(!isOpen);
- 
+
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false); // Close dropdown after selection
     handleSelect(option); // Call the passed handler
   };
-//   const router = useRouter();
-//   const [showBackIcon, setShowBackIcon] = useState(false);
-//   useEffect(() => {
-//     // Check the flag to determine if the back icon should be shown
-//     const shouldShowBackIcon = sessionStorage.getItem('showBackIcon') === 'true';
-//     setShowBackIcon(shouldShowBackIcon);
-// }, []);
+  //   const router = useRouter();
+  //   const [showBackIcon, setShowBackIcon] = useState(false);
+  //   useEffect(() => {
+  //     // Check the flag to determine if the back icon should be shown
+  //     const shouldShowBackIcon = sessionStorage.getItem('showBackIcon') === 'true';
+  //     setShowBackIcon(shouldShowBackIcon);
+  // }, []);
 
-//   const handleBack = () => {
-//     router.back(); // Navigate back to the previous page
-// };
-
+  //   const handleBack = () => {
+  //     router.back(); // Navigate back to the previous page
+  // };
 
   return (
     <main
@@ -322,20 +320,17 @@ const Expenses: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <>
-
-
         <div className="flex justify-between below-md:flex-col w-full below-md:item-start items-center below-md:mt-4 below-md:mb-4 mt-6 mb-6">
           <div className="flex gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
             <div className="flex">
-            <Dropdown
-              options={options}
-              selectedOption={selectedOption}
-              onSelect={handleSelect}
-              isOpen={isOpen}
-              toggleOpen={toggleDropdown1}
-              widthchange="tablet:w-full"
-            />
-              
+              <Dropdown
+                options={options}
+                selectedOption={selectedOption}
+                onSelect={handleSelect}
+                isOpen={isOpen}
+                toggleOpen={toggleDropdown1}
+                widthchange="tablet:w-full"
+              />
             </div>
 
             <div className="w-[260px] tablet:w-full below-md:w-full h-[35px]">
@@ -364,7 +359,7 @@ const Expenses: FC = () => {
         </div>
 
         {/* Card section */}
-        <div className="block md:hidden">
+        <div className="block md:hidden mb-16">
           {cardData.map((card, index) => (
             <div
               key={index}
@@ -376,20 +371,22 @@ const Expenses: FC = () => {
                   <p className="text-[14px] font-bold">{card.type}</p>
                 </div>
 
-                <div className='flex gap-4 mb-1 px-3 py-4'>
+                <div className="flex gap-4 mb-1 px-3 py-4">
                   <>
-                    <EditExpense expenseData={expenseData}
+                    <EditExpense
+                      expenseData={expenseData}
                       onUpdate={(updatedData) => {
                         console.log("Updated Data: ", updatedData);
                         // Example: update the state or send the updated data to an API
-                      }} />
+                      }}
+                    />
                     <DeleteExpense />
                   </>
                 </div>
               </div>
               {/* Divider */}
               <div className="flex items-center px-3 -mt-4">
-                 <div className="border-t border-gray-200 w-full"></div>
+                <div className="border-t border-gray-200 w-full"></div>
               </div>
               {/* Content Area */}
               <div className="flex justify-between items-center px-3 py-4">
@@ -428,9 +425,9 @@ const Expenses: FC = () => {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </th>
                     ))}
                   </tr>

@@ -61,7 +61,9 @@ const summary: FC = () => {
   };
 
   /**sales */
-  const [selectedOption3, setSelectedOption3] = useState<string>("2021");
+  const [selectedOption3, setSelectedOption3] = useState<string | undefined>(
+    undefined
+  );
   const [isOpen3, setIsOpen3] = useState<boolean>(false);
 
   const options3 = ["2024", "2023", "2022", "2021"];
@@ -86,7 +88,9 @@ const summary: FC = () => {
 
   /**invoices */
 
-  const [selectedOption5, setSelectedOption5] = useState<string>("2021");
+  const [selectedOption5, setSelectedOption5] = useState<string | undefined>(
+    undefined
+  );
   const [isOpen5, setIsOpen5] = useState<boolean>(false);
 
   const options5 = ["2024", "2023", "2022", "2021"];
@@ -111,7 +115,9 @@ const summary: FC = () => {
 
   /**yearly sales */
 
-  const [selectedOption7, setSelectedOption7] = useState<string>("2021");
+  const [selectedOption7, setSelectedOption7] = useState<string | undefined>(
+    undefined
+  );
   const [isOpen7, setIsOpen7] = useState<boolean>(false);
 
   const options7 = ["2024", "2023", "2022", "2021"];
@@ -378,7 +384,7 @@ const summary: FC = () => {
                       {data.map((item, index) => (
                         <li
                           key={index}
-                          className="flex px-[18%] items-center justify-between py-2"
+                          className="flex px-[15%] items-center justify-between py-2"
                         >
                           {/* Color Circle */}
                           <div className="flex items-center">
