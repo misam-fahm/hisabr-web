@@ -256,13 +256,13 @@ const AddStore = () => {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="mr-4 px-4 py-2 h-[37px] w-[165px] bg-[#E4E4E4] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
+                  className="mr-4 px-4 py-2 h-[35px] w-[165px] bg-[#E4E4E4] hover:bg-[#C9C9C9]  font-semibold text-[14px] rounded-md text-[#6F6F6F]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
+                  className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[35px] text-[#FFFFFF] rounded-md"
                 >
                   Add Item
                 </button>

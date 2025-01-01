@@ -106,8 +106,17 @@ const Page = () => {
   };
 
   return (
-    <main  className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-2 overflow-auto"
-    style={{ scrollbarWidth: "thin" }}>
+    <main
+      className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-2 overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
+      <div className="flex items-start pt-4 cursor-pointer pl-8 below-md:pl-4">
+        <img
+          src="/images/WebBackIcon.svg"
+          alt="Back Arrow"
+          className="w-8 h-8"
+        />
+      </div>
       {/* Mobile View */}
       <div className="flex justify-center items-center p-3 md:hidden">
         <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-xl">

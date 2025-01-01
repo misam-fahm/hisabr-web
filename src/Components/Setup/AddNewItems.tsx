@@ -73,7 +73,7 @@ const AddNewItems = () => {
       newErrors.price = "Valid price is required";
       isValid = false;
     }
- 
+
     if (!formData.quantity || isNaN(Number(formData.quantity))) {
       newErrors.quantity = "Valid quantity is required";
       isValid = false;
@@ -157,7 +157,7 @@ const AddNewItems = () => {
                   className={`h-[42px] mt-1 pl-2 pr-4 w-full text-sm font-normal rounded-lg border ${
                     errors.selectedType ? "border-red-500" : "border-gray-300"
                   } bg-white text-[#8D98AA] flex justify-between items-center`}
-                >
+                > 
                   {formData.selectedType || "Please select  Category"}
                   <img src="/images/dropdown1.svg" alt="dropdown1" />
                 </button>
@@ -268,13 +268,13 @@ const AddNewItems = () => {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="mr-4 px-4 py-2 h-[37px] w-[165px] bg-[#E4E4E4] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
+                  className="mr-4 px-4 py-2 h-[35px] w-[165px] bg-[#E4E4E4] hover:bg-[#C9C9C9]  font-semibold text-[14px] rounded-md text-[#6F6F6F]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
+                  className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[35px] text-[#FFFFFF] rounded-md"
                 >
                   Add Item
                 </button>
