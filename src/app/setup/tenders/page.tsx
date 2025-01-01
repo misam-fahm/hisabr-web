@@ -220,12 +220,11 @@ const Page: FC = () => {
 
             {/* Border */}
             <div className=" border-b bg-gray-200 my-3"></div>
-            
 
             <div className="  flex justify-between">
               <span className=" text-[#636363] text-[13px] mb-2">Type</span>{" "}
               <span className=" text-[14px]">{row.getValue("type")}</span>
-            </div> 
+            </div>
 
             <div className=" mt-1 flex justify-between">
               <span className=" text-[#636363] text-[13px] mb-2">Percent</span>{" "}

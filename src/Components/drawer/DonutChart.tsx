@@ -184,14 +184,14 @@ const DonutChart: React.FC = () => {
 
   return (
     <main>
-      <div className="below-md:hidden w-[90vh] h-[80vh] tablet:w-[55vh] tablet:h-[55vh]">
+      <div className="below-md:hidden w-[470px] h-[470px] tablet:w-[500px] tablet:h-[500px]">
         <Doughnut
           data={data}
           options={options}
           plugins={[customArrowsPlugin]}
         />
       </div>
-      <div className="below-lg:hidden tablet:hidden below-md:w-[60vh] below-md:h-[60vh]">
+      <div className="below-lg:hidden tablet:hidden below-md:w-[430px] below-md:h-[430px]">
         <Doughnut
           data={data}
           options={options}

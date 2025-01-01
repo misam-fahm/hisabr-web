@@ -354,7 +354,7 @@ const Sales: FC = () => {
                 <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
                   <img
                     className="cursor-pointer items-center"
-                    src="/images/SearchIcon.svg"
+                    src="/images/Searchicon.svg"
                   />
                 </div>
               </div>
@@ -386,7 +386,7 @@ const Sales: FC = () => {
 
               <button
                 onClick={handleUploadClick}
-                className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium"
+                className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold"
               >
                 <img
                   src="/images/uploadIcon.svg"
@@ -466,7 +466,7 @@ const Sales: FC = () => {
           <Pagination table={table} totalItems={0}/>
         </div>
 
-        <div className="below-lg:hidden mb-7">
+        <div className="below-lg:hidden mb-8">
           <div className="flex flex-col">
             <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
               <div className=" items-center mb-4 mt-2 px-2">
@@ -477,8 +477,8 @@ const Sales: FC = () => {
                   <div>
                     <img
                       onClick={handleImageClick}
-                      src="/images/eye.svg"
-                      width={26}
+                      src="/images/ViewEyeIcon.svg"
+                      className="w-7 h-7"
                     />
                   </div>
                 </div>
@@ -520,8 +520,8 @@ const Sales: FC = () => {
                   <div>
                     <img
                       onClick={handleImageClick}
-                      src="/images/eye.svg"
-                      width={26}
+                      src="/images/ViewEyeIcon.svg"
+                      className="w-7 h-7"
                     />
                   </div>
                 </div>
@@ -563,8 +563,8 @@ const Sales: FC = () => {
                   <div>
                     <img
                       onClick={handleImageClick}
-                      src="/images/eye.svg"
-                      width={26}
+                      src="/images/ViewEyeIcon.svg"
+                      className="w-7 h-7"
                     />
                   </div>
                 </div>
@@ -606,8 +606,8 @@ const Sales: FC = () => {
                   <div>
                     <img
                       onClick={handleImageClick}
-                      src="/images/eye.svg"
-                      width={26}
+                      src="/images/ViewEyeIcon.svg"
+                      className="w-7 h-7"
                     />
                   </div>
                 </div>
@@ -643,14 +643,18 @@ const Sales: FC = () => {
         </div>
       </div>
 
-      <div className="below-lg:hidden flex justify-end fixed bottom-3 right-6">
+      <div className="below-lg:hidden flex justify-end fixed bottom-5 right-5">
         <button
-          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[50px] h-[50px] rounded-md relative"
+          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[56px] h-[56px] rounded-lg relative"
           onTouchStart={handlePressStart} // For mobile devices
           onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
           onClick={handleUploadClick}
         >
-          <img src="/images/uploadIcon.svg" alt="Upload Icon" />
+          <img
+            src="/images/uploadIcon.svg"
+            alt="Upload Icon"
+            className="w-[18px]"
+          />
           {showTooltip && (
             <div className="absolute bottom-[70px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
               Upload Sale
