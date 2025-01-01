@@ -130,11 +130,10 @@ const AddStore = () => {
         </button>
       </div>
 
-
-       <div className="block below-md:hidden">
+      <div className="block below-md:hidden">
         <button
           onClick={openModal}
-          className="bg-[#1AA47D] hover:bg-[#168A68] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
+          className="bg-[#1AA47D] shadow-lg hover:bg-[#168A68] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
           <img src="/images/plus1.svg" alt="Add icon" />
           Add Store
@@ -262,7 +261,7 @@ const AddStore = () => {
                 </button>
                 <button
                   type="submit"
-                  className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
+                  className="font-semibold text-[14px] bg-[#1AA47D] shadow-lg w-[165px] px-6 hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
                 >
                   Add Item
                 </button>

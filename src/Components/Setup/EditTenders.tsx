@@ -420,7 +420,7 @@ const EditTender = () => {
                 </button>
                 <button
                   type="submit"
-                  className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
+                  className="font-semibold text-[14px] bg-[#168A6F] w-[165px] px-6 hover:bg-[#168A68] h-[37px] text-[#FFFFFF] rounded-md"
                 >
                   Save
                 </button>

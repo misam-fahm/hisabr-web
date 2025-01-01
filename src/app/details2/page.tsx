@@ -269,7 +269,7 @@ const DetailsPage: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <Pagination table={table} totalItems={0} />
+        <Pagination table={table} />
 
         <div className="below-lg:hidden tablet:hidden">
           <div className="flex flex-col">

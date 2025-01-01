@@ -4,15 +4,13 @@ import { Table } from "@tanstack/react-table";
 
 interface PaginationProps {
   table: Table<any>;
-  totalItems: number;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
+const Pagination: React.FC<PaginationProps> = ({ table }) => {
   const { pageIndex, pageSize } = table.getState().pagination;
-  // const totalItems = table.getFilteredRowModel().rows.length;
+  const totalItems = table.getFilteredRowModel().rows.length;
   const startItem = pageIndex * pageSize + 1;
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
-  const pageCount = table.getPageCount();
 
   return (
     <main>
@@ -35,7 +33,7 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
             <img src="/images/left.svg" />
           </button>
 
-          {Array.from({ length: pageCount }, (_, index) => {
+          {Array.from({ length: table.getPageCount() }, (_, index) => {
             const pageIndex = index;
             return (
               <button
@@ -43,8 +41,8 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
                 onClick={() => table.setPageIndex(pageIndex)}
                 className={`w-8 h-8 rounded-md text-[12px] flex items-center justify-center ${
                   table.getState().pagination.pageIndex === pageIndex
-                    ? "text-white bg-[#1AA47D]" // Green for active
-                    : "text-gray-700 bg-[#EBEFF6]" // Grey for inactive
+                    ? "text-white bg-[#1AA47D]"
+                    : "text-gray-700 bg-[#EBEFF6]"
                 }`}
               >
                 {pageIndex + 1}
@@ -69,7 +67,7 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
                 onChange={(e) => table.setPageIndex(Number(e.target.value))}
                 className="pl-3 pr-8 py-[6px] w-full rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
               >
-                {Array.from({ length: pageCount }, (_, index) => (
+                {Array.from({ length: table.getPageCount() }, (_, index) => (
                   <option key={index} value={index}>
                     Page {index + 1}
                   </option>

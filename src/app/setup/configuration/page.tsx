@@ -106,8 +106,10 @@ const Page = () => {
   };
 
   return (
-    <main  className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-2 overflow-auto"
-    style={{ scrollbarWidth: "thin" }}>
+    <main
+      className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-2 overflow-auto"
+      style={{ scrollbarWidth: "thin" }}
+    >
       {/* Mobile View */}
       <div className="flex justify-center items-center p-3 md:hidden">
         <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-xl">
@@ -267,7 +269,7 @@ const Page = () => {
               </button> */}
               <button
                 type="submit"
-                className="sm:w-auto bg-[#1AA47D] hover:bg-[#168A68] text-white font-medium py-2 px-10 rounded-md"
+                className="sm:w-auto bg-[#168A6F] hover:bg-[#168A68] text-white font-medium py-2 px-10 rounded-md"
               >
                 Save
               </button>
@@ -416,7 +418,7 @@ const Page = () => {
                   <div>
                     <button
                       type="submit"
-                      className="w-[145px] bg-[#1AA47D] hover:bg-[#168A68] text-white font-medium py-2 px-4 rounded-md"
+                      className="w-[145px] bg-[#168A6F] hover:bg-[#168A68] text-white font-medium py-2 px-4 rounded-md"
                     >
                       Save
                     </button>

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
-import { sendApiRequest } from '../../utils/apiUtils';
+import { sendApiRequest } from "../../utils/apiUtils";
 import ToastNotification from "../ui/ToastNotification/ToastNotification";
 
 interface JsonData {
@@ -24,7 +24,10 @@ const AddCategories = () => {
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
-  const [customToast, setCustomToast] = useState<CustomToast>({ toastMessage: "", toastType: "" });
+  const [customToast, setCustomToast] = useState<CustomToast>({
+    toastMessage: "",
+    toastType: "",
+  });
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -65,16 +68,24 @@ const AddCategories = () => {
     e.preventDefault();
     if (validateForm()) {
       // Prepare JSON object to send
-    const jsonData: JsonData = {
-      mode: "insertcategory",
-      categoryname: categoryName.trim(),
-      description: description.trim(),
-    };
+      const jsonData: JsonData = {
+        mode: "insertcategory",
+        categoryname: categoryName.trim(),
+        description: description.trim(),
+      };
 
-    const result: any = await sendApiRequest(jsonData);
-    result?.status === 200 ?
-      setCustomToast({ ...customToast, toastMessage: "Category added successfully!", toastType: "success" }) :
-      setCustomToast({ ...customToast, toastMessage: "Failed to add category.", toastType: "error" });
+      const result: any = await sendApiRequest(jsonData);
+      result?.status === 200
+        ? setCustomToast({
+            ...customToast,
+            toastMessage: "Category added successfully!",
+            toastType: "success",
+          })
+        : setCustomToast({
+            ...customToast,
+            toastMessage: "Failed to add category.",
+            toastType: "error",
+          });
       setCategoryName("");
       setDescription("");
       closeModal();
@@ -83,11 +94,14 @@ const AddCategories = () => {
 
   return (
     <>
-    <ToastNotification message={customToast.toastMessage} type={customToast.toastType} />
+      <ToastNotification
+        message={customToast.toastMessage}
+        type={customToast.toastType}
+      />
       <div className="block below-md:hidden">
         <button
           onClick={openModal}
-          className="bg-[#1AA47D] hover:bg-[#168A68] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
+          className="bg-[#1AA47D] shadow-lg hover:bg-[#168A68] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
           <img src="/images/plus1.svg" alt="Add icon" />
           Add Category

@@ -321,7 +321,7 @@ const DetailsPage: React.FC = () => {
             Expenses
           </p>
         </div>
-        <div className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
+        <div className="below-md:hidden flex items-center justify-center bg-[#1AA47D] shadow-lg below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
           <AddExpenses />
           {/* <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
             <img src="/images/addIcon.svg" alt="add Icon" className="mr-1" />
@@ -392,7 +392,7 @@ const DetailsPage: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <Pagination table={table} totalItems={0} />
+        <Pagination table={table} />
 
         <div className="below-lg:hidden tablet:hidden">
           <div className="flex flex-col">

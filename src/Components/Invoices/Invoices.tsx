@@ -336,7 +336,7 @@ const Invoices = () => {
         </div>
         <div className="below-md:hidden mt-1">
           <button
-            className="w-[170px] h-[35px] bg-[#1AA47D] hover:bg-[#168A6F] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
+            className="w-[170px] h-[35px] bg-[#1AA47D] shadow-lg hover:bg-[#168A6F] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
             onClick={handleButtonClick}
           >
             <img className="" src="/images/WebUploadIcon.svg" alt="" />
@@ -473,7 +473,7 @@ const Invoices = () => {
       </div>
       {/* Pagination Numbers */}
       <div className="mt-4  below-md:hidden">
-        <Pagination table={table} totalItems={0} />
+        <Pagination table={table} />
       </div>
     </main>
   );

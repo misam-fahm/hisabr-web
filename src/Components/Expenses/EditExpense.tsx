@@ -356,7 +356,7 @@ const EditExpense = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[36px] w-[158px]  below-md:w-[150px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-green-700"
+                  className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[36px] w-[158px]  below-md:w-[150px] h-[37px] bg-[#168A6F] rounded-md hover:bg-green-700"
                 >
                   Save
                 </button>

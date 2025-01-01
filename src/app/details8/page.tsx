@@ -324,7 +324,7 @@ const DetailsPage: React.FC = () => {
         </div>
         <div>
           <button
-            className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold"
+            className="below-md:hidden flex items-center justify-center bg-[#1AA47D] shadow-lg below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold"
             onClick={handleButtonClick}
           >
             <img
@@ -403,7 +403,7 @@ const DetailsPage: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <Pagination table={table} totalItems={0} />
+        <Pagination table={table} />
         <div className="below-lg:hidden tablet:hidden mb-5">
           <div className="flex flex-col">
             <div className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">

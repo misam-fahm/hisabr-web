@@ -325,7 +325,7 @@ const DetailsPage: React.FC = () => {
         </div>
         <div>
           <button
-            className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold"
+            className="below-md:hidden flex items-center justify-center bg-[#1AA47D] shadow-lg below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold"
             onClick={handleButtonClick}
           >
             <img
@@ -406,7 +406,7 @@ const DetailsPage: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <Pagination table={table} totalItems={0} />
+        <Pagination table={table} />
 
         <div className="below-lg:hidden tablet:hidden mb-7">
           <div className="flex flex-col">
@@ -543,7 +543,7 @@ const DetailsPage: React.FC = () => {
 
       <div className="below-lg:hidden flex justify-end fixed bottom-3 right-6 tablet:hidden">
         <button
-          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[56px] h-[56px] rounded-lg relative"
+          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] shadow-lg w-[56px] h-[56px] rounded-lg relative"
           onTouchStart={handlePressStart} // For mobile devices
           onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
           onClick={handleButtonClick}
