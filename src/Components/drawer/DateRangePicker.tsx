@@ -70,7 +70,10 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
           <DatePicker
             selected={startDate}
             onChange={(dates) => {
-              const [start, end] = dates as [Date | undefined, Date | undefined];
+              const [start, end] = dates as [
+                Date | undefined,
+                Date | undefined,
+              ];
               setStartDate(start);
               setEndDate(end);
             }}

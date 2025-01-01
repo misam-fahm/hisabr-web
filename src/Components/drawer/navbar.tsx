@@ -147,7 +147,7 @@ const Navbar: React.FC = () => {
               onClick={handleToggle}
               className="w-10 h-10 flex items-center justify-center"
             >
-              <img src="/images/More.svg" alt="Menu Icon" />
+              <img src="/images/ProfileDropdown.svg" alt="Menu Icon" />
             </p>
 
             {/* Dropdown Menu */}

@@ -212,7 +212,7 @@ const summary: FC = () => {
           <div className="bg-white mt-6 below-md:mt-3 shadow-md py-4 rounded-md ">
             <div className="flex flex-row justify-end mx-7 below-md:mx-3 gap-5">
               <div className="mt-2 cursor-pointer below-md:hidden">
-                <img src="/images/download.svg" />
+                <img src="/images/Download.svg" />
               </div>
               <div className="mb-6 relative below-md:w-full below-md:max-w-[40%]">
                 <Dropdown
@@ -245,7 +245,7 @@ const summary: FC = () => {
                   <div className="flex flex-row gap-5 w-[60%] justify-end">
                     {/* Download Icon */}
                     <div className="mt-2 cursor-pointer below-md:hidden">
-                      <img src="/images/download.svg" alt="Download" />
+                      <img src="/images/Download.svg" alt="Download" />
                     </div>
 
                     {/* Period Dropdown */}
@@ -292,7 +292,7 @@ const summary: FC = () => {
                   {/* Dropdown Group */}
                   <div className="flex flex-row gap-5 w-[60%] justify-end">
                     <div className="mt-2 cursor-pointer below-md:hidden">
-                      <img src="/images/download.svg" />
+                      <img src="/images/Download.svg" />
                     </div>
                     {/* Period Dropdown */}
                     <div className="relative below-md:w-full">
