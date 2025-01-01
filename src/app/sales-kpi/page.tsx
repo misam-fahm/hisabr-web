@@ -74,7 +74,7 @@ const SalesKPI: FC = () => {
             </div>
           </div>
           <div className="below-md:hidden tablet:hidden">
-            <button className="flex items-center justify-center bg-[#1AA47D] w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
+            <button className="flex items-center justify-center bg-[#1AA47D] w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold">
               <img
                 src="/images/uploadIcon.svg"
                 alt="Upload Icon"
@@ -229,8 +229,8 @@ const SalesKPI: FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col below-md:flex-col tablet:flex-col justify-between rounded-lg bg-white mt-6 below-md:mt-3 below-md:mx-3 shadow-md ml-6 mr-6">
-          <div className="w-full text-left font-bold mx-6 below-md:ml-3 mt-6 text-[16px] text-[#334155]">
+        <div className="flex flex-col below-md:flex-col tablet:flex-col justify-between rounded-lg below-md:mb-6 bg-white mt-6 below-md:mt-3 below-md:mx-3 shadow-md ml-6 mr-6">
+          <div className="w-full text-left font-bold mx-4 mt-6 text-[16px] text-[#334155]">
             Expense Distribution
           </div>
           <div className="flex flex-row items-center below-md:flex-col tablet:flex-col mx-3">
@@ -277,13 +277,17 @@ const SalesKPI: FC = () => {
         </div>
       </div>
 
-      <div className="below-lg:hidden flex justify-end fixed bottom-3 right-6">
+      <div className="below-lg:hidden flex justify-end fixed bottom-5 right-5">
         <button
-          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[50px] h-[50px] rounded-md relative"
+          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[56px] h-[56px] rounded-lg relative"
           onTouchStart={handlePressStart} // For mobile devices
           onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
         >
-          <img src="/images/uploadIcon.svg" alt="Upload Icon" />
+          <img
+            src="/images/uploadIcon.svg"
+            alt="Upload Icon"
+            className="w-[18px]"
+          />
           {showTooltip && (
             <div className="absolute bottom-[70px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
               PI Report

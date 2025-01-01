@@ -1,143 +1,153 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import React, { useState, useEffect } from "react";
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-const EditExpense = ({ expenseData, onUpdate }: { expenseData: any, onUpdate: (updatedData: any) => void }) => {
-    const [startDate, setStartDate] = useState<Date | null>(expenseData.date || null);
-    const [isOpen, setIsOpen] = useState(false);
-    const [dropdownOpen, setDropdownOpen] = useState(false); // Added state for dropdown visibility
-    const [expenseDropdownOpen, setExpenseDropdownOpen] = useState(false);
+const EditExpense = ({
+  expenseData,
+  onUpdate,
+}: {
+  expenseData: any;
+  onUpdate: (updatedData: any) => void;
+}) => {
+  const [startDate, setStartDate] = useState<Date | null>(
+    expenseData.date || null
+  );
+  const [isOpen, setIsOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false); // Added state for dropdown visibility
+  const [expenseDropdownOpen, setExpenseDropdownOpen] = useState(false);
 
-    const openModal = () => setIsOpen(true);
-    const closeModal = () => {
-        setIsOpen(false);
-        setFormData({
-            selectedType: expenseData.store || "",
-            expenseType: expenseData.expenseType || "",
-            description: expenseData.description || "",
-            amount: expenseData.amount || "",
-            date: expenseData.date || null,
-        });// Reset form data
-        setErrors({
-            selectedType: "",
-            expenseType: "",
-            description: "",
-            amount: "",
-            date: "",
-        });
-        setDropdownOpen(false); // Reset dropdown visibility when closing the modal // Clear validation errors
-        setExpenseDropdownOpen(false);
-    };
-
-    type FormData = {
-        selectedType: string;
-        date: Date | null;
-        expenseType: string;
-        description: string;
-        amount: number | string;
-    };
-
-    const [formData, setFormData] = useState<FormData>({
-        selectedType: expenseData.store || "",
-        expenseType: expenseData.expenseType || "",
-        description: expenseData.description || "",
-        amount: expenseData.amount || "",
-        date: expenseData.date || null,
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => {
+    setIsOpen(false);
+    setFormData({
+      selectedType: expenseData.store || "",
+      expenseType: expenseData.expenseType || "",
+      description: expenseData.description || "",
+      amount: expenseData.amount || "",
+      date: expenseData.date || null,
+    }); // Reset form data
+    setErrors({
+      selectedType: "",
+      expenseType: "",
+      description: "",
+      amount: "",
+      date: "",
     });
-    const [errors, setErrors] = useState({
-        selectedType: "",
-        expenseType: "",
-        description: "",
-        amount: "",
-        date: "",
+    setDropdownOpen(false); // Reset dropdown visibility when closing the modal // Clear validation errors
+    setExpenseDropdownOpen(false);
+  };
+
+  type FormData = {
+    selectedType: string;
+    date: Date | null;
+    expenseType: string;
+    description: string;
+    amount: number | string;
+  };
+
+  const [formData, setFormData] = useState<FormData>({
+    selectedType: expenseData.store || "",
+    expenseType: expenseData.expenseType || "",
+    description: expenseData.description || "",
+    amount: expenseData.amount || "",
+    date: expenseData.date || null,
+  });
+  const [errors, setErrors] = useState({
+    selectedType: "",
+    expenseType: "",
+    description: "",
+    amount: "",
+    date: "",
+  });
+
+  const handleValidation = () => {
+    let isValid = true;
+    let newErrors = { ...errors };
+
+    // Validate each field
+    if (!formData.selectedType) {
+      newErrors.selectedType = "Store is required.";
+      isValid = false;
+    } else {
+      newErrors.selectedType = "";
+    }
+
+    if (!formData.expenseType) {
+      newErrors.expenseType = "Expense Type is required.";
+      isValid = false;
+    } else {
+      newErrors.expenseType = "";
+    }
+
+    if (!formData.description.trim()) {
+      newErrors.description = "Description is required.";
+      isValid = false;
+    } else {
+      newErrors.description = "";
+    }
+
+    if (!formData.amount) {
+      newErrors.amount = "Amount is required.";
+      isValid = false;
+    } else if (parseFloat(String(formData.amount)) <= 0) {
+      newErrors.amount = "Amount must be greater than 0.";
+      isValid = false;
+    } else {
+      newErrors.amount = "";
+    }
+
+    if (!formData.date) {
+      newErrors.date = "Date is required.";
+      isValid = false;
+    } else {
+      newErrors.date = "";
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (handleValidation()) {
+      console.log("Form updated successfully:", formData);
+      onUpdate(formData); // Call the onUpdate function passed as prop
+      closeModal(); // Close modal if validation passes
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  useEffect(() => {
+    setFormData({
+      selectedType: expenseData.store || "",
+      expenseType: expenseData.expenseType || "",
+      description: expenseData.description || "",
+      amount: expenseData.amount || "",
+      date: expenseData.date || null,
     });
+  }, [expenseData]);
 
-    const handleValidation = () => {
-        let isValid = true;
-        let newErrors = { ...errors };
+  return (
+    <>
+      <div>
+        <button onClick={openModal}>
+          <img
+            src="/images/EditPencilIcon.svg"
+            className="flex justify-center w-4 h-4 text-left"
+          />
+        </button>
+      </div>
 
-        // Validate each field
-        if (!formData.selectedType) {
-            newErrors.selectedType = "Store is required.";
-            isValid = false;
-        } else {
-            newErrors.selectedType = "";
-        }
-
-        if (!formData.expenseType) {
-            newErrors.expenseType = "Expense Type is required.";
-            isValid = false;
-        } else {
-            newErrors.expenseType = "";
-        }
-
-        if (!formData.description.trim()) {
-            newErrors.description = "Description is required.";
-            isValid = false;
-        } else {
-            newErrors.description = "";
-        }
-
-        if (!formData.amount) {
-            newErrors.amount = "Amount is required.";
-            isValid = false;
-        } else if (parseFloat(String(formData.amount)) <= 0) {
-            newErrors.amount = "Amount must be greater than 0.";
-            isValid = false;
-        } else {
-            newErrors.amount = "";
-        }
-
-        if (!formData.date) {
-            newErrors.date = "Date is required.";
-            isValid = false;
-        } else {
-            newErrors.date = "";
-        }
-
-        setErrors(newErrors);
-        return isValid;
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (handleValidation()) {
-            console.log("Form updated successfully:", formData);
-            onUpdate(formData); // Call the onUpdate function passed as prop
-            closeModal(); // Close modal if validation passes
-        }
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
-    useEffect(() => {
-        setFormData({
-            selectedType: expenseData.store || "",
-            expenseType: expenseData.expenseType || "",
-            description: expenseData.description || "",
-            amount: expenseData.amount || "",
-            date: expenseData.date || null,
-        });
-    }, [expenseData]);
-
-    return (
-        <>
-
-            <div>
-                <button onClick={openModal}>
-                    <img src="/images/EditPencilIcon.svg"
-                        className="flex justify-center w-4 h-4 text-left"
-
-                    />
-                </button>
-            </div>
-
+     
 
             {/* Dialog for the modal */}
             <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
@@ -296,9 +306,11 @@ const EditExpense = ({ expenseData, onUpdate }: { expenseData: any, onUpdate: (u
                         </form>
                     </DialogPanel>
                 </div>
-            </Dialog>
-        </>
-    );
+
+                </Dialog>
+    </>
+  );
 };
+
 
 export default EditExpense;

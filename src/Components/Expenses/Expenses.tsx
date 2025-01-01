@@ -5,8 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/Expenses/AddExpenses";
 import DateRange from "@/Components/drawer/DateRangePicker";
 import Dropdown from "@/Components/ui/Common/DropDown";
-import { useRouter } from 'next/router';
-
+import { useRouter } from "next/router";
 
 import Image from "next/image";
 import {
@@ -140,11 +139,14 @@ const columns: ColumnDef<TableRow>[] = [
     cell: () => (
       <>
         <span className="flex justify-center">
-          <EditExpense expenseData={expenseData}
+          <EditExpense
+            expenseData={expenseData}
             onUpdate={(updatedData) => {
               console.log("Updated Data: ", updatedData);
               // Example: update the state or send the updated data to an API
-            }} /></span>
+            }}
+          />
+        </span>
       </>
     ),
     size: 50,
@@ -304,7 +306,9 @@ const Expenses: FC = () => {
     handleSelect(option); // Call the passed handler
   };
 
-
+  //   const handleBack = () => {
+  //     router.back(); // Navigate back to the previous page
+  // };
 
   return (
     <main
@@ -351,7 +355,7 @@ const Expenses: FC = () => {
         </div>
 
         {/* Card section */}
-        <div className="block md:hidden">
+        <div className="block md:hidden mb-16">
           {cardData.map((card, index) => (
             <div
               key={index}
@@ -363,13 +367,15 @@ const Expenses: FC = () => {
                   <p className="text-[14px] font-bold">{card.type}</p>
                 </div>
 
-                <div className='flex gap-4 mb-1 px-3 py-4'>
+                <div className="flex gap-4 mb-1 px-3 py-4">
                   <>
-                    <EditExpense expenseData={expenseData}
+                    <EditExpense
+                      expenseData={expenseData}
                       onUpdate={(updatedData) => {
                         console.log("Updated Data: ", updatedData);
                         // Example: update the state or send the updated data to an API
-                      }} />
+                      }}
+                    />
                     <DeleteExpense />
                   </>
                 </div>
@@ -415,9 +421,9 @@ const Expenses: FC = () => {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </th>
                     ))}
                   </tr>

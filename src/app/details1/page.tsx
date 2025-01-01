@@ -447,7 +447,7 @@ const DetailsPage: React.FC = () => {
                     {dat?.map((item, index) => (
                       <li
                         key={index}
-                        className="flex px-[12%] items-center justify-between py-2"
+                        className="flex px-[9%] items-center justify-between py-2"
                       >
                         {/* Color Circle */}
                         <div className="flex items-center">
@@ -572,7 +572,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/eye.svg" width={26} />
+                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
                     </div>
                   </div>
                 </div>
@@ -600,7 +600,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/eye.svg" width={26} />
+                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
                     </div>
                   </div>
                 </div>
@@ -628,7 +628,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/eye.svg" width={26} />
+                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
                     </div>
                   </div>
                 </div>
@@ -656,7 +656,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/eye.svg" width={26} />
+                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
                     </div>
                   </div>
                 </div>

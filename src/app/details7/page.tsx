@@ -576,7 +576,7 @@ const DetailsPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="below-lg:hidden flex justify-end fixed bottom-0 right-0 tablet:hidden">
+      <div className="below-lg:hidden flex justify-end fixed tablet:hidden">
         <AddExpenses />
       </div>
     </main>
