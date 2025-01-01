@@ -17,6 +17,7 @@ import { sendApiRequest } from "@/utils/apiUtils";
 import ToastNotification, {
   ToastNotificationProps,
 } from "@/Components/ui/ToastNotification/ToastNotification";
+import Loading from "@/Components/ui/Common/Loading";
 
 interface TableRow {
   categoryname: string;
@@ -238,9 +239,7 @@ const Page: FC = () => {
               <table className="w-full border-collapse border-gray-200 table-fixed">
                 <tbody>
                   {loading ? (
-                    <tr>
-                      <td>Loading...</td>
-                    </tr>
+                    <Loading numberOfColumns={5} />
                   ) : data && data.length > 0 ? (
                     table.getRowModel().rows.map((row) => (
                       <tr
