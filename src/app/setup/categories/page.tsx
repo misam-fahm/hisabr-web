@@ -53,7 +53,7 @@ const columns: ColumnDef<TableRow>[] = [
         <EditCategories />
       </span>
     ),
-    size: 40,
+    size: 60,
   },
   {
     id: "delete",
