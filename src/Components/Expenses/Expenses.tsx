@@ -468,7 +468,7 @@ const Expenses: FC = () => {
         </div>
         {/* Pagination Numbers */}
         <div className="mt-4  below-md:hidden">
-          <Pagination table={table} />
+          <Pagination table={table}  totalItems={0}/>
         </div>
       </>
     </main>
