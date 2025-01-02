@@ -181,15 +181,6 @@ const Expenses: FC = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      globalFilter,
-    },
-    initialState: {
-      pagination: {
-        pageSize: 10,
-        pageIndex: 0,
-      },
-    },
   });
   //Card data
   const cardData = [
@@ -277,9 +268,6 @@ const Expenses: FC = () => {
   const startItem = pageIndex * pageSize + 1;
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
-
-
-
   // const calendarRef = useRef<DatePicker | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -313,11 +301,9 @@ const Expenses: FC = () => {
   return (
     <main
       className="max-h-[calc(100vh-50px)] px-6 below-md:px-3 overflow-auto"
-      style={{  scrollbarWidth: "thin" }}
+      style={{ scrollbarWidth: "thin" }}
     >
       <>
-
-
         <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
           <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
             <Dropdown
@@ -332,7 +318,6 @@ const Expenses: FC = () => {
             <div className="w-full tablet:w-full below-md:w-full h-[35px]">
               <DateRange />
             </div>
-
 
             <div className="flex shadow text-[12px]  below-md:flex-row below-md:gap-4 bg-[#ffff] items-center  rounded-md w-full  h-[35px] below-md:w-full  below-md:text-[11px]">
               <input
@@ -351,7 +336,6 @@ const Expenses: FC = () => {
           <div className="block pl-24 below-md:hidden">
             <AddExpenses />
           </div>
-
         </div>
 
         {/* Card section */}
@@ -464,7 +448,7 @@ const Expenses: FC = () => {
         </div>
         {/* Pagination Numbers */}
         <div className="mt-4  below-md:hidden">
-          <Pagination table={table} totalItems={0} />
+          <Pagination table={table} totalItems={data.length} />
         </div>
       </>
     </main>

@@ -279,15 +279,6 @@ const Sales: FC = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      globalFilter,
-    },
-    initialState: {
-      pagination: {
-        pageSize: 10,
-        pageIndex: 0,
-      },
-    },
   });
 
   /**dropdown */
@@ -463,7 +454,7 @@ const Sales: FC = () => {
 
         {/* Pagination */}
         <div className="tablet:hidden">
-          <Pagination table={table} totalItems={0} />
+          <Pagination table={table} totalItems={data.length} />
         </div>
 
         <div className="below-lg:hidden mb-8">
