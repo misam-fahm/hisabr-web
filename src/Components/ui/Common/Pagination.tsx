@@ -17,18 +17,18 @@ const Pagination: React.FC<PaginationProps> = ({ table }) => {
       <div className="mt-4 flex gap-2 justify-between items-center below-md:hidden">
         {/* Page Range Display */}
         <div>
-          <span className="text-[#8899A8] text-[12px] font-medium ml-3">
+          <span className="text-[#8899A8] text-[12px] font-medium ml-3 ">
             {startItem} - {endItem} of {totalItems}
           </span>
         </div>
 
         {/* Pagination Numbers */}
         <div className="flex flex-row gap-3">
-          {/* Previous Button */}
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className="w-8 h-8 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50 flex items-center justify-center"
+            className="px-4 py-2 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50"
+            style={{ background: "#EBEFF6" }}
           >
             <img src="/images/left.svg" />
           </button>
@@ -39,33 +39,39 @@ const Pagination: React.FC<PaginationProps> = ({ table }) => {
               <button
                 key={pageIndex}
                 onClick={() => table.setPageIndex(pageIndex)}
-                className={`w-8 h-8 rounded-md text-[12px] flex items-center justify-center ${
+                className={`px-4 py-2 rounded-md text-[12px] ${
                   table.getState().pagination.pageIndex === pageIndex
-                    ? "text-white bg-[#1AA47D]"
-                    : "text-gray-700 bg-[#EBEFF6]"
+                    ? "!important text-[#FFFFFF]"
+                    : " text-gray-700"
                 }`}
+                style={{
+                  backgroundColor:
+                    table.getState().pagination.pageIndex === pageIndex
+                      ? "#1AA47D"
+                      : "transparent",
+                }}
               >
                 {pageIndex + 1}
               </button>
             );
           })}
 
-          {/* Next Button */}
           <button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className="w-8 h-8 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50 flex items-center justify-center"
+            className="px-4 py-2 bg-[gray-200] text-gray-700 rounded-md disabled:opacity-50"
+            style={{ background: "#EBEFF6" }}
           >
             <img src="/images/right.svg" />
           </button>
 
-          {/* Dropdown for Page Selection */}
           <div>
             <div className="w-full">
+              {/* Dropdown for Page Selection */}
               <select
-                value={table.getState().pagination.pageIndex}
-                onChange={(e) => table.setPageIndex(Number(e.target.value))}
-                className="pl-3 pr-8 py-[6px] w-full rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
+                value={table.getState().pagination.pageIndex} // Sync with current page index
+                onChange={(e) => table.setPageIndex(Number(e.target.value))} // Update page on selection
+                className=" pl-3 pr-8 py-[10px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381]"
               >
                 {Array.from({ length: table.getPageCount() }, (_, index) => (
                   <option key={index} value={index}>
