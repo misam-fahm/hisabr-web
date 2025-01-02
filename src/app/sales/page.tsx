@@ -220,25 +220,25 @@ const Sales: FC = () => {
     },
     {
       accessorKey: "amount",
-      header: () => <div className="text-right mr-16">Amount</div>,
+      header: () => <div className="text-right mr-12">Amount</div>,
       cell: (info) => (
-        <div className="text-right mr-14">{info.getValue() as number}</div>
+        <div className="text-right mr-12">{info.getValue() as number}</div>
       ),
-      size: 120,
+      size: 133,
     },
     {
       accessorKey: "net",
-      header: () => <div className="text-right mr-12">Net</div>,
+      header: () => <div className="text-right mr-10">Net</div>,
       cell: (info) => (
-        <div className="text-right mr-12">{info.getValue() as number}</div>
+        <div className="text-right mr-10">{info.getValue() as number}</div>
       ),
       size: 120,
     },
     {
       accessorKey: "average",
-      header: () => <div className="text-right mr-10">Average</div>,
+      header: () => <div className="text-right mr-8">Average</div>,
       cell: (info) => (
-        <div className="text-right mr-10">{info.getValue() as number}</div>
+        <div className="text-right mr-8">{info.getValue() as number}</div>
       ),
       size: 120,
     },
@@ -386,7 +386,7 @@ const Sales: FC = () => {
 
               <button
                 onClick={handleUploadClick}
-                className="flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold"
+                className="flex items-center justify-center bg-[#1AA47D] shadow-lg below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold"
               >
                 <img
                   src="/images/uploadIcon.svg"
@@ -463,7 +463,7 @@ const Sales: FC = () => {
 
         {/* Pagination */}
         <div className="tablet:hidden">
-          <Pagination table={table} totalItems={0}/>
+          <Pagination table={table} totalItems={0} />
         </div>
 
         <div className="below-lg:hidden mb-8">

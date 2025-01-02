@@ -74,7 +74,7 @@ const SalesKPI: FC = () => {
             </div>
           </div>
           <div className="below-md:hidden tablet:hidden">
-            <button className="flex items-center justify-center bg-[#1AA47D] w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold">
+            <button className="flex items-center justify-center bg-[#1AA47D] shadow-lg w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold">
               <img
                 src="/images/uploadIcon.svg"
                 alt="Upload Icon"
@@ -115,7 +115,7 @@ const SalesKPI: FC = () => {
                 </span>
               </p>
             </div>
-            <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+            <div className="bg-[#EFF6EFA1] rounded-full w-[45px] h-[43px] p-3 below-md:w-[40px] below-md:h-[40px] below-md:p-0 flex items-center justify-center">
               <img src="./images/dollar2.svg" />
             </div>
           </div>
@@ -133,7 +133,7 @@ const SalesKPI: FC = () => {
                 </span>
               </p>
             </div>
-            <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+            <div className="bg-[#EFF6EFA1] rounded-full  w-[47px] h-[43px] p-3 below-md:h-[40px] below-md:w-[40px] below-md:p-0 flex items-center justify-center">
               <img src="./images/dollar3.svg" />
             </div>
           </div>

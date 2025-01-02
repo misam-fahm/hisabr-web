@@ -25,14 +25,14 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
         </div>
 
         {/* Pagination Numbers */}
-        <div className="flex flex-row gap-3">
+        <div className="flex flex-row gap-3 items-center">
           {/* Previous Button */}
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
             className="w-8 h-8 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50 flex items-center justify-center"
           >
-            <img src="/images/left.svg" />
+            <img src="/images/left.svg"  alt="Previous" />
           </button>
 
           {Array.from({ length: pageCount }, (_, index) => {
@@ -58,7 +58,7 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
             disabled={!table.getCanNextPage()}
             className="w-8 h-8 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50 flex items-center justify-center"
           >
-            <img src="/images/right.svg" />
+            <img src="/images/right.svg" alt="Next" />
           </button>
 
           {/* Dropdown for Page Selection */}

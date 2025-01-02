@@ -147,7 +147,6 @@ const DetailsPage: React.FC = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-
     initialState: {
       pagination: {
         pageSize: 10,

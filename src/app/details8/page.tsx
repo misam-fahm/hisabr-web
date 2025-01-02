@@ -199,7 +199,6 @@ const DetailsPage: React.FC = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-
     initialState: {
       pagination: {
         pageSize: 10,
@@ -324,7 +323,7 @@ const DetailsPage: React.FC = () => {
         </div>
         <div>
           <button
-            className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold"
+            className="below-md:hidden flex items-center justify-center bg-[#1AA47D] shadow-lg below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold"
             onClick={handleButtonClick}
           >
             <img
