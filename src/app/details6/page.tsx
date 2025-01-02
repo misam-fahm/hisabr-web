@@ -199,6 +199,12 @@ const DetailsPage: React.FC = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    initialState: {
+      pagination: {
+        pageSize: 10,
+        pageIndex: 0,
+      },
+    },
   });
 
   /**go back button */
@@ -399,7 +405,7 @@ const DetailsPage: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <Pagination table={table} totalItems={data.length} />
+        <Pagination table={table} totalItems={0} />
 
         <div className="below-lg:hidden tablet:hidden mb-7">
           <div className="flex flex-col">

@@ -192,6 +192,15 @@ const Invoices = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      globalFilter,
+    },
+    initialState: {
+      pagination: {
+        pageSize: 10,
+        pageIndex: 0,
+      },
+    },
   });
   //Card data
   const cardData = [
@@ -462,7 +471,7 @@ const Invoices = () => {
       </div>
       {/* Pagination Numbers */}
       <div className="mt-4  below-md:hidden">
-        <Pagination table={table} totalItems={data.length} />
+        <Pagination table={table} totalItems={0} />
       </div>
     </main>
   );

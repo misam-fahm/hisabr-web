@@ -9,21 +9,10 @@ interface PaginationProps {
 
 const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
   const { pageIndex, pageSize } = table.getState().pagination;
-
-  if (totalItems === 0) {
-    return (
-      <div className="mt-4 text-center text-gray-500 text-sm">
-        No data available to display.
-      </div>
-    );
-  }
-
+  // const totalItems = table.getFilteredRowModel().rows.length;
   const startItem = pageIndex * pageSize + 1;
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
   const pageCount = table.getPageCount();
-  const maxPageButtons = 10;
-  const startPage = Math.max(0, pageIndex - Math.floor(maxPageButtons / 2));
-  const endPage = Math.min(pageCount, startPage + maxPageButtons);
 
   return (
     <main>
@@ -43,26 +32,25 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
             disabled={!table.getCanPreviousPage()}
             className="w-8 h-8 bg-[#EBEFF6] text-gray-700 rounded-md disabled:opacity-50 flex items-center justify-center"
           >
-            <img src="/images/left.svg" alt="Previous" />
+            <img src="/images/left.svg"  alt="Previous" />
           </button>
 
-          {/* Page Buttons */}
-          {Array.from(
-            { length: endPage - startPage },
-            (_, index) => startPage + index
-          ).map((page) => (
-            <button
-              key={page}
-              onClick={() => table.setPageIndex(page)}
-              className={`w-8 h-8 rounded-md text-[12px] flex items-center justify-center ${
-                table.getState().pagination.pageIndex === page
-                  ? "text-white bg-[#1AA47D]" // Green for active
-                  : "text-gray-700 bg-[#EBEFF6]" // Grey for inactive
-              }`}
-            >
-              {page + 1}
-            </button>
-          ))}
+          {Array.from({ length: pageCount }, (_, index) => {
+            const pageIndex = index;
+            return (
+              <button
+                key={pageIndex}
+                onClick={() => table.setPageIndex(pageIndex)}
+                className={`w-8 h-8 rounded-md text-[12px] flex items-center justify-center ${
+                  table.getState().pagination.pageIndex === pageIndex
+                    ? "text-white bg-[#1AA47D]" // Green for active
+                    : "text-gray-700 bg-[#EBEFF6]" // Grey for inactive
+                }`}
+              >
+                {pageIndex + 1}
+              </button>
+            );
+          })}
 
           {/* Next Button */}
           <button
