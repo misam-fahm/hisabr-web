@@ -275,7 +275,7 @@ const Page: FC = () => {
         </div>
       </div>
 
-      <Pagination table={table} totalItems={totalItems} />
+      <Pagination table={table} />
     </main>
   );
 };
