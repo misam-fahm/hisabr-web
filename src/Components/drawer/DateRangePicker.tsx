@@ -6,8 +6,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { enGB } from "date-fns/locale"; // Importing locale
 
 const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
   const [visibleMonth, setVisibleMonth] = useState<number>(
     new Date().getMonth()
@@ -41,10 +41,15 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
     return date.getMonth() === visibleMonth;
   };
 
-  const handleDateChange = (dates: [Date | null, Date | null]) => {
-    const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
+  const handleDateChange = (date: Date | [Date | null, Date | null]) => {
+    if (Array.isArray(date)) {
+      const [start, end] = date;
+      setStartDate(start || undefined); // Handle null/undefined values
+      setEndDate(end || undefined); // Handle null/undefined values
+    } else {
+      setStartDate(date || undefined); // Handle single date selection
+      setEndDate(undefined); // If only start date is selected, clear the end date
+    }
   };
 
   // Custom className for selected dates
@@ -90,7 +95,7 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
         <div className="absolute top-[50px] left-0 z-50">
           <DatePicker
             selected={startDate}
-            onChange={handleDateChange}
+            onChange={handleDateChange} // Update the onChange to handle both single and range date
             startDate={startDate}
             endDate={endDate}
             selectsRange
