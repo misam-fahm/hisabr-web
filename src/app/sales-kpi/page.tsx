@@ -74,7 +74,7 @@ const SalesKPI: FC = () => {
             </div>
           </div>
           <div className="below-md:hidden tablet:hidden">
-            <button className="flex items-center justify-center bg-[#1AA47D] shadow-lg w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold">
+            <button className="flex items-center justify-center bg-[#1AA47D] hover:bg-[#168A68] shadow-lg w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold">
               <img
                 src="/images/uploadIcon.svg"
                 alt="Upload Icon"
