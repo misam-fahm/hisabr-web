@@ -117,6 +117,7 @@ const Page = () => {
           className="w-8 h-8"
         />
       </div>
+
       {/* Mobile View */}
       <div className="flex justify-center items-center p-3 md:hidden">
         <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-xl">
@@ -276,7 +277,7 @@ const Page = () => {
               </button> */}
               <button
                 type="submit"
-                className="sm:w-auto bg-[#1AA47D] hover:bg-[#168A68] text-white font-medium py-2 px-10 rounded-md"
+                className="sm:w-auto bg-[#168A6F] hover:bg-[#168A68] text-white font-medium py-2 px-10 rounded-md"
               >
                 Save
               </button>
@@ -425,7 +426,7 @@ const Page = () => {
                   <div>
                     <button
                       type="submit"
-                      className="w-[145px] bg-[#1AA47D] hover:bg-[#168A68] text-white font-medium py-2 px-4 rounded-md"
+                      className="w-[145px] bg-[#168A6F] hover:bg-[#168A68] text-white font-medium py-2 px-4 rounded-md"
                     >
                       Save
                     </button>
