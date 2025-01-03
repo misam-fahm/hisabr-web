@@ -328,7 +328,7 @@ const Invoices = () => {
               placeholder='Search'
               className='w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none'>
             </input>
-            <img className='pr-2 cursor-pointer items-center' src='/images/searchIcon.svg'
+            <img className='pr-2 cursor-pointer items-center' src='/images/SearchIcon.svg'
               onClick={handleClick} />
           </div>
         </div>

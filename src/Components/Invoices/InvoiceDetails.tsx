@@ -137,7 +137,7 @@ const InvoiceDetails = () => {
       {/*table content*/}
       <div className='bg-white shadow-lg rounded-lg block below-md:hidden'>
         <div className='overflow-x-auto rounded-md '>
-          <table className='w-full table-auto border-collapse text-[12px] text-white rounded-md'>
+          <table className='w-full table-auto border-collapse text-[14px] text-white rounded-md'>
             <thead className='bg-[#334155]'>
               <tr>
                 <th className="py-2 px-4 text-left w-[100px]">Item Code</th>
