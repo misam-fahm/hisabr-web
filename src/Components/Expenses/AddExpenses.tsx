@@ -173,18 +173,18 @@ const AddExpenses = () => {
       >
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[410px] h-[518px] below-md:w-[94%] below-md:h-[450px] px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
-            <div className="flex items-center justify-between mb-5 mr-1">
+          <DialogPanel className="w-[335px] h-[421px] below-md:w-[94%] below-md:h-[450px] px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
+            <div className="relative flex items-center justify-center mb-5">
               <DialogTitle
                 as="h3"
-                className="text-[16px]  font-medium leading-4 text-[#5E6366]"
+                className="text-[16px]  font-medium leading-custom text-[#3D3D3D]"
               >
                 Add Expense
               </DialogTitle>
               <button
                 type="button"
                 onClick={closeModal}
-                className="text-[#5E6366] focus:outline-none"
+                className="absolute top-0 right-0 text-[#5E6366] focus:outline-none"
               >
                 <svg
                   xmlns="/images/CancelIcon.svg"
@@ -203,16 +203,16 @@ const AddExpenses = () => {
 
             {/* AddExpense Form */}
             <form onSubmit={handleSubmit}>
-              <div className="relative overflow-y-auto h-[380px] below-md:h-[300px] overflow-x-hidden scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent">
+              <div className="relative below-md:h-[300px]  scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent">
                 {/* Store */}
                 <div className="flex flex-col">
-                  <label className="text-[13px] text-[#5E6366] mb-1 block">
+                  {/* <label className="text-[13px] text-[#5E6366] mb-1 block">
                     Store
-                  </label>
+                  </label> */}
                   <button
                     type="button"
                     onClick={() => setDropdownOpen((prev) => !prev)}
-                    className={`h-[42px] mt-1 pl-2 pr-4 w-full text-[13px] font-normal rounded-lg border ${
+                    className={`h-[40px] mt-1 pl-2 pr-4 w-full text-[13px] font-normal rounded-lg border ${
                       errors.selectedType ? "border-red-500" : "border-gray-300"
                     } bg-white text-[#8D98AA] flex justify-between items-center`}
                   >
@@ -254,9 +254,9 @@ const AddExpenses = () => {
                 {/* Expense Type and Description */}
                 <div className="grid grid-cols-1 gap-2 mb-4">
                   <div>
-                    <label className="text-[13px] text-[#5E6366] mb-2 my-2 block">
+                    {/* <label className="text-[13px] text-[#5E6366] mb-2 my-2 block">
                       Expense Type
-                    </label>
+                    </label> */}
                     <button
                       type="button"
                       onClick={() => setExpenseDropdownOpen((prev) => !prev)}
@@ -301,9 +301,9 @@ const AddExpenses = () => {
                     )}
                   </div>
                   <div>
-                    <label className="text-[13px] text-[#5E6366] mb-2 block">
+                    {/* <label className="text-[13px] text-[#5E6366] mb-2 block">
                       Description
-                    </label>
+                    </label> */}
                     <input
                       type="text"
                       name="description"
@@ -323,9 +323,9 @@ const AddExpenses = () => {
                     )}
                   </div>
                   <div>
-                    <label className="text-[13px] text-[#5E6366] mb-2 block">
+                    {/* <label className="text-[13px] text-[#5E6366] mb-2 block">
                       Amount
-                    </label>
+                    </label> */}
                     <input
                       type="number"
                       name="amount"
@@ -343,9 +343,9 @@ const AddExpenses = () => {
                     )}
                   </div>
                   <div className="flex flex-col mt-1 mb-2">
-                    <label className="text-[13px] text-[#5E6366] mb-2 block">
+                    {/* <label className="text-[13px] text-[#5E6366] mb-2 block">
                       Date
-                    </label>
+                    </label> */}
                     <div className="relative w-full">
                       <DatePicker
                         selected={formData.date}

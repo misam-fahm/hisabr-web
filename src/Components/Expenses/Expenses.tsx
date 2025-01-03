@@ -303,10 +303,7 @@ const Expenses: FC = () => {
     handleSelect(option); // Call the passed handler
   };
 
-  //   const handleBack = () => {
-  //     router.back(); // Navigate back to the previous page
-  // };
-
+  
   return (
     <main
       className="max-h-[calc(100vh-50px)] px-6 below-md:px-3 overflow-auto"
@@ -337,7 +334,7 @@ const Expenses: FC = () => {
               ></input>
               <img
                 className="pr-2 cursor-pointer items-center"
-                src="/images/searchIcon.svg"
+                src="/images/SearchIcon.svg"
                 onClick={handleClick}
               />
             </div>

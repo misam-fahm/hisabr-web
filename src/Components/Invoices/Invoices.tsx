@@ -322,14 +322,11 @@ const Invoices = () => {
               type="search"
               onChange={(e) => setGlobalFilter(e.target.value)}
               ref={searchInputRef}
-              placeholder="Search"
-              className="w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none"
-            ></input>
-            <img
-              className="pr-2 cursor-pointer items-center"
-              src="/images/searchIcon.svg"
-              onClick={handleClick}
-            />
+              placeholder='Search'
+              className='w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none'>
+            </input>
+            <img className='pr-2 cursor-pointer items-center' src='/images/SearchIcon.svg'
+              onClick={handleClick} />
           </div>
         </div>
         <div className=" pl-24 below-md:hidden">

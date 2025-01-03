@@ -95,19 +95,19 @@ const Home: FC = () => {
   //sixth link(customer count)
 
   const handleClick6 = () => {
-    router.push("/details6"); // Navigates to the 'details' page
+    router.push("/invoices"); // Navigates to the 'details' page
   };
 
   //seventh link(customer count)// 
 
   const handleClick7 = () => {
-    router.push("/details7"); // Navigates to the 'details' page
+    router.push("/expenses"); // Navigates to the 'details' page
   };
 
   //eighth link(customer count)
 
   const handleClick8 = () => {
-    router.push("/details8"); // Navigates to the 'details' page
+    router.push("/invoices"); // Navigates to the 'details' page
   };
 
   return (
