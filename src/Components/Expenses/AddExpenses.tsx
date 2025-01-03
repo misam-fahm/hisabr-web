@@ -157,7 +157,7 @@ const AddExpenses = () => {
       <div className="block below-md:hidden">
         <button
           onClick={openModal}
-          className="bg-[#1AA47D] text-white w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
+          className="bg-[#1AA47D] hover:bg-[#168A68] shadow-lg text-white w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
           <img className="" src="/images/WebAddIcon.svg" alt="" />
           Add Expenses

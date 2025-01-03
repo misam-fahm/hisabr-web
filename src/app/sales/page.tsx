@@ -354,7 +354,7 @@ const Sales: FC = () => {
                 <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
                   <img
                     className="cursor-pointer items-center"
-                    src="/images/Searchicon.svg"
+                    src="/images/searchicon.svg"
                   />
                 </div>
               </div>
@@ -386,7 +386,7 @@ const Sales: FC = () => {
 
               <button
                 onClick={handleUploadClick}
-                className="flex items-center justify-center bg-[#1AA47D] shadow-lg below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold"
+                className="flex items-center justify-center bg-[#1AA47D] hover:bg-[#168A68] shadow-lg below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold"
               >
                 <img
                   src="/images/uploadIcon.svg"
