@@ -70,7 +70,7 @@ const Home: FC = () => {
   }, []);
 
   const handleClick = () => {
-    router.push("/details1"); // Navigates to the 'details' page
+    router.push("/grossrevenue"); // Navigates to the 'details' page
   };
 
   /**second link(tender) */
@@ -82,7 +82,7 @@ const Home: FC = () => {
   //forth link(customer count)
 
   const handleClick4 = () => {
-    router.push("/details4"); // Navigates to the 'details' page
+    router.push("/customercount"); // Navigates to the 'details' page
   };
 
   //fifth link(customer count)
@@ -98,7 +98,7 @@ const Home: FC = () => {
     router.push("/invoices"); // Navigates to the 'details' page
   };
 
-  //seventh link(customer count)
+  //seventh link(customer count)// 
 
   const handleClick7 = () => {
     router.push("/expenses"); // Navigates to the 'details' page

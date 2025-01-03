@@ -9,6 +9,8 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import AddNewItems from "@/Components/Setup/AddNewItems";
 import AddCategories from "@/Components/Setup/AddCategories";
 import EditCategories from "@/Components/Setup/EditCategories";
@@ -239,7 +241,19 @@ const Page: FC = () => {
               <table className="w-full border-collapse border-gray-200 table-fixed">
                 <tbody>
                   {loading ? (
-                    <Loading numberOfColumns={5} />
+                    Array.from({ length: 10 }).map((_, index) => (
+                      <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+                        {columns.map((column, colIndex) => (
+                          <td
+                            key={colIndex}
+                            className="px-4 py-1.5"
+                            style={{ width: `${column.size}px` }}
+                          >
+                            <Skeleton height={30} />
+                          </td>
+                        ))}
+                      </tr>
+                    ))
                   ) : data && data.length > 0 ? (
                     table.getRowModel().rows.map((row) => (
                       <tr
@@ -249,6 +263,7 @@ const Page: FC = () => {
                         }
                       >
                         {row.getVisibleCells().map((cell) => (
+                          
                           <td
                             key={cell?.id}
                             className="px-4 py-1.5 text-[#636363] text-[14px]"

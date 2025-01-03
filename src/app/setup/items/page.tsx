@@ -222,8 +222,8 @@ const Page: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
-        <AddNewItems/>
-        <AddCategories/>
+        <AddNewItems />
+        <AddCategories />
       </div>
 
       <div className="overflow-hidden max-w-full ">
@@ -260,36 +260,31 @@ const Page: FC = () => {
 
               {/* Border */}
               <div className=" border-b bg-gray-200 my-3"></div>
-              
 
               {/* Category */}
               <div className="flex justify-between">
-                <span className=" text-[#636363] text-[13px] mb-2">Category</span>{" "}
-                <span className="text-[14px]">
-                {row.getValue("category")}
-                </span>
+                <span className=" text-[#636363] text-[13px] mb-2">
+                  Category
+                </span>{" "}
+                <span className="text-[14px]">{row.getValue("category")}</span>
               </div>
 
               {/* Price */}
               <div className="mt-1 flex justify-between">
                 <span className=" text-[#636363] text-[13px] mb-2">Price</span>{" "}
-                <span className="text-[14px]">
-                {row.getValue("price")}
-                </span>
+                <span className="text-[14px]">{row.getValue("price")}</span>
               </div>
               {/* Quantity */}
               <div className=" mt-1 flex justify-between">
-                <span className=" text-[#636363] text-[13px] mb-2">Quantity</span>{" "}
-                <span className="text-[14px]">
-                {row.getValue("quantity")}
-                </span>
+                <span className=" text-[#636363] text-[13px] mb-2">
+                  Quantity
+                </span>{" "}
+                <span className="text-[14px]">{row.getValue("quantity")}</span>
               </div>
               {/* Weight */}
               <div className=" mt-1 flex justify-between">
                 <span className=" text-[#636363] text-[13px] mb-2">Weight</span>{" "}
-                <span className="text-[14px]">
-                {row.getValue("weight")}
-                </span>
+                <span className="text-[14px]">{row.getValue("weight")}</span>
               </div>
             </div>
           ))}
@@ -367,7 +362,7 @@ const Page: FC = () => {
             </span>
           </div> */}
 
-        <Pagination table={table} totalItems={0}/>
+        <Pagination table={table} totalItems={0} />
       </div>
     </main>
   );

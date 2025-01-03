@@ -9,7 +9,7 @@ const Loading = ({ numberOfColumns }) => {
             padding: '20px' }}>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <img
-          src="/images/loading.gif" // URL for loading gif (you can replace it with your own gif URL)
+          src="/images/CircleLoader.gif" // URL for loading gif (you can replace it with your own gif URL)
           alt="Loading..."
           style={{ width: '100px', marginRight: '20px' }}
         />

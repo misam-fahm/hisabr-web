@@ -302,27 +302,24 @@ const Invoices = () => {
       className="max-h-[calc(100vh-80px)] px-6 below-md:px-3 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className='flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6'>
+      <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
         <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
           <Dropdown
-              options={options}
-              selectedOption={selectedOption}
-              onSelect={handleSelect}
-              isOpen={isOpen}
-              toggleOpen={toggleDropdown1}
-              widthchange="w-full"
-            />
-          
-
-
+            options={options}
+            selectedOption={selectedOption}
+            onSelect={handleSelect}
+            isOpen={isOpen}
+            toggleOpen={toggleDropdown1}
+            widthchange="w-full"
+          />
 
           <div className="below-lg:w-full tablet:w-full below-md:w-full">
             <DateRange />
           </div>
 
-
-          <div className='flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]'>
-            <input type='search'
+          <div className="flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
+            <input
+              type="search"
               onChange={(e) => setGlobalFilter(e.target.value)}
               ref={searchInputRef}
               placeholder='Search'
@@ -332,8 +329,9 @@ const Invoices = () => {
               onClick={handleClick} />
           </div>
         </div>
-        <div className= ' pl-24 below-md:hidden'>
-          <button className="w-[159px] h-[35px] bg-[#1AA47D] hover:bg-[#168A6F] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
+        <div className=" pl-24 below-md:hidden">
+          <button
+            className="w-[159px] h-[35px] bg-[#1AA47D] hover:bg-[#168A6F] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
             onClick={handleButtonClick}
           >
             <img className="" src="/images/WebUploadIcon.svg" alt="" />
