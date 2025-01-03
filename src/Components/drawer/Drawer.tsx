@@ -104,9 +104,9 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
 
   const pathsToHideHamburger = [
     "/sales/sales_view",
-    "/details1",
+    "/grossrevenue",
     "/details2",
-    "/details4",
+    "/customercount",
     "/details5",
     "/details6",
     "/details7",
