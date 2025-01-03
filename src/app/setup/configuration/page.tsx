@@ -114,7 +114,7 @@ const Page = () => {
         <img
           src="/images/WebBackIcon.svg"
           alt="Back Arrow"
-          className="w-8 h-8"
+          className="w-7 h-7"
         />
       </div>
 
