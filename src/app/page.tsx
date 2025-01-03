@@ -98,7 +98,7 @@ const Home: FC = () => {
     router.push("/invoices"); // Navigates to the 'details' page
   };
 
-  //seventh link(customer count)// 
+  //seventh link(customer count)//
 
   const handleClick7 = () => {
     router.push("/expenses"); // Navigates to the 'details' page
@@ -258,7 +258,7 @@ const Home: FC = () => {
                   <div className="group relative">
                     <img
                       src="/images/tooltip.svg"
-                      className="max-w-[65%] mt-1 max-h-[62%] mx-auto cursor-pointer"
+                      className=" mt-[3px] w-5 cursor-pointer"
                     />
 
                     {/* Tooltip Box */}

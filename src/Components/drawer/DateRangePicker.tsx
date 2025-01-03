@@ -3,17 +3,16 @@
 import React, { useState, useRef, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { enGB } from "date-fns/locale"; // Importing locale
+import { enGB } from "date-fns/locale";
 
 const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
-  const [visibleMonth, setVisibleMonth] = useState<number>(
-    new Date().getMonth()
-  );
+  const [lastSelectedDate, setLastSelectedDate] = useState<Date | undefined>(
+    undefined
+  ); // Use undefined instead of null
   const pickerRef = useRef<HTMLDivElement>(null);
-  const calendarRef = useRef<DatePicker | null>(null);
 
   const handleClickIcon = () => setIsOpen((prev) => !prev);
 
@@ -33,34 +32,11 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
     };
   }, []);
 
-  const handleMonthChange = (date: Date) => {
-    setVisibleMonth(date.getMonth());
-  };
-
-  const filterDates = (date: Date): boolean => {
-    return date.getMonth() === visibleMonth;
-  };
-
-  const handleDateChange = (date: Date | [Date | null, Date | null]) => {
-    if (Array.isArray(date)) {
-      const [start, end] = date;
-      setStartDate(start || undefined); // Handle null/undefined values
-      setEndDate(end || undefined); // Handle null/undefined values
-    } else {
-      setStartDate(date || undefined); // Handle single date selection
-      setEndDate(undefined); // If only start date is selected, clear the end date
-    }
-  };
-
-  // Custom className for selected dates
-  const dayClassName = (date: Date) => {
-    if (startDate && endDate) {
-      // Highlight the range of dates
-      if (date >= startDate && date <= endDate) {
-        return "custom-selected-date";
-      }
-    }
-    return "";
+  const handleDateChange = (dates: [Date | null, Date | null]) => {
+    const [start, end] = dates;
+    setLastSelectedDate(start ?? undefined);
+    setStartDate(start ?? undefined);
+    setEndDate(end ?? undefined);
   };
 
   return (
@@ -78,36 +54,59 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
               ? `Selected: ${startDate.toLocaleDateString()}`
               : "Select Date Range"}
         </span>
-        <img
-          className="pr-2"
-          src="/images/CalenderIcon.svg"
-          alt="calendar"
-          onClick={() => {
-            if (calendarRef.current) {
-              (calendarRef.current as any).setOpen(true); // Open the calendar on icon click
-            }
-          }}
-        />
+        <img className="pr-2" src="/images/CalenderIcon.svg" alt="calendar" />
       </div>
 
-      {/* Datepicker */}
       {isOpen && (
-        <div className="absolute top-[50px] left-0 z-50">
+        <div className="absolute top-[50px] left-0 z-50 bg-white shadow-lg p-4 rounded">
           <DatePicker
             selected={startDate}
-            onChange={handleDateChange} // Update the onChange to handle both single and range date
+            onChange={handleDateChange}
             startDate={startDate}
             endDate={endDate}
             selectsRange
             inline
             maxDate={new Date()}
-            onMonthChange={handleMonthChange}
-            filterDate={filterDates}
-            ref={calendarRef} // Add reference for the DatePicker
-            locale={enGB} // Setting the locale to English (Great Britain)
-            formatWeekDay={(day) => day.slice(0, 3)} // Display only the first 3 letters of weekdays (e.g., Sun, Mon, Tue)
-            dayClassName={dayClassName} // Apply custom class for selected dates
+            locale={enGB}
+            formatWeekDay={(day) => day.slice(0, 3)}
+            dayClassName={(date) => {
+              if (
+                lastSelectedDate &&
+                date.getTime() === lastSelectedDate.getTime()
+              ) {
+                return "last-selected-day";
+              }
+              return "";
+            }}
           />
+          <div className="flex flex-row justify-between items-center border-[#DBDBDB] border-t-[1px] ">
+            <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 py-[17px] w-[30%] text-[10px] rounded-xl flex items-center justify-center">
+              <span className="absolute -top-[10px] left-[30%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
+                From
+              </span>
+              <p className="text-sm">
+                {startDate ? startDate.toLocaleDateString() : ""}
+              </p>
+            </div>
+
+            <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 py-[17px] w-[30%] text-[10px] rounded-xl flex items-center justify-center">
+              <span className="absolute -top-[10px] left-[30%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
+                To
+              </span>
+              <p className="text-sm">
+                {endDate ? endDate.toLocaleDateString() : ""}
+              </p>
+            </div>
+
+            <div>
+              <button
+                className="bg-[#334155] mt-4 text-white px-4 py-2 w-[100%] text-[14px] font-medium rounded-xl"
+                onClick={() => setIsOpen(false)}
+              >
+                Set Date
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
