@@ -71,11 +71,12 @@ const DetailsPage: React.FC = () => {
       </div> */}
       <div className="pt-6 pb-6 below-md:pb-4 below-md:pt-4 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div>
-          <Images
-            className="below-md:hidden cursor-pointer h-5 w-5 bg-white rounded-full p-1 mb-3"
+          <img
             onClick={handleBack}
-            src="./images/back-arrow.svg"
-          />
+            alt="Back Arrow"
+            className="w-7 h-7 mb-3 below-md:hidden cursor-pointer"
+            src="/images/WebBackIcon.svg"
+          ></img>
         </div>
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row below-md:flex-col gap-3 w-full">
