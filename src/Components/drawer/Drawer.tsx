@@ -82,7 +82,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
       title: "Setup",
       src: "setup",
       submenus: [
-        { title: "Item Categories", path: "/setup/categories" },
+        { title: "Categories", path: "/setup/categories" },
         { title: "Items", path: "/setup/items" },
         { title: "Tenders", path: "/setup/tenders" },
         { title: "Stores", path: "/setup/stores" },

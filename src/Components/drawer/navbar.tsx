@@ -50,7 +50,7 @@ const Navbar: React.FC = () => {
           newTitle = "Expenses";
           break;
         case "setup/categories":
-          newTitle = "Item Categories";
+          newTitle = "Categories";
           break;
         case "setup/items":
           newTitle = "Items";
