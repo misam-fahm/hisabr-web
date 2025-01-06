@@ -51,7 +51,7 @@ const DeleteTenders = () => {
             onClick={openModal}
             src="/images/DeleteBinIcon.svg"
             alt="Add icon"
-            className="flex justify-center  below-md:ml-5 h-5 w-5"
+            className="flex justify-center  below-md:ml-5  w-4 h-4 below-md:w-5 below-md:h-5"
           />
         </Button>
       </div>

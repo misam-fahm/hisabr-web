@@ -109,7 +109,7 @@ const EditItems = () => {
           <img
             src="/images/EditPencilIcon.svg"
             alt="Add icon"
-            className="flex justify-center items-center w-4 h-4"
+            className="flex justify-center items-center  w-4 h-4 below-md:w-5 below-md:h-5"
           />
         </Button>
       </div>
