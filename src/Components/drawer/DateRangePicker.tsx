@@ -52,13 +52,13 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
             ? `From: ${startDate.toLocaleDateString()} - To: ${endDate.toLocaleDateString()}`
             : startDate
               ? `Selected: ${startDate.toLocaleDateString()}`
-              : "Select Date Range"}
+              : "Date Range"}
         </span>
         <img className="pr-2" src="/images/CalenderIcon.svg" alt="calendar" />
       </div>
 
       {isOpen && (
-        <div className="absolute top-[50px] left-0 z-50 bg-white shadow-lg p-4 rounded">
+        <div className="absolute top-[40px] left-0 z-50 bg-white shadow-lg p-4 rounded">
           <DatePicker
             selected={startDate}
             onChange={handleDateChange}
@@ -79,12 +79,12 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
               return "";
             }}
           />
-          <div className="flex flex-row justify-between items-center border-[#DBDBDB] border-t-[1px] ">
+          <div className="flex flex-row justify-between items-center border-[#DBDBDB] border-t-[1px]">
             <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 py-[17px] w-[30%] text-[10px] rounded-xl flex items-center justify-center">
               <span className="absolute -top-[10px] left-[30%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
                 From
               </span>
-              <p className="text-sm">
+              <p className="text-[11px]">
                 {startDate ? startDate.toLocaleDateString() : ""}
               </p>
             </div>
@@ -93,7 +93,7 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
               <span className="absolute -top-[10px] left-[30%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
                 To
               </span>
-              <p className="text-sm">
+              <p className="text-[11px]">
                 {endDate ? endDate.toLocaleDateString() : ""}
               </p>
             </div>
