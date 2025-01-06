@@ -92,7 +92,7 @@ export function Inputtext(props:any): JSX.Element {
 						onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
 						placeholder=""
-						className={`w-full appearance-none rounded-md border-none px-3 py-3 text-sm font-normal bg-transparent ${textColor ? textColor : "text-white "}  ${
+						className={`w-full appearance-none rounded-md border-none below-md:h-[38px] h-[35px] px-3 py-3 text-sm font-normal bg-transparent ${textColor ? textColor : "text-white "}  ${
 							errors && errors?.message
 								? "border-red-500 focus:border-red-500"
 								: borderClassName

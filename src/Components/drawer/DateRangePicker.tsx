@@ -43,7 +43,7 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
     <div className="relative" ref={pickerRef}>
       <div
         onClick={handleClickIcon}
-        className={`flex items-center justify-between rounded h-[35px] bg-white cursor-pointer shadow ${
+        className={`flex items-center justify-between roundedbelow-md:h-[38px] h-[35px] rounded-md border bg-white cursor-pointer shadow ${
           widthchang ? "" : "below-md:w-full w-full"
         }`}
       >
@@ -52,13 +52,13 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
             ? `From: ${startDate.toLocaleDateString()} - To: ${endDate.toLocaleDateString()}`
             : startDate
               ? `Selected: ${startDate.toLocaleDateString()}`
-              : "Select Date Range"}
+              : "Date Range"}
         </span>
         <img className="pr-2" src="/images/CalenderIcon.svg" alt="calendar" />
       </div>
 
       {isOpen && (
-        <div className="absolute top-[50px] left-0 z-50 bg-white shadow-lg p-4 rounded">
+        <div className="absolute top-[50px] left-0 z-50 bg-white shadow-lg p-4 rounded ">
           <DatePicker
             selected={startDate}
             onChange={handleDateChange}
