@@ -314,12 +314,24 @@ const Invoices = () => {
     setShowTooltip(false);
   };
 
+  const handleBack = () => {
+    router.push("/");
+  };
+
   return (
     <main
       className="max-h-[calc(100vh-80px)] px-6 below-md:px-3 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
+      <div>
+        <img
+          onClick={handleBack}
+          alt="Back Arrow"
+          className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
+          src="/images/WebBackIcon.svg"
+        ></img>
+      </div>
+      <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-4 mb-6">
         <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
           <Dropdown
             options={options}
@@ -339,11 +351,14 @@ const Invoices = () => {
               type="search"
               onChange={(e) => setGlobalFilter(e.target.value)}
               ref={searchInputRef}
-              placeholder='Search'
-              className='w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none'>
-            </input>
-            <img className='pr-2 cursor-pointer items-center' src='/images/searchicon.svg'
-              onClick={handleClick} />
+              placeholder="Search"
+              className="w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none"
+            ></input>
+            <img
+              className="pr-2 cursor-pointer items-center"
+              src="/images/searchicon.svg"
+              onClick={handleClick}
+            />
           </div>
         </div>
         <div className=" pl-24 below-md:hidden">

@@ -73,7 +73,13 @@ const DetailsPage: React.FC = () => {
       />
 
       <div className="py-3 pb-6 bg-[#f7f8f9] pl-6 pr-6 below-md:px-4">
-        <div className="flex flex-row justify-between items-center gap-6 tablet:pr-32">
+        <img
+          onClick={handleBack}
+          alt="Back Arrow"
+          className="w-7 h-7 mb-1 below-md:hidden cursor-pointer"
+          src="/images/WebBackIcon.svg"
+        ></img>
+        <div className="flex flex-row justify-between items-center gap-6 ">
           <div className="below-md:w-full tablet:w-full border-b-[2px] border-[#E1E0E0D1] relative flex items-center">
             {/* Left Arrow */}
             {showLeftArrow && (
@@ -87,7 +93,7 @@ const DetailsPage: React.FC = () => {
             {/* Scrollable Tabs */}
             <div
               id="tabContainer"
-              className="flex-1 flex below-md:overflow-x-hidden tablet:overflow-x-auto 
+              className="flex-1 flex below-md:overflow-x-hidden 
              below-md:overflow-y-hidden tablet:overflow-y-hidden space-x-8 
              px-0 below-md:space-x-6 tablet:space-x-6 whitespace-nowrap scroll-smooth"
             >
@@ -116,15 +122,6 @@ const DetailsPage: React.FC = () => {
               className={`below-md:block tablet:block hidden px-2 text-[#334155] text-xl`}
               src="/images/rightArrow.svg"
             />
-          </div>
-
-          <div className="below-md:hidden">
-            <p
-              onClick={handleBack}
-              className="cursor-pointer text-[14px] text-[#6F6F6F] bg-[#C8C8C87A] w-[104px] h-[37px] rounded-md flex items-center justify-center"
-            >
-              Back
-            </p>
           </div>
         </div>
       </div>

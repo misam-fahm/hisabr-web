@@ -1,14 +1,12 @@
-import React from 'react'
-import Invoices from '@/Components/Invoices/Invoices'
+import React from "react";
+import Invoices from "@/Components/Invoices/Invoices";
 
 const page = () => {
   return (
-
     <div>
-      <Invoices/>
+      <Invoices />
     </div>
-  )
-  
-}
+  );
+};
 
-export default page
+export default page;

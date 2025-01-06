@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/Expenses/AddExpenses";
 import DateRange from "@/Components/drawer/DateRangePicker";
 import Dropdown from "@/Components/ui/Common/DropDown";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 import Image from "next/image";
 import {
@@ -193,6 +193,7 @@ const expenseData = {
 
 
 const Expenses: FC = () => {
+  const router = useRouter();
   const [globalFilter, setGlobalFilter] = React.useState("");
   const table = useReactTable({
     data: formattedData,
@@ -321,15 +322,25 @@ const Expenses: FC = () => {
     setIsOpen(false); // Close dropdown after selection
     handleSelect(option); // Call the passed handler
   };
+  const handleBack = () => {
+    router.push("/");
+  };
 
-  
   return (
     <main
       className="max-h-[calc(100vh-50px)] px-6 below-md:px-3 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <>
-        <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
+        <div>
+          <img
+            onClick={handleBack}
+            alt="Back Arrow"
+            className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
+            src="/images/WebBackIcon.svg"
+          ></img>
+        </div>
+        <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-4 mb-6">
           <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
             <Dropdown
               options={options}
