@@ -249,10 +249,10 @@ const Sales: FC = () => {
         <span className="flex justify-center">
           <button onClick={handleImageClick}>
             <Images
-              src="/images/eye.svg"
+              src="/images/ViewEyeIcon.svg"
               alt="Eye Icon"
-              width={25}
-              height={25}
+              width={15}
+              height={15}
             />
           </button>
         </span>

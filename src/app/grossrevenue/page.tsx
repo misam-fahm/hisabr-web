@@ -182,7 +182,12 @@ const columns: ColumnDef<TableRow>[] = [
     header: () => <div className="text-center">View</div>,
     cell: () => (
       <span className="flex justify-center">
-        <Images src="/images/eye.svg" alt="Eye Icon" width={25} height={25} />
+        <Images
+          src="/images/ViewEyeIcon.svg"
+          alt="Eye Icon"
+          width={15}
+          height={15}
+        />
       </span>
     ),
     size: 60,
@@ -279,6 +284,7 @@ const DetailsPage: React.FC = () => {
         src="/images/MobileBackIcon.svg"
         className="fixed top-4 left-4 z-50 below-lg:hidden tablet:hidden"
       />
+
       {/* <div className="below-md:flex below-md:justify-center ">
         <p className="text-[18px] below-md:text-[16px] below-md:mr-8 font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
           Gross Revenue Analysis
@@ -286,11 +292,12 @@ const DetailsPage: React.FC = () => {
       </div> */}
       <div className="pt-6 pb-6 below-md:pt-4 below-md:pb-4 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div>
-          <Images
-            className="below-md:hidden cursor-pointer h-5 w-5 bg-white rounded-full p-1 mb-3"
+          <img
             onClick={handleBack}
-            src="./images/back-arrow.svg"
-          />
+            alt="Back Arrow"
+            className="w-7 h-7 mb-3 below-md:hidden cursor-pointer"
+            src="/images/WebBackIcon.svg"
+          ></img>
         </div>
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row below-md:flex-col gap-3 w-full">
@@ -424,7 +431,7 @@ const DetailsPage: React.FC = () => {
                     Product Revenue
                   </p>
                 </div>
-                <div className="relative below-md:w-[35%] ">
+                <div className="relative below-md:w-[35%] z-[60]">
                   <Dropdown
                     className="relative w-full"
                     shadowclassName="shadow-sm"

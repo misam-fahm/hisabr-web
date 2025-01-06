@@ -359,7 +359,7 @@ const summary: FC = () => {
                   </div>
 
                   {/* Dropdown */}
-                  <div className="mb-6 relative below-md:w-[100%] below-md:max-w-[35%]">
+                  <div className="mb-6 relative z-[60] below-md:w-[100%] below-md:max-w-[35%]">
                     <Dropdown
                       className="relative below-md:w-full"
                       shadowclassName="shadow-sm"
