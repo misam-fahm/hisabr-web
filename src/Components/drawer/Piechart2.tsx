@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 const data = [
   { name: "Group A", value: 200000 },
@@ -20,7 +20,7 @@ const DonutChart = () => {
     <div className="w-full h-[400px] flex justify-center items-center relative">
       {/* Ensure the container has position: relative */}
       <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
+        <PieChart className="relative z-50">
           {/* Donut Chart */}
           <Pie
             data={data}
@@ -39,6 +39,23 @@ const DonutChart = () => {
               />
             ))}
           </Pie>
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "#fff",
+
+              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
+            }}
+            labelStyle={{
+              fontWeight: "bold",
+              fontSize: "14px",
+              color: "#333",
+            }}
+            itemStyle={{
+              fontSize: "15px",
+              color: "#737373",
+              background: "white",
+            }}
+          />
         </PieChart>
       </ResponsiveContainer>
       {/* Center Text */}
@@ -58,7 +75,7 @@ const DonutChart = () => {
           Total Items
         </div>
         <div style={{ fontSize: "28px", fontWeight: "bold", color: "#0A0A0A" }}>
-          {new Intl.NumberFormat('en-US').format(total)}
+          {new Intl.NumberFormat("en-US").format(total)}
         </div>
       </div>
     </div>

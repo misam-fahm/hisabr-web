@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 const data = [
-  { name: "Group A", value: 200000 },
-  { name: "Group B", value: 150000 },
-  { name: "Group C", value: 100000 },
-  { name: "Group D", value: 80000 },
-  { name: "Group E", value: 121645 }, // Total sums to 651,645
+  { name: "Beverage", value: 200000 },
+  { name: "Cakes", value: 150000 },
+  { name: "Food", value: 100000 },
+  { name: "Novelties-Boxed", value: 80000 },
+  { name: "Soft Serve", value: 121645 }, // Total sums to 651,645
 ];
 
 const COLORS = ["#796C72", "#376066CC", "#DEC560", "#5B7993", "#C87F5E"];
@@ -19,7 +19,7 @@ const DonutChart = () => {
   return (
     <div className="w-full h-[320px] flex justify-center items-center relative">
       <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
+        <PieChart className="relative z-50">
           {/* Donut Chart */}
           <Pie
             data={data}
@@ -38,6 +38,23 @@ const DonutChart = () => {
               />
             ))}
           </Pie>
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "#fff",
+
+              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
+            }}
+            labelStyle={{
+              fontWeight: "bold",
+              fontSize: "14px",
+              color: "#333",
+            }}
+            itemStyle={{
+              fontSize: "15px",
+              color: "#737373",
+              background: "white",
+            }}
+          />
         </PieChart>
       </ResponsiveContainer>
       {/* Center Text */}
@@ -51,12 +68,31 @@ const DonutChart = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          zIndex: "10",
         }}
       >
-        <div style={{ fontSize: "12px", color: "#737373", fontWeight: "500" }}>
+        <div
+          style={{
+            fontSize: "12px",
+            color: "#737373",
+            fontWeight: "500",
+            background: "white",
+            position: "relative",
+            zIndex: "10",
+          }}
+        >
           Total Items
         </div>
-        <div style={{ fontSize: "28px", fontWeight: "bold", color: "#0A0A0A" }}>
+        <div
+          style={{
+            fontSize: "28px",
+            fontWeight: "bold",
+            color: "#0A0A0A",
+            background: "white",
+            position: "relative",
+            zIndex: "10",
+          }}
+        >
           {total.toLocaleString()}
         </div>
       </div>
