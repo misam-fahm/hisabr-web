@@ -364,7 +364,7 @@ const Invoices = () => {
                   className="text-green-500 hover:text-green-700"
                 >
                   <img
-                    className="below-md:w-7 below-md:h-7 h-4 w-4"
+                    className="below-md:w-5 below-md:h-5 h-4 w-4"
                     src="/images/ViewEyeIcon.svg"
                   />
                 </button>

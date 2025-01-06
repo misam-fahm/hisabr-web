@@ -1,9 +1,10 @@
 import { FieldError, FieldErrorsImpl, FieldValues, Merge, useFormContext } from "react-hook-form";
 import { Text } from "./Common/Text";
+import { useRef, useState } from "react";
 export interface IInputtextProps
 	extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
 	label: string;
-	name: string;
+	name: any;
 	type: string;
 	placeholder: string;
 	borderClassName?: string;
@@ -13,6 +14,8 @@ export interface IInputtextProps
 	className?: string;
 	divClassName?: string;
 	containerClassName?: string;
+	textColor?:string;
+	labelBackgroundColor?:string;
 	required?: boolean;
 	leftIcon?: React.ReactNode;
 	rightIcon?: React.ReactNode;
@@ -27,6 +30,7 @@ export interface IInputtextProps
 export function Inputtext(props:any): JSX.Element {
 
 	const useComponentId = (id: string) => id.trim().toLowerCase().replace(/ /g, "-");
+	const [isFocused, setIsFocused] = useState(false);
 	
 	const {
 		label,
@@ -38,9 +42,11 @@ export function Inputtext(props:any): JSX.Element {
 		className,
 		leftIcon,
 		rightIcon,
+		labelBackgroundColor,
 		borderClassName,
 		required = true,
 		variant,
+		textColor,
 		ClassName,
 		isDisabled,
 		divClassName,
@@ -60,8 +66,8 @@ export function Inputtext(props:any): JSX.Element {
 				{variant === "outline" ? (
 					<div
 					className={`
-					${errors && errors?.message ? "border-danger border" : "border border-white"}
-					${divClassName || ""} flex w-full items-center justify-between rounded-md focus-within:border-white`}
+					${errors && errors?.message ? "border-danger border" : borderClassName ? borderClassName : "border border-white"}
+					${divClassName || ""} flex w-full items-center justify-between rounded-md ${borderClassName ? "focus-within:border-black" : "focus-within:border-white"}`}
 				>
 					{leftIcon}
 					<input
@@ -83,33 +89,47 @@ export function Inputtext(props:any): JSX.Element {
 								rest.onChange(event);
 							}
 						}}
-						onBlur={onBlur}
+						onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
 						placeholder=""
-						className={`w-full appearance-none rounded-md border-none px-3 py-3 text-sm font-normal bg-transparent text-white ${
+						className={`w-full appearance-none rounded-md border-none px-3 py-3 text-sm font-normal bg-transparent ${textColor ? textColor : "text-white "}  ${
 							errors && errors?.message
 								? "border-red-500 focus:border-red-500"
 								: borderClassName
-								? "border-white"
-								: "focus:border-white"
+								? borderClassName ? borderClassName : "border border-white"
+								: borderClassName ? "focus: border border-black" :"focus:border-white"
 						} ${isDisabled && "cursor-not-allowed opacity-90"} focus:outline-none`}
 					/>
 					{rightIcon}
+
+					{/* <label
+                    className={`absolute left-2 top-1/2 transform -translate-y-1/2 px-1 text-sm bg-white transition-all ${
+                      isFocused || value
+                        ? "-top-0.5 text-xs text-gray-400"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    Tender  */}
+                  
+					
 					<label
 						htmlFor={fieldId}
 						onClick={() => document.getElementById(fieldId)?.focus()}
-						className={`text-darklightgrey absolute top-1.5  z-10 origin-[0] ml-5 -translate-y-4 scale-75 bg-[#334155] text-white px-2 text-base duration-300 peer-focus:px-2 ${
+						className={`text-darklightgrey absolute  ${isFocused || value ? (`-top-2.5  text-[8px]  ${textColor ? textColor : "text-white" }`) : textColor ? textColor : "text-white" }
+                    z-10   translate-all  ${labelBackgroundColor ? labelBackgroundColor : "bg-[#334155]" }  rounded-md ${textColor ? textColor : "text-white" } px-2 text-[8px] duration-300 peer-focus:px-2 ${
 							errors && errors?.message
 								? "peer-focus:text-red-500"
 								: borderClassName
-								? "border-white"
+								?  "border border-white"
 								: "peer-focus:text-primary"
-						} !text-sm left-3 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-1.5 peer-focus:-translate-y-4 peer-focus:scale-75 ${
-							watch(name) && " top-1.5 -translate-y-4 scale-75 bg-[#334155] px-2"
+						} !text-sm left-3   ${
+							watch(name) && "  translate-all bg-[#334155] px-2"
 						}`}
 					>
-						{placeholder}
+						{label}
 						<span className="">{required ? "*" : ""}</span>
 					</label>
+					
 				</div>
 				
 				) : variant === "normal" ? (
@@ -118,7 +138,7 @@ export function Inputtext(props:any): JSX.Element {
 					${errors && errors?.message ? "border-2 border-red-500" : ""}
 			${
 				divClassName || ""
-			} border border-white w-full items-center  justify-between rounded-md `}
+			} border ${borderClassName ? borderClassName : "border border-white"} w-full items-center  justify-between rounded-md `}
 					>
 						<input
 							type={type}
@@ -173,7 +193,7 @@ export function Inputtext(props:any): JSX.Element {
 				) : (
 					<div
 						className={`
-					${errors && errors?.message ? "border-2 border-red-500" : "border border-gray-300"}
+					${errors && errors?.message ? "border-2 border-red-500" :  "border border-gray-300"}
 			${divClassName || ""} flex  w-full items-center justify-between  rounded-md bg-white px-3 `}
 					>
 						<span className="rounded-[50%] bg-[#F7F7FD] p-1.5">{leftIcon}</span>
