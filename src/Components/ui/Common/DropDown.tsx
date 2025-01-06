@@ -57,15 +57,19 @@ const Dropdown = ({
       </p>
       {/* Dropdown Button */}
       <button
-        onClick={toggleOpen}
+         onClick={(e) => {
+          e.stopPropagation(); // Prevent dialog close
+          toggleOpen();
+        }}
+        // onClick={toggleOpen}
         className={`bg-[#ffffff] text-[#4B4B4B] ${
           shadowclassName ? shadowclassName : "shadow"
-        } shadow px-4 py-[10px] h-[35px] w-full ${widthchange || "below-md:w-[100%] below-lg:w-full"} rounded flex items-center justify-between below-md:w-full text-[12px] focus:outline-none`}
+        } shadow px-3  below-md:h-[38px] h-[35px] w-full ${widthchange || "below-md:w-[100%] below-lg:w-full"} rounded flex items-center justify-between below-md:w-full text-[12px] border focus:outline-none`}
       >
         <span>{selectedOption || "Year"}</span>
         <img
           src="./images/dropdown1.svg"
-          className={`-mr-1.5 transition-transform duration-200 ${
+          className={`-mr-0.5 transition-transform duration-200 ${
             isOpen ? "transform rotate-180" : ""
           }`}
         />
@@ -82,7 +86,11 @@ const Dropdown = ({
           {options?.map((option, index) => (
             <div
               key={index}
-              onClick={() => onSelect(option)}
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent dialog close
+                onSelect(option);
+              }}
+              // onClick={() => onSelect(option)}
               className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
             >
               {option}
