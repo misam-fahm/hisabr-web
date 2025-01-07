@@ -132,6 +132,23 @@ const data: TableRow[] = [
     name: "Gordon Gordon Gordon",
   },
 ];
+const formattedData = data?.map((item) => {
+  const rawDate = new Date(item?.date);
+
+  // Format the date as MM-DD-YY
+  const formattedDate = `${(rawDate?.getMonth() + 1)
+    .toString()
+    .padStart(
+      2,
+      "0"
+    )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
+    .getFullYear()
+    .toString()
+    .slice(-2)}`;
+
+  return { ...item, date: formattedDate };
+});
+console.log(formattedData);
 const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "date",
@@ -187,7 +204,7 @@ const Invoices = () => {
   const router = useRouter();
   const [globalFilter, setGlobalFilter] = React.useState("");
   const table = useReactTable({
-    data,
+    data:formattedData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -262,7 +279,7 @@ const Invoices = () => {
     }
   };
   /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("Select Stores");
+  const [selectedOption, setSelectedOption] = useState<string>("All Stores");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
@@ -297,12 +314,24 @@ const Invoices = () => {
     setShowTooltip(false);
   };
 
+  const handleBack = () => {
+    router.push("/");
+  };
+
   return (
     <main
       className="max-h-[calc(100vh-80px)] px-6 below-md:px-3 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
+      <div>
+        <img
+          onClick={handleBack}
+          alt="Back Arrow"
+          className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
+          src="/images/WebBackIcon.svg"
+        ></img>
+      </div>
+      <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-4 mb-6">
         <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
           <Dropdown
             options={options}
@@ -322,16 +351,19 @@ const Invoices = () => {
               type="search"
               onChange={(e) => setGlobalFilter(e.target.value)}
               ref={searchInputRef}
-              placeholder='Search'
-              className='w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none'>
-            </input>
-            <img className='pr-2 cursor-pointer items-center' src='/images/SearchIcon.svg'
-              onClick={handleClick} />
+              placeholder="Search"
+              className="w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none"
+            ></input>
+            <img
+              className="pr-2 cursor-pointer items-center"
+              src="/images/searchicon.svg"
+              onClick={handleClick}
+            />
           </div>
         </div>
         <div className=" pl-24 below-md:hidden">
           <button
-            className="w-[159px] h-[35px] bg-[#1AA47D] hover:bg-[#168A6F] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
+            className="w-[159px] h-[35px] bg-[#168A6F] hover:bg-[#11735C] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
             onClick={handleButtonClick}
           >
             <img className="" src="/images/WebUploadIcon.svg" alt="" />
@@ -345,7 +377,7 @@ const Invoices = () => {
           />
         </div>
       </div>
-      {/* Card section */}
+      {/* Mobile View : Card section */}
       <div className="block md:hidden">
         {cardData.map((card, index) => (
           <div
@@ -364,7 +396,7 @@ const Invoices = () => {
                   className="text-green-500 hover:text-green-700"
                 >
                   <img
-                    className="below-md:w-5 below-md:h-5 h-4 w-4"
+                    className="below-md:w-5 h-4 w-4"
                     src="/images/ViewEyeIcon.svg"
                   />
                 </button>
@@ -392,12 +424,15 @@ const Invoices = () => {
         ))}
         <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
           <button
-            className="focus:outline-none flex items-center bg-[#1AA47D]  justify-center  w-[50px] h-[50px] rounded-lg relative"
+            className="focus:outline-none flex items-center bg-[#168A6F]  justify-center  w-[56px] h-[56px] rounded-xl relative"
             onTouchStart={handlePressStart} // For mobile devices
             onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
             onClick={handleButtonClick}
           >
-            <img src="/images/MobileUploadIcon.svg" alt="Upload Invoice" />
+            <img src="/images/MobileUploadIcon.svg" 
+            alt="Upload Invoice" 
+            className="w-[18px] h-[18px]"
+            />
             {showTooltip && (
               <div className="absolute bottom-[75px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
                 Upload Invoice
@@ -409,7 +444,7 @@ const Invoices = () => {
         </div>
       </div>
 
-      {/* Invoice Table */}
+      {/*Web View : Invoice Table */}
       <div className="overflow-x-auto  shadow-md border-collapse border border-gray-200 rounded-lg  flex-grow flex flex-col below-md:hidden">
         <div className="overflow-hidden max-w-full rounded-md">
           <table className="w-full border-collapse text-[12px] rounded-md text-white table-fixed">
@@ -419,7 +454,7 @@ const Invoices = () => {
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[14px]  w-[100px]"
+                      className="text-left px-4 py-2 text-[#FFFFFF] font-normal text-[15px] w-[100px]"
                       style={{ width: `${header.column.getSize()}px` }}
                     >
                       {header.isPlaceholder
@@ -450,7 +485,7 @@ const Invoices = () => {
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        className="px-4 py-1 text-[#636363] text-[14px]  "
+                        className="px-4 py-1.5 text-[#636363] text-[14px]"
                         style={{ width: `${cell.column.getSize()}px` }}
                       >
                         {flexRender(

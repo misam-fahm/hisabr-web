@@ -224,7 +224,7 @@ const DetailsPage: React.FC = () => {
     }
   };
 
-  const [selectedOption, setSelectedOption] = useState<string>("All stores");
+  const [selectedOption, setSelectedOption] = useState<string>("Stores");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedOption2, setSelectedOption2] = useState<string>("2021");
   const [isOpen2, setIsOpen2] = useState<boolean>(false);

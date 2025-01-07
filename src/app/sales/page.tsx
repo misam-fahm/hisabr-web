@@ -249,10 +249,10 @@ const Sales: FC = () => {
         <span className="flex justify-center">
           <button onClick={handleImageClick}>
             <Images
-              src="/images/eye.svg"
+              src="/images/ViewEyeIcon.svg"
               alt="Eye Icon"
-              width={25}
-              height={25}
+              width={15}
+              height={15}
             />
           </button>
         </span>
@@ -291,7 +291,7 @@ const Sales: FC = () => {
   });
 
   /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("All stores");
+  const [selectedOption, setSelectedOption] = useState<string>("Stores");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];

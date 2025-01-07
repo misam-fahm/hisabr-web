@@ -19,7 +19,7 @@ const DonutChart = () => {
   return (
     <div className="w-full h-[320px] flex justify-center items-center relative">
       <ResponsiveContainer width="100%" height="100%">
-        <PieChart className="relative z-50">
+        <PieChart className="relative z-30">
           {/* Donut Chart */}
           <Pie
             data={data}

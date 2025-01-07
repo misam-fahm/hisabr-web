@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/Expenses/AddExpenses";
 import DateRange from "@/Components/drawer/DateRangePicker";
 import Dropdown from "@/Components/ui/Common/DropDown";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 import Image from "next/image";
 import {
@@ -33,73 +33,91 @@ const data: TableRow[] = [
     date: "2022-01-01",
     store: 13246,
     amount: "11,800",
-    description: "Mortgage Mortgage Mortgage Mortgage",
+    description: "Mortgage Mortgage Mortgage",
     type: "Mortgage",
   },
   {
     date: "2022-01-01",
     store: 13246,
     amount: "11,800",
-    description: "Mortgage Mortgage Mortgage Mortgage",
+    description: "Mortgage Mortgage Mortgage",
     type: "Mortgage",
   },
   {
     date: "2022-01-01",
     store: 13246,
     amount: "11,800",
-    description: "Mortgage Mortgage Mortgage Mortgage",
+    description: "Mortgage Mortgage Mortgage",
     type: "Mortgage",
   },
   {
     date: "2022-01-01",
     store: 13246,
     amount: "11,800",
-    description: "Mortgage Mortgage Mortgage Mortgage",
+    description: "Mortgage Mortgage Mortgage",
     type: "Mortgage",
   },
   {
     date: "2022-01-01",
     store: 13246,
     amount: "11,800",
-    description: "Mortgage Mortgage Mortgage Mortgage",
+    description: "Mortgage Mortgage Mortgage",
     type: "Mortgage",
   },
   {
     date: "2022-01-01",
     store: 13246,
     amount: "11,800",
-    description: "Mortgage Mortgage Mortgage Mortgage",
+    description: "Mortgage Mortgage Mortgage",
     type: "Mortgage",
   },
   {
     date: "2022-01-01",
     store: 13246,
     amount: "11,800",
-    description: "Mortgage Mortgage Mortgage Mortgage",
+    description: "Mortgage Mortgage Mortgage",
     type: "Mortgage",
   },
   {
     date: "2022-01-01",
     store: 13246,
     amount: "11,800",
-    description: "Mortgage Mortgage Mortgage Mortgage",
+    description: "Mortgage Mortgage Mortgage",
     type: "Mortgage",
   },
   {
     date: "2022-01-01",
     store: 13246,
     amount: "11,800",
-    description: "Mortgage Mortgage Mortgage Mortgage",
+    description: "Mortgage Mortgage Mortgage",
     type: "Mortgage",
   },
   {
     date: "2022-01-01",
     store: 13246,
     amount: "11,800",
-    description: "Mortgage Mortgage Mortgage Mortgage",
+    description: "Mortgage Mortgage Mortgage",
     type: "Mortgage",
   },
 ];
+const formattedData = data?.map((item) => {
+  const rawDate = new Date(item?.date);
+
+  // Format the date as MM-DD-YY
+  const formattedDate = `${(rawDate?.getMonth() + 1)
+    .toString()
+    .padStart(
+      2,
+      "0"
+    )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
+    .getFullYear()
+    .toString()
+    .slice(-2)}`;
+
+  return { ...item, date: formattedDate };
+});
+console.log(formattedData);
+
 const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "date",
@@ -173,10 +191,12 @@ const expenseData = {
   date: new Date(),
 };
 
+
 const Expenses: FC = () => {
+  const router = useRouter();
   const [globalFilter, setGlobalFilter] = React.useState("");
   const table = useReactTable({
-    data,
+    data: formattedData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -292,7 +312,7 @@ const Expenses: FC = () => {
     setIsOpen(!isOpen);
   };
   /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("Select Stores");
+  const [selectedOption, setSelectedOption] = useState<string>("All Stores");
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
   const toggleDropdown1 = () => setIsOpen(!isOpen);
@@ -302,15 +322,25 @@ const Expenses: FC = () => {
     setIsOpen(false); // Close dropdown after selection
     handleSelect(option); // Call the passed handler
   };
+  const handleBack = () => {
+    router.push("/");
+  };
 
-  
   return (
     <main
       className="max-h-[calc(100vh-50px)] px-6 below-md:px-3 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <>
-        <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
+        <div>
+          <img
+            onClick={handleBack}
+            alt="Back Arrow"
+            className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
+            src="/images/WebBackIcon.svg"
+          ></img>
+        </div>
+        <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-4 mb-6">
           <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
             <Dropdown
               options={options}
@@ -334,7 +364,7 @@ const Expenses: FC = () => {
               ></input>
               <img
                 className="pr-2 cursor-pointer items-center"
-                src="/images/SearchIcon.svg"
+                src="/images/searchicon.svg"
                 onClick={handleClick}
               />
             </div>
@@ -344,7 +374,7 @@ const Expenses: FC = () => {
           </div>
         </div>
 
-        {/* Card section */}
+        {/*Mobile View : Card section */}
         <div className="block md:hidden mb-16">
           {cardData.map((card, index) => (
             <div
@@ -395,7 +425,7 @@ const Expenses: FC = () => {
           </div>
         </div>
 
-        {/* Expenses Table */}
+        {/*Web View :  Expenses Table */}
         <div className="overflow-x-auto shadow-md border-collapse border border-gray-200  rounded-lg  flex-grow flex flex-col below-md:hidden">
           <div className="overflow-hidden max-w-full rounded-md">
             <table className="w-full border-collapse text-[12px] text-white table-fixed rounded-md">
@@ -405,7 +435,7 @@ const Expenses: FC = () => {
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className="text-left px-4 py-3 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+                        className="text-left px-4 py-2 text-[#FFFFFF] font-normal text-[15px] w-[100px]"
                         style={{ width: `${header.column.getSize()}px` }}
                       >
                         {header.isPlaceholder
@@ -436,7 +466,7 @@ const Expenses: FC = () => {
                       {row.getVisibleCells().map((cell) => (
                         <td
                           key={cell.id}
-                          className="px-4  py-1.5 text-[#636363] text-[14px]"
+                          className="px-4 py-1.5 text-[#636363] text-[14px]"
                           style={{ width: `${cell.column.getSize()}px` }}
                         >
                           {flexRender(
