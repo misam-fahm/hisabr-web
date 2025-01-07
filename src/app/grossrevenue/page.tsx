@@ -179,14 +179,13 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     id: "view",
-    header: () => <div className="text-center">View</div>,
+    header: () => <div className="text-center"></div>,
     cell: () => (
       <span className="flex justify-center">
         <Images
           src="/images/ViewEyeIcon.svg"
           alt="Eye Icon"
-          width={15}
-          height={15}
+          className="w-4 h-4"
         />
       </span>
     ),
@@ -290,7 +289,7 @@ const DetailsPage: React.FC = () => {
           Gross Revenue Analysis
         </p>
       </div> */}
-      <div className="pt-6 pb-6 below-md:pt-4 below-md:pb-4 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
+      <div className="pt-4 pb-6 below-md:pt-4 below-md:pb-4 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div>
           <img
             onClick={handleBack}
@@ -325,7 +324,7 @@ const DetailsPage: React.FC = () => {
       </div>
 
       <div className=" pl-6 pr-6 below-md:px-3">
-        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3  items-stretch">
+        <div className="grid grid-cols-4 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3  items-stretch">
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full items-stretch p-4 justify-between">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
@@ -408,7 +407,7 @@ const DetailsPage: React.FC = () => {
                 <div className="relative below-md:w-[35%]">
                   <Dropdown
                     className="relative below-md:w-full"
-                    shadowclassName="shadow-sm"
+                    shadowclassName="shadow-none"
                     options={options3}
                     selectedOption={selectedOption3}
                     onSelect={handleSelect3}
@@ -418,7 +417,7 @@ const DetailsPage: React.FC = () => {
                   />
                 </div>
               </div>
-              <div>
+              <div className="-mb-2 below-md:mb-3">
                 <BarChart3 selectedYear={Number(selectedOption3)} />
               </div>
             </div>
@@ -434,7 +433,7 @@ const DetailsPage: React.FC = () => {
                 <div className="relative below-md:w-[35%] z-[60]">
                   <Dropdown
                     className="relative w-full"
-                    shadowclassName="shadow-sm"
+                    shadowclassName="shadow-none"
                     options={options4}
                     selectedOption={selectedOption4}
                     onSelect={handleSelect4}
@@ -509,7 +508,7 @@ const DetailsPage: React.FC = () => {
 
           <div className="below-md:hidden">
             {/* Table */}
-            <div className="overflow-x-auto shadow-md rounded-lg">
+            <div className="overflow-x-auto shadow-sm border border-[#E4E4EF] rounded-lg">
               <table className="w-full border-collapse border border-gray-200">
                 <thead className="bg-[#334155]">
                   {table.getHeaderGroups().map((headerGroup) => (
@@ -578,7 +577,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
+                      <img src="/images/ViewEyeIcon.svg" className="w-5 h-5" />
                     </div>
                   </div>
                 </div>
@@ -606,7 +605,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
+                      <img src="/images/ViewEyeIcon.svg" className="w-5 h-5" />
                     </div>
                   </div>
                 </div>
@@ -634,7 +633,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
+                      <img src="/images/ViewEyeIcon.svg" className="w-5 h-5" />
                     </div>
                   </div>
                 </div>
@@ -662,7 +661,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
+                      <img src="/images/ViewEyeIcon.svg" className="w-5 h-5" />
                     </div>
                   </div>
                 </div>

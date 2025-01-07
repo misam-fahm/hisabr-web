@@ -11,7 +11,7 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [lastSelectedDate, setLastSelectedDate] = useState<Date | undefined>(
     undefined
-  ); // Use undefined instead of null
+  );
   const pickerRef = useRef<HTMLDivElement>(null);
 
   const handleClickIcon = () => setIsOpen((prev) => !prev);
@@ -43,8 +43,8 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
     <div className="relative" ref={pickerRef}>
       <div
         onClick={handleClickIcon}
-        className={`flex items-center justify-between roundedbelow-md:h-[38px] h-[35px] rounded-md border bg-white cursor-pointer shadow ${
-          widthchang ? "" : "below-md:w-full w-full"
+        className={`flex items-center justify-between rounded below-md:h-[38px] h-[35px] border bg-white cursor-pointer shadow ${
+          widthchang ? "" : "below-lg:w-[260px] below-md:w-full w-full"
         }`}
       >
         <span className="text-[#636363] text-[12px] px-3">
@@ -58,7 +58,7 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
       </div>
 
       {isOpen && (
-        <div className="absolute top-[50px] left-0 z-50 bg-white shadow-lg p-4 rounded ">
+        <div className="absolute top-[40px] below-md:top-[43px] left-0 z-50 bg-white shadow-lg p-4 rounded ">
           <DatePicker
             selected={startDate}
             onChange={handleDateChange}
@@ -80,23 +80,37 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
             }}
           />
           <div className="flex flex-row justify-between items-center border-[#DBDBDB] border-t-[1px]">
-            <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 py-[17px] w-[30%] text-[10px] rounded-xl flex items-center justify-center">
-              <span className="absolute -top-[10px] left-[30%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
-                From
-              </span>
-              <p className="text-[11px]">
-                {startDate ? startDate.toLocaleDateString() : ""}
-              </p>
-            </div>
+            {startDate && endDate ? (
+              <>
+                {/* "From" Box */}
+                <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 h-9 w-[30%] text-[10px] rounded-xl flex items-center justify-center">
+                  <span className="absolute -top-[10px] left-[30%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
+                    From
+                  </span>
+                  <p className="text-[10px]">
+                    {startDate.toLocaleDateString()}
+                  </p>
+                </div>
 
-            <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 py-[17px] w-[30%] text-[10px] rounded-xl flex items-center justify-center">
-              <span className="absolute -top-[10px] left-[30%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
-                To
-              </span>
-              <p className="text-[11px]">
-                {endDate ? endDate.toLocaleDateString() : ""}
-              </p>
-            </div>
+                {/* "To" Box */}
+                <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 h-9 w-[30%] text-[10px] rounded-xl flex items-center justify-center">
+                  <span className="absolute -top-[10px] left-[30%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
+                    To
+                  </span>
+                  <p className="text-[10px]">{endDate.toLocaleDateString()}</p>
+                </div>
+              </>
+            ) : (
+              // "Selected Date" Box
+              <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 h-9 w-[60%] text-[10px] rounded-xl flex items-center justify-center">
+                <span className="absolute -top-[10px] left-[15%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
+                  Date
+                </span>
+                <p className="text-[12px]">
+                  {startDate?.toLocaleDateString() || ""}
+                </p>
+              </div>
+            )}
 
             <div>
               <button

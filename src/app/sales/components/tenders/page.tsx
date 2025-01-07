@@ -72,7 +72,7 @@ const paymentData = [
 const PaymentTable: React.FC = () => {
   return (
     <main>
-      <div className="overflow-x-auto rounded-lg mb-16 shadow-md  below-md:hidden">
+      <div className="overflow-x-auto rounded-lg mb-16 shadow-sm border border-[#E4E4EF] below-md:hidden">
         <table className="min-w-full below-md:hidden">
           <thead className="bg-[#334155] text-white">
             <tr className=" text-[15px] font-medium">

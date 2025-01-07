@@ -38,7 +38,7 @@ const discountData = [
 const DiscountTable: React.FC = () => {
   return (
     <main>
-      <div className="overflow-x-auto below-md:hidden rounded-lg  shadow-md">
+      <div className="overflow-x-auto below-md:hidden rounded-lg  shadow-sm border border-[#E4E4EF]">
         <table className="min-w-full border-collapse">
           <thead className="bg-[#334155] text-white">
             <tr className="text-[15px] font-medium">

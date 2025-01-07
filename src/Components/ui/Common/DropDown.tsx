@@ -46,7 +46,7 @@ const Dropdown = ({
   return (
     <div
       ref={dropdownRef}
-      className={`${className || "relative below-md:w-full"} ${widthchange || "below-md:w-[100%] below-lg:w-[260px] tablet:w-full"}`}
+      className={`${className || "relative below-md:w-full "} ${widthchange || "below-md:w-full below-lg:w-[260px] tablet:w-full"}`}
     >
       <p
         className={`text-[#2D374880] text-[12px] below-md:hidden ${
@@ -57,7 +57,7 @@ const Dropdown = ({
       </p>
       {/* Dropdown Button */}
       <button
-         onClick={(e) => {
+        onClick={(e) => {
           e.stopPropagation(); // Prevent dialog close
           toggleOpen();
         }}

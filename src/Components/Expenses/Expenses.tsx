@@ -3,7 +3,7 @@
 import React, { FC, useState, useRef, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/Expenses/AddExpenses";
-import DateRange from "@/Components/drawer/DateRangePicker";
+import DateRange from "@/Components/ui/Common/DateRangePicker";
 import Dropdown from "@/Components/ui/Common/DropDown";
 import { useRouter } from "next/navigation";
 
@@ -190,7 +190,6 @@ const expenseData = {
   amount: 100,
   date: new Date(),
 };
-
 
 const Expenses: FC = () => {
   const router = useRouter();

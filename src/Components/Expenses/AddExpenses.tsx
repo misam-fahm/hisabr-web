@@ -6,12 +6,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/ui/Common/DropDown";
 import { FormProvider, useForm, Controller } from "react-hook-form";
 import { Inputtext } from "../ui/InputText";
-import DateRange from "@/Components/drawer/DateRangePicker";
+import DateRange from "@/Components/ui/Common/DateRangePicker";
 
 const AddExpenses = () => {
   const methods = useForm();
   const { register, setValue, handleSubmit, watch } = methods;
-
 
   const onSubmit = (data: any) => {
     console.log("Form Data:", data);
@@ -37,9 +36,6 @@ const AddExpenses = () => {
     setShowTooltip(false);
   };
 
-
-
-
   //Dropdown
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [isExpenseDropdownOpen, setIsExpenseDropdownOpen] = useState(false);
@@ -48,7 +44,7 @@ const AddExpenses = () => {
   const toggleDropdown1 = () => {
     setIsStoreDropdownOpen((prev) => !prev);
     setIsExpenseDropdownOpen(false); // Close the other dropdown
-  }
+  };
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
   const selectedStore = watch("store"); // Watch the "store" field for changes
 
@@ -58,9 +54,6 @@ const AddExpenses = () => {
   };
   const expenseTypes = ["Travel", "Food", "Accommodation", "Miscellaneous"];
   const selectedExpense = watch("Expense Type"); // Watch the "store" field for changes
-
-
-
 
   return (
     <>
@@ -122,9 +115,7 @@ const AddExpenses = () => {
             </div>
 
             <FormProvider {...methods}>
-              <form
-                onSubmit={methods.handleSubmit(onSubmit)}
-              >
+              <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <div className="flex flex-col mt-4 gap-4">
                   <div className="flex w-full h-[38px]">
                     {/* Store Input Field */}
@@ -133,7 +124,8 @@ const AddExpenses = () => {
                       selectedOption={selectedStore || "Store"} // Watch the selected value
                       onSelect={(selectedOption) => {
                         setValue("store", selectedOption); // Update the form value
-                        setIsStoreDropdownOpen(false); (false); // Close dropdown after selection
+                        setIsStoreDropdownOpen(false);
+                        false; // Close dropdown after selection
                       }}
                       isOpen={isStoreDropdownOpen}
                       toggleOpen={toggleDropdown1}
@@ -171,7 +163,8 @@ const AddExpenses = () => {
                       })}
                       errors={methods.formState.errors.description}
                       placeholder="Description"
-                      variant="outline" />
+                      variant="outline"
+                    />
                   </div>
                   <div className="flex w-[286px] h-[38px]">
                     {/* Amount Input Field */}
@@ -195,7 +188,8 @@ const AddExpenses = () => {
                   </div>
                   <div className="flex flex-col items-center py-4">
                     <div className="flex justify-between gap-3 items-center w-full">
-                      <button type="button"
+                      <button
+                        type="button"
                         className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
                         onClick={closeModal}
                       >
@@ -207,30 +201,16 @@ const AddExpenses = () => {
                       >
                         Save
                       </button>
-
-
                     </div>
                   </div>
-
-
-
                 </div>
-
               </form>
-
-
-
-
-
             </FormProvider>
-
           </DialogPanel>
         </div>
       </Dialog>
-
     </>
   );
 };
-
 
 export default AddExpenses;
