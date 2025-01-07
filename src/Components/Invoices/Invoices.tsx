@@ -194,7 +194,7 @@ const columns: ColumnDef<TableRow>[] = [
         onClick={() => (window.location.href = "/invoicedetails")}
         className="text-green-500 hover:text-green-700 text-center ml-2"
       >
-        <img src="/images/ViewEyeIcon.svg" alt="View Icon" />
+        <img src="/images/vieweyeicon.svg" alt="View Icon" />
       </button>
     ),
     size: 30,
@@ -279,7 +279,7 @@ const Invoices = () => {
     }
   };
   /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("All Stores");
+  const [selectedOption, setSelectedOption] = useState<string>("Stores");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
@@ -328,7 +328,7 @@ const Invoices = () => {
           onClick={handleBack}
           alt="Back Arrow"
           className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
-          src="/images/WebBackIcon.svg"
+          src="/images/webbackicon.svg"
         ></img>
       </div>
       <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-4 mb-6">
@@ -366,7 +366,7 @@ const Invoices = () => {
             className="w-[159px] h-[35px] bg-[#168A6F] hover:bg-[#11735C] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
             onClick={handleButtonClick}
           >
-            <img className="" src="/images/WebUploadIcon.svg" alt="" />
+            <img className="" src="/images/webuploadicon.svg" alt="" />
             Upload Invoice
           </button>
           <input
@@ -397,7 +397,7 @@ const Invoices = () => {
                 >
                   <img
                     className="below-md:w-5 h-4 w-4"
-                    src="/images/ViewEyeIcon.svg"
+                    src="/images/vieweyeicon.svg"
                   />
                 </button>
               </div>

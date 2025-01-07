@@ -118,7 +118,7 @@ export function Inputtext(props:any): JSX.Element {
 						className={`text-darklightgrey absolute  ${isFocused || value ? (`-top-2.5  text-[8px]  ${textColor ? textColor : "text-white" }`) : textColor ? textColor : "text-white" }
                     z-10   translate-all  ${labelBackgroundColor ? labelBackgroundColor : "bg-[#334155]" }  rounded-md ${textColor ? textColor : "text-white" } px-2 text-[8px] duration-300 peer-focus:px-2 ${
 							errors && errors?.message
-								? "peer-focus:text-red-500"
+								? "peer-focus: text-red-500"
 								: borderClassName
 								?  "border border-white"
 								: "peer-focus:text-primary"
@@ -223,9 +223,9 @@ export function Inputtext(props:any): JSX.Element {
 				)}
 			</div>
 			{errors && errors?.message && (
-				<Text className="mt-1 !text-sm absolute top-[2.50rem] z-10 text-red-600">
+				<p className="mt-1  absolute text-[10px] top-[2.50rem] z-10 text-red-600">
 					{errors?.message as string}
-				</Text>
+				</p>
 			)}
 		</div>
 	);
