@@ -6,6 +6,7 @@ import AddExpenses from "@/Components/Expenses/AddExpenses";
 import DateRange from "@/Components/ui/Common/DateRangePicker";
 import Dropdown from "@/Components/ui/Common/DropDown";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 
 import Image from "next/image";
 import {
@@ -192,6 +193,7 @@ const expenseData = {
 };
 
 const Expenses: FC = () => {
+  const methods = useForm(); // Initialize useForm hook
   const router = useRouter();
   const [globalFilter, setGlobalFilter] = React.useState("");
   const table = useReactTable({
@@ -311,7 +313,7 @@ const Expenses: FC = () => {
     setIsOpen(!isOpen);
   };
   /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("All Stores");
+  const [selectedOption, setSelectedOption] = useState<string>("Stores");
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
   const toggleDropdown1 = () => setIsOpen(!isOpen);
@@ -336,7 +338,7 @@ const Expenses: FC = () => {
             onClick={handleBack}
             alt="Back Arrow"
             className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
-            src="/images/WebBackIcon.svg"
+            src="/images/webbackicon.svg"
           ></img>
         </div>
         <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-4 mb-6">
@@ -348,6 +350,7 @@ const Expenses: FC = () => {
               isOpen={isOpen}
               toggleOpen={toggleDropdown1}
               widthchange="w-full"
+      
             />
 
             <div className="w-full tablet:w-full below-md:w-full h-[35px]">

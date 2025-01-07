@@ -54,7 +54,7 @@ const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
               ? `Selected: ${startDate.toLocaleDateString()}`
               : "Date Range"}
         </span>
-        <img className="pr-2" src="/images/CalenderIcon.svg" alt="calendar" />
+        <img className="pr-2" src="/images/calendericon.svg" alt="calendar" />
       </div>
 
       {isOpen && (

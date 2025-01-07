@@ -4,13 +4,31 @@ import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/ui/Common/DropDown";
-import { FormProvider, useForm, Controller } from "react-hook-form";
+import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
 import { Inputtext } from "../ui/InputText";
 import DateRange from "@/Components/ui/Common/DateRangePicker";
 
+// Define the form values interface
+interface FormValues {
+  expenseType: string;
+  store: string;
+  // Add other fields as needed
+}
+
 const AddExpenses = () => {
-  const methods = useForm();
-  const { register, setValue, handleSubmit, watch } = methods;
+  const methods = useForm({
+    mode: "onTouched", // Validate only when a field is touched
+    reValidateMode: "onChange", // Revalidate only when a field's value changes
+  });
+  const { register, setValue, handleSubmit, watch, clearErrors, trigger } =
+    methods;
+
+  const [description, setDescription] = useState("");
+
+  const handleChange = (data: any) => {
+    setDescription(data); // Update local state
+    methods.setValue("description", data); // Update form state in react-hook-form
+  };
 
   const onSubmit = (data: any) => {
     console.log("Form Data:", data);
@@ -65,7 +83,7 @@ const AddExpenses = () => {
           className="focus:outline-none flex items-center justify-center bg-[#168A6F]  w-[56px] h-[56px] rounded-xl relative"
         >
           <img
-            src="/images/WebAddIcon.svg"
+            src="/images/webaddicon.svg"
             alt="AddExpense"
             className="w-[18px] h-[18px]"
           />
@@ -83,7 +101,7 @@ const AddExpenses = () => {
           onClick={openModal}
           className="bg-[#168A6F] hover:bg-[#11735C] shadow-lg text-white w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
-          <img className="" src="/images/WebAddIcon.svg" alt="" />
+          <img className="" src="/images/webaddicon.svg" alt="" />
           Add Expenses
         </button>
       </div>
@@ -96,11 +114,11 @@ const AddExpenses = () => {
       >
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[335px] h-[421px] below-md:w-[94%] below-md:h-[450px] px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
+          <DialogPanel className="w-[335px] h-[430px] below-md:w-[94%] below-md:h-[450px] px-6 below-md:px-3 py-3 bg-white rounded-lg shadow-lg flex flex-col">
             <div className="relative">
               <img
                 onClick={closeModal}
-                src="/images/CancelIcon.svg"
+                src="/images/cancelicon.svg"
                 alt="Cancel"
                 className="absolute top-0 right-0 cursor-pointer"
               />
@@ -116,92 +134,94 @@ const AddExpenses = () => {
 
             <FormProvider {...methods}>
               <form onSubmit={methods.handleSubmit(onSubmit)}>
-                <div className="flex flex-col mt-4 gap-4">
-                  <div className="flex w-full h-[38px]">
-                    {/* Store Input Field */}
-                    <Dropdown
-                      options={options}
-                      selectedOption={selectedStore || "Store"} // Watch the selected value
-                      onSelect={(selectedOption) => {
-                        setValue("store", selectedOption); // Update the form value
-                        setIsStoreDropdownOpen(false);
-                        false; // Close dropdown after selection
-                      }}
-                      isOpen={isStoreDropdownOpen}
-                      toggleOpen={toggleDropdown1}
-                      widthchange="w-full"
-                    />
-                  </div>
-                  <div className="flex w-full h-[38px]">
-                    {/* Expense Type Input Field */}
-                    <Dropdown
-                      options={expenseTypes}
-                      selectedOption={selectedExpense || "Expense Type"} // Watch the selected value
-                      onSelect={(selectedOption) => {
-                        setValue("Expense Type", selectedOption); // Update the form value
-                        setIsExpenseDropdownOpen(false); // Close dropdown after selection
-                      }}
-                      isOpen={isExpenseDropdownOpen}
-                      toggleOpen={toggleExpenseDropdown}
-                      widthchange="w-full"
-                    />
-                  </div>
-                  <div className="w-full h-[38px]">
-                    <DateRange />
-                  </div>
+                <div className="flex flex-col h-full mt-4 gap-7">
+                  {/* Store Input Field */}
+                  <Dropdown
+                    options={options}
+                    selectedOption={selectedStore || "Store"} // Watch the selected value
+                    onSelect={(selectedOption) => {
+                      setValue("store", selectedOption); // Update the form value
+                      setIsStoreDropdownOpen(false); // Close dropdown after selection
+                      clearErrors("store"); // Clear errors for this field
+                    }}
+                    isOpen={isStoreDropdownOpen}
+                    toggleOpen={toggleDropdown1}
+                    widthchange="w-full"
+                    {...methods.register("store", {
+                      required: "Store Selection is required",
+                    })}
+                    errors={methods.formState.errors.store} // Explicitly cast the type
+                  />
 
-                  <div className="w-full flex">
-                    {/* Description Input Field */}
-                    <Inputtext
-                      type="text"
-                      label="Description"
-                      borderClassName=" border border-gray-400"
-                      labelBackgroundColor="bg-white"
-                      textColor="text-gray-500"
-                      {...methods?.register("description", {
-                        required: "Description is required",
-                      })}
-                      errors={methods.formState.errors.description}
-                      placeholder="Description"
-                      variant="outline"
-                    />
-                  </div>
-                  <div className="flex w-[286px] h-[38px]">
-                    {/* Amount Input Field */}
-                    <Inputtext
-                      type="number" // Use type="number" for numeric input
-                      label="Amount"
-                      borderClassName="border border-gray-400"
-                      labelBackgroundColor="bg-white"
-                      textColor="text-gray-500"
-                      {...methods?.register("amount", {
-                        required: "Amount is required",
-                        min: {
-                          value: 0,
-                          message: "Amount must be a positive number",
-                        },
-                      })}
-                      errors={methods.formState.errors.amount}
-                      placeholder="Enter Amount"
-                      variant="outline"
-                    />
-                  </div>
-                  <div className="flex flex-col items-center py-4">
-                    <div className="flex justify-between gap-3 items-center w-full">
-                      <button
-                        type="button"
-                        className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
-                        onClick={closeModal}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
-                      >
-                        Save
-                      </button>
-                    </div>
+                  {/* Expense Type Input Field */}
+                  <Dropdown
+                    options={expenseTypes}
+                    selectedOption={selectedExpense || "Expense Type"} // Watch the selected value
+                    onSelect={(selectedOption) => {
+                      setValue("Expense Type", selectedOption); // Update the form value
+                      setIsExpenseDropdownOpen(false); // Close dropdown after selection
+                      trigger("expenseType"); // Validate only the expenseType field
+                    }}
+                    isOpen={isExpenseDropdownOpen}
+                    toggleOpen={toggleExpenseDropdown}
+                    widthchange="w-full"
+                    {...methods.register("expenseType", {
+                      required: "Expense Type is required", // Validation for this field
+                    })}
+                    errors={methods.formState.errors.expenseType} // Pass errors specific to this field
+                  />
+
+                  <DateRange />
+
+                  <Inputtext
+                    type="text"
+                    label="Description"
+                    borderClassName=" border border-gray-400"
+                    labelBackgroundColor="bg-white"
+                    value={description}
+                    textColor="text-gray-500"
+                    {...methods?.register("description", {
+                      required: "Description is required",
+                    })}
+                    errors={methods.formState.errors.description}
+                    placeholder="Description"
+                    variant="outline"
+                    onChange={(e: any) => handleChange(e.target.value)}
+                  />
+
+                  <Inputtext
+                    type="number" // Use type="number" for numeric input
+                    label="Amount"
+                    borderClassName="border border-gray-400"
+                    labelBackgroundColor="bg-white"
+                    textColor="text-gray-500"
+                    {...methods?.register("amount", {
+                      required: "Amount is required",
+                      min: {
+                        value: 0,
+                        message: "Amount must be a positive number",
+                      },
+                    })}
+                    errors={methods.formState.errors.amount}
+                    placeholder="Enter Amount"
+                    variant="outline"
+                  />
+
+                  <div className="flex justify-between gap-3 items-center w-full">
+                    <button
+                      type="button"
+                      className="px-4  below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
+                      onClick={closeModal}
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="submit"
+                      className="px-4 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
+                    >
+                      Save
+                    </button>
                   </div>
                 </div>
               </form>
