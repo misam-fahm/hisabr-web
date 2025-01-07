@@ -229,6 +229,7 @@ const DetailsPage: React.FC = () => {
 
   /**go back button */
   const router = useRouter();
+  
   const handleBack = () => {
     router.back();
   };
