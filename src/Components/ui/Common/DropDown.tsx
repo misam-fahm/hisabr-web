@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect,useState } from "react";
+import { FieldError, FieldErrorsImpl, FieldValues, Merge, useFormContext} from "react-hook-form";
 
 // Dropdown Component
 const Dropdown = ({
@@ -11,6 +12,9 @@ const Dropdown = ({
   onSelect,
   isOpen,
   toggleOpen,
+  errors, // New prop for validation errors
+  borderClassName = "border-gray-400",
+  ...rest // Spread other props like register
 }: {
   label?: string;
   options: string[];
@@ -21,8 +25,12 @@ const Dropdown = ({
   onSelect: (option: string) => void;
   isOpen: boolean;
   toggleOpen: () => void;
+  errors?: FieldError | Merge<FieldError, FieldErrorsImpl<FieldValues>> | undefined;
+  borderClassName?: string;
+  [key: string]: any; // Allow additional props like register
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isFocused, setIsFocused] = useState(false); // State to track focus
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -60,11 +68,21 @@ const Dropdown = ({
          onClick={(e) => {
           e.stopPropagation(); // Prevent dialog close
           toggleOpen();
+          setIsFocused(true); // Set focus state
         }}
         // onClick={toggleOpen}
+        onBlur={() => setIsFocused(false)} // Remove focus state on blur
         className={`bg-[#ffffff] text-[#4B4B4B] ${
           shadowclassName ? shadowclassName : "shadow"
-        } shadow px-3  below-md:h-[38px] h-[35px] w-full ${widthchange || "below-md:w-[100%] below-lg:w-full"} rounded flex items-center justify-between below-md:w-full text-[12px] border focus:outline-none`}
+        } shadow px-3  below-md:h-[38px] h-[35px] w-full ${widthchange || "below-md:w-[100%] below-lg:w-full"} rounded flex items-center justify-between below-md:w-full text-[12px] border
+        ${
+          errors ?
+            "border-red-500" 
+            : isFocused
+            ? "border-blue-500" // Blue border on focus
+            : borderClassName
+        } focus:outline-none`} // Add error styling
+        {...rest} // Apply validation props
       >
         <span>{selectedOption || "Year"}</span>
         <img
@@ -98,6 +116,11 @@ const Dropdown = ({
           ))}
         </div>
       )}
+      {errors && errors?.message && (
+				<p className="mt-0 absolute text-[10px]  z-10 text-red-600">
+					{errors?.message as string}
+				</p>
+			)}
     </div>
   );
 };

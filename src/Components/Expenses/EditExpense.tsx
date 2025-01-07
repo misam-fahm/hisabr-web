@@ -141,7 +141,7 @@ const EditExpense = ({
       <div>
         <button onClick={openModal}>
           <img
-            src="/images/EditPencilIcon.svg"
+            src="/images/editpencilicon.svg"
             className="flex justify-center w-4 h-4 md:h-5 md:w-5 text-left"
           />
         </button>
