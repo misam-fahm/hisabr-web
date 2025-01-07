@@ -223,7 +223,7 @@ export function Inputtext(props:any): JSX.Element {
 				)}
 			</div>
 			{errors && errors?.message && (
-				<p className="mt-1  absolute text-[10px] top-[2.50rem] z-10 text-red-600">
+				<p className="mt-1  absolute text-[10px] top-[2.30rem] z-10 text-red-600">
 					{errors?.message as string}
 				</p>
 			)}

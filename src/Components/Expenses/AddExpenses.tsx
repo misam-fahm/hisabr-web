@@ -15,6 +15,13 @@ const AddExpenses = () => {
   const methods = useForm();
   const { setValue, watch } = methods;
 
+  const [description, setDescription] = useState("");
+
+  const handleChange = (data:any) => {
+    setDescription(data); // Update local state
+    methods.setValue("description", data); // Update form state in react-hook-form
+  };
+
 
   const onSubmit = (data: any) => {
     console.log("Form Data:", data);
@@ -106,7 +113,7 @@ const AddExpenses = () => {
       >
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[335px] h-[421px] below-md:w-[94%] below-md:h-[450px] px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
+          <DialogPanel className="w-[335px] h-[430px] below-md:w-[94%] below-md:h-[450px] px-6 below-md:px-3 py-3 bg-white rounded-lg shadow-lg flex flex-col">
             <div className="relative">
               <img
                 onClick={closeModal}
@@ -126,24 +133,30 @@ const AddExpenses = () => {
 
             <FormProvider {...methods}>
               <form
-                onSubmit={methods.handleSubmit(onSubmit)}
+              onSubmit={methods.handleSubmit(onSubmit)}
               >
-                <div className="flex flex-col mt-4 gap-4">
-                  <div className="flex w-full h-[38px]">
+                <div className="flex flex-col h-full mt-4 gap-7">
+          
                     {/* Store Input Field */}
                     <Dropdown
-                    options={options}
-                    selectedOption={selectedStore || "Store"} // Watch the selected value
-                    onSelect={(selectedOption) => {
-                        setValue("store", selectedOption); // Update the form value
-                        setIsStoreDropdownOpen(false);// Close dropdown after selection
-                      }}
-                      isOpen={isStoreDropdownOpen}
-                      toggleOpen={toggleDropdown1}
-                      widthchange="w-full"
-                    />
-                  </div>
-                  <div className="flex w-full h-[38px]">
+  options={options}
+  selectedOption={selectedStore || "Store"} // Watch the selected value
+  onSelect={(selectedOption) => {
+    setValue("store", selectedOption); // Update the form value
+    setIsStoreDropdownOpen(false); // Close dropdown after selection
+  
+  }}
+  isOpen={isStoreDropdownOpen}
+  toggleOpen={toggleDropdown1}
+  widthchange="w-full"
+  {...methods.register("store", {
+    required: "Store Selection is required",
+  })}
+  errors={methods.formState.errors.store } // Explicitly cast the type
+/>
+
+                 
+                 
                     {/* Expense Type Input Field */}
                     <Dropdown
                       options={expenseTypes}
@@ -156,28 +169,29 @@ const AddExpenses = () => {
                       toggleOpen={toggleExpenseDropdown}
                       widthchange="w-full"
                     />
-                  </div>
-                  <div className="w-full h-[38px]">
+                 
+                 
                     <DateRange />
-                  </div>
+                 
 
-                  <div className="w-full flex">
-                    {/* Description Input Field */}
+               
                     <Inputtext
                       type="text"
                       label="Description"
                       borderClassName=" border border-gray-400"
                       labelBackgroundColor="bg-white"
+                      value={description}
                       textColor="text-gray-500"
                       {...methods?.register("description", {
                         required: "Description is required",
                       })}
                       errors={methods.formState.errors.description}
                       placeholder="Description"
-                      variant="outline" />
-                  </div>
-                  <div className="flex w-[286px] h-[38px]">
-                    {/* Amount Input Field */}
+                      variant="outline" 
+                      onChange={(e: any) => handleChange(e.target.value)} 
+                      />
+                 
+                    
                     <Inputtext
                       type="number" // Use type="number" for numeric input
                       label="Amount"
@@ -195,25 +209,26 @@ const AddExpenses = () => {
                       placeholder="Enter Amount"
                       variant="outline"
                     />
-                  </div>
-                  <div className="flex flex-col items-center py-3">
+                 
+                 
                     <div className="flex justify-between gap-3 items-center w-full">
                       <button type="button"
-                        className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
+                        className="px-4  below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
                         onClick={closeModal}
                       >
                         Cancel
                       </button>
+
                       <button
                         type="submit"
-                        className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
+                        className="px-4 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
                       >
                         Save
                       </button>
 
 
                     </div>
-                  </div>
+               
 
 
 
