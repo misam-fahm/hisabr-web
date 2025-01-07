@@ -8,21 +8,12 @@ import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
 import { Inputtext } from "../ui/InputText";
 import DateRange from "@/Components/drawer/DateRangePicker";
 
-// Define the form values interface
-interface FormValues {
-  expenseType: string;
-  store: string;
-  // Add other fields as needed
-}
+
+
 
 const AddExpenses = () => {
-  const methods = useForm(
-    {
-      mode: "onTouched", // Validate only when a field is touched
-      reValidateMode: "onChange", // Revalidate only when a field's value changes
-    }
-  );
-  const { register, setValue, handleSubmit, watch ,clearErrors,trigger} = methods;
+  const methods = useForm();
+  const { setValue, watch } = methods;
 
   const [description, setDescription] = useState("");
 
@@ -153,7 +144,7 @@ const AddExpenses = () => {
   onSelect={(selectedOption) => {
     setValue("store", selectedOption); // Update the form value
     setIsStoreDropdownOpen(false); // Close dropdown after selection
-    clearErrors("store"); // Clear errors for this field
+  
   }}
   isOpen={isStoreDropdownOpen}
   toggleOpen={toggleDropdown1}
@@ -173,15 +164,10 @@ const AddExpenses = () => {
                       onSelect={(selectedOption) => {
                         setValue("Expense Type", selectedOption); // Update the form value
                         setIsExpenseDropdownOpen(false); // Close dropdown after selection
-                        trigger("expenseType"); // Validate only the expenseType field
                       }}
                       isOpen={isExpenseDropdownOpen}
                       toggleOpen={toggleExpenseDropdown}
                       widthchange="w-full"
-                      {...methods.register("expenseType", {
-                        required: "Expense Type is required", // Validation for this field
-                      })}
-                      errors={methods.formState.errors.expenseType} // Pass errors specific to this field
                     />
                  
                  
