@@ -99,7 +99,7 @@ const EditTender = () => {
           <img
             src="/images/EditPencilIcon.svg"
             alt="Add icon"
-            className="flex justify-center items-center w-4 h-4"
+            className="flex justify-center items-center  w-4 h-4 below-md:w-5 below-md:h-5"
           />
         </Button>
       </div>
@@ -216,7 +216,7 @@ const EditTender = () => {
                   type="submit"
                   className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[35px] text-[#FFFFFF] rounded-md"
                 >
-                  Save
+                  Update
                 </button>
               </div>
             </form>

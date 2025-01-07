@@ -203,13 +203,13 @@ const Page: FC = () => {
             <div>No data available</div>
           )}
           {/* Add NewItem bottom */}
-          <div className=" fixed bottom-[20px] below-lg:hidden right-3">
-            <AddNewItems />
+          <div className="block pl-24 ">
+            <AddCategories />
           </div>
         </div>
 
         {/* Desktop View */}
-        <div className="overflow-x-auto shadow-md border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block">
+        <div className="overflow-x-auto shadow-md border-collapse border border-gray-200 rounded-lg   below-md:hidden flex-col md:block">
           <div className="overflow-hidden max-w-full">
             <table className="w-full  table-fixed">
               <thead className="bg-[#334155] sticky top-0 z-10">
@@ -218,7 +218,7 @@ const Page: FC = () => {
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className="text-left px-4 py-2.5 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+                        className="text-left px-4 py-2 text-[#FFFFFF] font-normal text-[15px] w-[100px]"
                         style={{ width: `${header.column.getSize()}px` }} // Applying dynamic width
                       >
                         {header.isPlaceholder
