@@ -1,443 +1,160 @@
-"use client";
 
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+
+import { Inputtext } from "@/Components/ui/InputText";
+import { Text } from "@/Components/ui/Common/Text";
+import Dropdown from "@/Components/ui/Common/DropDown";
 
 const Page = () => {
-  const [formData, setFormData] = useState({
-    selectedStore: "",
-    monthlyRoyalty: "",
-    laborSalary: "",
-    rent: "",
-    electricity: "",
-    mortgage: "",
-    otherExpenses: "",
-  });
+  const methods = useForm();
 
-  const [errors, setErrors] = useState({
-    selectedStore: "",
-    monthlyRoyalty: "",
-    laborSalary: "",
-    rent: "",
-    electricity: "",
-    mortgage: "",
-    otherExpenses: "",
-  });
+  const onSubmit = (data: any) => {
+    console.log(data);
+  };
+   
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  const [selectedOption, setSelectedOption] = useState<string>("All stores");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-    if (value) {
-      setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-    }
+  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
+
+  const toggleDropdown1 = () => setIsOpen(!isOpen);
+
+  const handleSelect = (option: string) => {
+    setSelectedOption(option);
+    setIsOpen(false);
   };
 
-  const validateForm = () => {
-    const newErrors = {
-      selectedStore: "",
-      monthlyRoyalty: "",
-      laborSalary: "",
-      rent: "",
-      electricity: "",
-      mortgage: "",
-      otherExpenses: "",
-    };
-    let isValid = true;
-
-    if (!formData.selectedStore) {
-      newErrors.selectedStore = "Store selection is required.";
-      isValid = false;
-    }
-    if (!formData.monthlyRoyalty || isNaN(Number(formData.monthlyRoyalty))) {
-      newErrors.monthlyRoyalty = "Valid monthly royalty is required.";
-      isValid = false;
-    }
-    if (!formData.laborSalary || isNaN(Number(formData.laborSalary))) {
-      newErrors.laborSalary = "Valid labor/salary is required.";
-      isValid = false;
-    }
-    if (!formData.rent || isNaN(Number(formData.rent))) {
-      newErrors.rent = "Valid rent is required.";
-      isValid = false;
-    }
-    if (!formData.electricity || isNaN(Number(formData.electricity))) {
-      newErrors.electricity = "Valid electricity value is required.";
-      isValid = false;
-    }
-    if (!formData.mortgage || isNaN(Number(formData.mortgage))) {
-      newErrors.mortgage = "Valid mortgage is required.";
-      isValid = false;
-    }
-    if (!formData.otherExpenses || isNaN(Number(formData.otherExpenses))) {
-      newErrors.otherExpenses = "Valid other expenses value is required.";
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (validateForm()) {
-      console.log("Form submitted successfully:", formData);
-      setFormData({
-        selectedStore: "",
-        monthlyRoyalty: "",
-        laborSalary: "",
-        rent: "",
-        electricity: "",
-        mortgage: "",
-        otherExpenses: "",
-      });
-      setErrors({
-        selectedStore: "",
-        monthlyRoyalty: "",
-        laborSalary: "",
-        rent: "",
-        electricity: "",
-        mortgage: "",
-        otherExpenses: "",
-      });
-    }
-  };
 
   return (
-    <main
-      className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-2 overflow-auto"
-      style={{ scrollbarWidth: "thin" }}
-    >
-      <div className="flex items-start pt-4 cursor-pointer pl-8 below-md:pl-4">
-        <img
-          src="/images/WebBackIcon.svg"
-          alt="Back Arrow"
-          className="w-7 h-7"
-        />
-      </div>
+    <FormProvider {...methods}>
+      <form
+        onSubmit={methods.handleSubmit(onSubmit)}
+        className="w-full flex flex-col gap-8 p-10 "
+      >
+        <div className="bg-white py-10 px-5 rounded-lg">
+        <div className="flex gap-2  justify-between ">
+          <div className=" w-full below-md:w-full ">
+          <Dropdown
+            options={options}
+            selectedOption={selectedOption}
+            onSelect={handleSelect}
+            isOpen={isOpen}
+            toggleOpen={toggleDropdown1}
+            widthchange="w-full"
+            
+          />
+          </div>
 
-      {/* Mobile View */}
-      <div className="flex justify-center items-center p-3 md:hidden">
-        <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-xl">
-          <p className="font-medium text-[#5E6366]">Add Configuration:</p>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Store Select */}
-            <div className="w-full mt-4">
-              <label className="block text-sm font-medium text-[#5E6366]">
-                Store
-              </label>
-              <select
-                name="selectedStore"
-                value={formData.selectedStore}
-                onChange={handleInputChange}
-                className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm sm:text-sm ${
-                  !formData.selectedStore ? "text-gray-400" : "text-gray-700"
-                } ${errors.selectedStore ? "border-red-500" : ""}`}
-              >
-                <option value="" disabled>
-                  Please select Store name
-                </option>
-                <option value="Store1">Store 1</option>
-                <option value="Store2">Store 2</option>
-                <option value="Store3">Store 3</option>
-              </select>
-              {errors.selectedStore && (
-                <p className="text-xs text-red-500">{errors.selectedStore}</p>
-              )}
-            </div>
-
-            {/* Monthly Royalty */}
-            <div className="w-full">
-              <label className="block text-sm font-medium text-[#5E6366]">
-                Monthly Royalty
-              </label>
-              <input
-                type="text"
-                name="monthlyRoyalty"
-                value={formData.monthlyRoyalty}
-                onChange={handleInputChange}
-                placeholder="Enter Monthly Royalty"
-                className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm sm:text-sm ${
-                  errors.monthlyRoyalty ? "border-red-500" : ""
-                }`}
-              />
-              {errors.monthlyRoyalty && (
-                <p className="text-xs text-red-500">{errors.monthlyRoyalty}</p>
-              )}
-            </div>
-
-            {/* Labor Salary */}
-            <div className="w-full">
-              <label className="block text-sm font-medium text-[#5E6366]">
-                Labor/Salary
-              </label>
-              <input
-                type="text"
-                name="laborSalary"
-                value={formData.laborSalary}
-                onChange={handleInputChange}
-                placeholder="Enter Labor/Salary"
-                className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm sm:text-sm ${
-                  errors.laborSalary ? "border-red-500" : ""
-                }`}
-              />
-              {errors.laborSalary && (
-                <p className="text-xs text-red-500">{errors.laborSalary}</p>
-              )}
-            </div>
-
-            {/* Rent */}
-            <div className="w-full">
-              <label className="block text-sm font-medium text-[#5E6366]">
-                Rent
-              </label>
-              <input
-                type="text"
-                name="rent"
-                value={formData.rent}
-                onChange={handleInputChange}
-                placeholder="Enter Rent"
-                className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm sm:text-sm ${
-                  errors.rent ? "border-red-500" : ""
-                }`}
-              />
-              {errors.rent && (
-                <p className="text-xs text-red-500">{errors.rent}</p>
-              )}
-            </div>
-
-            {/* Electricity */}
-            <div className="w-full">
-              <label className="block text-sm font-medium text-[#5E6366]">
-                Electricity
-              </label>
-              <input
-                type="text"
-                name="electricity"
-                value={formData.electricity}
-                onChange={handleInputChange}
-                placeholder="Enter Electricity"
-                className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm sm:text-sm ${
-                  errors.electricity ? "border-red-500" : ""
-                }`}
-              />
-              {errors.electricity && (
-                <p className="text-xs text-red-500">{errors.electricity}</p>
-              )}
-            </div>
-
-            {/* Mortgage */}
-            <div className="w-full">
-              <label className="block text-sm font-medium text-[#5E6366]">
-                Mortgage
-              </label>
-              <input
-                type="text"
-                name="mortgage"
-                value={formData.mortgage}
-                onChange={handleInputChange}
-                placeholder="Enter Mortgage"
-                className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm sm:text-sm ${
-                  errors.mortgage ? "border-red-500" : ""
-                }`}
-              />
-              {errors.mortgage && (
-                <p className="text-xs text-red-500">{errors.mortgage}</p>
-              )}
-            </div>
-
-            {/* Other Expenses */}
-            <div className="w-full">
-              <label className="block text-sm font-medium text-[#5E6366]">
-                Other Expenses
-              </label>
-              <input
-                type="text"
-                name="otherExpenses"
-                value={formData.otherExpenses}
-                onChange={handleInputChange}
-                placeholder="Enter Other Expenses"
-                className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm sm:text-sm ${
-                  errors.otherExpenses ? "border-red-500" : ""
-                }`}
-              />
-              {errors.otherExpenses && (
-                <p className="text-xs text-red-500">{errors.otherExpenses}</p>
-              )}
-            </div>
-
-            <div className="flex justify-start">
-              {/* <button
-                type="button"
-                className="w-full sm:w-auto bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md"
-              >
-                Cancel
-              </button> */}
-              <button
-                type="submit"
-                className="sm:w-auto bg-[#168A6F] hover:bg-[#168A68] text-white font-medium py-2 px-10 rounded-md"
-              >
-                Save
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-      {/* Web View */}
-      <div className="justify-center items-center  p-8 hidden md:block">
-        <div className="bg-white shadow-md rounded-lg p-6 w-full px-7">
-          <div>
-            <p className="font-medium text-[#5E6366]">Add Configuration:</p>
-            <form onSubmit={handleSubmit}>
-              <div className="flex gap-10 mt-4 py-4">
-                <div className="w-[30%]">
-                  <label className="block text-sm font-medium text-[#5E6366]">
-                    Store
-                  </label>
-                  <select
-                    name="selectedStore"
-                    value={formData.selectedStore}
-                    onChange={handleInputChange}
-                    className={`mt-1 block w-full border p-2 border-gray-300 rounded-md  sm:text-sm ${
-                      !formData.selectedStore
-                        ? "text-gray-400"
-                        : "text-gray-700"
-                    } ${errors.selectedStore ? "border-red-500" : ""}`}
-                  >
-                    <option value="" disabled hidden>
-                      Please select Store name
-                    </option>
-                    <option value="Store1">Store 1</option>
-                    <option value="Store2">Store 2</option>
-                    <option value="Store3">Store 3</option>
-                  </select>
-
-                  {errors.selectedStore && (
-                    <p className="text-xs text-red-500">
-                      {errors.selectedStore}
-                    </p>
-                  )}
-                </div>
-
-                {[
-                  {
-                    name: "monthlyRoyalty",
-                    label: "Monthly Royalty",
-                    placeholder: "Please enter Monthly Royalty",
-                  },
-                  {
-                    name: "laborSalary",
-                    label: "Labor/Salary",
-                    placeholder: "Please enter Labor/Salary",
-                  },
-                ].map(({ name, label, placeholder }) => (
-                  <div key={name} className="w-[30%]">
-                    <label className="block text-sm font-medium text-[#5E6366]">
-                      {label}
-                    </label>
-                    <input
-                      type="text"
-                      name={name}
-                      value={formData[name as keyof typeof formData]}
-                      onChange={handleInputChange}
-                      placeholder={placeholder}
-                      className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm sm:text-sm ${
-                        errors[name as keyof typeof errors]
-                          ? "border-red-500"
-                          : ""
-                      }`}
-                    />
-                    {errors[name as keyof typeof errors] && (
-                      <p className="text-xs text-red-500">
-                        {errors[name as keyof typeof errors]}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex gap-10 py-4">
-                {[
-                  {
-                    name: "rent",
-                    label: "Rent",
-                    placeholder: "Please enter Rent",
-                  },
-                  {
-                    name: "electricity",
-                    label: "Electricity",
-                    placeholder: "Please enter Electricity",
-                  },
-                  {
-                    name: "mortgage",
-                    label: "Mortgage",
-                    placeholder: "Please enter Mortgage",
-                  },
-                ].map(({ name, label, placeholder }) => (
-                  <div key={name} className="w-[30%]">
-                    <label className="block text-sm font-medium text-[#5E6366]">
-                      {label}
-                    </label>
-                    <input
-                      type="text"
-                      name={name}
-                      value={formData[name as keyof typeof formData]}
-                      onChange={handleInputChange}
-                      placeholder={placeholder}
-                      className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm sm:text-sm ${
-                        errors[name as keyof typeof errors]
-                          ? "border-red-500"
-                          : ""
-                      }`}
-                    />
-                    {errors[name as keyof typeof errors] && (
-                      <p className="text-xs text-red-500">
-                        {errors[name as keyof typeof errors]}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex justify-between py-4">
-                <div className="w-[30%]">
-                  <label className="block text-sm font-medium text-[#5E6366]">
-                    Other Expenses
-                  </label>
-                  <input
-                    type="text"
-                    name="otherExpenses"
-                    value={formData.otherExpenses}
-                    onChange={handleInputChange}
-                    placeholder="Please enter Other Expenses"
-                    className={`mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-sm sm:text-sm ${
-                      errors.otherExpenses ? "border-red-500" : ""
-                    }`}
-                  />
-                  {errors.otherExpenses && (
-                    <p className="text-xs text-red-500">
-                      {errors.otherExpenses}
-                    </p>
-                  )}
-                </div>
-                <div className="flex gap-4 mt-3 p-2 px-4">
-                  <div>
-                    <button
-                      type="submit"
-                      className="w-[145px] bg-[#168A6F] hover:bg-[#168A68] text-white font-medium py-2 px-4 rounded-md"
-                    >
-                      Save
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </form>
+          <div className="w-full below-md:w-full">
+            <Inputtext
+              type={"text"}
+              label="Monthly Royalty"
+              borderClassName="border border-[#5E6366]"
+              labelBackgroundColor="bg-white"
+              textColor="text-[#5E6366]"
+              {...methods.register("monthlyroyalty", {
+                required: "Monthly Royalty is required",
+                
+              })}
+              errors={methods.formState.errors.monthlyroyalty}
+              placeholder="Enter Monthly Royalty"
+              variant="outline"
+            />
+          </div>
+          <div className="w-full below-md:w-full">
+            <Inputtext
+              type={"text"}
+              label="Labor Salary"
+              borderClassName="border border-[#5E6366]"
+              labelBackgroundColor="bg-white"
+              textColor="text-[#5E6366]"
+              {...methods.register("labor", {
+                required: " Labor Salary is required",
+              })}
+              errors={methods.formState.errors.labor}
+              placeholder="Enter Labor Salary"
+              variant="outline"
+            />
+          </div>
+          <div className="w-full below-md:w-full">
+            <Inputtext
+              type={"text"}
+              label="Rent"
+              borderClassName="border border-[#5E6366]"
+              labelBackgroundColor="bg-white"
+              textColor="text-[#5E6366]"
+              {...methods.register("rent", {
+                required: "Rent is required",
+              
+              })}
+              errors={methods.formState.errors.rent}
+              placeholder="Enter Rent"
+              variant="outline"
+            />
           </div>
         </div>
-      </div>
-    </main>
+        <div className="flex gap-2 mt-10 justify-center ">
+          <div className="w-[25%] below-md:w-full">
+            <Inputtext
+              type={"text"}
+              label="Electricity"
+              borderClassName="border border-[#5E6366]"
+              labelBackgroundColor="bg-white"
+              textColor="text-[#5E6366]"
+              {...methods.register("electricity", {
+                required: "Electricity is required",
+                
+              })}
+              errors={methods.formState.errors.electricity}
+              placeholder="Enter Electricity"
+              variant="outline"
+            />
+          </div>
+
+          <div className="w-[25%] below-md:w-full">
+            <Inputtext
+              type={"text"}
+              label="Mortgage"
+              borderClassName="border border-[#5E6366]"
+              labelBackgroundColor="bg-white"
+              textColor="text-[#5E6366]"
+              {...methods.register("mortgage", {
+                required: "Mortgage is required",
+               
+              })}
+              errors={methods.formState.errors.mortgage}
+              placeholder="Enter Mortgage"
+              variant="outline"
+            />
+          </div>
+          <div className="w-[25%] below-md:w-full">
+            <Inputtext
+              type={"text"}
+              label="Other Expenses"
+              borderClassName="border border-[#5E6366]"
+              labelBackgroundColor="bg-white"
+              textColor="text-[#5E6366]"
+              {...methods.register("otherexpenses", {
+                required: "Other Expenses is required",
+              
+              })}
+              errors={methods.formState.errors.otherexpenses}
+              placeholder="Enter Other Expenses"
+              variant="outline"
+            />
+          </div>
+          <div className="flex justify-end w-[25%] below-md:w-full">
+            <button className=" rounded-md text-white px-14 bg-[#168A6F] hover:bg-[#11735C] ">
+              Add
+            </button>
+          </div>
+        </div>
+        </div>
+      </form>
+    </FormProvider>
   );
 };
 
