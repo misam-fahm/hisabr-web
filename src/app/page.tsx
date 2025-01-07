@@ -64,13 +64,16 @@ const Home: FC = () => {
   /**first link(gross revenue) */
   const router = useRouter();
 
+  const [grossrevenue, setgrossrevenue] = useState(false)
+
   useEffect(() => {
     // Ensure the back icon is hidden on the home page
     sessionStorage.setItem("showBackIcon", "false");
   }, []);
 
   const handleClick = () => {
-    router.push("/grossrevenue"); // Navigates to the 'details' page
+    setgrossrevenue(true)
+    router.push("/grossrevenue")
   };
 
   /**second link(tender) */
