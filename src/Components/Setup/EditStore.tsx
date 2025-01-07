@@ -1,125 +1,30 @@
 "use client";
 
 import React, { useState } from "react";
-import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
-
+import { Button, Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
+import Dropdown from "@/Components/ui/Common/DropDown";
+import { FormProvider, useForm, Controller } from "react-hook-form";
+import { Inputtext } from "../ui/InputText";
+import DateRange from "@/Components/drawer/DateRangePicker";
 
-const EditStore = () => {
+const AddStore = () => {
+  const methods = useForm();
+
+  const onSubmit = (data: any) => {
+    console.log("Form Data:", data);
+  };
+  const { control } = useForm(); // Initialize React Hook Form
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    storeName: "",
-    location: "",
-    user: "",
-    county: "",
-    royalty: "",
-  });
-  const [errors, setErrors] = useState({
-    storeName: "",
-    location: "",
-    user: "",
-    county: "",
-    royalty: "",
-  });
 
   const openModal = () => setIsOpen(true);
-  const closeModal = () => {
-    setIsOpen(false);
-    setFormData({
-      storeName: "",
-      location: "",
-      user: "",
-      county: "",
-      royalty: "",
-    });
-    setErrors({
-      storeName: "",
-      location: "",
-      user: "",
-      county: "",
-      royalty: "",
-    });
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-
-    // Clear error dynamically
-    if (value.trim()) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: "",
-      }));
-    }
-  };
-
-  const validateForm = () => {
-    let isValid = true;
-    const newErrors = {
-      storeName: "",
-      location: "",
-      county: "",
-      user: "",
-      royalty: "",
-    };
-
-    if (!formData.storeName.trim()) {
-      newErrors.storeName = "Store name is required";
-      isValid = false;
-    }
-
-    if (!formData.location.trim()) {
-      newErrors.location = "Store location is required";
-      isValid = false;
-    }
-    if (!formData.county.trim()) {
-      newErrors.county = "Store county is required";
-      isValid = false;
-    }
-
-    if (!formData.user.trim()) {
-      newErrors.user = "Store description is required";
-      isValid = false;
-    }
-
-    if (!formData.royalty.trim()) {
-      newErrors.royalty = "Store royalty is required";
-      isValid = false;
-    } else {
-      const royaltyValue = Number(formData.royalty);
-      if (isNaN(royaltyValue) || royaltyValue <= 0) {
-        newErrors.royalty = "Royalty must be a positive number";
-        isValid = false;
-      }
-    }
-
-    setErrors(newErrors);
-    return isValid;
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (validateForm()) {
-      // Form is valid, process the data
-      const finalData = {
-        ...formData,
-        royalty: Number(formData.royalty), // Ensure royalty is a number
-      };
-      console.log("Store added:", finalData);
-      closeModal();
-    }
-  };
+  const closeModal = () => setIsOpen(false);
 
   return (
     <>
-      <div>
-        <Button onClick={openModal}>
-          <img
+            <div>
+         <Button onClick={openModal}>
+           <img
             src="/images/EditPencilIcon.svg"
             alt="Add icon"
             className="flex justify-center items-center  w-4 h-4 below-md:w-5 below-md:h-5"
@@ -133,127 +38,132 @@ const EditStore = () => {
         className="relative z-50"
         onClose={closeModal}
       >
-        <div className="fixed inset-0 bg-black bg-opacity-50 " />
+        <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[420px] below-md:w-[345px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
-            <div className="flex justify-between mb-4">
-              <DialogTitle
-                as="h3"
-                className="font-medium border-none text-gray-900"
-              >
-                Edit Store
-              </DialogTitle>
+          <DialogPanel className="w-[335px] h-auto below-md:w-[94%] below-md:h-auto px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
+            <div className="relative">
               <img
                 onClick={closeModal}
-                src="/images/cancelicon.svg"
-                alt=""
-                className="cursor-pointer"
+                src="/images/CancelIcon.svg"
+                alt="Cancel"
+                className="absolute top-0 right-0 cursor-pointer"
               />
+              <div className="flex justify-center mt-1">
+                <DialogTitle
+                  as="h3"
+                  className=" font-medium  text-[#3D3D3D] opacity-80"
+                >
+                  Edit Store
+                </DialogTitle>
+              </div>
             </div>
 
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-2 gap-2 mb-4">
-                <div className="col-span-2">
-                  <label className="text-sm text-gray-600">Store Name</label>
-                  <input
-                    type="text"
-                    name="storeName"
-                    value={formData.storeName}
-                    onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm  font-normal rounded-lg border ${
-                      errors.storeName ? "border-red-500" : "border-gray-300"
-                    }`}
-                    placeholder="Please enter Store name"
-                  />
-                  {errors.storeName && (
-                    <p className="text-xs text-red-500">{errors.storeName}</p>
-                  )}
-                </div>
+            <FormProvider {...methods}>
+              <form onSubmit={methods.handleSubmit(onSubmit)}>
+                <div className="flex flex-col mt-4 gap-4">
+                  <div className="w-full flex">
+                    {/* Description Input Field */}
+                    <Inputtext
+                      type="text"
+                      label="Store Name"
+                      borderClassName=" border border-gray-400"
+                      labelBackgroundColor="bg-white"
+                      textColor="text-gray-500"
+                      {...methods?.register("storename", {
+                        required: "Store Name is required",
+                      })}
+                      errors={methods.formState.errors.storename}
+                      placeholder="Storename"
+                      variant="outline"
+                    />
+                  </div>
+                  <div className="w-full flex mt-4">
+                    {/* Description Input Field */}
+                    <Inputtext
+                      type="text"
+                      label="Location"
+                      borderClassName=" border border-gray-400"
+                      labelBackgroundColor="bg-white"
+                      textColor="text-gray-500"
+                      {...methods?.register("location", {
+                        required: "Location is required",
+                      })}
+                      errors={methods.formState.errors.location}
+                      placeholder="Location"
+                      variant="outline"
+                    />
+                  </div>
+                  <div className="w-full flex mt-4">
+                    {/* Description Input Field */}
+                    <Inputtext
+                      type="text"
+                      label="User"
+                      borderClassName=" border border-gray-400"
+                      labelBackgroundColor="bg-white"
+                      textColor="text-gray-500"
+                      {...methods?.register("user", {
+                        required: "User is required",
+                      })}
+                      errors={methods.formState.errors.user}
+                      placeholder="User"
+                      variant="outline"
+                    />
+                  </div>
+                  <div className="w-full flex mt-4">
+                    {/* Description Input Field */}
+                    <Inputtext
+                      type="text"
+                      label="County"
+                      borderClassName=" border border-gray-400"
+                      labelBackgroundColor="bg-white"
+                      textColor="text-gray-500"
+                      {...methods?.register("county", {
+                        required: "County is required",
+                      })}
+                      errors={methods.formState.errors.county}
+                      placeholder="County"
+                      variant="outline"
+                    />
+                  </div>
+                  <div className="w-full flex mt-4">
+                    {/* Description Input Field */}
+                    <Inputtext
+                      type="text"
+                      label="Royalty"
+                      borderClassName=" border border-gray-400"
+                      labelBackgroundColor="bg-white"
+                      textColor="text-gray-500"
+                      {...methods?.register("royalty", {
+                        required: "Royalty is required",
+                      })}
+                      errors={methods.formState.errors.royalty}
+                      placeholder="Royalty"
+                      variant="outline"
+                    />
+                  </div>
+           
 
-                <div className="col-span-2">
-                  <label className="text-sm text-gray-600">Location</label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-normal rounded-lg border ${
-                      errors.location ? "border-red-500" : "border-gray-300"
-                    }`}
-                    placeholder="Please enter Store Location"
-                  />
-                  {errors.location && (
-                    <p className="text-xs text-red-500">{errors.location}</p>
-                  )}
+                  <div className="flex flex-col items-center py-4">
+                    <div className="flex justify-between gap-3 items-center w-full">
+                      <button
+                        type="button"
+                        className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
+                        onClick={closeModal}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
+                      >
+                        Update
+                      </button>
+                    </div>
+                  </div>
                 </div>
-
-                <div className="col-span-2">
-                  <label className="text-sm text-gray-600">User</label>
-                  <input
-                    type="text"
-                    name="description"
-                    value={formData.user}
-                    onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-normal rounded-lg border ${
-                      errors.user ? "border-red-500" : "border-gray-300"
-                    }`}
-                    placeholder="Please enter Store User"
-                  />
-                  {errors.user && (
-                    <p className="text-xs text-red-500">{errors.user}</p>
-                  )}
-                </div>
-
-                <div className="col-span-2">
-                  <label className="text-sm text-gray-600">County</label>
-                  <input
-                    type="text"
-                    name="royalty"
-                    value={formData.royalty}
-                    onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-normal rounded-lg border ${
-                      errors.royalty ? "border-red-500" : "border-gray-300"
-                    }`}
-                    placeholder="Please enter Store County"
-                  />
-                  {errors.royalty && (
-                    <p className="text-xs text-red-500">{errors.county}</p>
-                  )}
-                </div>
-                <div className="col-span-2">
-                  <label className="text-sm text-gray-600">Royalty</label>
-                  <input
-                    type="text"
-                    name="royalty"
-                    value={formData.royalty}
-                    onChange={handleInputChange}
-                    className={`h-[42px] mt-1 pl-2 w-full text-gray-700 text-sm font-normal rounded-lg border ${
-                      errors.royalty ? "border-red-500" : "border-gray-300"
-                    }`}
-                    placeholder="Please enter Store Royalty"
-                  />
-                  {errors.royalty && (
-                    <p className="text-xs text-red-500">{errors.royalty}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex mt-5 justify-between">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="mr-4 px-4 py-2 h-[35px] w-[165px] bg-[#E4E4E4] hover:bg-[#C9C9C9]  font-semibold text-[14px] rounded-md text-[#6F6F6F]"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[35px] text-[#FFFFFF] rounded-md"
-                >
-                  Update
-                </button>
-              </div>
-            </form>
+              </form>
+            </FormProvider>
+            
           </DialogPanel>
         </div>
       </Dialog>
@@ -261,4 +171,4 @@ const EditStore = () => {
   );
 };
 
-export default EditStore;
+export default AddStore;
