@@ -94,15 +94,15 @@ const AddTender = () => {
 
   return (
     <>
-      <div className="hidden below-md:block">
+      <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
         <button
           onClick={openModal}
-          className="hover:gap-2 text-white w-[80px] h-[80px] rounded-md items-center justify-center overflow-hidden"
+          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[56px] h-[56px] rounded-lg relative"
         >
-          <img
-            src="/images/addButton.svg"
+         <img
+            src="/images/WebAddIcon.svg"
             alt="Add Button"
-            className="transition-opacity duration-10"
+            className="w-[18px]"
           />
         </button>
       </div>
@@ -228,7 +228,7 @@ const AddTender = () => {
                   type="submit"
                   className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[35px]text-[#FFFFFF] rounded-md text-[#ffffff] "
                 >
-                  Add Tender
+                  Save
                 </button>
               </div>
             </form>

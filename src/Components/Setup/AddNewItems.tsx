@@ -104,15 +104,15 @@ const AddNewItems = () => {
 
   return (
     <>
-      <div className="hidden below-md:block">
+      <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
         <button
           onClick={openModal}
-          className="hover:gap-2 text-white w-[80px] h-[80px] rounded-md items-center justify-center overflow-hidden"
+          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[56px] h-[56px] rounded-lg relative"
         >
           <img
-            src="/images/addButton.svg"
+            src="/images/WebAddIcon.svg"
             alt="Add Button"
-            className="transition-opacity duration-10"
+            className="w-[18px]"
           />
         </button>
       </div>
@@ -157,7 +157,7 @@ const AddNewItems = () => {
                   className={`h-[42px] mt-1 pl-2 pr-4 w-full text-sm font-normal rounded-lg border ${
                     errors.selectedType ? "border-red-500" : "border-gray-300"
                   } bg-white text-[#8D98AA] flex justify-between items-center`}
-                > 
+                >
                   {formData.selectedType || "Please select  Category"}
                   <img src="/images/dropdown1.svg" alt="dropdown1" />
                 </button>
@@ -276,7 +276,7 @@ const AddNewItems = () => {
                   type="submit"
                   className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[35px] text-[#FFFFFF] rounded-md"
                 >
-                  Add Item
+                 Save
                 </button>
               </div>
             </form>

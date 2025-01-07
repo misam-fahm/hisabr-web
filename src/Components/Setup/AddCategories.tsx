@@ -98,6 +98,18 @@ const AddCategories = () => {
         message={customToast.toastMessage}
         type={customToast.toastType}
       />
+       <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
+        <button
+          onClick={openModal}
+          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[56px] h-[56px] rounded-lg relative"
+        >
+          <img
+            src="/images/WebAddIcon.svg"
+            alt="Add Button"
+            className="w-[18px]"
+          />
+        </button>
+      </div>
       <div className="block below-md:hidden">
         <button
           onClick={openModal}
@@ -188,7 +200,7 @@ const AddCategories = () => {
                     type="submit"
                     className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[35px] text-[#FFFFFF] rounded-md"
                   >
-                    Add Category
+                    Save
                   </button>
                 </div>
               </form>

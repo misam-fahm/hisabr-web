@@ -216,7 +216,7 @@ const EditTender = () => {
                   type="submit"
                   className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[35px] text-[#FFFFFF] rounded-md"
                 >
-                  Save
+                  Update
                 </button>
               </div>
             </form>
