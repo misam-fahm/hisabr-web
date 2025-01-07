@@ -8,21 +8,12 @@ import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
 import { Inputtext } from "../ui/InputText";
 import DateRange from "@/Components/drawer/DateRangePicker";
 
-// Define the form values interface
-interface FormValues {
-  expenseType: string;
-  store: string;
-  // Add other fields as needed
-}
+
+
 
 const AddExpenses = () => {
-  const methods = useForm(
-    {
-      mode: "onTouched", // Validate only when a field is touched
-      reValidateMode: "onChange", // Revalidate only when a field's value changes
-    }
-  );
-  const { register, setValue, handleSubmit, watch ,clearErrors,trigger} = methods;
+  const methods = useForm();
+  const { setValue, watch } = methods;
 
 
   const onSubmit = (data: any) => {
@@ -146,15 +137,10 @@ const AddExpenses = () => {
                     onSelect={(selectedOption) => {
                         setValue("store", selectedOption); // Update the form value
                         setIsStoreDropdownOpen(false);// Close dropdown after selection
-                        clearErrors("store"); // Clear errors for this field
                       }}
                       isOpen={isStoreDropdownOpen}
                       toggleOpen={toggleDropdown1}
                       widthchange="w-full"
-                      {...methods.register("store", {
-                      required: "Store Selection is required",
-                    })}
-                    errors={methods.formState.errors.store as FieldError | undefined} // Explicitly cast the type
                     />
                   </div>
                   <div className="flex w-full h-[38px]">
@@ -165,15 +151,10 @@ const AddExpenses = () => {
                       onSelect={(selectedOption) => {
                         setValue("Expense Type", selectedOption); // Update the form value
                         setIsExpenseDropdownOpen(false); // Close dropdown after selection
-                        trigger("expenseType"); // Validate only the expenseType field
                       }}
                       isOpen={isExpenseDropdownOpen}
                       toggleOpen={toggleExpenseDropdown}
                       widthchange="w-full"
-                      {...methods.register("expenseType", {
-                        required: "Expense Type is required", // Validation for this field
-                      })}
-                      errors={methods.formState.errors.expenseType} // Pass errors specific to this field
                     />
                   </div>
                   <div className="w-full h-[38px]">
@@ -215,7 +196,7 @@ const AddExpenses = () => {
                       variant="outline"
                     />
                   </div>
-                  <div className="flex flex-col items-center py-4">
+                  <div className="flex flex-col items-center py-3">
                     <div className="flex justify-between gap-3 items-center w-full">
                       <button type="button"
                         className="px-4 py-2 below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
