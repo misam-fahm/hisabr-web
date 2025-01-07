@@ -47,6 +47,7 @@ const LoginForm = () => {
             >
               <div className="w-[400px] below-md:w-full">
                 <Inputtext
+                  type={"email"} 
                   label="Email"
                   {...methods.register("email", {
                     required: "Email is required",
@@ -54,12 +55,12 @@ const LoginForm = () => {
                   })}
                   errors={methods.formState.errors.email}
                   placeholder="Enter email"
-                  variant="outline"
-                />
+                  variant="outline"                />
               </div>
 
               <div className="w-[400px] below-md:w-full ">
                 <Inputtext
+                  type={"text"} 
                   label="Password"
                   {...methods.register("Password", {
                     required: "Password is required",
@@ -72,16 +73,13 @@ const LoginForm = () => {
                       message: "Password cannot exceed 20 characters",
                     },
                     pattern: {
-                      value:
-                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                      message:
-                        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                      message: "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
                     },
                   })}
                   errors={methods.formState.errors.Password}
                   placeholder="Enter Password"
-                  variant="outline"
-                />
+                  variant="outline"                />
                 <div className="flex justify-end mt-2">
               <p className=" text-[#3BFCC6] font-normal text-[14px] cursor-pointer"   onClick={() => (window.location.href = "/forgotpassword")} >
               Forgot Password?

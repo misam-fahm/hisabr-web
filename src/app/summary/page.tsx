@@ -3,17 +3,19 @@ import { FC, useState } from "react";
 import dynamic from "next/dynamic";
 import Dropdown from "@/Components/ui/Common/DropDown";
 
-const ComposedChart = dynamic(
-  () => import("@/Components/drawer/ComposedChart"),
-  { ssr: false }
+const SummaryGraph = dynamic(() => import("@/Components/drawer/SummaryGraph"), {
+  ssr: false,
+});
+const YearlySalesGraph = dynamic(
+  () => import("@/Components/drawer/YearlySalesGraph"),
+  {
+    ssr: false,
+  }
 );
-const PieChart = dynamic(() => import("@/Components/drawer/PieChart"), {
+const InvoiceGraph = dynamic(() => import("@/Components/drawer/InvoiceGraph"), {
   ssr: false,
 });
-const BartChart1 = dynamic(() => import("@/Components/drawer/BarChart1"), {
-  ssr: false,
-});
-const BartChart2 = dynamic(() => import("@/Components/drawer/BarChart2"), {
+const SalesGraph = dynamic(() => import("@/Components/drawer/salesGraph"), {
   ssr: false,
 });
 const DateRangePicker = dynamic(
@@ -34,7 +36,7 @@ const data = [
 
 const summary: FC = () => {
   /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("All stores");
+  const [selectedOption, setSelectedOption] = useState<string>("Stores");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
@@ -218,9 +220,9 @@ const summary: FC = () => {
           <div className="bg-white mt-6 below-md:mt-3 shadow-md py-4 rounded-md ">
             <div className="flex flex-row justify-end mx-7 below-md:mx-3 gap-5">
               <div className="mt-2 cursor-pointer below-md:hidden">
-                <img src="/images/Download.svg" />
+                <img src="/images/download.svg" />
               </div>
-              <div className="mb-6 relative below-md:w-full below-md:max-w-[40%]">
+              <div className="mb-6 relative below-md:w-full below-md:max-w-[40%] border border-gray-100 rounded ">
                 <Dropdown
                   options={options2}
                   shadowclassName="shadow-sm"
@@ -233,7 +235,7 @@ const summary: FC = () => {
                 />
               </div>
             </div>
-            <ComposedChart />
+            <SummaryGraph />
           </div>
 
           <div className="flex flex-row below-md:flex-col tablet:flex-col w-full mt-6 below-md:mt-3 mb-9">
@@ -251,11 +253,11 @@ const summary: FC = () => {
                   <div className="flex flex-row gap-5 w-[60%] justify-end">
                     {/* Download Icon */}
                     <div className="mt-2 cursor-pointer below-md:hidden">
-                      <img src="/images/Download.svg" alt="Download" />
+                      <img src="/images/download.svg" alt="Download" />
                     </div>
 
                     {/* Period Dropdown */}
-                    <div className="relative below-md:w-full">
+                    <div className="relative below-md:w-full border border-gray-100 rounded">
                       <Dropdown
                         className="relative below-md:w-full"
                         shadowclassName="shadow-sm"
@@ -269,7 +271,7 @@ const summary: FC = () => {
                     </div>
 
                     {/* Year Dropdown */}
-                    <div className="relative below-md:w-full">
+                    <div className="relative below-md:w-full border border-gray-100 rounded">
                       <Dropdown
                         className="relative w-full below-md:w-full"
                         shadowclassName="shadow-sm"
@@ -284,7 +286,7 @@ const summary: FC = () => {
                   </div>
                 </div>
                 <div className="below-md:mb-2">
-                  <BartChart2 />
+                  <SalesGraph />
                 </div>
               </div>
               <div className="bg-white shadow-md rounded-md mt-6  below-md:mt-3">
@@ -298,10 +300,10 @@ const summary: FC = () => {
                   {/* Dropdown Group */}
                   <div className="flex flex-row gap-5 w-[60%] justify-end">
                     <div className="mt-2 cursor-pointer below-md:hidden">
-                      <img src="/images/Download.svg" />
+                      <img src="/images/download.svg" />
                     </div>
                     {/* Period Dropdown */}
-                    <div className="relative below-md:w-full">
+                    <div className="relative below-md:w-full border border-gray-100 rounded">
                       <Dropdown
                         className="relative below-md:w-full"
                         shadowclassName="shadow-sm"
@@ -315,7 +317,7 @@ const summary: FC = () => {
                     </div>
 
                     {/* Year Dropdown */}
-                    <div className="relative below-md:w-full">
+                    <div className="relative below-md:w-full border border-gray-100 rounded">
                       <Dropdown
                         className="relative w-full below-md:w-full"
                         shadowclassName="shadow-sm"
@@ -330,7 +332,7 @@ const summary: FC = () => {
                   </div>
                 </div>
                 <div className="below-md:mb-2">
-                  <BartChart1 />
+                  <InvoiceGraph />
                 </div>
               </div>
             </div>
@@ -359,9 +361,9 @@ const summary: FC = () => {
                   </div>
 
                   {/* Dropdown */}
-                  <div className="mb-6 relative below-md:w-[100%] below-md:max-w-[35%]">
+                  <div className="mb-6 relative z-[60] below-md:w-[100%] below-md:max-w-[35%]">
                     <Dropdown
-                      className="relative below-md:w-full"
+                      className="relative below-md:w-full border border-gray-100 rounded"
                       shadowclassName="shadow-sm"
                       options={options7}
                       selectedOption={selectedOption7}
@@ -375,7 +377,7 @@ const summary: FC = () => {
 
                 {/* Pie Chart Section */}
                 <div className="-my-5">
-                  <PieChart />
+                  <YearlySalesGraph />
                 </div>
 
                 <div>

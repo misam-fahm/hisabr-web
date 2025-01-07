@@ -20,7 +20,7 @@ const SalesKPI: FC = () => {
   ];
 
   /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("All stores");
+  const [selectedOption, setSelectedOption] = useState<string>("Stores");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
@@ -74,7 +74,7 @@ const SalesKPI: FC = () => {
             </div>
           </div>
           <div className="below-md:hidden tablet:hidden">
-            <button className="flex items-center justify-center bg-[#1AA47D] shadow-lg w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold">
+            <button className="flex items-center justify-center bg-[#1AA47D] hover:bg-[#168A68] shadow-lg w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold">
               <img
                 src="/images/uploadIcon.svg"
                 alt="Upload Icon"
@@ -87,7 +87,7 @@ const SalesKPI: FC = () => {
 
         {/* grid 1 */}
 
-        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3  pl-6 pr-6 items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid tablet:gap-3">
+        <div className="grid grid-cols-4 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3  pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">Sales</p>
@@ -111,11 +111,12 @@ const SalesKPI: FC = () => {
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 65.2%{" "}
                 <span className="text-[#575F6D] font-medium">
-                  of total revenue achieved
+                  of total revenue <br />
+                  achieved
                 </span>
               </p>
             </div>
-            <div className="bg-[#EFF6EFA1] rounded-full w-[45px] h-[43px] p-3 below-md:w-[40px] below-md:h-[40px] below-md:p-0 flex items-center justify-center">
+            <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
               <img src="./images/dollar2.svg" />
             </div>
           </div>
@@ -129,11 +130,11 @@ const SalesKPI: FC = () => {
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 40%{" "}
                 <span className="text-[#575F6D] font-medium">
-                  increase compare to last year
+                  increase compare <br /> to last year
                 </span>
               </p>
             </div>
-            <div className="bg-[#EFF6EFA1] rounded-full  w-[47px] h-[43px] p-3 below-md:h-[40px] below-md:w-[40px] below-md:p-0 flex items-center justify-center">
+            <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
               <img src="./images/dollar3.svg" />
             </div>
           </div>
@@ -155,10 +156,9 @@ const SalesKPI: FC = () => {
               <img src="./images/dollar4.svg" />
             </div>
           </div>
-        </div>
 
-        {/* grid 2 */}
-        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3 below-md:px-3 mt-6 below-md:mt-3  pl-6 pr-6 items-stretch tablet:flex-wrap tablet:grid-cols-1 tablet:grid tablet:gap-3 tablet:mt-3">
+          {/* grid 2 */}
+
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
@@ -219,7 +219,7 @@ const SalesKPI: FC = () => {
               <p className="text-[12px] text-[#388E3C] font-semibold">
                 9.8%{" "}
                 <span className="text-[#575F6D] font-medium">
-                  of total total expenses
+                  of total expenses
                 </span>
               </p>
             </div>

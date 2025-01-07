@@ -63,12 +63,12 @@ const InvoiceDetails = () => {
 
   return (
     <main
-    className="max-h-[calc(100vh-60px)] overflow-auto px-6"
+    className="max-h-[calc(100vh-60px)] overflow-auto px-6 below-md:px-3"
     style={{ scrollbarWidth: "thin" }}
   >
      <div className='block below-md:hidden'>
     <div className='flex items-start pt-4 cursor-pointer' onClick={() => window.history.back()}>
-          <img src='/images/WebBackIcon.svg' alt='Back Arrow' className='w-8 h-8'/>
+          <img src='/images/WebBackIcon.svg' alt='Back Arrow' className='w-7 h-7'/>
           </div>
           </div>
       <div className="flex gap-8 pt-4 pb-4  below-md:flex below-md:flex-col below-md:gap-3">
@@ -137,7 +137,7 @@ const InvoiceDetails = () => {
       {/*table content*/}
       <div className='bg-white shadow-lg rounded-lg block below-md:hidden'>
         <div className='overflow-x-auto rounded-md '>
-          <table className='w-full table-auto border-collapse text-[12px] text-white rounded-md'>
+          <table className='w-full table-auto border-collapse text-[14px] text-white rounded-md'>
             <thead className='bg-[#334155]'>
               <tr>
                 <th className="py-2 px-4 text-left w-[100px]">Item Code</th>

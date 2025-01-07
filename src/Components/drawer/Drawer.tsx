@@ -82,7 +82,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
       title: "Setup",
       src: "setup",
       submenus: [
-        { title: "Item Categories", path: "/setup/categories" },
+        { title: "Categories", path: "/setup/categories" },
         { title: "Items", path: "/setup/items" },
         { title: "Tenders", path: "/setup/tenders" },
         { title: "Stores", path: "/setup/stores" },
@@ -104,9 +104,9 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
 
   const pathsToHideHamburger = [
     "/sales/sales_view",
-    "/details1",
+    "/grossrevenue",
     "/details2",
-    "/details4",
+    "/customercount",
     "/details5",
     "/details6",
     "/details7",
