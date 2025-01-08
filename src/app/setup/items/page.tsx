@@ -1,9 +1,5 @@
 "use client";
-
-import Image from "next/image";
-
 import React, { FC, useEffect, useState } from "react";
-import DateRangePicker from "@/Components/ui/Common/DateRangePicker";
 import { sendApiRequest } from "@/utils/apiUtils";
 import ToastNotification, {
   ToastNotificationProps,
@@ -425,7 +421,7 @@ const Page: FC = () => {
         </div>
       </div>
 
-      <div className="mt-4   below-md:hidden">
+      <div className="mt-4 below-md:hidden">
         {/* Page Range Display */}
         {/* <div>
             <span className="text-[#8899A8] text-[12px] font-medium ml-3">
