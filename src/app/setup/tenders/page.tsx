@@ -1,7 +1,8 @@
 "use client";
 import React, { FC, useState } from "react";
-import DateRange from "@/Components/drawer/DateRangePicker";
+import DateRange from "@/Components/ui/Common/DateRangePicker";
 import Images from "@/Components/ui/Common/Image";
+import { useRouter } from "next/navigation";
 import {
   useReactTable,
   getCoreRowModel,
@@ -171,20 +172,33 @@ const Page: FC = () => {
   const startItem = pageIndex * pageSize + 1;
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
+  /**go back button */
+  const router = useRouter();
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
     <main
       className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-4 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="flex  justify-between my-6">
-      <div className="flex items-start cursor-pointer   below-md:hidden"onClick={() => window.history.back()}>
-        <img
-          src="/images/WebBackIcon.svg"
-          alt="Back Arrow"
-          className="w-7 h-7"
-        />
-      </div>
-       <div className="gap-2 below-md:hidden"> <AddTender /></div>
+        <div
+          className="flex items-start cursor-pointer   below-md:hidden"
+          onClick={() => window.history.back()}
+        >
+          <img
+            onClick={handleBack}
+            src="/images/WebBackIcon.svg"
+            alt="Back Arrow"
+            className="w-7 h-7"
+          />
+        </div>
+        <div className="gap-2 below-md:hidden">
+          {" "}
+          <AddTender />
+        </div>
       </div>
 
       {/* mobile view */}
@@ -228,7 +242,9 @@ const Page: FC = () => {
             </div>
 
             <div className=" mt-1 flex justify-between">
-              <span className=" text-[#636363] text-[13px] mb-2">Commission</span>{" "}
+              <span className=" text-[#636363] text-[13px] mb-2">
+                Commission
+              </span>{" "}
               <span className=" text-[14px]">{row.getValue("commission")}</span>
             </div>
           </div>

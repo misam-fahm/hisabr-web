@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Table } from "@tanstack/react-table";
 
 interface PaginationProps {
@@ -15,11 +15,29 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
   const pageCount = table.getPageCount();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const handlePageSelect = (index: number) => {
     table.setPageIndex(index);
     setIsDropdownOpen(false);
   };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return totalItems > 0 ? (
     <main>
@@ -70,7 +88,7 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
 
           {/* Dropdown for Page Selection */}
           <div>
-            <div className="w-full relative">
+            <div className="w-full relative" ref={dropdownRef}>
               <button
                 onClick={toggleDropdown}
                 className="pl-2 pr-2 py-[6px] w-full rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381] flex items-center justify-between gap-9"
