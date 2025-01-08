@@ -1,7 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
+import { sendApiRequest } from "@/utils/apiUtils";
+import ToastNotification, { ToastNotificationProps } from "../ui/ToastNotification/ToastNotification";
+interface Category {
+  categoryid: number;
+  categoryname: string;
+}
 
 const AddNewItems = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +18,6 @@ const AddNewItems = () => {
     weight: "",
     selectedType: "",
   });
-
   const [errors, setErrors] = useState({
     itemName: "",
     price: "",
@@ -20,9 +25,12 @@ const AddNewItems = () => {
     weight: "",
     selectedType: "",
   });
-
-  const [dropdownOpen, setDropdownOpen] = useState(false); // Added state for dropdown visibility
-
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
   const openModal = () => setIsOpen(true);
   const closeModal = () => {
     setIsOpen(false);
@@ -42,6 +50,30 @@ const AddNewItems = () => {
     });
     setDropdownOpen(false); // Reset dropdown visibility when closing the modal
   };
+
+  useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response: any = await sendApiRequest({
+            mode: "getallcategories",
+          });
+  
+          if (response?.status === 200) {
+            setCategories(response?.data?.categories || []);
+          } else {
+            setCustomToast({
+              ...customToast,
+              message: response?.message,
+              type: "error",
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+  
+      fetchData();
+    }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -104,6 +136,10 @@ const AddNewItems = () => {
 
   return (
     <>
+    <ToastNotification
+        message={customToast.message}
+        type={customToast.type}
+      />
       <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
         <button
           onClick={openModal}
@@ -163,14 +199,14 @@ const AddNewItems = () => {
                 </button>
                 {dropdownOpen && (
                   <ul className="absolute z-10 w-full text-[#8D98AA] mt-1 bg-white border  border-gray-300 rounded-lg shadow-lg">
-                    {["Dairy", "Bakery", "Beverages", "Frozen Foods"].map(
-                      (category) => (
+                    {categories && categories.length > 0 && categories.map(
+                      (category: Category) => (
                         <li
-                          key={category}
+                          key={category.categoryid}
                           onClick={() => {
                             setFormData((prevData) => ({
                               ...prevData,
-                              selectedType: category,
+                              selectedType: category.categoryname,
                             }));
                             setErrors((prevErrors) => ({
                               ...prevErrors,
@@ -180,7 +216,7 @@ const AddNewItems = () => {
                           }}
                           className="px-4 py-2 cursor-pointer border-b text-sm hover:text-white hover:bg-[#334155]"
                         >
-                          {category}
+                          {category.categoryname}
                         </li>
                       )
                     )}
