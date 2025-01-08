@@ -6,9 +6,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/ui/Common/DropDown";
 import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
 import { Inputtext } from "../ui/InputText";
-import DateRange from "@/Components/drawer/DateRangePicker";
+import CalendarRangePicker from "../drawer/CalenderRangePicker";
 
-
+type ExpenseFormInputs = {
+  expenseName: string;
+  amount: number;
+  date: Date; // The date field
+};
 
 
 const AddExpenses = () => {
@@ -16,17 +20,28 @@ const AddExpenses = () => {
   const { setValue, watch } = methods;
 
   const [description, setDescription] = useState("");
+  const [amount, setAmount] = useState("");
 
-  const handleChange = (data:any) => {
+  const handleChange = (data: any) => {
     setDescription(data); // Update local state
     methods.setValue("description", data); // Update form state in react-hook-form
   };
+  const handleChangeAmount = (data: any) => {
+    setAmount(data);
+    methods.setValue("amount", data);
+  };
+
 
 
   const onSubmit = (data: any) => {
     console.log("Form Data:", data);
   };
-  const { control } = useForm(); // Initialize React Hook Form
+  const {
+    control,
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<ExpenseFormInputs>(); // Initialize React Hook Form
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => setIsOpen(true);
@@ -133,102 +148,130 @@ const AddExpenses = () => {
 
             <FormProvider {...methods}>
               <form
-              onSubmit={methods.handleSubmit(onSubmit)}
+                onSubmit={methods.handleSubmit(onSubmit)}
               >
                 <div className="flex flex-col h-full mt-4 gap-7">
-          
-                    {/* Store Input Field */}
-                    <Dropdown
-  options={options}
-  selectedOption={selectedStore || "Store"} // Watch the selected value
-  onSelect={(selectedOption) => {
-    setValue("store", selectedOption); // Update the form value
-    setIsStoreDropdownOpen(false); // Close dropdown after selection
-  
-  }}
-  isOpen={isStoreDropdownOpen}
-  toggleOpen={toggleDropdown1}
-  widthchange="w-full"
-  {...methods.register("store", {
-    required: "Store Selection is required",
-  })}
-  errors={methods.formState.errors.store } // Explicitly cast the type
-/>
 
-                 
-                 
-                    {/* Expense Type Input Field */}
-                    <Dropdown
-                      options={expenseTypes}
-                      selectedOption={selectedExpense || "Expense Type"} // Watch the selected value
-                      onSelect={(selectedOption) => {
-                        setValue("Expense Type", selectedOption); // Update the form value
-                        setIsExpenseDropdownOpen(false); // Close dropdown after selection
-                      }}
-                      isOpen={isExpenseDropdownOpen}
-                      toggleOpen={toggleExpenseDropdown}
-                      widthchange="w-full"
-                    />
-                 
-                 
-                    <DateRange />
-                 
+                  {/* Store Input Field */}
+                  <Dropdown
+                    options={options}
+                    selectedOption={selectedStore || "Store"} // Watch the selected value
+                    onSelect={(selectedOption) => {
+                      setValue("store", selectedOption); // Update the form value
+                      setIsStoreDropdownOpen(false); // Close dropdown after selection
 
-               
-                    <Inputtext
-                      type="text"
-                      label="Description"
-                      borderClassName=" border border-gray-400"
-                      labelBackgroundColor="bg-white"
-                      value={description}
-                      textColor="text-gray-500"
-                      {...methods?.register("description", {
-                        required: "Description is required",
-                      })}
-                      errors={methods.formState.errors.description}
-                      placeholder="Description"
-                      variant="outline" 
-                      onChange={(e: any) => handleChange(e.target.value)} 
+                    }}
+                    isOpen={isStoreDropdownOpen}
+                    toggleOpen={toggleDropdown1}
+                    widthchange="w-full"
+                    {...methods.register("store", {
+                      required: "Store Selection is required",
+                    })}
+                    errors={methods.formState.errors.store} // Explicitly cast the type
+                  />
+
+
+
+                  {/* Expense Type Input Field */}
+                  <Dropdown
+                    options={expenseTypes}
+                    selectedOption={selectedExpense || "Expense Type"} // Watch the selected value
+                    onSelect={(selectedOption) => {
+                      setValue("expenseType", selectedOption); // Update the form value
+                      setIsExpenseDropdownOpen(false); // Close dropdown after selection
+                    }}
+                    isOpen={isExpenseDropdownOpen}
+                    toggleOpen={toggleExpenseDropdown}
+                    widthchange="w-full"
+                    {...methods.register("expenseType", {
+                      required: "Expense Type is required",
+                    })}
+                    errors={methods.formState.errors.expenseType} // Explicitly cast the type
+                  />
+
+                  {/* Date input field */}
+                  <Controller
+                    name="date"
+                    control={control}
+                    rules={{ required: "Date is required" }}
+                    render={({ field }) => (
+                      <CalendarRangePicker
+                        value={field.value}
+                        onChange={(date) => field.onChange(date)} // Pass the date to React Hook Form
+                        placeholder="Date"
                       />
-                 
-                    
-                    <Inputtext
-                      type="number" // Use type="number" for numeric input
-                      label="Amount"
-                      borderClassName="border border-gray-400"
-                      labelBackgroundColor="bg-white"
-                      textColor="text-gray-500"
-                      {...methods?.register("amount", {
-                        required: "Amount is required",
-                        min: {
-                          value: 0,
-                          message: "Amount must be a positive number",
-                        },
-                      })}
-                      errors={methods.formState.errors.amount}
-                      placeholder="Enter Amount"
-                      variant="outline"
-                    />
-                 
-                 
-                    <div className="flex justify-between gap-3 items-center w-full">
-                      <button type="button"
-                        className="px-4  below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
-                        onClick={closeModal}
-                      >
-                        Cancel
-                      </button>
-
-                      <button
-                        type="submit"
-                        className="px-4 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
-                      >
-                        Save
-                      </button>
+                    )}
+                  />
+                  {errors.date && (
+                    <p className="text-red-500 text-sm mt-1">{errors.date.message}</p>
+                  )}
+                  {/* <CalendarRangePicker
+                       value={methods.watch("date")}
+                       onChange={(date) =>
+                       methods.setValue("date", date, { shouldValidate: true })
+                     }
+                       placeholder="Date"
+                       errors={methods.formState.errors.date?.message}
+                      /> */}
 
 
-                    </div>
-               
+                  {/* Description field */}
+                  <Inputtext
+                    type="text"
+                    label="Description"
+                    borderClassName=" border border-gray-400"
+                    labelBackgroundColor="bg-white"
+                    value={description}
+                    textColor="text-gray-500"
+                    {...methods?.register("description", {
+                      required: "Description is required",
+                    })}
+                    errors={methods.formState.errors.description}
+                    placeholder="Description"
+                    variant="outline"
+                    onChange={(e: any) => handleChange(e.target.value)}
+                  />
+
+                  {/* Amount Field */}
+                  <Inputtext
+                    type="number" // Use type="number" for numeric input
+                    label="Amount"
+                    borderClassName="border border-gray-400"
+                    labelBackgroundColor="bg-white"
+                    value={amount}
+                    textColor="text-gray-500"
+                    {...methods?.register("amount", {
+                      required: "Amount is required",
+                      min: {
+                        value: 0,
+                        message: "Amount must be a positive number",
+                      },
+                    })}
+                    errors={methods.formState.errors.amount}
+                    placeholder="Enter Amount"
+                    variant="outline"
+                    onChange={(e: any) => handleChangeAmount(e.target.value)}
+                  />
+
+
+                  <div className="flex justify-between gap-3 items-center w-full">
+                    <button type="button"
+                      className="px-4  below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
+                      onClick={closeModal}
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="submit"
+                      className="px-4 text-white md:text[13px] text-[14px] h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
+                    >
+                      Save
+                    </button>
+
+
+                  </div>
+
 
 
 

@@ -77,7 +77,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
     { title: "Summary", src: "summary", path: "/summary" },
     { title: "Sales", src: "sales", path: "/sales" },
     { title: "Invoices", src: "invoices", path: "/invoices" },
-    { title: "Expenses", src: "expences", path: "/expenses" },
+    { title: "Expenses", src: "expences", path: "/Expenses" },
     {
       title: "Setup",
       src: "setup",

@@ -111,9 +111,9 @@ const formattedData = data?.map((item) => {
       2,
       "0"
     )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
-    .getFullYear()
-    .toString()
-    .slice(-2)}`;
+      .getFullYear()
+      .toString()
+      .slice(-2)}`;
 
   return { ...item, date: formattedDate };
 });
@@ -154,28 +154,24 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     id: "edit",
-    header: () => <div className="text-center ">Edit</div>,
+    header: () => <div className="text-center"></div>,
     cell: () => (
       <>
         <span className="flex justify-center">
-          <EditExpense
-            expenseData={expenseData}
-            onUpdate={(updatedData) => {
-              console.log("Updated Data: ", updatedData);
-              // Example: update the state or send the updated data to an API
-            }}
-          />
+          <EditExpense initialData={existingExpense}
+            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
+            onClose={() => console.log("Modal Closed")} />
         </span>
       </>
     ),
-    size: 50,
+    size: 30,
   },
   {
     id: "delete",
-    header: () => <div className="text-center">Delete</div>,
+    header: () => <div className="text-center"></div>,
     cell: () => (
       <>
-        <span className="flex justify-center">
+        <span className="flex justify-center mr-4">
           {" "}
           <DeleteExpense />
         </span>
@@ -184,12 +180,13 @@ const columns: ColumnDef<TableRow>[] = [
     size: 50,
   },
 ];
-const expenseData = {
-  store: "Store 1",
-  expenseType: "Type 1",
-  description: "Expense description",
-  amount: 100,
+
+const existingExpense = {
+  amount: 150.5,
   date: new Date(),
+  store: "Store 1",
+  expenseType: "Accommodation",
+  description: "Business trip hotel expense",
 };
 
 
@@ -293,8 +290,16 @@ const Expenses: FC = () => {
       description: "Mortgage Mortgage Mortgage",
     },
   ];
-  
-  
+
+  // Format date to MM-DD-YYYY
+  const formattedCardData = cardData.map((item) => {
+    const date = new Date(item.date);
+    const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}-${date.getFullYear()}`;
+    return { ...item, date: formattedDate };
+  });
+
+  console.log(formattedCardData);
+
   // const calendarRef = useRef<DatePicker | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -318,7 +323,7 @@ const Expenses: FC = () => {
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false); // Close dropdown after selection
-    handleSelect(option); // Call the passed handler
+    //handleSelect(option); // Call the passed handler
   };
   const handleBack = () => {
     router.push("/");
@@ -347,7 +352,7 @@ const Expenses: FC = () => {
               isOpen={isOpen}
               toggleOpen={toggleDropdown1}
               widthchange="w-full"
-      
+
             />
 
             <div className="w-full tablet:w-full below-md:w-full h-[35px]">
@@ -355,18 +360,18 @@ const Expenses: FC = () => {
             </div>
 
             <div className="flex shadow text-[12px] relative below-md:flex-row below-md:gap-4 bg-[#ffff] items-center  rounded-md w-full below-md:w-full  below-md:text-[11px]">
-            <input
-                  value={globalFilter ?? ""}
-                  onChange={(e) => setGlobalFilter(e.target.value)}
-                  placeholder="Search"
-                  className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+              <input
+                value={globalFilter ?? ""}
+                onChange={(e) => setGlobalFilter(e.target.value)}
+                placeholder="Search"
+                className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+              />
+              <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                <img
+                  className="cursor-pointer items-center"
+                  src="/images/searchicon.svg"
                 />
-                <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                  <img
-                    className="cursor-pointer items-center"
-                    src="/images/searchicon.svg"
-                  />
-                </div>
+              </div>
             </div>
           </div>
           <div className="block pl-24 below-md:hidden">
@@ -389,13 +394,9 @@ const Expenses: FC = () => {
 
                 <div className="flex gap-4 mb-1 px-3 py-4">
                   <>
-                    <EditExpense
-                      expenseData={expenseData}
-                      onUpdate={(updatedData) => {
-                        console.log("Updated Data: ", updatedData);
-                        // Example: update the state or send the updated data to an API
-                      }}
-                    />
+                    <EditExpense initialData={existingExpense}
+                      onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
+                      onClose={() => console.log("Modal Closed")} />
                     <DeleteExpense />
                   </>
                 </div>
@@ -426,7 +427,7 @@ const Expenses: FC = () => {
         </div>
 
         {/*Web View :  Expenses Table */}
-        <div className="overflow-x-auto shadow-md border-collapse border border-gray-200  rounded-lg  flex-grow flex flex-col below-md:hidden">
+        <div className="overflow-x-auto shadow-sm border-collapse border border-b border-[#E4E4EF] rounded-md  flex-grow flex flex-col below-md:hidden">
           <div className="overflow-hidden max-w-full rounded-md">
             <table className="w-full border-collapse text-[12px] text-white table-fixed rounded-md">
               <thead className="bg-[#334155] top-0 z-10">
@@ -441,9 +442,9 @@ const Expenses: FC = () => {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                       </th>
                     ))}
                   </tr>

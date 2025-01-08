@@ -1,84 +1,82 @@
-// import React, { useState } from 'react'
-// import DatePicker from "react-datepicker";
-// import "react-datepicker/dist/react-datepicker.css";
+'use client';
+import React, { useState ,useRef,useEffect} from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { enGB } from "date-fns/locale";
 
-// const CalenderRangePicker = ({
-//   value,
-//   onChange,
-//   placeholder = "Select Date Range",
-//   buttonText = "Set Date",
-// }: {
-//   value?: { startDate?: Date; endDate?: Date };
-//   onChange?: (dates: { startDate?: Date; endDate?: Date }) => void;
-//   placeholder?: string;
-//   buttonText?: string;
-// }) => {
-//     const [startDate, setStartDate] = useState<Date | null>(
-//         value?.startDate || null
-//       );
-//       const [endDate, setEndDate] = useState<Date | null>(value?.endDate || null);
-//       const [isOpen, setIsOpen] = useState(false);
-     
-//       const handleDateChange = (dates: [Date | null, Date | null]) => {
-//         const [start, end] = dates;
-//         setStartDate(start);
-//         setEndDate(end);
-//         onChange?.({ startDate: start || undefined, endDate: end || undefined });
-//       };
-    
+const CalendarRangePicker = ({
+    value,
+    onChange,
+    errors,
+    placeholder = "Date",
+    buttonText = "Set Date",
+}: {
+    value?: Date;
+    errors?:any;
+    onChange?: (date: Date | null) => void;
+    placeholder?: string;
+    buttonText?: string;
+}) => {
+    const [selectedDate, setSelectedDate] = useState<Date | null>(value || null);
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
-//   return (
-//     <div className="relative w-[348px]">
-//       {/* Input Field */}
-//       <div
-//         onClick={() => setIsOpen(!isOpen)}
-//         className="flex items-center justify-between p-3 border rounded-lg bg-white cursor-pointer shadow-md"
-//       >
-//         <span className="text-gray-500 text-sm">
-//           {startDate && endDate
-//             ? `From: ${startDate.toLocaleDateString()} - To: ${endDate.toLocaleDateString()}`
-//             : placeholder}
-//         </span>
-//         <img
-//           src="/images/calendericon.svg"
-//           alt="Calendar Icon"
-//           className="w-4 h-4"
-//         />
-//       </div>
+    const handleDateChange = (date: Date | null) => {
+        setSelectedDate(date);
+        onChange?.(date);
+        setIsOpen(false); // Automatically close the dropdown
+    };
 
-//       {/* Calendar Dropdown */}
-//       {isOpen && (
-//         <div className="absolute top-[50px] left-0 z-50 bg-white shadow-lg p-4 rounded-lg w-full">
-//           <DatePicker
-//             selected={startDate}
-//             onChange={handleDateChange}
-//             startDate={startDate}
-//             endDate={endDate}
-//             selectsRange
-//             inline
-//             maxDate={new Date()}
-//             calendarClassName="w-full"
-//           />
-//           <div className="flex items-center mt-4">
-//             <label className="text-gray-500 text-sm mr-4">Date</label>
-//             <input
-//               type="text"
-//               value={startDate?.toLocaleDateString() || ""}
-//               className="border rounded-md p-2 text-gray-700 text-sm"
-//               readOnly
-//             />
-//           </div>
-//           <button
-//             className="bg-blue-600 text-white px-4 py-2 mt-4 w-full rounded-md hover:bg-blue-700"
-//             onClick={() => setIsOpen(false)}
-//           >
-//             {buttonText}
-//           </button>
-//         </div>
-//       )}
-//     </div>
-   
-//   )
-// }
+    const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            setIsOpen(false); // Close the dropdown if clicked outside
+        }
+    };
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
-// export default CalenderRangePicker
+    return (
+        <div className="relative w-full" ref={dropdownRef}>
+            {/* Input Field */}
+            <div
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center h-[35px] justify-between p-3 border rounded-md bg-white cursor-pointer shadow"
+            >
+                <span className="text-[#4B4B4B] text-[12px]">
+                    {selectedDate
+                        ? selectedDate.toLocaleDateString()
+                        : placeholder}
+                </span>
+                <img
+                    src="/images/calendericon.svg"
+                    alt="Calendar Icon"
+                    className=" w-3 h-3"
+                />
+            </div>
+
+            {/* Calendar Dropdown */}
+            {isOpen && (
+                <div className="absolute top-[90%] left-1/2 z-50 bg-white shadow-lg p-4 rounded-lg w-full transform -translate-x-1/2 -translate-y-1/2">
+                    <DatePicker
+                        selected={selectedDate || undefined} // Convert null to undefined
+                        onChange={handleDateChange}
+                        inline
+                        maxDate={new Date()} // Disable future dates
+                        locale={enGB}
+                        formatWeekDay={(day) => day.slice(0, 3)}
+                        calendarClassName=""
+                    />
+                  
+                </div>
+            )}
+           {errors && <p className="text-red-500 text-sm mt-1">{errors}</p>}
+			
+        </div>
+    );
+};
+
+export default CalendarRangePicker;

@@ -194,7 +194,8 @@ const columns: ColumnDef<TableRow>[] = [
         onClick={() => (window.location.href = "/invoicedetails")}
         className="text-green-500 hover:text-green-700 text-center ml-2"
       >
-        <img src="/images/vieweyeicon.svg" alt="View Icon" />
+        <img src="/images/vieweyeicon.svg" alt="View Icon" 
+        className=" w-4 h-4 below-md:h-5 below-md:w-5 "/>
       </button>
     ),
     size: 30,
@@ -396,7 +397,7 @@ const Invoices = () => {
                   className="text-green-500 hover:text-green-700"
                 >
                   <img
-                    className="below-md:w-5 h-4 w-4"
+                    className=" w-4 h-4 below-md:h-5 below-md:w-5"
                     src="/images/vieweyeicon.svg"
                   />
                 </button>
@@ -445,7 +446,7 @@ const Invoices = () => {
       </div>
 
       {/*Web View : Invoice Table */}
-      <div className="overflow-x-auto  shadow-md border-collapse border border-gray-200 rounded-lg  flex-grow flex flex-col below-md:hidden">
+      <div className="overflow-x-auto  shadow-sm border-collapse border border-b border-[#E4E4EF] rounded-md  flex-grow flex flex-col below-md:hidden">
         <div className="overflow-hidden max-w-full rounded-md">
           <table className="w-full border-collapse text-[12px] rounded-md text-white table-fixed">
             <thead className="bg-[#334155] top-0 z-10">
