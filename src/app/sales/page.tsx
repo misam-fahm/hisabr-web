@@ -413,7 +413,7 @@ const Sales: FC = () => {
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className="text-left px-4 py-2.5 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+                        className="text-left px-4 py-2 text-[#FFFFFF] font-normal text-[15px] w-[100px]"
                         style={{ width: `${header.column.getSize()}px` }} // Applying dynamic width
                       >
                         {header.isPlaceholder
