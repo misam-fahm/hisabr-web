@@ -19,7 +19,7 @@ const SalesGraph = dynamic(() => import("@/Components/drawer/salesGraph"), {
   ssr: false,
 });
 const DateRangePicker = dynamic(
-  () => import("@/Components/drawer/DateRangePicker"),
+  () => import("@/Components/ui/Common/DateRangePicker"),
   {
     ssr: false,
   }
@@ -225,7 +225,7 @@ const summary: FC = () => {
               <div className="mb-6 relative below-md:w-full below-md:max-w-[40%] border border-gray-100 rounded ">
                 <Dropdown
                   options={options2}
-                  shadowclassName="shadow-sm"
+                  shadowclassName="shadow-none"
                   selectedOption={selectedOption2}
                   onSelect={handleSelect2}
                   isOpen={isOpen2}
@@ -260,7 +260,7 @@ const summary: FC = () => {
                     <div className="relative below-md:w-full border border-gray-100 rounded">
                       <Dropdown
                         className="relative below-md:w-full"
-                        shadowclassName="shadow-sm"
+                        shadowclassName="shadow-none"
                         options={options4}
                         selectedOption={selectedOption4}
                         onSelect={handleSelect4}
@@ -274,7 +274,7 @@ const summary: FC = () => {
                     <div className="relative below-md:w-full border border-gray-100 rounded">
                       <Dropdown
                         className="relative w-full below-md:w-full"
-                        shadowclassName="shadow-sm"
+                        shadowclassName="shadow-none"
                         options={options3}
                         selectedOption={selectedOption3}
                         onSelect={handleSelect3}
@@ -306,7 +306,7 @@ const summary: FC = () => {
                     <div className="relative below-md:w-full border border-gray-100 rounded">
                       <Dropdown
                         className="relative below-md:w-full"
-                        shadowclassName="shadow-sm"
+                        shadowclassName="shadow-none"
                         options={options6}
                         selectedOption={selectedOption6}
                         onSelect={handleSelect6}
@@ -320,7 +320,7 @@ const summary: FC = () => {
                     <div className="relative below-md:w-full border border-gray-100 rounded">
                       <Dropdown
                         className="relative w-full below-md:w-full"
-                        shadowclassName="shadow-sm"
+                        shadowclassName="shadow-none"
                         options={options5}
                         selectedOption={selectedOption5}
                         onSelect={handleSelect5}
@@ -361,10 +361,10 @@ const summary: FC = () => {
                   </div>
 
                   {/* Dropdown */}
-                  <div className="mb-6 relative z-[60] below-md:w-[100%] below-md:max-w-[35%]">
+                  <div className="mb-6 relative z-[40] below-md:w-[100%] below-md:max-w-[35%]">
                     <Dropdown
                       className="relative below-md:w-full border border-gray-100 rounded"
-                      shadowclassName="shadow-sm"
+                      shadowclassName="shadow-none"
                       options={options7}
                       selectedOption={selectedOption7}
                       onSelect={handleSelect7}

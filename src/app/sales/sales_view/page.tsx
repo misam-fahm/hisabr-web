@@ -93,8 +93,8 @@ const DetailsPage: React.FC = () => {
             {/* Scrollable Tabs */}
             <div
               id="tabContainer"
-              className="flex-1 flex below-md:overflow-x-hidden 
-             below-md:overflow-y-hidden tablet:overflow-y-hidden space-x-8 
+              className="flex-1 flex scrollable-container
+             below-md:overflow-y-hidden  tablet:overflow-y-hidden space-x-8 
              px-0 below-md:space-x-6 tablet:space-x-6 whitespace-nowrap scroll-smooth"
             >
               {tabs.map((tab, index) => (

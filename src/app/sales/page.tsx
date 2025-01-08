@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useState } from "react";
-import DateRange from "@/Components/drawer/DateRangePicker";
+import DateRange from "@/Components/ui/Common/DateRangePicker";
 import Images from "@/Components/ui/Common/Image";
 import { useRouter } from "next/navigation";
 import Pagination from "@/Components/ui/Common/Pagination";
@@ -244,15 +244,14 @@ const Sales: FC = () => {
     },
     {
       id: "view",
-      header: () => <div className="text-center">View</div>,
+      header: () => <div className="text-center"></div>,
       cell: () => (
         <span className="flex justify-center">
           <button onClick={handleImageClick}>
             <Images
               src="/images/ViewEyeIcon.svg"
               alt="Eye Icon"
-              width={15}
-              height={15}
+              className="w-4 h-4"
             />
           </button>
         </span>
@@ -330,7 +329,7 @@ const Sales: FC = () => {
     >
       <div className="mx-6 mt-6 below-md:mx-3 below-md:mt-0 tablet:mt-4">
         <div className="flex flex-row below-md:flex-col pb-6 sticky z-20  below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
-          <div className="flex flex-row below-md:flex-col w-full gap-3">
+          <div className="flex flex-row below-md:flex-col w-full  gap-3">
             {/* Dropdown Button */}
             <Dropdown
               options={options}
@@ -338,22 +337,23 @@ const Sales: FC = () => {
               onSelect={handleSelect}
               isOpen={isOpen}
               toggleOpen={toggleDropdown1}
-              widthchange="w-full"
+              widthchange="w-full below-lg:w-[260px]"
             />
-            <div className="w-full">
-              <DateRange widthchang="w-full" />
+            <div className="w-[260px] tablet:w-full below-md:w-full">
+              <DateRange />
             </div>
             <div className="flex flex-row gap-3 w-full">
-              <div className=" w-full below-md:w-full relative below-md:hidden tablet:w-full">
+              <div className=" w-full below-md:w-full below-lg:w-[260px] relative below-md:hidden tablet:w-full">
                 <input
+                  type="search"
                   value={globalFilter ?? ""}
                   onChange={(e) => setGlobalFilter(e.target.value)}
                   placeholder="Search"
-                  className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                  className="below-lg:w-[260px] cursor-pointer py-[10px] pr-7 pl-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
                 <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
                   <img
-                    className="cursor-pointer items-center"
+                    className="cursor-pointer  items-center"
                     src="/images/searchicon.svg"
                   />
                 </div>
@@ -361,8 +361,9 @@ const Sales: FC = () => {
 
               <div className="tablet:hidden below-md:w-full relative below-lg:hidden">
                 <input
+                  type="search"
                   placeholder="Search"
-                  className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                  className=" py-[10px] px-3 h-[35px] w-full shadow pr-7 pl-3 rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
                 <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
                   <img
@@ -375,7 +376,7 @@ const Sales: FC = () => {
           </div>
 
           {/* button */}
-          <div className="pl-24  below-md:w-full">
+          <div className=" below-md:w-full">
             <div className="below-md:hidden tablet:hidden">
               <input
                 type="file"
@@ -403,7 +404,7 @@ const Sales: FC = () => {
 
         {/* Table */}
         {/* Desktop View */}
-        <div className="tablet:hidden overflow-x-auto border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block shadow-md">
+        <div className="tablet:hidden overflow-x-auto border-collapse border border-[#E4E4EF] rounded-lg flex-grow hidden flex-col md:block shadow-sm">
           <div className="overflow-hidden max-w-full">
             <table className="w-full border-collapse border-gray-200 table-fixed shadow-lg">
               <thead className="bg-[#334155] sticky top-0 z-10">
@@ -412,7 +413,7 @@ const Sales: FC = () => {
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className="text-left px-4 py-2.5 text-[#FFFFFF] font-medium text-[15px] w-[100px]"
+                        className="text-left px-4 py-2 text-[#FFFFFF] font-normal text-[15px] w-[100px]"
                         style={{ width: `${header.column.getSize()}px` }} // Applying dynamic width
                       >
                         {header.isPlaceholder
@@ -478,7 +479,7 @@ const Sales: FC = () => {
                     <img
                       onClick={handleImageClick}
                       src="/images/ViewEyeIcon.svg"
-                      className="w-7 h-7"
+                      className="w-5 h-5"
                     />
                   </div>
                 </div>
@@ -521,7 +522,7 @@ const Sales: FC = () => {
                     <img
                       onClick={handleImageClick}
                       src="/images/ViewEyeIcon.svg"
-                      className="w-7 h-7"
+                      className="w-5 h-5"
                     />
                   </div>
                 </div>
@@ -564,7 +565,7 @@ const Sales: FC = () => {
                     <img
                       onClick={handleImageClick}
                       src="/images/ViewEyeIcon.svg"
-                      className="w-7 h-7"
+                      className="w-5 h-5"
                     />
                   </div>
                 </div>
@@ -607,7 +608,7 @@ const Sales: FC = () => {
                     <img
                       onClick={handleImageClick}
                       src="/images/ViewEyeIcon.svg"
-                      className="w-7 h-7"
+                      className="w-5 h-5"
                     />
                   </div>
                 </div>
@@ -645,7 +646,7 @@ const Sales: FC = () => {
 
       <div className="below-lg:hidden flex justify-end fixed bottom-5 right-5">
         <button
-          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[56px] h-[56px] rounded-lg relative"
+          className="focus:outline-none flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] w-[56px] h-[56px] rounded-xl relative"
           onTouchStart={handlePressStart} // For mobile devices
           onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
           onClick={handleUploadClick}

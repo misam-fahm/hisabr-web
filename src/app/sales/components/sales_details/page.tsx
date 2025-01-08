@@ -86,18 +86,18 @@ const data: TableData[] = [
 const TableComponent: React.FC = () => {
   return (
     <main>
-      <div className="below-md:hidden  overflow-x-auto rounded-lg shadow-sm ">
+      <div className="below-md:hidden  overflow-x-auto rounded-lg shadow-sm border border-[#E4E4EF]">
         <div className="max-h-[600px] overflow-y-auto  scrollbar-hide ">
           <table className="min-w-full bg-white ">
             <thead className="bg-[#334155] text-white sticky top-0 z-[2]">
               <tr>
-                <th className="px-4 py-2 text-left text-[15px] font-medium">
+                <th className="px-4 py-2 text-left text-[15px] font-normal">
                   Category
                 </th>
-                <th className="px-4 py-2 text-left text-[15px] font-medium">
+                <th className="px-4 py-2 text-left text-[15px] font-normal">
                   Description
                 </th>
-                <th className="px-4 py-2 text-left text-[15px] font-medium">
+                <th className="px-4 py-2 text-left text-[15px] font-normal">
                   Value
                 </th>
               </tr>
@@ -110,13 +110,13 @@ const TableComponent: React.FC = () => {
                       key={rowIndex}
                       className={`${rowIndex === 0 ? "bg-[#F8F9FCFA]" : ""}`} // Apply a background color for the first row of each section
                     >
-                      <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                      <td className="px-4 py-1.5 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                         {rowIndex === 0 ? section.category : ""}
                       </td>
-                      <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                      <td className="px-4 py-1.5 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                         {row.description}
                       </td>
-                      <td className="px-4 py-2 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                      <td className="px-4 py-1.5 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                         {row.value}
                       </td>
                     </tr>
