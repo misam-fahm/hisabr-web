@@ -51,9 +51,9 @@ const columns: ColumnDef<TableRow>[] = [
   {
     id: "edit",
     header: () => <div className=" flex justify-center items-center">Edit</div>,
-    cell: () => (
+    cell: (info) => (
       <span className="flex justify-center ml-2">
-        <EditCategories />
+       <EditCategories rowData={info.row.original} />
       </span>
     ),
     size: 60,
@@ -173,7 +173,7 @@ const Page: FC = () => {
                   </span>
                   <div className="flex items-center ">
                     {/* Edit */}
-                    <EditCategories />
+                    <EditCategories rowData={row} />
                     {/* Delete */}
                     <>
                       <DeleteCategories />
