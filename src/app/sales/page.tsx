@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useState } from "react";
-import DateRange from "@/Components/ui/Common/DateRangePicker";
+import DateRangePicker from "@/Components/ui/Common/DateRangePicker";
 import Images from "@/Components/ui/Common/Image";
 import { useRouter } from "next/navigation";
 import Pagination from "@/Components/ui/Common/Pagination";
@@ -340,7 +340,7 @@ const Sales: FC = () => {
               widthchange="w-full below-lg:w-[260px]"
             />
             <div className="w-[260px] tablet:w-full below-md:w-full">
-              <DateRange />
+              <DateRangePicker />
             </div>
             <div className="flex flex-row gap-3 w-full">
               <div className=" w-full below-md:w-full below-lg:w-[260px] relative below-md:hidden tablet:w-full">

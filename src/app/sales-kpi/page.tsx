@@ -1,7 +1,7 @@
 "use client";
 import { FC, useState } from "react";
 import DonutChart from "@/Components/drawer/DonutChart";
-import DateRange from "@/Components/ui/Common/DateRangePicker";
+import DateRangePicker from "@/Components/ui/Common/DateRangePicker";
 import Dropdown from "@/Components/ui/Common/DropDown";
 
 const SalesKPI: FC = () => {
@@ -70,7 +70,7 @@ const SalesKPI: FC = () => {
             />
 
             <div className="w-[260px] tablet:w-full below-md:w-full">
-              <DateRange />
+              <DateRangePicker />
             </div>
           </div>
           <div className="below-md:hidden tablet:hidden">
