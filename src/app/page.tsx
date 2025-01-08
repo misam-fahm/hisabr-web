@@ -31,6 +31,9 @@ const tableData2: TableRow2[] = [
   { name: "Beverage", revenue: 93, commission: "248.00" },
   { name: "Cakes", revenue: 77, commission: "350.00" },
   { name: "Food", revenue: 56, commission: "450.00" },
+  { name: "Novelties-Boxed", revenue: 93, commission: "248.00" },
+  { name: "Soft Serve", revenue: 77, commission: "350.00" },
+  { name: "Donations", revenue: 56, commission: "450.00" },
 ];
 
 const Home: FC = () => {
@@ -64,7 +67,7 @@ const Home: FC = () => {
   /**first link(gross revenue) */
   const router = useRouter();
 
-  const [grossrevenue, setgrossrevenue] = useState(false)
+  const [grossrevenue, setgrossrevenue] = useState(false);
 
   useEffect(() => {
     // Ensure the back icon is hidden on the home page
@@ -72,8 +75,8 @@ const Home: FC = () => {
   }, []);
 
   const handleClick = () => {
-    setgrossrevenue(true)
-    router.push("/grossrevenue")
+    setgrossrevenue(true);
+    router.push("/grossrevenue");
   };
 
   /**second link(tender) */
@@ -640,28 +643,28 @@ const Home: FC = () => {
                           : "bg-[#FAFBFB] text-[14px]"
                       }`}
                     >
-                      <td className="pl-6 px-2 py-1 border-b border-gray-200 text-gray-700 text-[14px]">
+                      <td className="pl-6 px-2 py-1 border-b border-gray-200 text-gray-700 font-medium text-[14px]">
                         {row.name}
                       </td>
-                      <td className="px-2 py-1 border-b border-gray-200 text-[#334155] text-[14px] font-bold text-center">
+                      <td className="px-2 py-1 border-b font-medium border-gray-200 text-[#334155] text-[14px] text-center">
                         {row.revenue.toLocaleString()}
                       </td>
-                      <td className="px-2 py-1 border-b border-gray-200 text-[14px] font-bold text-[#334155]">
+                      <td className="px-2 py-1 border-b border-gray-200 text-[14px] font-medium text-[#334155]">
                         ${row.commission}
                       </td>
                     </tr>
                   ))}
                 </tbody>
-                <tfoot className="bottom-0 bg-white sticky">
-                  <tr className="font-bold text-[#E31212] text-[14px]">
-                    <td className="pl-6 px-2 py-1 border-t border-gray-200">
+                <tfoot className="-bottom-1 bg-white sticky">
+                  <tr className=" text-[#E31212] text-[14px]">
+                    <td className="pl-6 px-2 py-1 border-t border-gray-200 font-medium">
                       Total
                     </td>
-                    <td className=" px-2 py-1 border-t border-gray-200 text-[14px]">
+                    <td className=" px-2 py-1 border-t border-gray-200 text-[14px] font-medium">
                       ${totalRevenue.toLocaleString()}
                     </td>
 
-                    <td className="px-2 py-1 border-t border-gray-200 text-[14px]">
+                    <td className="px-2 py-1 border-t border-gray-200 text-[14px] font-medium">
                       ${totalAmount.toFixed(2)}
                     </td>
                   </tr>
