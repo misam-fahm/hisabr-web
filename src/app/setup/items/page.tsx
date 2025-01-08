@@ -1,7 +1,16 @@
 "use client";
-import React, { FC, useState } from "react";
 
 import Image from "next/image";
+
+import React, { FC, useEffect, useState } from "react";
+import DateRangePicker from "@/Components/ui/Common/DateRangePicker";
+import { sendApiRequest } from "@/utils/apiUtils";
+import ToastNotification, {
+  ToastNotificationProps,
+} from "@/Components/ui/ToastNotification/ToastNotification";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -25,108 +34,108 @@ interface TableRow {
   weight: string;
 }
 
-const data: TableRow[] = [
-  {
-    name: "Milk Packet",
-    category: "Dairy",
-    price: 80,
-    quantity: 100,
-    weight: "1 litre",
-  },
-  {
-    name: "Bread Loaf",
-    category: " Bakery",
-    price: 100,
-    quantity: 100,
-    weight: "300 gm",
-  },
-  {
-    name: "Butter Stick",
-    category: "Dairy  ",
-    price: 60,
-    quantity: 100,
-    weight: "100 gm",
-  },
-  {
-    name: "Chocolate ",
-    category: " Bakery",
-    price: 120,
-    quantity: 100,
-    weight: "200 gm",
-  },
-  {
-    name: "Chocolate ",
-    category: " Bakery",
-    price: 120,
-    quantity: 100,
-    weight: "200 gm",
-  },
-  {
-    name: "Chocolate ",
-    category: " Bakery",
-    price: 120,
-    quantity: 100,
-    weight: "200 gm",
-  },
-  {
-    name: "Chocolate ",
-    category: " Bakery",
-    price: 120,
-    quantity: 100,
-    weight: "200 gm",
-  },
-  {
-    name: "Cheese Block",
-    category: "Dairy",
-    price: 250,
-    quantity: 100,
-    weight: "1 litre",
-  },
-  {
-    name: "Milk Packet",
-    category: " Bakery",
-    price: 320,
-    quantity: 100,
-    weight: "300 gm",
-  },
-  {
-    name: "Chocolate ",
-    category: " Bakery",
-    price: 120,
-    quantity: 100,
-    weight: "200 gm",
-  },
-  {
-    name: "Cheese Block",
-    category: "Dairy",
-    price: 800,
-    quantity: 100,
-    weight: "1 litre",
-  },
-  {
-    name: "Chocolate",
-    category: " Bakery",
-    price: 300,
-    quantity: 100,
-    weight: "300 gm",
-  },
-  {
-    name: "Cheese Block",
-    category: "Dairy",
-    price: 250,
-    quantity: 100,
-    weight: "1 litre",
-  },
-  {
-    name: "Milk Packet",
-    category: " Bakery",
-    price: 320,
-    quantity: 100,
-    weight: "300 gm",
-  },
-];
+// const data: TableRow[] = [
+//   {
+//     name: "Milk Packet",
+//     category: "Dairy",
+//     price: 80,
+//     quantity: 100,
+//     weight: "1 litre",
+//   },
+//   {
+//     name: "Bread Loaf",
+//     category: " Bakery",
+//     price: 100,
+//     quantity: 100,
+//     weight: "300 gm",
+//   },
+//   {
+//     name: "Butter Stick",
+//     category: "Dairy  ",
+//     price: 60,
+//     quantity: 100,
+//     weight: "100 gm",
+//   },
+//   {
+//     name: "Chocolate ",
+//     category: " Bakery",
+//     price: 120,
+//     quantity: 100,
+//     weight: "200 gm",
+//   },
+//   {
+//     name: "Chocolate ",
+//     category: " Bakery",
+//     price: 120,
+//     quantity: 100,
+//     weight: "200 gm",
+//   },
+//   {
+//     name: "Chocolate ",
+//     category: " Bakery",
+//     price: 120,
+//     quantity: 100,
+//     weight: "200 gm",
+//   },
+//   {
+//     name: "Chocolate ",
+//     category: " Bakery",
+//     price: 120,
+//     quantity: 100,
+//     weight: "200 gm",
+//   },
+//   {
+//     name: "Cheese Block",
+//     category: "Dairy",
+//     price: 250,
+//     quantity: 100,
+//     weight: "1 litre",
+//   },
+//   {
+//     name: "Milk Packet",
+//     category: " Bakery",
+//     price: 320,
+//     quantity: 100,
+//     weight: "300 gm",
+//   },
+//   {
+//     name: "Chocolate ",
+//     category: " Bakery",
+//     price: 120,
+//     quantity: 100,
+//     weight: "200 gm",
+//   },
+//   {
+//     name: "Cheese Block",
+//     category: "Dairy",
+//     price: 800,
+//     quantity: 100,
+//     weight: "1 litre",
+//   },
+//   {
+//     name: "Chocolate",
+//     category: " Bakery",
+//     price: 300,
+//     quantity: 100,
+//     weight: "300 gm",
+//   },
+//   {
+//     name: "Cheese Block",
+//     category: "Dairy",
+//     price: 250,
+//     quantity: 100,
+//     weight: "1 litre",
+//   },
+//   {
+//     name: "Milk Packet",
+//     category: " Bakery",
+//     price: 320,
+//     quantity: 100,
+//     weight: "300 gm",
+//   },
+// ];
 
-const columns: ColumnDef<TableRow>[] = [
+const columns: ColumnDef<any>[] = [
   {
     accessorKey: "name",
     header: () => <div className="text-left">Name</div>,
@@ -194,6 +203,14 @@ const columns: ColumnDef<TableRow>[] = [
 
 const Page: FC = () => {
   const [globalFilter, setGlobalFilter] = React.useState("");
+  const [data, setData] = useState<TableRow[]>([]); // Data state for table rows
+  const [totalItems, setTotalItems] = useState<number>(0); // Total number of items from the API
+  const [loading, setLoading] = useState<boolean>(true);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+
   const table = useReactTable({
     data,
     columns,
@@ -212,15 +229,50 @@ const Page: FC = () => {
   });
 
   const { pageIndex, pageSize } = table.getState().pagination;
-  const totalItems = table.getFilteredRowModel().rows.length;
+  // const totalItems = table.getFilteredRowModel().rows.length;
   const startItem = pageIndex * pageSize + 1;
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response: any = await sendApiRequest({
+          mode: "getitems",
+          page: table.getState().pagination.pageIndex + 1,
+          limit: table.getState().pagination.pageSize,
+        });
+
+        if (response?.status === 200) {
+          setData(response?.data?.categories || []);
+          response?.data?.total > 0 &&
+            setTotalItems(response?.data?.total || 0);
+        } else {
+          setCustomToast({
+            ...customToast,
+            message: response?.message,
+            type: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [pageIndex, pageSize]);
 
   return (
     <main
       className="max-h-[calc(100vh-60px)] px-6 below-md:px-3 below-md:py-4 overflow-auto "
       style={{ scrollbarWidth: "thin" }}
     >
+      <ToastNotification
+        message={customToast.message}
+        type={customToast.type}
+      />
       <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
         <AddNewItems />
         <AddCategories />
@@ -326,27 +378,46 @@ const Page: FC = () => {
             >
               <table className="w-full table-fixed">
                 <tbody>
-                  {table.getRowModel().rows.map((row) => (
-                    <tr
-                      key={row.id}
-                      className={
-                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                      }
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <td
-                          key={cell.id}
-                          className="px-4 py-1.5 text-[#636363] text-[14px]"
-                          style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                  {loading
+                    ? Array.from({ length: 10 }).map((_, index) => (
+                        <tr
+                          key={index}
+                          className={
+                            index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                          }
                         >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
+                          {columns.map((column, colIndex) => (
+                            <td
+                              key={colIndex}
+                              className="px-4 py-1.5"
+                              style={{ width: `${column.size}px` }}
+                            >
+                              <Skeleton height={30} />
+                            </td>
+                          ))}
+                        </tr>
+                      ))
+                    : table.getRowModel().rows.map((row) => (
+                        <tr
+                          key={row.id}
+                          className={
+                            row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                          }
+                        >
+                          {row.getVisibleCells().map((cell) => (
+                            <td
+                              key={cell.id}
+                              className="px-4 py-1.5 text-[#636363] text-[14px]"
+                              style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                            >
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
+                            </td>
+                          ))}
+                        </tr>
                       ))}
-                    </tr>
-                  ))}
                 </tbody>
               </table>
             </div>
