@@ -408,7 +408,7 @@ const DetailsPage: React.FC = () => {
                 <div className="relative below-md:w-[35%]">
                   <Dropdown
                     className="relative below-md:w-full"
-                    shadowclassName="shadow-none"
+                    shadowclassName="shadow-none border border-gray-100"
                     options={options3}
                     selectedOption={selectedOption3}
                     onSelect={handleSelect3}
@@ -434,7 +434,7 @@ const DetailsPage: React.FC = () => {
                 <div className="relative below-md:w-[35%] z-[60]">
                   <Dropdown
                     className="relative w-full"
-                    shadowclassName="shadow-none"
+                    shadowclassName="shadow-none border border-gray-100"
                     options={options4}
                     selectedOption={selectedOption4}
                     onSelect={handleSelect4}
