@@ -78,6 +78,11 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
     { title: "Sales", src: "sales", path: "/sales" },
     { title: "Invoices", src: "invoices", path: "/invoices" },
     { title: "Expenses", src: "expences", path: "/expenses" },
+    { type: "Setup", title: "SETUP" },
+    { title: "Categories", src: "Categories", path: "/setup/categories" },
+    { title: "Items", src: "Items2", path: "/setup/items" },
+    { title: "Tenders", src: "Tenders", path: "/setup/tenders" },
+    { title: "Stores", src: "Stores", path: "/setup/stores" },
     {
       title: "Configuration",
       src: "Configuration",
