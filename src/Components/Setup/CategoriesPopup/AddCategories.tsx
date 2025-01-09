@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import { sendApiRequest } from "@/utils/apiUtils";
-import ToastNotification from "@/Components/ui/ToastNotification/ToastNotification";
+import ToastNotification from "@/Components/UI/ToastNotification/ToastNotification";
 
 interface JsonData {
   mode: string;

@@ -18,7 +18,7 @@ import AddCategories from "@/Components/Setup/CategoriesPopup/AddCategories";
 import Pagination from "@/Components/UI/Pagination/Pagination";
 import DeleteItems from "@/Components/Setup/ItemsPopup/DeleteItems";
 import EditItem from "@/Components/Setup/ItemsPopup/EditItem";
-import ToastNotification, { ToastNotificationProps } from "@/Components/ui/ToastNotification/ToastNotification";
+import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 
 interface TableRow {
   name: string;
