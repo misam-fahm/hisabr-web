@@ -5,9 +5,9 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 //import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
-import Dropdown from "../ui/Common/DropDown";
-import CustomDatePicker from "../drawer/CustomDatePicker";
-import { Inputtext } from "../ui/InputText";
+import Dropdown from "../UI/Themes/DropDown";
+import CustomDatePicker from "../UI/Themes/CustomDatePicker";
+import { InputField } from "@/Components/UI/Themes/InputField";
 
 type ExpenseFormInputs = {
   amount: number;
@@ -187,7 +187,7 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
 
 
                   {/* Description field */}
-                  <Inputtext
+                  <InputField
                   type="text"
                   label="Description"
                   borderClassName="border border-gray-400"
@@ -203,7 +203,7 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
                 />
 
                   {/* Amount Field */}
-                  <Inputtext
+                  <InputField
                   type="number"
                   label="Amount"
                   borderClassName="border border-gray-400"

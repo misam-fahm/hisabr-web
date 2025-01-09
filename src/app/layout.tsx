@@ -1,10 +1,9 @@
-// app/layout.tsx
 "use client";
 
 import "./globals.css";
 import type { Metadata } from "next";
-import Navbar from "@/Components/drawer/navbar";
-import Drawer from "@/Components/drawer/Drawer";
+import Header from "@/Components/Header/header";
+import Navbar from "@/Components/Navbar/Navbar";
 import { usePathname } from "next/navigation";
 import { ToastContainer } from "react-toastify";
 
@@ -13,7 +12,7 @@ import { ToastContainer } from "react-toastify";
 //   description: "Admin Dashboard with Next.js",
 // };
 
-export default function RootLayout({
+export default function RootLayout({   
   children,
 }: {
   children: React.ReactNode;
@@ -31,13 +30,13 @@ export default function RootLayout({
         <div className="flex w-full ">
           {!shouldHideSidebar && (
             <div className="w-auto">
-              <Drawer children={undefined} />
+              <Navbar children={undefined} />
             </div>
           )}
           <div className="flex w-full flex-col">
             {!shouldHideSidebar && (
               <div>
-                <Navbar />
+                <Header />
               </div>
             )}
             <main>{children}</main>

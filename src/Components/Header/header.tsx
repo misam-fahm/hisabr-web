@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
 import { useState, useRef, useEffect } from "react";
-import Images from "../ui/Common/Image";
+import Images from "../UI/Themes/Image";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
-const Navbar: React.FC = () => {
+const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const currentPath = usePathname();
@@ -191,4 +191,4 @@ const Navbar: React.FC = () => {
   );
 };
 
-export default Navbar;
+export default Header;

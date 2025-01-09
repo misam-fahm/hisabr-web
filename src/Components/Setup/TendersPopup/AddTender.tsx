@@ -5,10 +5,10 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/ui/Common/DropDown";
 import { FormProvider, useForm, Controller } from "react-hook-form";
-import { Inputtext } from "../ui/InputText";
+import { InputField } from "../ui/InputField";
 import DateRange from "@/Components/drawer/DateRangePicker";
 
-const EditTender = () => {
+const AddTender = () => {
   const methods = useForm();
 
   const onSubmit = (data: any) => {
@@ -44,13 +44,25 @@ const EditTender = () => {
 
   return (
     <>
-       <div>
-        <button onClick={openModal}>
+      <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
+        <button
+          onClick={openModal}
+          className="focus:outline-none flex items-center justify-center bg-[#168A6F]  w-[56px] h-[56px] rounded-xl relative"
+        >
           <img
-            src="/images/EditPencilIcon.svg"
-            alt="Add icon"
-            className="flex justify-center items-center  w-4 h-4 below-md:w-5 below-md:h-5"
+            src="/images/WebAddIcon.svg"
+            alt=" Add Store"
+            className="w-[18px] h-[18px]"
           />
+        </button>
+      </div>
+      <div className="block below-md:hidden">
+        <button
+          onClick={openModal}
+          className="bg-[#168A6F] hover:bg-[#11735C] shadow-lg text-white w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
+        >
+          <img className="" src="/images/WebAddIcon.svg" alt="" />
+          Add Tender
         </button>
       </div>
       {/* Dialog for the modal */}
@@ -75,7 +87,7 @@ const EditTender = () => {
                   as="h3"
                   className=" font-medium  text-[#3D3D3D] opacity-80"
                 >
-                  Edit Tender
+                  Add Tender
                 </DialogTitle>
               </div>
             </div>
@@ -86,7 +98,7 @@ const EditTender = () => {
                  
                   <div className="w-full flex mt-4">
                     {/* Description Input Field */}
-                    <Inputtext
+                    <InputField
                       type="text"
                       label="Name"
                       borderClassName=" border border-gray-400"
@@ -121,7 +133,7 @@ const EditTender = () => {
                     />
                   </div>
                   <div className="w-full flex mt-4">
-                    <Inputtext
+                    <InputField
                       type="text"
                       label="Commission"
                       borderClassName=" border border-gray-400"
@@ -151,7 +163,7 @@ const EditTender = () => {
                         type="submit"
                         className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
                       >
-                        Update
+                        Save
                       </button>
                     </div>
                   </div>
@@ -165,4 +177,4 @@ const EditTender = () => {
   );
 };
 
-export default EditTender;
+export default AddTender;

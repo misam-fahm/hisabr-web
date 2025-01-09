@@ -2,11 +2,11 @@
 import React, { useState } from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
-import Images from "@/Components/ui/Common/Image";
-import Pagination from "@/Components/ui/Common/Pagination";
-import AddTender from "@/Components/Setup/AddTender";
-import DeleteTenders from "@/Components/Setup/DeleteTenders";
-import EditTenders from "@/Components/Setup/EditTenders";
+import Images from "@/Components/UI/Themes/Image";
+import Pagination from "@/Components/UI/Pagination/Pagination";
+import AddTender from "@/Components/Setup/TendersPopup/AddTender";
+import DeleteTenders from "@/Components/Setup/TendersPopup/DeleteTenders";
+import EditTenders from "@/Components/Setup/TendersPopup/EditTenders";
 
 import {
   useReactTable,

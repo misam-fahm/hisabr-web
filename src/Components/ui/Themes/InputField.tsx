@@ -1,7 +1,6 @@
 import { FieldError, FieldErrorsImpl, FieldValues, Merge, useFormContext } from "react-hook-form";
-import { Text } from "./Common/Text";
 import { useRef, useState } from "react";
-export interface IInputtextProps
+export interface IInputFieldProps
 	extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
 	label: string;
 	name: any;
@@ -27,7 +26,7 @@ export interface IInputtextProps
 
 //purpose : input component
 //dev-name : md haider
-export function Inputtext(props:any): JSX.Element {
+export function InputField(props:any): JSX.Element {
 
 	const useComponentId = (id: string) => id.trim().toLowerCase().replace(/ /g, "-");
 	const [isFocused, setIsFocused] = useState(false);

@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useState } from "react";
-import Images from "@/Components/ui/Common/Image";
+import Images from "@/Components/UI/Themes/Image";
 import {
   useReactTable,
   getCoreRowModel,
@@ -10,9 +10,9 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 
-import AddStore from "@/Components/Setup/AddStore";
-import EditStore from "@/Components/Setup/EditStore";
-import Pagination from "@/Components/ui/Common/Pagination";
+import AddStore from "@/Components/Setup/StorePopup/AddStore";
+import EditStore from "@/Components/Setup/StorePopup/EditStore";
+import Pagination from "@/Components/UI/Pagination/Pagination";
 
 interface TableRow {
   store: string;

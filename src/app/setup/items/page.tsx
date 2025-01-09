@@ -3,7 +3,7 @@ import React, { FC, useEffect, useState } from "react";
 import { sendApiRequest } from "@/utils/apiUtils";
 import ToastNotification, {
   ToastNotificationProps,
-} from "@/Components/ui/ToastNotification/ToastNotification";
+} from "@/Components/UI/ToastNotification/ToastNotification";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
@@ -16,11 +16,11 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 
-import AddNewItems from "@/Components/Setup/AddNewItems";
-import AddCategories from "@/Components/Setup/AddCategories";
-import Pagination from "@/Components/ui/Common/Pagination";
-import DeleteItems from "@/Components/Setup/DeleteItems";
-import EditItem from "@/Components/Setup/EditItem";
+import AddNewItems from "@/Components/Setup/ItemsPopup/AddNewItems";
+import AddCategories from "@/Components/Setup/CategoriesPopup/AddCategories";
+import Pagination from "@/Components/UI/Pagination/Pagination";
+import DeleteItems from "@/Components/Setup/ItemsPopup/DeleteItems";
+import EditItem from "@/Components/Setup/ItemsPopup/EditItem";
 
 interface TableRow {
   name: string;

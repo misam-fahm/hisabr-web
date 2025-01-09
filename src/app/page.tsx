@@ -1,10 +1,10 @@
 "use client";
 import "./globals.css";
 import { FC, useState } from "react";
-import Linechart from "@/Components/drawer/LineChart";
+import Linechart from "@/Components/Charts-Graph/LineChart";
 import React from "react";
 import { useRouter } from "next/navigation";
-import Dropdown from "@/Components/ui/Common/DropDown";
+import Dropdown from "@/Components/UI/Themes/DropDown";
 import { useEffect } from "react";
 
 interface TableRow {

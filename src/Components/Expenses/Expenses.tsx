@@ -3,8 +3,8 @@
 import React, { FC, useState, useRef, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/Expenses/AddExpenses";
-import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
-import Dropdown from "@/Components/UI/Themes/DropDown";
+import DateRangePicker from "../UI/Themes/DateRangePicker";
+import Dropdown from "../UI/Themes/DropDown";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
@@ -17,9 +17,9 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-import Pagination from "@/Components/UI/Pagination/Pagination";
-import DeleteExpense from "@/Components/Expenses/DeleteExpense";
-import EditExpense from "@/Components/Expenses/EditExpense";
+import Pagination from "../UI/Pagination/Pagination";
+import DeleteExpense from "./DeleteExpense";
+import EditExpense from "./EditExpense";
 
 interface TableRow {
   date: string;
@@ -111,13 +111,21 @@ const formattedData = data?.map((item) => {
       2,
       "0"
     )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
-      .getFullYear()
-      .toString()
-      .slice(-2)}`;
+    .getFullYear()
+    .toString()
+    .slice(-2)}`;
 
   return { ...item, date: formattedDate };
 });
 console.log(formattedData);
+
+const existingExpense = {
+  amount: 150.5,
+  date: new Date(),
+  store: "Store 1",
+  expenseType: "Accommodation",
+  description: "Business trip hotel expense",
+};
 
 const columns: ColumnDef<TableRow>[] = [
   {
@@ -154,24 +162,24 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     id: "edit",
-    header: () => <div className="text-center"></div>,
+    header: () => <div className="text-center ">Edit</div>,
     cell: () => (
       <>
         <span className="flex justify-center">
-          <EditExpense initialData={existingExpense}
+        <EditExpense initialData={existingExpense}
             onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
             onClose={() => console.log("Modal Closed")} />
         </span>
       </>
     ),
-    size: 30,
+    size: 50,
   },
   {
     id: "delete",
-    header: () => <div className="text-center"></div>,
+    header: () => <div className="text-center">Delete</div>,
     cell: () => (
       <>
-        <span className="flex justify-center mr-4">
+        <span className="flex justify-center">
           {" "}
           <DeleteExpense />
         </span>
@@ -180,13 +188,12 @@ const columns: ColumnDef<TableRow>[] = [
     size: 50,
   },
 ];
-
-const existingExpense = {
-  amount: 150.5,
-  date: new Date(),
+const expenseData = {
   store: "Store 1",
-  expenseType: "Accommodation",
-  description: "Business trip hotel expense",
+  expenseType: "Type 1",
+  description: "Expense description",
+  amount: 100,
+  date: new Date(),
 };
 
 const Expenses: FC = () => {
@@ -289,15 +296,11 @@ const Expenses: FC = () => {
       description: "Mortgage Mortgage Mortgage",
     },
   ];
-
-  // Format date to MM-DD-YYYY
-  const formattedCardData = cardData.map((item) => {
-    const date = new Date(item.date);
-    const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}-${date.getFullYear()}`;
-    return { ...item, date: formattedDate };
-  });
-
-  console.log(formattedCardData);
+  //pagination range
+  const { pageIndex, pageSize } = table.getState().pagination;
+  const totalItems = table.getFilteredRowModel().rows.length;
+  const startItem = pageIndex * pageSize + 1;
+  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   // const calendarRef = useRef<DatePicker | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -322,7 +325,7 @@ const Expenses: FC = () => {
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false); // Close dropdown after selection
-    //handleSelect(option); // Call the passed handler
+    handleSelect(option); // Call the passed handler
   };
   const handleBack = () => {
     router.push("/");
@@ -357,19 +360,18 @@ const Expenses: FC = () => {
               <DateRangePicker />
             </div>
 
-            <div className="flex shadow text-[12px] relative below-md:flex-row below-md:gap-4 bg-[#ffff] items-center  rounded w-full below-md:w-full  below-md:text-[11px]">
+            <div className="flex shadow text-[12px]  below-md:flex-row below-md:gap-4 bg-[#ffff] items-center  rounded-md w-full  h-[35px] below-md:w-full  below-md:text-[11px]">
               <input
-                value={globalFilter ?? ""}
-                onChange={(e) => setGlobalFilter(e.target.value)}
+                type="search"
+                ref={searchInputRef}
                 placeholder="Search"
-                className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                className="w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none"
+              ></input>
+              <img
+                className="pr-2 cursor-pointer items-center"
+                src="/images/searchicon.svg"
+                onClick={handleClick}
               />
-              <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                <img
-                  className="cursor-pointer items-center"
-                  src="/images/searchicon.svg"
-                />
-              </div>
             </div>
           </div>
           <div className="block pl-24 below-md:hidden">
@@ -392,9 +394,9 @@ const Expenses: FC = () => {
 
                 <div className="flex gap-4 mb-1 px-3 py-4">
                   <>
-                    <EditExpense initialData={existingExpense}
-                      onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-                      onClose={() => console.log("Modal Closed")} />
+                  <EditExpense initialData={existingExpense}
+            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
+            onClose={() => console.log("Modal Closed")} />
                     <DeleteExpense />
                   </>
                 </div>
@@ -425,7 +427,7 @@ const Expenses: FC = () => {
         </div>
 
         {/*Web View :  Expenses Table */}
-        <div className="overflow-x-auto shadow-sm border-collapse border border-b border-[#E4E4EF] rounded-md  flex-grow flex flex-col below-md:hidden">
+        <div className="overflow-x-auto shadow-md border-collapse border border-gray-200  rounded-lg  flex-grow flex flex-col below-md:hidden">
           <div className="overflow-hidden max-w-full rounded-md">
             <table className="w-full border-collapse text-[12px] text-white table-fixed rounded-md">
               <thead className="bg-[#334155] top-0 z-10">
@@ -440,9 +442,9 @@ const Expenses: FC = () => {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </th>
                     ))}
                   </tr>

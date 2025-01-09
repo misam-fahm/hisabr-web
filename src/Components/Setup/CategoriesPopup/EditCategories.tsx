@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Inputtext } from "../ui/InputText";
+import { InputField } from "../../UI/Themes/InputField";
 
 const EditCategories = ({ rowData }: { rowData: any }) => {
   const methods = useForm({
@@ -72,7 +72,7 @@ const EditCategories = ({ rowData }: { rowData: any }) => {
                 <form onSubmit={methods.handleSubmit(onSubmit)}>
                   <div className="flex flex-col gap-4">
                     {/* Category Name Input */}
-                    <Inputtext
+                    <InputField
                       type="text"
                       label="Category Name"
                       borderClassName="border border-gray-400"
@@ -91,7 +91,7 @@ const EditCategories = ({ rowData }: { rowData: any }) => {
                     />
 
                     {/* Description Input */}
-                    <Inputtext
+                    <InputField
                       type="text"
                       label="Description"
                       borderClassName="border border-gray-400"

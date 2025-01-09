@@ -4,13 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import React, { ReactNode, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import Images from "../ui/Common/Image";
+import Images from "../UI/Themes/Image";
 
 interface DrawerProps {
   children: ReactNode;
 }
 
-const Drawer: React.FC<DrawerProps> = ({ children }) => {
+const Navbar: React.FC<DrawerProps> = ({ children }) => {
   const [open, setOpen] = useState(true);
   const [setupOpen, setSetupOpen] = useState(false); // State to toggle the dropdown
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null); // Track active submenu item
@@ -243,4 +243,4 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
   );
 };
 
-export default Drawer;
+export default Navbar;
