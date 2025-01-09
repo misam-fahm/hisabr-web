@@ -92,7 +92,7 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
         <button onClick={openModal}>
           <img
             src="/images/editpencilicon.svg"
-            className="flex justify-center w-4 h-4 below-md:h-5 below-md:w-5  text-left"
+            className="flex justify-center w-4 h-4 below-md:h-5 below-md:w-5 text-left"
           />
         </button>
       </div>
