@@ -2,9 +2,9 @@
 import { useRef, useState } from "react";
 import React from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import DateRange from "@/Components/ui/Common/DateRangePicker";
+import DateRange from "@/Components/ui/Thems/DateRangePicker";
 import { useRouter } from "next/navigation";
-import Dropdown from "@/Components/ui/Common/DropDown";
+import Dropdown from "@/Components/ui/Thems/DropDown";
 
 // import Image from "next/image"
 import {
@@ -15,7 +15,7 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-import Pagination from "../ui/Common/Pagination";
+import Pagination from "../ui/Pagination/Pagination";
 
 interface TableRow {
   date: string;

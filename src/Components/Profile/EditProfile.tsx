@@ -1,6 +1,6 @@
 "use client";
 import React from 'react'
-import { Text } from '../ui/Common/Text'
+import { Text } from '../ui/Thems/Text'
 import { useRouter } from 'next/navigation';
 
 const EditProfile = () => {

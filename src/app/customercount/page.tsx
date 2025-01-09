@@ -2,11 +2,11 @@
 import React from "react";
 import { useState } from "react";
 import "../globals.css";
-import BarChart4 from "@/Components/drawer/BarChart4";
-import PieChart3 from "@/Components/drawer/Piechart3";
+import BarChart4 from "@/Components/Charts&Graph/BarChart4";
+import PieChart3 from "@/Components/Charts&Graph/Piechart3";
 import { useRouter } from "next/navigation";
-import Dropdown from "@/Components/ui/Common/DropDown";
-import Images from "@/Components/ui/Common/Image";
+import Dropdown from "@/Components/ui/Thems/DropDown";
+import Images from "@/Components/ui/Thems/Image";
 
 const dat = [
   { label: "New Customers", value: 10836, per: "2%", color: "#376066CC" },

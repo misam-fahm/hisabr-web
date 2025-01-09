@@ -3,10 +3,10 @@
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
-import Dropdown from "@/Components/ui/Common/DropDown";
+import Dropdown from "@/Components/ui/Thems/DropDown";
 import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
-import { Inputtext } from "../ui/InputText";
-import DateRange from "@/Components/drawer/DateRangePicker";
+import { Inputtext } from "../ui/Thems/InputText";
+import DateRangePicker from "../ui/Thems/DateRangePicker";
 
 
 
@@ -171,7 +171,7 @@ const AddExpenses = () => {
                     />
                  
                  
-                    <DateRange />
+                    <DateRangePicker />
                  
 
                

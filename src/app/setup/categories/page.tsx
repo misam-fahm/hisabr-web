@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useEffect, useState } from "react";
-import Pagination from "@/Components/ui/Common/Pagination";
+import Pagination from "@/Components/ui/Pagination/Pagination";
 import {
   useReactTable,
   getCoreRowModel,
@@ -11,15 +11,15 @@ import {
 } from "@tanstack/react-table";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import AddNewItems from "@/Components/Setup/AddNewItems";
-import AddCategories from "@/Components/Setup/AddCategories";
-import EditCategories from "@/Components/Setup/EditCategories";
-import DeleteCategories from "@/Components/Setup/DeleteCategories";
+import AddNewItems from "@/Components/Setup/ItemsPopup/AddNewItems";
+import AddCategories from "@/Components/Setup/CategoriesPopup/AddCategories";
+import EditCategories from "@/Components/Setup/CategoriesPopup/EditCategories";
+import DeleteCategories from "@/Components/Setup/CategoriesPopup/DeleteCategories";
 import { sendApiRequest } from "@/utils/apiUtils";
 import ToastNotification, {
   ToastNotificationProps,
 } from "@/Components/ui/ToastNotification/ToastNotification";
-import Loading from "@/Components/ui/Common/Loading";
+import Loading from "@/Components/ui/Thems/Loading";
 
 interface TableRow {
   categoryname: string;

@@ -1,7 +1,7 @@
 "use client";
 import React, { FC, useState } from "react";
-import DateRange from "@/Components/ui/Common/DateRangePicker";
-import Images from "@/Components/ui/Common/Image";
+import DateRange from "@/Components/ui/Thems/DateRangePicker";
+import Images from "@/Components/ui/Thems/Image";
 import { useRouter } from "next/navigation";
 import {
   useReactTable,
@@ -11,10 +11,10 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-import AddTender from "@/Components/Setup/AddTender";
-import DeleteTenders from "@/Components/Setup/DeleteTenders";
-import EditTenders from "@/Components/Setup/EditTenders";
-import Pagination from "@/Components/ui/Common/Pagination";
+import AddTender from "@/Components/Setup/TendersPopup/AddTender";
+import DeleteTenders from "@/Components/Setup/TendersPopup/DeleteTenders";
+import EditTenders from "@/Components/Setup/TendersPopup/EditTenders";
+import Pagination from "@/Components/ui/Pagination/Pagination";
 
 interface TableRow {
   commission: string;

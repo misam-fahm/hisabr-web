@@ -1,6 +1,5 @@
 "use client";
 import React, { FC, useEffect, useState } from "react";
-import DateRange from "@/Components/drawer/DateRangePicker";
 import { sendApiRequest } from "@/utils/apiUtils";
 import ToastNotification, {
   ToastNotificationProps,
@@ -16,11 +15,11 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 
-import AddNewItems from "@/Components/Setup/AddNewItems";
-import AddCategories from "@/Components/Setup/AddCategories";
-import Pagination from "@/Components/ui/Common/Pagination";
-import DeleteItems from "@/Components/Setup/DeleteItems";
-import EditItem from "@/Components/Setup/EditItem";
+import AddNewItems from "@/Components/Setup/ItemsPopup/AddNewItems";
+import AddCategories from "@/Components/Setup/CategoriesPopup/AddCategories";
+import Pagination from "@/Components/ui/Pagination/Pagination";
+import DeleteItems from "@/Components/Setup/ItemsPopup/DeleteItems";
+import EditItem from "@/Components/Setup/ItemsPopup/EditItem";
 
 interface TableRow {
   name: string;

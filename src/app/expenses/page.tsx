@@ -3,8 +3,8 @@
 import React, { FC, useState, useRef, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/Expenses/AddExpenses";
-import DateRange from "@/Components/drawer/DateRangePicker";
-import Dropdown from "@/Components/ui/Common/DropDown";
+import DateRangePicker from "@/Components/ui/Thems/DateRangePicker";
+import Dropdown from "@/Components/ui/Thems/DropDown";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
@@ -17,7 +17,7 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-import Pagination from "@/Components/ui/Common/Pagination";
+import Pagination from "@/Components/ui/Pagination/Pagination";
 import DeleteExpense from "@/Components/Expenses/DeleteExpense";
 import EditExpense from "@/Components/Expenses/EditExpense";
 
@@ -351,7 +351,7 @@ const Expenses: FC = () => {
             />
 
             <div className="w-full tablet:w-full below-md:w-full h-[35px]">
-              <DateRange />
+              <DateRangePicker />
             </div>
 
             <div className="flex shadow text-[12px] relative below-md:flex-row below-md:gap-4 bg-[#ffff] items-center  rounded-md w-full below-md:w-full  below-md:text-[11px]">

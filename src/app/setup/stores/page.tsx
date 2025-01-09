@@ -1,7 +1,7 @@
 "use client";
 import React, { FC, useState } from "react";
-import DateRange from "@/Components/ui/Common/DateRangePicker";
-import Images from "@/Components/ui/Common/Image";
+import DateRange from "@/Components/ui/Thems/DateRangePicker";
+import Images from "@/Components/ui/Thems/Image";
 import {
   useReactTable,
   getCoreRowModel,
@@ -13,7 +13,7 @@ import {
 
 import AddStore from "@/Components/Setup/AddStore";
 import EditStore from "@/Components/Setup/EditStore";
-import Pagination from "@/Components/ui/Common/Pagination";
+import Pagination from "@/Components/ui/Pagination/Pagination";
 
 interface TableRow {
   store: string;

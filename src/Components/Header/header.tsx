@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useState, useRef, useEffect } from "react";
-import Images from "../ui/Common/Image";
+import Images from "../ui/Thems/Image";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 

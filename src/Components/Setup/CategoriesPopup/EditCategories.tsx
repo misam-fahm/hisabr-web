@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Inputtext } from "../ui/InputText";
+import { Inputtext } from "../../ui/Thems/InputText";
 
 const EditCategories = ({ rowData }: { rowData: any }) => {
   const methods = useForm({

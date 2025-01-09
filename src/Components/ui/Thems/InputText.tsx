@@ -1,5 +1,5 @@
 import { FieldError, FieldErrorsImpl, FieldValues, Merge, useFormContext } from "react-hook-form";
-import { Text } from "./Common/Text";
+import { Text } from "./Text";
 import { useRef, useState } from "react";
 export interface IInputtextProps
 	extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
