@@ -13,6 +13,37 @@ const AddStore = () => {
   const onSubmit = (data: any) => {
     console.log("Form Data:", data);
   };
+
+  const [royalty, setRoyalty] = useState("");
+  const handleChange = (data: any) => {
+    setRoyalty(data); // Update local state
+    methods.setValue("royalty", data); // Update form state in react-hook-form
+  };
+
+  const [county, setCounty] = useState("");
+  const handleChangeCounty = (data: any) => {
+    setCounty(data); // Update local state
+    methods.setValue("county", data); // Update form state in react-hook-form
+  };
+
+  const [storeName, setStoreName] = useState("");
+  const handleChangesetStoreName = (data: any) => {
+    setStoreName(data); // Update local state
+    methods.setValue("storeName", data); // Update form state in react-hook-form
+  };
+
+  const [user, setUser] = useState("");
+  const handleChangeUser = (data: any) => {
+    setUser(data); // Update local state
+    methods.setValue("user", data); // Update form state in react-hook-form
+  };
+
+  const [location, setLocation] = useState("");
+  const handleChangeLocation = (data: any) => {
+    setLocation(data); // Update local state
+    methods.setValue("location", data); // Update form state in react-hook-form
+  };
+
   const { control } = useForm(); // Initialize React Hook Form
   const [isOpen, setIsOpen] = useState(false);
 
@@ -79,13 +110,17 @@ const AddStore = () => {
                       label="Store Name"
                       borderClassName=" border border-gray-400"
                       labelBackgroundColor="bg-white"
+                      value={storeName}
                       textColor="text-gray-500"
-                      {...methods?.register("storename", {
+                      {...methods?.register("storeName", {
                         required: "Store Name is required",
                       })}
-                      errors={methods.formState.errors.storename}
-                      placeholder="Storename"
+                      errors={methods.formState.errors.storeName}
+                      placeholder="Store Name"
                       variant="outline"
+                      onChange={(e: any) =>
+                        handleChangesetStoreName(e.target.value)
+                      }
                     />
                   </div>
                   <div className="w-full flex mt-4">
@@ -95,6 +130,7 @@ const AddStore = () => {
                       label="Location"
                       borderClassName=" border border-gray-400"
                       labelBackgroundColor="bg-white"
+                      value={location}
                       textColor="text-gray-500"
                       {...methods?.register("location", {
                         required: "Location is required",
@@ -102,6 +138,9 @@ const AddStore = () => {
                       errors={methods.formState.errors.location}
                       placeholder="Location"
                       variant="outline"
+                      onChange={(e: any) =>
+                        handleChangeLocation(e.target.value)
+                      }
                     />
                   </div>
                   <div className="w-full flex mt-4">
@@ -111,6 +150,7 @@ const AddStore = () => {
                       label="User"
                       borderClassName=" border border-gray-400"
                       labelBackgroundColor="bg-white"
+                      value={user}
                       textColor="text-gray-500"
                       {...methods?.register("user", {
                         required: "User is required",
@@ -118,6 +158,7 @@ const AddStore = () => {
                       errors={methods.formState.errors.user}
                       placeholder="User"
                       variant="outline"
+                      onChange={(e: any) => handleChangeUser(e.target.value)}
                     />
                   </div>
                   <div className="w-full flex mt-4">
@@ -127,22 +168,24 @@ const AddStore = () => {
                       label="County"
                       borderClassName=" border border-gray-400"
                       labelBackgroundColor="bg-white"
+                      value={county}
                       textColor="text-gray-500"
                       {...methods?.register("county", {
                         required: "County is required",
                       })}
-                      errors={methods.formState.errors.county}
+                      errors={methods.formState.errors.royalty}
                       placeholder="County"
                       variant="outline"
+                      onChange={(e: any) => handleChangeCounty(e.target.value)}
                     />
                   </div>
                   <div className="w-full flex mt-4">
-                    {/* Description Input Field */}
                     <Inputtext
                       type="text"
                       label="Royalty"
                       borderClassName=" border border-gray-400"
                       labelBackgroundColor="bg-white"
+                      value={royalty}
                       textColor="text-gray-500"
                       {...methods?.register("royalty", {
                         required: "Royalty is required",
@@ -150,6 +193,7 @@ const AddStore = () => {
                       errors={methods.formState.errors.royalty}
                       placeholder="Royalty"
                       variant="outline"
+                      onChange={(e: any) => handleChange(e.target.value)}
                     />
                   </div>
 

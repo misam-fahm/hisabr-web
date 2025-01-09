@@ -113,7 +113,7 @@ const AddCategories = () => {
       <div className="block below-md:hidden">
         <button
           onClick={openModal}
-          className="bg-[#1AA47D] shadow-lg hover:bg-[#168A68] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
+          className=" shadow-lg bg-[#168A6F] hover:bg-[#11735C] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
           <img src="/images/plus1.svg" alt="Add icon" />
           Add Category
@@ -129,17 +129,20 @@ const AddCategories = () => {
       >
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[420px] below-md:w-[345px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
-            <div className="flex justify-between">
-              <DialogTitle as="h3" className="font-medium text-gray-900">
-                Add Category
-              </DialogTitle>
+          <DialogPanel className="w-[335px] below-md:w-[345px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
+            <div className="flex justify-end">
+             
               <img
                 onClick={closeModal}
                 src="/images/cancelicon.svg"
                 alt=""
                 className="cursor-pointer"
               />
+            </div>
+            <div>
+            <DialogTitle as="h3" className="flex justify-center font-medium  text-[#3D3D3D] opacity-80">
+                Add Category
+              </DialogTitle>
             </div>
 
             <div className="mt-4">
