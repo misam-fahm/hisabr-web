@@ -16,10 +16,7 @@ import AddCategories from "@/Components/Setup/CategoriesPopup/AddCategories";
 import EditCategories from "@/Components/Setup/CategoriesPopup/EditCategories";
 import DeleteCategories from "@/Components/Setup/CategoriesPopup/DeleteCategories";
 import { sendApiRequest } from "@/utils/apiUtils";
-import ToastNotification, {
-  ToastNotificationProps,
-} from "@/Components/UI/ToastNotification/ToastNotification";
-import Loading from "@/Components/UI/Themes/Loading";
+import ToastNotification, { ToastNotificationProps } from "@/Components/ui/ToastNotification/ToastNotification";
 
 interface TableRow {
   categoryname: string;

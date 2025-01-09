@@ -3,10 +3,10 @@
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
-import Dropdown from "@/Components/ui/Common/DropDown";
 import { FormProvider, useForm, Controller } from "react-hook-form";
-import { InputField } from "../ui/InputField";
-import DateRange from "@/Components/drawer/DateRangePicker";
+import { InputField } from "@/Components/UI/Themes/InputField";
+import Dropdown from "@/Components/UI/Themes/DropDown";
+
 
 const AddTender = () => {
   const methods = useForm();

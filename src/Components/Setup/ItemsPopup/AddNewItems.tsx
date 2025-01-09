@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import { sendApiRequest } from "@/utils/apiUtils";
-import ToastNotification, { ToastNotificationProps } from "../ui/ToastNotification/ToastNotification";
+import ToastNotification, { ToastNotificationProps } from "@/Components/ui/ToastNotification/ToastNotification";
 interface Category {
   categoryid: number;
   categoryname: string;
