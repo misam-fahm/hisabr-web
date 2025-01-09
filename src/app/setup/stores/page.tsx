@@ -1,6 +1,5 @@
 "use client";
 import React, { FC, useState } from "react";
-import DateRange from "@/Components/ui/Thems/DateRangePicker";
 import Images from "@/Components/ui/Thems/Image";
 import {
   useReactTable,
@@ -11,8 +10,8 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 
-import AddStore from "@/Components/Setup/AddStore";
-import EditStore from "@/Components/Setup/EditStore";
+import AddStore from "@/Components/Setup/StorePopup/AddStore";
+import EditStore from "@/Components/Setup/StorePopup/EditStore";
 import Pagination from "@/Components/ui/Pagination/Pagination";
 
 interface TableRow {

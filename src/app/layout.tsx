@@ -3,8 +3,8 @@
 
 import "./globals.css";
 import type { Metadata } from "next";
-import Navbar from "@/Components/drawer/navbar";
-import Drawer from "@/Components/drawer/Drawer";
+import Navbar from "@/Components/Header/header";
+import Drawer from "@/Components/Navbar/Drawer";
 import { usePathname } from "next/navigation";
 import { ToastContainer } from "react-toastify";
 

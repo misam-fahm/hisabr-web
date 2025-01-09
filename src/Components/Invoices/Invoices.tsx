@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import React from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import DateRange from "@/Components/ui/Thems/DateRangePicker";
+import DateRangePicker from "@/Components/ui/Thems/DateRangePicker";
 import { useRouter } from "next/navigation";
 import Dropdown from "@/Components/ui/Thems/DropDown";
 
@@ -342,7 +342,7 @@ const Invoices = () => {
           />
 
           <div className="below-lg:w-full tablet:w-full below-md:w-full">
-            <DateRange />
+            <DateRangePicker />
           </div>
 
           <div className="flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">

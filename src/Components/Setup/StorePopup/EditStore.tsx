@@ -5,10 +5,10 @@ import { Button, Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/ui/Thems/DropDown";
 import { FormProvider, useForm, Controller } from "react-hook-form";
-import { Inputtext } from "../ui/Thems/InputText";
-import DateRange from "@/Components/drawer/DateRangePicker";
+import { Inputtext } from "@/Components/ui/Thems/InputText";
 
-const AddStore = () => {
+
+const EditStore = () => {
   const methods = useForm();
 
   const onSubmit = (data: any) => {
@@ -22,9 +22,9 @@ const AddStore = () => {
 
   return (
     <>
-            <div>
-         <Button onClick={openModal}>
-           <img
+      <div>
+        <Button onClick={openModal}>
+          <img
             src="/images/EditPencilIcon.svg"
             alt="Add icon"
             className="flex justify-center items-center  w-4 h-4 below-md:w-5 below-md:h-5"
@@ -141,7 +141,6 @@ const AddStore = () => {
                       variant="outline"
                     />
                   </div>
-           
 
                   <div className="flex flex-col items-center py-4">
                     <div className="flex justify-between gap-3 items-center w-full">
@@ -163,7 +162,6 @@ const AddStore = () => {
                 </div>
               </form>
             </FormProvider>
-            
           </DialogPanel>
         </div>
       </Dialog>
@@ -171,4 +169,4 @@ const AddStore = () => {
   );
 };
 
-export default AddStore;
+export default EditStore;

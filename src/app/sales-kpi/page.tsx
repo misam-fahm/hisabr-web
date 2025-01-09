@@ -1,7 +1,7 @@
 "use client";
 import { FC, useState } from "react";
 import DonutChart from "@/Components/Charts&Graph/DonutChart";
-import DateRange from "@/Components/ui/Thems/DateRangePicker";
+import DateRangePicker from "@/Components/ui/Thems/DateRangePicker";
 import Dropdown from "@/Components/ui/Thems/DropDown";
 
 const SalesKPI: FC = () => {
@@ -70,7 +70,7 @@ const SalesKPI: FC = () => {
             />
 
             <div className="w-[260px] tablet:w-full below-md:w-full">
-              <DateRange />
+              <DateRangePicker />
             </div>
           </div>
           <div className="below-md:hidden tablet:hidden">
@@ -108,11 +108,17 @@ const SalesKPI: FC = () => {
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
+              <p className="text-[12px] text-[#388E3C] font-semibold  2xl:block hidden">
                 65.2%{" "}
-                <span className="text-[#575F6D] font-medium">
-                  of total revenue <br />
-                  achieved
+                <span className="text-[#575F6D] font-medium ">
+                  of total revenue achieved
+                </span>
+              </p>
+              <p className="text-[12px] text-[#388E3C] font-semibold 2xl:hidden">
+                65.2%{" "}
+                <span className="text-[#575F6D] font-medium ">
+                  of total
+                  <br /> revenue achieved
                 </span>
               </p>
             </div>
@@ -127,7 +133,13 @@ const SalesKPI: FC = () => {
                 Customer Count
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
+              <p className="text-[12px] text-[#388E3C] font-semibold 2xl:block hidden">
+                40%{" "}
+                <span className="text-[#575F6D] font-medium">
+                  increase compare to last year
+                </span>
+              </p>
+              <p className="text-[12px] text-[#388E3C] font-semibold 2xl:hidden">
                 40%{" "}
                 <span className="text-[#575F6D] font-medium">
                   increase compare <br /> to last year

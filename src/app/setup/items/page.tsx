@@ -6,6 +6,7 @@ import ToastNotification, {
 } from "@/Components/ui/ToastNotification/ToastNotification";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -373,43 +374,46 @@ const Page: FC = () => {
             >
               <table className="w-full table-fixed">
                 <tbody>
-                {loading ? (
-                    Array.from({ length: 10 }).map((_, index) => (
-                      <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
-                        {columns.map((column, colIndex) => (
-                          <td
-                            key={colIndex}
-                            className="px-4 py-1.5"
-                            style={{ width: `${column.size}px` }}
-                          >
-                            <Skeleton height={30} />
-                          </td>
-                        ))}
-                      </tr>
-                    ))
-                  ) :
-                  table.getRowModel().rows.map((row) => (
-                    <tr
-                      key={row.id}
-                      className={
-                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                      }
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <td
-                          key={cell.id}
-                          className="px-4 py-1.5 text-[#636363] text-[14px]"
-                          style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                  {loading
+                    ? Array.from({ length: 10 }).map((_, index) => (
+                        <tr
+                          key={index}
+                          className={
+                            index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                          }
                         >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
+                          {columns.map((column, colIndex) => (
+                            <td
+                              key={colIndex}
+                              className="px-4 py-1.5"
+                              style={{ width: `${column.size}px` }}
+                            >
+                              <Skeleton height={30} />
+                            </td>
+                          ))}
+                        </tr>
+                      ))
+                    : table.getRowModel().rows.map((row) => (
+                        <tr
+                          key={row.id}
+                          className={
+                            row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                          }
+                        >
+                          {row.getVisibleCells().map((cell) => (
+                            <td
+                              key={cell.id}
+                              className="px-4 py-1.5 text-[#636363] text-[14px]"
+                              style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                            >
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
+                            </td>
+                          ))}
+                        </tr>
                       ))}
-                    </tr>
-                  ))
-                }
                 </tbody>
               </table>
             </div>
@@ -417,7 +421,7 @@ const Page: FC = () => {
         </div>
       </div>
 
-      <div className="mt-4   below-md:hidden">
+      <div className="mt-4 below-md:hidden">
         {/* Page Range Display */}
         {/* <div>
             <span className="text-[#8899A8] text-[12px] font-medium ml-3">

@@ -192,7 +192,6 @@ const expenseData = {
   date: new Date(),
 };
 
-
 const Expenses: FC = () => {
   const methods = useForm(); // Initialize useForm hook
   const router = useRouter();
@@ -293,8 +292,7 @@ const Expenses: FC = () => {
       description: "Mortgage Mortgage Mortgage",
     },
   ];
-  
-  
+
   // const calendarRef = useRef<DatePicker | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -347,7 +345,6 @@ const Expenses: FC = () => {
               isOpen={isOpen}
               toggleOpen={toggleDropdown1}
               widthchange="w-full"
-      
             />
 
             <div className="w-full tablet:w-full below-md:w-full h-[35px]">
@@ -355,18 +352,18 @@ const Expenses: FC = () => {
             </div>
 
             <div className="flex shadow text-[12px] relative below-md:flex-row below-md:gap-4 bg-[#ffff] items-center  rounded-md w-full below-md:w-full  below-md:text-[11px]">
-            <input
-                  value={globalFilter ?? ""}
-                  onChange={(e) => setGlobalFilter(e.target.value)}
-                  placeholder="Search"
-                  className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+              <input
+                value={globalFilter ?? ""}
+                onChange={(e) => setGlobalFilter(e.target.value)}
+                placeholder="Search"
+                className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+              />
+              <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                <img
+                  className="cursor-pointer items-center"
+                  src="/images/searchicon.svg"
                 />
-                <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                  <img
-                    className="cursor-pointer items-center"
-                    src="/images/searchicon.svg"
-                  />
-                </div>
+              </div>
             </div>
           </div>
           <div className="block pl-24 below-md:hidden">

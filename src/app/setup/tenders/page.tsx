@@ -1,7 +1,5 @@
 "use client";
 import React, { FC, useState } from "react";
-import DateRange from "@/Components/ui/Thems/DateRangePicker";
-import Images from "@/Components/ui/Thems/Image";
 import { useRouter } from "next/navigation";
 import {
   useReactTable,

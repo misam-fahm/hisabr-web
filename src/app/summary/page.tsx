@@ -222,10 +222,10 @@ const summary: FC = () => {
               <div className="mt-2 cursor-pointer below-md:hidden">
                 <img src="/images/download.svg" />
               </div>
-              <div className="mb-6 relative below-md:w-full below-md:max-w-[40%] border border-gray-100 rounded ">
+              <div className="mb-6 relative below-md:w-full below-md:max-w-[40%]  rounded ">
                 <Dropdown
                   options={options2}
-                  shadowclassName="shadow-none"
+                  shadowclassName="shadow-none border border-gray-100"
                   selectedOption={selectedOption2}
                   onSelect={handleSelect2}
                   isOpen={isOpen2}
@@ -257,10 +257,10 @@ const summary: FC = () => {
                     </div>
 
                     {/* Period Dropdown */}
-                    <div className="relative below-md:w-full border border-gray-100 rounded">
+                    <div className="relative below-md:w-full rounded">
                       <Dropdown
                         className="relative below-md:w-full"
-                        shadowclassName="shadow-none"
+                        shadowclassName="shadow-none border border-gray-100"
                         options={options4}
                         selectedOption={selectedOption4}
                         onSelect={handleSelect4}
@@ -271,10 +271,10 @@ const summary: FC = () => {
                     </div>
 
                     {/* Year Dropdown */}
-                    <div className="relative below-md:w-full border border-gray-100 rounded">
+                    <div className="relative below-md:w-full rounded">
                       <Dropdown
                         className="relative w-full below-md:w-full"
-                        shadowclassName="shadow-none"
+                        shadowclassName="shadow-none border border-gray-100"
                         options={options3}
                         selectedOption={selectedOption3}
                         onSelect={handleSelect3}
@@ -303,10 +303,10 @@ const summary: FC = () => {
                       <img src="/images/download.svg" />
                     </div>
                     {/* Period Dropdown */}
-                    <div className="relative below-md:w-full border border-gray-100 rounded">
+                    <div className="relative below-md:w-full rounded">
                       <Dropdown
                         className="relative below-md:w-full"
-                        shadowclassName="shadow-none"
+                        shadowclassName="shadow-none border border-gray-100"
                         options={options6}
                         selectedOption={selectedOption6}
                         onSelect={handleSelect6}
@@ -317,10 +317,10 @@ const summary: FC = () => {
                     </div>
 
                     {/* Year Dropdown */}
-                    <div className="relative below-md:w-full border border-gray-100 rounded">
+                    <div className="relative below-md:w-full rounded">
                       <Dropdown
                         className="relative w-full below-md:w-full"
-                        shadowclassName="shadow-none"
+                        shadowclassName="shadow-none border border-gray-100"
                         options={options5}
                         selectedOption={selectedOption5}
                         onSelect={handleSelect5}
@@ -363,8 +363,8 @@ const summary: FC = () => {
                   {/* Dropdown */}
                   <div className="mb-6 relative z-[40] below-md:w-[100%] below-md:max-w-[35%]">
                     <Dropdown
-                      className="relative below-md:w-full border border-gray-100 rounded"
-                      shadowclassName="shadow-none"
+                      className="relative below-md:w-full rounded"
+                      shadowclassName="shadow-none border border-gray-100"
                       options={options7}
                       selectedOption={selectedOption7}
                       onSelect={handleSelect7}

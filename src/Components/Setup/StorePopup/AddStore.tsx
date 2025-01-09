@@ -5,8 +5,8 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/ui/Thems/DropDown";
 import { FormProvider, useForm, Controller } from "react-hook-form";
-import { Inputtext } from "../ui/Thems/InputText";
-import DateRange from "@/Components/drawer/DateRangePicker";
+import { Inputtext } from "@/Components/ui/Thems/InputText";
+
 
 const AddStore = () => {
   const methods = useForm();
@@ -153,7 +153,6 @@ const AddStore = () => {
                       variant="outline"
                     />
                   </div>
-           
 
                   <div className="flex flex-col items-center py-4">
                     <div className="flex justify-between gap-3 items-center w-full">
@@ -175,7 +174,6 @@ const AddStore = () => {
                 </div>
               </form>
             </FormProvider>
-            
           </DialogPanel>
         </div>
       </Dialog>

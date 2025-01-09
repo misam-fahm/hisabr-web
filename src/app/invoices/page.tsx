@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import DateRange from "@/Components/drawer/DateRangePicker";
+import DateRangePicker from "@/Components/ui/Common/DateRangePicker";
 import { useRouter } from "next/navigation";
 import Dropdown from "@/Components/ui/Thems/DropDown";
 
@@ -204,7 +204,7 @@ const Invoices = () => {
   const router = useRouter();
   const [globalFilter, setGlobalFilter] = React.useState("");
   const table = useReactTable({
-    data:formattedData,
+    data: formattedData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -343,7 +343,7 @@ const Invoices = () => {
           />
 
           <div className="below-lg:w-full tablet:w-full below-md:w-full">
-            <DateRange />
+            <DateRangePicker />
           </div>
 
           <div className="flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
@@ -429,9 +429,10 @@ const Invoices = () => {
             onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
             onClick={handleButtonClick}
           >
-            <img src="/images/MobileUploadIcon.svg" 
-            alt="Upload Invoice" 
-            className="w-[18px] h-[18px]"
+            <img
+              src="/images/MobileUploadIcon.svg"
+              alt="Upload Invoice"
+              className="w-[18px] h-[18px]"
             />
             {showTooltip && (
               <div className="absolute bottom-[75px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">

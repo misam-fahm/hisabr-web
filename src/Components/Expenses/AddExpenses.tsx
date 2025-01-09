@@ -17,11 +17,10 @@ const AddExpenses = () => {
 
   const [description, setDescription] = useState("");
 
-  const handleChange = (data:any) => {
+  const handleChange = (data: any) => {
     setDescription(data); // Update local state
     methods.setValue("description", data); // Update form state in react-hook-form
   };
-
 
   const onSubmit = (data: any) => {
     console.log("Form Data:", data);
@@ -47,9 +46,6 @@ const AddExpenses = () => {
     setShowTooltip(false);
   };
 
-
-
-
   //Dropdown
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [isExpenseDropdownOpen, setIsExpenseDropdownOpen] = useState(false);
@@ -58,7 +54,7 @@ const AddExpenses = () => {
   const toggleDropdown1 = () => {
     setIsStoreDropdownOpen((prev) => !prev);
     setIsExpenseDropdownOpen(false); // Close the other dropdown
-  }
+  };
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
   const selectedStore = watch("store"); // Watch the "store" field for changes
 
@@ -68,9 +64,6 @@ const AddExpenses = () => {
   };
   const expenseTypes = ["Travel", "Food", "Accommodation", "Miscellaneous"];
   const selectedExpense = watch("Expense Type"); // Watch the "store" field for changes
-
-
-
 
   return (
     <>
@@ -132,123 +125,98 @@ const AddExpenses = () => {
             </div>
 
             <FormProvider {...methods}>
-              <form
-              onSubmit={methods.handleSubmit(onSubmit)}
-              >
+              <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <div className="flex flex-col h-full mt-4 gap-7">
-          
-                    {/* Store Input Field */}
-                    <Dropdown
-  options={options}
-  selectedOption={selectedStore || "Store"} // Watch the selected value
-  onSelect={(selectedOption) => {
-    setValue("store", selectedOption); // Update the form value
-    setIsStoreDropdownOpen(false); // Close dropdown after selection
-  
-  }}
-  isOpen={isStoreDropdownOpen}
-  toggleOpen={toggleDropdown1}
-  widthchange="w-full"
-  {...methods.register("store", {
-    required: "Store Selection is required",
-  })}
-  errors={methods.formState.errors.store } // Explicitly cast the type
-/>
+                  {/* Store Input Field */}
+                  <Dropdown
+                    options={options}
+                    selectedOption={selectedStore || "Store"} // Watch the selected value
+                    onSelect={(selectedOption) => {
+                      setValue("store", selectedOption); // Update the form value
+                      setIsStoreDropdownOpen(false); // Close dropdown after selection
+                    }}
+                    isOpen={isStoreDropdownOpen}
+                    toggleOpen={toggleDropdown1}
+                    widthchange="w-full"
+                    {...methods.register("store", {
+                      required: "Store Selection is required",
+                    })}
+                    errors={methods.formState.errors.store} // Explicitly cast the type
+                  />
 
-                 
-                 
-                    {/* Expense Type Input Field */}
-                    <Dropdown
-                      options={expenseTypes}
-                      selectedOption={selectedExpense || "Expense Type"} // Watch the selected value
-                      onSelect={(selectedOption) => {
-                        setValue("Expense Type", selectedOption); // Update the form value
-                        setIsExpenseDropdownOpen(false); // Close dropdown after selection
-                      }}
-                      isOpen={isExpenseDropdownOpen}
-                      toggleOpen={toggleExpenseDropdown}
-                      widthchange="w-full"
-                    />
-                 
-                 
-                    <DateRangePicker />
-                 
+                  {/* Expense Type Input Field */}
+                  <Dropdown
+                    options={expenseTypes}
+                    selectedOption={selectedExpense || "Expense Type"} // Watch the selected value
+                    onSelect={(selectedOption) => {
+                      setValue("Expense Type", selectedOption); // Update the form value
+                      setIsExpenseDropdownOpen(false); // Close dropdown after selection
+                    }}
+                    isOpen={isExpenseDropdownOpen}
+                    toggleOpen={toggleExpenseDropdown}
+                    widthchange="w-full"
+                  />
 
-               
-                    <Inputtext
-                      type="text"
-                      label="Description"
-                      borderClassName=" border border-gray-400"
-                      labelBackgroundColor="bg-white"
-                      value={description}
-                      textColor="text-gray-500"
-                      {...methods?.register("description", {
-                        required: "Description is required",
-                      })}
-                      errors={methods.formState.errors.description}
-                      placeholder="Description"
-                      variant="outline" 
-                      onChange={(e: any) => handleChange(e.target.value)} 
-                      />
-                 
-                    
-                    <Inputtext
-                      type="number" // Use type="number" for numeric input
-                      label="Amount"
-                      borderClassName="border border-gray-400"
-                      labelBackgroundColor="bg-white"
-                      textColor="text-gray-500"
-                      {...methods?.register("amount", {
-                        required: "Amount is required",
-                        min: {
-                          value: 0,
-                          message: "Amount must be a positive number",
-                        },
-                      })}
-                      errors={methods.formState.errors.amount}
-                      placeholder="Enter Amount"
-                      variant="outline"
-                    />
-                 
-                 
-                    <div className="flex justify-between gap-3 items-center w-full">
-                      <button type="button"
-                        className="px-4  below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
-                        onClick={closeModal}
-                      >
-                        Cancel
-                      </button>
+                  <DateRangePicker />
 
-                      <button
-                        type="submit"
-                        className="px-4 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
-                      >
-                        Save
-                      </button>
+                  <Inputtext
+                    type="text"
+                    label="Description"
+                    borderClassName=" border border-gray-400"
+                    labelBackgroundColor="bg-white"
+                    value={description}
+                    textColor="text-gray-500"
+                    {...methods?.register("description", {
+                      required: "Description is required",
+                    })}
+                    errors={methods.formState.errors.description}
+                    placeholder="Description"
+                    variant="outline"
+                    onChange={(e: any) => handleChange(e.target.value)}
+                  />
 
+                  <Inputtext
+                    type="number" // Use type="number" for numeric input
+                    label="Amount"
+                    borderClassName="border border-gray-400"
+                    labelBackgroundColor="bg-white"
+                    textColor="text-gray-500"
+                    {...methods?.register("amount", {
+                      required: "Amount is required",
+                      min: {
+                        value: 0,
+                        message: "Amount must be a positive number",
+                      },
+                    })}
+                    errors={methods.formState.errors.amount}
+                    placeholder="Enter Amount"
+                    variant="outline"
+                  />
 
-                    </div>
-               
+                  <div className="flex justify-between gap-3 items-center w-full">
+                    <button
+                      type="button"
+                      className="px-4  below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
+                      onClick={closeModal}
+                    >
+                      Cancel
+                    </button>
 
-
-
+                    <button
+                      type="submit"
+                      className="px-4 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
+                    >
+                      Save
+                    </button>
+                  </div>
                 </div>
-
               </form>
-
-
-
-
-
             </FormProvider>
-
           </DialogPanel>
         </div>
       </Dialog>
-
     </>
   );
 };
-
 
 export default AddExpenses;
