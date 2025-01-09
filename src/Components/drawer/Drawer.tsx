@@ -127,7 +127,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
       {/* Backdrop */}
       {open && (
         <div
-          className="below-md:fixed below-md:inset-0 below-md:bg-black below-md:bg-opacity-50 below-md:z-30"
+          className="below-md:fixed below-md:inset-0 below-md:bg-black below-md:bg-opacity-50 below-md:z-50"
           onClick={() => setOpen(false)}
         ></div>
       )}
@@ -150,7 +150,7 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
         )
       )}
       <div
-        className={`${sidebarClass} duration-300 h-full bg-defaultblack text-defaultwhite sticky below-md:fixed top-0 left-0 z-40`}
+        className={`${sidebarClass} duration-300 h-full bg-defaultblack text-defaultwhite sticky below-md:fixed top-0 left-0 z-40 below-md:z-50`}
       >
         <img
           src="/images/DrawerToggle.svg"

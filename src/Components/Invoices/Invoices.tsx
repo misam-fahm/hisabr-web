@@ -1,7 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
 import React from "react";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import DateRangePicker from "@/Components/ui/Common/DateRangePicker";
 import { useRouter } from "next/navigation";
@@ -16,7 +15,7 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-import Pagination from "@/Components/ui/Common/Pagination";
+import Pagination from "../ui/Common/Pagination";
 
 interface TableRow {
   date: string;
@@ -194,8 +193,7 @@ const columns: ColumnDef<TableRow>[] = [
         onClick={() => (window.location.href = "/invoicedetails")}
         className="text-green-500 hover:text-green-700 text-center ml-2"
       >
-        <img src="/images/vieweyeicon.svg" alt="View Icon" 
-        className=" w-4 h-4 below-md:h-5 below-md:w-5 "/>
+        <img src="/images/vieweyeicon.svg" alt="View Icon" />
       </button>
     ),
     size: 30,
@@ -397,7 +395,7 @@ const Invoices = () => {
                   className="text-green-500 hover:text-green-700"
                 >
                   <img
-                    className=" w-4 h-4 below-md:h-5 below-md:w-5"
+                    className="below-md:w-5 h-4 w-4"
                     src="/images/vieweyeicon.svg"
                   />
                 </button>
@@ -447,7 +445,7 @@ const Invoices = () => {
       </div>
 
       {/*Web View : Invoice Table */}
-      <div className="overflow-x-auto  shadow-sm border-collapse border border-b border-[#E4E4EF] rounded-md  flex-grow flex flex-col below-md:hidden">
+      <div className="overflow-x-auto  shadow-md border-collapse border border-gray-200 rounded-lg  flex-grow flex flex-col below-md:hidden">
         <div className="overflow-hidden max-w-full rounded-md">
           <table className="w-full border-collapse text-[12px] rounded-md text-white table-fixed">
             <thead className="bg-[#334155] top-0 z-10">

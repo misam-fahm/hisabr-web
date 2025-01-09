@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/ui/Common/DropDown";
@@ -18,10 +18,8 @@ type ExpenseFormInputs = {
 const AddExpenses = () => {
   const methods = useForm();
   const { setValue, watch } = methods;
-
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
-
   const handleChange = (data: any) => {
     setDescription(data); // Update local state
     methods.setValue("description", data); // Update form state in react-hook-form
@@ -30,9 +28,6 @@ const AddExpenses = () => {
     setAmount(data);
     methods.setValue("amount", data);
   };
-
-
-
   const onSubmit = (data: any) => {
     console.log("Form Data:", data);
   };
@@ -43,49 +38,34 @@ const AddExpenses = () => {
     formState: { errors },
   } = useForm<ExpenseFormInputs>(); // Initialize React Hook Form
   const [isOpen, setIsOpen] = useState(false);
-
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
-
   //tooltip for mobile
   const [showTooltip, setShowTooltip] = useState(false);
-
   const handlePressStart = () => {
     setShowTooltip(true);
-
     setTimeout(() => {
       setShowTooltip(false);
     }, 2000);
   };
-
   const handlePressEnd = () => {
     setShowTooltip(false);
   };
-
-
-
-
-  //Dropdown
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [isExpenseDropdownOpen, setIsExpenseDropdownOpen] = useState(false);
   // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
   const toggleDropdown1 = () => {
     setIsStoreDropdownOpen((prev) => !prev);
     setIsExpenseDropdownOpen(false); // Close the other dropdown
-  }
+  };
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
   const selectedStore = watch("store"); // Watch the "store" field for changes
-
   const toggleExpenseDropdown = () => {
     setIsExpenseDropdownOpen((prev) => !prev);
     setIsStoreDropdownOpen(false); // Close the other dropdown
   };
   const expenseTypes = ["Travel", "Food", "Accommodation", "Miscellaneous"];
   const selectedExpense = watch("Expense Type"); // Watch the "store" field for changes
-
-
-
 
   return (
     <>
@@ -169,9 +149,6 @@ const AddExpenses = () => {
                     })}
                     errors={methods.formState.errors.store} // Explicitly cast the type
                   />
-
-
-
                   {/* Expense Type Input Field */}
                   <Dropdown
                     options={expenseTypes}
@@ -213,8 +190,6 @@ const AddExpenses = () => {
                        placeholder="Date"
                        errors={methods.formState.errors.date?.message}
                       /> */}
-
-
                   {/* Description field */}
                   <Inputtext
                     type="text"
@@ -252,8 +227,6 @@ const AddExpenses = () => {
                     variant="outline"
                     onChange={(e: any) => handleChangeAmount(e.target.value)}
                   />
-
-
                   <div className="flex justify-between gap-3 items-center w-full">
                     <button type="button"
                       className="px-4  below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
@@ -261,37 +234,21 @@ const AddExpenses = () => {
                     >
                       Cancel
                     </button>
-
                     <button
                       type="submit"
                       className="px-4 text-white md:text[13px] text-[14px] h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
                     >
                       Save
                     </button>
-
-
                   </div>
-
-
-
-
                 </div>
-
               </form>
-
-
-
-
-
             </FormProvider>
-
           </DialogPanel>
         </div>
       </Dialog>
-
     </>
   );
 };
-
 
 export default AddExpenses;

@@ -1,7 +1,7 @@
 "use client";
 import { FC, useState } from "react";
 import DonutChart from "@/Components/drawer/DonutChart";
-import DateRange from "@/Components/drawer/DateRangePicker";
+import DateRangePicker from "@/Components/ui/Common/DateRangePicker";
 import Dropdown from "@/Components/ui/Common/DropDown";
 
 const SalesKPI: FC = () => {
@@ -70,7 +70,7 @@ const SalesKPI: FC = () => {
             />
 
             <div className="w-[260px] tablet:w-full below-md:w-full">
-              <DateRange />
+              <DateRangePicker />
             </div>
           </div>
           <div className="below-md:hidden tablet:hidden">
@@ -279,7 +279,7 @@ const SalesKPI: FC = () => {
 
       <div className="below-lg:hidden flex justify-end fixed bottom-5 right-5">
         <button
-          className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[56px] h-[56px] rounded-lg relative"
+          className="focus:outline-none flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] w-[56px] h-[56px] rounded-xl relative"
           onTouchStart={handlePressStart} // For mobile devices
           onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
         >
