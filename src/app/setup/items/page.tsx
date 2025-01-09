@@ -171,29 +171,29 @@ const columns: ColumnDef<any>[] = [
       <div className="text-left ml-14">{info.getValue() as string}</div>
     ),
 
-    size: 150,
+    size: 120,
   },
   {
     id: "edit",
-    header: () => <div className="text-center">Edit</div>,
+    header: () => <div className="text-center"></div>,
     cell: () => (
       <span className="flex justify-center">
         <EditItem />
       </span>
     ),
 
-    size: 50,
+    size: 30,
   },
   {
     id: "delete",
-    header: () => <div className="text-center">Delete</div>,
+    header: () => <div className="text-center"></div>,
     cell: () => (
-      <span className="flex justify-center">
+      <span className="flex justify-center mr-5">
         <DeleteItems />
       </span>
     ),
 
-    size: 60,
+    size: 50,
   },
 ];
 
