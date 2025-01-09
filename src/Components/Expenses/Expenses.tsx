@@ -3,7 +3,7 @@
 import React, { FC, useState, useRef, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/Expenses/AddExpenses";
-import DateRange from "@/Components/drawer/DateRangePicker";
+import DateRangePicker from "@/Components/ui/Common/DateRangePicker";
 import Dropdown from "@/Components/ui/Common/DropDown";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -192,7 +192,6 @@ const expenseData = {
   date: new Date(),
 };
 
-
 const Expenses: FC = () => {
   const methods = useForm(); // Initialize useForm hook
   const router = useRouter();
@@ -351,11 +350,10 @@ const Expenses: FC = () => {
               isOpen={isOpen}
               toggleOpen={toggleDropdown1}
               widthchange="w-full"
-      
             />
 
             <div className="w-full tablet:w-full below-md:w-full h-[35px]">
-              <DateRange />
+              <DateRangePicker />
             </div>
 
             <div className="flex shadow text-[12px]  below-md:flex-row below-md:gap-4 bg-[#ffff] items-center  rounded-md w-full  h-[35px] below-md:w-full  below-md:text-[11px]">

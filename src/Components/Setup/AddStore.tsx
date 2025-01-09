@@ -6,7 +6,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/ui/Common/DropDown";
 import { FormProvider, useForm, Controller } from "react-hook-form";
 import { Inputtext } from "../ui/InputText";
-import DateRange from "@/Components/drawer/DateRangePicker";
 
 const AddStore = () => {
   const methods = useForm();

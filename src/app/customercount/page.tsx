@@ -69,7 +69,7 @@ const DetailsPage: React.FC = () => {
           Customer Count Analysis
         </p>
       </div> */}
-      <div className="pt-6 pb-6 below-md:pb-4 below-md:pt-4 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
+      <div className="pt-4 pb-6 below-md:pb-4 below-md:pt-4 sticky z-10  bg-[#f7f8f9] pl-6 pr-6 below-md:px-3">
         <div>
           <img
             onClick={handleBack}
@@ -103,7 +103,7 @@ const DetailsPage: React.FC = () => {
       </div>
 
       <div className=" pl-6 pr-6 below-md:px-3">
-        <div className="flex flex-row below-md:flex-col w-full h-full gap-6 below-md:gap-3  items-stretch">
+        <div className="grid grid-cols-4 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3  items-stretch">
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full items-stretch p-4 justify-between">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
@@ -176,7 +176,7 @@ const DetailsPage: React.FC = () => {
                 <div className="relative below-md:w-[35%]">
                   <Dropdown
                     className="relative below-md:w-full"
-                    shadowclassName="shadow-sm"
+                    shadowclassName="shadow-none border border-gray-100"
                     options={options3}
                     selectedOption={selectedOption3}
                     onSelect={handleSelect3}
@@ -186,7 +186,7 @@ const DetailsPage: React.FC = () => {
                   />
                 </div>
               </div>
-              <div>
+              <div className="pb-2">
                 <BarChart4 selectedYear={Number(selectedOption3)} />
               </div>
             </div>

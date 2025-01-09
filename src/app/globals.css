@@ -45,6 +45,14 @@ body {
   display: none; /* For Chrome, Safari, and Opera */
 }
 
+@media (max-width: 1024px) {
+  .scrollable-container {
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
 /*-------------date range picker------------*/
 /* Custom styles for the weekday names (Sun, Mon, Tue, etc.) */
 .react-datepicker__day-name {
@@ -72,6 +80,8 @@ body {
 }
 .react-datepicker {
   border: transparent !important;
+  padding-right: 5px;
+  padding-left: 5px;
 }
 .react-datepicker__current-month {
   font-size: 16px !important;
@@ -136,4 +146,16 @@ body {
   background-color: #334155 !important;
   color: #fff !important;
   border-radius: 10px !important;
+}
+
+
+/* styles.css or globals.css for DatePicker*/
+.react-datepicker__day--disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  color: #d3d3d3 !important; ; /* Light gray for disabled dates */
+}
+
+.react-datepicker__day--disabled:hover {
+  background-color: transparent; /* Prevent hover effect */
 }
