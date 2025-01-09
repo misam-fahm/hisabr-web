@@ -1,5 +1,6 @@
 "use client";
 
+import { th } from "date-fns/locale/th";
 import React from "react";
 
 const paymentData = [

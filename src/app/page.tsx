@@ -4,7 +4,7 @@ import { FC, useState } from "react";
 import Linechart from "@/Components/Charts-Graph/LineChart";
 import React from "react";
 import { useRouter } from "next/navigation";
-import Dropdown from "@/Components/UI/Themes/DropDown";
+import Dropdown from "@/Components/ui/Themes/DropDown";
 import { useEffect } from "react";
 
 interface TableRow {

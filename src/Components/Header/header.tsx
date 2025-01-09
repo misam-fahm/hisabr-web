@@ -1,16 +1,17 @@
 "use client";
 import React from "react";
 import { useState, useRef, useEffect } from "react";
-import Images from "../UI/Themes/Image";
+import Images from "@/Components/ui/Themes/Image";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
-const Header: React.FC = () => {
+const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const currentPath = usePathname();
   const [isClient, setIsClient] = useState(false);
   const [title, setTitle] = useState("");
+  const [isRotated, setIsRotated] = useState(false);
 
   useEffect(() => {
     setIsClient(true); // Ensuring we are on the client side
@@ -98,23 +99,19 @@ const Header: React.FC = () => {
     }
   }, [isClient, currentPath]);
 
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
-  };
-
   const handleClickOutside = (event: MouseEvent) => {
     if (
       dropdownRef.current &&
       !dropdownRef.current.contains(event.target as Node)
     ) {
       setIsOpen(false);
+      setIsRotated(false);
     }
   };
 
-  const [isRotated, setIsRotated] = useState(false);
-
-  const handleRotate = () => {
-    setIsRotated(!isRotated);
+  const handleToggle = () => {
+    setIsOpen((prev) => !prev);
+    setIsRotated((prev) => !prev);
   };
 
   // Close dropdown on outside click
@@ -159,7 +156,6 @@ const Header: React.FC = () => {
                 className={`transition-transform duration-300 ${
                   isRotated ? "rotate-180" : "rotate-0"
                 }`}
-                onClick={handleRotate}
               />
             </p>
 
@@ -191,4 +187,4 @@ const Header: React.FC = () => {
   );
 };
 
-export default Header;
+export default Navbar;

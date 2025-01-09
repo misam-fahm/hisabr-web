@@ -3,17 +3,16 @@
 import React, { FC, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
-import Dropdown from "@/Components/UI/Themes/DropDown";
+import Dropdown from "@/Components/ui/Themes/DropDown";
 import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
-import { InputField } from "../UI/Themes/InputField";
-import CustomDatePicker from "../UI/Themes/CustomDatePicker";
+import { InputField } from "@/Components/ui/Themes/InputField";
+import CustomDatePicker from "../ui/Themes/CustomDatePicker";
 
 type ExpenseFormInputs = {
   expenseName: string;
   amount: number;
   date: Date; // The date field
 };
-
 
 const AddExpenses = () => {
   const methods = useForm();
@@ -127,11 +126,8 @@ const AddExpenses = () => {
             </div>
 
             <FormProvider {...methods}>
-              <form
-                onSubmit={methods.handleSubmit(onSubmit)}
-              >
+              <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <div className="flex flex-col h-full mt-4 gap-7">
-
                   {/* Store Input Field */}
                   <Dropdown
                     options={options}
@@ -139,7 +135,6 @@ const AddExpenses = () => {
                     onSelect={(selectedOption) => {
                       setValue("store", selectedOption); // Update the form value
                       setIsStoreDropdownOpen(false); // Close dropdown after selection
-
                     }}
                     isOpen={isStoreDropdownOpen}
                     toggleOpen={toggleDropdown1}
@@ -180,7 +175,9 @@ const AddExpenses = () => {
                     )}
                   />
                   {errors.date && (
-                    <p className="text-red-500 text-sm mt-1">{errors.date.message}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.date.message}
+                    </p>
                   )}
                   {/* <CalendarRangePicker
                        value={methods.watch("date")}
@@ -228,7 +225,8 @@ const AddExpenses = () => {
                     onChange={(e: any) => handleChangeAmount(e.target.value)}
                   />
                   <div className="flex justify-between gap-3 items-center w-full">
-                    <button type="button"
+                    <button
+                      type="button"
                       className="px-4  below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
                       onClick={closeModal}
                     >

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import { FormProvider, useForm } from "react-hook-form";
-import { InputField } from "../../UI/Themes/InputField";
+import { InputField } from "@/Components/ui/Themes/InputField";
 
 const EditCategories = ({ rowData }: { rowData: any }) => {
   const methods = useForm({
@@ -45,7 +45,12 @@ const EditCategories = ({ rowData }: { rowData: any }) => {
       </div>
 
       {/* Dialog for the Modal */}
-      <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
+      <Dialog
+        open={isOpen}
+        as="div"
+        className="relative z-50"
+        onClose={closeModal}
+      >
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] below-md:w-[345px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
@@ -61,8 +66,11 @@ const EditCategories = ({ rowData }: { rowData: any }) => {
               />
             </div>
             <div>
-            <DialogTitle as="h3" className=" flex justify-center font-medium  text-[#3D3D3D] opacity-80">
-                Edit  Category
+              <DialogTitle
+                as="h3"
+                className=" flex justify-center font-medium  text-[#3D3D3D] opacity-80"
+              >
+                Edit Category
               </DialogTitle>
             </div>
 

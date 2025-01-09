@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 import { FormProvider, useForm, Controller } from "react-hook-form";
-import { InputField } from "@/Components/UI/Themes/InputField";
-import Dropdown from "@/Components/UI/Themes/DropDown";
-
+import { InputField } from "@/Components/ui/Themes/InputField";
+import Dropdown from "@/Components/ui/Themes/DropDown";
 
 const AddTender = () => {
   const methods = useForm();
@@ -29,7 +28,8 @@ const AddTender = () => {
 
   //Dropdown
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const { register, setValue, handleSubmit, watch ,clearErrors,trigger} = methods;
+  const { register, setValue, handleSubmit, watch, clearErrors, trigger } =
+    methods;
   const toggleDropdown1 = () => {
     setIsStoreDropdownOpen((prev) => !prev);
   };
@@ -95,7 +95,6 @@ const AddTender = () => {
             <FormProvider {...methods}>
               <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <div className="flex flex-col mt-4 gap-4">
-                 
                   <div className="w-full flex mt-4">
                     {/* Description Input Field */}
                     <InputField

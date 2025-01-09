@@ -31,6 +31,8 @@ const DonutChart = () => {
             dataKey="value"
             startAngle={90}
             endAngle={450} // Adjust for donut rotation
+            tabIndex={-1} // Disable focus
+            style={{ outline: "none" }}
           >
             {data.map((entry, index) => (
               <Cell

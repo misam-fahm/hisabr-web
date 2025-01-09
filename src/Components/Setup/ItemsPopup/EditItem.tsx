@@ -289,15 +289,14 @@
 
 // export default AddNewItems;
 
-
 "use client";
 
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 import { FormProvider, useForm, Controller } from "react-hook-form";
-import { InputField } from "@/Components/UI/Themes/InputField";
-import Dropdown from "@/Components/UI/Themes/DropDown";
+import { InputField } from "@/Components/ui/Themes/InputField";
+import Dropdown from "@/Components/ui/Themes/DropDown";
 const EditItems = () => {
   const methods = useForm();
 
@@ -317,7 +316,6 @@ const EditItems = () => {
     methods.setValue("name", data); // Update form state in react-hook-form
   };
 
-
   const [quantity, setQuantity] = useState("");
   const handleChangeQuantity = (data: any) => {
     setQuantity(data); // Update local state
@@ -332,7 +330,8 @@ const EditItems = () => {
 
   //Dropdown
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const { register, setValue, handleSubmit, watch ,clearErrors,trigger} = methods;
+  const { register, setValue, handleSubmit, watch, clearErrors, trigger } =
+    methods;
   const toggleDropdown1 = () => {
     setIsStoreDropdownOpen((prev) => !prev);
   };
@@ -386,7 +385,7 @@ const EditItems = () => {
             <FormProvider {...methods}>
               <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <div className="flex flex-col mt-4 gap-4">
-                <div className="w-full flex mt-4">
+                  <div className="w-full flex mt-4">
                     <Dropdown
                       options={options}
                       selectedOption={selectedStore || "Category"} // Watch the selected value
@@ -422,7 +421,7 @@ const EditItems = () => {
                       onChange={(e: any) => handleChangeName(e.target.value)}
                     />
                   </div>
-             
+
                   <div className="w-full flex mt-4">
                     <InputField
                       type="text"
@@ -455,7 +454,9 @@ const EditItems = () => {
                       errors={methods.formState.errors.quantity}
                       placeholder="Quantity"
                       variant="outline"
-                      onChange={(e: any) => handleChangeQuantity(e.target.value)}
+                      onChange={(e: any) =>
+                        handleChangeQuantity(e.target.value)
+                      }
                     />
                   </div>
 
@@ -491,7 +492,7 @@ const EditItems = () => {
                         type="submit"
                         className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
                       >
-                      Update
+                        Update
                       </button>
                     </div>
                   </div>

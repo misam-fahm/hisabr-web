@@ -87,8 +87,11 @@ const TableComponent: React.FC = () => {
   return (
     <main>
       <div className="below-md:hidden  overflow-x-auto rounded-lg shadow-sm border border-[#E4E4EF]">
-        <div className="max-h-[600px] overflow-y-auto  scrollbar-hide ">
-          <table className="min-w-full bg-white ">
+        <div
+          className=" overflow-y-auto  scrollbar-hide "
+          style={{ maxHeight: "calc(100vh - 192px)" }}
+        >
+          <table className="min-w-full bg-white table-fixed">
             <thead className="bg-[#334155] text-white sticky top-0 z-[2]">
               <tr>
                 <th className="px-4 py-2 text-left text-[15px] font-normal">
@@ -97,7 +100,7 @@ const TableComponent: React.FC = () => {
                 <th className="px-4 py-2 text-left text-[15px] font-normal">
                   Description
                 </th>
-                <th className="px-4 py-2 text-left text-[15px] font-normal">
+                <th className="px-4 py-2 text-right text-[15px] font-normal">
                   Value
                 </th>
               </tr>
@@ -110,13 +113,13 @@ const TableComponent: React.FC = () => {
                       key={rowIndex}
                       className={`${rowIndex === 0 ? "bg-[#F8F9FCFA]" : ""}`} // Apply a background color for the first row of each section
                     >
-                      <td className="px-4 py-1.5 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                      <td className="px-4 py-1.5 text-left text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                         {rowIndex === 0 ? section.category : ""}
                       </td>
-                      <td className="px-4 py-1.5 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                      <td className="px-4 py-1.5 text-left text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                         {row.description}
                       </td>
-                      <td className="px-4 py-1.5 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                      <td className="px-4 py-1.5 text-right  text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                         {row.value}
                       </td>
                     </tr>

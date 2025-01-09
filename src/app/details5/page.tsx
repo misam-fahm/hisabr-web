@@ -3,9 +3,9 @@ import React from "react";
 import { useState } from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
-import Images from "@/Components/UI/Themes/Image";
-import Pagination from "@/Components/UI/Pagination/Pagination";
-import Dropdown from "@/Components/UI/Themes/DropDown";
+import Images from "@/Components/ui/Themes/Image";
+import Pagination from "@/Components/ui/Pagination/Pagination";
+import Dropdown from "@/Components/ui/Themes/DropDown";
 
 import {
   useReactTable,
@@ -177,9 +177,13 @@ const columns: ColumnDef<TableRow>[] = [
       // </button>
       <>
         <span className="flex justify-center">
-        <EditExpense initialData={existingExpense}
-            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-            onClose={() => console.log("Modal Closed")} />
+          <EditExpense
+            initialData={existingExpense}
+            onSubmit={(updatedData) =>
+              console.log("Updated Expense:", updatedData)
+            }
+            onClose={() => console.log("Modal Closed")}
+          />
         </span>
       </>
     ),
@@ -408,9 +412,13 @@ const DetailsPage: React.FC = () => {
                   </div>
                   <div className="flex gap-7">
                     <>
-                    <EditExpense initialData={existingExpense}
-            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-            onClose={() => console.log("Modal Closed")} />
+                      <EditExpense
+                        initialData={existingExpense}
+                        onSubmit={(updatedData) =>
+                          console.log("Updated Expense:", updatedData)
+                        }
+                        onClose={() => console.log("Modal Closed")}
+                      />
                       <DeleteExpense />
                     </>
                   </div>
@@ -441,9 +449,13 @@ const DetailsPage: React.FC = () => {
                   </div>
                   <div className="flex gap-7">
                     <>
-                    <EditExpense initialData={existingExpense}
-            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-            onClose={() => console.log("Modal Closed")} />
+                      <EditExpense
+                        initialData={existingExpense}
+                        onSubmit={(updatedData) =>
+                          console.log("Updated Expense:", updatedData)
+                        }
+                        onClose={() => console.log("Modal Closed")}
+                      />
                       <DeleteExpense />
                     </>
                   </div>
@@ -474,9 +486,13 @@ const DetailsPage: React.FC = () => {
                   </div>
                   <div className="flex gap-7">
                     <>
-                    <EditExpense initialData={existingExpense}
-            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-            onClose={() => console.log("Modal Closed")} />
+                      <EditExpense
+                        initialData={existingExpense}
+                        onSubmit={(updatedData) =>
+                          console.log("Updated Expense:", updatedData)
+                        }
+                        onClose={() => console.log("Modal Closed")}
+                      />
                       <DeleteExpense />
                     </>
                   </div>
@@ -507,9 +523,13 @@ const DetailsPage: React.FC = () => {
                   </div>
                   <div className="flex gap-7">
                     <>
-                    <EditExpense initialData={existingExpense}
-            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-            onClose={() => console.log("Modal Closed")} />
+                      <EditExpense
+                        initialData={existingExpense}
+                        onSubmit={(updatedData) =>
+                          console.log("Updated Expense:", updatedData)
+                        }
+                        onClose={() => console.log("Modal Closed")}
+                      />
                       <DeleteExpense />
                     </>
                   </div>

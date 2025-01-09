@@ -1,25 +1,34 @@
 "use client";
 import { FC, useState } from "react";
 import dynamic from "next/dynamic";
-import Dropdown from "@/Components/UI/Themes/DropDown";
+import Dropdown from "@/Components/ui/Themes/DropDown";
 
-const SummaryGraph = dynamic(() => import("@/Components/Charts-Graph/SummaryGraph"), {
-  ssr: false,
-});
+const SummaryGraph = dynamic(
+  () => import("@/Components/Charts-Graph/SummaryGraph"),
+  {
+    ssr: false,
+  }
+);
 const YearlySalesGraph = dynamic(
   () => import("@/Components/Charts-Graph/YearlySalesGraph"),
   {
     ssr: false,
   }
 );
-const InvoiceGraph = dynamic(() => import("@/Components/Charts-Graph/InvoiceGraph"), {
-  ssr: false,
-});
-const SalesGraph = dynamic(() => import("@/Components/Charts-Graph/salesGraph"), {
-  ssr: false,
-});
+const InvoiceGraph = dynamic(
+  () => import("@/Components/Charts-Graph/InvoiceGraph"),
+  {
+    ssr: false,
+  }
+);
+const SalesGraph = dynamic(
+  () => import("@/Components/Charts-Graph/salesGraph"),
+  {
+    ssr: false,
+  }
+);
 const DateRangePicker = dynamic(
-  () => import("@/Components/UI/Themes/DateRangePicker"),
+  () => import("@/Components/ui/Themes/DateRangePicker"),
   {
     ssr: false,
   }
@@ -225,7 +234,7 @@ const summary: FC = () => {
               <div className="mb-6 relative below-md:w-full below-md:max-w-[40%]  rounded ">
                 <Dropdown
                   options={options2}
-                  shadowclassName="shadow-none border border-gray-100"
+                  shadowclassName="shadow-none border border-gray-200"
                   selectedOption={selectedOption2}
                   onSelect={handleSelect2}
                   isOpen={isOpen2}
@@ -260,7 +269,7 @@ const summary: FC = () => {
                     <div className="relative below-md:w-full rounded">
                       <Dropdown
                         className="relative below-md:w-full"
-                        shadowclassName="shadow-none border border-gray-100"
+                        shadowclassName="shadow-none border border-gray-200"
                         options={options4}
                         selectedOption={selectedOption4}
                         onSelect={handleSelect4}
@@ -274,7 +283,7 @@ const summary: FC = () => {
                     <div className="relative below-md:w-full rounded">
                       <Dropdown
                         className="relative w-full below-md:w-full"
-                        shadowclassName="shadow-none border border-gray-100"
+                        shadowclassName="shadow-none border border-gray-200"
                         options={options3}
                         selectedOption={selectedOption3}
                         onSelect={handleSelect3}
@@ -306,7 +315,7 @@ const summary: FC = () => {
                     <div className="relative below-md:w-full rounded">
                       <Dropdown
                         className="relative below-md:w-full"
-                        shadowclassName="shadow-none border border-gray-100"
+                        shadowclassName="shadow-none border border-gray-200"
                         options={options6}
                         selectedOption={selectedOption6}
                         onSelect={handleSelect6}
@@ -320,7 +329,7 @@ const summary: FC = () => {
                     <div className="relative below-md:w-full rounded">
                       <Dropdown
                         className="relative w-full below-md:w-full"
-                        shadowclassName="shadow-none border border-gray-100"
+                        shadowclassName="shadow-none border border-gray-200"
                         options={options5}
                         selectedOption={selectedOption5}
                         onSelect={handleSelect5}
@@ -364,7 +373,7 @@ const summary: FC = () => {
                   <div className="mb-6 relative z-[40] below-md:w-[100%] below-md:max-w-[35%]">
                     <Dropdown
                       className="relative below-md:w-full rounded"
-                      shadowclassName="shadow-none border border-gray-100"
+                      shadowclassName="shadow-none border border-gray-200"
                       options={options7}
                       selectedOption={selectedOption7}
                       onSelect={handleSelect7}

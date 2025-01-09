@@ -1,5 +1,4 @@
-import React, { useRef, useEffect,useState } from "react";
-import { FieldError, FieldErrorsImpl, FieldValues, Merge, useFormContext} from "react-hook-form";
+import React, { useRef, useEffect } from "react";
 
 // Dropdown Component
 const Dropdown = ({
@@ -15,7 +14,7 @@ const Dropdown = ({
   errors,
 }: {
   label?: string;
-  errors?:any;
+  errors?: any;
   options: string[];
   selectedOption?: string;
   className?: string;
@@ -26,7 +25,6 @@ const Dropdown = ({
   toggleOpen: () => void;
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -49,7 +47,7 @@ const Dropdown = ({
 
   return (
     <div
-     
+      ref={dropdownRef}
       className={`${className || "relative below-md:w-full"} ${widthchange || "below-md:w-[100%] below-lg:w-[260px] tablet:w-full"}`}
     >
       <p
@@ -61,26 +59,25 @@ const Dropdown = ({
       </p>
       {/* Dropdown Button */}
       <button
-  type="button" // Prevent form submission
-  onClick={(e) => {
-    e.stopPropagation(); // Prevent dialog close
-    toggleOpen();
-  }}
-  className={`bg-[#ffffff] text-[#4B4B4B] ${
-    shadowclassName ? shadowclassName : "shadow"
-  } shadow px-3 below-md:h-[38px] h-[35px] w-full ${
-    widthchange || "below-md:w-[100%] below-lg:w-full"
-  } rounded flex items-center justify-between below-md:w-full text-[12px] border focus:outline-none`}
->
-  <span>{selectedOption || "Year"}</span>
-  <img
-    src="/images/dropdown1.svg"
-    className={`-mr-0.5 transition-transform duration-200 ${
-      isOpen ? "transform rotate-180" : ""
-    }`}
-  />
-</button>
-
+        type="button" // Prevent form submission
+        onClick={(e) => {
+          e.stopPropagation(); // Prevent dialog close
+          toggleOpen();
+        }}
+        className={`bg-[#ffffff] text-[#4B4B4B] ${
+          shadowclassName ? shadowclassName : "shadow"
+        } shadow px-3 below-md:h-[38px] h-[35px] w-full ${
+          widthchange || "below-md:w-[100%] below-lg:w-full"
+        } rounded flex items-center justify-between below-md:w-full text-[12px] border focus:outline-none`}
+      >
+        <span>{selectedOption || "Year"}</span>
+        <img
+          src="/images/dropdown1.svg"
+          className={`-mr-0.5 transition-transform duration-200 ${
+            isOpen ? "transform rotate-180" : ""
+          }`}
+        />
+      </button>
 
       {/* Dropdown Menu */}
       {isOpen && (
@@ -106,10 +103,10 @@ const Dropdown = ({
         </div>
       )}
       {errors && errors?.message && (
-				<p className="mt-1  absolute text-[10px] top-[2.30rem] z-10 text-red-600">
-					{errors?.message as string}
-				</p>
-			)}
+        <p className="mt-1  absolute text-[10px] top-[2.30rem] z-10 text-red-600">
+          {errors?.message as string}
+        </p>
+      )}
     </div>
   );
 };

@@ -5,9 +5,9 @@ import MultiLineChart from "@/Components/Charts-Graph/MultiLineChart";
 import BarChart3 from "@/Components/Charts-Graph/BarChart3";
 import PieChart2 from "@/Components/Charts-Graph/Piechart2";
 import { useRouter } from "next/navigation";
-import Pagination from "@/Components/UI/Pagination/Pagination";
-import Dropdown from "@/Components/UI/Themes/DropDown";
-import Images from "@/Components/UI/Themes/Image";
+import Pagination from "@/Components/ui/Pagination/Pagination";
+import Dropdown from "@/Components/ui/Themes/DropDown";
+import Images from "@/Components/ui/Themes/Image";
 
 import {
   useReactTable,
@@ -408,7 +408,7 @@ const DetailsPage: React.FC = () => {
                 <div className="relative below-md:w-[35%]">
                   <Dropdown
                     className="relative below-md:w-full"
-                    shadowclassName="shadow-none border border-gray-100"
+                    shadowclassName="shadow-none border border-gray-200"
                     options={options3}
                     selectedOption={selectedOption3}
                     onSelect={handleSelect3}
@@ -434,7 +434,7 @@ const DetailsPage: React.FC = () => {
                 <div className="relative below-md:w-[35%] z-[60]">
                   <Dropdown
                     className="relative w-full"
-                    shadowclassName="shadow-none border border-gray-100"
+                    shadowclassName="shadow-none border border-gray-200"
                     options={options4}
                     selectedOption={selectedOption4}
                     onSelect={handleSelect4}

@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useEffect, useState } from "react";
-import Pagination from "@/Components/UI/Pagination/Pagination";
+import Pagination from "@/Components/ui/Pagination/Pagination";
 import {
   useReactTable,
   getCoreRowModel,
@@ -16,7 +16,9 @@ import AddCategories from "@/Components/Setup/CategoriesPopup/AddCategories";
 import EditCategories from "@/Components/Setup/CategoriesPopup/EditCategories";
 import DeleteCategories from "@/Components/Setup/CategoriesPopup/DeleteCategories";
 import { sendApiRequest } from "@/utils/apiUtils";
-import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, {
+  ToastNotificationProps,
+} from "@/Components/ui/ToastNotification/ToastNotification";
 
 interface TableRow {
   categoryname: string;
@@ -50,16 +52,14 @@ const columns: ColumnDef<TableRow>[] = [
     header: () => <div className=" flex justify-center items-center"></div>,
     cell: (info) => (
       <span className="flex justify-center">
-       <EditCategories rowData={info.row.original} />
+        <EditCategories rowData={info.row.original} />
       </span>
     ),
     size: 30,
   },
   {
     id: "delete",
-    header: () => (
-      <div className="flex justify-center items-center"></div>
-    ),
+    header: () => <div className="flex justify-center items-center"></div>,
     cell: () => (
       <span className="flex justify-center mr-5">
         <DeleteCategories />
@@ -239,7 +239,12 @@ const Page: FC = () => {
                 <tbody>
                   {loading ? (
                     Array.from({ length: 10 }).map((_, index) => (
-                      <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+                      <tr
+                        key={index}
+                        className={
+                          index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
+                      >
                         {columns.map((column, colIndex) => (
                           <td
                             key={colIndex}
@@ -260,7 +265,6 @@ const Page: FC = () => {
                         }
                       >
                         {row.getVisibleCells().map((cell) => (
-                          
                           <td
                             key={cell?.id}
                             className="px-4 py-1.5 text-[#636363] text-[14px]"

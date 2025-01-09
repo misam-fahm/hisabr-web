@@ -1,19 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { InputField } from "../UI/Themes/InputField"; 
-import { Text } from "../UI/Themes/Text";
-
+import { InputField } from "@/Components/ui/Themes/InputField";
 
 const LoginForm = () => {
+  const methods = useForm();
 
-  const methods = useForm(); 
- 
   const onSubmit = (data: any) => {
     console.log(data);
   };
-
-
 
   return (
     <FormProvider {...methods}>
@@ -47,7 +42,7 @@ const LoginForm = () => {
             >
               <div className="w-[400px] below-md:w-full">
                 <InputField
-                  type={"email"} 
+                  type={"email"}
                   label="Email"
                   {...methods.register("email", {
                     required: "Email is required",
@@ -55,12 +50,13 @@ const LoginForm = () => {
                   })}
                   errors={methods.formState.errors.email}
                   placeholder="Enter email"
-                  variant="outline"                />
+                  variant="outline"
+                />
               </div>
 
               <div className="w-[400px] below-md:w-full ">
                 <InputField
-                  type={"text"} 
+                  type={"text"}
                   label="Password"
                   {...methods.register("Password", {
                     required: "Password is required",
@@ -73,20 +69,26 @@ const LoginForm = () => {
                       message: "Password cannot exceed 20 characters",
                     },
                     pattern: {
-                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                      message: "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+                      value:
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                      message:
+                        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
                     },
                   })}
                   errors={methods.formState.errors.Password}
                   placeholder="Enter Password"
-                  variant="outline"                />
+                  variant="outline"
+                />
                 <div className="flex justify-end mt-2">
-              <p className=" text-[#3BFCC6] font-normal text-[14px] cursor-pointer"   onClick={() => (window.location.href = "/forgotpassword")} >
-              Forgot Password?
-              </p>
-              </div> 
+                  <p
+                    className=" text-[#3BFCC6] font-normal text-[14px] cursor-pointer"
+                    onClick={() => (window.location.href = "/forgotpassword")}
+                  >
+                    Forgot Password?
+                  </p>
+                </div>
               </div>
-            
+
               <button
                 type="submit"
                 className="bg-[#1AA47D] w-[400px] below-md:w-full text-white py-2 px-4 rounded "

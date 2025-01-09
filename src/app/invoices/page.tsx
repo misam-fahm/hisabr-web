@@ -3,9 +3,9 @@ import { useRef, useState } from "react";
 import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
+import DateRangePicker from "@/Components/ui/Themes/DateRangePicker";
 import { useRouter } from "next/navigation";
-import Dropdown from "@/Components/UI/Themes/DropDown";
+import Dropdown from "@/Components/ui/Themes/DropDown";
 
 // import Image from "next/image"
 import {
@@ -16,7 +16,7 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-import Pagination from "@/Components/UI/Pagination/Pagination";
+import Pagination from "@/Components/ui/Pagination/Pagination";
 
 interface TableRow {
   date: string;
@@ -194,8 +194,11 @@ const columns: ColumnDef<TableRow>[] = [
         onClick={() => (window.location.href = "/invoices/invoicedetails")}
         className="text-green-500 hover:text-green-700 text-center ml-2"
       >
-        <img src="/images/vieweyeicon.svg" alt="View Icon" 
-        className=" w-4 h-4 below-md:h-5 below-md:w-5 "/>
+        <img
+          src="/images/vieweyeicon.svg"
+          alt="View Icon"
+          className=" w-4 h-4 below-md:h-5 below-md:w-5 "
+        />
       </button>
     ),
     size: 30,

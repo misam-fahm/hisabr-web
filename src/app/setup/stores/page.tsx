@@ -11,7 +11,7 @@ import {
 
 import AddStore from "@/Components/Setup/StorePopup/AddStore";
 import EditStore from "@/Components/Setup/StorePopup/EditStore";
-import Pagination from "@/Components/UI/Pagination/Pagination";
+import Pagination from "@/Components/ui/Pagination/Pagination";
 
 interface TableRow {
   store: string;

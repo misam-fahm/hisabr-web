@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import { sendApiRequest } from "@/utils/apiUtils";
-import ToastNotification from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification from "@/Components/ui/ToastNotification/ToastNotification";
 
 interface JsonData {
   mode: string;
@@ -98,7 +98,7 @@ const AddCategories = () => {
         message={customToast.toastMessage}
         type={customToast.toastType}
       />
-       <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
+      <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
         <button
           onClick={openModal}
           className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[56px] h-[56px] rounded-lg relative"
@@ -131,7 +131,6 @@ const AddCategories = () => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] below-md:w-[345px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
             <div className="flex justify-end">
-             
               <img
                 onClick={closeModal}
                 src="/images/cancelicon.svg"
@@ -140,7 +139,10 @@ const AddCategories = () => {
               />
             </div>
             <div>
-            <DialogTitle as="h3" className="flex justify-center font-medium  text-[#3D3D3D] opacity-80">
+              <DialogTitle
+                as="h3"
+                className="flex justify-center font-medium  text-[#3D3D3D] opacity-80"
+              >
                 Add Category
               </DialogTitle>
             </div>

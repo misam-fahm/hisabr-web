@@ -5,9 +5,9 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 //import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
-import Dropdown from "../UI/Themes/DropDown";
-import CustomDatePicker from "../UI/Themes/CustomDatePicker";
-import { InputField } from "@/Components/UI/Themes/InputField";
+import Dropdown from "@/Components/ui/Themes/DropDown";
+import CustomDatePicker from "@/Components/ui/Themes/CustomDatePicker";
+import { InputField } from "@/Components/ui/Themes/InputField";
 
 type ExpenseFormInputs = {
   amount: number;
@@ -22,12 +22,12 @@ type EditExpensesProps = {
   onClose: () => void; // Callback to close the modal
 };
 
-
 const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
   const methods = useForm<ExpenseFormInputs>({
     defaultValues: initialData, // Prepopulate form with existing data
   });
-  const {  setValue, watch, control, register, formState, handleSubmit } = methods;
+  const { setValue, watch, control, register, formState, handleSubmit } =
+    methods;
   const { errors } = formState;
 
   const [description, setDescription] = useState("");
@@ -52,12 +52,10 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
   //   formState: { errors },
   // } = useForm<ExpenseFormInputs>(); // Initialize React Hook Form
 
-
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
-
 
   //Dropdown
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
@@ -67,7 +65,7 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
     setIsExpenseDropdownOpen(false); // Close the other dropdown
-  }
+  };
   const storeOptions = ["Store 1", "Store 2", "Store 3", "All Store"];
   const selectedStore = watch("store"); // Watch the "store" field for changes
 
@@ -77,14 +75,6 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
   };
   const expenseTypes = ["Travel", "Food", "Accommodation", "Miscellaneous"];
   const selectedExpense = watch("expenseType"); // Watch the "store" field for changes
-
-
-
-
-
-
-
-
 
   return (
     <>
@@ -97,10 +87,13 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
         </button>
       </div>
 
-
-
       {/* Dialog for the modal */}
-      <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
+      <Dialog
+        open={isOpen}
+        as="div"
+        className="relative z-50"
+        onClose={closeModal}
+      >
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] h-[430px] below-md:w-[94%] below-md:h-[400] px-6 below-md:px-3 py-3 bg-white rounded-lg shadow-lg flex flex-col">
@@ -121,61 +114,62 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
               </div>
             </div>
 
-
             {/* EditExpense Form */}
             <FormProvider {...methods}>
-              <form
-                onSubmit={methods.handleSubmit(onSubmit)}
-              >
+              <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <div className="flex flex-col h-full mt-4 gap-7">
                   {/* Store Input Field */}
                   <Dropdown
-                  options={storeOptions}
-                  selectedOption={watch("store") || "Store"}
-                  onSelect={(selectedOption) => {
-                    setValue("store", selectedOption);
-                    setIsStoreDropdownOpen(false);
-                  }}
-                  isOpen={isStoreDropdownOpen}
-                  toggleOpen={toggleStoreDropdown}
-                  widthchange="w-full"
-                  {...register("store", { required: "Store Selection is required" })}
-                  errors={errors.store}
-                />
-
-                 
+                    options={storeOptions}
+                    selectedOption={watch("store") || "Store"}
+                    onSelect={(selectedOption) => {
+                      setValue("store", selectedOption);
+                      setIsStoreDropdownOpen(false);
+                    }}
+                    isOpen={isStoreDropdownOpen}
+                    toggleOpen={toggleStoreDropdown}
+                    widthchange="w-full"
+                    {...register("store", {
+                      required: "Store Selection is required",
+                    })}
+                    errors={errors.store}
+                  />
 
                   {/* Expense Type Input Field */}
                   <Dropdown
-                  options={expenseTypes}
-                  selectedOption={watch("expenseType") || "Expense Type"}
-                  onSelect={(selectedOption) => {
-                    setValue("expenseType", selectedOption);
-                    setIsExpenseDropdownOpen(false);
-                  }}
-                  isOpen={isExpenseDropdownOpen}
-                  toggleOpen={toggleExpenseDropdown}
-                  widthchange="w-full"
-                  {...register("expenseType", { required: "Expense Type is required" })}
-                  errors={errors.expenseType}
-                />
+                    options={expenseTypes}
+                    selectedOption={watch("expenseType") || "Expense Type"}
+                    onSelect={(selectedOption) => {
+                      setValue("expenseType", selectedOption);
+                      setIsExpenseDropdownOpen(false);
+                    }}
+                    isOpen={isExpenseDropdownOpen}
+                    toggleOpen={toggleExpenseDropdown}
+                    widthchange="w-full"
+                    {...register("expenseType", {
+                      required: "Expense Type is required",
+                    })}
+                    errors={errors.expenseType}
+                  />
 
                   {/* Date input field */}
                   <Controller
-                  name="date"
-                  control={control}
-                  rules={{ required: "Date is required" }}
-                  render={({ field }) => (
-                    <CustomDatePicker
-                      value={field.value}
-                      onChange={(date) => field.onChange(date)}
-                      placeholder="Date"
-                    />
+                    name="date"
+                    control={control}
+                    rules={{ required: "Date is required" }}
+                    render={({ field }) => (
+                      <CustomDatePicker
+                        value={field.value}
+                        onChange={(date) => field.onChange(date)}
+                        placeholder="Date"
+                      />
+                    )}
+                  />
+                  {errors.date && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.date.message}
+                    </p>
                   )}
-                />
-                {errors.date && (
-                  <p className="text-red-500 text-sm mt-1">{errors.date.message}</p>
-                )}
                   {/* <CalendarRangePicker
                        value={methods.watch("date")}
                        onChange={(date) =>
@@ -185,45 +179,45 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
                        errors={methods.formState.errors.date?.message}
                       /> */}
 
-
                   {/* Description field */}
                   <InputField
-                  type="text"
-                  label="Description"
-                  borderClassName="border border-gray-400"
-                  labelBackgroundColor="bg-white"
-                  value={watch("description")}
-                  textColor="text-gray-500"
-                  {...register("description", {
-                    required: "Description is required",
-                  })}
-                  errors={errors.description}
-                  placeholder="Description"
-                  variant="outline"
-                />
+                    type="text"
+                    label="Description"
+                    borderClassName="border border-gray-400"
+                    labelBackgroundColor="bg-white"
+                    value={watch("description")}
+                    textColor="text-gray-500"
+                    {...register("description", {
+                      required: "Description is required",
+                    })}
+                    errors={errors.description}
+                    placeholder="Description"
+                    variant="outline"
+                  />
 
                   {/* Amount Field */}
                   <InputField
-                  type="number"
-                  label="Amount"
-                  borderClassName="border border-gray-400"
-                  labelBackgroundColor="bg-white"
-                  value={watch("amount")}
-                  textColor="text-gray-500"
-                  {...register("amount", {
-                    required: "Amount is required",
-                    min: {
-                      value: 0,
-                      message: "Amount must be a positive number",
-                    },
-                  })}
-                  errors={errors.amount}
-                  placeholder="Enter Amount"
-                  variant="outline"
-                />
+                    type="number"
+                    label="Amount"
+                    borderClassName="border border-gray-400"
+                    labelBackgroundColor="bg-white"
+                    value={watch("amount")}
+                    textColor="text-gray-500"
+                    {...register("amount", {
+                      required: "Amount is required",
+                      min: {
+                        value: 0,
+                        message: "Amount must be a positive number",
+                      },
+                    })}
+                    errors={errors.amount}
+                    placeholder="Enter Amount"
+                    variant="outline"
+                  />
 
                   <div className="flex justify-between gap-3 items-center w-full">
-                    <button type="button"
+                    <button
+                      type="button"
                       className="px-4  below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
                       onClick={closeModal}
                     >
@@ -236,27 +230,15 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
                     >
                       Save
                     </button>
-
-
                   </div>
-
-
-
-
-
                 </div>
-
               </form>
-
-
             </FormProvider>
           </DialogPanel>
         </div>
-
       </Dialog>
     </>
   );
 };
-
 
 export default EditExpense;

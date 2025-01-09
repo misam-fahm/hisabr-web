@@ -15,10 +15,12 @@ import {
 
 import AddNewItems from "@/Components/Setup/ItemsPopup/AddNewItems";
 import AddCategories from "@/Components/Setup/CategoriesPopup/AddCategories";
-import Pagination from "@/Components/UI/Pagination/Pagination";
+import Pagination from "@/Components/ui/Pagination/Pagination";
 import DeleteItems from "@/Components/Setup/ItemsPopup/DeleteItems";
 import EditItem from "@/Components/Setup/ItemsPopup/EditItem";
-import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, {
+  ToastNotificationProps,
+} from "@/Components/ui/ToastNotification/ToastNotification";
 
 interface TableRow {
   name: string;

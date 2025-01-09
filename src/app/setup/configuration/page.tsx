@@ -1,9 +1,9 @@
 "use client";
-import React, {useState } from "react";
+import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { InputField } from "@/Components/UI/Themes/InputField";
-import Dropdown from "@/Components/UI/Themes/DropDown";
+import { InputField } from "@/Components/ui/Themes/InputField";
+import Dropdown from "@/Components/ui/Themes/DropDown";
 
 const Page = () => {
   const methods = useForm();

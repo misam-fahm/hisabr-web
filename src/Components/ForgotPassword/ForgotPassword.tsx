@@ -1,11 +1,10 @@
 "use client";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { InputField } from "../UI/Themes/InputField"; 
-import { Text } from "../UI/Themes/Text";
+import { InputField } from "@/Components/ui/Themes/InputField";
 
 const LoginForm = () => {
-  const methods = useForm(); 
+  const methods = useForm();
 
   const onSubmit = (data: any) => {
     console.log(data);
@@ -30,10 +29,11 @@ const LoginForm = () => {
           <div className="w-[460px] below-md:w-full h-[406px] below-md:px-4 flex justify-center flex-col">
             <div className="flex flex-col w-[340px] below-md:w-full h-[67px] mb-6">
               <p className="text-[25px] text-[#FFFFFF] font-medium">
-              Reset Your Password
+                Reset Your Password
               </p>
               <p className="text-[14px] text-[#FFFFFF] font-normal">
-              Enter your registered email, and we’ll send you a password reset link.
+                Enter your registered email, and we’ll send you a password reset
+                link.
               </p>
             </div>
 
@@ -54,16 +54,19 @@ const LoginForm = () => {
                 />
               </div>
               <div className="flex justify-start">
-              <p className=" text-[#3BFCC6] font-normal text-[14px] cursor-pointer"   onClick={() => (window.location.href = "/login")} >
-              Back to Sign In
-              </p>
-              </div> 
+                <p
+                  className=" text-[#3BFCC6] font-normal text-[14px] cursor-pointer"
+                  onClick={() => (window.location.href = "/login")}
+                >
+                  Back to Sign In
+                </p>
+              </div>
 
               <button
                 type="submit"
                 className="bg-[#1AA47D] w-[400px] below-md:w-full text-white py-2 px-4 rounded "
               >
-                    SEND RESET LINK
+                SEND RESET LINK
               </button>
             </form>
           </div>

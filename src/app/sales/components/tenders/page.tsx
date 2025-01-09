@@ -9,7 +9,7 @@ const paymentData = [
     payment: "$223.27",
     tips: "$0.00",
     total: "$223.27",
-    percent: "5.99%",
+    percent: "5.99.00%",
   },
   {
     name: "Cash",
@@ -17,7 +17,7 @@ const paymentData = [
     payment: "$772.21",
     tips: "$0.00",
     total: "$772.21",
-    percent: "20.71%",
+    percent: "20.71.00%",
   },
   {
     name: "Delivery Doordash Integrated",
@@ -25,7 +25,7 @@ const paymentData = [
     payment: "$112.36",
     tips: "$0.00",
     total: "$112.36",
-    percent: "3.01%",
+    percent: "3.01.00%",
   },
   {
     name: "Discover",
@@ -33,7 +33,7 @@ const paymentData = [
     payment: "$49.63",
     tips: "$0.00",
     total: "$49.63",
-    percent: "1.33%",
+    percent: "1.33.00%",
   },
   {
     name: "Gift Card",
@@ -41,7 +41,7 @@ const paymentData = [
     payment: "$209.21",
     tips: "$0.00",
     total: "$209.31",
-    percent: "5.61%",
+    percent: "5.61.00%",
   },
   {
     name: "Master Card",
@@ -49,7 +49,7 @@ const paymentData = [
     payment: "$510.21",
     tips: "$0.00",
     total: "$510.31",
-    percent: "13.6%",
+    percent: "13.6.00%",
   },
   {
     name: "Mobile/ Web Order",
@@ -57,7 +57,7 @@ const paymentData = [
     payment: "$54.75",
     tips: "$0.00",
     total: "$54.75",
-    percent: "1.47%",
+    percent: "1.47.00%",
   },
   {
     name: "Visa",
@@ -65,7 +65,7 @@ const paymentData = [
     payment: "$1,796.49",
     tips: "$0.00",
     total: "$1,796.49",
-    percent: "48.1%",
+    percent: "48.1.00%",
   },
 ];
 
@@ -77,11 +77,11 @@ const PaymentTable: React.FC = () => {
           <thead className="bg-[#334155] text-white">
             <tr className=" text-[15px] font-medium">
               <th className="px-4 py-2 text-left font-normal">Name</th>
-              <th className="px-4 py-2 text-left font-normal">Quantity</th>
-              <th className="px-4 py-2 text-left font-normal">Payment</th>
-              <th className="px-4 py-2 text-left font-normal">Tips</th>
-              <th className="px-4 py-2 text-left font-normal">Total</th>
-              <th className="px-4 py-2 text-left font-normal">Percent</th>
+              <th className="px-4 py-2 text-right font-normal">Quantity</th>
+              <th className="px-4 py-2 text-right font-normal">Payment</th>
+              <th className="px-4 py-2 text-right font-normal">Tips</th>
+              <th className="px-4 py-2 text-right font-normal">Total</th>
+              <th className="px-4 py-2 text-right font-normal">Percent</th>
             </tr>
           </thead>
           <tbody>
@@ -90,22 +90,22 @@ const PaymentTable: React.FC = () => {
                 key={index}
                 className={`${index % 2 === 0 ? "bg-[#F8F9FB]" : "bg-white"}`}
               >
-                <td className="px-4 py-1.5 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                <td className="px-4 py-1.5 text-left text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                   {row.name}
                 </td>
-                <td className="px-8 py-1.5 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                <td className="px-5 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                   {row.quantity}
                 </td>
-                <td className="px-4 py-1.5 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                <td className="px-4 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                   {row.payment}
                 </td>
-                <td className="px-4 py-1.5 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                <td className="px-4 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                   {row.tips}
                 </td>
-                <td className="px-4 py-1.5 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                <td className="px-4 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                   {row.total}
                 </td>
-                <td className="px-4 py-1.5 text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+                <td className="px-4 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
                   {row.percent}
                 </td>
               </tr>

@@ -3,7 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import { sendApiRequest } from "@/utils/apiUtils";
-import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, {
+  ToastNotificationProps,
+} from "@/Components/ui/ToastNotification/ToastNotification";
 interface Category {
   categoryid: number;
   categoryname: string;
@@ -52,28 +54,28 @@ const AddNewItems = () => {
   };
 
   useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response: any = await sendApiRequest({
-            mode: "getallcategories",
+    const fetchData = async () => {
+      try {
+        const response: any = await sendApiRequest({
+          mode: "getallcategories",
+        });
+
+        if (response?.status === 200) {
+          setCategories(response?.data?.categories || []);
+        } else {
+          setCustomToast({
+            ...customToast,
+            message: response?.message,
+            type: "error",
           });
-  
-          if (response?.status === 200) {
-            setCategories(response?.data?.categories || []);
-          } else {
-            setCustomToast({
-              ...customToast,
-              message: response?.message,
-              type: "error",
-            });
-          }
-        } catch (error) {
-          console.error("Error fetching data:", error);
         }
-      };
-  
-      fetchData();
-    }, []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -136,7 +138,7 @@ const AddNewItems = () => {
 
   return (
     <>
-    <ToastNotification
+      <ToastNotification
         message={customToast.message}
         type={customToast.type}
       />
@@ -199,8 +201,9 @@ const AddNewItems = () => {
                 </button>
                 {dropdownOpen && (
                   <ul className="absolute z-10 w-full text-[#8D98AA] mt-1 bg-white border  border-gray-300 rounded-lg shadow-lg">
-                    {categories && categories.length > 0 && categories.map(
-                      (category: Category) => (
+                    {categories &&
+                      categories.length > 0 &&
+                      categories.map((category: Category) => (
                         <li
                           key={category.categoryid}
                           onClick={() => {
@@ -218,8 +221,7 @@ const AddNewItems = () => {
                         >
                           {category.categoryname}
                         </li>
-                      )
-                    )}
+                      ))}
                   </ul>
                 )}
                 {errors.selectedType && (
@@ -312,7 +314,7 @@ const AddNewItems = () => {
                   type="submit"
                   className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[35px] text-[#FFFFFF] rounded-md"
                 >
-                 Save
+                  Save
                 </button>
               </div>
             </form>

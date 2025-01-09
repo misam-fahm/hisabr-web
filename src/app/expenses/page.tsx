@@ -3,8 +3,8 @@
 import React, { FC, useState, useRef, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/ExpensesPopup/AddExpenses";
-import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
-import Dropdown from "@/Components/UI/Themes/DropDown";
+import DateRangePicker from "@/Components/ui/Themes/DateRangePicker";
+import Dropdown from "@/Components/ui/Themes/DropDown";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
@@ -17,7 +17,7 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-import Pagination from "@/Components/UI/Pagination/Pagination";
+import Pagination from "@/Components/ui/Pagination/Pagination";
 import DeleteExpense from "@/Components/ExpensesPopup/DeleteExpense";
 import EditExpense from "@/Components/ExpensesPopup/EditExpense";
 
@@ -111,9 +111,9 @@ const formattedData = data?.map((item) => {
       2,
       "0"
     )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
-      .getFullYear()
-      .toString()
-      .slice(-2)}`;
+    .getFullYear()
+    .toString()
+    .slice(-2)}`;
 
   return { ...item, date: formattedDate };
 });
@@ -158,9 +158,13 @@ const columns: ColumnDef<TableRow>[] = [
     cell: () => (
       <>
         <span className="flex justify-center">
-          <EditExpense initialData={existingExpense}
-            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-            onClose={() => console.log("Modal Closed")} />
+          <EditExpense
+            initialData={existingExpense}
+            onSubmit={(updatedData) =>
+              console.log("Updated Expense:", updatedData)
+            }
+            onClose={() => console.log("Modal Closed")}
+          />
         </span>
       </>
     ),
@@ -392,9 +396,13 @@ const Expenses: FC = () => {
 
                 <div className="flex gap-4 mb-1 px-3 py-4">
                   <>
-                    <EditExpense initialData={existingExpense}
-                      onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-                      onClose={() => console.log("Modal Closed")} />
+                    <EditExpense
+                      initialData={existingExpense}
+                      onSubmit={(updatedData) =>
+                        console.log("Updated Expense:", updatedData)
+                      }
+                      onClose={() => console.log("Modal Closed")}
+                    />
                     <DeleteExpense />
                   </>
                 </div>
@@ -440,9 +448,9 @@ const Expenses: FC = () => {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </th>
                     ))}
                   </tr>
