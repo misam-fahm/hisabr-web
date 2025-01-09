@@ -6,7 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
 import Dropdown from "../ui/Common/DropDown";
-import CalendarRangePicker from "../drawer/CalenderRangePicker";
+import CalendarRangePicker from "../drawer/DatePicker";
 import { Inputtext } from "../ui/InputText";
 
 type ExpenseFormInputs = {
