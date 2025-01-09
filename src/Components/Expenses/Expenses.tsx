@@ -119,6 +119,14 @@ const formattedData = data?.map((item) => {
 });
 console.log(formattedData);
 
+const existingExpense = {
+  amount: 150.5,
+  date: new Date(),
+  store: "Store 1",
+  expenseType: "Accommodation",
+  description: "Business trip hotel expense",
+};
+
 const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "date",
@@ -158,13 +166,9 @@ const columns: ColumnDef<TableRow>[] = [
     cell: () => (
       <>
         <span className="flex justify-center">
-          <EditExpense
-            expenseData={expenseData}
-            onUpdate={(updatedData) => {
-              console.log("Updated Data: ", updatedData);
-              // Example: update the state or send the updated data to an API
-            }}
-          />
+        <EditExpense initialData={existingExpense}
+            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
+            onClose={() => console.log("Modal Closed")} />
         </span>
       </>
     ),
@@ -390,13 +394,9 @@ const Expenses: FC = () => {
 
                 <div className="flex gap-4 mb-1 px-3 py-4">
                   <>
-                    <EditExpense
-                      expenseData={expenseData}
-                      onUpdate={(updatedData) => {
-                        console.log("Updated Data: ", updatedData);
-                        // Example: update the state or send the updated data to an API
-                      }}
-                    />
+                  <EditExpense initialData={existingExpense}
+            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
+            onClose={() => console.log("Modal Closed")} />
                     <DeleteExpense />
                   </>
                 </div>
