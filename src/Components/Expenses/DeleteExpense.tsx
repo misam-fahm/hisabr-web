@@ -115,7 +115,7 @@ const DeleteExpense = () => {
         <Button onClick={openModal}>
           <img
             src="/images/deletebinicon.svg"
-            className="flex justify-center w-4 h-4 md:h-5 md:w-5 text-left"
+            className="flex justify-center w-4 h-4 below-md:h-5 below-md:w-5 text-left"
           />
         </Button>
       </div>
@@ -123,7 +123,7 @@ const DeleteExpense = () => {
       <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[420px] h-auto below-md:w-[335px]  px-6 py-6 bg-white rounded-lg shadow-lg flex flex-col">
+          <DialogPanel className=" h-auto below-md:w-[335px]  px-6 py-6 bg-white rounded-lg shadow-lg flex flex-col">
             <div>
               <DialogTitle as="h3" className=" flex justify-center text-[16px] font font-semibold leading-4 text-[#5E6366] ">
                 Delete Item

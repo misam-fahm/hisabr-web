@@ -50,25 +50,25 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     id: "edit",
-    header: () => <div className=" flex justify-center items-center">Edit</div>,
+    header: () => <div className=" flex justify-center items-center"></div>,
     cell: (info) => (
-      <span className="flex justify-center ml-2">
+      <span className="flex justify-center">
        <EditCategories rowData={info.row.original} />
       </span>
     ),
-    size: 60,
+    size: 30,
   },
   {
     id: "delete",
     header: () => (
-      <div className="flex justify-center items-center">Delete</div>
+      <div className="flex justify-center items-center"></div>
     ),
     cell: () => (
-      <span className="flex justify-center ml-2">
+      <span className="flex justify-center mr-5">
         <DeleteCategories />
       </span>
     ),
-    size: 60,
+    size: 50,
   },
 ];
 
@@ -137,7 +137,7 @@ const Page: FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-4 overflow-auto"
+      className="max-h-[calc(100vh-60px)] px-6 below-md:px-3   below-md:py-4 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <ToastNotification
@@ -209,9 +209,9 @@ const Page: FC = () => {
         </div>
 
         {/* Desktop View */}
-        <div className="overflow-x-auto shadow-md border-collapse border border-gray-200 rounded-lg   below-md:hidden flex-col md:block">
-          <div className="overflow-hidden max-w-full">
-            <table className="w-full  table-fixed">
+        <div className="overflow-x-auto shadow-sm border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block">
+          <div className="overflow-hidden  max-w-full">
+            <table className="w-full   table-fixed">
               <thead className="bg-[#334155] sticky top-0 z-10">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
@@ -238,7 +238,7 @@ const Page: FC = () => {
               className="w-full overflow-y-auto scrollbar-thin flex-grow"
               style={{ maxHeight: "calc(100vh - 270px)" }}
             >
-              <table className="w-full border-collapse border-gray-200 table-fixed">
+              <table className="w-full border-collapse  border-gray-200 table-fixed">
                 <tbody>
                   {loading ? (
                     Array.from({ length: 10 }).map((_, index) => (
