@@ -4,7 +4,7 @@ import { useState } from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
 import Pagination from "@/Components/UI/Pagination/Pagination";
-import Dropdown from "@/Components/UI/Thems/DropDown";
+import Dropdown from "@/Components/UI/Themes/DropDown";
 
 import {
   useReactTable,

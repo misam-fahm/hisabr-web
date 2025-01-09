@@ -6,8 +6,8 @@ import BarChart3 from "@/Components/Charts-Graph/BarChart3";
 import PieChart2 from "@/Components/Charts-Graph/Piechart2";
 import { useRouter } from "next/navigation";
 import Pagination from "@/Components/UI/Pagination/Pagination";
-import Dropdown from "@/Components/UI/Thems/DropDown";
-import Images from "@/Components/UI/Thems/Image";
+import Dropdown from "@/Components/UI/Themes/DropDown";
+import Images from "@/Components/UI/Themes/Image";
 
 import {
   useReactTable,

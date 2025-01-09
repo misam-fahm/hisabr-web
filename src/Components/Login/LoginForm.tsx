@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Inputtext } from "../UI/Thems/InputText"; 
-import { Text } from "../UI/Thems/Text";
+import { InputField } from "../UI/Themes/InputField"; 
+import { Text } from "../UI/Themes/Text";
 
 
 const LoginForm = () => {
@@ -46,7 +46,7 @@ const LoginForm = () => {
               className="w-full mt-4 flex flex-col gap-8"
             >
               <div className="w-[400px] below-md:w-full">
-                <Inputtext
+                <InputField
                   type={"email"} 
                   label="Email"
                   {...methods.register("email", {
@@ -59,7 +59,7 @@ const LoginForm = () => {
               </div>
 
               <div className="w-[400px] below-md:w-full ">
-                <Inputtext
+                <InputField
                   type={"text"} 
                   label="Password"
                   {...methods.register("Password", {

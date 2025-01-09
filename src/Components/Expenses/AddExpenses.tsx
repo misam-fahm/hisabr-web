@@ -3,10 +3,10 @@
 import React, { FC, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
-import Dropdown from "@/Components/UI/Thems/DropDown";
+import Dropdown from "@/Components/UI/Themes/DropDown";
 import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
-import { Inputtext } from "../UI/Thems/InputText";
-import CustomDatePicker from "../UI/Thems/CustomDatePicker";
+import { InputField } from "../UI/Themes/InputField";
+import CustomDatePicker from "../UI/Themes/CustomDatePicker";
 
 type ExpenseFormInputs = {
   expenseName: string;
@@ -191,7 +191,7 @@ const AddExpenses = () => {
                        errors={methods.formState.errors.date?.message}
                       /> */}
                   {/* Description field */}
-                  <Inputtext
+                  <InputField
                     type="text"
                     label="Description"
                     borderClassName=" border border-gray-400"
@@ -208,7 +208,7 @@ const AddExpenses = () => {
                   />
 
                   {/* Amount Field */}
-                  <Inputtext
+                  <InputField
                     type="number" // Use type="number" for numeric input
                     label="Amount"
                     borderClassName="border border-gray-400"

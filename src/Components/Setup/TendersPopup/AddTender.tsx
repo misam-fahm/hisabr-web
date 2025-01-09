@@ -5,7 +5,7 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/ui/Common/DropDown";
 import { FormProvider, useForm, Controller } from "react-hook-form";
-import { Inputtext } from "../ui/InputText";
+import { InputField } from "../ui/InputField";
 import DateRange from "@/Components/drawer/DateRangePicker";
 
 const AddTender = () => {
@@ -98,7 +98,7 @@ const AddTender = () => {
                  
                   <div className="w-full flex mt-4">
                     {/* Description Input Field */}
-                    <Inputtext
+                    <InputField
                       type="text"
                       label="Name"
                       borderClassName=" border border-gray-400"
@@ -133,7 +133,7 @@ const AddTender = () => {
                     />
                   </div>
                   <div className="w-full flex mt-4">
-                    <Inputtext
+                    <InputField
                       type="text"
                       label="Commission"
                       borderClassName=" border border-gray-400"

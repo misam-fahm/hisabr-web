@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
-import Images from "@/Components/UI/Thems/Image";
+import Images from "@/Components/UI/Themes/Image";
 import Pagination from "@/Components/UI/Pagination/Pagination";
 import AddTender from "@/Components/Setup/TendersPopup/AddTender";
 import DeleteTenders from "@/Components/Setup/TendersPopup/DeleteTenders";

@@ -1,7 +1,7 @@
 "use client";
 import { FC, useState } from "react";
 import dynamic from "next/dynamic";
-import Dropdown from "@/Components/UI/Thems/DropDown";
+import Dropdown from "@/Components/UI/Themes/DropDown";
 
 const SummaryGraph = dynamic(() => import("@/Components/Charts-Graph/SummaryGraph"), {
   ssr: false,
@@ -19,7 +19,7 @@ const SalesGraph = dynamic(() => import("@/Components/Charts-Graph/salesGraph"),
   ssr: false,
 });
 const DateRangePicker = dynamic(
-  () => import("@/Components/UI/Thems/DateRangePicker"),
+  () => import("@/Components/UI/Themes/DateRangePicker"),
   {
     ssr: false,
   }

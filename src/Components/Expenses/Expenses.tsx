@@ -3,8 +3,8 @@
 import React, { FC, useState, useRef, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/Expenses/AddExpenses";
-import DateRangePicker from "../UI/Thems/DateRangePicker";
-import Dropdown from "../UI/Thems/DropDown";
+import DateRangePicker from "../UI/Themes/DateRangePicker";
+import Dropdown from "../UI/Themes/DropDown";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 

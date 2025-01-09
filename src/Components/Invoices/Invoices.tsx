@@ -2,9 +2,9 @@
 import { useRef, useState } from "react";
 import React from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import DateRangePicker from "@/Components/UI/Thems/DateRangePicker";
+import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import { useRouter } from "next/navigation";
-import Dropdown from "@/Components/UI/Thems/DropDown";
+import Dropdown from "@/Components/UI/Themes/DropDown";
 
 // import Image from "next/image"
 import {

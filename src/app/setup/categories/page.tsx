@@ -19,7 +19,7 @@ import { sendApiRequest } from "@/utils/apiUtils";
 import ToastNotification, {
   ToastNotificationProps,
 } from "@/Components/UI/ToastNotification/ToastNotification";
-import Loading from "@/Components/UI/Thems/Loading";
+import Loading from "@/Components/UI/Themes/Loading";
 
 interface TableRow {
   categoryname: string;

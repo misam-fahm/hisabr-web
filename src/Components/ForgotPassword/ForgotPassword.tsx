@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Inputtext } from "../UI/Thems/InputText"; 
-import { Text } from "../UI/Thems/Text";
+import { InputField } from "../UI/Themes/InputField"; 
+import { Text } from "../UI/Themes/Text";
 
 const LoginForm = () => {
   const methods = useForm(); 
@@ -42,7 +42,7 @@ const LoginForm = () => {
               className="w-full mt-4 flex flex-col gap-6"
             >
               <div className="w-[400px] below-md:w-full">
-                <Inputtext
+                <InputField
                   label="Email"
                   {...methods.register("email", {
                     required: "Email is required",

@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
-import Dropdown from "@/Components/UI/Thems/DropDown";
+import Dropdown from "@/Components/UI/Themes/DropDown";
 import { FormProvider, useForm, Controller } from "react-hook-form";
-import { Inputtext } from "@/Components/UI/Thems/InputText";
+import { InputField } from "@/Components/UI/Themes/InputField";
 
 const EditStore = () => {
   const methods = useForm();
@@ -94,7 +94,7 @@ const EditStore = () => {
                 <div className="flex flex-col mt-4 gap-4">
                   <div className="w-full flex">
                     {/* Description Input Field */}
-                    <Inputtext
+                    <InputField
                       type="text"
                       label="Store Name"
                       borderClassName=" border border-gray-400"
@@ -114,7 +114,7 @@ const EditStore = () => {
                   </div>
                   <div className="w-full flex mt-4">
                     {/* Description Input Field */}
-                    <Inputtext
+                    <InputField
                       type="text"
                       label="Location"
                       borderClassName=" border border-gray-400"
@@ -134,7 +134,7 @@ const EditStore = () => {
                   </div>
                   <div className="w-full flex mt-4">
                     {/* Description Input Field */}
-                    <Inputtext
+                    <InputField
                       type="text"
                       label="User"
                       borderClassName=" border border-gray-400"
@@ -152,7 +152,7 @@ const EditStore = () => {
                   </div>
                   <div className="w-full flex mt-4">
                     {/* Description Input Field */}
-                    <Inputtext
+                    <InputField
                       type="text"
                       label="County"
                       borderClassName=" border border-gray-400"
@@ -169,7 +169,7 @@ const EditStore = () => {
                     />
                   </div>
                   <div className="w-full flex mt-4">
-                    <Inputtext
+                    <InputField
                       type="text"
                       label="Royalty"
                       borderClassName=" border border-gray-400"

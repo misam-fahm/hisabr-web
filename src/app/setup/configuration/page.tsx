@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { Inputtext } from "@/Components/UI/Thems/InputText";
-import { Text } from "@/Components/UI/Thems/Text";
-import Dropdown from "@/Components/UI/Thems/DropDown";
+import { InputField } from "@/Components/UI/Themes/InputField";
+import { Text } from "@/Components/UI/Themes/Text";
+import Dropdown from "@/Components/UI/Themes/DropDown";
 
 const Page = () => {
   const methods = useForm();
@@ -58,7 +58,7 @@ const Page = () => {
             </div>
 
             <div className="w-full below-md:w-full">
-              <Inputtext
+              <InputField
                 type="text"
                 label="Monthly Royalty"
                 borderClassName=" border border-gray-400"
@@ -77,7 +77,7 @@ const Page = () => {
               />
             </div>
             <div className="w-full below-md:w-full">
-              <Inputtext
+              <InputField
                 type={"text"}
                 label="Labor Salary"
                 borderClassName="border border-[#5E6366]"
@@ -92,7 +92,7 @@ const Page = () => {
               />
             </div>
             <div className="w-full below-md:w-full">
-              <Inputtext
+              <InputField
                 type={"text"}
                 label="Rent"
                 borderClassName="border border-[#5E6366]"
@@ -109,7 +109,7 @@ const Page = () => {
           </div>
           <div className="flex gap-2 mt-10 justify-center ">
             <div className="w-[25%] below-md:w-full">
-              <Inputtext
+              <InputField
                 type={"text"}
                 label="Electricity"
                 borderClassName="border border-[#5E6366]"
@@ -125,7 +125,7 @@ const Page = () => {
             </div>
 
             <div className="w-[25%] below-md:w-full">
-              <Inputtext
+              <InputField
                 type={"text"}
                 label="Mortgage"
                 borderClassName="border border-[#5E6366]"
@@ -140,7 +140,7 @@ const Page = () => {
               />
             </div>
             <div className="w-[25%] below-md:w-full">
-              <Inputtext
+              <InputField
                 type={"text"}
                 label="Other Expenses"
                 borderClassName="border border-[#5E6366]"

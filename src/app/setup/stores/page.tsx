@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useState } from "react";
-import Images from "@/Components/UI/Thems/Image";
+import Images from "@/Components/UI/Themes/Image";
 import {
   useReactTable,
   getCoreRowModel,
