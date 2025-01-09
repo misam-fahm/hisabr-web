@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { enGB } from "date-fns/locale";
 
-const DateRangePicker = ({ widthchang}: { widthchang?: string }) => {
+const DateRangePicker = ({ widthchang }: { widthchang?: string }) => {
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
@@ -54,7 +54,7 @@ const DateRangePicker = ({ widthchang}: { widthchang?: string }) => {
               ? `Selected: ${startDate.toLocaleDateString()}`
               : "Date Range"}
         </span>
-        <img className="pr-2" src="/images/calendericon.svg" alt="calendar" />
+        <img className="pr-2" src="/images/CalenderIcon.svg" alt="calendar" />
       </div>
 
       {isOpen && (

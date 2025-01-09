@@ -78,16 +78,17 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
     { title: "Sales", src: "sales", path: "/sales" },
     { title: "Invoices", src: "invoices", path: "/invoices" },
     { title: "Expenses", src: "expences", path: "/expenses" },
+
+    { type: "Setup", title: "SETUP" },
+
+    { title: "Categories", src: "Categories", path: "/setup/categories" },
+    { title: "Items", src: "Items2", path: "/setup/items" },
+    { title: "Tenders", src: "Tenders", path: "/setup/tenders" },
+    { title: "Stores", src: "Stores", path: "/setup/stores" },
     {
-      title: "Setup",
-      src: "setup",
-      submenus: [
-        { title: "Categories", path: "/setup/categories" },
-        { title: "Items", path: "/setup/items" },
-        { title: "Tenders", path: "/setup/tenders" },
-        { title: "Stores", path: "/setup/stores" },
-        { title: "Configuration", path: "/setup/configuration" },
-      ],
+      title: "Configuration",
+      src: "Configuration",
+      path: "/setup/configuration",
     },
   ];
 
@@ -194,32 +195,27 @@ const Drawer: React.FC<DrawerProps> = ({ children }) => {
                       ? setSetupOpen(!setupOpen)
                       : handleNavigation(menu.path!)
                   }
-                  className={`text-defaultwhite  text-[14px] flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#EEEEEE1A] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]   mr-5 rounded-tr-full rounded-br-full 
-                    ${currentPath === menu.path ? "bg-[#EEEEEE1A]  shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]" : ""} 
-                    ${menu?.gap ? "mt-11" : "mt-1"} 
-                    ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""}`}
+                  className={`text-defaultwhite flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#EEEEEE1A] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] mr-5 rounded-tr-full rounded-br-full 
+                ${currentPath === menu.path ? "bg-[#EEEEEE1A] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]" : ""} 
+                ${menu?.gap ? "mt-11" : "mt-1"} 
+                ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""} 
+                ${menu.title === "SETUP" ? "border border-[#B8BCC3B2] cursor-auto w-20 ml-5 hover:bg-none hover:shadow-none rounded-tl-full rounded-bl-full py-1 text-[#B8BCC3B2] text-[10px]" : ""}`}
                 >
-                  <img src={`/images/${menu.src}.svg`} />
+                  {/* Only render the image if the menu is not "Setup" */}
+                  {menu.title !== "SETUP" && (
+                    <img src={`/images/${menu.src}.svg`} />
+                  )}
                   <span
                     className={`${!open && "hidden"} origin-left duration-200`}
                   >
                     {menu.title}
                   </span>
-                  {/* Dropdown Arrow for Setup */}
-                  {menu.submenus && open && (
-                    <img
-                      src={`/images/dropdown.svg`}
-                      className={`ml-auto ${
-                        setupOpen ? "rotate-180" : ""
-                      } duration-300`}
-                    />
-                  )}
                 </li>
 
-                {/* Submenu Items bg-[#B2BAC5]  */}
+                {/* Submenu Items */}
                 {menu.submenus && setupOpen && open && (
-                  <ul className="relative ml-8 mt-2  pr-9">
-                    <div className="absolute  top-0 w-0.5 h-full bg-[#B2BAC5] opacity-50 "></div>
+                  <ul className="relative ml-8 mt-2 pr-9">
+                    <div className="absolute top-0 w-0.5 h-full opacity-50"></div>
                     {menu.submenus.map((submenu: any, subIndex: any) => (
                       <li
                         key={subIndex}
