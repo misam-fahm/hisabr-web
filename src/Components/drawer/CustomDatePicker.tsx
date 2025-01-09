@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { enGB } from "date-fns/locale";
 
-const CalendarRangePicker = ({
+const CustomDatePicker = ({
     value,
     onChange,
     errors,
@@ -79,4 +79,4 @@ const CalendarRangePicker = ({
     );
 };
 
-export default CalendarRangePicker;
+export default CustomDatePicker;

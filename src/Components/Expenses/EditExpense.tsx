@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import DatePicker from "react-datepicker";
+//import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
 import Dropdown from "../ui/Common/DropDown";
-import CalendarRangePicker from "../drawer/DatePicker";
+import CustomDatePicker from "../drawer/CustomDatePicker";
 import { Inputtext } from "../ui/InputText";
 
 type ExpenseFormInputs = {
@@ -166,7 +166,7 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
                   control={control}
                   rules={{ required: "Date is required" }}
                   render={({ field }) => (
-                    <CalendarRangePicker
+                    <CustomDatePicker
                       value={field.value}
                       onChange={(date) => field.onChange(date)}
                       placeholder="Date"

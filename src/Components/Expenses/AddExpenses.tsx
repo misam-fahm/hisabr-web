@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/ui/Common/DropDown";
 import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
 import { Inputtext } from "../ui/InputText";
-import CalendarRangePicker from "../drawer/DatePicker";
+import CustomDatePicker from "../drawer/CustomDatePicker";
 
 type ExpenseFormInputs = {
   expenseName: string;
@@ -172,7 +172,7 @@ const AddExpenses = () => {
                     control={control}
                     rules={{ required: "Date is required" }}
                     render={({ field }) => (
-                      <CalendarRangePicker
+                      <CustomDatePicker
                         value={field.value}
                         onChange={(date) => field.onChange(date)} // Pass the date to React Hook Form
                         placeholder="Date"
