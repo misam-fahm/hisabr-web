@@ -191,7 +191,7 @@ const columns: ColumnDef<TableRow>[] = [
     header: () => <div className="text-left">View</div>,
     cell: () => (
       <button
-        onClick={() => (window.location.href = "/invoicedetails")}
+        onClick={() => (window.location.href = "/invoices/invoicedetails")}
         className="text-green-500 hover:text-green-700 text-center ml-2"
       >
         <img src="/images/vieweyeicon.svg" alt="View Icon" 

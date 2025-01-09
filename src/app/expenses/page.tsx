@@ -357,7 +357,7 @@ const Expenses: FC = () => {
               <DateRangePicker />
             </div>
 
-            <div className="flex shadow text-[12px] relative below-md:flex-row below-md:gap-4 bg-[#ffff] items-center  rounded-md w-full below-md:w-full  below-md:text-[11px]">
+            <div className="flex shadow text-[12px] relative below-md:flex-row below-md:gap-4 bg-[#ffff] items-center  rounded w-full below-md:w-full  below-md:text-[11px]">
               <input
                 value={globalFilter ?? ""}
                 onChange={(e) => setGlobalFilter(e.target.value)}
