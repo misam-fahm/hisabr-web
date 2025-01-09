@@ -166,13 +166,13 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     id: "edit",
-    header: () => <div className="text-center">Edit</div>,
+    header: () => <div className="text-center"></div>,
     cell: () => (
       <span className="flex justify-center">
         <EditStore />
       </span>
     ),
-    size: 70,
+    size: 50,
   },
 ];
 
@@ -269,7 +269,7 @@ const Page: FC = () => {
       </div>
 
       {/* Desktop View */}
-      <div className="overflow-x-auto shadow-md border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block">
+      <div className="overflow-x-auto shadow-sm border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block">
         <div className="overflow-hidden max-w-full">
           <table className="w-full border-collapse border-gray-200 table-fixed">
             <thead className="bg-[#334155] sticky top-0 z-10">

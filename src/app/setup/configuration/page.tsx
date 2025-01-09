@@ -8,7 +8,7 @@ import Dropdown from "@/Components/ui/Common/DropDown";
 
 const Page = () => {
   const methods = useForm();
-  const{watch,setValue}=methods
+  const { watch, setValue } = methods;
 
   const onSubmit = (data: any) => {
     console.log(data);
@@ -17,9 +17,11 @@ const Page = () => {
   const [selectedOption, setSelectedOption] = useState<string>("All stores");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  //const options = ["Store 1", "Store 2", "Store 3", "All Store"];
-
- // const toggleDropdown1 = () => setIsOpen(!isOpen);
+  const [monthlyroyalty, setMonthlyroyalty] = useState("");
+  const handleChangeMonthlyroyalty = (data: any) => {
+    setMonthlyroyalty(data); // Update local state
+    methods.setValue("name", data); // Update form state in react-hook-form
+  };
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
@@ -28,7 +30,7 @@ const Page = () => {
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const toggleDropdown1 = () => {
     setIsStoreDropdownOpen((prev) => !prev);
-  }
+  };
   const options = ["Store 1", "Store 2", "Store 3", "All Store"];
   const selectedStore = watch("store"); // Watch the "store" field for changes
 
@@ -40,45 +42,38 @@ const Page = () => {
       >
         <div className="bg-white py-10 px-5 rounded-lg">
           <div className="flex gap-2  justify-between ">
-            {/* <div className=" w-full below-md:w-full ">
+            <div className="flex w-full h-[38px]">
+              {/* Store Input Field */}
               <Dropdown
                 options={options}
-                selectedOption={selectedOption}
-                onSelect={handleSelect}
-                isOpen={isOpen}
+                selectedOption={selectedStore || "Store"} // Watch the selected value
+                onSelect={(selectedOption) => {
+                  setValue("store", selectedOption); // Update the form value
+                  setIsStoreDropdownOpen(false); // Close dropdown after selection
+                }}
+                isOpen={isStoreDropdownOpen}
                 toggleOpen={toggleDropdown1}
                 widthchange="w-full"
               />
-            </div> */}
-             <div className="flex w-full h-[38px]">
-                    {/* Store Input Field */}
-                    <Dropdown
-                    options={options}
-                    selectedOption={selectedStore || "Store"} // Watch the selected value
-                    onSelect={(selectedOption) => {
-                        setValue("store", selectedOption); // Update the form value
-                        setIsStoreDropdownOpen(false);// Close dropdown after selection
-                      
-                      }}
-                      isOpen={isStoreDropdownOpen}
-                      toggleOpen={toggleDropdown1}
-                      widthchange="w-full"
-                    />
-                  </div>
+            </div>
 
             <div className="w-full below-md:w-full">
               <Inputtext
-                type={"text"}
+                type="text"
                 label="Monthly Royalty"
-                borderClassName="border border-[#5E6366]"
+                borderClassName=" border border-gray-400"
                 labelBackgroundColor="bg-white"
-                textColor="text-[#5E6366]"
-                {...methods.register("monthlyroyalty", {
+                value={monthlyroyalty}
+                textColor="text-gray-500"
+                {...methods?.register("monthlyroyalty", {
                   required: "Monthly Royalty is required",
                 })}
                 errors={methods.formState.errors.monthlyroyalty}
-                placeholder="Enter Monthly Royalty"
+                placeholder="monthlyroyalty"
                 variant="outline"
+                onChange={(e: any) =>
+                  handleChangeMonthlyroyalty(e.target.value)
+                }
               />
             </div>
             <div className="w-full below-md:w-full">
