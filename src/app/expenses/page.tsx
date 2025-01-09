@@ -3,8 +3,8 @@
 import React, { FC, useState, useRef, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/Expenses/AddExpenses";
-import DateRangePicker from "@/Components/ui/Thems/DateRangePicker";
-import Dropdown from "@/Components/ui/Thems/DropDown";
+import DateRangePicker from "@/Components/UI/Thems/DateRangePicker";
+import Dropdown from "@/Components/UI/Thems/DropDown";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
@@ -17,7 +17,7 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-import Pagination from "@/Components/ui/Pagination/Pagination";
+import Pagination from "@/Components/UI/Pagination/Pagination";
 import DeleteExpense from "@/Components/Expenses/DeleteExpense";
 import EditExpense from "@/Components/Expenses/EditExpense";
 

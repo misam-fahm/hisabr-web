@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
-import Images from "@/Components/ui/Thems/Image";
-import Pagination from "@/Components/ui/Pagination/Pagination";
+import Images from "@/Components/UI/Thems/Image";
+import Pagination from "@/Components/UI/Pagination/Pagination";
 import AddTender from "@/Components/Setup/TendersPopup/AddTender";
 import DeleteTenders from "@/Components/Setup/TendersPopup/DeleteTenders";
 import EditTenders from "@/Components/Setup/TendersPopup/EditTenders";

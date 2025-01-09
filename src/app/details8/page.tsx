@@ -3,9 +3,9 @@ import React from "react";
 import { useState, useRef } from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
-import Images from "@/Components/ui/Thems/Image";
-import Pagination from "@/Components/ui/Pagination/Pagination";
-import Dropdown from "@/Components/ui/Thems/DropDown";
+import Images from "@/Components/UI/Thems/Image";
+import Pagination from "@/Components/UI/Pagination/Pagination";
+import Dropdown from "@/Components/UI/Thems/DropDown";
 
 import {
   useReactTable,

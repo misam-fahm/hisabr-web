@@ -3,8 +3,8 @@ import React from "react";
 import { useState } from "react";
 import "../globals.css";
 import { useRouter } from "next/navigation";
-import Pagination from "@/Components/ui/Pagination/Pagination";
-import Dropdown from "@/Components/ui/Thems/DropDown";
+import Pagination from "@/Components/UI/Pagination/Pagination";
+import Dropdown from "@/Components/UI/Thems/DropDown";
 
 import {
   useReactTable,

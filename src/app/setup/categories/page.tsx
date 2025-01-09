@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useEffect, useState } from "react";
-import Pagination from "@/Components/ui/Pagination/Pagination";
+import Pagination from "@/Components/UI/Pagination/Pagination";
 import {
   useReactTable,
   getCoreRowModel,
@@ -18,8 +18,8 @@ import DeleteCategories from "@/Components/Setup/CategoriesPopup/DeleteCategorie
 import { sendApiRequest } from "@/utils/apiUtils";
 import ToastNotification, {
   ToastNotificationProps,
-} from "@/Components/ui/ToastNotification/ToastNotification";
-import Loading from "@/Components/ui/Thems/Loading";
+} from "@/Components/UI/ToastNotification/ToastNotification";
+import Loading from "@/Components/UI/Thems/Loading";
 
 interface TableRow {
   categoryname: string;

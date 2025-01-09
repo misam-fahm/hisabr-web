@@ -1,13 +1,13 @@
 "use client";
 import { useRef, useState } from "react";
 import "../globals.css";
-import MultiLineChart from "@/Components/Charts&Graph/MultiLineChart";
-import BarChart3 from "@/Components/Charts&Graph/BarChart3";
-import PieChart2 from "@/Components/Charts&Graph/Piechart2";
+import MultiLineChart from "@/Components/Charts-Graph/MultiLineChart";
+import BarChart3 from "@/Components/Charts-Graph/BarChart3";
+import PieChart2 from "@/Components/Charts-Graph/Piechart2";
 import { useRouter } from "next/navigation";
-import Pagination from "@/Components/ui/Pagination/Pagination";
-import Dropdown from "@/Components/ui/Thems/DropDown";
-import Images from "@/Components/ui/Thems/Image";
+import Pagination from "@/Components/UI/Pagination/Pagination";
+import Dropdown from "@/Components/UI/Thems/DropDown";
+import Images from "@/Components/UI/Thems/Image";
 
 import {
   useReactTable,

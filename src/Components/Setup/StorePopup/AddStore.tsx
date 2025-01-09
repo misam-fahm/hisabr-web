@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
-import Dropdown from "@/Components/ui/Thems/DropDown";
+import Dropdown from "@/Components/UI/Thems/DropDown";
 import { FormProvider, useForm, Controller } from "react-hook-form";
-import { Inputtext } from "@/Components/ui/Thems/InputText";
+import { Inputtext } from "@/Components/UI/Thems/InputText";
 
 
 const AddStore = () => {

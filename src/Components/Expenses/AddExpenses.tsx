@@ -3,10 +3,10 @@
 import React, { FC, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
-import Dropdown from "@/Components/ui/Thems/DropDown";
+import Dropdown from "@/Components/UI/Thems/DropDown";
 import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
-import { Inputtext } from "../ui/Thems/InputText";
-import CustomDatePicker from "../ui/Thems/CustomDatePicker";
+import { Inputtext } from "../UI/Thems/InputText";
+import CustomDatePicker from "../UI/Thems/CustomDatePicker";
 
 type ExpenseFormInputs = {
   expenseName: string;

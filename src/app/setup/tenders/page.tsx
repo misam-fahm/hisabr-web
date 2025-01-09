@@ -12,7 +12,7 @@ import {
 import AddTender from "@/Components/Setup/TendersPopup/AddTender";
 import DeleteTenders from "@/Components/Setup/TendersPopup/DeleteTenders";
 import EditTenders from "@/Components/Setup/TendersPopup/EditTenders";
-import Pagination from "@/Components/ui/Pagination/Pagination";
+import Pagination from "@/Components/UI/Pagination/Pagination";
 
 interface TableRow {
   commission: string;

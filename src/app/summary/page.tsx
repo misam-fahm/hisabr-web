@@ -1,25 +1,25 @@
 "use client";
 import { FC, useState } from "react";
 import dynamic from "next/dynamic";
-import Dropdown from "@/Components/ui/Thems/DropDown";
+import Dropdown from "@/Components/UI/Thems/DropDown";
 
-const SummaryGraph = dynamic(() => import("@/Components/Charts&Graph/SummaryGraph"), {
+const SummaryGraph = dynamic(() => import("@/Components/Charts-Graph/SummaryGraph"), {
   ssr: false,
 });
 const YearlySalesGraph = dynamic(
-  () => import("@/Components/Charts&Graph/YearlySalesGraph"),
+  () => import("@/Components/Charts-Graph/YearlySalesGraph"),
   {
     ssr: false,
   }
 );
-const InvoiceGraph = dynamic(() => import("@/Components/Charts&Graph/InvoiceGraph"), {
+const InvoiceGraph = dynamic(() => import("@/Components/Charts-Graph/InvoiceGraph"), {
   ssr: false,
 });
-const SalesGraph = dynamic(() => import("@/Components/Charts&Graph/salesGraph"), {
+const SalesGraph = dynamic(() => import("@/Components/Charts-Graph/salesGraph"), {
   ssr: false,
 });
 const DateRangePicker = dynamic(
-  () => import("@/Components/ui/Thems/DateRangePicker"),
+  () => import("@/Components/UI/Thems/DateRangePicker"),
   {
     ssr: false,
   }

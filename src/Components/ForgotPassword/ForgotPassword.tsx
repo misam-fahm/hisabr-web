@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Inputtext } from "../ui/Thems/InputText"; 
-import { Text } from "../ui/Thems/Text";
+import { Inputtext } from "../UI/Thems/InputText"; 
+import { Text } from "../UI/Thems/Text";
 
 const LoginForm = () => {
   const methods = useForm(); 

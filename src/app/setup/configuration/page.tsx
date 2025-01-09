@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { Inputtext } from "@/Components/ui/Thems/InputText";
-import { Text } from "@/Components/ui/Thems/Text";
-import Dropdown from "@/Components/ui/Thems/DropDown";
+import { Inputtext } from "@/Components/UI/Thems/InputText";
+import { Text } from "@/Components/UI/Thems/Text";
+import Dropdown from "@/Components/UI/Thems/DropDown";
 
 const Page = () => {
   const methods = useForm();

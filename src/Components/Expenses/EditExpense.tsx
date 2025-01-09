@@ -5,9 +5,9 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 //import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
-import Dropdown from "../ui/Thems/DropDown";
-import CustomDatePicker from "../ui/Thems/CustomDatePicker";
-import { Inputtext } from "@/Components/ui/Thems/InputText";
+import Dropdown from "../UI/Thems/DropDown";
+import CustomDatePicker from "../UI/Thems/CustomDatePicker";
+import { Inputtext } from "@/Components/UI/Thems/InputText";
 
 type ExpenseFormInputs = {
   amount: number;

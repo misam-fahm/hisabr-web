@@ -1,8 +1,8 @@
 "use client";
 import { FC, useState } from "react";
-import DonutChart from "@/Components/Charts&Graph/DonutChart";
-import DateRangePicker from "@/Components/ui/Thems/DateRangePicker";
-import Dropdown from "@/Components/ui/Thems/DropDown";
+import DonutChart from "@/Components/Charts-Graph/DonutChart";
+import DateRangePicker from "@/Components/UI/Thems/DateRangePicker";
+import Dropdown from "@/Components/UI/Thems/DropDown";
 
 const SalesKPI: FC = () => {
   const tableData = [

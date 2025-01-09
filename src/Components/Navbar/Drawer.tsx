@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import React, { ReactNode, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import Images from "../ui/Thems/Image";
+import Images from "../UI/Thems/Image";
 
 interface DrawerProps {
   children: ReactNode;
