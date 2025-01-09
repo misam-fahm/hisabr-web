@@ -2,7 +2,7 @@
 
 import React, { FC, useState, useRef, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import AddExpenses from "@/Components/Expenses/AddExpenses";
+import AddExpenses from "@/Components/ExpensesPopup/AddExpenses";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { useRouter } from "next/navigation";
@@ -18,8 +18,8 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import Pagination from "@/Components/UI/Pagination/Pagination";
-import DeleteExpense from "@/Components/Expenses/DeleteExpense";
-import EditExpense from "@/Components/Expenses/EditExpense";
+import DeleteExpense from "@/Components/ExpensesPopup/DeleteExpense";
+import EditExpense from "@/Components/ExpensesPopup/EditExpense";
 
 interface TableRow {
   date: string;

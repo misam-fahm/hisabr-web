@@ -14,9 +14,9 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-import EditExpense from "@/Components/Expenses/EditExpense";
-import DeleteExpense from "@/Components/Expenses/DeleteExpense";
-import AddExpenses from "@/Components/Expenses/AddExpenses";
+import EditExpense from "@/Components/ExpensesPopup/EditExpense";
+import DeleteExpense from "@/Components/ExpensesPopup/DeleteExpense";
+import AddExpenses from "@/Components/ExpensesPopup/AddExpenses";
 
 interface TableRow {
   date: string;
