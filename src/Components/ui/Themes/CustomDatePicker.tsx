@@ -9,7 +9,7 @@ const CustomDatePicker = ({
     onChange,
     errors,
     placeholder = "Date",
-    buttonText = "Set Date",
+   // buttonText = "Set Date",
 }: {
     value?: Date;
     errors?:any;
@@ -54,7 +54,7 @@ const CustomDatePicker = ({
                 <img
                     src="/images/calendericon.svg"
                     alt="Calendar Icon"
-                    className=" w-3 h-3"
+                    className="-mr-1 w-3 h-3"
                 />
             </div>
 

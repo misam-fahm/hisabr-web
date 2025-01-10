@@ -114,7 +114,7 @@ body {
 
 /* Previous Button */
 .react-datepicker__navigation--previous {
-  background-image: url("/images/Lefticon.svg") !important;
+  background-image: url("/images/LeftIcon.svg") !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
   border: none !important;

@@ -39,7 +39,7 @@ const data: TableRow[] = [
   },
   {
     date: "2022-01-01",
-    store: 13246,
+    store: 45673,
     amount: "11,800",
     description: "Mortgage Mortgage Mortgage",
     type: "Mortgage",
@@ -53,7 +53,7 @@ const data: TableRow[] = [
   },
   {
     date: "2022-01-01",
-    store: 13246,
+    store: 45673,
     amount: "11,800",
     description: "Mortgage Mortgage Mortgage",
     type: "Mortgage",
@@ -67,7 +67,7 @@ const data: TableRow[] = [
   },
   {
     date: "2022-01-01",
-    store: 13246,
+    store: 121212,
     amount: "11,800",
     description: "Mortgage Mortgage Mortgage",
     type: "Mortgage",
@@ -209,95 +209,6 @@ const Expenses: FC = () => {
       },
     },
   });
-  //Card data
-  const cardData = [
-    {
-      date: "2022-01-01",
-      type: "Mortgage",
-      store: 13246,
-      amount: "11,456 ",
-      description: "Mortgage Mortgage Mortgage",
-    },
-    {
-      date: "2022-01-01",
-      type: "Mortgage",
-      store: 13246,
-      amount: "11,456",
-      description: "Mortgage Mortgage Mortgage",
-    },
-    {
-      date: "2022-01-01",
-      type: "Mortgage",
-      store: 13246,
-      amount: "11,456",
-      description: "Mortgage Mortgage Mortgage",
-    },
-    {
-      date: "2022-01-01",
-      type: "Mortgage",
-      store: 13246,
-      amount: "11,456",
-      description: "Mortgage Mortgage Mortgage",
-    },
-    {
-      date: "2022-01-01",
-      type: "Mortgage",
-      store: 13246,
-      amount: "11,456",
-      description: "Mortgage Mortgage Mortgage",
-    },
-    {
-      date: "2022-01-01",
-      type: "Mortgage",
-      store: 13246,
-      amount: "11,456",
-      description: "Mortgage Mortgage Mortgage",
-    },
-    {
-      date: "2022-01-01",
-      type: "Mortgage",
-      store: 13246,
-      amount: "11,456",
-      description: "Mortgage Mortgage Mortgage",
-    },
-    {
-      date: "2022-01-01",
-      type: "Mortgage",
-      store: 13246,
-      amount: "11,456",
-      description: "Mortgage Mortgage Mortgage",
-    },
-    {
-      date: "2022-01-01",
-      type: "Mortgage",
-      store: 13246,
-      amount: "11,456",
-      description: "Mortgage Mortgage Mortgage",
-    },
-    {
-      date: "2022-01-01",
-      type: "Mortgage",
-      store: 13246,
-      amount: "11,456",
-      description: "Mortgage Mortgage Mortgage ",
-    },
-    {
-      date: "2022-01-01",
-      type: "Mortgage",
-      store: 13246,
-      amount: "11,456",
-      description: "Mortgage Mortgage Mortgage",
-    },
-  ];
-
-  // Format date to MM-DD-YYYY
-  const formattedCardData = cardData.map((item) => {
-    const date = new Date(item.date);
-    const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}-${date.getFullYear()}`;
-    return { ...item, date: formattedDate };
-  });
-
-  console.log(formattedCardData);
 
   // const calendarRef = useRef<DatePicker | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -357,19 +268,20 @@ const Expenses: FC = () => {
               <DateRangePicker />
             </div>
 
-            <div className="flex shadow text-[12px] relative below-md:flex-row below-md:gap-4 bg-[#ffff] items-center  rounded w-full below-md:w-full  below-md:text-[11px]">
+            <div className="flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
               <input
+                type="search"
                 value={globalFilter ?? ""}
                 onChange={(e) => setGlobalFilter(e.target.value)}
+                ref={searchInputRef}
                 placeholder="Search"
-                className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                className="w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none"
+              ></input>
+              <img
+                className="pr-2 cursor-pointer items-center"
+                src="/images/searchicon.svg"
+                onClick={handleClick}
               />
-              <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                <img
-                  className="cursor-pointer items-center"
-                  src="/images/searchicon.svg"
-                />
-              </div>
             </div>
           </div>
           <div className="block pl-24 below-md:hidden">
@@ -379,7 +291,7 @@ const Expenses: FC = () => {
 
         {/*Mobile View : Card section */}
         <div className="block md:hidden mb-16">
-          {cardData.map((card, index) => (
+          {formattedData.map((card, index) => (
             <div
               key={index}
               className="flex flex-col w-full rounded bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3"
@@ -478,7 +390,7 @@ const Expenses: FC = () => {
                   ))}
                 </tbody>
               </table>
-            </div>
+              </div>
           </div>
         </div>
         {/* Pagination Numbers */}
