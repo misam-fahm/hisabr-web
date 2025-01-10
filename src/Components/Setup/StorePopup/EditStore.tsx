@@ -55,7 +55,7 @@ const EditStore = () => {
       <div>
         <button onClick={openModal}>
           <img
-            src="/images/EditPencilIcon.svg"
+            src="/images/editpencilicon.svg"
             alt="Add icon"
             className="flex justify-center items-center  w-4 h-4 below-md:w-5 below-md:h-5"
           />

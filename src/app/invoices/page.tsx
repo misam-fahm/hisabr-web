@@ -431,7 +431,7 @@ const Invoices = () => {
             onClick={handleButtonClick}
           >
             <img
-              src="/images/MobileUploadIcon.svg"
+              src="/images/Mobileuploadicon.svg"
               alt="Upload Invoice"
               className="w-[18px] h-[18px]"
             />

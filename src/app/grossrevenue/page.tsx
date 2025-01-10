@@ -183,7 +183,7 @@ const columns: ColumnDef<TableRow>[] = [
     cell: () => (
       <span className="flex justify-center">
         <Images
-          src="/images/ViewEyeIcon.svg"
+          src="/images/vieweyeicon.svg"
           alt="Eye Icon"
           className="w-4 h-4"
         />
@@ -281,7 +281,7 @@ const DetailsPage: React.FC = () => {
     >
       <img
         onClick={handleBack}
-        src="/images/MobileBackIcon.svg"
+        src="/images/Mobilebackicon.svg"
         className="fixed top-4 left-4 z-50 below-lg:hidden tablet:hidden"
       />
 
@@ -296,7 +296,7 @@ const DetailsPage: React.FC = () => {
             onClick={handleBack}
             alt="Back Arrow"
             className="w-7 h-7 mb-3 below-md:hidden cursor-pointer"
-            src="/images/WebBackIcon.svg"
+            src="/images/webbackicon.svg"
           ></img>
         </div>
         <div className="flex flex-row justify-between items-center">
@@ -578,7 +578,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/ViewEyeIcon.svg" className="w-5 h-5" />
+                      <img src="/images/vieweyeicon.svg" className="w-5 h-5" />
                     </div>
                   </div>
                 </div>
@@ -606,7 +606,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/ViewEyeIcon.svg" className="w-5 h-5" />
+                      <img src="/images/vieweyeicon.svg" className="w-5 h-5" />
                     </div>
                   </div>
                 </div>
@@ -634,7 +634,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/ViewEyeIcon.svg" className="w-5 h-5" />
+                      <img src="/images/vieweyeicon.svg" className="w-5 h-5" />
                     </div>
                   </div>
                 </div>
@@ -662,7 +662,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/ViewEyeIcon.svg" className="w-5 h-5" />
+                      <img src="/images/vieweyeicon.svg" className="w-5 h-5" />
                     </div>
                   </div>
                 </div>

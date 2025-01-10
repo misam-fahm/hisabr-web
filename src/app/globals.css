@@ -114,7 +114,7 @@ body {
 
 /* Previous Button */
 .react-datepicker__navigation--previous {
-  background-image: url("/images/LeftIcon.svg") !important;
+  background-image: url("/images/Lefticon.svg") !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
   border: none !important;
@@ -124,7 +124,7 @@ body {
 
 /* Next Button */
 .react-datepicker__navigation--next {
-  background-image: url("/images/RightIcon.svg") !important;
+  background-image: url("/images/righticon.svg") !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
   border: none !important;

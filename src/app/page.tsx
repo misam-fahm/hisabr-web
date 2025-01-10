@@ -165,7 +165,7 @@ const Home: FC = () => {
               </div>
               <div className="cursor-pointer">
                 <img
-                  src="/images/under_details.svg"
+                  src="/images/underdetails.svg"
                   onClick={handleClick}
                   alt="Details"
                 />
@@ -186,7 +186,7 @@ const Home: FC = () => {
               <div className="cursor-pointer">
                 <img
                   onClick={handleClick2}
-                  src="/images/under_details.svg"
+                  src="/images/underdetails.svg"
                   alt="Details"
                 />
               </div>
@@ -292,7 +292,7 @@ const Home: FC = () => {
                 </div>
               </div>
               <div className="cursor-pointer">
-                <img src="/images/under_details.svg" onClick={handleClick} />
+                <img src="/images/underdetails.svg" onClick={handleClick} />
               </div>
             </div>
 
@@ -334,7 +334,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img src="/images/under_details.svg" onClick={handleClick4} />
+                <img src="/images/underdetails.svg" onClick={handleClick4} />
               </div>
             </div>
             <div className="mt-5 mx-6">
@@ -416,7 +416,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img src="/images/under_details.svg" onClick={handleClick5} />
+                <img src="/images/underdetails.svg" onClick={handleClick5} />
               </div>
             </div>
 
@@ -461,7 +461,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img src="/images/under_details.svg" onClick={handleClick6} />
+                <img src="/images/underdetails.svg" onClick={handleClick6} />
               </div>
             </div>
             <div className="mt-5 mx-6">
@@ -505,7 +505,7 @@ const Home: FC = () => {
                 </p>
               </div>
               <div className="cursor-pointer">
-                <img src="/images/under_details.svg" onClick={handleClick7} />
+                <img src="/images/underdetails.svg" onClick={handleClick7} />
               </div>
             </div>
             <div className="mt-5 mx-6">
@@ -627,7 +627,7 @@ const Home: FC = () => {
                 <p className="text-[#334155]  text-[16px] font-bold">Items</p>
               </div>
               <div className="cursor-pointer">
-                <img src="/images/under_details.svg" onClick={handleClick8} />
+                <img src="/images/underdetails.svg" onClick={handleClick8} />
               </div>
             </div>
 

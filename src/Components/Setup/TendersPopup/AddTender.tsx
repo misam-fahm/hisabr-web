@@ -50,7 +50,7 @@ const AddTender = () => {
           className="focus:outline-none flex items-center justify-center bg-[#168A6F]  w-[56px] h-[56px] rounded-xl relative"
         >
           <img
-            src="/images/WebAddIcon.svg"
+            src="/images/webaddicon.svg"
             alt=" Add Store"
             className="w-[18px] h-[18px]"
           />
@@ -61,7 +61,7 @@ const AddTender = () => {
           onClick={openModal}
           className="bg-[#168A6F] hover:bg-[#11735C] shadow-lg text-white w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
-          <img className="" src="/images/WebAddIcon.svg" alt="" />
+          <img className="" src="/images/webaddicon.svg" alt="" />
           Add Tender
         </button>
       </div>

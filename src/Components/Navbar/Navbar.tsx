@@ -135,7 +135,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
       title === "Edit Profile" ||
       title === "Invoice Details" ? (
         <img
-          src="/images/MobileBackIcon.svg"
+          src="/images/Mobilebackicon.svg"
           className="fixed top-4 left-4 cursor-pointer z-50"
           onClick={() => router.back()}
         />
@@ -152,7 +152,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
         className={`${sidebarClass} duration-300 h-full bg-defaultblack text-defaultwhite sticky below-md:fixed top-0 left-0 z-40 below-md:z-50`}
       >
         <img
-          src="/images/DrawerToggle.svg"
+          src="/images/Drawertoggle.svg"
           className={`absolute cursor-pointer rounded-full -right-[0.7rem] below-md:hidden top-3 opacity-[0.73] ${!open && "rotate-180"}`}
           onClick={() => setOpen(!open)}
         />
@@ -168,7 +168,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
           title === "Edit Profile" ||
           title === "Invoice Details" ? (
             <img
-              src="/images/MobileBackIcon.svg"
+              src="/images/Mobilebackicon.svg"
               className="fixed top-4 left-4 cursor-pointer z-50"
               onClick={() => router.back()}
             />
@@ -240,7 +240,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
         <div
           className={`flex mt-10 gap-4 below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px]  ${open ? "mr-8" : "mr-3 below-md:bg-transparent below-md:shadow-none"} ml-3 rounded-md`}
         >
-          <img src="/images/logout.svg" />
+          <img src="/images/navbarlogouticon.svg" />
           {open && <p className="text-[14px]">Logout</p>}
         </div>
       </div>
