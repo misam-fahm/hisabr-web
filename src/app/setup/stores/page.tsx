@@ -29,7 +29,7 @@ const data: TableRow[] = [
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
-    royalty: "MORTGAGE",
+    royalty: "20%",
   },
   {
     store: "Store 2",
@@ -37,7 +37,7 @@ const data: TableRow[] = [
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
-    royalty: "MORTGAGE",
+    royalty: "40%",
   },
   {
     store: "Store 3",
@@ -45,7 +45,7 @@ const data: TableRow[] = [
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
-    royalty: "MORTGAGE",
+    royalty: "3%",
   },
   {
     store: "13246",
@@ -53,8 +53,7 @@ const data: TableRow[] = [
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
-
-    royalty: "MORTGAGE",
+    royalty: "20%",
   },
   {
     store: "Store 2",
@@ -62,7 +61,7 @@ const data: TableRow[] = [
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
-    royalty: "MORTGAGE",
+    royalty: "40%",
   },
   {
     store: "Store 1",
@@ -70,7 +69,7 @@ const data: TableRow[] = [
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
-    royalty: "MORTGAGE",
+    royalty: "20%",
   },
   {
     store: "Store 2",
@@ -78,7 +77,7 @@ const data: TableRow[] = [
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
-    royalty: "MORTGAGE",
+    royalty: "20%",
   },
   {
     store: "Store 3",
@@ -86,7 +85,7 @@ const data: TableRow[] = [
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
-    royalty: "MORTGAGE",
+    royalty: "20%",
   },
   {
     store: "Store 1",
@@ -94,7 +93,7 @@ const data: TableRow[] = [
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
-    royalty: "MORTGAGE",
+    royalty: "20%",
   },
   {
     store: "Store 2",
@@ -102,7 +101,7 @@ const data: TableRow[] = [
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
-    royalty: "MORTGAGE",
+    royalty: "20%",
   },
   {
     store: "Store 3",
@@ -110,7 +109,7 @@ const data: TableRow[] = [
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
-    royalty: "MORTGAGE",
+    royalty: "30%",
   },
   {
     store: "13246",
@@ -118,7 +117,7 @@ const data: TableRow[] = [
     location: "VatisinVille",
     user: "MORTGAGE",
     county: "10%",
-    royalty: "MORTGAGE",
+    royalty: "20%",
   },
 ];
 
@@ -158,8 +157,8 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     accessorKey: "royalty",
-    header: () => <div className="text-left">Royalty</div>,
-    cell: (info) => <div>{info.getValue() as number}</div>,
+    header: () => <div className="text-left ml-7">Royalty</div>,
+    cell: (info) => <div className=" text-right mr-5">{info.getValue() as number}</div>,
     size: 80,
   },
   {

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import { sendApiRequest } from "@/utils/apiUtils";
-import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, { ToastNotificationProps } from "../UI/ToastNotification/ToastNotification";
 interface Category {
   categoryid: number;
   categoryname: string;
@@ -156,7 +156,7 @@ const AddNewItems = () => {
       <div className="block below-md:hidden">
         <button
           onClick={openModal}
-          className="bg-[#168A6F] hover:bg-[#11735C] text-white w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center"
+          className="bg-[#1AA47D] hover:bg-[#168A68] text-white w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center"
         >
           <img src="/images/plus1.svg" alt="Add icon" />
           Add Item
