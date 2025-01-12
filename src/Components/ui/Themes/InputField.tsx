@@ -43,7 +43,7 @@ export function InputField(props:any): JSX.Element {
 		rightIcon,
 		labelBackgroundColor,
 		borderClassName,
-		required = true,
+		required = false,
 		variant,
 		textColor,
 		ClassName,
