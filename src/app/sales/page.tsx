@@ -249,7 +249,7 @@ const Sales: FC = () => {
         <span className="flex justify-center">
           <button onClick={handleImageClick}>
             <Images
-              src="/images/ViewEyeIcon.svg"
+              src="/images/vieweyeicon.svg"
               alt="Eye Icon"
               className="w-4 h-4"
             />
@@ -478,7 +478,7 @@ const Sales: FC = () => {
                   <div>
                     <img
                       onClick={handleImageClick}
-                      src="/images/ViewEyeIcon.svg"
+                      src="/images/vieweyeicon.svg"
                       className="w-5 h-5"
                     />
                   </div>
@@ -521,7 +521,7 @@ const Sales: FC = () => {
                   <div>
                     <img
                       onClick={handleImageClick}
-                      src="/images/ViewEyeIcon.svg"
+                      src="/images/vieweyeicon.svg"
                       className="w-5 h-5"
                     />
                   </div>
@@ -564,7 +564,7 @@ const Sales: FC = () => {
                   <div>
                     <img
                       onClick={handleImageClick}
-                      src="/images/ViewEyeIcon.svg"
+                      src="/images/vieweyeicon.svg"
                       className="w-5 h-5"
                     />
                   </div>
@@ -607,7 +607,7 @@ const Sales: FC = () => {
                   <div>
                     <img
                       onClick={handleImageClick}
-                      src="/images/ViewEyeIcon.svg"
+                      src="/images/vieweyeicon.svg"
                       className="w-5 h-5"
                     />
                   </div>
