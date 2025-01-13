@@ -183,7 +183,7 @@ const columns: ColumnDef<TableRow>[] = [
     cell: () => (
       <span className="flex justify-center">
         <Images
-          src="/images/ViewEyeIcon.svg"
+          src="/images/vieweyeicon.svg"
           alt="Eye Icon"
           className="w-4 h-4"
         />
@@ -578,7 +578,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/ViewEyeIcon.svg" className="w-5 h-5" />
+                      <img src="/images/vieweyeicon.svg" className="w-5 h-5" />
                     </div>
                   </div>
                 </div>
@@ -606,7 +606,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/ViewEyeIcon.svg" className="w-5 h-5" />
+                      <img src="/images/vieweyeicon.svg" className="w-5 h-5" />
                     </div>
                   </div>
                 </div>
@@ -634,7 +634,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/ViewEyeIcon.svg" className="w-5 h-5" />
+                      <img src="/images/vieweyeicon.svg" className="w-5 h-5" />
                     </div>
                   </div>
                 </div>
@@ -662,7 +662,7 @@ const DetailsPage: React.FC = () => {
                       <span>Gordon</span>
                     </div>
                     <div>
-                      <img src="/images/ViewEyeIcon.svg" className="w-5 h-5" />
+                      <img src="/images/vieweyeicon.svg" className="w-5 h-5" />
                     </div>
                   </div>
                 </div>
