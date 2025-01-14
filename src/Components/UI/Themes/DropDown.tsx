@@ -16,7 +16,7 @@ const Dropdown = ({
 }: {
   options?: any[];
   label?: string;
-  errors?:any;
+  errors?: any;
   selectedOption?: string;
   className?: string;
   shadowclassName?: string;
@@ -25,8 +25,7 @@ const Dropdown = ({
   isOpen: boolean;
   toggleOpen: () => void;
 }) => {
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  
+  const dropdownRef = useRef<HTMLDivElement>(null);  
 
   // Close dropdown on outside click
   useEffect(() => {
