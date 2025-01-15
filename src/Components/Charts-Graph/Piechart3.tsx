@@ -26,7 +26,9 @@ const DonutChart = () => {
             outerRadius="80%"
             dataKey="value"
             startAngle={90}
-            endAngle={450} // Adjust for donut rotation
+            endAngle={450}
+            tabIndex={-1}
+            style={{ outline: "none" }}
           >
             {data.map((entry, index) => (
               <Cell
