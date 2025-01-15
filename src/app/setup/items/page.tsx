@@ -21,127 +21,27 @@ import EditItem from "@/Components/Setup/ItemsPopup/EditItem";
 import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 
 interface TableRow {
-  name: string;
-  category: string;
+  itemname: string;
+  categoryname: string;
   price: number;
   quantity: number;
   weight: string;
+  itemid?: number;
+  categoryid?: number;
 }
 
-// const data: TableRow[] = [
-//   {
-//     name: "Milk Packet",
-//     category: "Dairy",
-//     price: 80,
-//     quantity: 100,
-//     weight: "1 litre",
-//   },
-//   {
-//     name: "Bread Loaf",
-//     category: " Bakery",
-//     price: 100,
-//     quantity: 100,
-//     weight: "300 gm",
-//   },
-//   {
-//     name: "Butter Stick",
-//     category: "Dairy  ",
-//     price: 60,
-//     quantity: 100,
-//     weight: "100 gm",
-//   },
-//   {
-//     name: "Chocolate ",
-//     category: " Bakery",
-//     price: 120,
-//     quantity: 100,
-//     weight: "200 gm",
-//   },
-//   {
-//     name: "Chocolate ",
-//     category: " Bakery",
-//     price: 120,
-//     quantity: 100,
-//     weight: "200 gm",
-//   },
-//   {
-//     name: "Chocolate ",
-//     category: " Bakery",
-//     price: 120,
-//     quantity: 100,
-//     weight: "200 gm",
-//   },
-//   {
-//     name: "Chocolate ",
-//     category: " Bakery",
-//     price: 120,
-//     quantity: 100,
-//     weight: "200 gm",
-//   },
-//   {
-//     name: "Cheese Block",
-//     category: "Dairy",
-//     price: 250,
-//     quantity: 100,
-//     weight: "1 litre",
-//   },
-//   {
-//     name: "Milk Packet",
-//     category: " Bakery",
-//     price: 320,
-//     quantity: 100,
-//     weight: "300 gm",
-//   },
-//   {
-//     name: "Chocolate ",
-//     category: " Bakery",
-//     price: 120,
-//     quantity: 100,
-//     weight: "200 gm",
-//   },
-//   {
-//     name: "Cheese Block",
-//     category: "Dairy",
-//     price: 800,
-//     quantity: 100,
-//     weight: "1 litre",
-//   },
-//   {
-//     name: "Chocolate",
-//     category: " Bakery",
-//     price: 300,
-//     quantity: 100,
-//     weight: "300 gm",
-//   },
-//   {
-//     name: "Cheese Block",
-//     category: "Dairy",
-//     price: 250,
-//     quantity: 100,
-//     weight: "1 litre",
-//   },
-//   {
-//     name: "Milk Packet",
-//     category: " Bakery",
-//     price: 320,
-//     quantity: 100,
-//     weight: "300 gm",
-//   },
-// ];
 
-const columns: ColumnDef<any>[] = [
+const columns: ColumnDef<TableRow>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "itemname",
     header: () => <div className="text-left">Name</div>,
     cell: (info) => <span>{info.getValue() as string}</span>,
-
     size: 160,
   },
   {
-    accessorKey: "category",
+    accessorKey: "categoryname",
     header: () => <div className="text-left">Category</div>,
     cell: (info) => <span>{info.getValue() as string}</span>,
-
     size: 120,
   },
   {
@@ -150,7 +50,6 @@ const columns: ColumnDef<any>[] = [
     cell: (info) => (
       <div className="text-right">{info.getValue() as number}</div>
     ),
-
     size: 100,
   },
   {
@@ -159,7 +58,6 @@ const columns: ColumnDef<any>[] = [
     cell: (info) => (
       <div className="text-right">{info.getValue() as string}</div>
     ),
-
     size: 120,
   },
   {
@@ -168,7 +66,6 @@ const columns: ColumnDef<any>[] = [
     cell: (info) => (
       <div className="text-left ml-14">{info.getValue() as string}</div>
     ),
-
     size: 120,
   },
   {
@@ -179,7 +76,6 @@ const columns: ColumnDef<any>[] = [
         <EditItem />
       </span>
     ),
-
     size: 30,
   },
   {
@@ -190,7 +86,6 @@ const columns: ColumnDef<any>[] = [
         <DeleteItems />
       </span>
     ),
-
     size: 50,
   },
 ];
@@ -238,7 +133,7 @@ const Page: FC = () => {
         });
 
         if (response?.status === 200) {
-          setData(response?.data?.categories || []);
+          setData(response?.data?.items || []);
           response?.data?.total > 0 &&
             setTotalItems(response?.data?.total || 0);
         } else {
@@ -283,15 +178,16 @@ const Page: FC = () => {
             scrollbarWidth: "none", // Hide scrollbar
           }}
         >
-          {table.getRowModel().rows.map((row) => (
+          {data && data?.length > 0 ? (
+            data?.map((row) => (
             <div
-              key={row.id}
+              key={row?.itemid}
               className={`border border-gray-200 p-5 bg-white rounded-lg mb-3`}
             >
               <div className="flex justify-between items-center">
                 {/* Name */}
                 <span className="font-bold text-[14px] text-[#334155]">
-                  {row.getValue("name")}
+                  {row?.itemname}
                 </span>
                 <div className="flex items-center">
                   <>
@@ -312,28 +208,29 @@ const Page: FC = () => {
                 <span className=" text-[#636363] text-[13px] mb-2">
                   Category
                 </span>{" "}
-                <span className="text-[14px]">{row.getValue("category")}</span>
+                <span className="text-[14px]">{row?.categoryname}</span>
               </div>
 
               {/* Price */}
               <div className="mt-1 flex justify-between">
                 <span className=" text-[#636363] text-[13px] mb-2">Price</span>{" "}
-                <span className="text-[14px]">{row.getValue("price")}</span>
+                <span className="text-[14px]">{row?.price}</span>
               </div>
               {/* Quantity */}
               <div className=" mt-1 flex justify-between">
                 <span className=" text-[#636363] text-[13px] mb-2">
                   Quantity
                 </span>{" "}
-                <span className="text-[14px]">{row.getValue("quantity")}</span>
+                <span className="text-[14px]">{row?.quantity}</span>
               </div>
               {/* Weight */}
               <div className=" mt-1 flex justify-between">
                 <span className=" text-[#636363] text-[13px] mb-2">Weight</span>{" "}
-                <span className="text-[14px]">{row.getValue("weight")}</span>
+                <span className="text-[14px]">{row?.weight}</span>
               </div>
             </div>
-          ))}
+          ))) : (
+            <div>No data available</div>)}
           {/* Add NewItems bottom */}
           <div className=" fixed bottom-[20px] below-lg:hidden right-3">
             <AddNewItems />
@@ -391,16 +288,17 @@ const Page: FC = () => {
                           ))}
                         </tr>
                       ))
-                    : table.getRowModel().rows.map((row) => (
+                    : data && data.length > 0 ? (
+                      table.getRowModel().rows.map((row) => (
                         <tr
-                          key={row.id}
+                          key={row?.id}
                           className={
                             row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
                           }
                         >
                           {row.getVisibleCells().map((cell) => (
                             <td
-                              key={cell.id}
+                              key={cell?.id}
                               className="px-4 py-1.5 text-[#636363] text-[14px]"
                               style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
                             >
@@ -411,7 +309,12 @@ const Page: FC = () => {
                             </td>
                           ))}
                         </tr>
-                      ))}
+                      ))
+                    ) : (
+                      <tr>
+                        <td>No data available</td>
+                      </tr>
+                    )}
                 </tbody>
               </table>
             </div>
@@ -427,7 +330,7 @@ const Page: FC = () => {
             </span>
           </div> */}
 
-        <Pagination table={table} totalItems={0} />
+        <Pagination table={table} totalItems={totalItems} />
       </div>
     </main>
   );

@@ -55,7 +55,7 @@ const EditStore = () => {
       <div>
         <button onClick={openModal}>
           <img
-            src="/images/EditPencilIcon.svg"
+            src="/images/editpencilicon.svg"
             alt="Add icon"
             className="flex justify-center items-center  w-4 h-4 below-md:w-5 below-md:h-5"
           />
@@ -75,7 +75,7 @@ const EditStore = () => {
             <div className="relative">
               <img
                 onClick={closeModal}
-                src="/images/CancelIcon.svg"
+                src="/images/cancelicon.svg"
                 alt="Cancel"
                 className="absolute top-0 right-0 cursor-pointer"
               />

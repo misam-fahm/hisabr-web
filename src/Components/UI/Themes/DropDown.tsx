@@ -13,14 +13,14 @@ const Dropdown = ({
   toggleOpen,
   errors,
 }: {
+  options?: any[];
   label?: string;
   errors?: any;
-  options: string[];
   selectedOption?: string;
   className?: string;
   shadowclassName?: string;
   widthchange?: string;
-  onSelect: (option: string) => void;
+  onSelect: (option: any) => void;
   isOpen: boolean;
   toggleOpen: () => void;
 }) => {
@@ -70,7 +70,8 @@ const Dropdown = ({
           widthchange || "below-md:w-[100%] below-lg:w-full"
         } rounded flex items-center justify-between below-md:w-full text-[12px] border focus:outline-none`}
       >
-        <span>{selectedOption || "Year"}</span>
+        <span>{selectedOption}</span>
+
         <img
           src="/images/dropdown1.svg"
           className={`-mr-0.5 transition-transform duration-200 ${
@@ -87,19 +88,21 @@ const Dropdown = ({
           } shadow`}
           style={{ zIndex: 50 }}
         >
-          {options?.map((option, index) => (
-            <div
-              key={index}
-              onClick={(e) => {
-                e.stopPropagation(); // Prevent dialog close
-                onSelect(option);
-              }}
-              // onClick={() => onSelect(option)}
-              className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-            >
-              {option}
-            </div>
-          ))}
+          {options &&
+            options.length > 0 &&
+            options?.map((option) => (
+              <div
+                key={option?.id}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent dialog close
+                  onSelect(option);
+                }}
+                // onClick={() => onSelect(option)}
+                className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
+              >
+                {option?.name}
+              </div>
+            ))}
         </div>
       )}
       {errors && errors?.message && (

@@ -22,6 +22,7 @@ interface TableRow {
   categoryname: string;
   description: string;
   itemcount: number;
+  categoryid?: number;
 }
 
 const columns: ColumnDef<TableRow>[] = [
