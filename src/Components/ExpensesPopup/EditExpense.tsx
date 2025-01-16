@@ -23,7 +23,7 @@ type EditExpensesProps = {
 };
 
 
-const EditExpense = ({ initialData }: EditExpensesProps) => {
+const EditExpense = ({ initialData ,onSubmit}: EditExpensesProps) => {
   const methods = useForm<ExpenseFormInputs>({
     defaultValues: initialData, // Prepopulate form with existing data
   });
@@ -42,9 +42,9 @@ const EditExpense = ({ initialData }: EditExpensesProps) => {
     methods.setValue("amount", data);
   };
 
-  const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
-  };
+  // const onSubmit = (data: any) => {
+  //   console.log("Form Data:", data);
+  // };
   // const {
   //   control,
   //   handleSubmit,
