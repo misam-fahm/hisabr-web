@@ -78,14 +78,6 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
   const expenseTypes = ["Travel", "Food", "Accommodation", "Miscellaneous"];
   const selectedExpense = watch("expenseType"); // Watch the "store" field for changes
 
-
-
-
-
-
-
-
-
   return (
     <>
       <div>
@@ -127,7 +119,7 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
               <form
                 onSubmit={methods.handleSubmit(onSubmit)}
               >
-                <div className="flex flex-col h-full mt-4 gap-7">
+                <div className="flex flex-col h-full mt-4 gap-6">
                   {/* Store Input Field */}
                   <Dropdown
                   options={storeOptions}

@@ -13,7 +13,6 @@ const DateRangePicker = ({ widthchang,}: { widthchang?: string }) => {
     undefined
   );
   const pickerRef = useRef<HTMLDivElement>(null);
-
   const handleClickIcon = () => setIsOpen((prev) => !prev);
 
   useEffect(() => {

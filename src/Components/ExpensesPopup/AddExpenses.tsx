@@ -130,7 +130,7 @@ const AddExpenses = () => {
               <form
                 onSubmit={methods.handleSubmit(onSubmit)}
               >
-                <div className="flex flex-col h-full mt-4 gap-7">
+                <div className="flex flex-col h-full mt-4 gap-6">
 
                   {/* Store Input Field */}
                   <Dropdown
@@ -167,7 +167,7 @@ const AddExpenses = () => {
                   />
 
                   {/* Date input field */}
-                  <Controller
+                  {/* <Controller
                     name="date"
                     control={control}
                     rules={{ required: "Date is required" }}
@@ -181,15 +181,15 @@ const AddExpenses = () => {
                   />
                   {errors.date && (
                     <p className="text-red-500 text-sm mt-1">{errors.date.message}</p>
-                  )}
-                  {/* <CalendarRangePicker
+                  )} */}
+                  <CustomDatePicker
                        value={methods.watch("date")}
                        onChange={(date) =>
                        methods.setValue("date", date, { shouldValidate: true })
                      }
                        placeholder="Date"
                        errors={methods.formState.errors.date?.message}
-                      /> */}
+                      />
                   {/* Description field */}
                   <InputField
                     type="text"

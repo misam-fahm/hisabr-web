@@ -294,15 +294,15 @@ const Expenses: FC = () => {
           {formattedData.map((card, index) => (
             <div
               key={index}
-              className="flex flex-col w-full rounded bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3"
+              className="flex flex-col w-full rounded-lg bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3"
             >
               <div className="flex justify-between items-start">
-                <div className="flex gap-4 px-3 py-4">
+                <div className="flex gap-4 px-4 py-4 text-[#334155]">
                   <p className="text-[14px] font-bold">{card.date}</p>
                   <p className="text-[14px] font-bold">{card.type}</p>
                 </div>
 
-                <div className="flex gap-4 mb-1 px-3 py-4">
+                <div className="flex gap-5 mb-1 px-4 py-4">
                   <>
                     <EditExpense initialData={existingExpense}
                       onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
@@ -312,11 +312,11 @@ const Expenses: FC = () => {
                 </div>
               </div>
               {/* Divider */}
-              <div className="flex items-center px-3 -mt-4">
+              <div className="flex items-center px-4 -mt-4">
                 <div className="border-t border-gray-200 w-full"></div>
               </div>
               {/* Content Area */}
-              <div className="flex justify-between items-center px-3 py-4">
+              <div className="flex justify-between items-center px-4 py-3">
                 <div className="flex flex-col text-[13px] space-y-3">
                   <p className="text-[#636363]">Store</p>
                   <p className="text-[#636363]">Amount</p>
@@ -339,7 +339,7 @@ const Expenses: FC = () => {
         {/*Web View :  Expenses Table */}
         <div className="overflow-x-auto shadow-sm border-collapse border border-b border-[#E4E4EF] rounded-md  flex-grow flex flex-col below-md:hidden">
           <div className="overflow-hidden max-w-full rounded-md">
-            <table className="w-full border-collapse text-[12px] text-white table-fixed rounded-md">
+            <table className="w-full border-collapse text-white table-fixed rounded-md">
               <thead className="bg-[#334155] top-0 z-10">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
