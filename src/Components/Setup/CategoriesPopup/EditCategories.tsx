@@ -37,7 +37,7 @@ const EditCategories = ({ rowData }: { rowData: any }) => {
       <div>
         <Button onClick={openModal}>
           <img
-            src="/images/EditPencilIcon.svg"
+            src="/images/editpencilicon.svg"
             alt="Edit icon"
             className="w-4 h-4 below-md:w-5 below-md:h-5"
           />
