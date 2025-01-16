@@ -156,7 +156,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
         className={`${sidebarClass} duration-300 h-full bg-[#0F1044] text-defaultwhite sticky below-md:fixed top-0 left-0 z-40 below-md:z-50`}
       >
         <img
-          src="/images/drawertoggle.svg"
+          src="/images/DrawerToggle.svg"
           className={`absolute cursor-pointer rounded-full -right-[0.8rem] below-md:hidden top-3 opacity-[0.73] ${!open && "rotate-180"}`}
           onClick={() => setOpen(!open)}
         />
