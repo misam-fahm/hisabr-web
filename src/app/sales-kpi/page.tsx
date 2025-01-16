@@ -105,20 +105,13 @@ const SalesKPI: FC = () => {
           </div>
 
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
-            <div>
+            <div className="w-[75%]">
               <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold  2xl:block hidden">
+              <p className="text-[12px] text-[#388E3C] font-semibold ">
                 65.2%{" "}
                 <span className="text-[#575F6D] font-medium ">
                   of total revenue achieved
-                </span>
-              </p>
-              <p className="text-[12px] text-[#388E3C] font-semibold 2xl:hidden">
-                65.2%{" "}
-                <span className="text-[#575F6D] font-medium ">
-                  of total
-                  <br /> revenue achieved
                 </span>
               </p>
             </div>
@@ -128,21 +121,15 @@ const SalesKPI: FC = () => {
           </div>
 
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
-            <div>
+            <div className="w-[75%]">
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Customer Count
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold 2xl:block hidden">
+              <p className="text-[12px] text-[#388E3C] font-semibold">
                 40%{" "}
                 <span className="text-[#575F6D] font-medium">
                   increase compare to last year
-                </span>
-              </p>
-              <p className="text-[12px] text-[#388E3C] font-semibold 2xl:hidden">
-                40%{" "}
-                <span className="text-[#575F6D] font-medium">
-                  increase compare <br /> to last year
                 </span>
               </p>
             </div>

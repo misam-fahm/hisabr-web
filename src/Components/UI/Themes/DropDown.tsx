@@ -1,5 +1,4 @@
-import React, { useRef, useEffect,useState } from "react";
-import { FieldError, FieldErrorsImpl, FieldValues, Merge, useFormContext} from "react-hook-form";
+import React, { useRef, useEffect } from "react";
 
 // Dropdown Component
 const Dropdown = ({
@@ -25,7 +24,7 @@ const Dropdown = ({
   isOpen: boolean;
   toggleOpen: () => void;
 }) => {
-  const dropdownRef = useRef<HTMLDivElement>(null);  
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -48,7 +47,7 @@ const Dropdown = ({
 
   return (
     <div
-     
+      ref={dropdownRef}
       className={`${className || "relative below-md:w-full"} ${widthchange || "below-md:w-[100%] below-lg:w-[260px] tablet:w-full"}`}
     >
       <p
@@ -72,6 +71,7 @@ const Dropdown = ({
         } rounded flex items-center justify-between below-md:w-full text-[12px] border focus:outline-none`}
       >
         <span>{selectedOption}</span>
+
         <img
           src="/images/dropdown1.svg"
           className={`-mr-0.5 transition-transform duration-200 ${
@@ -88,26 +88,28 @@ const Dropdown = ({
           } shadow`}
           style={{ zIndex: 50 }}
         >
-          {options && options.length > 0 && options?.map((option) => (
-            <div
-              key={option?.id}
-              onClick={(e) => {
-                e.stopPropagation(); // Prevent dialog close
-                onSelect(option);
-              }}
-              // onClick={() => onSelect(option)}
-              className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
-            >
-              {option?.name}
-            </div>
-          ))}
+          {options &&
+            options.length > 0 &&
+            options?.map((option) => (
+              <div
+                key={option?.id}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent dialog close
+                  onSelect(option);
+                }}
+                // onClick={() => onSelect(option)}
+                className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
+              >
+                {option?.name}
+              </div>
+            ))}
         </div>
       )}
       {errors && errors?.message && (
-				<p className="mt-1  absolute text-[10px] top-[2.30rem] z-10 text-red-600">
-					{errors?.message as string}
-				</p>
-			)}
+        <p className="mt-1  absolute text-[10px] top-[2.30rem] z-10 text-red-600">
+          {errors?.message as string}
+        </p>
+      )}
     </div>
   );
 };

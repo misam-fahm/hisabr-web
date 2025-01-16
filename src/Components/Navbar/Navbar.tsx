@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { ReactNode, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Images from "../UI/Themes/Image";
+import clsx from "clsx";
 
 interface DrawerProps {
   children: ReactNode;
@@ -99,7 +100,10 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
     }
   };
 
-  const sidebarClass = open ? "w-[230px]" : "w-[70px] below-md:w-0";
+  const sidebarClass = clsx({
+    "w-[230px]": open,
+    "w-[85px] below-md:w-0": !open,
+  });
 
   const pathsToHideHamburger = [
     "/sales/sales_view",
@@ -182,10 +186,10 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
             )
           )}
         </div>
-        <div className="max-h-[calc(100vh-160px)] py-4 overflow-auto scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent ">
-          <ul className="">
+        <div className="max-h-[calc(100vh-160px)] py-4 overflow-auto scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent">
+          <ul>
             {Menus.map((menu: any, index) => (
-              <React.Fragment key={index}>
+              <div key={index}>
                 {/* Main Menu Item */}
                 <li
                   onClick={() =>
@@ -193,55 +197,39 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
                       ? setSetupOpen(!setupOpen)
                       : handleNavigation(menu.path!)
                   }
-                  className={`text-defaultwhite flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#EEEEEE1A] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] mr-5 rounded-tr-full rounded-br-full 
-                ${currentPath === menu.path ? "bg-[#EEEEEE1A] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]" : ""} 
-                ${menu?.gap ? "mt-11" : "mt-1"} 
-                ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""} 
-                ${menu.title === "SETUP" ? "border border-[#B8BCC3B2] cursor-auto w-20 ml-5 hover:bg-none hover:shadow-none rounded-tl-full rounded-bl-full py-1 text-[#B8BCC3B2] text-[10px]" : ""}`}
+                  className={`text-[#FFFFFFCC] text-[14px] flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#A9A5CA33] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] mr-5 rounded-tr-full rounded-br-full
+            ${currentPath === menu.path ? " bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]" : ""}
+            ${menu?.gap ? "mt-11" : "mt-1 "}
+            ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""}
+            ${
+              menu.title === "SETUP"
+                ? `border border-[#B8BCC3B2] cursor-default pointer-events-none w-14 h-6 ml-5 pl-[13px] hover:bg-transparent hover:shadow-none rounded-tl-full rounded-bl-full py-1 !text-[#B8BCC3B2] text-[9px] 
+              ${!open ? "ml-[7px]" : ""}`
+                : ""
+            }`}
                 >
                   {/* Only render the image if the menu is not "Setup" */}
                   {menu.title !== "SETUP" && (
                     <img src={`/images/${menu.src}.svg`} />
                   )}
+
+                  {/* Show the "SETUP" title even when drawer is closed */}
                   <span
-                    className={`${!open && "hidden"} origin-left duration-200`}
+                    className={`${!open && menu.title !== "SETUP" ? "hidden" : ""} origin-left duration-200`}
                   >
                     {menu.title}
                   </span>
                 </li>
-
-                {/* Submenu Items */}
-                {menu.submenus && setupOpen && open && (
-                  <ul className="relative ml-8 mt-2 pr-9">
-                    <div className="absolute top-0 w-0.5 h-full opacity-50"></div>
-                    {menu.submenus.map((submenu: any, subIndex: any) => (
-                      <li
-                        key={subIndex}
-                        onClick={() =>
-                          handleNavigation(submenu.path, submenu.title)
-                        }
-                        className={`flex items-center gap-x-2 text-[14px] cursor-pointer px-4 py-2 rounded-tr-full rounded-br-full hover:bg-[#A9A5CA33] ${
-                          activeSubmenu === submenu.title
-                            ? "bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]"
-                            : "bg-transparent"
-                        }`}
-                        style={{ marginBottom: "3px" }}
-                      >
-                        <span>{submenu.title}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </React.Fragment>
+              </div>
             ))}
           </ul>
         </div>
 
         <div
-          className={`flex mt-10 gap-4 below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px]  ${open ? "mr-8" : "mr-3 below-md:bg-transparent below-md:shadow-none"} ml-3 rounded-md`}
+          className={`flex mt-10 gap-4 below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px]  ${open ? "mr-8" : "mr-7 below-md:bg-transparent below-md:shadow-none"} ml-3 rounded-md`}
         >
           <img src="/images/logout.svg" />
-          {open && <p className="text-[14px]">Logout</p>}
+          {open && <p className="text-[14px] text-[#FFFFFFCC]">Logout</p>}
         </div>
       </div>
     </main>

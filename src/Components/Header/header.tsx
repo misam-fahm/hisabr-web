@@ -11,6 +11,7 @@ const Header: React.FC = () => {
   const currentPath = usePathname();
   const [isClient, setIsClient] = useState(false);
   const [title, setTitle] = useState("");
+  const [isRotated, setIsRotated] = useState(false);
 
   useEffect(() => {
     setIsClient(true); // Ensuring we are on the client side
@@ -99,7 +100,8 @@ const Header: React.FC = () => {
   }, [isClient, currentPath]);
 
   const handleToggle = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
+    setIsRotated((prev) => !prev);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -108,13 +110,8 @@ const Header: React.FC = () => {
       !dropdownRef.current.contains(event.target as Node)
     ) {
       setIsOpen(false);
+      setIsRotated(false);
     }
-  };
-
-  const [isRotated, setIsRotated] = useState(false);
-
-  const handleRotate = () => {
-    setIsRotated(!isRotated);
   };
 
   // Close dropdown on outside click
@@ -146,12 +143,12 @@ const Header: React.FC = () => {
           </div>
 
           <div
-            className="ml-8 mr-4 cursor-pointer below-md:hidden"
+            className="ml-8 mr-4 cursor-pointer below-md:hidden relative"
             ref={dropdownRef}
           >
             <p
               onClick={handleToggle}
-              className="w-10 h-10 flex items-center justify-center"
+              className="w-10 h-10 flex items-center justify-center "
             >
               <img
                 src="/images/ProfileDropdown.svg"
@@ -159,14 +156,13 @@ const Header: React.FC = () => {
                 className={`transition-transform duration-300 ${
                   isRotated ? "rotate-180" : "rotate-0"
                 }`}
-                onClick={handleRotate}
               />
             </p>
 
             {/* Dropdown Menu */}
             {isOpen && (
               <div className="absolute right-0 mt-3 mr-2 pl-4 w-52 bg-white shadow-lg rounded-lg">
-                <ul className="py-2">
+                <ul className="py-2 ">
                   <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
                     <img
                       src="/images/Profile.svg"
