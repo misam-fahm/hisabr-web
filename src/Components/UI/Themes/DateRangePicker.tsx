@@ -13,7 +13,6 @@ const DateRangePicker = ({ widthchang,}: { widthchang?: string }) => {
     undefined
   );
   const pickerRef = useRef<HTMLDivElement>(null);
-
   const handleClickIcon = () => setIsOpen((prev) => !prev);
 
   useEffect(() => {
@@ -44,7 +43,7 @@ const DateRangePicker = ({ widthchang,}: { widthchang?: string }) => {
       <div
         onClick={handleClickIcon}
         className={`flex items-center justify-between rounded below-md:h-[38px] h-[35px] border bg-white cursor-pointer shadow ${
-          widthchang ? "" : "below-lg:w-[260px] below-md:w-full w-full"
+          widthchang ? "" : "below-md:w-full w-full"
         }`}
       >
         <span className="text-[#636363] text-[12px] px-3">
@@ -83,7 +82,7 @@ const DateRangePicker = ({ widthchang,}: { widthchang?: string }) => {
             {startDate && endDate ? (
               <>
                 {/* "From" Box */}
-                <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 h-9 w-[30%] text-[10px] rounded-xl flex items-center justify-center">
+                <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 h-9 w-[30%] text-[11px] rounded-xl flex items-center justify-center">
                   <span className="absolute -top-[10px] left-[30%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
                     From
                   </span>
@@ -93,7 +92,7 @@ const DateRangePicker = ({ widthchang,}: { widthchang?: string }) => {
                 </div>
 
                 {/* "To" Box */}
-                <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 h-9 w-[30%] text-[10px] rounded-xl flex items-center justify-center">
+                <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 h-9 w-[30%] text-[11px] rounded-xl flex items-center justify-center">
                   <span className="absolute -top-[10px] left-[30%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
                     To
                   </span>
@@ -114,7 +113,7 @@ const DateRangePicker = ({ widthchang,}: { widthchang?: string }) => {
 
             <div>
               <button
-                className="bg-[#334155] mt-4 text-white px-4 py-2 w-[100%] text-[14px] font-medium rounded-xl"
+                className="bg-[#334155] mt-4 text-white px-4 py-2 w-[100%] text-[12px] font-normal rounded-xl"
                 onClick={() => setIsOpen(false)}
               >
                 Set Date

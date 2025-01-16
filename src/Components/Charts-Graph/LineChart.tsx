@@ -39,7 +39,7 @@ const LineChart: FC = () => {
     const blue = new Image();
     blue.src = "/images/blue.svg";
     const green = new Image();
-    green.src = "/images/green_dot.svg";
+    green.src = "/images/greendot.svg";
 
     // Set the images to state after loading
     blue.onload = () => setBlueMarker(blue);

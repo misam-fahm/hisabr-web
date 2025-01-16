@@ -221,19 +221,20 @@ const Expenses: FC = () => {
               <DateRangePicker />
             </div>
 
-            <div className="flex shadow text-[12px] relative below-md:flex-row below-md:gap-4 bg-[#ffff] items-center  rounded w-full below-md:w-full  below-md:text-[11px]">
+            <div className="flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
               <input
+                type="search"
                 value={globalFilter ?? ""}
                 onChange={(e) => setGlobalFilter(e.target.value)}
+                ref={searchInputRef}
                 placeholder="Search"
-                className=" py-[10px] px-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                className="w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none"
+              ></input>
+              <img
+                className="pr-2 cursor-pointer items-center"
+                src="/images/searchicon.svg"
+                onClick={handleClick}
               />
-              <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                <img
-                  className="cursor-pointer items-center"
-                  src="/images/searchicon.svg"
-                />
-              </div>
             </div>
           </div>
           <div className="block pl-24 below-md:hidden">
@@ -246,7 +247,7 @@ const Expenses: FC = () => {
           {data?.map((card, index) => (
             <div
               key={index}
-              className="flex flex-col w-full rounded bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3"
+              className="flex flex-col w-full rounded-lg bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3"
             >
               <div className="flex justify-between items-start">
                 <div className="flex gap-4 px-3 py-4">
@@ -254,7 +255,7 @@ const Expenses: FC = () => {
                   <p className="text-[14px] font-bold">{card.expensename}</p>
                 </div>
 
-                <div className="flex gap-4 mb-1 px-3 py-4">
+                <div className="flex gap-5 mb-1 px-4 py-4">
                   <>
                     <EditExpense initialData={card}
                       onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
@@ -264,11 +265,11 @@ const Expenses: FC = () => {
                 </div>
               </div>
               {/* Divider */}
-              <div className="flex items-center px-3 -mt-4">
+              <div className="flex items-center px-4 -mt-4">
                 <div className="border-t border-gray-200 w-full"></div>
               </div>
               {/* Content Area */}
-              <div className="flex justify-between items-center px-3 py-4">
+              <div className="flex justify-between items-center px-4 py-3">
                 <div className="flex flex-col text-[13px] space-y-3">
                   <p className="text-[#636363]">Store</p>
                   <p className="text-[#636363]">Amount</p>
@@ -291,7 +292,7 @@ const Expenses: FC = () => {
         {/*Web View :  Expenses Table */}
         <div className="overflow-x-auto shadow-sm border-collapse border border-b border-[#E4E4EF] rounded-md  flex-grow flex flex-col below-md:hidden">
           <div className="overflow-hidden max-w-full rounded-md">
-            <table className="w-full border-collapse text-[12px] text-white table-fixed rounded-md">
+            <table className="w-full border-collapse text-white table-fixed rounded-md">
               <thead className="bg-[#334155] top-0 z-10">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
@@ -357,7 +358,7 @@ const Expenses: FC = () => {
                   ))}
                 </tbody>
               </table>
-            </div>
+              </div>
           </div>
         </div>
         {/* Pagination Numbers */}

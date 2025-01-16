@@ -48,7 +48,7 @@ const DeleteItems = () => {
       <Button>
         <img
           onClick={openModal}
-          src="/images/DeleteBinIcon.svg"
+          src="/images/deletebinicon.svg"
           alt="Add icon"
           className="flex justify-center below-md:ml-5  w-4 h-4 below-md:w-5 below-md:h-5"
         />

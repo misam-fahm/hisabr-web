@@ -110,7 +110,7 @@
 //           className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[56px] h-[56px] rounded-lg relative"
 //         >
 //           <img
-//             src="/images/WebAddIcon.svg"
+//             src="/images/webaddicon.svg"
 //             alt="Add Button"
 //             className="w-[18px]"
 //           />
@@ -350,7 +350,7 @@ const EditItems = () => {
       <div>
         <button onClick={openModal}>
           <img
-            src="/images/EditPencilIcon.svg"
+            src="/images/editpencilicon.svg"
             alt="Add icon"
             className="flex justify-center items-center  w-4 h-4 below-md:w-5 below-md:h-5"
           />
