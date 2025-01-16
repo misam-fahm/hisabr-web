@@ -1,12 +1,14 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
 import { InputField } from "../UI/Themes/InputField";
 import CustomDatePicker from "../UI/Themes/CustomDatePicker";
+import { sendApiRequest } from "@/utils/apiUtils";
+import { ToastNotificationProps } from "../UI/ToastNotification/ToastNotification";
 
 type ExpenseFormInputs = {
   expenseName: string;
@@ -16,32 +18,37 @@ type ExpenseFormInputs = {
 
 
 const AddExpenses = () => {
+
   const methods = useForm();
   const { setValue, watch } = methods;
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
-  const handleChange = (data: any) => {
-    setDescription(data); // Update local state
-    methods.setValue("description", data); // Update form state in react-hook-form
-  };
-  const handleChangeAmount = (data: any) => {
-    setAmount(data);
-    methods.setValue("amount", data);
-  };
-  const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
-  };
-  const {
-    control,
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm<ExpenseFormInputs>(); // Initialize React Hook Form
+  const {control,handleSubmit,register,formState: { errors },} = useForm<ExpenseFormInputs>(); 
   const [isOpen, setIsOpen] = useState(false);
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
-  //tooltip for mobile
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [isExpenseDropdownOpen, setIsExpenseDropdownOpen] = useState(false); 
+  const selectedStore = watch("store"); 
+  const selectedExpense = watch("expenseType"); 
+  // const [isStoreFetched, setIsStoreFetched] = useState(false);
+  // const [isExpenseFetched, setIsExpenseFetched] = useState(false);
+  const [expensetypes, setExpensetypes] = useState<any[]>([]);
+  const [store, setStore] = useState<any[]>([]);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+    setIsExpenseDropdownOpen(false);
+  };
+  const toggleExpenseDropdown = () => {
+    setIsExpenseDropdownOpen((prev) => !prev);
+    setIsStoreDropdownOpen(false); 
+  };
+
+
   const handlePressStart = () => {
     setShowTooltip(true);
     setTimeout(() => {
@@ -51,21 +58,79 @@ const AddExpenses = () => {
   const handlePressEnd = () => {
     setShowTooltip(false);
   };
-  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [isExpenseDropdownOpen, setIsExpenseDropdownOpen] = useState(false);
-  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const toggleDropdown1 = () => {
-    setIsStoreDropdownOpen((prev) => !prev);
-    setIsExpenseDropdownOpen(false); // Close the other dropdown
-  };
-  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
-  const selectedStore = watch("store"); // Watch the "store" field for changes
-  const toggleExpenseDropdown = () => {
-    setIsExpenseDropdownOpen((prev) => !prev);
-    setIsStoreDropdownOpen(false); // Close the other dropdown
-  };
-  const expenseTypes = ["Travel", "Food", "Accommodation", "Miscellaneous"];
-  const selectedExpense = watch("Expense Type"); // Watch the "store" field for changes
+ 
+    const handleChange = (data: any) => {
+      setDescription(data);
+      methods.setValue("description", data); 
+    };
+
+    const handleChangeAmount = (data: any) => {
+      setAmount(data);
+      methods.setValue("amount", data);
+    };
+   
+    const openModal = async () => {
+      setIsOpen(true);
+  
+   
+        try {
+          const response: any = await sendApiRequest({ mode: "getallstores" });
+          if (response?.status === 200) {
+            setStore(response?.data?.stores || []);
+            // setIsStoreFetched(true);
+          } else {
+            setCustomToast({
+              ...customToast,
+              message: response?.message,
+              type: "error",
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching stores:", error);
+        }
+      
+  
+     
+        try {
+          const response: any = await sendApiRequest({ mode: "getallexpensetypes" });
+          if (response?.status === 200) {
+            setExpensetypes(response?.data?.expensetypes || []);
+            // setIsExpenseFetched(true); 
+          } else {
+            setCustomToast({
+              ...customToast,
+              message: response?.message,
+              type: "error",
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching expense types:", error);
+        }
+      
+    };
+    const closeModal = () => setIsOpen(false);
+
+    const storeList = store.map((item: any) => item.name) ||   ["Store 1", "Store 2"];
+    const expenseTypesList =
+      expensetypes.map((item: any) => item.name) || [
+        "Travel",
+        "Food",
+        "Accommodation",
+        "Miscellaneous",
+      ];
+
+    const onSubmit = (data: any) => {
+      const selectedStoreId = store.find((item) => item.name === data.store)?.id;
+      const selectedExpenseTypeId = expensetypes.find((item) => item.name === data.expenseType)?.id;
+
+      const payload = {
+        ...data,
+        store: selectedStoreId,
+        expenseType: selectedExpenseTypeId,
+      };
+  
+      console.log("Form Data with IDs:", payload);
+    };
 
   return (
     <>
@@ -134,7 +199,7 @@ const AddExpenses = () => {
 
                   {/* Store Input Field */}
                   <Dropdown
-                    options={options}
+                    options={storeList}
                     selectedOption={selectedStore || "Store"} // Watch the selected value
                     onSelect={(selectedOption) => {
                       setValue("store", selectedOption); // Update the form value
@@ -142,7 +207,7 @@ const AddExpenses = () => {
 
                     }}
                     isOpen={isStoreDropdownOpen}
-                    toggleOpen={toggleDropdown1}
+                    toggleOpen={toggleStoreDropdown}
                     widthchange="w-full"
                     {...methods.register("store", {
                       required: "Store Selection is required",
@@ -151,7 +216,7 @@ const AddExpenses = () => {
                   />
                   {/* Expense Type Input Field */}
                   <Dropdown
-                    options={expenseTypes}
+                    options={expenseTypesList}
                     selectedOption={selectedExpense || "Expense Type"} // Watch the selected value
                     onSelect={(selectedOption) => {
                       setValue("expenseType", selectedOption); // Update the form value

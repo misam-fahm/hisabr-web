@@ -16,7 +16,7 @@ const Dropdown = ({
 }: {
   label?: string;
   errors?:any;
-  options: string[];
+  options: any;
   selectedOption?: string;
   className?: string;
   shadowclassName?: string;
@@ -85,7 +85,7 @@ const Dropdown = ({
       {/* Dropdown Menu */}
       {isOpen && (
         <div
-          className={`absolute left-0 w-full mt-1 bg-[#ffffff] text-[#4B4B4B] text-[12px] border rounded ${
+          className={`absolute left-0 w-full mt-1 bg-[#ffffff] h-[200px] overflow-auto scrollbar-thin text-[#4B4B4B] text-[12px] border rounded ${
             shadowclassName ? shadowclassName : "shadow"
           } shadow`}
           style={{ zIndex: 50 }}
