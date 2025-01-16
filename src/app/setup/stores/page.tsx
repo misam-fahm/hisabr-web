@@ -46,7 +46,18 @@ const Page: FC = () => {
     {
       accessorKey: "date",
       header: () => <div className="text-left">Date</div>,
-      cell: (info) => <span>{format(info.row.original.createdate , "MM-dd-yyyy")}</span>,
+      cell: (info) => {
+        const rawDate = info.row.original.createdate;
+        const validDate = rawDate ? new Date(rawDate) : null;
+      
+        return (
+          <span>
+            {validDate && !isNaN(validDate.getTime())
+              ? format(validDate, "MM-dd-yyyy")
+              : ""}
+          </span>
+        );
+      },
       size: 100,
     },
   
