@@ -188,7 +188,7 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     id: "view",
-    header: () => <div className="text-left">View</div>,
+    header: () => <div className="text-left"></div>,
     cell: () => (
       <button
         onClick={() => (window.location.href = "/invoices/invoicedetails")}
@@ -379,21 +379,21 @@ const Invoices = () => {
         </div>
       </div>
       {/* Mobile View : Card section */}
-      <div className="block md:hidden">
+      <div className="block md:hidden mb-16">
         {cardData.map((card, index) => (
           <div
             key={index}
-            className="flex flex-col w-full  rounded-md bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3"
+            className="flex flex-col w-full  rounded-lg bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3"
           >
             <div className="flex justify-between items-start">
-              <div className="flex gap-4 px-3 py-4">
+              <div className="flex gap-4 px-4 py-4 text-[#334155]">
                 <p className="text-[14px] font-bold">{card.date}</p>
                 <p className="text-[14px] font-bold">{card.name}</p>
               </div>
 
-              <div className="flex gap-4 mb-1 px-3 py-4">
+              <div className="flex px-4 py-4">
                 <button
-                  onClick={() => (window.location.href = "/invoicedetails")}
+                  onClick={() => (window.location.href = "/invoices/invoicedetails")}
                   className="text-green-500 hover:text-green-700"
                 >
                   <img
@@ -404,12 +404,12 @@ const Invoices = () => {
               </div>
             </div>
             {/* Divider */}
-            <div className="flex items-center px-3 -mt-4">
+            <div className="flex items-center px-4 -mt-2">
               <div className="border-t border-gray-200 w-full"></div>
             </div>
 
             {/* Content Area */}
-            <div className="flex justify-between items-center px-3 py-4">
+            <div className="flex justify-between items-center px-4 py-3">
               <div className="flex flex-col text-[13px] space-y-3">
                 <p className="text-[#636363]">Store</p>
                 <p className="text-[#636363]">quantity</p>
