@@ -65,14 +65,14 @@ const Header: React.FC = () => {
         case "setup/configuration":
           newTitle = "Configuration";
           break;
-        case "details1":
-          newTitle = "Gross Revenue Analysis";
+        case "grossrevenue":
+          newTitle = "Gross Revenue";
           break;
         case "details2":
           newTitle = " Tender Analysis";
           break;
-        case "details4":
-          newTitle = "Customer Count Analysis";
+        case "customercount":
+          newTitle = "Customer Count";
           break;
         case "details5":
           newTitle = "Operating Expense Analysis";
