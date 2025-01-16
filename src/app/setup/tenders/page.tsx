@@ -188,7 +188,7 @@ const Page: FC = () => {
         >
           <img
             onClick={handleBack}
-            src="/images/WebBackIcon.svg"
+            src="/images/webbackicon.svg"
             alt="Back Arrow"
             className="w-7 h-7"
           />

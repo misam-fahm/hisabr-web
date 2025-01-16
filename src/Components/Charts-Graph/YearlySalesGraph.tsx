@@ -29,7 +29,9 @@ const DonutChart = () => {
             outerRadius="80%"
             dataKey="value"
             startAngle={90}
-            endAngle={450} // Adjust for donut rotation
+            endAngle={450}
+            tabIndex={-1}
+            style={{ outline: "none" }}
           >
             {data.map((entry, index) => (
               <Cell
@@ -41,7 +43,7 @@ const DonutChart = () => {
           <Tooltip
             contentStyle={{
               backgroundColor: "#fff",
-
+              outline: "none",
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
             }}
             labelStyle={{

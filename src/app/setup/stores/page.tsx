@@ -1,5 +1,5 @@
 "use client";
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,173 +8,86 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-
 import AddStore from "@/Components/Setup/StorePopup/AddStore";
 import EditStore from "@/Components/Setup/StorePopup/EditStore";
+import { format } from "date-fns";
 import Pagination from "@/Components/UI/Pagination/Pagination";
+import { sendApiRequest } from "@/utils/apiUtils";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 interface TableRow {
-  store: string;
-  date: string;
+  storename: string;
+  createdate: string;
   location: string;
-  user: string;
+  owner: string;
   county: string;
   royalty: string;
 }
 
-const data: TableRow[] = [
-  {
-    store: "Store 1",
-    date: "12-10-24",
-    location: "VatisinVille",
-    user: "MORTGAGE",
-    county: "10%",
-    royalty: "20%",
-  },
-  {
-    store: "Store 2",
-    date: "12-10-24",
-    location: "VatisinVille",
-    user: "MORTGAGE",
-    county: "10%",
-    royalty: "40%",
-  },
-  {
-    store: "Store 3",
-    date: "12-10-24",
-    location: "VatisinVille",
-    user: "MORTGAGE",
-    county: "10%",
-    royalty: "3%",
-  },
-  {
-    store: "13246",
-    date: "12-10-24",
-    location: "VatisinVille",
-    user: "MORTGAGE",
-    county: "10%",
-    royalty: "20%",
-  },
-  {
-    store: "Store 2",
-    date: "12-10-24",
-    location: "VatisinVille",
-    user: "MORTGAGE",
-    county: "10%",
-    royalty: "40%",
-  },
-  {
-    store: "Store 1",
-    date: "12-10-24",
-    location: "VatisinVille",
-    user: "MORTGAGE",
-    county: "10%",
-    royalty: "20%",
-  },
-  {
-    store: "Store 2",
-    date: "12-10-24",
-    location: "VatisinVille",
-    user: "MORTGAGE",
-    county: "10%",
-    royalty: "20%",
-  },
-  {
-    store: "Store 3",
-    date: "12-10-24",
-    location: "VatisinVille",
-    user: "MORTGAGE",
-    county: "10%",
-    royalty: "20%",
-  },
-  {
-    store: "Store 1",
-    date: "12-10-24",
-    location: "VatisinVille",
-    user: "MORTGAGE",
-    county: "10%",
-    royalty: "20%",
-  },
-  {
-    store: "Store 2",
-    date: "12-10-24",
-    location: "VatisinVille",
-    user: "MORTGAGE",
-    county: "10%",
-    royalty: "20%",
-  },
-  {
-    store: "Store 3",
-    date: "12-10-24",
-    location: "VatisinVille",
-    user: "MORTGAGE",
-    county: "10%",
-    royalty: "30%",
-  },
-  {
-    store: "13246",
-    date: "12-10-24",
-    location: "VatisinVille",
-    user: "MORTGAGE",
-    county: "10%",
-    royalty: "20%",
-  },
-];
-
-const columns: ColumnDef<TableRow>[] = [
-  {
-    accessorKey: "store",
-    header: () => <div className="text-left">Store</div>,
-    cell: (info) => <span>{info.getValue() as string}</span>,
-    size: 100,
-  },
-  {
-    accessorKey: "date",
-    header: () => <div className="text-left">Date</div>,
-    cell: (info) => <span>{info.getValue() as string}</span>,
-    size: 100,
-  },
-
-  {
-    accessorKey: "location",
-    header: () => <div className="text-left">Location</div>,
-    cell: (info) => <div>{info.getValue() as string}</div>,
-    size: 120,
-  },
-  {
-    accessorKey: "user",
-    header: () => <div className="text-left ">User</div>,
-    cell: (info) => <div>{info.getValue() as string}</div>,
-    size: 100,
-  },
-  {
-    accessorKey: "county",
-    header: () => <div className="text-right mr-8">County</div>,
-    cell: (info) => (
-      <div className="text-right mr-8">{info.getValue() as number}</div>
-    ),
-    size: 100,
-  },
-  {
-    accessorKey: "royalty",
-    header: () => <div className="text-left ml-7">Royalty</div>,
-    cell: (info) => <div className=" text-right mr-5">{info.getValue() as number}</div>,
-    size: 80,
-  },
-  {
-    id: "edit",
-    header: () => <div className="text-center"></div>,
-    cell: () => (
-      <span className="flex justify-center">
-        <EditStore />
-      </span>
-    ),
-    size: 50,
-  },
-];
-
 const Page: FC = () => {
   const [globalFilter, setGlobalFilter] = React.useState("");
+  const [data, setData] = useState<TableRow[]>([]);
+  const [totalItems, setTotalItems] = useState<number>(0); 
+  const [loading, setLoading] = useState<boolean>(true);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+
+  const columns: ColumnDef<TableRow>[] = [
+    {
+      accessorKey: "store",
+      header: () => <div className="text-left">Store</div>,
+      cell: (info) => <span>{info.row.original.storename}</span>,
+      size: 100,
+    },
+    {
+      accessorKey: "date",
+      header: () => <div className="text-left">Date</div>,
+      cell: (info) => <span>{format(info.row.original.createdate , "MM-dd-yyyy")}</span>,
+      size: 100,
+    },
+  
+    {
+      accessorKey: "location",
+      header: () => <div className="text-left">Location</div>,
+      cell: (info) => <div>{info.row.original.location}</div>,
+      size: 120,
+    },
+    {
+      accessorKey: "user",
+      header: () => <div className="text-left ">Owner</div>,
+      cell: (info) => <div>{info.row.original.owner}</div>,
+      size: 100,
+    },
+    {
+      accessorKey: "county",
+      header: () => <div className="text-right ">County</div>,
+      cell: (info) => (
+        <div className="text-right ">{info.row.original.county}</div>
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "royalty",
+      header: () => <div className="text-right">Royalty</div>,
+      cell: (info) => <div className=" text-right ">{info.row.original.royalty}</div>,
+      size: 80,
+    },
+    {
+      id: "edit",
+      header: () => <div className="text-center"></div>,
+      cell: () => (
+        <span className="flex justify-center">
+          <EditStore />
+        </span>
+      ),
+      size: 50,
+    },
+  ];
+  
   const table = useReactTable({
     data,
     columns,
@@ -190,12 +103,50 @@ const Page: FC = () => {
         pageIndex: 0,
       },
     },
+    manualPagination: true, // Enable manual pagination
+    pageCount: Math.ceil(totalItems / 10),
   });
 
   const { pageIndex, pageSize } = table.getState().pagination;
-  const totalItems = table.getFilteredRowModel().rows.length;
   const startItem = pageIndex * pageSize + 1;
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response: any = await sendApiRequest({
+          mode: "getstores",
+          page: table.getState().pagination.pageIndex + 1,
+          limit: table.getState().pagination.pageSize,
+        });
+
+        if (response?.status === 200) {
+          setData(response?.data?.stores || []);
+          response?.data?.total > 0 &&
+            setTotalItems(response?.data?.total || 0);
+        } else {
+          setCustomToast({
+            ...customToast,
+            message: response?.message,
+            type: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [pageIndex, pageSize]);
+
+
+  const handleAddExpense = (newExpense:any) => {
+    setData((prevExpenses) => [...prevExpenses, newExpense]);
+  };
+
 
   return (
     <main
@@ -203,7 +154,7 @@ const Page: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
-        <AddStore />
+        <AddStore onAddStore={handleAddExpense} />
       </div>
 
       {/* Mobile View */}
@@ -261,7 +212,7 @@ const Page: FC = () => {
         {/* Add Store bottom */}
         <div className="block pl-24 ">
           {" "}
-          <AddStore />
+          <AddStore onAddStore={handleAddExpense} />
         </div>
       </div>
 
@@ -297,7 +248,22 @@ const Page: FC = () => {
           >
             <table className="w-full border-collapse border-gray-200 table-fixed">
               <tbody>
-                {table.getRowModel().rows.map((row) => (
+              {loading ? (
+                    Array.from({ length: 10 })?.map((_, index) => (
+                      <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+                        {columns.map((column, colIndex) => (
+                          <td
+                            key={colIndex}
+                            className="px-4 py-1.5"
+                            style={{ width: `${column.size}px` }}
+                          >
+                            <Skeleton height={30} />
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) :
+                  table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
                     className={

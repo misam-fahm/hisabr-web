@@ -77,7 +77,7 @@ const DetailsPage: React.FC = () => {
           onClick={handleBack}
           alt="Back Arrow"
           className="w-7 h-7 mb-1 below-md:hidden cursor-pointer"
-          src="/images/WebBackIcon.svg"
+          src="/images/webbackicon.svg"
         ></img>
         <div className="flex flex-row justify-between items-center gap-6 ">
           <div className="below-md:w-full tablet:w-full border-b-[2px] border-[#E1E0E0D1] relative flex items-center">
