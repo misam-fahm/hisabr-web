@@ -78,14 +78,6 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
   const expenseTypes = ["Travel", "Food", "Accommodation", "Miscellaneous"];
   const selectedExpense = watch("expenseType"); // Watch the "store" field for changes
 
-
-
-
-
-
-
-
-
   return (
     <>
       <div>
@@ -103,7 +95,7 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
       <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[335px] h-[430px] below-md:w-[94%] below-md:h-[400] px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
+          <DialogPanel className="w-[335px] h-[430px] below-md:w-[94%] below-md:h-[450] px-6 below-md:px-4 py-3 bg-white rounded-lg shadow-lg flex flex-col">
             <div className="relative">
               <img
                 onClick={closeModal}
@@ -224,7 +216,7 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
 
                   <div className="flex justify-between gap-3 items-center w-full">
                     <button type="button"
-                      className="px-4  below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] md:h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
+                      className="px-4  below-md:px-2 md:py-1 text-[14px] text-[#6F6F6F] h-[35px] w-[165px] hover:bg-[#C9C9C9] bg-[#E4E4E4] rounded-md"
                       onClick={closeModal}
                     >
                       Cancel
@@ -232,7 +224,7 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
 
                     <button
                       type="submit"
-                      className="px-4 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
+                      className="px-4 text-white md:text[13px] text-[14px] h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
                     >
                       Save
                     </button>

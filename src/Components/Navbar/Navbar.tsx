@@ -139,7 +139,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
       title === "Edit Profile" ||
       title === "Invoice Details" ? (
         <img
-          src="/images/MobileBackIcon.svg"
+          src="/images/Mobilebackicon.svg"
           className="fixed top-4 left-4 cursor-pointer z-50"
           onClick={() => router.back()}
         />
@@ -172,7 +172,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
           title === "Edit Profile" ||
           title === "Invoice Details" ? (
             <img
-              src="/images/MobileBackIcon.svg"
+              src="/images/Mobilebackicon.svg"
               className="fixed top-4 left-4 cursor-pointer z-50"
               onClick={() => router.back()}
             />

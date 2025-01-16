@@ -185,7 +185,7 @@ const summary: FC = () => {
                 </p>
               </div>
               <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-                <img src="./images/summary1.svg" />
+                <img src="./images/summarytotalsales.svg" />
               </div>
             </div>
 
@@ -203,7 +203,7 @@ const summary: FC = () => {
                 </p>
               </div>
               <div className="bg-[#F6F1F1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-                <img src="./images/summary2.svg" />
+                <img src="./images/summarytotalexpenses.svg" />
               </div>
             </div>
 
@@ -221,7 +221,7 @@ const summary: FC = () => {
                 </p>
               </div>
               <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-                <img src="./images/summary3.svg" />
+                <img src="./images/summarytotalprofits.svg" />
               </div>
             </div>
           </div>
@@ -359,7 +359,7 @@ const summary: FC = () => {
                     </p>
                     <div className="flex flex-row gap-2 bg-[#ECFDF5] p-1 w-20 rounded-sm mt-2 items-center">
                       <img
-                        src="/images/112.svg"
+                        src="/images/direction.svg"
                         alt="Growth Icon"
                         className="w-4 h-4"
                       />

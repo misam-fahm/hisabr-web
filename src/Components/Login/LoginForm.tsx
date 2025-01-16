@@ -21,7 +21,7 @@ const LoginForm = () => {
         <div className="w-[50%] below-md:w-full flex justify-center items-center h-full below-md:h-auto">
           <img
             className="w-auto h-[200px] below-md:h-[150px]"
-            src="/images/HisabrFinalLogo.png"
+            src="/images/Hisabrfinallogo.png"
             alt="Logo"
           />
         </div>

@@ -201,6 +201,8 @@ const columns: ColumnDef<TableRow>[] = [
     size: 30,
   },
 ];
+
+
 const Invoices = () => {
   const router = useRouter();
   const [globalFilter, setGlobalFilter] = React.useState("");
@@ -220,54 +222,8 @@ const Invoices = () => {
       },
     },
   });
-  //Card data
-  const cardData = [
-    {
-      date: "2022-01-01",
-      store: 13246,
-      quantity: 176,
-      total: "$3,484.47",
-      name: "Gordon",
-    },
-    {
-      date: "2022-01-01",
-      store: 13246,
-      quantity: 176,
-      total: "$3,484.47",
-      name: "Gordon",
-    },
-    {
-      date: "2022-01-01",
-      store: 13246,
-      quantity: 176,
-      total: "$3,484.47",
-      name: "Gordon",
-    },
-    {
-      date: "2022-01-01",
-      store: 13246,
-      quantity: 176,
-      total: "$3,484.47",
-      name: "Gordon",
-    },
-    {
-      date: "2022-01-01",
-      store: 13246,
-      quantity: 176,
-      total: "$3,484.47",
-      name: "Gordon",
-    },
-  ];
-  //pagination range
-  const { pageIndex, pageSize } = table.getState().pagination;
-  const totalItems = table.getFilteredRowModel().rows.length;
-  const startItem = pageIndex * pageSize + 1;
-  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
+ 
 
-  const [dateRange, setDateRange] = useState<
-    [Date | undefined, Date | undefined]
-  >([undefined, undefined]); // From and To Date
-  const [startDate, endDate] = dateRange;
   const fileInputRef: any = useRef(null);
   const handleButtonClick = () => {
     // Programmatically trigger the hidden file input
@@ -350,6 +306,7 @@ const Invoices = () => {
           <div className="flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
             <input
               type="search"
+              value={globalFilter ?? ""}
               onChange={(e) => setGlobalFilter(e.target.value)}
               ref={searchInputRef}
               placeholder="Search"
@@ -379,8 +336,8 @@ const Invoices = () => {
         </div>
       </div>
       {/* Mobile View : Card section */}
-      <div className="block md:hidden mb-16">
-        {cardData.map((card, index) => (
+      <div className="block md:hidden">
+        {formattedData.map((card, index) => (
           <div
             key={index}
             className="flex flex-col w-full  rounded-lg bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3"
@@ -431,7 +388,7 @@ const Invoices = () => {
             onClick={handleButtonClick}
           >
             <img
-              src="/images/MobileUploadIcon.svg"
+              src="/images/Mobileuploadicon.svg"
               alt="Upload Invoice"
               className="w-[18px] h-[18px]"
             />

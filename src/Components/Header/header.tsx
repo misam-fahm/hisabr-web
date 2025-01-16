@@ -151,7 +151,7 @@ const Header: React.FC = () => {
               className="w-10 h-10 flex items-center justify-center "
             >
               <img
-                src="/images/ProfileDropdown.svg"
+                src="/images/profiledropdown.svg"
                 alt="Menu Icon"
                 className={`transition-transform duration-300 ${
                   isRotated ? "rotate-180" : "rotate-0"
@@ -165,14 +165,14 @@ const Header: React.FC = () => {
                 <ul className="py-2 ">
                   <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
                     <img
-                      src="/images/Profile.svg"
+                      src="/images/profile.svg"
                       className="inline-block mr-2"
                     />
                     My Profile
                   </li>
                   <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
                     <img
-                      src="/images/logout2.svg"
+                      src="/images/headerlogouticon.svg"
                       className="inline-block mr-2"
                     />
                     Logout
