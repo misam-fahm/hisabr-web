@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import React, { ReactNode, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import Images from "../UI/Themes/Image";
+//import Images from "../UI/Themes/Image";
+import clsx from "clsx";
 
 interface DrawerProps {
   children: ReactNode;
@@ -99,7 +100,10 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
     }
   };
 
-  const sidebarClass = open ? "w-[230px]" : "w-[70px] below-md:w-0";
+  const sidebarClass = clsx({
+    "w-[230px]": open,
+    "w-[85px] below-md:w-0": !open,
+  });
 
   const pathsToHideHamburger = [
     "/sales/sales_view",
@@ -149,20 +153,20 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
         )
       )}
       <div
-        className={`${sidebarClass} duration-300 h-full bg-defaultblack text-defaultwhite sticky below-md:fixed top-0 left-0 z-40 below-md:z-50`}
+        className={`${sidebarClass} duration-300 h-full bg-[#0F1044] text-defaultwhite sticky below-md:fixed top-0 left-0 z-40 below-md:z-50`}
       >
         <img
           src="/images/DrawerToggle.svg"
-          className={`absolute cursor-pointer rounded-full -right-[0.7rem] below-md:hidden top-3 opacity-[0.73] ${!open && "rotate-180"}`}
+          className={`absolute cursor-pointer rounded-full -right-[0.8rem] below-md:hidden top-3 opacity-[0.73] ${!open && "rotate-180"}`}
           onClick={() => setOpen(!open)}
         />
 
         <div
           className={`flex gap-x-4 mt-[13px] ${open ? "pl-3" : "pl-3"}  below-md:pl-1 ${open ? "ml-[13px]" : "ml-[3px]"}`}
         >
-          <Images
-            src={open ? "/images/logo.svg" : "/images/halflogo.png"}
-            className={`cursor-pointer ${open ? "w-[136px]" : "w-[36px]"}  h-[45px]`}
+          <img
+            src={open ? "/images/logo.svg" : "/images/halflogo.svg"}
+            className={`cursor-pointer ${open ? "w-[136px] -mt-4" : "w-[36px]"} `}
           />
           {title === "My Profile" ||
           title === "Edit Profile" ||
@@ -177,13 +181,13 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
               <img
                 src="/images/x.svg"
                 onClick={() => setOpen(!open)}
-                className="below-lg:hidden tablet:hidden sticky z-40 pl-5"
+                className="below-lg:hidden -mt-4 tablet:hidden sticky z-40 pl-5"
               />
             )
           )}
         </div>
-        <div className="max-h-[calc(100vh-160px)] py-4 overflow-auto scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent ">
-          <ul className="">
+        <div className="max-h-[calc(100vh-160px)] py-4 overflow-auto scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent">
+          <ul>
             {Menus.map((menu: any, index) => (
               <div key={index}>
                 {/* Main Menu Item */}
@@ -193,18 +197,25 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
                       ? setSetupOpen(!setupOpen)
                       : handleNavigation(menu.path!)
                   }
-                  className={`text-[#FFFFFFCC] text-[14px] flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#A9A5CA33] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] mr-5 rounded-tr-full rounded-br-full 
-                    ${currentPath === menu.path ? " bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]" : ""} 
-                    ${menu?.gap ? "mt-11" : "mt-1 "} 
-                    ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""} 
-                    ${menu.title === "SETUP" ? "border border-[#B8BCC3B2] cursor-default pointer-events-none w-14 ml-5 pl-[13px]  hover:bg-transparent hover:shadow-none rounded-tl-full rounded-bl-full py-1 !text-[#B8BCC3B2] text-[9px]" : ""}`}
+                  className={`text-[#FFFFFFCC] text-[14px] flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#A9A5CA33] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] mr-5 rounded-tr-full rounded-br-full
+            ${currentPath === menu.path ? " bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]" : ""}
+            ${menu?.gap ? "mt-11" : "mt-1 "}
+            ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""}
+            ${
+              menu.title === "SETUP"
+                ? `border border-[#B8BCC3B2] cursor-default pointer-events-none w-14 h-6 ml-5 pl-[13px] hover:bg-transparent hover:shadow-none rounded-tl-full rounded-bl-full py-1 !text-[#B8BCC3B2] text-[9px] 
+              ${!open ? "ml-[7px]" : ""}`
+                : ""
+            }`}
                 >
                   {/* Only render the image if the menu is not "Setup" */}
                   {menu.title !== "SETUP" && (
                     <img src={`/images/${menu.src}.svg`} />
                   )}
+
+                  {/* Show the "SETUP" title even when drawer is closed */}
                   <span
-                    className={`${!open && "hidden"} origin-left duration-200`}
+                    className={`${!open && menu.title !== "SETUP" ? "hidden" : ""} origin-left duration-200`}
                   >
                     {menu.title}
                   </span>
@@ -215,7 +226,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
         </div>
 
         <div
-          className={`flex mt-10 gap-4 below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px]  ${open ? "mr-8" : "mr-3 below-md:bg-transparent below-md:shadow-none"} ml-3 rounded-md`}
+          className={`flex mt-8 gap-4 below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px]  ${open ? "mr-8" : "mr-7 below-md:bg-transparent below-md:shadow-none"} ml-3 rounded-md`}
         >
           <img src="/images/logout.svg" />
           {open && <p className="text-[14px] text-[#FFFFFFCC]">Logout</p>}

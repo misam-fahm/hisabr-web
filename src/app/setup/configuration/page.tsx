@@ -111,11 +111,9 @@ const Page = () => {
         onSubmit={methods.handleSubmit(onSubmit)}
         className="w-full flex flex-col  p-5"
       >
-        <div className="bg-white py-6 px-8 rounded-lg">
+        <div className="bg-white py-6 px-8 rounded-lg shadow-lg">
           <div>
-            <p className=" text-[16px] font-medium text-[#5E6366]">
-              Configuration{" "}
-            </p>
+            
             <p className="text-[12px] font-normal mt-1 text-[#5E6366]">
               Streamline and configure operational expenses for accurate
               tracking
@@ -401,7 +399,7 @@ const Page = () => {
               </div>
             </div>
             <div  className="flex justify-end">
-              <button className="bg-[#168A6F] hover:bg-[#11735C] text-[14px]  font-semibold text-white rounded-md  px-8 py-1.5">
+              <button className="bg-[#168A6F] hover:bg-[#11735C] text-[14px]  font-semibold text-white rounded-md  h-[35px] w-[118px]">
                 Add
               </button>
             </div>

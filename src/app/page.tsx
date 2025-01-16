@@ -264,7 +264,7 @@ const Home: FC = () => {
                   <div className="group relative">
                     <img
                       src="/images/tooltip.svg"
-                      className=" mt-[3px] w-5 tablet:w-6 below-md:w-6 cursor-pointer"
+                      className=" mt-[3px] w-5 tablet:w-[21px] below-md:w-[21px] opacity-80 cursor-pointer"
                     />
 
                     {/* Tooltip Box */}
