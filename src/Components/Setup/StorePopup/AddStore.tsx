@@ -3,56 +3,113 @@
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
-import Dropdown from "@/Components/UI/Themes/DropDown";
 import { FormProvider, useForm, Controller } from "react-hook-form";
 import { InputField } from "@/Components/UI/Themes/InputField";
+import { sendApiRequest } from "@/utils/apiUtils";
+import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+
+interface JsonData {
+  mode: string;
+  storename:string;
+  location: string;
+  owner:string;
+  county: number | null;
+  royalty: number | null;
+}
 
 
-const AddStore = () => {
+const AddStore = ({ onAddStore }: { onAddStore: (newExpense: any) => void }) => {
   const methods = useForm();
-
-  const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
-  };
-
   const [royalty, setRoyalty] = useState("");
-  const handleChange = (data: any) => {
-    setRoyalty(data); // Update local state
-    methods.setValue("royalty", data); // Update form state in react-hook-form
-  };
-
   const [county, setCounty] = useState("");
-  const handleChangeCounty = (data: any) => {
-    setCounty(data); // Update local state
-    methods.setValue("county", data); // Update form state in react-hook-form
-  };
-
   const [storeName, setStoreName] = useState("");
-  const handleChangesetStoreName = (data: any) => {
-    setStoreName(data); // Update local state
-    methods.setValue("storeName", data); // Update form state in react-hook-form
-  };
-
-  const [user, setUser] = useState("");
-  const handleChangeUser = (data: any) => {
-    setUser(data); // Update local state
-    methods.setValue("user", data); // Update form state in react-hook-form
-  };
-
   const [location, setLocation] = useState("");
-  const handleChangeLocation = (data: any) => {
-    setLocation(data); // Update local state
-    methods.setValue("location", data); // Update form state in react-hook-form
+  const [owner, setOwner] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+ 
+  const handleChange = (data: any) => {
+    setRoyalty(data);
+    methods.setValue("royalty", data);
+  };
+ 
+  const handleChangeCounty = (data: any) => {
+    setCounty(data); 
+    methods.setValue("county", data); 
   };
 
-  const { control } = useForm(); // Initialize React Hook Form
-  const [isOpen, setIsOpen] = useState(false);
+  const handleChangesetStoreName = (data: any) => {
+    setStoreName(data); 
+    methods.setValue("storeName", data); 
+  }
+  const handleChangeUser = (data: any) => {
+    setOwner(data); 
+    methods.setValue("owner", data); 
+  };
+
+  const handleChangeLocation = (data: any) => {
+    setLocation(data); 
+    methods.setValue("location", data); 
+  };
+
+
+ 
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
+  const onSubmit = async (data: any) => {
+    console.log("Form Data with IDs:", data);
+    const jsonData: JsonData = {
+      mode: "insertstore",
+      storename: data?.storeName,
+      location: data?.location,
+      owner: data?.owner,
+      county:data?.county,
+      royalty:data?.royalty
+    };
+  
+    try {
+      const result: any = await sendApiRequest(jsonData);
+      const { status, data: responseData } = result; // Assuming responseData contains the new expense data or its ID
+  
+      setCustomToast({
+        message: status === 200 ? "Item added successfully!" : "Failed to add item.",
+        type: status === 200 ? "success" : "error",
+      });
+  
+      if (status === 200) {
+        // Create a newExpense object from the input and API response
+        const newExpense = {
+          id: responseData?.storeid, // Assuming the API returns the new expense ID
+          county: jsonData.county,
+          location: jsonData.location,
+          storename: jsonData.storename,
+          royalty:jsonData?.royalty, // For display purposes
+          owner:jsonData?.owner       // For display purposes
+        };
+  
+        // Pass the new expense to the parent component
+        onAddStore(newExpense);
+  
+        // Close the modal
+        closeModal();
+      }
+    } catch (error) {
+      setCustomToast({ message: "Error adding item", type: "error" });
+      console.error("Error submitting form:", error);
+    }
+  };
+
   return (
     <>
+    <ToastNotification
+        message={customToast.message}
+        type={customToast.type}
+      />
       <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
         <button
           onClick={openModal}
@@ -148,16 +205,16 @@ const AddStore = () => {
                     {/* Description Input Field */}
                     <InputField
                       type="text"
-                      label="User"
+                      label="Owner"
                       borderClassName=" border border-gray-400"
                       labelBackgroundColor="bg-white"
-                      value={user}
+                      value={owner}
                       textColor="text-gray-500"
-                      {...methods?.register("user", {
-                        required: "User is required",
+                      {...methods?.register("owner", {
+                        required: "Owner is required",
                       })}
-                      errors={methods.formState.errors.user}
-                      placeholder="User"
+                      errors={methods.formState.errors.owner}
+                      placeholder="Owner"
                       variant="outline"
                       onChange={(e: any) => handleChangeUser(e.target.value)}
                     />

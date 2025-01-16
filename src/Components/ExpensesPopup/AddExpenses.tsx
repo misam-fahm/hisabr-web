@@ -1,12 +1,15 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, {useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/UI/Themes/DropDown";
-import { FormProvider, useForm, Controller, FieldError } from "react-hook-form";
+import { FormProvider, useForm,} from "react-hook-form";
+import { format } from "date-fns";
 import { InputField } from "../UI/Themes/InputField";
 import CustomDatePicker from "../UI/Themes/CustomDatePicker";
+import { sendApiRequest } from "@/utils/apiUtils";
+import ToastNotification, { ToastNotificationProps } from "../UI/ToastNotification/ToastNotification";
 
 type ExpenseFormInputs = {
   expenseName: string;
@@ -14,34 +17,48 @@ type ExpenseFormInputs = {
   date: Date; // The date field
 };
 
+interface JsonData {
+  mode: string;
+  storeid: number | null;
+  expensedate: any;
+  amount: number | null;
+  expenseid: number | null;
+  description: string;
+}
 
-const AddExpenses = () => {
+
+const AddExpenses = ({ onAddExpense }: { onAddExpense: (newExpense: any) => void }) => {
+
   const methods = useForm();
-  const { setValue, watch } = methods;
+  const { setValue, watch , clearErrors } = methods;
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
-  const handleChange = (data: any) => {
-    setDescription(data); // Update local state
-    methods.setValue("description", data); // Update form state in react-hook-form
-  };
-  const handleChangeAmount = (data: any) => {
-    setAmount(data);
-    methods.setValue("amount", data);
-  };
-  const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
-  };
-  const {
-    control,
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm<ExpenseFormInputs>(); // Initialize React Hook Form
+  const {control,handleSubmit,register,formState: { errors },} = useForm<ExpenseFormInputs>(); 
   const [isOpen, setIsOpen] = useState(false);
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
-  //tooltip for mobile
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [isExpenseDropdownOpen, setIsExpenseDropdownOpen] = useState(false); 
+  const selectedStore = watch("store"); 
+  const selectedExpense = watch("expenseType"); 
+  // const [isStoreFetched, setIsStoreFetched] = useState(false);
+  // const [isExpenseFetched, setIsExpenseFetched] = useState(false);
+  const [expensetypes, setExpensetypes] = useState<any[]>([]);
+  const [store, setStore] = useState<any[]>([]);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+    setIsExpenseDropdownOpen(false);
+  };
+  const toggleExpenseDropdown = () => {
+    setIsExpenseDropdownOpen((prev) => !prev);
+    setIsStoreDropdownOpen(false); 
+  };
+
+
   const handlePressStart = () => {
     setShowTooltip(true);
     setTimeout(() => {
@@ -51,29 +68,126 @@ const AddExpenses = () => {
   const handlePressEnd = () => {
     setShowTooltip(false);
   };
-  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [isExpenseDropdownOpen, setIsExpenseDropdownOpen] = useState(false);
-  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const toggleDropdown1 = () => {
-    setIsStoreDropdownOpen((prev) => !prev);
-    setIsExpenseDropdownOpen(false); // Close the other dropdown
-  };
-  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
-  const selectedStore = watch("store"); // Watch the "store" field for changes
-  const toggleExpenseDropdown = () => {
-    setIsExpenseDropdownOpen((prev) => !prev);
-    setIsStoreDropdownOpen(false); // Close the other dropdown
-  };
-  const expenseTypes = ["Travel", "Food", "Accommodation", "Miscellaneous"];
-  const selectedExpense = watch("Expense Type"); // Watch the "store" field for changes
+ 
+    const handleChange = (data: any) => {
+      setDescription(data);
+      methods.setValue("description", data); 
+    };
+
+    const handleChangeAmount = (data: any) => {
+      setAmount(data);
+      methods.setValue("amount", data);
+    };
+   
+    const openModal = async () => {
+      setIsOpen(true);
+  
+   
+        try {
+          const response: any = await sendApiRequest({ mode: "getallstores" });
+          if (response?.status === 200) {
+            setStore(response?.data?.stores || []);
+            // setIsStoreFetched(true);
+          } else {
+            setCustomToast({
+              ...customToast,
+              message: response?.message,
+              type: "error",
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching stores:", error);
+        }
+      
+  
+     
+        try {
+          const response: any = await sendApiRequest({ mode: "getallexpensetypes" });
+          if (response?.status === 200) {
+            setExpensetypes(response?.data?.expensetypes || []);
+            // setIsExpenseFetched(true); 
+          } else {
+            setCustomToast({
+              ...customToast,
+              message: response?.message,
+              type: "error",
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching expense types:", error);
+        }
+      
+    };
+    const closeModal = () => setIsOpen(false);
+
+    // const onSubmit = (data: any) => {
+    //   const payload = {
+    //     date: format(data?.date , "MM-dd-yyyy"),
+    //        expenseType: data?.expenseTypeId,
+    //      store: data?.storeId,
+    //    description: data?.description,
+    //        amount: data?.amount,
+    //   };
+    //   console.log("Form Data with IDs:", payload);
+    // };
+
+    const onSubmit = async (data: any) => {
+      console.log("Form Data with IDs:", data);
+      const jsonData: JsonData = {
+        mode: "insertexpense",
+        expensedate: format(data?.date, "yyyy-MM-dd"),
+        expenseid: data?.expenseTypeId,
+        storeid: data?.storeId,
+        description: data?.description,
+        amount: Number(data?.amount),
+      };
+    
+      try {
+        const result: any = await sendApiRequest(jsonData);
+        const { status, data: responseData } = result; // Assuming responseData contains the new expense data or its ID
+    
+        setCustomToast({
+          message: status === 200 ? "Item added successfully!" : "Failed to add item.",
+          type: status === 200 ? "success" : "error",
+        });
+    
+        if (status === 200) {
+          // Create a newExpense object from the input and API response
+          const newExpense = {
+            id: responseData?.id, // Assuming the API returns the new expense ID
+            description: jsonData.description,
+            amount: jsonData.amount,
+            expensedate: jsonData.expensedate,
+            expensename:data?.expenseType,
+            expenseid:jsonData?.expenseid, // For display purposes
+            storename:data?.store,
+            storeid: jsonData?.storeid,           // For display purposes
+          };
+    
+          // Pass the new expense to the parent component
+          onAddExpense(newExpense);
+    
+          // Close the modal
+          closeModal();
+        }
+      } catch (error) {
+        setCustomToast({ message: "Error adding item", type: "error" });
+        console.error("Error submitting form:", error);
+      }
+    };
+    
 
   return (
     <>
+      <ToastNotification
+        message={customToast.message}
+        type={customToast.type}
+      />
       <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
         <button
           onClick={openModal}
-          onTouchStart={handlePressStart} // For mobile devices
-          onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
+          onTouchStart={handlePressStart} 
+          onMouseLeave={handlePressEnd} 
           className="focus:outline-none flex items-center justify-center bg-[#168A6F]  w-[56px] h-[56px] rounded-xl relative"
         >
           <img
@@ -134,28 +248,33 @@ const AddExpenses = () => {
 
                   {/* Store Input Field */}
                   <Dropdown
-                    options={options}
-                    selectedOption={selectedStore || "Store"} // Watch the selected value
+                    options={store}
+                    selectedOption={selectedStore || "Store"} 
                     onSelect={(selectedOption) => {
-                      setValue("store", selectedOption); // Update the form value
-                      setIsStoreDropdownOpen(false); // Close dropdown after selection
+                      setValue("store", selectedOption.name); 
+                      setValue("storeId", selectedOption.id);
+                      setIsStoreDropdownOpen(false); 
+                      clearErrors("store"); 
 
                     }}
                     isOpen={isStoreDropdownOpen}
-                    toggleOpen={toggleDropdown1}
+                    toggleOpen={toggleStoreDropdown}
                     widthchange="w-full"
                     {...methods.register("store", {
                       required: "Store Selection is required",
                     })}
-                    errors={methods.formState.errors.store} // Explicitly cast the type
+                    errors={methods.formState.errors.store} 
                   />
                   {/* Expense Type Input Field */}
                   <Dropdown
-                    options={expenseTypes}
-                    selectedOption={selectedExpense || "Expense Type"} // Watch the selected value
+                    options={expensetypes}
+                    selectedOption={selectedExpense || "Expense Type"} 
                     onSelect={(selectedOption) => {
-                      setValue("expenseType", selectedOption); // Update the form value
-                      setIsExpenseDropdownOpen(false); // Close dropdown after selection
+                      setValue("expenseType", selectedOption.name);
+                      setValue("expenseTypeId", selectedOption.id);
+                      setIsExpenseDropdownOpen(false);
+                      clearErrors("expenseType"); 
+
                     }}
                     isOpen={isExpenseDropdownOpen}
                     toggleOpen={toggleExpenseDropdown}
@@ -189,7 +308,7 @@ const AddExpenses = () => {
                      }
                        placeholder="Date"
                        errors={methods.formState.errors.date?.message}
-                      />
+                      /> 
                   {/* Description field */}
                   <InputField
                     type="text"

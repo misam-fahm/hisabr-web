@@ -17,13 +17,13 @@ type ExpenseFormInputs = {
   description: string;
 };
 type EditExpensesProps = {
-  initialData: ExpenseFormInputs; // Existing expense data to edit
-  onSubmit: (data: ExpenseFormInputs) => void; // Callback to handle form submission
-  onClose: () => void; // Callback to close the modal
+  initialData: any; // Existing expense data to edit
+  onSubmit?: any; // Callback to handle form submission
+  onClose?: () => void; // Callback to close the modal
 };
 
 
-const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
+const EditExpense = ({ initialData }: EditExpensesProps) => {
   const methods = useForm<ExpenseFormInputs>({
     defaultValues: initialData, // Prepopulate form with existing data
   });
@@ -42,9 +42,9 @@ const EditExpense = ({ initialData, onSubmit }: EditExpensesProps) => {
     methods.setValue("amount", data);
   };
 
-  // const onSubmit = (data: any) => {
-  //   console.log("Form Data:", data);
-  // };
+  const onSubmit = (data: any) => {
+    console.log("Form Data:", data);
+  };
   // const {
   //   control,
   //   handleSubmit,

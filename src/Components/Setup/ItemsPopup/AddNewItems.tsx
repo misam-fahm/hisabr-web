@@ -24,7 +24,7 @@ interface JsonData {
 const AddNewItems = () => {
   const methods = useForm();
   const { register, setValue, handleSubmit, watch, clearErrors, trigger, formState: { errors } } = methods;
-  const options = [{name: "Dairy", id: 1}, {name: "Bakery", id: 2}, {name: "Beverages", id:3}, {name: "Frozen Foods", id: 4}];
+  const options = [{name: "Dairy", id: 1}, {name: "Bakery", id: 2}, {name: "Beverages", id:3}, {name: "Frozen Foods", id: 4}];  
   const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
@@ -183,8 +183,9 @@ const AddNewItems = () => {
                     <Dropdown
                       options={options}
                       selectedOption={selectedDqCategory || "DQ Category"} 
-                      onSelect={(selectedOption) => {
+                      onSelect={(selectedOption : any) => {
                         setValue("dqcategory", selectedOption?.name); 
+                        setValue("dqcategoryId", selectedOption?.id); 
                         setIsStoreDropdownOpen(false); 
                         clearErrors("dqcategory"); 
                       }}
@@ -199,10 +200,11 @@ const AddNewItems = () => {
                   </div>
                   <div className="w-full flex ">
                     <Dropdown
-                      options={options}
+                      options={[]}
                       selectedOption={ selectedCOGSTracking || "COGS Tracking Category"} 
-                      onSelect={(selectedOption) => {
-                        setValue("cogstrackingcategory", selectedOption?.name); 
+                      onSelect={(selected : any) => {
+                        setValue("cogstrackingcategory", selected?.name); 
+                        setValue("cogstrackingcategoryId", selected?.id); 
                         setIsStoreDropdownOpen(false); 
                         clearErrors("cogstrackingcategory"); 
                       }}
