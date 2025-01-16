@@ -67,7 +67,7 @@ const EditTender = () => {
             <div className="relative">
               <img
                 onClick={closeModal}
-                src="/images/CancelIcon.svg"
+                src="/images/cancelicon.svg"
                 alt="Cancel"
                 className="absolute top-0 right-0 cursor-pointer"
               />

@@ -50,9 +50,9 @@ const EditCategories = ({ rowData }: { rowData: any }) => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] below-md:w-[345px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
             <div className="flex justify-end">
-              <DialogTitle as="h3" className="font-medium text-gray-900">
+              {/* <DialogTitle as="h3" className="font-medium text-gray-900">
                 Edit Category
-              </DialogTitle>
+              </DialogTitle> */}
               <img
                 onClick={closeModal}
                 src="/images/cancelicon.svg"
