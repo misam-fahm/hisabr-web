@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
@@ -62,7 +61,6 @@ const AddStore = ({ onAddStore }: { onAddStore: (newExpense: any) => void }) => 
   const closeModal = () => setIsOpen(false);
 
   const onSubmit = async (data: any) => {
-    console.log("Form Data with IDs:", data);
     const jsonData: JsonData = {
       mode: "insertstore",
       storename: data?.storeName,
