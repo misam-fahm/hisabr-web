@@ -337,13 +337,13 @@ const Sales: FC = () => {
               onSelect={handleSelect}
               isOpen={isOpen}
               toggleOpen={toggleDropdown1}
-              widthchange="w-full below-lg:w-[260px]"
+              widthchange="w-full"
             />
-            <div className="w-[260px] tablet:w-full below-md:w-full">
+            <div className="w-full tablet:w-full below-md:w-full">
               <DateRangePicker />
             </div>
             <div className="flex flex-row gap-3 w-full">
-              <div className=" w-full below-md:w-full below-lg:w-[260px] relative below-md:hidden tablet:w-full">
+              <div className=" w-full below-md:w-full relative below-md:hidden tablet:w-full">
                 <input
                   type="search"
                   value={globalFilter ?? ""}
@@ -351,7 +351,7 @@ const Sales: FC = () => {
                   placeholder="Search"
                   className="below-lg:w-[260px] cursor-pointer py-[10px] pr-7 pl-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
-                <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
                   <img
                     className="cursor-pointer  items-center"
                     src="/images/searchicon.svg"

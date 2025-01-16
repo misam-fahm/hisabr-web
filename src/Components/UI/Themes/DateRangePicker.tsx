@@ -44,7 +44,7 @@ const DateRangePicker = ({ widthchang,}: { widthchang?: string }) => {
       <div
         onClick={handleClickIcon}
         className={`flex items-center justify-between rounded below-md:h-[38px] h-[35px] border bg-white cursor-pointer shadow ${
-          widthchang ? "" : "below-lg:w-[260px] below-md:w-full w-full"
+          widthchang ? "" : " below-md:w-full w-full"
         }`}
       >
         <span className="text-[#636363] text-[12px] px-3">
