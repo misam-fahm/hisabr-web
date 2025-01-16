@@ -316,7 +316,9 @@ const DetailsPage: React.FC = () => {
           </p>
         </div>
         <div className="below-md:hidden flex items-center justify-center below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
-          <AddExpenses />
+          <AddExpenses onAddExpense={function (newExpense: any): void {
+            throw new Error("Function not implemented.");
+          } } />
           {/* <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
             <img src="/images/addIcon.svg" alt="add Icon" className="mr-1" />
             Add Expense
@@ -558,7 +560,9 @@ const DetailsPage: React.FC = () => {
       </div>
 
       <div className="below-lg:hidden flex justify-end fixed tablet:hidden">
-        <AddExpenses />
+        <AddExpenses onAddExpense={function (newExpense: any): void {
+          throw new Error("Function not implemented.");
+        } } />
       </div>
     </main>
   );
