@@ -63,16 +63,22 @@ const AddStore = ({ onAddStore }: { onAddStore: (newExpense: any) => void }) => 
   const onSubmit = async (data: any) => {
     const jsonData: JsonData = {
       mode: "insertstore",
-      storename: data?.storeName,
-      location: data?.location,
-      owner: data?.owner,
-      county:data?.county,
-      royalty:data?.royalty
+      storename: data?.storeName || "",
+      location: data?.location || "",
+      owner: data?.owner || "",
+      county: data?.county || "",
+      royalty: data?.royalty || 0,
     };
   
     try {
+      console.log("Submitting data:", jsonData);
       const result: any = await sendApiRequest(jsonData);
-      const { status, data: responseData } = result; // Assuming responseData contains the new expense data or its ID
+      if (!result || typeof result !== "object") {
+        throw new Error("Invalid API response.");
+      }
+  
+      const { status, data: responseData } = result;
+      console.log("API Response:", result);
   
       setCustomToast({
         message: status === 200 ? "Item added successfully!" : "Failed to add item.",
@@ -80,27 +86,24 @@ const AddStore = ({ onAddStore }: { onAddStore: (newExpense: any) => void }) => 
       });
   
       if (status === 200) {
-        // Create a newExpense object from the input and API response
         const newExpense = {
-          id: responseData?.storeid, // Assuming the API returns the new expense ID
+          id: responseData?.storeid || "N/A",
           county: jsonData.county,
           location: jsonData.location,
           storename: jsonData.storename,
-          royalty:jsonData?.royalty, // For display purposes
-          owner:jsonData?.owner       // For display purposes
+          royalty: jsonData.royalty,
+          owner: jsonData.owner,
         };
   
-        // Pass the new expense to the parent component
-        onAddStore(newExpense);
-  
-        // Close the modal
-        closeModal();
+        if (typeof onAddStore === "function") onAddStore(newExpense);
+        if (typeof closeModal === "function") closeModal();
       }
     } catch (error) {
       setCustomToast({ message: "Error adding item", type: "error" });
       console.error("Error submitting form:", error);
     }
   };
+  
 
   return (
     <>
