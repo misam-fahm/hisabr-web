@@ -25,26 +25,8 @@ interface JsonData {
 
 const AddNewItems = () => {
   const methods = useForm();
-<<<<<<< HEAD
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    watch,
-    clearErrors,
-    trigger,
-    formState: { errors },
-  } = methods;
-  const options = [
-    { name: "Dairy", id: 1 },
-    { name: "Bakery", id: 2 },
-    { name: "Beverages", id: 3 },
-    { name: "Frozen Foods", id: 4 },
-  ];
-=======
   const { register, setValue, handleSubmit, watch, clearErrors, trigger, formState: { errors } } = methods;
   const options = [{name: "Dairy", id: 1}, {name: "Bakery", id: 2}, {name: "Beverages", id:3}, {name: "Frozen Foods", id: 4}];  
->>>>>>> production
   const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
@@ -205,20 +187,12 @@ const AddNewItems = () => {
                   <div className="w-full flex ">
                     <Dropdown
                       options={options}
-<<<<<<< HEAD
-                      selectedOption={selectedDqCategory || "DQ Category"}
-                      onSelect={(selectedOption) => {
-                        setValue("dqcategory", selectedOption?.name);
-                        setIsStoreDropdownOpen(false);
-                        clearErrors("dqcategory");
-=======
                       selectedOption={selectedDqCategory || "DQ Category"} 
                       onSelect={(selectedOption : any) => {
                         setValue("dqcategory", selectedOption?.name); 
                         setValue("dqcategoryId", selectedOption?.id); 
                         setIsStoreDropdownOpen(false); 
                         clearErrors("dqcategory"); 
->>>>>>> production
                       }}
                       isOpen={isdqCategoryDropdownOpen}
                       toggleOpen={toggleDropdownDQCategory}
@@ -231,16 +205,6 @@ const AddNewItems = () => {
                   </div>
                   <div className="w-full">
                     <Dropdown
-<<<<<<< HEAD
-                      options={options}
-                      selectedOption={
-                        selectedCOGSTracking || "COGS Tracking Category"
-                      }
-                      onSelect={(selectedOption) => {
-                        setValue("cogstrackingcategory", selectedOption?.name);
-                        setIsStoreDropdownOpen(false);
-                        clearErrors("cogstrackingcategory");
-=======
                       options={[]}
                       selectedOption={ selectedCOGSTracking || "COGS Tracking Category"} 
                       onSelect={(selected : any) => {
@@ -248,7 +212,6 @@ const AddNewItems = () => {
                         setValue("cogstrackingcategoryId", selected?.id); 
                         setIsStoreDropdownOpen(false); 
                         clearErrors("cogstrackingcategory"); 
->>>>>>> production
                       }}
                       isOpen={iscogstrackingDropdownOpen}
                       toggleOpen={toggleDropdownCOGSTracking}
