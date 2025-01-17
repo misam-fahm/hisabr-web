@@ -165,7 +165,7 @@ const Header: React.FC = () => {
                 <ul className="py-2 ">
                   <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
                     <img
-                      src="/images/profile.svg"
+                      src="/images/userprofile.svg"
                       className="inline-block mr-2"
                     />
                     My Profile
