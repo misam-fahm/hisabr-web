@@ -151,7 +151,7 @@ const Header: React.FC = () => {
               className="w-10 h-10 flex items-center justify-center "
             >
               <img
-                src="/images/profiledropdown.svg"
+                src="/images/profiledropdownside.svg"
                 alt="Menu Icon"
                 className={`transition-transform duration-300 ${
                   isRotated ? "rotate-180" : "rotate-0"
