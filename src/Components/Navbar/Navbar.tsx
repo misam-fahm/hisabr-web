@@ -139,14 +139,14 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
       title === "Edit Profile" ||
       title === "Invoice Details" ? (
         <img
-          src="/images/Mobilebackicon.svg"
+          src="/images/mobilebackicon.svg"
           className="fixed top-4 left-4 cursor-pointer z-50"
           onClick={() => router.back()}
         />
       ) : (
         !shouldHideHamburger && (
           <img
-            src="/images/Hammenu.svg"
+            src="/images/hammenu.svg"
             className="fixed top-4 left-4 cursor-pointer z-40 below-lg:hidden below-md:block"
             onClick={() => setOpen(!open)}
           />
@@ -156,7 +156,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
         className={`${sidebarClass} duration-300 h-full bg-[#0F1044] text-defaultwhite sticky below-md:fixed top-0 left-0 z-40 below-md:z-50`}
       >
         <img
-          src="/images/DrawerToggle.svg"
+          src="/images/drawertoggle.svg"
           className={`absolute cursor-pointer rounded-full -right-[0.8rem] below-md:hidden top-3 opacity-[0.73] ${!open && "rotate-180"}`}
           onClick={() => setOpen(!open)}
         />
@@ -172,7 +172,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
           title === "Edit Profile" ||
           title === "Invoice Details" ? (
             <img
-              src="/images/Mobilebackicon.svg"
+              src="/images/mobilebackicon.svg"
               className="fixed top-4 left-4 cursor-pointer z-50"
               onClick={() => router.back()}
             />

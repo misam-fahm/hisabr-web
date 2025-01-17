@@ -349,11 +349,11 @@ const Sales: FC = () => {
                   value={globalFilter ?? ""}
                   onChange={(e) => setGlobalFilter(e.target.value)}
                   placeholder="Search"
-                  className="below-lg:w-[260px] cursor-pointer py-[10px] pr-7 pl-3 h-[35px] w-full shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                  className="w-full cursor-pointer py-[10px] pr-7 pl-3 h-[35px] shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
-                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
                   <img
-                    className="cursor-pointer  items-center"
+                    className="cursor-pointer items-center"
                     src="/images/searchicon.svg"
                   />
                 </div>
@@ -377,7 +377,7 @@ const Sales: FC = () => {
 
           {/* button */}
           <div className=" below-md:w-full">
-            <div className="below-md:hidden tablet:hidden">
+            <div className="pl-24 below-md:hidden tablet:hidden">
               <input
                 type="file"
                 id="fileInput"
@@ -387,7 +387,7 @@ const Sales: FC = () => {
 
               <button
                 onClick={handleUploadClick}
-                className="flex items-center justify-center bg-[#1AA47D] hover:bg-[#168A68] shadow-lg below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold"
+                className="flex items-center justify-center bg-[#1AA47D] hover:bg-[#168A68] shadow-lg below-md:mt-3 w-[159px] h-[35px] rounded-md text-white text-[14px] font-semibold"
               >
                 <img
                   src="/images/uploadIcon.svg"
