@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   useReactTable,
@@ -13,140 +13,67 @@ import AddTender from "@/Components/Setup/TendersPopup/AddTender";
 import DeleteTenders from "@/Components/Setup/TendersPopup/DeleteTenders";
 import EditTenders from "@/Components/Setup/TendersPopup/EditTenders";
 import Pagination from "@/Components/UI/Pagination/Pagination";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { sendApiRequest } from "@/utils/apiUtils";
 
 interface TableRow {
   commission: string;
-  name: string;
-  type: string;
+  tendername: string;
+  tendertypename: string;
 }
 
-const data: TableRow[] = [
-  {
-    name: "American Express",
-    type: "VISA",
-    commission: "2 %",
-  },
-  {
-    name: "American Express",
-    type: "Amex",
-    commission: "1.5 %",
-  },
-  {
-    name: "American Express",
-    type: "Discovery  ",
-    commission: "3 %",
-  },
-  {
-    name: "American Express",
-    type: "Master",
-    commission: "3.5 %",
-  },
-  {
-    name: "American Express",
-    type: "Amex",
-    commission: "10 %",
-  },
-  {
-    name: "American Express",
-    type: "Discovery",
-    commission: "12 %",
-  },
-  {
-    name: "American Express",
-    type: "VISA",
-    commission: "2.5 %",
-  },
-  {
-    name: "American Express",
-    type: "Amex",
-    commission: "6.2 %",
-  },
-  {
-    name: "American Express",
-    type: "VISA",
-    commission: "2 %",
-  },
-  {
-    name: "American Express",
-    type: "Amex",
-    commission: "1.5 %",
-  },
-  {
-    name: "American Express",
-    type: "Discovery  ",
-    commission: "3 %",
-  },
-  {
-    name: "American Express",
-    type: "Master",
-    commission: "3.5 %",
-  },
-  {
-    name: "American Express",
-    type: "Amex",
-    commission: "10 %",
-  },
-  {
-    name: "American Express",
-    type: "Discovery",
-    commission: "12 %",
-  },
-  {
-    name: "American Express",
-    type: "VISA",
-    commission: "2.5 %",
-  },
-  {
-    name: "American Express",
-    type: "Amex",
-    commission: "6.2 %",
-  },
-];
-
-const columns: ColumnDef<TableRow>[] = [
-  {
-    accessorKey: "name",
-    header: () => <div className="text-left">Name</div>,
-    cell: (info) => <span>{info.getValue() as string}</span>,
-    size: 160,
-  },
-  {
-    accessorKey: "type",
-    header: () => <div className="text-left">Type</div>,
-    cell: (info) => <span>{info.getValue() as string}</span>,
-    size: 120,
-  },
-  {
-    accessorKey: "commission",
-    header: () => <div className="text-right mr-16">Commission</div>,
-    cell: (info) => (
-      <div className="text-right mr-14">{info.getValue() as number}</div>
-    ),
-    size: 120,
-  },
-  {
-    id: "edit",
-    header: () => <div className="text-center  "></div>,
-    cell: () => (
-      <span className="flex justify-center ml-6">
-        <EditTenders />
-      </span>
-    ),
-    size: 20,
-  },
-  {
-    id: "delete",
-    header: () => <div className="text-center "></div>,
-    cell: () => (
-      <span className="flex justify-center mr-5">
-        <DeleteTenders />
-      </span>
-    ),
-    size: 30,
-  },
-];
-
 const Page: FC = () => {
+  const [data, setData] = useState<TableRow[]>([]);
+  const [totalItems, setTotalItems] = useState<number>(0); 
+  const [loading, setLoading] = useState<boolean>(true);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+  const [isOpenAddTender, setAddTender] = useState(false);
+  const columns: ColumnDef<TableRow>[] = [
+    {
+      accessorKey: "name",
+      header: () => <div className="text-left">Name</div>,
+      cell: (info) => <span>{info?.row?.original?.tendername}</span>,
+      size: 160,
+    },
+    {
+      accessorKey: "type",
+      header: () => <div className="text-left">Type</div>,
+      cell: (info) => <span>{info?.row?.original?.tendertypename}</span>,
+      size: 120,
+    },
+    {
+      accessorKey: "commission",
+      header: () => <div className="text-right mr-16">Commission</div>,
+      cell: (info) => (
+        <div className="text-right mr-14">{info?.row?.original?.commission}</div>
+      ),
+      size: 120,
+    },
+    {
+      id: "edit",
+      header: () => <div className="text-center  "></div>,
+      cell: () => (
+        <span className="flex justify-center ml-6">
+          <EditTenders />
+        </span>
+      ),
+      size: 20,
+    },
+    {
+      id: "delete",
+      header: () => <div className="text-center "></div>,
+      cell: () => (
+        <span className="flex justify-center mr-5">
+          <DeleteTenders />
+        </span>
+      ),
+      size: 30,
+    },
+  ];
+
   const [globalFilter, setGlobalFilter] = React.useState("");
   const table = useReactTable({
     data,
@@ -163,17 +90,51 @@ const Page: FC = () => {
         pageIndex: 0,
       },
     },
+    manualPagination: true, // Enable manual pagination
+    pageCount: Math.ceil(totalItems / 10),
   });
 
   const { pageIndex, pageSize } = table.getState().pagination;
-  const totalItems = table.getFilteredRowModel().rows.length;
-  const startItem = pageIndex * pageSize + 1;
-  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response: any = await sendApiRequest({
+        mode: "gettenders",
+        page: table.getState().pagination.pageIndex + 1,
+        limit: table.getState().pagination.pageSize,
+      });
+
+      if (response?.status === 200) {
+        setData(response?.data?.tenders || []);
+        response?.data?.total > 0 &&
+          setTotalItems(response?.data?.total || 0);
+      } else {
+        setCustomToast({
+          ...customToast,
+          message: response?.message,
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [pageIndex, pageSize , isOpenAddTender]);
 
   /**go back button */
   const router = useRouter();
   const handleBack = () => {
     router.back();
+  };
+
+  const handleAddTender = (newExpense:any) => {
+    setData((prevExpenses) => [...prevExpenses, newExpense]);
   };
 
   return (
@@ -195,7 +156,7 @@ const Page: FC = () => {
         </div>
         <div className="gap-2 below-md:hidden">
           {" "}
-          <AddTender />
+          <AddTender  setAddTender={setAddTender}/>
         </div>
       </div>
 
@@ -209,7 +170,7 @@ const Page: FC = () => {
           scrollbarWidth: "none", // Hide scrollbar
         }}
       >
-        {table.getRowModel().rows.map((row) => (
+        {table?.getRowModel()?.rows?.map((row) => (
           <div
             key={row.id}
             className={`border border-gray-200 p-5 bg-white rounded-lg mb-3`}
@@ -217,7 +178,7 @@ const Page: FC = () => {
             <div className="flex justify-between items-center">
               {/* Name */}
               <span className="font-bold text-[14px] text-[#334155]">
-                {row.getValue("name")}
+                {row?.original?.tendername}
               </span>
               <div className="flex items-center">
                 {/* Edit */}
@@ -236,21 +197,21 @@ const Page: FC = () => {
 
             <div className="  flex justify-between">
               <span className=" text-[#636363] text-[13px] mb-2">Type</span>{" "}
-              <span className=" text-[14px]">{row.getValue("type")}</span>
+              <span className=" text-[14px]">{row?.original?.tendertypename}</span>
             </div>
 
             <div className=" mt-1 flex justify-between">
               <span className=" text-[#636363] text-[13px] mb-2">
                 Commission
               </span>{" "}
-              <span className=" text-[14px]">{row.getValue("commission")}</span>
+              <span className=" text-[14px]">{row?.original?.commission}</span>
             </div>
           </div>
         ))}
         {/* Add Tender bottom */}
         <div className="block pl-24 ">
           {" "}
-          <AddTender />
+          <AddTender  setAddTender={setAddTender} />
         </div>
       </div>
 

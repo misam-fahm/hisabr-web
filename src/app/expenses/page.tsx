@@ -41,44 +41,56 @@ const Expenses: FC = () => {
     message: "",
     type: "",
   });
-
+  const [isOpenAddExpenses, setAddExpenses] = useState(false);
 
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "date",
       header: () => <div className="text-left ">Date</div>,
       cell: (info) => <span>{info.row.original.expensedate}</span>,
-      size: 60,
+      size: 80,
     },
     {
       accessorKey: "store",
       header: () => <div className="text-left">Store</div>,
-      cell: (info) => <span>{info.row.original.storename}</span>,
+      cell: (info) => {
+        const Storename:any = info.row.original.storename;
+        const truncatedDescription =
+        Storename.length > 15 ? `${Storename.slice(0, 15)}...` : Storename;
+        return <span className="">{truncatedDescription}</span>;
+      },
+      // cell: (info) => <span>{info.row.original.storename}</span>,
       size: 120,
     },
     {
       accessorKey: "amount",
-      header: () => <div className="text-right">Amount</div>,
+      header: () => <div className=" flex justify-end   mr-3">Amount</div>,
       cell: (info) => (
-        <div className="text-right ">{info.getValue() as string}</div>
+        <span className=" flex justify-end  mr-3">{info.row.original.amount}</span>
       ),
-      size: 40,
+      size: 80,
     },
     {
       accessorKey: "description",
-      header: () => <div className="text-left">Description</div>,
+      header: () => <div className="text-left ml-2">Description</div>,
       cell: (info) => {
         const description = info.row.original.description;
         const truncatedDescription =
           description.length > 50 ? `${description.slice(0, 55)}...` : description;
-        return <span className="">{truncatedDescription}</span>;
+        return <div className="text-left  ml-3">{truncatedDescription}</div>;
       },
       size: 190,
     },
     {
       accessorKey: "type",
       header: () => <div className="text-left">Type</div>,
-      cell: (info) => <span className="">{info.row.original.expensename}</span>,
+      cell: (info) => {
+        const expensename:any = info.row.original.expensename;
+        const truncatedDescription =
+        expensename.length > 15 ? `${expensename.slice(0, 15)}...` : expensename;
+        return <span className="text-left">{truncatedDescription}</span>;
+      },
+      // cell: (info) => <span className="">{info.row.original.expensename}</span>,
       size: 100,
     },
     {
@@ -106,9 +118,11 @@ const Expenses: FC = () => {
       ),
       size: 50,
     },
+    
   ];
  
   const table = useReactTable({
+    
     data: data,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -158,7 +172,7 @@ const Expenses: FC = () => {
     };
 
     fetchData();
-  }, [pageIndex, pageSize]);
+  }, [pageIndex, pageSize , isOpenAddExpenses]);
  
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -191,6 +205,43 @@ const Expenses: FC = () => {
     setData((prevExpenses) => [...prevExpenses, newExpense]);
   };
 
+  const containerRef = useRef(null);
+  const [isScrollbarVisible, setIsScrollbarVisible] = useState(false);
+
+  const checkScrollbarVisibility = () => {
+    const container:any = containerRef.current;
+    if (container) {
+      const hasScrollbar = container.scrollHeight > container.clientHeight;
+      setIsScrollbarVisible(hasScrollbar);
+    }
+  };
+
+  useEffect(() => {
+    const container = containerRef.current;
+
+    if (!container) return;
+
+    // Initial check after DOM has fully loaded
+    checkScrollbarVisibility();
+
+    // Observe changes to the table's rows or content
+    const observer = new MutationObserver(() => {
+      checkScrollbarVisibility();
+    });
+
+    observer.observe(container, {
+      childList: true, // Observe changes to child elements
+      subtree: true,   // Observe changes deep within the subtree
+    });
+
+    // Re-check on window resize
+    window.addEventListener("resize", checkScrollbarVisibility);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", checkScrollbarVisibility);
+    };
+  }, [table]);
 
   return (
     <main
@@ -238,7 +289,7 @@ const Expenses: FC = () => {
             </div>
           </div>
           <div className="block pl-24 below-md:hidden">
-            <AddExpenses onAddExpense={handleAddExpense} />
+            <AddExpenses setAddExpenses={setAddExpenses} />
           </div>
         </div>
 
@@ -285,7 +336,7 @@ const Expenses: FC = () => {
           ))}
           <div className=" fixed hidden below-md:block">
             {" "}
-            <AddExpenses onAddExpense={handleAddExpense} />
+            <AddExpenses setAddExpenses={setAddExpenses} />
           </div>
         </div>
 
@@ -300,7 +351,11 @@ const Expenses: FC = () => {
                       <th
                         key={header.id}
                         className="text-left px-4 py-2 text-[#FFFFFF] font-normal text-[15px] w-[100px]"
-                        style={{ width: `${header.column.getSize()}px` }}
+                        style={{
+                          width: isScrollbarVisible
+                            ? `${header.column.getSize() + 8}px` // Add 10px if scrollbar is visible
+                            : `${header.column.getSize()}px`,
+                        }}
                       >
                         {header.isPlaceholder
                           ? null
@@ -315,6 +370,7 @@ const Expenses: FC = () => {
               </thead>
             </table>
             <div
+              ref={containerRef}
               className="w-full overflow-y-auto scrollbar-thin flex-grow"
               style={{ maxHeight: "calc(100vh - 270px)" }}
             >
@@ -345,7 +401,7 @@ const Expenses: FC = () => {
                       {row.getVisibleCells().map((cell) => (
                         <td
                           key={cell.id}
-                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          className="px-4 py-1.5 text-[#636363] text-[14px] "
                           style={{ width: `${cell.column.getSize()}px` }}
                         >
                           {flexRender(
