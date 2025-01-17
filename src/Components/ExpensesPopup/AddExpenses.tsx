@@ -27,7 +27,7 @@ interface JsonData {
 }
 
 
-const AddExpenses = ({ onAddExpense }: { onAddExpense: (newExpense: any) => void }) => {
+const AddExpenses = ({ setAddExpenses }: any) => {
 
   const methods = useForm();
   const { setValue, watch , clearErrors } = methods;
@@ -152,23 +152,8 @@ const AddExpenses = ({ onAddExpense }: { onAddExpense: (newExpense: any) => void
         });
     
         if (status === 200) {
-          // Create a newExpense object from the input and API response
-          const newExpense = {
-            id: responseData?.id, // Assuming the API returns the new expense ID
-            description: jsonData.description,
-            amount: jsonData.amount,
-            expensedate: jsonData.expensedate,
-            expensename:data?.expenseType,
-            expenseid:jsonData?.expenseid, // For display purposes
-            storename:data?.store,
-            storeid: jsonData?.storeid,           // For display purposes
-          };
-    
-          // Pass the new expense to the parent component
-          onAddExpense(newExpense);
-    
-          // Close the modal
           closeModal();
+          setAddExpenses(true)
         }
       } catch (error) {
         setCustomToast({ message: "Error adding item", type: "error" });
