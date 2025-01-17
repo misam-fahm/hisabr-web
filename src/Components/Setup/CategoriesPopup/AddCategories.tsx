@@ -68,27 +68,35 @@ const AddCategories = () => {
     e.preventDefault();
     if (validateForm()) {
       // Prepare JSON object to send
-      const jsonData: JsonData = {
-        mode: "insertcategory",
-        categoryname: categoryName.trim(),
-        description: description.trim(),
-      };
+      try {
+        const jsonData: JsonData = {
+          mode: "insertcategory",
+          categoryname: categoryName.trim(),
+          description: description.trim(),
+        };
 
-      const result: any = await sendApiRequest(jsonData);
-      result?.status === 200
-        ? setCustomToast({
-            ...customToast,
-            toastMessage: "Category added successfully!",
-            toastType: "success",
-          })
-        : setCustomToast({
-            ...customToast,
-            toastMessage: "Failed to add category.",
-            toastType: "error",
-          });
-      setCategoryName("");
-      setDescription("");
-      closeModal();
+        const result: any = await sendApiRequest(jsonData);
+        result?.status === 200
+          ? setCustomToast({
+              ...customToast,
+              toastMessage: "Category added successfully!",
+              toastType: "success",
+            })
+          : setCustomToast({
+              ...customToast,
+              toastMessage: "Failed to add category.",
+              toastType: "error",
+            });
+        setCategoryName("");
+        setDescription("");
+        closeModal();
+      } catch (error: any) {
+        setCustomToast({
+          ...customToast,
+          toastMessage: error?.message,
+          toastType: "error",
+        });
+      }
     }
   };
 
