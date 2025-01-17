@@ -100,7 +100,7 @@ const SalesKPI: FC = () => {
               </p>
             </div>
             <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-              <img src="./images/dollar.svg" />
+              <img src="./images/saleskpisales.svg" />
             </div>
           </div>
 
@@ -116,7 +116,7 @@ const SalesKPI: FC = () => {
               </p>
             </div>
             <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-              <img src="./images/dollar2.svg" />
+              <img src="./images/saleskpiprofit.svg" />
             </div>
           </div>
 
@@ -134,7 +134,7 @@ const SalesKPI: FC = () => {
               </p>
             </div>
             <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-              <img src="./images/dollar3.svg" />
+              <img src="./images/saleskpicustomercount.svg" />
             </div>
           </div>
 
@@ -152,7 +152,7 @@ const SalesKPI: FC = () => {
               </p>
             </div>
             <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-              <img src="./images/dollar4.svg" />
+              <img src="./images/saleskpilaborcost.svg" />
             </div>
           </div>
 
@@ -171,7 +171,7 @@ const SalesKPI: FC = () => {
               </p>
             </div>
             <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-              <img src="./images/dollar5.svg" />
+              <img src="./images/saleskpisalestax.svg" />
             </div>
           </div>
 
@@ -189,7 +189,7 @@ const SalesKPI: FC = () => {
               </p>
             </div>
             <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-              <img src="./images/dollar6.svg" />
+              <img src="./images/saleskpiroyalty.svg" />
             </div>
           </div>
 
@@ -207,7 +207,7 @@ const SalesKPI: FC = () => {
               </p>
             </div>
             <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-              <img src="./images/dollar7.svg" />
+              <img src="./images/saleskpioperatingexpenses.svg" />
             </div>
           </div>
 
@@ -223,7 +223,7 @@ const SalesKPI: FC = () => {
               </p>
             </div>
             <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-              <img src="./images/dollar8.svg" />
+              <img src="./images/saleskpicogs.svg" />
             </div>
           </div>
         </div>

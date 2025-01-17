@@ -68,7 +68,7 @@ const DetailsPage: React.FC = () => {
     <main className="max-h-[calc(100vh-80px)] tablet:max-h-[calc(100vh-10px)] overflow-auto">
       <img
         onClick={handleBack}
-        src="/images/MobileBackIcon.svg"
+        src="/images/Mobilebackicon.svg"
         className="fixed top-4 left-4 z-30 below-lg:hidden tablet:hidden"
       />
 
@@ -86,7 +86,7 @@ const DetailsPage: React.FC = () => {
               <img
                 onClick={() => scrollTabs("left")}
                 className={`below-md:block tablet:block hidden px-2 text-[#334155] text-xl`}
-                src="/images/leftArrow.svg"
+                src="/images/leftarrow.svg"
               />
             )}
 
@@ -120,7 +120,7 @@ const DetailsPage: React.FC = () => {
             <img
               onClick={() => scrollTabs("right")}
               className={`below-md:block tablet:block hidden px-2 text-[#334155] text-xl`}
-              src="/images/rightArrow.svg"
+              src="/images/rightarrow.svg"
             />
           </div>
         </div>

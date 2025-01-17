@@ -281,7 +281,7 @@ const DetailsPage: React.FC = () => {
     >
       <img
         onClick={handleBack}
-        src="/images/MobileBackIcon.svg"
+        src="/images/Mobilebackicon.svg"
         className="fixed top-4 left-4 z-50 below-lg:hidden tablet:hidden"
       />
 
@@ -296,7 +296,7 @@ const DetailsPage: React.FC = () => {
             onClick={handleBack}
             alt="Back Arrow"
             className="w-7 h-7 mb-3 below-md:hidden cursor-pointer"
-            src="/images/WebBackIcon.svg"
+            src="/images/webbackicon.svg"
           ></img>
         </div>
         <div className="flex flex-row justify-between items-center">

@@ -3,13 +3,15 @@ import React, { useState ,useRef,useEffect} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { enGB } from "date-fns/locale";
+import { format } from "date-fns"; // Import format from date-fns
+
 
 const CustomDatePicker = ({
     value,
     onChange,
     errors,
     placeholder = "Date",
-    buttonText = "Set Date",
+   // buttonText = "Set Date",
 }: {
     value?: Date;
     errors?:any;
@@ -48,13 +50,13 @@ const CustomDatePicker = ({
             >
                 <span className="text-[#4B4B4B] text-[12px]">
                     {selectedDate
-                        ? selectedDate.toLocaleDateString()
+                        ? format(selectedDate, "MM-dd-yyyy") // Format the date
                         : placeholder}
                 </span>
                 <img
                     src="/images/calendericon.svg"
                     alt="Calendar Icon"
-                    className=" w-3 h-3"
+                    className="-mr-1 w-3 h-3"
                 />
             </div>
 

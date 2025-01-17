@@ -188,7 +188,7 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     id: "view",
-    header: () => <div className="text-left">View</div>,
+    header: () => <div className="text-left"></div>,
     cell: () => (
       <button
         onClick={() => (window.location.href = "/invoices/invoicedetails")}
@@ -201,6 +201,8 @@ const columns: ColumnDef<TableRow>[] = [
     size: 30,
   },
 ];
+
+
 const Invoices = () => {
   const router = useRouter();
   const [globalFilter, setGlobalFilter] = React.useState("");
@@ -220,54 +222,8 @@ const Invoices = () => {
       },
     },
   });
-  //Card data
-  const cardData = [
-    {
-      date: "2022-01-01",
-      store: 13246,
-      quantity: 176,
-      total: "$3,484.47",
-      name: "Gordon",
-    },
-    {
-      date: "2022-01-01",
-      store: 13246,
-      quantity: 176,
-      total: "$3,484.47",
-      name: "Gordon",
-    },
-    {
-      date: "2022-01-01",
-      store: 13246,
-      quantity: 176,
-      total: "$3,484.47",
-      name: "Gordon",
-    },
-    {
-      date: "2022-01-01",
-      store: 13246,
-      quantity: 176,
-      total: "$3,484.47",
-      name: "Gordon",
-    },
-    {
-      date: "2022-01-01",
-      store: 13246,
-      quantity: 176,
-      total: "$3,484.47",
-      name: "Gordon",
-    },
-  ];
-  //pagination range
-  const { pageIndex, pageSize } = table.getState().pagination;
-  const totalItems = table.getFilteredRowModel().rows.length;
-  const startItem = pageIndex * pageSize + 1;
-  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
+ 
 
-  const [dateRange, setDateRange] = useState<
-    [Date | undefined, Date | undefined]
-  >([undefined, undefined]); // From and To Date
-  const [startDate, endDate] = dateRange;
   const fileInputRef: any = useRef(null);
   const handleButtonClick = () => {
     // Programmatically trigger the hidden file input
@@ -350,6 +306,7 @@ const Invoices = () => {
           <div className="flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
             <input
               type="search"
+              value={globalFilter ?? ""}
               onChange={(e) => setGlobalFilter(e.target.value)}
               ref={searchInputRef}
               placeholder="Search"
@@ -362,7 +319,7 @@ const Invoices = () => {
             />
           </div>
         </div>
-        <div className=" pl-24 below-md:hidden">
+        <div className="pl-24 below-md:hidden">
           <button
             className="w-[159px] h-[35px] bg-[#168A6F] hover:bg-[#11735C] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
             onClick={handleButtonClick}
@@ -380,20 +337,20 @@ const Invoices = () => {
       </div>
       {/* Mobile View : Card section */}
       <div className="block md:hidden">
-        {cardData.map((card, index) => (
+        {formattedData.map((card, index) => (
           <div
             key={index}
-            className="flex flex-col w-full  rounded-md bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3"
+            className="flex flex-col w-full  rounded-lg bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3"
           >
             <div className="flex justify-between items-start">
-              <div className="flex gap-4 px-3 py-4">
+              <div className="flex gap-4 px-4 py-4 text-[#334155]">
                 <p className="text-[14px] font-bold">{card.date}</p>
                 <p className="text-[14px] font-bold">{card.name}</p>
               </div>
 
-              <div className="flex gap-4 mb-1 px-3 py-4">
+              <div className="flex px-4 py-4">
                 <button
-                  onClick={() => (window.location.href = "/invoicedetails")}
+                  onClick={() => (window.location.href = "/invoices/invoicedetails")}
                   className="text-green-500 hover:text-green-700"
                 >
                   <img
@@ -404,12 +361,12 @@ const Invoices = () => {
               </div>
             </div>
             {/* Divider */}
-            <div className="flex items-center px-3 -mt-4">
+            <div className="flex items-center px-4 -mt-2">
               <div className="border-t border-gray-200 w-full"></div>
             </div>
 
             {/* Content Area */}
-            <div className="flex justify-between items-center px-3 py-4">
+            <div className="flex justify-between items-center px-4 py-3">
               <div className="flex flex-col text-[13px] space-y-3">
                 <p className="text-[#636363]">Store</p>
                 <p className="text-[#636363]">quantity</p>
@@ -431,7 +388,7 @@ const Invoices = () => {
             onClick={handleButtonClick}
           >
             <img
-              src="/images/MobileUploadIcon.svg"
+              src="/images/Mobileuploadicon.svg"
               alt="Upload Invoice"
               className="w-[18px] h-[18px]"
             />

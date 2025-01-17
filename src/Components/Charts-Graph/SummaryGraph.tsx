@@ -109,7 +109,7 @@ const CustomChart: FC = () => {
                       {entry.value === "Profit" ? (
                         // Replace "Profit" with an image
                         <img
-                          src="/images/profit1.svg" // Replace with the actual image path
+                          src="/images/overallperformance.svg" // Replace with the actual image path
                           alt="Profit"
                           style={{
                             width: 20,

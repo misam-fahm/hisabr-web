@@ -272,7 +272,7 @@ const DetailsPage: React.FC = () => {
     >
       <img
         onClick={handleBack}
-        src="/images/MobileBackIcon.svg"
+        src="/images/Mobilebackicon.svg"
         className="fixed top-4 left-4 z-30 below-lg:hidden tablet:hidden"
       />
       {/* <div className="below-md:flex below-md:justify-center ">
@@ -416,7 +416,7 @@ const DetailsPage: React.FC = () => {
                     <button
                       onClick={() => (window.location.href = "/invoicedetails")}
                     >
-                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
+                      <img src="/images/vieweyeicon.svg" className="w-7 h-7" />
                     </button>
                   </div>
                 </div>
@@ -448,7 +448,7 @@ const DetailsPage: React.FC = () => {
                     <button
                       onClick={() => (window.location.href = "/invoicedetails")}
                     >
-                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
+                      <img src="/images/vieweyeicon.svg" className="w-7 h-7" />
                     </button>
                   </div>
                 </div>
@@ -480,7 +480,7 @@ const DetailsPage: React.FC = () => {
                     <button
                       onClick={() => (window.location.href = "/invoicedetails")}
                     >
-                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
+                      <img src="/images/vieweyeicon.svg" className="w-7 h-7" />
                     </button>
                   </div>
                 </div>
@@ -512,7 +512,7 @@ const DetailsPage: React.FC = () => {
                     <button
                       onClick={() => (window.location.href = "/invoicedetails")}
                     >
-                      <img src="/images/ViewEyeIcon.svg" className="w-7 h-7" />
+                      <img src="/images/vieweyeicon.svg" className="w-7 h-7" />
                     </button>
                   </div>
                 </div>

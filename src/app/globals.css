@@ -25,7 +25,7 @@ body {
 /* Custom Scrollbar Styles */
 .custom-scrollbar::-webkit-scrollbar {
   width: 0;
-  height: 11px;
+  height: 0;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
@@ -124,7 +124,7 @@ body {
 
 /* Next Button */
 .react-datepicker__navigation--next {
-  background-image: url("/images/RightIcon.svg") !important;
+  background-image: url("/images/righticon.svg") !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
   border: none !important;
@@ -148,12 +148,11 @@ body {
   border-radius: 10px !important;
 }
 
-
 /* styles.css or globals.css for DatePicker*/
 .react-datepicker__day--disabled {
   pointer-events: none;
   cursor: not-allowed;
-  color: #d3d3d3 !important; ; /* Light gray for disabled dates */
+  color: #d3d3d3 !important; /* Light gray for disabled dates */
 }
 
 .react-datepicker__day--disabled:hover {

@@ -240,10 +240,10 @@ const Page: FC = () => {
                 <tbody>
                   {loading ? (
                     Array.from({ length: 10 }).map((_, index) => (
-                      <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+                      <tr key={`skeleton-row-${index}`} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
                         {columns.map((column, colIndex) => (
                           <td
-                            key={colIndex}
+                          key={`skeleton-col-${index}-${colIndex}`}
                             className="px-4 py-1.5"
                             style={{ width: `${column.size}px` }}
                           >
@@ -263,7 +263,7 @@ const Page: FC = () => {
                         {row.getVisibleCells().map((cell) => (
                           
                           <td
-                            key={cell?.id}
+                          key={`cell-${cell?.id}`} 
                             className="px-4 py-1.5 text-[#636363] text-[14px]"
                             style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
                           >

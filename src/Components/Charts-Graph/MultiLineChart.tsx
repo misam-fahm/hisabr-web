@@ -133,7 +133,11 @@ const MultiLineChart: React.FC = () => {
         <CartesianGrid strokeDasharray="3 3" />
 
         {/* X-Axis */}
-        <XAxis dataKey="month" className="text-[#000000B2] text-[12px]" />
+        <XAxis
+          dataKey="month"
+          interval={0}
+          className="text-[#000000B2] text-[12px]"
+        />
 
         {/* Y-Axis */}
         <YAxis
