@@ -143,7 +143,7 @@ const Page: FC = () => {
         type={customToast.type}
       />
       <div className="flex justify-end gap-2 below-md:hidden my-6">
-        <AddNewItems />
+        {/* <AddNewItems /> */}
         <AddCategories />
       </div>
 
