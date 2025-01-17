@@ -157,10 +157,13 @@ const columns: ColumnDef<TableRow>[] = [
   },
   {
     accessorKey: "royalty",
-    header: () => <div className="text-left ml-7">Royalty</div>,
-    cell: (info) => <div className=" text-right mr-5">{info.getValue() as number}</div>,
-    size: 80,
+    header: () => <div className="text-right mr-8">Royalty</div>,
+    cell: (info) => (
+      <div className="text-right mr-8">{info.getValue() as number}</div>
+    ),
+    size: 100,
   },
+
   {
     id: "edit",
     header: () => <div className="text-center"></div>,

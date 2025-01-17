@@ -65,8 +65,8 @@ const Dropdown = ({
           toggleOpen();
         }}
         className={`bg-[#ffffff] text-[#4B4B4B] ${
-          shadowclassName ? shadowclassName : "shadow"
-        } shadow px-3 below-md:h-[38px] h-[35px] w-full ${
+          shadowclassName ? shadowclassName : ""
+        }  px-3 below-md:h-[38px] h-[35px] w-full ${
           widthchange || "below-md:w-[100%] below-lg:w-full"
         } rounded flex items-center justify-between below-md:w-full text-[12px] border focus:outline-none`}
       >
@@ -106,7 +106,7 @@ const Dropdown = ({
         </div>
       )}
       {errors && errors?.message && (
-        <p className="mt-1  absolute text-[10px] top-[2.30rem] z-10 text-red-600">
+        <p className="mt-1 absolute text-[10px] top-[2.30rem] z-10 text-red-600">
           {errors?.message as string}
         </p>
       )}

@@ -124,7 +124,7 @@ const Header: React.FC = () => {
 
   return (
     <main className="w-full sticky z-30 bg-[#ffff] h-[50px] flex justify-center items-center shadow ">
-      <div className="flex justify-between below-md:justify-center  items-center  w-full">
+      <div className="flex  justify-between below-md:justify-center  items-center  w-full">
         <div className=" flex justify-center items-center pl-8 below-md:pl-0 ">
           {" "}
           <text className="text-[18px] font-bold text-defaultblack ">

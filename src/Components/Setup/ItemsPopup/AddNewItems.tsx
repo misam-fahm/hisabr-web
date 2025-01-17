@@ -6,7 +6,9 @@ import Dropdown from "@/Components/UI/Themes/DropDown";
 import { FormProvider, useForm, Controller } from "react-hook-form";
 import { InputField } from "@/Components/UI/Themes/InputField";
 import { sendApiRequest } from "@/utils/apiUtils";
-import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, {
+  ToastNotificationProps,
+} from "@/Components/UI/ToastNotification/ToastNotification";
 interface Category {
   id: number;
   name: string;
@@ -23,13 +25,28 @@ interface JsonData {
 
 const AddNewItems = () => {
   const methods = useForm();
-  const { register, setValue, handleSubmit, watch, clearErrors, trigger, formState: { errors } } = methods;
-  const options = [{name: "Dairy", id: 1}, {name: "Bakery", id: 2}, {name: "Beverages", id:3}, {name: "Frozen Foods", id: 4}];
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    watch,
+    clearErrors,
+    trigger,
+    formState: { errors },
+  } = methods;
+  const options = [
+    { name: "Dairy", id: 1 },
+    { name: "Bakery", id: 2 },
+    { name: "Beverages", id: 3 },
+    { name: "Frozen Foods", id: 4 },
+  ];
   const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [isdqCategoryDropdownOpen, setIsDQCategoryDropdownOpen] = useState(false);
-  const [iscogstrackingDropdownOpen, setIsCOGSTrackingDropdownOpen] = useState(false);
+  const [isdqCategoryDropdownOpen, setIsDQCategoryDropdownOpen] =
+    useState(false);
+  const [iscogstrackingDropdownOpen, setIsCOGSTrackingDropdownOpen] =
+    useState(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
@@ -38,11 +55,11 @@ const AddNewItems = () => {
   const units = watch("units");
   const weight = watch("weight");
   const packsize = watch("packsize");
-  const selectedCategory = watch("category"); 
-  const selectedDqCategory = watch("dqcategory"); 
+  const selectedCategory = watch("category");
+  const selectedDqCategory = watch("dqcategory");
   const selectedCOGSTracking = watch("cogstrackingcategory");
   const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);  
+  const closeModal = () => setIsOpen(false);
 
   const onSubmit = async (data: any) => {
     const jsonData: JsonData = {
@@ -53,12 +70,13 @@ const AddNewItems = () => {
       quantity: data?.units,
       weight: data?.weight,
     };
-    
+
     try {
       const result: any = await sendApiRequest(jsonData);
       const { status } = result;
       setCustomToast({
-        message: status === 200 ? "Item added successfully!" : "Failed to add item.",
+        message:
+          status === 200 ? "Item added successfully!" : "Failed to add item.",
         type: status === 200 ? "success" : "error",
       });
       if (status === 200) closeModal();
@@ -67,7 +85,7 @@ const AddNewItems = () => {
       console.error("Error submitting form:", error);
     }
   };
-  
+
   const toggleDropdownStore = () => {
     setIsStoreDropdownOpen((prev) => !prev);
   };
@@ -78,8 +96,8 @@ const AddNewItems = () => {
 
   const toggleDropdownCOGSTracking = () => {
     setIsCOGSTrackingDropdownOpen((prev) => !prev);
-  };  
-  
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -141,13 +159,7 @@ const AddNewItems = () => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] h-auto below-md:w-[94%] below-md:h-auto px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
             <div className="relative">
-              <img
-                onClick={closeModal}
-                src="/images/cancelicon.svg"
-                alt="Cancel"
-                className="absolute top-0 right-0 cursor-pointer"
-              />
-              <div className="flex justify-center mt-1">
+              <div className="flex justify-center">
                 <DialogTitle
                   as="h3"
                   className=" font-medium  text-[#3D3D3D] opacity-80"
@@ -155,75 +167,83 @@ const AddNewItems = () => {
                   Add Item
                 </DialogTitle>
               </div>
+              <img
+                onClick={closeModal}
+                src="/images/cancelicon.svg"
+                alt="Cancel"
+                className="absolute top-1.5 right-0 cursor-pointer"
+              />
             </div>
 
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col mt-4 gap-6">
-                <div className="w-full flex ">
+                  <div className="w-full flex ">
                     <Dropdown
                       options={categories}
-                      selectedOption={selectedCategory || "Category" } 
+                      selectedOption={selectedCategory || "Category"}
                       onSelect={(selectedValue) => {
                         setValue("category", selectedValue?.name);
                         setValue("categoryId", selectedValue?.id);
-                        setIsStoreDropdownOpen(false); 
-                        clearErrors("category"); 
+                        setIsStoreDropdownOpen(false);
+                        clearErrors("category");
                       }}
                       isOpen={isStoreDropdownOpen}
                       toggleOpen={toggleDropdownStore}
-                      widthchange="w-full"
+                      widthchange="w-full flex justify-end"
                       {...register("category", {
                         required: "Category is required",
                       })}
-                      errors={errors.category} 
+                      errors={errors.category}
                     />
                   </div>
                   <div className="w-full flex ">
                     <Dropdown
                       options={options}
-                      selectedOption={selectedDqCategory || "DQ Category"} 
+                      selectedOption={selectedDqCategory || "DQ Category"}
                       onSelect={(selectedOption) => {
-                        setValue("dqcategory", selectedOption?.name); 
-                        setIsStoreDropdownOpen(false); 
-                        clearErrors("dqcategory"); 
+                        setValue("dqcategory", selectedOption?.name);
+                        setIsStoreDropdownOpen(false);
+                        clearErrors("dqcategory");
                       }}
                       isOpen={isdqCategoryDropdownOpen}
                       toggleOpen={toggleDropdownDQCategory}
-                      widthchange="w-full"
+                      widthchange="w-full "
                       {...methods.register("dqcategory", {
-                        required: "DQ Category should not be empty",
+                      //  required: "DQ Category should not be empty",
                       })}
-                      errors={errors.dqcategory} 
+                      errors={errors.dqcategory}
                     />
                   </div>
-                  <div className="w-full flex ">
+                  <div className="w-full">
                     <Dropdown
                       options={options}
-                      selectedOption={ selectedCOGSTracking || "COGS Tracking Category"} 
+                      selectedOption={
+                        selectedCOGSTracking || "COGS Tracking Category"
+                      }
                       onSelect={(selectedOption) => {
-                        setValue("cogstrackingcategory", selectedOption?.name); 
-                        setIsStoreDropdownOpen(false); 
-                        clearErrors("cogstrackingcategory"); 
+                        setValue("cogstrackingcategory", selectedOption?.name);
+                        setIsStoreDropdownOpen(false);
+                        clearErrors("cogstrackingcategory");
                       }}
                       isOpen={iscogstrackingDropdownOpen}
                       toggleOpen={toggleDropdownCOGSTracking}
-                      widthchange="w-full"
+                      widthchange="w-full "
                       {...methods.register("cogstrackingcategory", {
-                        required: "COGS Tracking Category should not be empty",
+                        //required: "COGS Tracking Category should not be empty",
                       })}
-                      errors={errors.cogstrackingcategory} 
+                      errors={errors.cogstrackingcategory}
                     />
                   </div>
-                  <div className="w-full flex ">
-                    {/* Description Input Field */}
+                  <div className="w-full flex">
                     <InputField
                       type="text"
                       label="Item Name"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-200"
                       labelBackgroundColor="bg-white"
-                      value={name || ''}
-                      textColor="text-gray-500"
+                      value={name || ""}
+                      
+                      textColor="text-[#4B4B4B]"
                       {...register("name", {
                         required: "Item Name is required",
                       })}
@@ -233,17 +253,17 @@ const AddNewItems = () => {
                       // onChange={(e:any) => handleChange("name", e.target.value)}
                     />
                   </div>
-             
+
                   <div className="w-full flex ">
                     <InputField
-                      type="number"
+                      type="text"
                       label="Pack Size"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-200"
                       labelBackgroundColor="bg-white"
-                      value={packsize || ''}
-                      textColor="text-gray-500"
+                      value={packsize || ""}
+                      textColor="text-[#4B4B4B]"
                       {...register("packsize", {
-                        required: "Pack Size is required",
+                        //required: "Pack Size is required",
                       })}
                       errors={errors.packsize}
                       placeholder="Pack Size"
@@ -252,16 +272,15 @@ const AddNewItems = () => {
                     />
                   </div>
                   <div className="w-full flex ">
-                    {/* Description Input Field */}
                     <InputField
-                      type="number"
+                      type="text"
                       label="Units"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-200"
                       labelBackgroundColor="bg-white"
-                      value={units || ''}
-                      textColor="text-gray-500"
+                      value={units || ""}
+                      textColor="text-[#4B4B4B]"
                       {...methods?.register("units", {
-                        required: "Units is required",
+                       // required: "Units is required",
                       })}
                       errors={errors.units}
                       placeholder="Units"
@@ -271,16 +290,15 @@ const AddNewItems = () => {
                   </div>
 
                   <div className="w-full flex">
-                    {/* Description Input Field */}
                     <InputField
                       type="text"
                       label="Weight"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-200"
                       labelBackgroundColor="bg-white"
-                      value={weight || ''}
-                      textColor="text-gray-500"
+                      value={weight || ""}
+                      textColor="text-[#4B4B4B]"
                       {...methods?.register("weight", {
-                        required: "Weight is required",
+                       // required: "Weight is required",
                       })}
                       errors={errors.weight}
                       placeholder="Weight"
@@ -289,7 +307,7 @@ const AddNewItems = () => {
                     />
                   </div>
 
-                  <div className="flex flex-col items-center py-4">
+                  <div className="flex flex-col items-center ">
                     <div className="flex justify-between gap-3 items-center w-full">
                       <button
                         type="button"
