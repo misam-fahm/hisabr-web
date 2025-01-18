@@ -68,7 +68,7 @@ const DetailsPage: React.FC = () => {
     <main className="max-h-[calc(100vh-80px)] tablet:max-h-[calc(100vh-10px)] overflow-auto">
       <img
         onClick={handleBack}
-        src="/images/Mobilebackicon.svg"
+        src="/images/mobilebackicon.svg"
         className="fixed top-4 left-4 z-30 below-lg:hidden tablet:hidden"
       />
 

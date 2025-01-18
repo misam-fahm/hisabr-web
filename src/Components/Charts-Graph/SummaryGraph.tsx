@@ -88,7 +88,16 @@ const CustomChart: FC = () => {
             }}
           />
           {/* Tooltip */}
-          <Tooltip cursor={false} />
+          <Tooltip
+            cursor={false}
+            formatter={(value, name, props) => {
+              if (name === "Profit" && props?.stroke === "none") {
+                return [null, null];
+              }
+              return [value, name];
+            }}
+          />
+
           {/* Legend */}
           <Legend
             content={({ payload }) => (
