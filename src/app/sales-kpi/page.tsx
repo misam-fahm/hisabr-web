@@ -49,7 +49,7 @@ const SalesKPI: FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] overflow-auto"
+      className="max-h-[calc(100vh-60px)] min-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       {/* <div className="below-md:flex below-md:justify-center">
@@ -74,7 +74,7 @@ const SalesKPI: FC = () => {
             </div>
           </div>
           <div className="below-md:hidden tablet:hidden">
-            <button className="flex items-center justify-center bg-[#1AA47D] hover:bg-[#168A68] shadow-lg w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold">
+            <button className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[170px] h-[35px] rounded-md text-white text-[14px] font-semibold">
               <img
                 src="/images/uploadIcon.svg"
                 alt="Upload Icon"
@@ -92,9 +92,9 @@ const SalesKPI: FC = () => {
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">Sales</p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
                 20%{" "}
-                <span className="text-[#575F6D] font-medium">
+                <span className="text-[#575F6D] font-normal">
                   more than last year
                 </span>
               </p>
@@ -108,9 +108,9 @@ const SalesKPI: FC = () => {
             <div className="w-[75%]">
               <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold ">
+              <p className="text-[11px] text-[#388E3C] font-semibold ">
                 65.2%{" "}
-                <span className="text-[#575F6D] font-medium ">
+                <span className="text-[#575F6D] font-normal">
                   of total revenue achieved
                 </span>
               </p>
@@ -126,9 +126,9 @@ const SalesKPI: FC = () => {
                 Customer Count
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
                 40%{" "}
-                <span className="text-[#575F6D] font-medium">
+                <span className="text-[#575F6D] font-normal">
                   increase compare to last year
                 </span>
               </p>
@@ -144,9 +144,9 @@ const SalesKPI: FC = () => {
                 Labor Cost
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
                 16%{" "}
-                <span className="text-[#575F6D] font-medium">
+                <span className="text-[#575F6D] font-normal">
                   of total expenses
                 </span>
               </p>
@@ -164,8 +164,8 @@ const SalesKPI: FC = () => {
                 Sales Tax
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
-                <span className="text-[#575F6D] font-medium">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
+                <span className="text-[#575F6D] font-normal">
                   Estimated tax liablity
                 </span>
               </p>
@@ -181,9 +181,9 @@ const SalesKPI: FC = () => {
                 Royalty
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
                 9.0%{" "}
-                <span className="text-[#575F6D] font-medium">
+                <span className="text-[#575F6D] font-normal">
                   of total expenses
                 </span>
               </p>
@@ -199,9 +199,9 @@ const SalesKPI: FC = () => {
                 Operating Expenses
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
                 0%{" "}
-                <span className="text-[#575F6D] font-medium">
+                <span className="text-[#575F6D] font-normal">
                   of total expenses
                 </span>
               </p>
@@ -215,9 +215,9 @@ const SalesKPI: FC = () => {
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">COGS</p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
                 9.8%{" "}
-                <span className="text-[#575F6D] font-medium">
+                <span className="text-[#575F6D] font-normal">
                   of total expenses
                 </span>
               </p>

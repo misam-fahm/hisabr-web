@@ -194,7 +194,7 @@ const Sales: FC = () => {
       accessorKey: "date",
       header: () => <div className="text-left">Date</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
-      size: 160,
+      size: 100,
     },
     {
       accessorKey: "store",
@@ -376,8 +376,8 @@ const Sales: FC = () => {
           </div>
 
           {/* button */}
-          <div className=" below-md:w-full">
-            <div className="pl-24 below-md:hidden tablet:hidden">
+          <div className="below-lg:pl-24 below-md:w-full">
+            <div className="below-md:hidden tablet:hidden">
               <input
                 type="file"
                 id="fileInput"
@@ -387,7 +387,7 @@ const Sales: FC = () => {
 
               <button
                 onClick={handleUploadClick}
-                className="flex items-center justify-center bg-[#1AA47D] hover:bg-[#168A68] shadow-lg below-md:mt-3 w-[159px] h-[35px] rounded-md text-white text-[14px] font-semibold"
+                className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg below-md:mt-3 w-[159px] h-[35px] rounded-md text-white text-[14px] font-semibold"
               >
                 <img
                   src="/images/uploadIcon.svg"
