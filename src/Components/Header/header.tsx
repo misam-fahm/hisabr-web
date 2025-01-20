@@ -5,7 +5,6 @@ import Images from "../UI/Themes/Image";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
-
 const Header: React.FC = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +14,6 @@ const Header: React.FC = () => {
   const [title, setTitle] = useState("");
   const [isRotated, setIsRotated] = useState(false);
 
-  
   const handleRedirect = () => {
     router.push("/myprofile");
   };
@@ -129,8 +127,6 @@ const Header: React.FC = () => {
     };
   }, []);
 
-
-
   return (
     <main className="w-full sticky z-30 bg-[#ffff] h-[50px] flex justify-center items-center shadow ">
       <div className="flex  justify-between below-md:justify-center  items-center  w-full">
@@ -160,7 +156,7 @@ const Header: React.FC = () => {
               className="w-10 h-10 flex items-center justify-center "
             >
               <img
-                src="/images/profiledropdownside.svg"
+                src="/images/profiledropdown.svg"
                 alt="Menu Icon"
                 className={`transition-transform duration-300 ${
                   isRotated ? "rotate-180" : "rotate-0"
@@ -172,9 +168,10 @@ const Header: React.FC = () => {
             {isOpen && (
               <div className="absolute right-0 mt-3 mr-2 pl-4 w-52 bg-white shadow-lg rounded-lg">
                 <ul className="py-2 ">
-                  <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]"
-                   onClick={handleRedirect}
-                   >
+                  <li
+                    className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]"
+                    onClick={handleRedirect}
+                  >
                     <img
                       src="/images/userprofile.svg"
                       className="inline-block mr-2"
