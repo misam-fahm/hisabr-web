@@ -80,28 +80,10 @@ const tableData : TableRow[] = [
   },
 ];
 const InvoiceDetails = () => {
-  //  const router = useRouter();
-  //   const [globalFilter, setGlobalFilter] = React.useState("");
-  //   const table = useReactTable({
-  //     Data,
-  //     columns,
-  //     getCoreRowModel: getCoreRowModel(),
-  //     getPaginationRowModel: getPaginationRowModel(),
-  //     getFilteredRowModel: getFilteredRowModel(),
-  //     state: {
-  //       globalFilter,
-  //     },
-  //     initialState: {
-  //       pagination: {
-  //         pageSize: 10,
-  //         pageIndex: 0,
-  //       },
-  //     },
-  //   });
 
   return (
     <main
-      className="max-h-[calc(100vh-60px)] overflow-auto px-6 below-md:px-3"
+      className="max-h-[calc(100vh-80px)] w-full overflow-auto px-4 below-md:px-3"
       style={{ scrollbarWidth: "thin" }}
     >
       <div className='block below-md:hidden'>
@@ -109,10 +91,10 @@ const InvoiceDetails = () => {
           <img src='/images/webbackicon.svg' alt='Back Arrow' className='w-7 h-7' />
         </div>
       </div>
-      <div className="flex gap-8 pt-4 pb-4  below-md:flex below-md:flex-col below-md:gap-3">
+      <div className="flex gap-6 pt-4 pb-4 w-full below-md:flex below-md:flex-col below-md:gap-3">
 
         {/* Left Panel - Invoice Details */}
-        <div className="space-y-2 shadow border bg-[#FFFFFF] rounded-lg w-[299px] below-md:w-full p-4 items-start">
+        <div className="space-y-2 shadow border bg-[#FFFFFF] rounded-lg w-full max-w-[299px] below-md:w-full p-4 items-start">
           <div className="flex flex-col below-md:flex-row justify-between gap-[4px]">
             <p className="text-[#636363] text-[12px]">Date</p>
             <p className="text-[#636363] text-[13px] font-semibold">2023/01/09</p>
@@ -132,7 +114,7 @@ const InvoiceDetails = () => {
         </div>
         <div className='flex justify-between w-full'>
           {/* Right Panel - Totals */}
-          <div className="shadow border rounded-lg w-[369px] bg-[#FFFFFF] below-md:w-full px-4 flex flex-col py-3 gap-3">
+          <div className="shadow border rounded-lg w-full max-w-[369px] bg-[#FFFFFF] below-md:w-full p-4 flex flex-col gap-3">
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Product Total</span>
               <span className="text-[#636363] text-[13px] font-semibold">$8,068.89</span>
@@ -164,42 +146,42 @@ const InvoiceDetails = () => {
       </div>
       {/*table content*/}
       <div className=' shadow-sm  border border-b border-[#E4E4EF] block below-md:hidden rounded-md '>
-        <div className='overflow-x-auto rounded-md'>
+        <div className='overflow-x-auto  rounded-md'>
           <table className='w-full table-auto border-collapse text-[15px] text-white'>
-            <thead className='bg-[#334155] '>
+            <thead className='bg-[#0F1044] '>
               <tr>
-                <th className="px-4 text-left h-[40px] whitespace-nowrap font-normal" style={{ width: '100px' }}>Item Code</th>
-                <th className="px-4 text-left h-[40px] font-normal" style={{ width: '250px' }}>Description</th>
-                <th className="px-4 text-left h-[40px] font-normal pr-3" style={{ width: '100px' }}>Brand</th>
-                <th className="px-4 text-left h-[40px] font-normal pr-2" style={{ width: '80px' }}>Category</th>
-                <th className="px-4 text-center h-[40px] font-normal pl-2" style={{ width: '100px' }}>Quantity</th>
-                <th className="px-4 text-center h-[40px] font-normal pr-3" style={{ width: '100px' }}>Units</th>
-                <th className="px-4 text-center h-[40px] whitespace-nowrap font-normal" style={{ width: '120px' }}>Pack Size</th>
-                <th className="px-4 text-right h-[40px] whitespace-nowrap font-normal" style={{ width: '120px' }}>Invt Value</th>
-                <th className="px-4 text-right h-[40px] whitespace-nowrap font-normal"style={{ width: '120px' }}>Unit Price</th>
-                <th className="px-4 text-right h-[40px] font-normal" style={{ width: '100px' }}>Tax</th>
-                <th className="px-4 text-right h-[40px] font-normal" style={{ width: '120px' }}>Total</th>
+                <th className="px-4 text-left h-[40px] whitespace-nowrap font-normal">Item Code</th>
+                <th className="px-4 text-left h-[40px] font-normal">Description</th>
+                <th className="px-4 text-left h-[40px] font-normal pr-2">Brand</th>
+                <th className="px-4 text-left h-[40px] font-normal ">Category</th>
+                <th className="px-4 text-center h-[40px] font-normal pl-2">Quantity</th>
+                <th className="px-4 text-center h-[40px] font-normal pr-3">Units</th>
+                <th className="px-4 text-center h-[40px] whitespace-nowrap font-normal">Pack Size</th>
+                <th className="px-4 text-right h-[40px] whitespace-nowrap font-normal">Invt Value</th>
+                <th className="px-4 text-right h-[40px] whitespace-nowrap font-normal">Unit Price</th>
+                <th className="px-4 text-right h-[40px] font-normal">Tax</th>
+                <th className="px-4 text-right h-[40px] font-normal">Total</th>
                 <th className="w-[8px]">{ }</th>
               </tr>
             </thead>
           </table>
-          <div className='max-h-[calc(100vh-420px)]  overflow-auto' style={{ scrollbarWidth: "thin" }}>
-            <table className='w-full text-[14px] table-auto shadow rounded-md'>
+          <div className='max-h-[calc(100vh-420px)] overflow-auto' style={{ scrollbarWidth: "thin" }}>
+            <table className='w-full  text-[14px] table-auto shadow rounded-md'>
               <tbody>
                 {tableData.map((row, index) => (
                   <tr key={index}
                     className={index % 2 === 0 ? 'bg-white' : 'bg-[#F3F3F6]'}>
-                    <td className="px-4 text-center text-[#636363]" style={{ width: '100px' }}>{row.itemCode}</td>
-                    <td className="py-2 px-4 text-[#636363] break-words" style={{ width: '250px' }}>{row.description}</td>
-                    <td className="py-2 px-4  text-[#636363] pr-7" style={{ width: '100px' }}>{row.brand}</td>
-                    <td className="py-2 px-4 text-center pl-2 text-[#636363]" style={{ width: '80px' }}>{row.category}</td>
-                    <td className="py-2 px-4 text-right pr-8 text-[#636363]" style={{ width: '100px' }}>{row.quantity}</td>
-                    <td className="py-2 px-4 text-center text-[#636363]" style={{ width: '100px' }}>{row.units}</td>
-                    <td className="py-2 px-4 text-center text-[#636363]" style={{ width: '120px' }}>{row.packSize}</td>
-                    <td className="py-2 px-4 text-right text-[#636363]" style={{ width: '120px' }}>{row.invtValue}</td>
-                    <td className="py-2 px-4 text-right text-[#636363]"style={{ width: '120px' }}>{row.unitPrice}</td>
-                    <td className="py-2 px-4 text-right pr-3 text-[#636363]"style={{ width: '100px' }}>{row.tax}</td>
-                    <td className="py-2 px-4 text-right text-[#636363]"style={{ width: '120px' }}>{row.total}</td>
+                    <td className="px-6 py-3 text-center text-[#636363]">{row.itemCode}</td>
+                    <td className="py-2 px-4 text-[#636363]">{row.description}</td>
+                    <td className="py-2 px-4  text-[#636363] pl-2 ">{row.brand}</td>
+                    <td className="py-2 px-4 text-center  text-[#636363] ">{row.category}</td>
+                    <td className="py-2 px-4 text-right pr-8 text-[#636363]">{row.quantity}</td>
+                    <td className="py-2 px-4 text-center text-[#636363]">{row.units}</td>
+                    <td className="py-2 px-4 text-center text-[#636363]">{row.packSize}</td>
+                    <td className="py-2 px-4 text-right text-[#636363]">{row.invtValue}</td>
+                    <td className="py-2 px-4 text-right text-[#636363]">{row.unitPrice}</td>
+                    <td className="py-2 px-4 text-right pr-3 text-[#636363]">{row.tax}</td>
+                    <td className="py-2 px-4 text-right text-[#636363]">{row.total}</td>
                   </tr>
                 ))}
               </tbody>

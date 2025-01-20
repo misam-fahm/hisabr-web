@@ -54,7 +54,7 @@ const columns: ColumnDef<TableRow>[] = [
        <EditCategories rowData={info.row.original} />
       </span>
     ),
-    size: 30,
+    size: 50,
   },
   {
     id: "delete",
@@ -62,7 +62,7 @@ const columns: ColumnDef<TableRow>[] = [
       <div className="flex justify-center items-center"></div>
     ),
     cell: () => (
-      <span className="flex justify-center mr-5">
+      <span className="flex justify-center">
         <DeleteCategories />
       </span>
     ),

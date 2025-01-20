@@ -107,9 +107,12 @@ const Page = () => {
 
   return (
     <FormProvider {...methods}>
+      <main 
+      className="max-h-[calc(100vh-60px)] px-5 overflow-auto"
+      style={{ scrollbarWidth: "thin" }}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
-        className="w-full flex flex-col  p-5"
+        className="w-full flex flex-col p-4"
       >
         <div className="bg-white py-6 px-8 rounded-lg shadow-lg">
           <div>
@@ -406,6 +409,7 @@ const Page = () => {
           </div>
         </div>
       </form>
+      </main>
     </FormProvider>
   );
 };

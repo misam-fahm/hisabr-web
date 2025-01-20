@@ -76,13 +76,13 @@ const columns: ColumnDef<TableRow>[] = [
         <EditItem />
       </span>
     ),
-    size: 30,
+    size: 50,
   },
   {
     id: "delete",
     header: () => <div className="text-center"></div>,
     cell: () => (
-      <span className="flex justify-center mr-5">
+      <span className="flex justify-center">
         <DeleteItems />
       </span>
     ),

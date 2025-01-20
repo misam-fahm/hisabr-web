@@ -113,7 +113,7 @@ const AddCategories = () => {
       <div className="block below-md:hidden">
         <button
           onClick={openModal}
-          className=" shadow-lg bg-[#168A6F] hover:bg-[#11735C] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
+          className=" shadow-lg bg-[#168A6F] hover:bg-[#11735C] text-white  w-[159px] text-[13px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
           <img src="/images/plus1.svg" alt="Add icon" />
           Add Category

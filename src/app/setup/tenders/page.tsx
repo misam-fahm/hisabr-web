@@ -128,17 +128,17 @@ const columns: ColumnDef<TableRow>[] = [
     id: "edit",
     header: () => <div className="text-center  "></div>,
     cell: () => (
-      <span className="flex justify-center ml-6">
+      <span className="flex justify-center">
         <EditTenders />
       </span>
     ),
-    size: 20,
+    size: 30,
   },
   {
     id: "delete",
     header: () => <div className="text-center "></div>,
     cell: () => (
-      <span className="flex justify-center mr-5">
+      <span className="flex justify-center">
         <DeleteTenders />
       </span>
     ),

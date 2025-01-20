@@ -6,6 +6,8 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { useEffect } from "react";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { sendApiRequest } from "@/utils/apiUtils";
 
 interface TableRow {
   name: string;
@@ -37,15 +39,49 @@ const tableData2: TableRow2[] = [
 ];
 
 const Home: FC = () => {
-  const [selectedOption, setSelectedOption] = useState<string>("Stores");
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+      message: "",
+      type: "",
+    });
   const [selectedOption2, setSelectedOption2] = useState<string>("2021");
   const [isOpen2, setIsOpen2] = useState<boolean>(false);
 
-  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+  }
+
+  const handleError = (message: string) => {
+    setCustomToast({
+      message,
+      type: "error",
+    });
+  };
+
+  const fetchDropdownData = async () => {
+      try {
+        const response = await sendApiRequest({ mode: "getallstores" });
+        if (response?.status === 200) {
+          setStore(response?.data?.stores || []);
+        } else {
+          handleError(response?.message);
+        }
+      } catch (error) {
+        console.error("Error fetching stores:", error);
+      }
+    
+    };
+    useEffect(() => {
+     
+      fetchDropdownData();
+    
+  }, []);
+
   const options2 = ["2024", "2023", "2022", "2021"];
 
-  const toggleDropdown1 = () => setIsOpen(!isOpen);
   const toggleDropdown2 = () => setIsOpen2(!isOpen2);
 
   const handleSelect = (option: string) => {
@@ -94,7 +130,7 @@ const Home: FC = () => {
   //fifth link(customer count)
 
   const handleClick5 = () => {
-    // localStorage.setItem('showBackIcon', 'true');
+    localStorage.setItem('showBackIcon', 'true');
     router.push("/expenses");
   };
 
@@ -134,11 +170,14 @@ const Home: FC = () => {
           {/* First Dropdown */}
 
           <Dropdown
-            options={options}
-            selectedOption={selectedOption}
-            onSelect={handleSelect}
-            isOpen={isOpen}
-            toggleOpen={toggleDropdown1}
+            options={store}
+            selectedOption={selectedOption?.name || "Store"}
+            onSelect={(selectedOption:any) => {
+              setSelectedOption( {name : selectedOption.name , id: selectedOption.id}); 
+              setIsStoreDropdownOpen(false); 
+            }}
+            isOpen={isStoreDropdownOpen}
+            toggleOpen={toggleStoreDropdown}
           />
           {/* Second Dropdown */}
 
@@ -496,9 +535,9 @@ const Home: FC = () => {
           <div className=" bg-white below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md below-md:shadow-none w-full pb-6  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
-                <img src="/images/labor.svg" />
+                <img src="/images/labour.svg" />
                 <p className="text-[#334155]  text-[16px] font-bold">
-                  Labor{" "}
+                  Labour{" "}
                   <span className="text-[12px] font-semibold text-[#B25209] ">
                     13% of total cost
                   </span>

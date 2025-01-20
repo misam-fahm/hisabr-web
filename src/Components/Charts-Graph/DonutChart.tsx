@@ -28,13 +28,13 @@ const DonutChart: React.FC = () => {
   }, []);
 
   const data = {
-    labels: ["Profit", "Labor Cost", "Sales Tax", "ROYALTY", "COGS"],
+    labels: ["Profit", "Labour Cost", "Sales Tax", "ROYALTY", "COGS"],
     datasets: [
       {
         data: [65.2, 16.0, 8.6, 9.0, 9.8],
         backgroundColor: [
           "#53755599", // profit
-          "#DAB777", // Labor cost
+          "#DAB777", // Labour cost
           "#653C597A", // Sales Tax
           "#79AFC7", // Royalty
           "#AC8892", // Cogs
@@ -109,8 +109,8 @@ const DonutChart: React.FC = () => {
         let labelX = midX + (angle > Math.PI ? -50 : 50);
         let labelY = midY;
 
-        // Check if it's the 'Labor Cost' index and make it vertical with a horizontal line outside the chart
-        if (chartData.labels![index] === "Labor Cost") {
+        // Check if it's the 'Labour Cost' index and make it vertical with a horizontal line outside the chart
+        if (chartData.labels![index] === "Labour Cost") {
           labelX = centerX + Math.cos(angle) * (outerRadius * 1.5);
           labelY = centerY + Math.sin(angle) * (outerRadius * 1);
 
