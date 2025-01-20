@@ -103,14 +103,14 @@ const Expenses: FC = () => {
           </span>
         </>
       ),
-      size: 30,
+      size: 50,
     },
     {
       id: "delete",
       header: () => <div className="text-center"></div>,
       cell: () => (
         <>
-          <span className="flex justify-center mr-4">
+          <span className="flex justify-center">
             {" "}
             <DeleteExpense />
           </span>
@@ -272,7 +272,7 @@ const Expenses: FC = () => {
               <DateRangePicker />
             </div>
 
-            <div className="flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
+            <div className="flex  border below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
               <input
                 type="search"
                 value={globalFilter ?? ""}
@@ -344,7 +344,7 @@ const Expenses: FC = () => {
         <div className="overflow-x-auto shadow-sm border-collapse border border-b border-[#E4E4EF] rounded-md  flex-grow flex flex-col below-md:hidden">
           <div className="overflow-hidden max-w-full rounded-md">
             <table className="w-full border-collapse text-white table-fixed rounded-md">
-              <thead className="bg-[#334155] top-0 z-10">
+              <thead className="bg-[#0F1044] top-0 z-10">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
