@@ -64,11 +64,7 @@ const Dropdown = ({
           e.stopPropagation(); // Prevent dialog close
           toggleOpen();
         }}
-<<<<<<< HEAD
         className={`bg-[#ffffff] text-[#636363] ${
-=======
-        className={`bg-[#ffffff] text-[#4B4B4B] ${
->>>>>>> production
           shadowclassName ? shadowclassName : ""
         }  px-3 below-md:h-[38px] h-[35px] w-full ${
           widthchange || "below-md:w-[100%] below-lg:w-full"
