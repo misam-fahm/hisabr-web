@@ -33,7 +33,7 @@ const SalesKPI: FC = () => {
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
-  }
+  };
 
   const handleError = (message: string) => {
     setCustomToast({
@@ -53,15 +53,10 @@ const SalesKPI: FC = () => {
     } catch (error) {
       console.error("Error fetching stores:", error);
     }
-  
   };
   useEffect(() => {
-   
     fetchDropdownData();
-  
-}, []);
-
-  
+  }, []);
 
   //tooltip for mobile
   const [showTooltip, setShowTooltip] = useState(false);
@@ -95,9 +90,12 @@ const SalesKPI: FC = () => {
             <Dropdown
               options={store}
               selectedOption={selectedOption?.name || "Store"}
-              onSelect={(selectedOption:any) => {
-                setSelectedOption( {name : selectedOption.name , id: selectedOption.id}); 
-                setIsStoreDropdownOpen(false); 
+              onSelect={(selectedOption: any) => {
+                setSelectedOption({
+                  name: selectedOption.name,
+                  id: selectedOption.id,
+                });
+                setIsStoreDropdownOpen(false);
               }}
               isOpen={isStoreDropdownOpen}
               toggleOpen={toggleStoreDropdown}
@@ -186,7 +184,7 @@ const SalesKPI: FC = () => {
               </p>
             </div>
             <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-              <img src="./images/saleskpiLabourcost.svg" />
+              <img src="./images/labour.svg" />
             </div>
           </div>
 
