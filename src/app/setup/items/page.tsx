@@ -164,7 +164,7 @@ const Page: FC = () => {
       />
       <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
         <AddNewItems />
-        <AddCategories />
+        {/* <AddCategories /> */}
       </div>
 
       <div className="overflow-hidden max-w-full ">

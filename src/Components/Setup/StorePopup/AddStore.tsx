@@ -17,7 +17,7 @@ interface JsonData {
 }
 
 
-const AddStore = ({ onAddStore }: { onAddStore: (newExpense: any) => void }) => {
+const AddStore = ({ setAddStore }:any) => {
   const methods = useForm();
   const [royalty, setRoyalty] = useState("");
   const [county, setCounty] = useState("");
@@ -86,17 +86,8 @@ const AddStore = ({ onAddStore }: { onAddStore: (newExpense: any) => void }) => 
       });
   
       if (status === 200) {
-        const newExpense = {
-          id: responseData?.storeid || "N/A",
-          county: jsonData.county,
-          location: jsonData.location,
-          storename: jsonData.storename,
-          royalty: jsonData.royalty,
-          owner: jsonData.owner,
-        };
-  
-        if (typeof onAddStore === "function") onAddStore(newExpense);
-        if (typeof closeModal === "function") closeModal();
+        closeModal();
+        setAddStore(true)
       }
     } catch (error) {
       setCustomToast({ message: "Error adding item", type: "error" });

@@ -35,6 +35,7 @@ const Page: FC = () => {
     message: "",
     type: "",
   });
+  const [isOpenAddStore, setAddStore] = useState(false);
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -151,7 +152,7 @@ const Page: FC = () => {
     };
 
     fetchData();
-  }, [pageIndex, pageSize]);
+  }, [pageIndex, pageSize , isOpenAddStore]);
 
 
   const handleAddExpense = (newExpense:any) => {
@@ -165,7 +166,7 @@ const Page: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
-        <AddStore onAddStore={handleAddExpense} />
+        <AddStore setAddStore={setAddStore} />
       </div>
 
       {/* Mobile View */}
@@ -223,7 +224,7 @@ const Page: FC = () => {
         {/* Add Store bottom */}
         <div className="block pl-24 ">
           {" "}
-          <AddStore onAddStore={handleAddExpense} />
+          <AddStore setAddStore={setAddStore} />
         </div>
       </div>
 

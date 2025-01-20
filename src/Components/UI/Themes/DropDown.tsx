@@ -64,7 +64,11 @@ const Dropdown = ({
           e.stopPropagation(); // Prevent dialog close
           toggleOpen();
         }}
+<<<<<<< HEAD
         className={`bg-[#ffffff] text-[#636363] ${
+=======
+        className={`bg-[#ffffff] text-[#4B4B4B] ${
+>>>>>>> production
           shadowclassName ? shadowclassName : ""
         }  px-3 below-md:h-[38px] h-[35px] w-full ${
           widthchange || "below-md:w-[100%] below-lg:w-full"
@@ -83,7 +87,7 @@ const Dropdown = ({
       {/* Dropdown Menu */}
       {isOpen && (
         <div
-          className={`absolute left-0 w-full mt-1 bg-[#ffffff] h-[178px] overflow-auto scrollbar-thin text-[#4B4B4B] text-[12px] border rounded ${
+          className={`absolute left-0 w-full mt-1 bg-[#ffffff] max-h-[178px] overflow-auto scrollbar-thin text-[#4B4B4B] text-[12px] border rounded ${
             shadowclassName ? shadowclassName : "shadow"
           } shadow`}
           style={{ zIndex: 50 }}
@@ -106,7 +110,7 @@ const Dropdown = ({
         </div>
       )}
       {errors && errors?.message && (
-        <p className="mt-1  absolute text-[10px] top-[2.30rem] z-10 text-red-600">
+        <p className="mt-1 absolute text-[10px] top-[2.30rem] z-10 text-red-600">
           {errors?.message as string}
         </p>
       )}

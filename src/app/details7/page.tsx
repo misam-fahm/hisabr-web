@@ -171,9 +171,13 @@ const columns: ColumnDef<TableRow>[] = [
     cell: () => (
       <>
         <span className="flex justify-center">
-        <EditExpense initialData={existingExpense}
-            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-            onClose={() => console.log("Modal Closed")} />
+          <EditExpense
+            initialData={existingExpense}
+            onSubmit={(updatedData) =>
+              console.log("Updated Expense:", updatedData)
+            }
+            onClose={() => console.log("Modal Closed")}
+          />
         </span>
       </>
     ),
@@ -265,7 +269,7 @@ const DetailsPage: React.FC = () => {
     >
       <img
         onClick={handleBack}
-        src="/images/Mobilebackicon.svg"
+        src="/images/mobilebackicon.svg"
         className="fixed top-4 left-4 z-30 below-lg:hidden tablet:hidden"
       />
       {/* <div className="below-md:flex below-md:justify-center ">
@@ -316,9 +320,11 @@ const DetailsPage: React.FC = () => {
           </p>
         </div>
         <div className="below-md:hidden flex items-center justify-center below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
-          <AddExpenses onAddExpense={function (newExpense: any): void {
-            throw new Error("Function not implemented.");
-          } } />
+          <AddExpenses
+            onAddExpense={function (newExpense: any): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
           {/* <button className="below-md:hidden flex items-center justify-center bg-[#1AA47D] below-md:mt-3 w-[170px] h-[35px] rounded-md text-white text-[14px] font-medium">
             <img src="/images/addIcon.svg" alt="add Icon" className="mr-1" />
             Add Expense
@@ -400,9 +406,13 @@ const DetailsPage: React.FC = () => {
                   </div>
                   <div className="flex gap-7">
                     <>
-                    <EditExpense initialData={existingExpense}
-            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-            onClose={() => console.log("Modal Closed")} />
+                      <EditExpense
+                        initialData={existingExpense}
+                        onSubmit={(updatedData) =>
+                          console.log("Updated Expense:", updatedData)
+                        }
+                        onClose={() => console.log("Modal Closed")}
+                      />
                       <DeleteExpense />
                     </>
                   </div>
@@ -433,9 +443,13 @@ const DetailsPage: React.FC = () => {
                   </div>
                   <div className="flex gap-7">
                     <>
-                    <EditExpense initialData={existingExpense}
-            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-            onClose={() => console.log("Modal Closed")} />
+                      <EditExpense
+                        initialData={existingExpense}
+                        onSubmit={(updatedData) =>
+                          console.log("Updated Expense:", updatedData)
+                        }
+                        onClose={() => console.log("Modal Closed")}
+                      />
                       <DeleteExpense />
                     </>
                   </div>
@@ -466,9 +480,13 @@ const DetailsPage: React.FC = () => {
                   </div>
                   <div className="flex gap-7">
                     <>
-                    <EditExpense initialData={existingExpense}
-            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-            onClose={() => console.log("Modal Closed")} />
+                      <EditExpense
+                        initialData={existingExpense}
+                        onSubmit={(updatedData) =>
+                          console.log("Updated Expense:", updatedData)
+                        }
+                        onClose={() => console.log("Modal Closed")}
+                      />
                       <DeleteExpense />
                     </>
                   </div>
@@ -499,9 +517,13 @@ const DetailsPage: React.FC = () => {
                   </div>
                   <div className="flex gap-7">
                     <>
-                    <EditExpense initialData={existingExpense}
-            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-            onClose={() => console.log("Modal Closed")} />
+                      <EditExpense
+                        initialData={existingExpense}
+                        onSubmit={(updatedData) =>
+                          console.log("Updated Expense:", updatedData)
+                        }
+                        onClose={() => console.log("Modal Closed")}
+                      />
                       <DeleteExpense />
                     </>
                   </div>
@@ -532,9 +554,13 @@ const DetailsPage: React.FC = () => {
                   </div>
                   <div className="flex gap-7">
                     <>
-                    <EditExpense initialData={existingExpense}
-            onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-            onClose={() => console.log("Modal Closed")} />
+                      <EditExpense
+                        initialData={existingExpense}
+                        onSubmit={(updatedData) =>
+                          console.log("Updated Expense:", updatedData)
+                        }
+                        onClose={() => console.log("Modal Closed")}
+                      />
                       <DeleteExpense />
                     </>
                   </div>
@@ -560,9 +586,11 @@ const DetailsPage: React.FC = () => {
       </div>
 
       <div className="below-lg:hidden flex justify-end fixed tablet:hidden">
-        <AddExpenses onAddExpense={function (newExpense: any): void {
-          throw new Error("Function not implemented.");
-        } } />
+        <AddExpenses
+          onAddExpense={function (newExpense: any): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
       </div>
     </main>
   );
