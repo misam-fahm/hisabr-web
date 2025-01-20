@@ -32,10 +32,10 @@ const data: TableData[] = [
   {
     category: "Labour Information",
     rows: [
-      { description: "Labor Cost", value: "$636.32" },
-      { description: "Labor Hours", value: "$59.72" },
-      { description: "Labor Percentage of Sales", value: "$59.72" },
-      { description: "Sales per Labor Hour", value: "$59.72" },
+      { description: "Labour Cost", value: "$636.32" },
+      { description: "Labour Hours", value: "$59.72" },
+      { description: "Labour Percentage of Sales", value: "$59.72" },
+      { description: "Sales per Labour Hour", value: "$59.72" },
     ],
   },
   {

@@ -1,13 +1,15 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import DonutChart from "@/Components/Charts-Graph/DonutChart";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { sendApiRequest } from "@/utils/apiUtils";
 
 const SalesKPI: FC = () => {
   const tableData = [
     { label: "Profit", amount: "10,000", per: "65%", color: "#53755599" },
-    { label: "Labor Cost", amount: "2,000", per: "20%", color: "#DAB777" },
+    { label: "Labour Cost", amount: "2,000", per: "20%", color: "#DAB777" },
     { label: "Sales Tax", amount: "50,000", per: "75%", color: "#653C597A" },
     { label: "Royalty", amount: "20,000", per: "25%", color: "#79AFC7" },
     {
@@ -20,17 +22,46 @@ const SalesKPI: FC = () => {
   ];
 
   /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("Stores");
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
 
-  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+  }
 
-  const toggleDropdown1 = () => setIsOpen(!isOpen);
-
-  const handleSelect = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
+  const handleError = (message: string) => {
+    setCustomToast({
+      message,
+      type: "error",
+    });
   };
+
+  const fetchDropdownData = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getallstores" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+  
+  };
+  useEffect(() => {
+   
+    fetchDropdownData();
+  
+}, []);
+
+  
 
   //tooltip for mobile
   const [showTooltip, setShowTooltip] = useState(false);
@@ -62,11 +93,14 @@ const SalesKPI: FC = () => {
         <div className="flex flex-row below-md:flex-col below-md:items-end sticky  justify-between pt-6 below-md:pt-4 below-md:px-3  pl-6 pr-6 pb-6 below-md:pb-4 bg-[#f7f8f9] ">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
             <Dropdown
-              options={options}
-              selectedOption={selectedOption}
-              onSelect={handleSelect}
-              isOpen={isOpen}
-              toggleOpen={toggleDropdown1}
+              options={store}
+              selectedOption={selectedOption?.name || "Store"}
+              onSelect={(selectedOption:any) => {
+                setSelectedOption( {name : selectedOption.name , id: selectedOption.id}); 
+                setIsStoreDropdownOpen(false); 
+              }}
+              isOpen={isStoreDropdownOpen}
+              toggleOpen={toggleStoreDropdown}
             />
 
             <div className="w-[260px] tablet:w-full below-md:w-full">
@@ -141,7 +175,7 @@ const SalesKPI: FC = () => {
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
-                Labor Cost
+                Labour Cost
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
@@ -152,7 +186,7 @@ const SalesKPI: FC = () => {
               </p>
             </div>
             <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-              <img src="./images/saleskpilaborcost.svg" />
+              <img src="./images/saleskpiLabourcost.svg" />
             </div>
           </div>
 
