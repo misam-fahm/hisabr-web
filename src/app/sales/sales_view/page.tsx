@@ -8,7 +8,7 @@ import Destinations from "../components/destinations/page";
 import Promotions from "../components/promotions/page";
 import CashSkims from "../components/cash-skims/page";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const tabContent: Record<string, JSX.Element> = {
   "Sales Details": <SalesDetails />,
@@ -29,6 +29,26 @@ const DetailsPage: React.FC = () => {
   const tabs = Object.keys(tabContent) as Array<keyof typeof tabContent>;
   const router = useRouter();
 
+  useEffect(() => {
+    const container = document.getElementById("tabContainer");
+
+    const handleScroll = () => {
+      if (container) {
+        setShowLeftArrow(container.scrollLeft > 0);
+      }
+    };
+
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
+
   const handleTabClick = (tab: keyof typeof tabContent) => {
     setActiveTab(tab);
   };
@@ -43,23 +63,10 @@ const DetailsPage: React.FC = () => {
     if (container) {
       const scrollAmount = 150;
       const maxScrollLeft = container.scrollWidth - container.clientWidth;
-
       if (direction === "left") {
         container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-
-        if (container.scrollLeft - scrollAmount <= 0) {
-          setShowLeftArrow(false);
-        }
       } else if (direction === "right") {
-        if (container.scrollLeft + scrollAmount < maxScrollLeft) {
-          container.scrollBy({ left: scrollAmount, behavior: "smooth" });
-          setShowLeftArrow(true);
-        } else {
-          container.scrollBy({
-            left: maxScrollLeft - container.scrollLeft,
-            behavior: "smooth",
-          });
-        }
+        container.scrollBy({ left: scrollAmount, behavior: "smooth" });
       }
     }
   };
