@@ -196,7 +196,7 @@ const Sales: FC = () => {
       accessorKey: "date",
       header: () => <div className="text-left">Date</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
-      size: 160,
+      size: 100,
     },
     {
       accessorKey: "store",
@@ -358,7 +358,7 @@ const Sales: FC = () => {
       className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] tablet:max-h-[calc(100vh-0)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className="mx-6 mt-6 below-md:mx-3 below-md:mt-0 tablet:mt-4">
+      <div className="px-6 mt-6 below-md:px-3 below-md:mt-0 tablet:mt-4">
         <div className="flex flex-row below-md:flex-col pb-6 sticky z-20  below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
           <div className="flex flex-row below-md:flex-col w-full  gap-3">
             {/* Dropdown Button */}
@@ -412,8 +412,8 @@ const Sales: FC = () => {
           </div>
 
           {/* button */}
-          <div className=" below-md:w-full">
-            <div className="pl-24 below-md:hidden tablet:hidden">
+          <div className="below-lg:pl-24 below-md:w-full">
+            <div className="below-md:hidden tablet:hidden">
               <input
                 type="file"
                 id="fileInput"
@@ -423,7 +423,7 @@ const Sales: FC = () => {
 
               <button
                 onClick={handleUploadClick}
-                className="flex items-center justify-center bg-[#1AA47D] hover:bg-[#168A68] shadow-lg below-md:mt-3 w-[159px] h-[35px] rounded-md text-white text-[14px] font-semibold"
+                className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg below-md:mt-3 w-[159px] h-[35px] rounded-md text-white text-[14px] font-semibold"
               >
                 <img
                   src="/images/uploadIcon.svg"
@@ -443,7 +443,7 @@ const Sales: FC = () => {
         <div className="tablet:hidden overflow-x-auto border-collapse border border-[#E4E4EF] rounded-lg flex-grow hidden flex-col md:block shadow-sm">
           <div className="overflow-hidden max-w-full">
             <table className="w-full border-collapse border-gray-200 table-fixed shadow-lg">
-              <thead className="bg-[#334155] sticky top-0 z-10">
+              <thead className="bg-[#334155]  top-0 z-10">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (

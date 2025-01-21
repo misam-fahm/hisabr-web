@@ -46,9 +46,9 @@ const CustomDatePicker = ({
             {/* Input Field */}
             <div
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center h-[35px] justify-between p-3 border rounded-md bg-white cursor-pointer shadow"
+                className="flex items-center below-md:h-[38px] h-[35px] justify-between p-3 border border-gray-300 rounded bg-white cursor-pointer"
             >
-                <span className="text-[#4B4B4B] text-[12px]">
+                <span className="text-[#636363] text-[12px]">
                     {selectedDate
                         ? format(selectedDate, "MM-dd-yyyy") // Format the date
                         : placeholder}

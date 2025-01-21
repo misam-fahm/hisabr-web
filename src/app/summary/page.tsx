@@ -215,9 +215,9 @@ const summary: FC = () => {
                 <p className="text-[16px] text-[#2D3748] font-bold">
                   $2,680,153
                 </p>
-                <p className="text-[12px] text-[#388E3C] font-semibold">
+                <p className="text-[11px] text-[#388E3C] font-semibold">
                   20%{" "}
-                  <span className="text-[#575F6D] font-medium">
+                  <span className="text-[#575F6D] font-normal">
                     more than last year
                   </span>
                 </p>
@@ -233,9 +233,9 @@ const summary: FC = () => {
                   Total Expenses
                 </p>
                 <p className="text-[16px] text-[#2D3748] font-bold">$861,148</p>
-                <p className="text-[12px] text-[#388E3C] font-semibold">
+                <p className="text-[11px] text-[#388E3C] font-semibold">
                   12%{" "}
-                  <span className="text-[#575F6D] font-medium">
+                  <span className="text-[#575F6D] font-normal">
                     more than last year
                   </span>
                 </p>
@@ -251,9 +251,9 @@ const summary: FC = () => {
                   Total Profits
                 </p>
                 <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
-                <p className="text-[12px] text-[#388E3C] font-semibold">
+                <p className="text-[11px] text-[#388E3C] font-semibold">
                   40%{" "}
-                  <span className="text-[#575F6D] font-medium">
+                  <span className="text-[#575F6D] font-normal">
                     increase compare to last year
                   </span>
                 </p>

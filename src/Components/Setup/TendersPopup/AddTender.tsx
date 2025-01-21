@@ -122,7 +122,7 @@ const AddTender = ({ setAddTender  }:any) => {
       <div className="block below-md:hidden">
         <button
           onClick={openModal}
-          className="bg-[#168A6F] hover:bg-[#11735C] shadow-lg text-white w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
+          className="bg-[#168A6F] hover:bg-[#11735C] shadow-lg text-white w-[159px] text-[13px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
           <img className="" src="/images/webaddicon.svg" alt="" />
           Add Tender
@@ -164,10 +164,10 @@ const AddTender = ({ setAddTender  }:any) => {
                     <InputField
                       type="text"
                       label="Name"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={name}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("name", {
                         required: "Name is required",
                       })}
@@ -201,10 +201,10 @@ const AddTender = ({ setAddTender  }:any) => {
                     <InputField
                       type="text"
                       label="Commission"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={commission}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("commission", {
                         required: "Royalty is required",
                       })}

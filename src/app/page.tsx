@@ -6,6 +6,8 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { useEffect } from "react";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { sendApiRequest } from "@/utils/apiUtils";
 
 interface TableRow {
   name: string;
@@ -37,15 +39,49 @@ const tableData2: TableRow2[] = [
 ];
 
 const Home: FC = () => {
-  const [selectedOption, setSelectedOption] = useState<string>("Stores");
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+      message: "",
+      type: "",
+    });
   const [selectedOption2, setSelectedOption2] = useState<string>("2021");
   const [isOpen2, setIsOpen2] = useState<boolean>(false);
 
-  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+  }
+
+  const handleError = (message: string) => {
+    setCustomToast({
+      message,
+      type: "error",
+    });
+  };
+
+  const fetchDropdownData = async () => {
+      try {
+        const response = await sendApiRequest({ mode: "getallstores" });
+        if (response?.status === 200) {
+          setStore(response?.data?.stores || []);
+        } else {
+          handleError(response?.message);
+        }
+      } catch (error) {
+        console.error("Error fetching stores:", error);
+      }
+    
+    };
+    useEffect(() => {
+     
+      fetchDropdownData();
+    
+  }, []);
+
   const options2 = ["2024", "2023", "2022", "2021"];
 
-  const toggleDropdown1 = () => setIsOpen(!isOpen);
   const toggleDropdown2 = () => setIsOpen2(!isOpen2);
 
   const handleSelect = (option: string) => {
@@ -94,7 +130,7 @@ const Home: FC = () => {
   //fifth link(customer count)
 
   const handleClick5 = () => {
-    // localStorage.setItem('showBackIcon', 'true');
+    localStorage.setItem('showBackIcon', 'true');
     router.push("/expenses");
   };
 
@@ -134,11 +170,14 @@ const Home: FC = () => {
           {/* First Dropdown */}
 
           <Dropdown
-            options={options}
-            selectedOption={selectedOption}
-            onSelect={handleSelect}
-            isOpen={isOpen}
-            toggleOpen={toggleDropdown1}
+            options={store}
+            selectedOption={selectedOption?.name || "Store"}
+            onSelect={(selectedOption:any) => {
+              setSelectedOption( {name : selectedOption.name , id: selectedOption.id}); 
+              setIsStoreDropdownOpen(false); 
+            }}
+            isOpen={isStoreDropdownOpen}
+            toggleOpen={toggleStoreDropdown}
           />
           {/* Second Dropdown */}
 
@@ -215,13 +254,13 @@ const Home: FC = () => {
                       key={index}
                       className={index % 2 === 0 ? "bg-white" : "bg-[#FAFBFB]"}
                     >
-                      <td className="px-4 py-1.5 text-[14px] border-b border-gray-200 text-gray-700">
+                      <td className="px-4 py-1.5 text-[14px] border-b border-gray-200 text-gray-600">
                         {row.name}
                       </td>
                       <td className="px-4 py-1.5 text-[14px] border-b border-gray-200 text-[#334155] font-medium">
                         ${row.revenue.toLocaleString()}
                       </td>
-                      <td className="px-4 py-1.5 border-b border-gray-200 text-[#202224B2] text-[14px] font-medium text-center">
+                      <td className="px-4 py-1.5 border-b border-gray-200 text-gray-600 text-[14px] font-medium text-center">
                         {row.commission}
                       </td>
                       <td className="px-4 py-1.5 border-b border-gray-200 text-[#3F526D] text-[14px] font-medium">
@@ -251,7 +290,7 @@ const Home: FC = () => {
 
         {/* 1st grid*/}
 
-        <div className="grid  grid-cols-3 below-md:grid-cols-1 tablet:grid-cols-2 gap-7 mb-4 below-md:gap-1 below-md:mt-1  below-md:flex-col items-stretch">
+        <div className="grid  grid-cols-3 below-md:grid-cols-1 tablet-home:grid-cols-2 gap-7 mb-4 below-md:gap-1 below-md:mt-1  below-md:flex-col items-stretch">
           <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md below-md:shadow-none w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
@@ -297,10 +336,8 @@ const Home: FC = () => {
             </div>
 
             <div className="mt-5 mx-6">
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600 text-transparent">
-                  Current year
-                </div>
+              <div className="grid grid-cols-3 items-end text-right mb-2">
+                <div className="text-gray-600 text-[14px] text-left"></div>
                 <div className="font-bold text-[#2D3748B2] text-[14px]">
                   YTD <span className="text-[#E31212] text-[12px]">10.5%</span>
                 </div>
@@ -310,14 +347,18 @@ const Home: FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-3 gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Current Year</div>
+              <div className="grid grid-cols-3 items-center text-right mb-3">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Current Year
+                </div>
                 <div className="font-bold text-gray-800">$85,000</div>
                 <div className="font-bold text-gray-800">$120,000</div>
               </div>
 
-              <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Previous Year</div>
+              <div className="grid grid-cols-3 items-center text-right">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Previous Year
+                </div>
                 <div className="font-bold text-gray-800">$95,000</div>
                 <div className="font-bold text-gray-800">$100,000</div>
               </div>
@@ -338,27 +379,29 @@ const Home: FC = () => {
               </div>
             </div>
             <div className="mt-5 mx-6">
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600 text-transparent">
-                  Current year
-                </div>
+              <div className="grid grid-cols-3 items-end text-right mb-2">
+                <div className="text-gray-600 text-[14px] text-left"></div>
                 <div className="font-bold text-[#2D3748B2] text-[14px]">
-                  YTD <span className="text-[#388E3C] text-[12px]">8.3%</span>
+                  YTD <span className="text-[#E31212] text-[12px]">8.3%</span>
                 </div>
                 <div className="font-bold text-[#2D3748B2] text-[14px]">
                   One Year{" "}
-                  <span className="text-[#E31212] text-[12px]">6.7%</span>
+                  <span className="text-[#388E3C] text-[12px]">6.7%</span>
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-3 gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Current Year</div>
+              <div className="grid grid-cols-3 items-center text-right mb-3">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Current Year
+                </div>
                 <div className="font-bold text-gray-800">11,000</div>
                 <div className="font-bold text-gray-800">16,000</div>
               </div>
 
-              <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Previous Year</div>
+              <div className="grid grid-cols-3 items-center text-right">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Previous Year
+                </div>
                 <div className="font-bold text-gray-800">12,000</div>
                 <div className="font-bold text-gray-800">15,000</div>
               </div>
@@ -366,7 +409,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white mt-6 tablet:mt-0 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md below-md:shadow-none w-full pb-6 items-stretch">
+          <div className=" bg-white mt-6 tablet-home:mt-0 below-md:mt-3 border-t-4 border-[#C2D1C3]  rounded-md shadow-md below-md:shadow-none w-full pb-6 items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/net.svg" />
@@ -376,27 +419,29 @@ const Home: FC = () => {
               </div>
             </div>
             <div className="mt-5 mx-6">
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600 text-transparent">
-                  Current year
-                </div>
+              <div className="grid grid-cols-3 items-end text-right mb-2">
+                <div className="text-gray-600 text-[14px] text-left"></div>
                 <div className="font-bold text-[#2D3748B2] text-[14px]">
                   YTD <span className="text-[#E31212] text-[12px]">3.8%</span>
                 </div>
                 <div className="font-bold text-[#2D3748B2] text-[14px]">
-                  One Year
+                  One Year{" "}
                   <span className="text-[#388E3C] text-[12px]">2.9%</span>
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-3 gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Current Year</div>
+              <div className="grid grid-cols-3 items-center text-right mb-3">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Current Year
+                </div>
                 <div className="font-bold text-gray-800">$60,000</div>
                 <div className="font-bold text-gray-800">$90,000</div>
               </div>
 
-              <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Previous Year</div>
+              <div className="grid grid-cols-3 items-center text-right">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Previous Year
+                </div>
                 <div className="font-bold text-gray-800">$65,000</div>
                 <div className="font-bold text-gray-800">$85,000</div>
               </div>
@@ -421,29 +466,31 @@ const Home: FC = () => {
             </div>
 
             <div className="mt-5 mx-6">
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600 text-transparent">
-                  Current year
-                </div>
+              <div className="grid grid-cols-3 items-end text-right mb-2">
+                <div className="text-gray-600 text-[14px] text-left"></div>
                 <div className="font-bold text-[#2D3748B2] text-[14px]">
-                  YTD <span className="text-[#388E3C] text-[12px]">10.5%</span>
+                  YTD <span className="text-[#E31212] text-[12px]">3.8%</span>
                 </div>
                 <div className="font-bold text-[#2D3748B2] text-[14px]">
                   One Year{" "}
-                  <span className="text-[#E31212] text-[12px]">20%</span>
+                  <span className="text-[#388E3C] text-[12px]">2.9%</span>
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-3 gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Current Year</div>
-                <div className="font-bold text-gray-800">$85,000</div>
-                <div className="font-bold text-gray-800">$120,000</div>
+              <div className="grid grid-cols-3 items-center text-right mb-3">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Current Year
+                </div>
+                <div className="font-bold text-gray-800">$60,000</div>
+                <div className="font-bold text-gray-800">$90,000</div>
               </div>
 
-              <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Previous Year</div>
-                <div className="font-bold text-gray-800">$95,000</div>
-                <div className="font-bold text-gray-800">$100,000</div>
+              <div className="grid grid-cols-3 items-center text-right">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Previous Year
+                </div>
+                <div className="font-bold text-gray-800">$65,000</div>
+                <div className="font-bold text-gray-800">$85,000</div>
               </div>
             </div>
           </div>
@@ -465,27 +512,29 @@ const Home: FC = () => {
               </div>
             </div>
             <div className="mt-5 mx-6">
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600 text-transparent">
-                  Current year
-                </div>
+              <div className="grid grid-cols-3 items-end text-right mb-2">
+                <div className="text-gray-600 text-[14px] text-left"></div>
                 <div className="font-bold text-[#2D3748B2] text-[14px]">
-                  YTD <span className="text-[#388E3C] text-[12px]">8.3%</span>
+                  YTD <span className="text-[#E31212] text-[12px]">8.3%</span>
                 </div>
                 <div className="font-bold text-[#2D3748B2] text-[14px]">
                   One Year{" "}
-                  <span className="text-[#E31212] text-[12px]">6.7%</span>
+                  <span className="text-[#388E3C] text-[12px]">6.7%</span>
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-3 gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Current Year</div>
+              <div className="grid grid-cols-3 items-center text-right mb-3">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Current Year
+                </div>
                 <div className="font-bold text-gray-800">11,000</div>
                 <div className="font-bold text-gray-800">16,000</div>
               </div>
 
-              <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Previous Year</div>
+              <div className="grid grid-cols-3 items-center text-right">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Previous Year
+                </div>
                 <div className="font-bold text-gray-800">12,000</div>
                 <div className="font-bold text-gray-800">15,000</div>
               </div>
@@ -496,9 +545,9 @@ const Home: FC = () => {
           <div className=" bg-white below-md:mt-3 border-t-4 border-[#E5D5D5]  rounded-md shadow-md below-md:shadow-none w-full pb-6  items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
               <div className="flex flex-row gap-2 ">
-                <img src="/images/labor.svg" />
+                <img src="/images/labour.svg" />
                 <p className="text-[#334155]  text-[16px] font-bold">
-                  Labor{" "}
+                  Labour{" "}
                   <span className="text-[12px] font-semibold text-[#B25209] ">
                     13% of total cost
                   </span>
@@ -509,27 +558,29 @@ const Home: FC = () => {
               </div>
             </div>
             <div className="mt-5 mx-6">
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600 text-transparent">
-                  Current year
+              <div className="grid grid-cols-3 items-end text-right mb-2">
+                <div className="text-gray-600 text-[14px] text-left"></div>
+                <div className="font-bold text-[#2D3748B2] text-[14px]">
+                  YTD <span className="text-[#E31212] text-[12px]">3.8%</span>
                 </div>
                 <div className="font-bold text-[#2D3748B2] text-[14px]">
-                  YTD <span className="text-[#388E3C] text-[12px]">3.8%</span>
-                </div>
-                <div className="font-bold text-[#2D3748B2] text-[14px]">
-                  One Year
-                  <span className="text-[#E31212] text-[12px]">2.9%</span>
+                  One Year{" "}
+                  <span className="text-[#388E3C] text-[12px]">2.9%</span>
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-3 gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Current Year</div>
+              <div className="grid grid-cols-3 items-center text-right mb-3">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Current Year
+                </div>
                 <div className="font-bold text-gray-800">$60,000</div>
                 <div className="font-bold text-gray-800">$90,000</div>
               </div>
 
-              <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Previous Year</div>
+              <div className="grid grid-cols-3 items-center text-right">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Previous Year
+                </div>
                 <div className="font-bold text-gray-800">$65,000</div>
                 <div className="font-bold text-gray-800">$85,000</div>
               </div>
@@ -551,29 +602,31 @@ const Home: FC = () => {
             </div>
 
             <div className="mt-5 mx-6">
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600 text-transparent">
-                  Current year
+              <div className="grid grid-cols-3 items-end text-right mb-2">
+                <div className="text-gray-600 text-[14px] text-left"></div>
+                <div className="font-bold text-[#2D3748B2] text-[14px]">
+                  YTD <span className="text-[#E31212] text-[12px]">3.8%</span>
                 </div>
                 <div className="font-bold text-[#2D3748B2] text-[14px]">
-                  YTD <span className="text-[#388E3C] text-[12px]">10.5%</span>
-                </div>
-                <div className="font-bold text-[#2D3748B2] text-[14px]">
-                  One Year
-                  <span className="text-[#E31212] text-[12px]">20%</span>
+                  One Year{" "}
+                  <span className="text-[#388E3C] text-[12px]">2.9%</span>
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-3 gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Current Year</div>
+              <div className="grid grid-cols-3 items-center text-right mb-3">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Current Year
+                </div>
+                <div className="font-bold text-gray-800">$60,000</div>
+                <div className="font-bold text-gray-800">$90,000</div>
+              </div>
+
+              <div className="grid grid-cols-3 items-center text-right">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Previous Year
+                </div>
+                <div className="font-bold text-gray-800">$65,000</div>
                 <div className="font-bold text-gray-800">$85,000</div>
-                <div className="font-bold text-gray-800">$120,000</div>
-              </div>
-
-              <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Previous Year</div>
-                <div className="font-bold text-gray-800">$95,000</div>
-                <div className="font-bold text-gray-800">$100,000</div>
               </div>
             </div>
           </div>
@@ -592,27 +645,29 @@ const Home: FC = () => {
               </div>
             </div>
             <div className="mt-5 mx-6">
-              <div className="flex justify-between items-center mb-2 gap-[2px]">
-                <div className="text-gray-600 text-transparent">
-                  Current year
-                </div>
+              <div className="grid grid-cols-3 items-end text-right mb-2">
+                <div className="text-gray-600 text-[14px] text-left"></div>
                 <div className="font-bold text-[#2D3748B2] text-[14px]">
-                  YTD <span className="text-[#388E3C] text-[12px]">8.3%</span>
+                  YTD <span className="text-[#E31212] text-[12px]">8.3%</span>
                 </div>
                 <div className="font-bold text-[#2D3748B2] text-[14px]">
                   One Year{" "}
-                  <span className="text-[#E31212] text-[12px]">6.7%</span>
+                  <span className="text-[#388E3C] text-[12px]">6.7%</span>
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mb-3 gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Current Year</div>
+              <div className="grid grid-cols-3 items-center text-right mb-3">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Current Year
+                </div>
                 <div className="font-bold text-gray-800">11,000</div>
                 <div className="font-bold text-gray-800">16,000</div>
               </div>
 
-              <div className="flex justify-between items-center gap-[2px]">
-                <div className="text-gray-600 text-[14px]">Previous Year</div>
+              <div className="grid grid-cols-3 items-center text-right">
+                <div className="text-gray-600 text-[14px] text-left">
+                  Previous Year
+                </div>
                 <div className="font-bold text-gray-800">12,000</div>
                 <div className="font-bold text-gray-800">15,000</div>
               </div>
@@ -643,7 +698,7 @@ const Home: FC = () => {
                           : "bg-[#FAFBFB] text-[14px]"
                       }`}
                     >
-                      <td className="pl-6 px-2 py-1 border-b border-gray-200 text-gray-700 font-medium text-[14px]">
+                      <td className="pl-6 px-2 py-1 border-b border-gray-200 text-gray-600 font-medium text-[14px]">
                         {row.name}
                       </td>
                       <td className="px-2 py-1 border-b font-medium border-gray-200 text-[#334155] text-[14px] text-center">

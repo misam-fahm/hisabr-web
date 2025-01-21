@@ -67,27 +67,37 @@ const AddCategories = () => {
     e.preventDefault();
     if (validateForm()) {
       // Prepare JSON object to send
-      const jsonData: JsonData = {
-        mode: "insertcategory",
-        categoryname: categoryName.trim(),
-        description: description.trim(),
-      };
+      try {
+        setCustomToast({ toastMessage: "", toastType: "" });
+        const jsonData: JsonData = {
+          mode: "insertcategory",
+          categoryname: categoryName.trim(),
+          description: description.trim(),
+        };
 
-      const result: any = await sendApiRequest(jsonData);
-      result?.status === 200
-        ? setCustomToast({
-            ...customToast,
-            toastMessage: "Category added successfully!",
-            toastType: "success",
-          })
-        : setCustomToast({
-            ...customToast,
-            toastMessage: "Failed to add category.",
+        const result: any = await sendApiRequest(jsonData);
+        // Delay setting the actual toast message to force re-render
+        setTimeout(() => {
+          setCustomToast({
+            toastMessage: result?.status === 200 ? "Category added successfully!" : "Failed to add category.",
+            toastType: result?.status === 200 ? "success" : "error",
+          });
+        }, 0); // Set delay to 0 to immediately execute after state change
+
+        if (result?.status === 200) {          
+          setCategoryName("");
+          setDescription("");
+          closeModal();
+        }
+      } catch (error: any) {
+        // Handle errors by displaying a toast with the error message
+        setTimeout(() => {
+          setCustomToast({
+            toastMessage: error?.message,
             toastType: "error",
           });
-      setCategoryName("");
-      setDescription("");
-      closeModal();
+        }, 0);
+      }
     }
   };
 
@@ -112,7 +122,7 @@ const AddCategories = () => {
       <div className="block below-md:hidden">
         <button
           onClick={openModal}
-          className=" shadow-lg bg-[#168A6F] hover:bg-[#11735C] text-white  w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
+          className=" shadow-lg bg-[#168A6F] hover:bg-[#11735C] text-white  w-[159px] text-[13px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
           <img src="/images/plus1.svg" alt="Add icon" />
           Add Category

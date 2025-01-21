@@ -197,8 +197,7 @@ const EditItems = ({rowData , setAddItems}:any) => {
   }, [isStoreDropdownOpen , isdqCategoryDropdownOpen , iscogstrackingDropdownOpen]);
 
 
-  
-console.log("tot",rowData)
+
   return (
     <>
      <ToastNotification
@@ -244,7 +243,7 @@ console.log("tot",rowData)
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col mt-4 gap-6">
-                  <div className="w-full flex ">
+                  <div className="w-full flex mt-4 ">
                     <Dropdown
                       options={categories}
                       selectedOption={selectedCategory ? selectedCategory || "Category" : rowData?.categoryname}

@@ -61,7 +61,7 @@ const DetailsPage: React.FC = () => {
     >
       <img
         onClick={handleBack}
-        src="/images/Mobilebackicon.svg"
+        src="/images/mobilebackicon.svg"
         className="fixed top-4 left-4 z-30 below-lg:hidden tablet:hidden"
       />
       {/* <div className="below-md:flex below-md:justify-center ">
@@ -110,9 +110,9 @@ const DetailsPage: React.FC = () => {
                 Total Customer Count
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">50,000</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
                 20%{" "}
-                <span className="text-[#575F6D] font-medium">
+                <span className="text-[#575F6D] font-normal">
                   more than last year
                 </span>
               </p>
@@ -125,9 +125,9 @@ const DetailsPage: React.FC = () => {
                 New Customers
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">33,000</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
                 13%{" "}
-                <span className="text-[#575F6D] font-medium">
+                <span className="text-[#575F6D] font-normal">
                   Increased compared to last year
                 </span>
               </p>
@@ -140,9 +140,9 @@ const DetailsPage: React.FC = () => {
                 Returning Customers
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">12,000</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
                 35%{" "}
-                <span className="text-[#575F6D] font-medium">
+                <span className="text-[#575F6D] font-normal">
                   of Total Customers
                 </span>
               </p>
@@ -155,8 +155,8 @@ const DetailsPage: React.FC = () => {
                 Customer Retention Rate
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">52% </p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
-                <span className="text-[#575F6D] font-medium">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
+                <span className="text-[#575F6D] font-normal">
                   of target met
                 </span>
               </p>

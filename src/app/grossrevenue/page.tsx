@@ -281,7 +281,7 @@ const DetailsPage: React.FC = () => {
     >
       <img
         onClick={handleBack}
-        src="/images/Mobilebackicon.svg"
+        src="/images/mobilebackicon.svg"
         className="fixed top-4 left-4 z-50 below-lg:hidden tablet:hidden"
       />
 
@@ -334,9 +334,9 @@ const DetailsPage: React.FC = () => {
               <p className="text-[16px] text-[#2D3748] font-bold">
                 $ 2,680,153
               </p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
                 20%{" "}
-                <span className="text-[#575F6D] font-medium">
+                <span className="text-[#575F6D] font-normal">
                   more than last year
                 </span>
               </p>
@@ -349,8 +349,8 @@ const DetailsPage: React.FC = () => {
                 Revenue Growth
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">+ 15.3%</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
-                <span className="text-[#575F6D] font-medium">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
+                <span className="text-[#575F6D] font-normal">
                   Increased compared to last year
                 </span>
               </p>
@@ -363,8 +363,8 @@ const DetailsPage: React.FC = () => {
                 Average Per Transaction
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">$ 161,358</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
-                <span className="text-[#575F6D] font-medium">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
+                <span className="text-[#575F6D] font-normal">
                   Average revenue earned per sale
                 </span>
               </p>
@@ -377,9 +377,9 @@ const DetailsPage: React.FC = () => {
                 Revenue Target Achievement
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">$ 161,358</p>
-              <p className="text-[12px] text-[#388E3C] font-semibold">
+              <p className="text-[11px] text-[#388E3C] font-semibold">
                 92%
-                <span className="text-[#575F6D] font-medium">
+                <span className="text-[#575F6D] font-normal">
                   of target met
                 </span>
               </p>
@@ -486,7 +486,7 @@ const DetailsPage: React.FC = () => {
           </div>
           <div>
             <button
-              className="flex items-center justify-center bg-[#1AA47D] hover:bg-[#168A68] shadow-lg below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px]  h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300"
+              className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg below-md:mt-3 [box-shadow:0px_3px_8px_0px_#00000026] w-[170px]  h-[37px] rounded-md text-white text-[13px] font-semibold hover:shadow-lg transition-shadow duration-300"
               onClick={handleButtonClick}
             >
               <img

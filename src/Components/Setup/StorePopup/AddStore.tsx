@@ -117,7 +117,7 @@ const AddStore = ({ setAddStore }:any) => {
       <div className="block below-md:hidden">
         <button
           onClick={openModal}
-          className="bg-[#168A6F] hover:bg-[#11735C] shadow-lg text-white w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
+          className="bg-[#168A6F] hover:bg-[#11735C] shadow-lg text-white w-[159px] text-[13px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
           <img className="" src="/images/webaddicon.svg" alt="" />
           Add Store
@@ -158,10 +158,10 @@ const AddStore = ({ setAddStore }:any) => {
                     <InputField
                       type="text"
                       label="Store Name"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={storeName}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("storeName", {
                         required: "Store Name is required",
                       })}
@@ -178,10 +178,10 @@ const AddStore = ({ setAddStore }:any) => {
                     <InputField
                       type="text"
                       label="Location"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={location}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("location", {
                         required: "Location is required",
                       })}
@@ -198,10 +198,10 @@ const AddStore = ({ setAddStore }:any) => {
                     <InputField
                       type="text"
                       label="Owner"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={owner}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("owner", {
                         required: "Owner is required",
                       })}
@@ -216,10 +216,10 @@ const AddStore = ({ setAddStore }:any) => {
                     <InputField
                       type="text"
                       label="County"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={county}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("county", {
                         required: "County is required",
                       })}
@@ -233,10 +233,10 @@ const AddStore = ({ setAddStore }:any) => {
                     <InputField
                       type="text"
                       label="Royalty"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={royalty}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("royalty", {
                         required: "Royalty is required",
                       })}

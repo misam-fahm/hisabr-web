@@ -183,7 +183,7 @@ const AddNewItems = () => {
       <div className="block below-md:hidden">
         <button
           onClick={openModal}
-          className="bg-[#168A6F] hover:bg-[#11735C] shadow-lg text-white w-[159px] text-[14px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center"
+          className="bg-[#168A6F] hover:bg-[#11735C] shadow-lg text-white w-[159px] text-[13px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center"
         >
           <img className="" src="/images/webaddicon.svg" alt="" />
           Add Item
@@ -280,11 +280,11 @@ const AddNewItems = () => {
                     <InputField
                       type="text"
                       label="Item Name"
-                      borderClassName=" border border-gray-200"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={name || ""}
                       
-                      textColor="text-[#4B4B4B]"
+                      textColor="text-[#636363]"
                       {...register("name", {
                         required: "Item Name is required",
                       })}
@@ -299,10 +299,10 @@ const AddNewItems = () => {
                     <InputField
                       type="text"
                       label="Pack Size"
-                      borderClassName=" border border-gray-200"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={packsize || ""}
-                      textColor="text-[#4B4B4B]"
+                      textColor="text-[#636363]"
                       {...register("packsize", {
                         //required: "Pack Size is required",
                       })}
@@ -316,10 +316,10 @@ const AddNewItems = () => {
                     <InputField
                       type="text"
                       label="Units"
-                      borderClassName=" border border-gray-200"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={units || ""}
-                      textColor="text-[#4B4B4B]"
+                      textColor="text-[#636363]"
                       {...methods?.register("units", {
                        // required: "Units is required",
                       })}
@@ -334,10 +334,10 @@ const AddNewItems = () => {
                     <InputField
                       type="text"
                       label="Weight"
-                      borderClassName=" border border-gray-200"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={weight || ""}
-                      textColor="text-[#4B4B4B]"
+                      textColor="text-[#636363]"
                       {...methods?.register("weight", {
                        // required: "Weight is required",
                       })}

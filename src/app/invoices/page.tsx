@@ -300,7 +300,7 @@ const Invoices = () => {
             <DateRangePicker />
           </div>
 
-          <div className="flex shadow  below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
+          <div className="flex shadow border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
             <input
               type="search"
               value={globalFilter ?? ""}
@@ -318,7 +318,7 @@ const Invoices = () => {
         </div>
         <div className="pl-24 below-md:hidden">
           <button
-            className="w-[159px] h-[35px] bg-[#168A6F] hover:bg-[#11735C] text-white  gap-[0.25rem] font-medium  rounded-md text-[14px] flex items-center justify-center "
+            className="w-[159px] h-[35px] bg-[#168A6F] hover:bg-[#11735C] text-white  gap-[0.25rem] font-medium  rounded-md text-[13px] flex items-center justify-center "
             onClick={handleButtonClick}
           >
             <img className="" src="/images/webuploadicon.svg" alt="" />
@@ -404,7 +404,7 @@ const Invoices = () => {
       <div className="overflow-x-auto  shadow-sm border-collapse border border-b border-[#E4E4EF] rounded-md  flex-grow flex flex-col below-md:hidden">
         <div className="overflow-hidden max-w-full rounded-md">
           <table className="w-full border-collapse text-[12px] rounded-md text-white table-fixed">
-            <thead className="bg-[#334155] top-0 z-10">
+            <thead className="bg-[#0F1044] top-0 z-10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (

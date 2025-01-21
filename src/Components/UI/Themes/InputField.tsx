@@ -73,14 +73,14 @@ export function InputField(props: any): JSX.Element {
 
   return (
     <div
-      className={`m-0 flex w-full flex-col relative rounded-md ${containerClassName || ""}`}
+      className={`m-0 flex w-full flex-col relative rounded ${containerClassName || ""}`}
     >
       <div className="relative">
         {variant === "outline" ? (
           <div
             className={`
 					${errors && errors?.message ? "border-danger border" : borderClassName ? borderClassName : "border border-white"}
-					${divClassName || ""} flex w-full items-center justify-between rounded-md ${borderClassName ? "focus-within:border-black" : "focus-within:border-white"}`}
+					${divClassName || ""} flex w-full items-center justify-between rounded ${borderClassName ? "focus-within:border-black" : "focus-within:border-white"}`}
           >
             {leftIcon}
             <input
@@ -105,7 +105,7 @@ export function InputField(props: any): JSX.Element {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               placeholder=""
-              className={`w-full appearance-none rounded-md border-none below-md:h-[38px] h-[35px] px-3 py-3 text-sm font-normal bg-transparent ${textColor ? textColor : "text-white "}  ${
+              className={`w-full appearance-none rounded border-none below-md:h-[38px] h-[35px] px-3 py-3 text-[12px] font-normal bg-transparent ${textColor ? textColor : "text-white "}  ${
                 errors && errors?.message
                   ? "border-red-500 focus:border-red-500"
                   : borderClassName
@@ -138,7 +138,7 @@ export function InputField(props: any): JSX.Element {
                         : borderClassName
                           ? "border border-white"
                           : "peer-focus:text-primary"
-                    } !text-sm left-3   ${
+                    } !text-[12px] left-1   ${
                       watch(name) && "  translate-all bg-[#334155] px-2"
                     }`}
             >

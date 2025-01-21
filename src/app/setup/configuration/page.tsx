@@ -107,6 +107,9 @@ const Page = () => {
 
   return (
     <FormProvider {...methods}>
+      <main 
+      className="max-h-[calc(100vh-60px)] px-5 overflow-auto"
+      style={{ scrollbarWidth: "thin" }}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
         className="w-full flex flex-col overflow-auto below-md:h-[850px] p-5"
@@ -141,10 +144,10 @@ const Page = () => {
               <InputField
                 type="text"
                 label="Insurance"
-                borderClassName=" border border-gray-200"
+                borderClassName=" border border-gray-300"
                 labelBackgroundColor="bg-white"
                 value={insurance}
-                textColor="text-gray-500"
+                textColor="text-[#636363]"
                 {...methods?.register("insurance", {
                 //  required: "Insurance is required",
                 })}
@@ -157,10 +160,10 @@ const Page = () => {
               <InputField
                 type="text"
                 label="Property Tax"
-                borderClassName=" border border-gray-200"
+                borderClassName=" border border-gray-300"
                 labelBackgroundColor="bg-white"
                 value={propertytax}
-                textColor="text-gray-500"
+                textColor="text-[#636363]"
                 {...methods?.register("propertytax", {
                  // required: "Property Tax is required",
                 })}
@@ -176,10 +179,10 @@ const Page = () => {
               <InputField
                 type="text"
                 label="Trash"
-                borderClassName=" border border-gray-200"
+                borderClassName=" border border-gray-300"
                 labelBackgroundColor="bg-white"
                 value={trash}
-                textColor="text-gray-500"
+                textColor="text-[#636363]"
                 {...methods?.register("trash", {
                  // required: "Trash is required",
                 })}
@@ -199,10 +202,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Rent/Mortgage"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={rentMortgage}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("rentMortgage", {
                    // required: "Rent/Mortgage is required",
                   })}
@@ -218,10 +221,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Payroll Tax (%)"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={payrolltax}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("payrolltax", {
                   //  required: "Payroll Tax (%) is required",
                   })}
@@ -235,10 +238,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Labour Salary"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={laboursalary}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("laboursalary", {
                   //  required: "Labour Salary is required",
                   })}
@@ -254,10 +257,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Operator Salary"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={operatorsalary}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("operatorsalary", {
                   // required: "Operator Salary is required",
                   })}
@@ -273,10 +276,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="NUCO2"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={nucO2}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("nucO2", {
                   //  required: "NUCO2 is required",
                   })}
@@ -298,10 +301,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Internet"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={internet}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("internet", {
                    // required: "Internet is required",
                   })}
@@ -317,10 +320,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Water Bill"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={waterbill}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("waterbill", {
                    // required: "Water Bill is required",
                   })}
@@ -334,10 +337,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Gas Bill"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={gasbill}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("gasbill", {
                     //required: "Gas Bill is required",
                   })}
@@ -353,10 +356,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="PAR"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={par}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("par", {
                     //required: "PAR is required",
                   })}
@@ -372,10 +375,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Repair"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={repair}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("repair", {
                   //  required: "Repair is required",
                   })}
@@ -429,10 +432,10 @@ const Page = () => {
               <InputField
                 type="text"
                 label="Insurance"
-                borderClassName=" border border-gray-200"
+                borderClassName=" border border-gray-300"
                 labelBackgroundColor="bg-white"
                 value={insurance}
-                textColor="text-gray-500"
+                textColor="text-[#636363]"
                 {...methods?.register("insurance", {
                 //  required: "Insurance is required",
                 })}
@@ -445,10 +448,10 @@ const Page = () => {
               <InputField
                 type="text"
                 label="Property Tax"
-                borderClassName=" border border-gray-200"
+                borderClassName=" border border-gray-300"
                 labelBackgroundColor="bg-white"
                 value={propertytax}
-                textColor="text-gray-500"
+                textColor="text-[#636363]"
                 {...methods?.register("propertytax", {
                  // required: "Property Tax is required",
                 })}
@@ -464,10 +467,10 @@ const Page = () => {
               <InputField
                 type="text"
                 label="Trash"
-                borderClassName=" border border-gray-200"
+                borderClassName=" border border-gray-300"
                 labelBackgroundColor="bg-white"
                 value={trash}
-                textColor="text-gray-500"
+                textColor="text-[#636363]"
                 {...methods?.register("trash", {
                  // required: "Trash is required",
                 })}
@@ -488,10 +491,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Rent/Mortgage"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={rentMortgage}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("rentMortgage", {
                    // required: "Rent/Mortgage is required",
                   })}
@@ -507,10 +510,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Payroll Tax (%)"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={payrolltax}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("payrolltax", {
                   //  required: "Payroll Tax (%) is required",
                   })}
@@ -524,10 +527,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Labour Salary"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={laboursalary}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("laboursalary", {
                   //  required: "Labour Salary is required",
                   })}
@@ -546,10 +549,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Operator Salary"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={operatorsalary}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("operatorsalary", {
                   // required: "Operator Salary is required",
                   })}
@@ -565,10 +568,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="NUCO2"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={nucO2}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("nucO2", {
                   //  required: "NUCO2 is required",
                   })}
@@ -590,10 +593,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Internet"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={internet}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("internet", {
                    // required: "Internet is required",
                   })}
@@ -609,10 +612,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Water Bill"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={waterbill}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("waterbill", {
                    // required: "Water Bill is required",
                   })}
@@ -626,10 +629,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Gas Bill"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={gasbill}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("gasbill", {
                     //required: "Gas Bill is required",
                   })}
@@ -648,10 +651,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="PAR"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={par}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("par", {
                     //required: "PAR is required",
                   })}
@@ -667,10 +670,10 @@ const Page = () => {
                 <InputField
                   type="text"
                   label="Repair"
-                  borderClassName=" border border-gray-200"
+                  borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={repair}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...methods?.register("repair", {
                   //  required: "Repair is required",
                   })}
@@ -689,6 +692,7 @@ const Page = () => {
           </div>
         </div>
       </form>
+      </main>
     </FormProvider>
   );
 };

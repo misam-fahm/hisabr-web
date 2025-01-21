@@ -6,12 +6,17 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 const Header: React.FC = () => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const currentPath = usePathname();
   const [isClient, setIsClient] = useState(false);
   const [title, setTitle] = useState("");
   const [isRotated, setIsRotated] = useState(false);
+
+  const handleRedirect = () => {
+    router.push("/myprofile");
+  };
 
   useEffect(() => {
     setIsClient(true); // Ensuring we are on the client side
@@ -81,7 +86,7 @@ const Header: React.FC = () => {
           newTitle = " Cost Analysis";
           break;
         case "details7":
-          newTitle = "Labor Analysis";
+          newTitle = "Labour Analysis";
           break;
         case "details8":
           newTitle = "Items Analysis";
@@ -163,7 +168,10 @@ const Header: React.FC = () => {
             {isOpen && (
               <div className="absolute right-0 mt-3 mr-2 pl-4 w-52 bg-white shadow-lg rounded-lg">
                 <ul className="py-2 ">
-                  <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
+                  <li
+                    className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]"
+                    onClick={handleRedirect}
+                  >
                     <img
                       src="/images/userprofile.svg"
                       className="inline-block mr-2"

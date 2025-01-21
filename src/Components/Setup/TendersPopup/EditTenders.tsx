@@ -161,10 +161,10 @@ const EditTender = ({ initialData ,setAddTender}:any) => {
                     <InputField
                       type="text"
                       label="Name"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={name}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("name", {
                         required: "Name is required",
                       })}
@@ -198,10 +198,10 @@ const EditTender = ({ initialData ,setAddTender}:any) => {
                     <InputField
                       type="text"
                       label="Commission"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={commission}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("commission", {
                         required: "Royalty is required",
                       })}
