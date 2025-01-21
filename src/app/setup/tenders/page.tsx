@@ -10,6 +10,7 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import AddTender from "@/Components/Setup/TendersPopup/AddTender";
+import Skeleton from "react-loading-skeleton";
 import DeleteTenders from "@/Components/Setup/TendersPopup/DeleteTenders";
 import EditTenders from "@/Components/Setup/TendersPopup/EditTenders";
 import Pagination from "@/Components/UI/Pagination/Pagination";
@@ -55,9 +56,9 @@ const Page: FC = () => {
     {
       id: "edit",
       header: () => <div className="text-center  "></div>,
-      cell: () => (
+      cell: (info) => (
         <span className="flex justify-center ml-6">
-          <EditTenders />
+          <EditTenders initialData = {info.row.original} setAddTender={setAddTender} />
         </span>
       ),
       size: 20,
@@ -183,7 +184,7 @@ const Page: FC = () => {
               <div className="flex items-center">
                 {/* Edit */}
                 <>
-                  <EditTenders />
+                  <EditTenders initialData = {row.original} setAddTender={setAddTender} />
                 </>
                 {/* Delete */}
                 <>
@@ -247,7 +248,27 @@ const Page: FC = () => {
           >
             <table className="w-full border-collapse border-gray-200 table-fixed">
               <tbody>
-                {table.getRowModel().rows.map((row) => (
+              {loading
+                    ? Array.from({ length: 10 }).map((_, index) => (
+                        <tr
+                          key={index}
+                          className={
+                            index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                          }
+                        >
+                          {columns.map((column, colIndex) => (
+                            <td
+                              key={colIndex}
+                              className="px-4 py-1.5"
+                              style={{ width: `${column.size}px` }}
+                            >
+                              <Skeleton height={30} />
+                            </td>
+                          ))}
+                        </tr>
+                      ))
+                    : 
+                 table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
                     className={

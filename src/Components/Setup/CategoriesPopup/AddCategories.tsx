@@ -21,7 +21,6 @@ const AddCategories = () => {
   const [description, setDescription] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [errors, setErrors] = useState({ categoryName: "", description: "" });
-
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
   const [customToast, setCustomToast] = useState<CustomToast>({

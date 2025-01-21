@@ -1,7 +1,9 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Dropdown from "@/Components/UI/Themes/DropDown";
+import { sendApiRequest } from "@/utils/apiUtils";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 
 const SummaryGraph = dynamic(
   () => import("@/Components/Charts-Graph/SummaryGraph"),
@@ -45,16 +47,46 @@ const data = [
 
 const summary: FC = () => {
   /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("Stores");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
 
-  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
-  const toggleDropdown = () => setIsOpen(!isOpen);
+  
 
-  const handleSelect = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+  }
+
+  const handleError = (message: string) => {
+    setCustomToast({
+      message,
+      type: "error",
+    });
   };
+
+  const fetchDropdownData = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getallstores" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+     console.error("Error fetching stores:", error);
+    }
+  
+  };
+
+  useEffect(() => {
+   
+      fetchDropdownData();
+    
+  }, []);
 
   /**year composed chart*/
 
@@ -151,17 +183,23 @@ const summary: FC = () => {
 
       <div>
         <div className="z-[11] pb-6 below-md:pb-4 bg-[#f7f8f9] sticky pt-6 below-md:pt-4 pl-6 pr-6 below-md:px-3">
-          <div className="flex flex-row below-md:flex-col w-full gap-3">
+          <div className="flex flex-row below-md:flex-col w-[50%] gap-3">
             {/* First Dropdown */}
 
             <Dropdown
-              options={options}
-              selectedOption={selectedOption}
-              onSelect={handleSelect}
-              isOpen={isOpen}
-              toggleOpen={toggleDropdown}
-            />
-            <div className=" w-[260px] below-md:w-full tablet:w-full">
+                    options={store}
+                    selectedOption={ selectedOption?.name || "Store" } 
+                    onSelect={(selectedOption:any) => {
+                      setSelectedOption( {name : selectedOption.name , id: selectedOption.id}); 
+                      // setSelectedOption();
+                      setIsStoreDropdownOpen(false);  
+                    }}
+                    isOpen={isStoreDropdownOpen}
+                    toggleOpen={toggleStoreDropdown}
+                    widthchange="w-full"
+                   
+                  />
+            <div className=" w-full">
               <DateRangePicker />
             </div>
           </div>

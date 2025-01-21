@@ -4,35 +4,87 @@ import React, { useState, useEffect } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { InputField } from "../../UI/Themes/InputField";
+import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { sendApiRequest } from "@/utils/apiUtils";
 
-const EditCategories = ({ rowData }: { rowData: any }) => {
-  const methods = useForm({
-    defaultValues: {
-      categoryname: rowData?.categoryname || "",
-      description: rowData?.description || "",
-    },
+interface JsonData {
+  mode: string;
+  categoryname: string;
+  description: string;
+  categoryid:number;
+}
+
+const EditCategories = ({ rowData ,setAddCategories }: any ) => {
+  const methods = useForm<any>({
+    defaultValues: rowData, 
   });
 
+  const [categoryNameData, setCategoryName] = useState( rowData?.categoryname);
+  const [descriptionData, setDescription] = useState(rowData?.description);
   const [isOpen, setIsOpen] = useState(false);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
-  useEffect(() => {
-    // Update default values when rowData changes
-    methods.reset({
-      categoryname: rowData?.categoryname || "",
-      description: rowData?.description || "",
-    });
-  }, [rowData, methods]);
+  const handleChange = (data: any) => {
+    setCategoryName(data); 
+    methods.setValue("categoryname", data); 
+  };
 
-  const onSubmit = (data: any) => {
-    console.log("Form Data Submitted:", data);
-    closeModal();
+  const handleChangeName = (data: any) => {
+    setDescription(data); // Update local state
+    methods.setValue("description", data);
+  };
+
+  const onSubmit = async (data: any) => {
+    console.log("form",data)
+   
+    const jsonData: JsonData = {
+      mode: "updatecategory",
+      categoryname: data?.categoryname,
+      description: data?.description,
+      categoryid: Number (data?.categoryid)
+    };
+
+
+    try {
+      const result: any = await sendApiRequest(jsonData);
+      const { status } = result;
+      setCustomToast({
+        message:
+          status === 200 ? "Item updated successfully!" : "Failed to add item.",
+        type: status === 200 ? "success" : "error",
+      });
+
+      if (status === 200) {
+        setCustomToast({
+          message: status === 200 ? "Item updated successfully!" : "Failed to add item.",
+          type: status === 200 ? "success" : "error",
+        });
+        setTimeout(() => {
+          setAddCategories(true);
+          closeModal();
+        }, 300);
+      };
+    
+      
+    } catch (error) {
+      setCustomToast({ message: "Error adding item", type: "error" });
+      console.error("Error submitting form:", error);
+    }
+    
   };
 
   return (
     <>
+      <ToastNotification
+        message={customToast.message}
+        type={customToast.type}
+      />
       {/* Edit Button */}
       <div>
         <Button onClick={openModal}>
@@ -77,7 +129,7 @@ const EditCategories = ({ rowData }: { rowData: any }) => {
                       label="Category Name"
                       borderClassName="border border-gray-400"
                       labelBackgroundColor="bg-white"
-                      value={methods.watch("categoryname")}
+                      value={categoryNameData }
                       textColor="text-gray-500"
                       {...methods.register("categoryname", {
                         required: "Category name is required",
@@ -85,9 +137,7 @@ const EditCategories = ({ rowData }: { rowData: any }) => {
                       errors={methods.formState.errors.categoryname}
                       placeholder="Category Name"
                       variant="outline"
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        methods.setValue("categoryname", e.target.value)
-                      }
+                      onChange={(e: any) => handleChange(e.target.value)}
                     />
 
                     {/* Description Input */}
@@ -96,7 +146,7 @@ const EditCategories = ({ rowData }: { rowData: any }) => {
                       label="Description"
                       borderClassName="border border-gray-400"
                       labelBackgroundColor="bg-white"
-                      value={methods.watch("description")}
+                      value={descriptionData}
                       textColor="text-gray-500"
                       {...methods.register("description", {
                         required: "Description is required",
@@ -104,9 +154,7 @@ const EditCategories = ({ rowData }: { rowData: any }) => {
                       errors={methods.formState.errors.description}
                       placeholder="Description"
                       variant="outline"
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        methods.setValue("description", e.target.value)
-                      }
+                      onChange={(e: any) => handleChangeName(e.target.value)}
                     />
                   </div>
 

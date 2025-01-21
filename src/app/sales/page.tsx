@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Images from "@/Components/UI/Themes/Image";
 import { useRouter } from "next/navigation";
@@ -14,6 +14,8 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
+import { sendApiRequest } from "@/utils/apiUtils";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 
 interface TableRow {
   date: string;
@@ -289,17 +291,46 @@ const Sales: FC = () => {
     },
   });
 
-  /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("Stores");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
 
-  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
-  const toggleDropdown1 = () => setIsOpen(!isOpen);
+  
 
-  const handleSelect = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+  }
+
+  const handleError = (message: string) => {
+    setCustomToast({
+      message,
+      type: "error",
+    });
   };
+
+  const fetchDropdownData = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getallstores" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+     console.error("Error fetching stores:", error);
+    }
+  
+  };
+
+  useEffect(() => {
+   
+      fetchDropdownData();
+    
+  }, []);
 
   const filteredData = data.filter((item) =>
     JSON.stringify(item)
@@ -332,13 +363,18 @@ const Sales: FC = () => {
           <div className="flex flex-row below-md:flex-col w-full  gap-3">
             {/* Dropdown Button */}
             <Dropdown
-              options={options}
-              selectedOption={selectedOption}
-              onSelect={handleSelect}
-              isOpen={isOpen}
-              toggleOpen={toggleDropdown1}
-              widthchange="w-full"
-            />
+                    options={store}
+                    selectedOption={ selectedOption?.name || "Store" } 
+                    onSelect={(selectedOption:any) => {
+                      setSelectedOption( {name : selectedOption.name , id: selectedOption.id}); 
+                      // setSelectedOption();
+                      setIsStoreDropdownOpen(false);  
+                    }}
+                    isOpen={isStoreDropdownOpen}
+                    toggleOpen={toggleStoreDropdown}
+                    widthchange="w-full"
+                   
+                  />
             <div className="w-full tablet:w-full below-md:w-full">
               <DateRangePicker />
             </div>

@@ -23,72 +23,12 @@ import ToastNotification, { ToastNotificationProps } from "@/Components/UI/Toast
 interface TableRow {
   itemname: string;
   categoryname: string;
-  price: number;
-  quantity: number;
+  packsize: number;
+  units: number;
   weight: string;
   itemid?: number;
   categoryid?: number;
 }
-
-
-const columns: ColumnDef<TableRow>[] = [
-  {
-    accessorKey: "itemname",
-    header: () => <div className="text-left">Name</div>,
-    cell: (info) => <span>{info.getValue() as string}</span>,
-    size: 160,
-  },
-  {
-    accessorKey: "categoryname",
-    header: () => <div className="text-left">Category</div>,
-    cell: (info) => <span>{info.getValue() as string}</span>,
-    size: 120,
-  },
-  {
-    accessorKey: "price",
-    header: () => <div className="text-right">Price</div>,
-    cell: (info) => (
-      <div className="text-right">{info.getValue() as number}</div>
-    ),
-    size: 100,
-  },
-  {
-    accessorKey: "quantity",
-    header: () => <div className="text-right">Quantity</div>,
-    cell: (info) => (
-      <div className="text-right">{info.getValue() as string}</div>
-    ),
-    size: 120,
-  },
-  {
-    accessorKey: "weight",
-    header: () => <div className="text-left ml-12">Weight</div>,
-    cell: (info) => (
-      <div className="text-left ml-14">{info.getValue() as string}</div>
-    ),
-    size: 120,
-  },
-  {
-    id: "edit",
-    header: () => <div className="text-center"></div>,
-    cell: () => (
-      <span className="flex justify-center">
-        <EditItem />
-      </span>
-    ),
-    size: 30,
-  },
-  {
-    id: "delete",
-    header: () => <div className="text-center"></div>,
-    cell: () => (
-      <span className="flex justify-center mr-5">
-        <DeleteItems />
-      </span>
-    ),
-    size: 50,
-  },
-];
 
 const Page: FC = () => {
   const [globalFilter, setGlobalFilter] = React.useState("");
@@ -99,6 +39,66 @@ const Page: FC = () => {
     message: "",
     type: "",
   });
+  const [isOpenAddItems, setAddItems] = useState(false);
+
+  const columns: ColumnDef<TableRow>[] = [
+    {
+      accessorKey: "itemname",
+      header: () => <div className="text-left">Name</div>,
+      cell: (info) => <span>{info.getValue() as string}</span>,
+      size: 160,
+    },
+    {
+      accessorKey: "categoryname",
+      header: () => <div className="text-left">Category</div>,
+      cell: (info) => <span>{info.getValue() as string}</span>,
+      size: 120,
+    },
+    {
+      accessorKey: "packsize",
+      header: () => <div className="text-right">Pack Size</div>,
+      cell: (info) => (
+        <div className="text-right">{info.getValue() as number}</div>
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "units",
+      header: () => <div className="text-right">Units</div>,
+      cell: (info) => (
+        <div className="text-right">{info.getValue() as string}</div>
+      ),
+      size: 120,
+    },
+    {
+      accessorKey: "weight",
+      header: () => <div className="text-left ml-12">Weight</div>,
+      cell: (info) => (
+        <div className="text-left ml-14">{info.getValue() as string}</div>
+      ),
+      size: 120,
+    },
+    {
+      id: "edit",
+      header: () => <div className="text-center"></div>,
+      cell: (info) => (
+        <span className="flex justify-center">
+          <EditItem rowData={info.row.original} setAddItems={setAddItems} />
+        </span>
+      ),
+      size: 30,
+    },
+    {
+      id: "delete",
+      header: () => <div className="text-center"></div>,
+      cell: () => (
+        <span className="flex justify-center mr-5">
+          <DeleteItems />
+        </span>
+      ),
+      size: 50,
+    },
+  ];
 
   const table = useReactTable({
     data,
@@ -115,6 +115,8 @@ const Page: FC = () => {
         pageIndex: 0,
       },
     },
+    manualPagination: true, // Enable manual pagination
+    pageCount: Math.ceil(totalItems / 10),
   });
 
   const { pageIndex, pageSize } = table.getState().pagination;
@@ -151,7 +153,7 @@ const Page: FC = () => {
     };
 
     fetchData();
-  }, [pageIndex, pageSize]);
+  }, [pageIndex, pageSize , isOpenAddItems]);
 
   return (
     <main
@@ -191,7 +193,7 @@ const Page: FC = () => {
                 </span>
                 <div className="flex items-center">
                   <>
-                    <EditItem />
+                    <EditItem rowData={row} setAddItems={setAddItems} />
                   </>
                   {/* Delete */}
                   <>
@@ -214,14 +216,14 @@ const Page: FC = () => {
               {/* Price */}
               <div className="mt-1 flex justify-between">
                 <span className=" text-[#636363] text-[13px] mb-2">Price</span>{" "}
-                <span className="text-[14px]">{row?.price}</span>
+                <span className="text-[14px]">{row?.packsize}</span>
               </div>
               {/* Quantity */}
               <div className=" mt-1 flex justify-between">
                 <span className=" text-[#636363] text-[13px] mb-2">
                   Quantity
                 </span>{" "}
-                <span className="text-[14px]">{row?.quantity}</span>
+                <span className="text-[14px]">{row?.units}</span>
               </div>
               {/* Weight */}
               <div className=" mt-1 flex justify-between">
