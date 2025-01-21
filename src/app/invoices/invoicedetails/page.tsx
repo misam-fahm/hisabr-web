@@ -1,85 +1,76 @@
 'use client';
 import React from 'react'
 
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  flexRender,
-  ColumnDef,
-} from "@tanstack/react-table";
-import { useRouter } from 'next/router';
-
 interface TableRow {
-  itemCode : string;
+  itemCode: string;
   description: string;
-  brand : string;
+  brand: string;
   category: string;
-  quantity : number;
-  units : string;
-  packSize : string;
-  invtValue : number;
-  unitPrice : number;
-  tax : string;
-  total : string;
+  quantity: number;
+  units: string;
+  packSize: string;
+  invtValue: number;
+  unitPrice: number;
+  tax: string;
+  total: string;
 }
-  
-const tableData : TableRow[] = [
-  {
-    itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-    packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-  },
-  {
-    itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-    packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-  },
-  {
-    itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-    packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-  },
-  {
-    itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-    packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-  },
-  {
-    itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-    packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-  },
-  {
-    itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-    packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-  },
-  {
-    itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-    packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-  },
-  {
-    itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-    packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-  },
-  {
-    itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-    packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-  },
-  {
-    itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-    packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-  },
-  {
-    itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-    packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-  },
-  {
-    itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-    packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-  },
-  {
-    itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-    packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-  },
-];
 const InvoiceDetails = () => {
+
+  const tableData = [
+    {
+      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
+      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
+    },
+    {
+      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
+      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
+    },
+    {
+      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
+      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
+    },
+    {
+      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
+      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
+    },
+    {
+      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
+      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
+    },
+    {
+      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
+      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
+    },
+    {
+      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
+      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
+    },
+    {
+      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
+      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
+    },
+    {
+      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
+      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
+    },
+    {
+      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
+      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
+    },
+    {
+      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
+      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
+    },
+    {
+      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
+      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
+    },
+    {
+      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
+      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
+    },
+  ];
+
 
   return (
     <main
@@ -150,38 +141,38 @@ const InvoiceDetails = () => {
           <table className='w-full table-auto border-collapse text-[15px] text-white'>
             <thead className='bg-[#0F1044] '>
               <tr>
-                <th className="px-4 text-left h-[40px] whitespace-nowrap font-normal">Item Code</th>
-                <th className="px-4 text-left h-[40px] font-normal">Description</th>
-                <th className="px-4 text-left h-[40px] font-normal pr-2">Brand</th>
-                <th className="px-4 text-left h-[40px] font-normal ">Category</th>
-                <th className="px-4 text-center h-[40px] font-normal pl-2">Quantity</th>
-                <th className="px-4 text-center h-[40px] font-normal pr-3">Units</th>
-                <th className="px-4 text-center h-[40px] whitespace-nowrap font-normal">Pack Size</th>
-                <th className="px-4 text-right h-[40px] whitespace-nowrap font-normal">Invt Value</th>
-                <th className="px-4 text-right h-[40px] whitespace-nowrap font-normal">Unit Price</th>
-                <th className="px-4 text-right h-[40px] font-normal">Tax</th>
-                <th className="px-4 text-right h-[40px] font-normal">Total</th>
+                <th className="px-4 py-2 text-left font-normal min-w-[100px]">Item Code</th>
+                <th className="py-2 text-left font-normal min-w-[15%]">Description</th>
+                <th className="px-4 py-2 text-left font-normal min-w-[10%]">Brand</th>
+                <th className="px-4 py-2 text-left font-normal min-w-[5%]">Category</th>
+                <th className="px-4 py-2 text-left font-normal min-w-[8%]">Quantity</th>
+                <th className="px-3 py-2 text-left font-normal min-w-[5%]">Units</th>
+                <th className="px-4 py-2 text-center whitespace-nowrap font-normal">Pack Size</th>
+                <th className="px-4 py-2 text-right whitespace-nowrap font-normal">Invt Value</th>
+                <th className="px-4 py-2 text-right whitespace-nowrap font-normal">Unit Price</th>
+                <th className="px-4 py-2 text-right font-normal">Tax</th>
+                <th className="px-4 py-2 text-right font-normal">Total</th>
                 <th className="w-[8px]">{ }</th>
               </tr>
             </thead>
           </table>
-          <div className='max-h-[calc(100vh-420px)] overflow-auto' style={{ scrollbarWidth: "thin" }}>
+          <div className='max-h-[calc(100vh-420px)] overflow-x-auto overflow-y-auto' style={{ scrollbarWidth: "thin" }}>
             <table className='w-full  text-[14px] table-auto shadow rounded-md'>
               <tbody>
                 {tableData.map((row, index) => (
                   <tr key={index}
                     className={index % 2 === 0 ? 'bg-white' : 'bg-[#F3F3F6]'}>
-                    <td className="px-6 py-3 text-center text-[#636363]">{row.itemCode}</td>
-                    <td className="py-2 px-4 text-[#636363]">{row.description}</td>
-                    <td className="py-2 px-4  text-[#636363] pl-2 ">{row.brand}</td>
-                    <td className="py-2 px-4 text-center  text-[#636363] ">{row.category}</td>
-                    <td className="py-2 px-4 text-right pr-8 text-[#636363]">{row.quantity}</td>
-                    <td className="py-2 px-4 text-center text-[#636363]">{row.units}</td>
-                    <td className="py-2 px-4 text-center text-[#636363]">{row.packSize}</td>
-                    <td className="py-2 px-4 text-right text-[#636363]">{row.invtValue}</td>
-                    <td className="py-2 px-4 text-right text-[#636363]">{row.unitPrice}</td>
-                    <td className="py-2 px-4 text-right pr-3 text-[#636363]">{row.tax}</td>
-                    <td className="py-2 px-4 text-right text-[#636363]">{row.total}</td>
+                    <td className="px-4 py-1.5 text-left text-[#636363]">{row.itemCode}</td>
+                    <td className="py-1.5 text-left text-[#636363] break-all whitespace-normal overflow-hidden w-[10%]">{row.description}</td>
+                    <td className="py-1.5 px-4 text-left text-[#636363]">{row.brand}</td>
+                    <td className="py-1.5 px-4 text-center min-w-[5%] text-[#636363]">{row.category}</td>
+                    <td className="py-1.5 px-6 text-right text-[#636363] min-w-[8%]">{row.quantity}</td>
+                    <td className="py-1.5 px-4 text-center text-[#636363] min-w-[5%]">{row.units}</td>
+                    <td className="py-1.5 px-4 text-center text-[#636363]">{row.packSize}</td>
+                    <td className="py-1.5 px-4 text-right text-[#636363]">{row.invtValue}</td>
+                    <td className="py-1.5 px-4 text-right text-[#030202]">{row.unitPrice}</td>
+                    <td className="py-1.5 px-4 text-right text-[#636363] ">{row.tax}</td>
+                    <td className="py-1.5 px-4 text-right text-[#636363]">{row.total}</td>
                   </tr>
                 ))}
               </tbody>

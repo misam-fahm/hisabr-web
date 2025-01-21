@@ -298,10 +298,10 @@ const AddExpenses = ({ setAddExpenses }: any) => {
                   <InputField
                     type="text"
                     label="Description"
-                    borderClassName=" border border-gray-400"
+                    borderClassName=" border border-gray-300"
                     labelBackgroundColor="bg-white"
                     value={description}
-                    textColor="text-gray-500"
+                    textColor="text-[#636363]"
                     {...methods?.register("description", {
                       required: "Description is required",
                     })}
@@ -315,10 +315,10 @@ const AddExpenses = ({ setAddExpenses }: any) => {
                   <InputField
                     type="number" // Use type="number" for numeric input
                     label="Amount"
-                    borderClassName="border border-gray-400"
+                    borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
                     value={amount}
-                    textColor="text-gray-500"
+                    textColor="text-[#636363]"
                     {...methods?.register("amount", {
                       required: "Amount is required",
                       min: {

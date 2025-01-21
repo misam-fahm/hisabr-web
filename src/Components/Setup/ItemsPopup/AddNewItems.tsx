@@ -226,11 +226,11 @@ const AddNewItems = () => {
                     <InputField
                       type="text"
                       label="Item Name"
-                      borderClassName=" border border-gray-200"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={name || ""}
                       
-                      textColor="text-[#4B4B4B]"
+                      textColor="text-[#636363]"
                       {...register("name", {
                         required: "Item Name is required",
                       })}
@@ -245,10 +245,10 @@ const AddNewItems = () => {
                     <InputField
                       type="text"
                       label="Pack Size"
-                      borderClassName=" border border-gray-200"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={packsize || ""}
-                      textColor="text-[#4B4B4B]"
+                      textColor="text-[#636363]"
                       {...register("packsize", {
                         //required: "Pack Size is required",
                       })}
@@ -262,10 +262,10 @@ const AddNewItems = () => {
                     <InputField
                       type="text"
                       label="Units"
-                      borderClassName=" border border-gray-200"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={units || ""}
-                      textColor="text-[#4B4B4B]"
+                      textColor="text-[#636363]"
                       {...methods?.register("units", {
                        // required: "Units is required",
                       })}
@@ -280,10 +280,10 @@ const AddNewItems = () => {
                     <InputField
                       type="text"
                       label="Weight"
-                      borderClassName=" border border-gray-200"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={weight || ""}
-                      textColor="text-[#4B4B4B]"
+                      textColor="text-[#636363]"
                       {...methods?.register("weight", {
                        // required: "Weight is required",
                       })}

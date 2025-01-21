@@ -386,7 +386,7 @@ const EditItems = () => {
             <FormProvider {...methods}>
               <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <div className="flex flex-col mt-4 gap-4">
-                <div className="w-full flex mt-4">
+                 <div className="w-full flex mt-4">
                     <Dropdown
                       options={options}
                       selectedOption={selectedStore || "Category"} // Watch the selected value
@@ -409,10 +409,10 @@ const EditItems = () => {
                     <InputField
                       type="text"
                       label="Item Name"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={name}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("name", {
                         required: "Item Name is required",
                       })}
@@ -427,10 +427,10 @@ const EditItems = () => {
                     <InputField
                       type="text"
                       label="Price"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={price}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("price", {
                         required: "Price is required",
                       })}
@@ -445,10 +445,10 @@ const EditItems = () => {
                     <InputField
                       type="text"
                       label="Quantity"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={name}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("quantity", {
                         required: "Quantity is required",
                       })}
@@ -464,10 +464,10 @@ const EditItems = () => {
                     <InputField
                       type="text"
                       label="Weight"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={name}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("weight", {
                         required: "Weight is required",
                       })}
