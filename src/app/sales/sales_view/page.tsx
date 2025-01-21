@@ -25,20 +25,24 @@ const DetailsPage: React.FC = () => {
   const [activeTab, setActiveTab] =
     useState<keyof typeof tabContent>("Sales Details");
   const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(true);
+  const router = useRouter();
 
   const tabs = Object.keys(tabContent) as Array<keyof typeof tabContent>;
-  const router = useRouter();
 
   useEffect(() => {
     const container = document.getElementById("tabContainer");
 
     const handleScroll = () => {
       if (container) {
+        const maxScrollLeft = container.scrollWidth - container.clientWidth;
         setShowLeftArrow(container.scrollLeft > 0);
+        setShowRightArrow(container.scrollLeft < maxScrollLeft - 1);
       }
     };
 
     if (container) {
+      handleScroll();
       container.addEventListener("scroll", handleScroll);
     }
 
@@ -62,7 +66,7 @@ const DetailsPage: React.FC = () => {
 
     if (container) {
       const scrollAmount = 150;
-      const maxScrollLeft = container.scrollWidth - container.clientWidth;
+
       if (direction === "left") {
         container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
       } else if (direction === "right") {
@@ -86,13 +90,13 @@ const DetailsPage: React.FC = () => {
           className="w-7 h-7 mb-1 below-md:hidden cursor-pointer"
           src="/images/webbackicon.svg"
         ></img>
-        <div className="flex flex-row justify-between items-center gap-6 ">
+        <div className="flex flex-row justify-between items-center gap-6">
           <div className="below-md:w-full tablet:w-full border-b-[2px] border-[#E1E0E0D1] relative flex items-center">
             {/* Left Arrow */}
             {showLeftArrow && (
               <img
                 onClick={() => scrollTabs("left")}
-                className={`below-md:block tablet:block hidden px-2 text-[#334155] text-xl`}
+                className="below-md:block tablet:block hidden px-2 text-[#334155] text-xl"
                 src="/images/leftarrow.svg"
               />
             )}
@@ -124,11 +128,13 @@ const DetailsPage: React.FC = () => {
             </div>
 
             {/* Right Arrow */}
-            <img
-              onClick={() => scrollTabs("right")}
-              className={`below-md:block tablet:block hidden px-2 text-[#334155] text-xl`}
-              src="/images/rightarrow.svg"
-            />
+            {showRightArrow && (
+              <img
+                onClick={() => scrollTabs("right")}
+                className="below-md:block tablet:block hidden px-2 cursor-pointer"
+                src="/images/rightarrow.svg"
+              />
+            )}
           </div>
         </div>
       </div>
