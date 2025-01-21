@@ -51,7 +51,7 @@ const Dropdown = ({
       className={`${className || "relative below-md:w-full"} ${widthchange || "below-md:w-[100%] below-lg:w-[260px] tablet:w-full"}`}
     >
       <p
-        className={`text-[#636363] text-[12px] below-md:hidden ${
+        className={`text-[#636363]  text-[12px] below-md:hidden ${
           label ? "mb-2" : ""
         }`}
       >
@@ -68,7 +68,7 @@ const Dropdown = ({
           shadowclassName ? shadowclassName : ""
         }  px-3 below-md:h-[38px] h-[35px] w-full ${
           widthchange || "below-md:w-[100%] below-lg:w-full"
-        } rounded flex items-center justify-between below-md:w-full text-[12px] border focus:outline-none`}
+        } rounded flex items-center justify-between below-md:w-full text-[12px] border border-gray-300  focus:outline-none`}
       >
         <span>{selectedOption}</span>
 

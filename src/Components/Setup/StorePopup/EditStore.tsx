@@ -97,10 +97,10 @@ const EditStore = () => {
                     <InputField
                       type="text"
                       label="Store Name"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={storeName}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("storeName", {
                         required: "Store Name is required",
                       })}
@@ -117,10 +117,10 @@ const EditStore = () => {
                     <InputField
                       type="text"
                       label="Location"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={location}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("location", {
                         required: "Location is required",
                       })}
@@ -137,10 +137,10 @@ const EditStore = () => {
                     <InputField
                       type="text"
                       label="User"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={user}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("user", {
                         required: "User is required",
                       })}
@@ -155,10 +155,10 @@ const EditStore = () => {
                     <InputField
                       type="text"
                       label="County"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={county}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("county", {
                         required: "County is required",
                       })}
@@ -172,10 +172,10 @@ const EditStore = () => {
                     <InputField
                       type="text"
                       label="Royalty"
-                      borderClassName=" border border-gray-400"
+                      borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={royalty}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods?.register("royalty", {
                         required: "Royalty is required",
                       })}

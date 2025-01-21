@@ -42,7 +42,7 @@ const DateRangePicker = ({ widthchang,}: { widthchang?: string }) => {
     <div className="relative" ref={pickerRef}>
       <div
         onClick={handleClickIcon}
-        className={`flex items-center justify-between rounded below-md:h-[38px] h-[35px] border bg-white cursor-pointer ${
+        className={`flex items-center justify-between rounded below-md:h-[38px] h-[35px] border border-gray-300 bg-white cursor-pointer ${
           widthchang ? "" : "below-md:w-full w-full"
         }`}
       >
@@ -121,6 +121,7 @@ const DateRangePicker = ({ widthchang,}: { widthchang?: string }) => {
             </div>
           </div>
         </div>
+       
       )}
     </div>
   );

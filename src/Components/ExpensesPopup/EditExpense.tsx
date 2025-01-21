@@ -84,7 +84,7 @@ const EditExpense = ({ initialData ,onSubmit}: EditExpensesProps) => {
         <button onClick={openModal}>
           <img
             src="/images/editpencilicon.svg"
-            className="flex justify-center w-4 h-4 text-left"
+            className="flex justify-center w-4 h-4 below-md:w-5 below-md:h-5 text-left"
           />
         </button>
       </div>
@@ -182,10 +182,10 @@ const EditExpense = ({ initialData ,onSubmit}: EditExpensesProps) => {
                   <InputField
                   type="text"
                   label="Description"
-                  borderClassName="border border-gray-400"
+                  borderClassName="border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={watch("description")}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...register("description", {
                     required: "Description is required",
                   })}
@@ -198,10 +198,10 @@ const EditExpense = ({ initialData ,onSubmit}: EditExpensesProps) => {
                   <InputField
                   type="number"
                   label="Amount"
-                  borderClassName="border border-gray-400"
+                  borderClassName="border border-gray-300"
                   labelBackgroundColor="bg-white"
                   value={watch("amount")}
-                  textColor="text-gray-500"
+                  textColor="text-[#636363]"
                   {...register("amount", {
                     required: "Amount is required",
                     min: {
