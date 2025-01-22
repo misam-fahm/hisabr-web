@@ -1,50 +1,121 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { FormProvider, useForm, Controller } from "react-hook-form";
 import { InputField } from "@/Components/UI/Themes/InputField";
+import { sendApiRequest } from "@/utils/apiUtils";
+import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 
+interface JsonData {
+  mode: string;
+  tendertypeid: number | null;
+  tendername: string;
+  commission: number | null;
+  tenderid: number | null;
+}
 
+const EditTender = ({ initialData ,setAddTender}:any) => {
+  const methods = useForm<any>({
+    defaultValues: initialData, // Prepopulate form with existing data
+  });
 
-const EditTender = () => {
-  const methods = useForm();
+  const [commission, setCommission] = useState( initialData?.commission);
+  const [name, setName] = useState(initialData?.tendername);
+  const [isTenderDropdownOpen, setIsTenderDropdownOpen] = useState(false);
+  const [tenderType, setTenderType] = useState<any[]>([]);
+  const { register, setValue, handleSubmit, watch ,clearErrors,trigger} = methods;
+  const selectedTenderType = watch("tendertype");  
+  const { control } = useForm(); // Initialize React Hook Form
+  const [isOpen, setIsOpen] = useState(false);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
 
-  const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
-  };
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
 
-  const [commission, setCommission] = useState("");
   const handleChange = (data: any) => {
     setCommission(data); // Update local state
     methods.setValue("commission", data); // Update form state in react-hook-form
   };
 
-  const [name, setName] = useState("");
   const handleChangeName = (data: any) => {
     setName(data); // Update local state
     methods.setValue("county", name); // Update form state in react-hook-form
   };
 
-  //Dropdown
-  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const { register, setValue, handleSubmit, watch ,clearErrors,trigger} = methods;
-  const toggleDropdown1 = () => {
-    setIsStoreDropdownOpen((prev) => !prev);
+  const toggleDropdownTenderType = () => {
+    setIsTenderDropdownOpen((prev) => !prev);
   };
-  const options = ["VISA", "Amex", "Discovery", "Master"];
-  const selectedStore = watch("store"); // Watch the "store" field for changes
 
-  const { control } = useForm(); // Initialize React Hook Form
-  const [isOpen, setIsOpen] = useState(false);
+  const fetchData = async () => {
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getalltendertypes",
+      });
 
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+      if (response?.status === 200) {
+        setTenderType(response?.data?.tendertypes || []);
+      } else {
+        setCustomToast({
+          ...customToast,
+          message: response?.message,
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
+  useEffect(() => {
+    if (isOpen) {
+    fetchData();
+    }
+  }, [isOpen]);
+
+ 
+  const onSubmit = async (data: any) => {
+   
+    const jsonData: JsonData = {
+      mode: "updatetender",
+      tendertypeid: data?.tendertypeId ? data?.tendertypeId : initialData?.tendertypeid,
+      tendername: data?.name?.trim(),
+      commission: Number(data?.commission),
+      tenderid:Number(initialData?.tenderid)
+    };
+    
+    try {
+      const result: any = await sendApiRequest(jsonData);
+      const { status , data: responseData  } = result;
+    
+
+      if (status === 200) {
+        setCustomToast({
+          message: status === 200 ? "Item updated successfully!" : "Failed to add item.",
+          type: status === 200 ? "success" : "error",
+        });
+        setTimeout(() => {
+          setAddTender(true);
+          closeModal();
+        }, 300);
+      };
+    } catch (error) {
+      setCustomToast({ message: "Error adding item", type: "error" });
+      console.error("Error submitting form:", error);
+    }
+  };
+  
   return (
     <>
+     <ToastNotification
+        message={customToast.message}
+        type={customToast.type}
+      />
        <div>
         <button onClick={openModal}>
           <img
@@ -82,7 +153,7 @@ const EditTender = () => {
             </div>
 
             <FormProvider {...methods}>
-              <form onSubmit={methods.handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col mt-4 gap-4">
                  
                   <div className="w-full flex mt-4">
@@ -104,21 +175,23 @@ const EditTender = () => {
                     />
                   </div>
                   <div className="w-full flex mt-4">
-                    <Dropdown
-                      options={options}
-                      selectedOption={selectedStore || "Type"} // Watch the selected value
-                      onSelect={(selectedOption) => {
-                        setValue("type", selectedOption); // Update the form value
-                        setIsStoreDropdownOpen(false); // Close dropdown after selection
-                        clearErrors("type"); // Clear errors for this field
+                  <Dropdown
+                      options={tenderType}
+                      selectedOption={selectedTenderType ? selectedTenderType  :  initialData?.tendertypename ? initialData?.tendertypename  : "Tender Type" } 
+                      onSelect={(selectedValue) => {
+                        setValue( "tendertype", selectedValue ? selectedValue?.name : initialData?.tendertypename );
+                        setValue("tendertypeId", selectedValue ? selectedValue?.id : initialData?.tendertypeid  );
+                        setIsTenderDropdownOpen(false); 
+                        clearErrors("tendertype"); 
                       }}
-                      isOpen={isStoreDropdownOpen}
-                      toggleOpen={toggleDropdown1}
+                      
+                      isOpen={isTenderDropdownOpen}
+                      toggleOpen={toggleDropdownTenderType}
                       widthchange="w-full"
-                      {...methods.register("store", {
-                        required: "Type Selection is required",
-                      })}
-                      errors={methods.formState.errors.type} // Explicitly cast the type
+                      // {...register("tendertype", {
+                      //   required: "Tender Type is required",
+                      // })}
+                      // errors={methods.formState.errors.tendertype} 
                     />
                   </div>
                   <div className="w-full flex mt-4">

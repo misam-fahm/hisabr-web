@@ -6,52 +6,119 @@ import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { FormProvider, useForm, Controller } from "react-hook-form";
 import { InputField } from "@/Components/UI/Themes/InputField";
+import { sendApiRequest } from "@/utils/apiUtils";
+import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 
-const EditStore = () => {
-  const methods = useForm();
+interface JsonData {
+  mode: string;
+  storename:string;
+  location: string;
+  owner:string;
+  county: number | null;
+  royalty: number | null;
+  storeid: number | null;
+}
 
-  const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
-  };
+const EditStore = ( {initialData , setAddStore , isOpenAddStore}:any) => {
+  const methods = useForm<any>({
+    defaultValues: initialData, // Prepopulate form with existing data
+  });
 
-  const [royalty, setRoyalty] = useState("");
-  const handleChange = (data: any) => {
-    setRoyalty(data); // Update local state
-    methods.setValue("royalty", data); // Update form state in react-hook-form
-  };
-
-  const [county, setCounty] = useState("");
-  const handleChangeCounty = (data: any) => {
-    setCounty(data); // Update local state
-    methods.setValue("county", data); // Update form state in react-hook-form
-  };
-
-  const [storeName, setStoreName] = useState("");
-  const handleChangesetStoreName = (data: any) => {
-    setStoreName(data); // Update local state
-    methods.setValue("storeName", data); // Update form state in react-hook-form
-  };
-
-  const [user, setUser] = useState("");
-  const handleChangeUser = (data: any) => {
-    setUser(data); // Update local state
-    methods.setValue("user", data); // Update form state in react-hook-form
-  };
-
-  const [location, setLocation] = useState("");
-  const handleChangeLocation = (data: any) => {
-    setLocation(data); // Update local state
-    methods.setValue("location", data); // Update form state in react-hook-form
-  };
-
-  const { control } = useForm(); // Initialize React Hook Form
+  const [royalty, setRoyalty] = useState(initialData?.royalty);
+  const [county, setCounty] = useState( initialData?.county);
+  const [storeName, setStoreName] = useState(initialData?.storename);
+  const [owner, setOwner] = useState(initialData?.owner);
+  const [location, setLocation] = useState(initialData?.location);
   const [isOpen, setIsOpen] = useState(false);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
+  const handleChange = (data: any) => {
+    setRoyalty(data); 
+    methods.setValue("royalty", data);
+  };
+
+  const handleChangeCounty = (data: any) => {
+    setCounty(data); 
+    methods.setValue("county", data); 
+  };
+
+  
+  const handleChangesetStoreName = (data: any) => {
+    setStoreName(data); 
+    methods.setValue("storeName", data); 
+  };
+
+  const handleChangeUser = (data: any) => {
+    setOwner(data); 
+    methods.setValue("owner", data); 
+  };
+
+  
+  const handleChangeLocation = (data: any) => {
+    setLocation(data); 
+    methods.setValue("location", data); 
+  };
+
+
+  const onSubmit = async (data: any) => {
+    const jsonData: JsonData = {
+      mode: "updatestore",
+      storename: data?.storeName || "",
+      location: data?.location || "",
+      owner: data?.owner || "",
+      county: data?.county || "",
+      royalty: data?.royalty || 0,
+      storeid : initialData?.storeid
+    };
+  
+    try {
+    
+      const result: any = await sendApiRequest(jsonData);
+      if (!result || typeof result !== "object") {
+        throw new Error("Invalid API response.");
+      }
+  
+      const { status, data: responseData } = result;
+      console.log("API Response:", result);
+  
+      setCustomToast({
+        message: status === 200 ? "Item updated successfully!" : "Failed to add item.",
+        type: status === 200 ? "success" : "error",
+      });
+  
+      if (status === 200) {
+        setCustomToast({
+          message: status === 200 ? "Item updated successfully!" : "Failed to add item.",
+          type: status === 200 ? "success" : "error",
+        });
+        setTimeout(() => {
+          setAddStore(true);
+          closeModal();
+        }, 300);
+      };
+    } catch (error) {
+      setCustomToast({ message: "Error adding item", type: "error" });
+      console.error("Error submitting form:", error);
+    }
+  };
+  
+  
+
   return (
     <>
+
+      <ToastNotification
+        message={customToast.message}
+        type={customToast.type}
+      />
+ 
       <div>
         <button onClick={openModal}>
           <img
@@ -119,7 +186,7 @@ const EditStore = () => {
                       label="Location"
                       borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
-                      value={location}
+                      value={location }
                       textColor="text-[#636363]"
                       {...methods?.register("location", {
                         required: "Location is required",
@@ -136,16 +203,16 @@ const EditStore = () => {
                     {/* Description Input Field */}
                     <InputField
                       type="text"
-                      label="User"
-                      borderClassName=" border border-gray-300"
+                      label="Owner"
+                      borderClassName=" border border-gray-400"
                       labelBackgroundColor="bg-white"
-                      value={user}
-                      textColor="text-[#636363]"
-                      {...methods?.register("user", {
-                        required: "User is required",
+                      value={owner}
+                      textColor="text-gray-500"
+                      {...methods?.register("owner", {
+                        required: "Owner is required",
                       })}
-                      errors={methods.formState.errors.user}
-                      placeholder="User"
+                      errors={methods.formState.errors.owner}
+                      placeholder="Owner"
                       variant="outline"
                       onChange={(e: any) => handleChangeUser(e.target.value)}
                     />
@@ -174,8 +241,8 @@ const EditStore = () => {
                       label="Royalty"
                       borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
-                      value={royalty}
-                      textColor="text-[#636363]"
+                      value={royalty  }
+                      textColor="text-gray-500"
                       {...methods?.register("royalty", {
                         required: "Royalty is required",
                       })}

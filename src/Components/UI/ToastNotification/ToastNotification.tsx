@@ -37,7 +37,7 @@ const ToastNotification: React.FC<ToastNotificationProps> = ({ message, type = '
     if (message) {
       showToast();
     }
-  }, [message]);
+  }, [message,type]);
 
   return null;
 };

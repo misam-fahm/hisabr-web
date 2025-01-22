@@ -33,15 +33,22 @@ interface TableRow {
 const Expenses: FC = () => {
 
   const router = useRouter();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef(null);
+  const [isScrollbarVisible, setIsScrollbarVisible] = useState(false);
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0); 
   const [loading, setLoading] = useState<boolean>(true);
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
+  const [isOpenAddExpenses, setAddExpenses] = useState(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
   });
-  const [isOpenAddExpenses, setAddExpenses] = useState(false);
+  
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -56,7 +63,7 @@ const Expenses: FC = () => {
       cell: (info) => {
         const Storename:any = info.row.original.storename;
         const truncatedDescription =
-        Storename.length > 15 ? `${Storename.slice(0, 15)}...` : Storename;
+        Storename?.length > 15 ? `${Storename.slice(0, 15)}...` : Storename;
         return <span className="">{truncatedDescription}</span>;
       },
       // cell: (info) => <span>{info.row.original.storename}</span>,
@@ -76,7 +83,7 @@ const Expenses: FC = () => {
       cell: (info) => {
         const description = info.row.original.description;
         const truncatedDescription =
-          description.length > 50 ? `${description.slice(0, 55)}...` : description;
+          description?.length > 50 ? `${description.slice(0, 55)}...` : description;
         return <div className="text-left  ml-3">{truncatedDescription}</div>;
       },
       size: 190,
@@ -87,7 +94,7 @@ const Expenses: FC = () => {
       cell: (info) => {
         const expensename:any = info.row.original.expensename;
         const truncatedDescription =
-        expensename.length > 15 ? `${expensename.slice(0, 15)}...` : expensename;
+        expensename?.length > 15 ? `${expensename.slice(0, 15)}...` : expensename;
         return <span className="text-left">{truncatedDescription}</span>;
       },
       // cell: (info) => <span className="">{info.row.original.expensename}</span>,
@@ -99,24 +106,24 @@ const Expenses: FC = () => {
       cell: (info) => (
         <>
           <span className="flex justify-center">
-            <EditExpense initialData={info.row.original}  />
+            <EditExpense initialData={info.row.original} setAddExpenses={setAddExpenses}  />
           </span>
         </>
       ),
-      size: 50,
+      size: 40,
     },
     {
       id: "delete",
       header: () => <div className="text-center"></div>,
       cell: () => (
         <>
-          <span className="flex justify-center">
+          <span className="flex justify-center ">
             {" "}
             <DeleteExpense />
           </span>
         </>
       ),
-      size: 50,
+      size: 40,
     },
     
   ];
@@ -168,46 +175,56 @@ const Expenses: FC = () => {
         console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
+        setAddExpenses(false)
       }
     };
 
     fetchData();
   }, [pageIndex, pageSize , isOpenAddExpenses]);
  
-  const searchInputRef = useRef<HTMLInputElement>(null);
+ 
 
   const handleClick = () => {
-    // Focus the input field when the image is clicked
     if (searchInputRef.current) {
       searchInputRef.current.focus();
     }
   };
 
-  const [isOpen, setIsOpen] = useState<boolean>(false); 
-  const togglePopup = () => {
-    setIsOpen(!isOpen);
-  };
-  /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("Stores");
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+  }
 
-  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
-  const toggleDropdown1 = () => setIsOpen(!isOpen);
-
-  const handleSelect = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
-    //handleSelect(option); // Call the passed handler
+  const handleError = (message: string) => {
+    setCustomToast({
+      message,
+      type: "error",
+    });
   };
+
+  useEffect(() => {
+    const fetchDropdownData = async () => {
+      try {
+        const response = await sendApiRequest({ mode: "getallstores" });
+        if (response?.status === 200) {
+          setStore(response?.data?.stores || []);
+        } else {
+          handleError(response?.message);
+        }
+      } catch (error) {
+        console.error("Error fetching stores:", error);
+      }
+    
+    };
+   
+      fetchDropdownData();
+    
+  }, []);
+
+ 
   const handleBack = () => {
     router.push("/");
   };
-  const handleAddExpense = (newExpense:any) => {
-    setData((prevExpenses) => [...prevExpenses, newExpense]);
-  };
-
-  const containerRef = useRef(null);
-  const [isScrollbarVisible, setIsScrollbarVisible] = useState(false);
-
+  
   const checkScrollbarVisibility = () => {
     const container:any = containerRef.current;
     if (container) {
@@ -220,26 +237,20 @@ const Expenses: FC = () => {
     const container = containerRef.current;
 
     if (!container) return;
-
-    // Initial check after DOM has fully loaded
     checkScrollbarVisibility();
-
-    // Observe changes to the table's rows or content
     const observer = new MutationObserver(() => {
       checkScrollbarVisibility();
     });
-
-    observer.observe(container, {
-      childList: true, // Observe changes to child elements
-      subtree: true,   // Observe changes deep within the subtree
+    observer?.observe(container, {
+      childList: true, 
+      subtree: true,   
     });
 
-    // Re-check on window resize
-    window.addEventListener("resize", checkScrollbarVisibility);
+    window?.addEventListener("resize", checkScrollbarVisibility);
 
     return () => {
       observer.disconnect();
-      window.removeEventListener("resize", checkScrollbarVisibility);
+      window?.removeEventListener("resize", checkScrollbarVisibility);
     };
   }, [table]);
 
@@ -259,15 +270,19 @@ const Expenses: FC = () => {
         </div>
         <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-4 mb-6">
           <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
-            <Dropdown
-              options={options}
-              selectedOption={selectedOption}
-              onSelect={handleSelect}
-              isOpen={isOpen}
-              toggleOpen={toggleDropdown1}
-              widthchange="w-full"
-            />
-
+          <Dropdown
+                    options={store}
+                    selectedOption={ selectedOption?.name || "Store" } 
+                    onSelect={(selectedOption:any) => {
+                      setSelectedOption( {name : selectedOption.name , id: selectedOption.id}); 
+                      // setSelectedOption();
+                      setIsStoreDropdownOpen(false);  
+                    }}
+                    isOpen={isStoreDropdownOpen}
+                    toggleOpen={toggleStoreDropdown}
+                    widthchange="w-full"
+                   
+                  />
             <div className="w-full tablet:w-full below-md:w-full h-[35px]">
               <DateRangePicker />
             </div>
@@ -308,9 +323,7 @@ const Expenses: FC = () => {
 
                 <div className="flex gap-5 mb-1 px-4 py-4">
                   <>
-                    <EditExpense initialData={card}
-                      onSubmit={(updatedData) => console.log("Updated Expense:", updatedData)}
-                      onClose={() => console.log("Modal Closed")} />
+                    <EditExpense initialData={card} setAddExpenses={setAddExpenses}  />
                     <DeleteExpense />
                   </>
                 </div>

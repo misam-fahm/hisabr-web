@@ -25,56 +25,57 @@ interface TableRow {
   categoryid?: number;
 }
 
-const columns: ColumnDef<TableRow>[] = [
-  {
-    accessorKey: "categoryname",
-    header: () => <div className="text-left">Name</div>,
-    cell: (info) => <span>{info.getValue() as string}</span>,
-    size: 200,
-  },
-  {
-    accessorKey: "description",
-    header: () => <div className="text-left">Description</div>,
-    cell: (info) => <span>{info.getValue() as string}</span>,
-    size: 250,
-  },
-  {
-    accessorKey: "itemcount",
-    header: () => <div className="text-right mr-14">No. of Items</div>,
-    cell: (info) => (
-      <div className="text-right mr-14">{info.getValue() as number}</div>
-    ),
-    size: 150,
-  },
-  {
-    id: "edit",
-    header: () => <div className=" flex justify-center items-center"></div>,
-    cell: (info) => (
-      <span className="flex justify-center">
-       <EditCategories rowData={info.row.original} />
-      </span>
-    ),
-    size: 50,
-  },
-  {
-    id: "delete",
-    header: () => (
-      <div className="flex justify-center items-center"></div>
-    ),
-    cell: () => (
-      <span className="flex justify-center">
-        <DeleteCategories />
-      </span>
-    ),
-    size: 50,
-  },
-];
-
 const Page: FC = () => {
   // const [globalFilter, setGlobalFilter] = React.useState("");
   const [data, setData] = useState<TableRow[]>([]); // Data state for table rows
   const [totalItems, setTotalItems] = useState<number>(0); // Total number of items from the API
   const [loading, setLoading] = useState<boolean>(true); // Loading state for API call
+  const [isOpenAddCategories, setAddCategories] = useState(false);
+
+  const columns: ColumnDef<TableRow>[] = [
+    {
+      accessorKey: "categoryname",
+      header: () => <div className="text-left">Name</div>,
+      cell: (info) => <span>{info.getValue() as string}</span>,
+      size: 200,
+    },
+    {
+      accessorKey: "description",
+      header: () => <div className="text-left">Description</div>,
+      cell: (info) => <span>{info.getValue() as string}</span>,
+      size: 250,
+    },
+    {
+      accessorKey: "itemcount",
+      header: () => <div className="text-right mr-14">No. of Items</div>,
+      cell: (info) => (
+        <div className="text-right mr-14">{info.getValue() as number}</div>
+      ),
+      size: 150,
+    },
+    {
+      id: "edit",
+      header: () => <div className=" flex justify-center items-center"></div>,
+      cell: (info) => (
+        <span className="flex justify-center">
+         <EditCategories rowData={info.row.original} setAddCategories={setAddCategories} />
+        </span>
+      ),
+      size: 30,
+    },
+    {
+      id: "delete",
+      header: () => (
+        <div className="flex justify-center items-center"></div>
+      ),
+      cell: () => (
+        <span className="flex justify-center mr-5">
+          <DeleteCategories />
+        </span>
+      ),
+      size: 50,
+    },
+  ];
   const [globalFilter, setGlobalFilter] = useState("");
   const table = useReactTable({
     data,
@@ -131,7 +132,7 @@ const Page: FC = () => {
     };
 
     fetchData();
-  }, [pageIndex, pageSize]);
+  }, [pageIndex, pageSize ,isOpenAddCategories]);
 
   return (
     <main
@@ -171,7 +172,7 @@ const Page: FC = () => {
                   </span>
                   <div className="flex items-center ">
                     {/* Edit */}
-                    <EditCategories rowData={row} />
+                    <EditCategories rowData={row} setAddCategories={setAddCategories} />
                     {/* Delete */}
                     <>
                       <DeleteCategories />

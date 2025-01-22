@@ -18,10 +18,13 @@ interface JsonData {
   mode: string;
   categoryid: number | null;
   itemname: string;
-  price: number | null;
-  quantity: number | null;
+  packsize: string ;
+  units:string ;
   weight: string;
+  cogstrackcategoryid:number | null
+  dqcategoryid:number | null
 }
+
 
 const AddNewItems = () => {
   const methods = useForm();
@@ -29,6 +32,8 @@ const AddNewItems = () => {
   const options = [{name: "Dairy", id: 1}, {name: "Bakery", id: 2}, {name: "Beverages", id:3}, {name: "Frozen Foods", id: 4}];  
   const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [dqCategory, setDqCategory] = useState<any[]>([]);
+  const [cogstracking, setCogstracking] = useState<any[]>([]); 
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [isdqCategoryDropdownOpen, setIsDQCategoryDropdownOpen] =
     useState(false);
@@ -53,9 +58,11 @@ const AddNewItems = () => {
       mode: "insertitem",
       categoryid: data?.categoryId,
       itemname: data?.name?.trim(),
-      price: data?.packsize,
-      quantity: data?.units,
+      packsize: data?.packsize,
+      units: data?.units,
       weight: data?.weight,
+      cogstrackcategoryid: data?.cogstrackingcategoryId,
+      dqcategoryid: data?.dqcategoryId
     };
 
     try {
@@ -86,7 +93,7 @@ const AddNewItems = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDataCategoriesDropdown = async () => {
       try {
         const response: any = await sendApiRequest({
           mode: "getallcategories",
@@ -106,8 +113,55 @@ const AddNewItems = () => {
       }
     };
 
-    fetchData();
-  }, []);
+    const fetchDataDQcategoryDropdown = async () => {
+      try {
+        const response: any = await sendApiRequest({
+          mode: "getalldqcategory",
+        });
+
+        if (response?.status === 200) {
+          setDqCategory(response?.data?.dqcategory || []);
+        } else {
+          setCustomToast({
+            ...customToast,
+            message: response?.message,
+            type: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    const fetchDataCogstrackcategoryDropdown = async () => {
+      try {
+        const response: any = await sendApiRequest({
+          mode: "getallcogstrackcategory",
+        });
+
+        if (response?.status === 200) {
+          setCogstracking(response?.data?.cogstrackcategory || []);
+        } else {
+          setCustomToast({
+            ...customToast,
+            message: response?.message,
+            type: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+   if(isStoreDropdownOpen ) {
+    fetchDataCategoriesDropdown();
+  }
+  if( isdqCategoryDropdownOpen ) {
+    fetchDataDQcategoryDropdown();
+  }
+  if( iscogstrackingDropdownOpen) {
+    fetchDataCogstrackcategoryDropdown();
+  }
+  }, [isStoreDropdownOpen , isdqCategoryDropdownOpen , iscogstrackingDropdownOpen]);
   return (
     <>
       <ToastNotification
@@ -186,12 +240,12 @@ const AddNewItems = () => {
                   </div>
                   <div className="w-full flex ">
                     <Dropdown
-                      options={options}
+                      options={dqCategory}
                       selectedOption={selectedDqCategory || "DQ Category"} 
                       onSelect={(selectedOption : any) => {
                         setValue("dqcategory", selectedOption?.name); 
                         setValue("dqcategoryId", selectedOption?.id); 
-                        setIsStoreDropdownOpen(false); 
+                        setIsDQCategoryDropdownOpen(false); 
                         clearErrors("dqcategory"); 
                       }}
                       isOpen={isdqCategoryDropdownOpen}
@@ -205,12 +259,12 @@ const AddNewItems = () => {
                   </div>
                   <div className="w-full">
                     <Dropdown
-                      options={[]}
+                      options={cogstracking}
                       selectedOption={ selectedCOGSTracking || "COGS Tracking Category"} 
                       onSelect={(selected : any) => {
                         setValue("cogstrackingcategory", selected?.name); 
                         setValue("cogstrackingcategoryId", selected?.id); 
-                        setIsStoreDropdownOpen(false); 
+                        setIsCOGSTrackingDropdownOpen(false); 
                         clearErrors("cogstrackingcategory"); 
                       }}
                       isOpen={iscogstrackingDropdownOpen}

@@ -1,11 +1,13 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import { useRouter } from "next/navigation";
 import Dropdown from "@/Components/UI/Themes/DropDown";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 // import Image from "next/image"
 import {
@@ -17,197 +19,122 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import Pagination from "@/Components/UI/Pagination/Pagination";
+import { sendApiRequest } from "@/utils/apiUtils";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 
 interface TableRow {
-  date: string;
-  store: number;
-  quantity: number;
+  invoicedate: string;
+  storename: number;
+  invoiceitems: any;
   total: string;
   name: string;
 }
-const data: TableRow[] = [
-  {
-    date: "2022-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-  {
-    date: "2022-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-  {
-    date: "2023-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-  {
-    date: "2023-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-  {
-    date: "2023-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-  {
-    date: "2023-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-  {
-    date: "2023-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-  {
-    date: "2024-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-  {
-    date: "2024-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-  {
-    date: "2024-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-  {
-    date: "2024-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-  {
-    date: "2024-01-01",
-    store: 13246,
-    quantity: 176,
-    total: "$3,484.47",
-    name: "Gordon Gordon Gordon",
-  },
-];
-const formattedData = data?.map((item) => {
-  const rawDate = new Date(item?.date);
 
-  // Format the date as MM-DD-YY
-  const formattedDate = `${(rawDate?.getMonth() + 1)
-    .toString()
-    .padStart(
-      2,
-      "0"
-    )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
-    .getFullYear()
-    .toString()
-    .slice(-2)}`;
 
-  return { ...item, date: formattedDate };
-});
-console.log(formattedData);
-const columns: ColumnDef<TableRow>[] = [
-  {
-    accessorKey: "date",
-    header: () => <div className="text-left">Date</div>,
-    cell: (info) => <span>{info.getValue() as string}</span>,
-    size: 60,
-  },
-  {
-    accessorKey: "store",
-    header: () => <div className="text-left">Store</div>,
-    cell: (info) => <span>{info.getValue() as number}</span>,
-    size: 30,
-  },
-  {
-    accessorKey: "quantity",
-    header: () => <div className="text-right">Quantity</div>,
-    cell: (info) => (
-      <span className="flex justify-end ">{info.getValue() as string}</span>
-    ),
-    size: 50,
-  },
-  {
-    accessorKey: "total",
-    header: () => <div className="text-right pr-8">Total</div>,
-    cell: (info) => (
-      <span className="flex justify-end pr-8">{info.getValue() as string}</span>
-    ),
-    size: 70,
-  },
-  {
-    accessorKey: "name",
-    header: () => <div className="text-left">Name</div>,
-    cell: (info) => (
-      <span className="text-left ">{info.getValue() as string}</span>
-    ),
-    size: 80,
-  },
-  {
-    id: "view",
-    header: () => <div className="text-left"></div>,
-    cell: () => (
-      <button
-        onClick={() => (window.location.href = "/invoices/invoicedetails")}
-        className="text-green-500 hover:text-green-700 text-center ml-2"
-      >
-        <img src="/images/vieweyeicon.svg" alt="View Icon" 
-        className=" w-4 h-4 below-md:h-5 below-md:w-5 "/>
-      </button>
-    ),
-    size: 30,
-  },
-];
+
 
 
 const Invoices = () => {
   const router = useRouter();
+  const [data, setData] = useState<TableRow[]>([]);
+  const [totalItems, setTotalItems] = useState<number>(0); 
+  const [loading, setLoading] = useState<boolean>(true);
   const [globalFilter, setGlobalFilter] = React.useState("");
+  const columns: ColumnDef<TableRow>[] = [
+    {
+      accessorKey: "invoicedate",
+      header: () => <div className="text-left">Date</div>,
+      cell: (info) => <span>{info.getValue() as string}</span>,
+      size: 60,
+    },
+    {
+      accessorKey: "storename",
+      header: () => <div className="text-left">Store</div>,
+      cell: (info) => <span>{info.getValue() as number}</span>,
+      size: 30,
+    },
+    {
+      accessorKey: "invoiceitems",
+      header: () => <div className="text-right">Quantity</div>,
+      cell: (info) => {
+        // Get the value and ensure it's an array
+        const items:any = Array.isArray(info.getValue()) ? info.getValue() : [];
+    
+        // Map and extract quantities safely
+        const quantities = items.map((item) => {
+          // Safely access the `quantity` field
+          if (item && typeof item === "object" && "quantity" in item) {
+            const quantity = item.quantity;
+            // Check if quantity is a valid primitive value
+            return typeof quantity === "object" ? JSON.stringify(quantity) : quantity;
+          }
+          // Fallback if quantity is missing or invalid
+          return 0;
+        });
+    
+        // Render the quantities
+        return (
+          <span className="flex justify-end">
+            {quantities.join(", ")}
+          </span>
+        );
+      },
+      size: 100, // Adjust the size as needed
+    },
+    
+    
+    {
+      accessorKey: "total",
+      header: () => <div className="text-right pr-8">Total</div>,
+      cell: (info) => (
+        <span className="flex justify-end pr-8">{info.getValue() as string}</span>
+      ),
+      size: 70,
+    },
+    {
+      accessorKey: "name",
+      header: () => <div className="text-left">Name</div>,
+      cell: (info) => (
+        <span className="text-left ">{info.getValue() as string}</span>
+      ),
+      size: 80,
+    },
+    {
+      id: "view",
+      header: () => <div className="text-left"></div>,
+      cell: () => (
+        <button
+          onClick={() => (window.location.href = "/invoices/invoicedetails")}
+          className="text-green-500 hover:text-green-700 text-center ml-2"
+        >
+          <img src="/images/vieweyeicon.svg" alt="View Icon" 
+          className=" w-4 h-4 below-md:h-5 below-md:w-5 "/>
+        </button>
+      ),
+      size: 30,
+    },
+  ];
+
+  const formattedData = data?.map((item) => {
+    const rawDate = new Date(item?.invoicedate);
+  
+    // Format the date as MM-DD-YY
+    const formattedDate = `${(rawDate?.getMonth() + 1)
+      .toString()
+      .padStart(
+        2,
+        "0"
+      )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
+      .getFullYear()
+      .toString()
+      .slice(-2)}`;
+  
+    return { ...item, date: formattedDate };
+  });
+
+  
   const table = useReactTable({
-    data: formattedData,
+    data: data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -221,8 +148,42 @@ const Invoices = () => {
         pageIndex: 0,
       },
     },
+    manualPagination: true, // Enable manual pagination
+    pageCount: Math.ceil(totalItems / 10),
   });
  
+  const { pageIndex, pageSize } = table.getState().pagination;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response: any = await sendApiRequest({
+          mode: "getinvoices",
+          page: table.getState().pagination.pageIndex + 1,
+          limit: table.getState().pagination.pageSize,
+        });
+
+        if (response?.status === 200) {
+          setData(response?.data?.invoices || []);
+          response?.data?.total > 0 &&
+            setTotalItems(response?.data?.total || 0);
+        } else {
+          setCustomToast({
+            ...customToast,
+            message: response?.message,
+            type: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [pageIndex, pageSize ]);
 
   const fileInputRef: any = useRef(null);
   const handleButtonClick = () => {
@@ -236,17 +197,47 @@ const Invoices = () => {
     }
   };
   /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<string>("Stores");
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
 
-  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
-  const toggleDropdown1 = () => setIsOpen(!isOpen);
+  
 
-  const handleSelect = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+  }
+
+  const handleError = (message: string) => {
+    setCustomToast({
+      message,
+      type: "error",
+    });
   };
 
+  const fetchDropdownData = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getallstores" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+     console.error("Error fetching stores:", error);
+    }
+  
+  };
+
+  useEffect(() => {
+   
+      fetchDropdownData();
+    
+  }, []);
   // const calendarRef = useRef<DatePicker | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const handleClick = () => {
@@ -275,6 +266,7 @@ const Invoices = () => {
     router.push("/");
   };
 
+
   return (
     <main
       className="max-h-[calc(100vh-80px)] px-6 below-md:px-3 overflow-auto"
@@ -290,14 +282,19 @@ const Invoices = () => {
       </div>
       <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-4 mb-6">
         <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
-          <Dropdown
-            options={options}
-            selectedOption={selectedOption}
-            onSelect={handleSelect}
-            isOpen={isOpen}
-            toggleOpen={toggleDropdown1}
-            widthchange="w-full"
-          />
+        <Dropdown
+                    options={store}
+                    selectedOption={ selectedOption?.name || "Store" } 
+                    onSelect={(selectedOption:any) => {
+                      setSelectedOption( {name : selectedOption.name , id: selectedOption.id}); 
+                      // setSelectedOption();
+                      setIsStoreDropdownOpen(false);  
+                    }}
+                    isOpen={isStoreDropdownOpen}
+                    toggleOpen={toggleStoreDropdown}
+                    widthchange="w-full"
+                   
+                  />
 
           <div className="below-lg:w-full tablet:w-full below-md:w-full">
             <DateRangePicker />
@@ -373,8 +370,8 @@ const Invoices = () => {
                 <p className="text-[#636363]">total</p>
               </div>
               <div className="flex flex-col text-[14px] text-right space-y-3">
-                <p className="text-[#1A1A1A]">{card.store}</p>
-                <p className="text-[#000000]">{card.quantity}</p>
+                <p className="text-[#1A1A1A]">{card.storename}</p>
+                <p className="text-[#000000]">{0}</p>
                 <p className="text-[#1A1A1A]">{card.total}</p>
               </div>
             </div>
@@ -434,7 +431,22 @@ const Invoices = () => {
           >
             <table className="w-full border-collapse text-[12px] text-white table-fixed">
               <tbody>
-                {table.getRowModel().rows.map((row) => (
+              {loading ? (
+                    Array.from({ length: 10 })?.map((_, index) => (
+                      <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+                        {columns.map((column, colIndex) => (
+                          <td
+                            key={colIndex}
+                            className="px-4 py-1.5"
+                            style={{ width: `${column.size}px` }}
+                          >
+                            <Skeleton height={30} />
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) :
+                 table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
                     className={
@@ -462,7 +474,7 @@ const Invoices = () => {
       </div>
       {/* Pagination Numbers */}
       <div className="mt-4  below-md:hidden">
-        <Pagination table={table} totalItems={0} />
+        <Pagination table={table} totalItems={totalItems} />
       </div>
     </main>
   );

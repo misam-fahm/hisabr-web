@@ -35,7 +35,7 @@ const Page: FC = () => {
     message: "",
     type: "",
   });
-  const [isOpenAddStore, setAddStore] = useState(false);
+  const [isOpenAddStore, setopenAddStore] = useState(false);
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -91,9 +91,9 @@ const Page: FC = () => {
     {
       id: "edit",
       header: () => <div className="text-center"></div>,
-      cell: () => (
+      cell: (info) => (
         <span className="flex justify-center">
-          <EditStore />
+          <EditStore initialData = {info.row.original} isOpenAddStore={isOpenAddStore} setAddStore={setopenAddStore} />
         </span>
       ),
       size: 50,
@@ -122,42 +122,40 @@ const Page: FC = () => {
   const { pageIndex, pageSize } = table.getState().pagination;
   const startItem = pageIndex * pageSize + 1;
   const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getstores",
+        page: table.getState().pagination.pageIndex + 1,
+        limit: table.getState().pagination.pageSize,
+      });
+
+      if (response?.status === 200) {
+        setData(response?.data?.stores || []);
+        response?.data?.total > 0 &&
+          setTotalItems(response?.data?.total || 0);
+
+      } else {
+        setCustomToast({
+          ...customToast,
+          message: response?.message,
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+       setopenAddStore(false)
+    }
+  };
+
   
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response: any = await sendApiRequest({
-          mode: "getstores",
-          page: table.getState().pagination.pageIndex + 1,
-          limit: table.getState().pagination.pageSize,
-        });
-
-        if (response?.status === 200) {
-          setData(response?.data?.stores || []);
-          response?.data?.total > 0 &&
-            setTotalItems(response?.data?.total || 0);
-        } else {
-          setCustomToast({
-            ...customToast,
-            message: response?.message,
-            type: "error",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, [pageIndex, pageSize , isOpenAddStore]);
-
-
-  const handleAddExpense = (newExpense:any) => {
-    setData((prevExpenses) => [...prevExpenses, newExpense]);
-  };
 
 
   return (
@@ -166,7 +164,7 @@ const Page: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
-        <AddStore setAddStore={setAddStore} />
+        <AddStore setAddStore={setopenAddStore} />
       </div>
 
       {/* Mobile View */}
@@ -191,7 +189,7 @@ const Page: FC = () => {
               </span>
               <div className="flex items-center gap-3">
                 {/* Edit */}
-                <EditStore />
+                <EditStore initialData = {row.original} isOpenAddStore={isOpenAddStore} setAddStore={setopenAddStore} />
               </div>
             </div>
 
@@ -224,7 +222,7 @@ const Page: FC = () => {
         {/* Add Store bottom */}
         <div className="block pl-24 ">
           {" "}
-          <AddStore setAddStore={setAddStore} />
+          <AddStore setAddStore={setopenAddStore} />
         </div>
       </div>
 
