@@ -86,13 +86,13 @@ const Page: FC = () => {
           <EditItem rowData={info.row.original} setAddItems={setAddItems} />
         </span>
       ),
-      size: 30,
+      size: 50,
     },
     {
       id: "delete",
       header: () => <div className="text-center"></div>,
       cell: () => (
-        <span className="flex justify-center mr-5">
+        <span className="flex justify-center">
           <DeleteItems />
         </span>
       ),
@@ -166,7 +166,7 @@ const Page: FC = () => {
         type={customToast.type}
       />
       <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
-        <AddNewItems />
+        <AddNewItems setAddItems={setAddItems} />
         {/* <AddCategories /> */}
       </div>
 
@@ -236,7 +236,7 @@ const Page: FC = () => {
             <div>No data available</div>)}
           {/* Add NewItems bottom */}
           <div className=" fixed bottom-[20px] below-lg:hidden right-3">
-            <AddNewItems />
+            <AddNewItems setAddItems={setAddItems} />
           </div>
         </div>
 

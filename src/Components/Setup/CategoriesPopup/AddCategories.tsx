@@ -3,7 +3,9 @@
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import { sendApiRequest } from "@/utils/apiUtils";
-import ToastNotification from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { FormProvider, useForm } from "react-hook-form";
+import { InputField } from "@/Components/UI/Themes/InputField";
 
 interface JsonData {
   mode: string;
@@ -16,11 +18,12 @@ interface CustomToast {
   toastType: string;
 }
 
-const AddCategories = () => {
+const AddCategories = ({ setAddCategories }:any) => {
+  const methods = useForm();
   const [categoryName, setCategoryName] = useState("");
   const [description, setDescription] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [errors, setErrors] = useState({ categoryName: "", description: "" });
+  //const [errors, setErrors] = useState({ categoryName: "", description: "" });
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
   const [customToast, setCustomToast] = useState<CustomToast>({
@@ -28,78 +31,120 @@ const AddCategories = () => {
     toastType: "",
   });
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: string
-  ) => {
-    const { value } = e.target;
 
-    if (field === "categoryName") {
-      setCategoryName(value);
-      if (value.trim())
-        setErrors((prevErrors) => ({ ...prevErrors, categoryName: "" }));
-    } else if (field === "description") {
-      setDescription(value);
-      if (value.trim())
-        setErrors((prevErrors) => ({ ...prevErrors, description: "" }));
-    }
+  const handleChange = (data: any) => {
+    setCategoryName(data); 
+    methods.setValue("categoryname", data); 
+  };
+  const handleChangeName = (data: any) => {
+    setDescription(data); // Update local state
+    methods.setValue("description", data);
   };
 
-  const validateForm = () => {
-    let isValid = true;
-    const newErrors = { categoryName: "", description: "" };
+  // const handleInputChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>,
+  //   field: string
+  // ) => {
+  //   const { value } = e.target;
 
-    if (!categoryName.trim()) {
-      newErrors.categoryName = "Category name is required";
-      isValid = false;
-    }
+  //   if (field === "categoryName") {
+  //     setCategoryName(value);
+  //     if (value.trim())
+  //       setErrors((prevErrors) => ({ ...prevErrors, categoryName: "" }));
+  //   } else if (field === "description") {
+  //     setDescription(value);
+  //     if (value.trim())
+  //       setErrors((prevErrors) => ({ ...prevErrors, description: "" }));
+  //   }
+  // };
 
-    if (!description.trim()) {
-      newErrors.description = "Description is required";
-      isValid = false;
-    }
+  // const validateForm = () => {
+  //   let isValid = true;
+  //   const newErrors = { categoryName: "", description: "" };
 
-    setErrors(newErrors);
-    return isValid;
+  //   if (!categoryName.trim()) {
+  //     newErrors.categoryName = "Category name is required";
+  //     isValid = false;
+  //   }
+
+  //   if (!description.trim()) {
+  //     newErrors.description = "Description is required";
+  //     isValid = false;
+  //   }
+
+  //   setErrors(newErrors);
+  //   return isValid;
+  // };
+ const onSubmit = async (data: any) => {
+    try {
+            setCustomToast({ toastMessage: "", toastType: "" });
+            const jsonData: JsonData = {
+              mode: "insertcategory",
+              categoryname: categoryName.trim(),
+              description: description.trim(),
+            };
+    
+            const result: any = await sendApiRequest(jsonData);
+            setTimeout(() => {
+              setCustomToast({
+                toastMessage: result?.status === 200 ? "Category added successfully!" : "Failed to add category.",
+                toastType: result?.status === 200 ? "success" : "error",
+              });
+            }, 0);
+    
+            if (result?.status === 200) {
+              setCategoryName("");
+              setDescription("");
+              closeModal();
+              setAddCategories(true)
+            }
+          } catch (error: any) {
+            setTimeout(() => {
+              setCustomToast({
+                toastMessage: error?.message,
+                toastType: "error",
+              });
+            }, 0);
+          }
+    
   };
+ 
+  
+  //   if (validateForm()) {
+  //     // Prepare JSON object to send
+  //     try {
+  //       setCustomToast({ toastMessage: "", toastType: "" });
+  //       const jsonData: JsonData = {
+  //         mode: "insertcategory",
+  //         categoryname: categoryName.trim(),
+  //         description: description.trim(),
+  //       };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validateForm()) {
-      // Prepare JSON object to send
-      try {
-        setCustomToast({ toastMessage: "", toastType: "" });
-        const jsonData: JsonData = {
-          mode: "insertcategory",
-          categoryname: categoryName.trim(),
-          description: description.trim(),
-        };
+  //       const result: any = await sendApiRequest(jsonData);
+  //       // Delay setting the actual toast message to force re-render
+  //       setTimeout(() => {
+  //         setCustomToast({
+  //           toastMessage: result?.status === 200 ? "Category added successfully!" : "Failed to add category.",
+  //           toastType: result?.status === 200 ? "success" : "error",
+  //         });
+  //       }, 0); // Set delay to 0 to immediately execute after state change
 
-        const result: any = await sendApiRequest(jsonData);
-        // Delay setting the actual toast message to force re-render
-        setTimeout(() => {
-          setCustomToast({
-            toastMessage: result?.status === 200 ? "Category added successfully!" : "Failed to add category.",
-            toastType: result?.status === 200 ? "success" : "error",
-          });
-        }, 0); // Set delay to 0 to immediately execute after state change
-
-        if (result?.status === 200) {          
-          setCategoryName("");
-          setDescription("");
-          closeModal();
-        }
-      } catch (error: any) {
-        // Handle errors by displaying a toast with the error message
-        setTimeout(() => {
-          setCustomToast({
-            toastMessage: error?.message,
-            toastType: "error",
-          });
-        }, 0);
-      }
-    }
-  };
+  //       if (result?.status === 200) {
+  //         setCategoryName("");
+  //         setDescription("");
+  //         closeModal();
+  //       }
+  //     } catch (error: any) {
+  //       // Handle errors by displaying a toast with the error message
+  //       setTimeout(() => {
+  //         setCustomToast({
+  //           toastMessage: error?.message,
+  //           toastType: "error",
+  //         });
+  //       }, 0);
+  //     }
+  //   }
+   
 
   return (
     <>
@@ -107,7 +152,7 @@ const AddCategories = () => {
         message={customToast.toastMessage}
         type={customToast.toastType}
       />
-       <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
+      <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
         <button
           onClick={openModal}
           className="focus:outline-none flex items-center justify-center bg-[#1AA47D] w-[56px] h-[56px] rounded-lg relative"
@@ -140,7 +185,7 @@ const AddCategories = () => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] below-md:w-[345px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
             <div className="flex justify-end">
-             
+
               <img
                 onClick={closeModal}
                 src="/images/cancelicon.svg"
@@ -149,73 +194,69 @@ const AddCategories = () => {
               />
             </div>
             <div>
-            <DialogTitle as="h3" className="flex justify-center font-medium  text-[#3D3D3D] opacity-80">
+              <DialogTitle as="h3" className="flex justify-center font-medium  text-[#3D3D3D] opacity-80">
                 Add Category
               </DialogTitle>
             </div>
 
             <div className="mt-4">
-              <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="col-span-2">
-                    <label className="text-sm text-gray-600">
-                      Category Name
-                    </label>
-                    <input
+              <FormProvider {...methods}>
+                <form onSubmit={methods.handleSubmit(onSubmit)}>
+                  <div className="flex flex-col gap-4">
+                    {/* Category Name Input */}
+                    <InputField
                       type="text"
+                      label="Category Name"
+                      borderClassName="border border-gray-300"
+                      labelBackgroundColor="bg-white"
                       value={categoryName}
-                      onChange={(e) => handleInputChange(e, "categoryName")}
-                      className={`h-[42px] mt-2 pl-2 w-full text-gray-700 text-sm  font-normal rounded-lg border ${
-                        errors.categoryName
-                          ? "border-red-500"
-                          : "border-gray-300"
-                      }`}
-                      placeholder="Please enter Category Name"
+                      textColor="text-[#636363]"
+                      {...methods.register("categoryname", {
+                        required: "Category name is required",
+                      })}
+                      errors={methods.formState.errors.categoryname}
+                      placeholder="Category Name"
+                      variant="outline"
+                      onChange={(e: any) => handleChange(e.target.value)}
                     />
-                    {errors.categoryName && (
-                      <p className="text-xs text-red-500">
-                        {errors.categoryName}
-                      </p>
-                    )}
-                  </div>
 
-                  <div className="col-span-2">
-                    <label className="text-sm text-gray-600">Description</label>
-                    <input
+                    {/* Description Input */}
+                    <InputField
                       type="text"
+                      label="Description"
+                      borderClassName="border border-gray-300"
+                      labelBackgroundColor="bg-white"
                       value={description}
-                      onChange={(e) => handleInputChange(e, "description")}
-                      className={`h-[42px] mt-2 pl-2 w-full text-gray-700 text-sm  font-normal rounded-lg border ${
-                        errors.description
-                          ? "border-red-500"
-                          : "border-gray-300"
-                      }`}
-                      placeholder="Please enter Description"
+                      textColor="text-[#636363]"
+                      {...methods.register("description", {
+                        required: "Description is required",
+                      })}
+                      errors={methods.formState.errors.description}
+                      placeholder="Description"
+                      variant="outline"
+                      onChange={(e: any) => handleChangeName(e.target.value)}
                     />
-                    {errors.description && (
-                      <p className="text-xs text-red-500">
-                        {errors.description}
-                      </p>
-                    )}
-                  </div>
-                </div>
 
-                <div className="flex mt-7 justify-between">
-                  <button
-                    type="button"
-                    onClick={closeModal}
-                    className="mr-4 px-4 py-2 h-[35px] w-[165px] bg-[#E4E4E4] hover:bg-[#C9C9C9] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[35px] text-[#FFFFFF] rounded-md"
-                  >
-                    Save
-                  </button>
-                </div>
-              </form>
+
+                  </div>
+
+                  <div className="flex mt-7 justify-between">
+                    <button
+                      type="button"
+                      onClick={closeModal}
+                      className="mr-4 px-4 py-2 h-[35px] w-[165px] bg-[#E4E4E4] hover:bg-[#C9C9C9] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="font-semibold text-[14px] bg-[#1AA47D] w-[165px] px-6 hover:bg-[#168A68] h-[35px] text-[#FFFFFF] rounded-md"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </FormProvider>
             </div>
           </DialogPanel>
         </div>

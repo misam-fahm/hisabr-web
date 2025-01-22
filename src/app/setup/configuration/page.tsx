@@ -120,7 +120,7 @@ const Page = () => {
               tracking
             </p>
             <div className=" pt-8">
-            <p className="text-[15px] font-medium text-[#5E6366]">
+            <p className="text-[14px] font-medium text-[#5E6366]">
               Store Selection :
             </p>
             <Dropdown
@@ -136,7 +136,7 @@ const Page = () => {
             />
           </div>
           <div className="pt-4">
-            <p className="text-[15px] font-medium text-[#5E6366]">
+            <p className="text-[14px] font-medium text-[#5E6366]">
               Yearly Expenses :
             </p>
 
@@ -194,7 +194,7 @@ const Page = () => {
             </div>
           </div>
           <div className="pt-4">
-              <p className="text-[15px] font-medium text-[#5E6366]">
+              <p className="text-[14px] font-medium text-[#5E6366]">
                 Monthly Expenses :
               </p>
 
@@ -293,7 +293,7 @@ const Page = () => {
             </div>
 
             <div className="pt-4">
-              <p className="text-[15px] font-medium text-[#5E6366]">
+              <p className="text-[14px] font-medium text-[#5E6366]">
               Other Expenses :
               </p>
 
@@ -407,7 +407,7 @@ const Page = () => {
         
 
           <div className="flex pt-8">
-            <p className="w-[16%] text-[15px] font-medium text-[#5E6366]">
+            <p className="w-[16%] text-[14px] font-medium text-[#5E6366]">
               Store Selection :
             </p>
             <Dropdown
@@ -424,7 +424,7 @@ const Page = () => {
           </div>
 
           <div className="flex pt-8">
-            <p className="w-[16%] text-[15px] font-medium text-[#5E6366]">
+            <p className="w-[16%] text-[14px] font-medium text-[#5E6366]">
               Yearly Expenses :
             </p>
 
@@ -483,7 +483,7 @@ const Page = () => {
           </div>
           <div>
             <div className="flex pt-8">
-              <p className="w-[16%] text-[15px] font-medium text-[#5E6366]">
+              <p className="w-[16%] text-[14px] font-medium text-[#5E6366]">
                 Monthly Expenses :
               </p>
 
@@ -585,7 +585,7 @@ const Page = () => {
           </div>
           <div>
             <div className="flex pt-8">
-              <p className="w-[16%] text-[15px] font-medium text-[#5E6366]">
+              <p className="w-[16%] text-[14px] font-medium text-[#5E6366]">
               Other Expenses :
               </p>
 
@@ -685,7 +685,7 @@ const Page = () => {
               </div>
             </div>
             <div  className="flex justify-end">
-              <button className="bg-[#168A6F] hover:bg-[#11735C] text-[14px]  font-semibold text-white rounded-md  h-[35px] w-[118px]">
+              <button className="bg-[#168A6F] hover:bg-[#11735C] text-[13px]  font-medium text-white rounded-md  h-[35px] w-[118px]">
                 Add
               </button>
             </div>
