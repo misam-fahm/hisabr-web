@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import "../globals.css";
 import BarChart4 from "@/Components/Charts-Graph/BarChart4";
@@ -7,6 +7,8 @@ import PieChart3 from "@/Components/Charts-Graph/Piechart3";
 import { useRouter } from "next/navigation";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import Images from "@/Components/UI/Themes/Image";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { sendApiRequest } from "@/utils/apiUtils";
 
 const dat = [
   { label: "New Customers", value: 10836, per: "2%", color: "#376066CC" },
@@ -14,6 +16,14 @@ const dat = [
 ];
 
 const DetailsPage: React.FC = () => {
+   const [selectedOption, setSelectedOption] = useState<any>();
+    const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+    const [store, setStore] = useState<any[]>([]);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+        message: "",
+        type: "",
+      });
   /**go back button */
   const router = useRouter();
   const handleBack = () => {
@@ -24,26 +34,49 @@ const DetailsPage: React.FC = () => {
     }
   };
 
-  const [selectedOption, setSelectedOption] = useState<string>("Stores");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  
   const [selectedOption2, setSelectedOption2] = useState<string>("2021");
   const [isOpen2, setIsOpen2] = useState<boolean>(false);
   const [selectedOption3, setSelectedOption3] = useState<string>("2021");
   const [isOpen3, setIsOpen3] = useState<boolean>(false);
 
-  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
+  
   const options2 = ["2024", "2023", "2022", "2021"];
   const options3 = ["2024", "2023", "2022", "2021"];
 
-  const toggleDropdown1 = () => setIsOpen(!isOpen);
+  
   const toggleDropdown2 = () => setIsOpen2(!isOpen2);
   const toggleDropdown3 = () => setIsOpen3(!isOpen3);
 
-  const handleSelect = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
   };
 
+  
+  const handleError = (message: string) => {
+    setCustomToast({
+      message,
+      type: "error",
+    });
+  }; 
+
+  const fetchDropdownData = async () => {
+        try {
+          const response = await sendApiRequest({ mode: "getallstores" });
+          if (response?.status === 200) {
+            setStore(response?.data?.stores || []);
+          } else {
+            handleError(response?.message);
+          }
+        } catch (error) {
+          console.error("Error fetching stores:", error);
+        }
+      };
+      useEffect(() => {
+        fetchDropdownData();
+      }, []);
+
+      
   const handleSelect2 = (option2: string) => {
     setSelectedOption2(option2);
     setIsOpen2(false);
@@ -81,11 +114,17 @@ const DetailsPage: React.FC = () => {
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row below-md:flex-col gap-3 w-full">
             <Dropdown
-              options={options}
-              selectedOption={selectedOption}
-              onSelect={handleSelect}
-              isOpen={isOpen}
-              toggleOpen={toggleDropdown1}
+              options={store}
+              selectedOption={selectedOption?.name || "Store"}
+              onSelect={(selectedOption: any) => {
+                setSelectedOption({
+                  name: selectedOption.name,
+                  id: selectedOption.id,
+                });
+                setIsStoreDropdownOpen(false);
+              }}
+              isOpen={isStoreDropdownOpen}
+              toggleOpen={toggleStoreDropdown}
             />
 
             {/* Second Dropdown */}

@@ -423,7 +423,7 @@ const Sales: FC = () => {
 
               <button
                 onClick={handleUploadClick}
-                className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg below-md:mt-3 w-[159px] h-[35px] rounded-md text-white text-[14px] font-semibold"
+                className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg below-md:mt-3 w-[159px] h-[35px] rounded-md text-white text-[13px] font-medium"
               >
                 <img
                   src="/images/uploadIcon.svg"

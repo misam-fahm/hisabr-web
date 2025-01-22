@@ -41,8 +41,7 @@ const EditCategories = ({ rowData ,setAddCategories }: any ) => {
   };
 
   const onSubmit = async (data: any) => {
-    console.log("form",data)
-   
+    
     const jsonData: JsonData = {
       mode: "updatecategory",
       categoryname: data?.categoryname,
@@ -91,7 +90,7 @@ const EditCategories = ({ rowData ,setAddCategories }: any ) => {
           <img
             src="/images/editpencilicon.svg"
             alt="Edit icon"
-            className="w-4 h-4 below-md:w-5 below-md:h-5"
+            className="flex justify-center items-center w-4 h-4 below-md:w-5 below-md:h-5"
           />
         </Button>
       </div>
@@ -127,10 +126,10 @@ const EditCategories = ({ rowData ,setAddCategories }: any ) => {
                     <InputField
                       type="text"
                       label="Category Name"
-                      borderClassName="border border-gray-400"
+                      borderClassName="border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={categoryNameData }
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods.register("categoryname", {
                         required: "Category name is required",
                       })}
@@ -144,10 +143,10 @@ const EditCategories = ({ rowData ,setAddCategories }: any ) => {
                     <InputField
                       type="text"
                       label="Description"
-                      borderClassName="border border-gray-400"
+                      borderClassName="border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={descriptionData}
-                      textColor="text-gray-500"
+                      textColor="text-[#636363]"
                       {...methods.register("description", {
                         required: "Description is required",
                       })}

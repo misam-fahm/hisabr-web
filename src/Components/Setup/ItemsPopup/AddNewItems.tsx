@@ -25,8 +25,13 @@ interface JsonData {
   dqcategoryid:number | null
 }
 
+interface CustomToast {
+  toastMessage: string;
+  toastType: string;
+}
 
-const AddNewItems = () => {
+
+const AddNewItems = ({setAddItems}:any) => {
   const methods = useForm();
   const { register, setValue, handleSubmit, watch, clearErrors, trigger, formState: { errors } } = methods;
   const options = [{name: "Dairy", id: 1}, {name: "Bakery", id: 2}, {name: "Beverages", id:3}, {name: "Frozen Foods", id: 4}];  
@@ -39,10 +44,10 @@ const AddNewItems = () => {
     useState(false);
   const [iscogstrackingDropdownOpen, setIsCOGSTrackingDropdownOpen] =
     useState(false);
-  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
-    message: "",
-    type: "",
-  });
+ const [customToast, setCustomToast] = useState<CustomToast>({
+     toastMessage: "",
+     toastType: "",
+   });
   const name = watch("name");
   const units = watch("units");
   const weight = watch("weight");
@@ -54,6 +59,7 @@ const AddNewItems = () => {
   const closeModal = () => setIsOpen(false);
 
   const onSubmit = async (data: any) => {
+    setCustomToast({ toastMessage: "", toastType: "" });
     const jsonData: JsonData = {
       mode: "insertitem",
       categoryid: data?.categoryId,
@@ -68,17 +74,27 @@ const AddNewItems = () => {
     try {
       const result: any = await sendApiRequest(jsonData);
       const { status } = result;
+      setTimeout(() => {
       setCustomToast({
-        message:
+        toastMessage:
           status === 200 ? "Item added successfully!" : "Failed to add item.",
-        type: status === 200 ? "success" : "error",
+          toastType: status === 200 ? "success" : "error",
       });
-      if (status === 200) closeModal();
-    } catch (error) {
-      setCustomToast({ message: "Error adding item", type: "error" });
-      console.error("Error submitting form:", error);
+    }, 0);
+    if (result?.status === 200) {
+      closeModal();
+      setAddItems(true)
     }
-  };
+    }  catch (error: any) {
+      setTimeout(() => {
+        setCustomToast({
+          toastMessage: error?.message,
+          toastType: "error",
+        });
+      }, 0);
+    }
+  }
+
 
   const toggleDropdownStore = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -104,8 +120,8 @@ const AddNewItems = () => {
         } else {
           setCustomToast({
             ...customToast,
-            message: response?.message,
-            type: "error",
+            toastMessage: response?.message,
+            toastType: "error",
           });
         }
       } catch (error) {
@@ -124,8 +140,8 @@ const AddNewItems = () => {
         } else {
           setCustomToast({
             ...customToast,
-            message: response?.message,
-            type: "error",
+            toastMessage: response?.message,
+            toastType: "error",
           });
         }
       } catch (error) {
@@ -144,8 +160,8 @@ const AddNewItems = () => {
         } else {
           setCustomToast({
             ...customToast,
-            message: response?.message,
-            type: "error",
+            toastMessage: response?.message,
+            toastType: "error",
           });
         }
       } catch (error) {
@@ -165,8 +181,8 @@ const AddNewItems = () => {
   return (
     <>
       <ToastNotification
-        message={customToast.message}
-        type={customToast.type}
+        message={customToast.toastMessage}
+        type={customToast.toastType}
       />
       <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
         <button

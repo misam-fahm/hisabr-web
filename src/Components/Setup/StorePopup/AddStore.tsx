@@ -16,6 +16,11 @@ interface JsonData {
   royalty: number | null;
 }
 
+interface CustomToast {
+  toastMessage: string;
+  toastType: string;
+}
+
 
 const AddStore = ({ setAddStore }:any) => {
   const methods = useForm();
@@ -25,10 +30,10 @@ const AddStore = ({ setAddStore }:any) => {
   const [location, setLocation] = useState("");
   const [owner, setOwner] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
-    message: "",
-    type: "",
-  });
+  const [customToast, setCustomToast] = useState<CustomToast>({
+      toastMessage: "",
+      toastType: "",
+    });
  
   const handleChange = (data: any) => {
     setRoyalty(data);
@@ -61,6 +66,7 @@ const AddStore = ({ setAddStore }:any) => {
   const closeModal = () => setIsOpen(false);
 
   const onSubmit = async (data: any) => {
+    setCustomToast({ toastMessage: "", toastType: "" });
     const jsonData: JsonData = {
       mode: "insertstore",
       storename: data?.storeName || "",
@@ -71,27 +77,30 @@ const AddStore = ({ setAddStore }:any) => {
     };
   
     try {
-      console.log("Submitting data:", jsonData);
       const result: any = await sendApiRequest(jsonData);
       if (!result || typeof result !== "object") {
         throw new Error("Invalid API response.");
       }
   
       const { status, data: responseData } = result;
-      console.log("API Response:", result);
-  
+      setTimeout(() => {
       setCustomToast({
-        message: status === 200 ? "Item added successfully!" : "Failed to add item.",
-        type: status === 200 ? "success" : "error",
+        toastMessage: status === 200 ? "Item added successfully!" : "Failed to add item.",
+        toastType: status === 200 ? "success" : "error",
       });
+    }, 0);
   
       if (status === 200) {
         closeModal();
         setAddStore(true)
       }
-    } catch (error) {
-      setCustomToast({ message: "Error adding item", type: "error" });
-      console.error("Error submitting form:", error);
+    } catch (error: any) {
+      setTimeout(() => {
+        setCustomToast({
+          toastMessage: error?.message,
+          toastType: "error",
+        });
+      }, 0);
     }
   };
   
@@ -99,8 +108,8 @@ const AddStore = ({ setAddStore }:any) => {
   return (
     <>
     <ToastNotification
-        message={customToast.message}
-        type={customToast.type}
+        message={customToast.toastMessage}
+        type={customToast.toastType}
       />
       <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
         <button

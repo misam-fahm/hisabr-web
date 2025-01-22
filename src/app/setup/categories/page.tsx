@@ -61,7 +61,7 @@ const Page: FC = () => {
          <EditCategories rowData={info.row.original} setAddCategories={setAddCategories} />
         </span>
       ),
-      size: 30,
+      size: 50,
     },
     {
       id: "delete",
@@ -69,7 +69,7 @@ const Page: FC = () => {
         <div className="flex justify-center items-center"></div>
       ),
       cell: () => (
-        <span className="flex justify-center mr-5">
+        <span className="flex justify-center">
           <DeleteCategories />
         </span>
       ),
@@ -128,6 +128,7 @@ const Page: FC = () => {
         console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
+        setAddCategories(false)
       }
     };
 
@@ -145,7 +146,7 @@ const Page: FC = () => {
       />
       <div className="flex justify-end gap-2 below-md:hidden my-6">
         {/* <AddNewItems /> */}
-        <AddCategories />
+        <AddCategories setAddCategories={setAddCategories} />
       </div>
 
       <div className="overflow-hidden max-w-full">
@@ -203,7 +204,7 @@ const Page: FC = () => {
           )}
           {/* Add NewItem bottom */}
           <div className="block pl-24 ">
-            <AddCategories />
+            <AddCategories setAddCategories={setAddCategories}/>
           </div>
         </div>
 

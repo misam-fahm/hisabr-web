@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../globals.css";
 import MultiLineChart from "@/Components/Charts-Graph/MultiLineChart";
 import BarChart3 from "@/Components/Charts-Graph/BarChart3";
@@ -17,6 +17,8 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { sendApiRequest } from "@/utils/apiUtils";
 
 interface TableRow {
   date: string;
@@ -203,8 +205,14 @@ const dat = [
 ];
 
 const DetailsPage: React.FC = () => {
-  const [selectedOption, setSelectedOption] = useState<string>("Stores");
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+      message: "",
+      type: "",
+    });
   const [selectedOption2, setSelectedOption2] = useState<string>("2021");
   const [isOpen2, setIsOpen2] = useState<boolean>(false);
   const [selectedOption3, setSelectedOption3] = useState<string>("2021");
@@ -233,20 +241,43 @@ const DetailsPage: React.FC = () => {
     router.back();
   };
 
-  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+  };
+
+  
+  const handleError = (message: string) => {
+    setCustomToast({
+      message,
+      type: "error",
+    });
+  };
+
+  const fetchDropdownData = async () => {
+      try {
+        const response = await sendApiRequest({ mode: "getallstores" });
+        if (response?.status === 200) {
+          setStore(response?.data?.stores || []);
+        } else {
+          handleError(response?.message);
+        }
+      } catch (error) {
+        console.error("Error fetching stores:", error);
+      }
+    };
+    useEffect(() => {
+      fetchDropdownData();
+    }, []);
+
+
   const options2 = ["2024", "2023", "2022", "2021"];
   const options3 = ["2024", "2023", "2022", "2021"];
   const options4 = ["2024", "2023", "2022", "2021"];
 
-  const toggleDropdown1 = () => setIsOpen(!isOpen);
+  
   const toggleDropdown2 = () => setIsOpen2(!isOpen2);
   const toggleDropdown3 = () => setIsOpen3(!isOpen3);
   const toggleDropdown4 = () => setIsOpen4(!isOpen4);
-
-  const handleSelect = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
-  };
 
   const handleSelect2 = (option2: string) => {
     setSelectedOption2(option2);
@@ -304,11 +335,17 @@ const DetailsPage: React.FC = () => {
             {/* First Dropdown */}
 
             <Dropdown
-              options={options}
-              selectedOption={selectedOption}
-              onSelect={handleSelect}
-              isOpen={isOpen}
-              toggleOpen={toggleDropdown1}
+              options={store}
+              selectedOption={selectedOption?.name || "Store"}
+              onSelect={(selectedOption: any) => {
+                setSelectedOption({
+                  name: selectedOption.name,
+                  id: selectedOption.id,
+                });
+                setIsStoreDropdownOpen(false);
+              }}
+              isOpen={isStoreDropdownOpen}
+              toggleOpen={toggleStoreDropdown}
             />
 
             {/* Second Dropdown */}

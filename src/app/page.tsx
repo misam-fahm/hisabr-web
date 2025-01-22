@@ -52,7 +52,7 @@ const Home: FC = () => {
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
-  }
+  };
 
   const handleError = (message: string) => {
     setCustomToast({
@@ -172,9 +172,12 @@ const Home: FC = () => {
           <Dropdown
             options={store}
             selectedOption={selectedOption?.name || "Store"}
-            onSelect={(selectedOption:any) => {
-              setSelectedOption( {name : selectedOption.name , id: selectedOption.id}); 
-              setIsStoreDropdownOpen(false); 
+            onSelect={(selectedOption: any) => {
+              setSelectedOption({
+                name: selectedOption.name,
+                id: selectedOption.id,
+              });
+              setIsStoreDropdownOpen(false);
             }}
             isOpen={isStoreDropdownOpen}
             toggleOpen={toggleStoreDropdown}

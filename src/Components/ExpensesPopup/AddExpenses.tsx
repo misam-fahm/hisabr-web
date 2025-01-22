@@ -26,6 +26,10 @@ interface JsonData {
   description: string;
 }
 
+interface CustomToast {
+  toastMessage: string;
+  toastType: string;
+}
 
 const AddExpenses = ({ setAddExpenses }: any) => {
 
@@ -44,10 +48,11 @@ const AddExpenses = ({ setAddExpenses }: any) => {
   // const [isExpenseFetched, setIsExpenseFetched] = useState(false);
   const [expensetypes, setExpensetypes] = useState<any[]>([]);
   const [store, setStore] = useState<any[]>([]);
-  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
-    message: "",
-    type: "",
-  });
+  const [customToast, setCustomToast] = useState<CustomToast>({
+      toastMessage: "",
+      toastType: "",
+    });
+  
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -91,8 +96,8 @@ const AddExpenses = ({ setAddExpenses }: any) => {
           } else {
             setCustomToast({
               ...customToast,
-              message: response?.message,
-              type: "error",
+              toastMessage: response?.message,
+              toastType: "error",
             });
           }
         } catch (error) {
@@ -109,8 +114,8 @@ const AddExpenses = ({ setAddExpenses }: any) => {
           } else {
             setCustomToast({
               ...customToast,
-              message: response?.message,
-              type: "error",
+              toastMessage: response?.message,
+              toastType: "error",
             });
           }
         } catch (error) {
@@ -132,7 +137,7 @@ const AddExpenses = ({ setAddExpenses }: any) => {
     // };
 
     const onSubmit = async (data: any) => {
-      console.log("Form Data with IDs:", data);
+      
       const jsonData: JsonData = {
         mode: "insertexpense",
         expensedate: format(data?.date, "yyyy-MM-dd"),
@@ -145,19 +150,23 @@ const AddExpenses = ({ setAddExpenses }: any) => {
       try {
         const result: any = await sendApiRequest(jsonData);
         const { status, data: responseData } = result; // Assuming responseData contains the new expense data or its ID
-    
+        setTimeout(() => {
         setCustomToast({
-          message: status === 200 ? "Item added successfully!" : "Failed to add item.",
-          type: status === 200 ? "success" : "error",
+          toastMessage: status === 200 ? "Item added successfully!" : "Failed to add item.",
+          toastType: status === 200 ? "success" : "error",
         });
-    
+      }, 0);
         if (status === 200) {
           closeModal();
           setAddExpenses(true)
         }
-      } catch (error) {
-        setCustomToast({ message: "Error adding item", type: "error" });
-        console.error("Error submitting form:", error);
+      } catch (error :any) {
+        setTimeout(() => {
+          setCustomToast({
+            toastMessage: error?.message,
+            toastType: "error",
+          });
+        }, 0);
       }
     };
     
@@ -165,8 +174,8 @@ const AddExpenses = ({ setAddExpenses }: any) => {
   return (
     <>
       <ToastNotification
-        message={customToast.message}
-        type={customToast.type}
+        message={customToast.toastMessage}
+        type={customToast.toastType}
       />
       <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
         <button

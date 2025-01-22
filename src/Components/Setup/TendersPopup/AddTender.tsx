@@ -17,6 +17,10 @@ interface JsonData {
   commission: number | null;
  
 }
+interface CustomToast {
+  toastMessage: string;
+  toastType: string;
+}
 
 const AddTender = ({ setAddTender  }:any) => {
 
@@ -27,10 +31,11 @@ const AddTender = ({ setAddTender  }:any) => {
   const [tenderType, setTenderType] = useState<any[]>([]);
   const { register, setValue, watch ,clearErrors} = methods;
   const [isOpen, setIsOpen] = useState(false);
-  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
-    message: "",
-    type: "",
-  });
+  const [customToast, setCustomToast] = useState<CustomToast>({
+      toastMessage: "",
+      toastType: "",
+    });
+  
    const selectedTenderType = watch("tendertype"); 
    const openModal = () => setIsOpen(true);
    const closeModal = () => {setIsOpen(false)};
@@ -61,8 +66,8 @@ const AddTender = ({ setAddTender  }:any) => {
         } else {
           setCustomToast({
             ...customToast,
-            message: response?.message,
-            type: "error",
+            toastMessage: response?.message,
+            toastType: "error",
           });
         }
       } catch (error) {
@@ -75,7 +80,7 @@ const AddTender = ({ setAddTender  }:any) => {
 
  
   const onSubmit = async (data: any) => {
-    console.log("form",data)
+    setCustomToast({ toastMessage: "", toastType: "" });
     const jsonData: JsonData = {
       mode: "inserttender",
       tendertypeid: data?.tendertypeId,
@@ -86,17 +91,23 @@ const AddTender = ({ setAddTender  }:any) => {
     try {
       const result: any = await sendApiRequest(jsonData);
       const { status , data: responseData  } = result;
+      setTimeout(() => {
       setCustomToast({
-        message: status === 200 ? "Item added successfully!" : "Failed to add item.",
-        type: status === 200 ? "success" : "error",
+        toastMessage: status === 200 ? "Item added successfully!" : "Failed to add item.",
+        toastType: status === 200 ? "success" : "error",
       });
+      }, 0);
       if (status === 200) {
         setAddTender(true)
         closeModal();
       };
-    } catch (error) {
-      setCustomToast({ message: "Error adding item", type: "error" });
-      console.error("Error submitting form:", error);
+    } catch (error: any) {
+      setTimeout(() => {
+        setCustomToast({
+          toastMessage: error?.message,
+          toastType: "error",
+        });
+      }, 0);
     }
   };
   
@@ -104,8 +115,8 @@ const AddTender = ({ setAddTender  }:any) => {
   return (
     <>
      <ToastNotification
-        message={customToast.message}
-        type={customToast.type}
+        message={customToast.toastMessage}
+        type={customToast.toastType}
       />
       <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
         <button
