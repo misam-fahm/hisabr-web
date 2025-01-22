@@ -149,6 +149,7 @@ const Page: FC = () => {
         console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
+        setAddItems(false)
       }
     };
 

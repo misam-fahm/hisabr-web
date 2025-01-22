@@ -24,9 +24,8 @@ interface JsonData {
 
 const EditExpense = ({ initialData , setAddExpenses}:any) => {
 
-  const methods = useForm<any>({
-    defaultValues: initialData, // Prepopulate form with existing data
-  });
+  const methods = useForm<any>();
+  
   const {  setValue, clearErrors, watch, control, register, formState, handleSubmit } = methods;
   const { errors } = formState;
   const [description, setDescription] = useState(initialData?.description );
@@ -155,7 +154,7 @@ const EditExpense = ({ initialData , setAddExpenses}:any) => {
     // Set the default value for 'store' when component mounts
     if (!selectedStore && initialData?.storename) {
       methods.setValue("store", initialData?.storename);
-      methods.setValue("storeId", initialData?.storeId); // Optionally set storeId if available
+      methods.setValue("storeId", initialData?.storeid); // Optionally set storeId if available
     }
 
     if (!selectedExpense && initialData?.expensename) {
@@ -165,7 +164,7 @@ const EditExpense = ({ initialData , setAddExpenses}:any) => {
     if (!selecetedDate && initialData?.expensedate) {
       methods.setValue("date", initialData?.expensedate);
     }
-  }, [selectedStore, selectedExpense, selecetedDate , initialData]);
+  }, [initialData]);
   
   return (
     <>
@@ -215,7 +214,7 @@ const EditExpense = ({ initialData , setAddExpenses}:any) => {
                 <div className="flex flex-col h-full mt-4 gap-6">
                 <Dropdown
                     options={store}
-                    selectedOption={selectedStore ? selectedStore : initialData?.storename ? initialData?.storename : "Store"} 
+                    selectedOption={selectedStore ? selectedStore || "Store" : initialData?.storename } 
                     onSelect={(selectedOption) => {
                       setValue("store", selectedOption.name); 
                       setValue("storeId", selectedOption.id);

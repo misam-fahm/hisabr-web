@@ -175,6 +175,7 @@ const Expenses: FC = () => {
         console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
+        setAddExpenses(false)
       }
     };
 

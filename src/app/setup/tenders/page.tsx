@@ -121,6 +121,7 @@ const Page: FC = () => {
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
+      setAddTender(false)
     }
   };
 
