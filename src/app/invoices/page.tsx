@@ -21,6 +21,7 @@ import {
 import Pagination from "@/Components/UI/Pagination/Pagination";
 import { sendApiRequest } from "@/utils/apiUtils";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import UploadInvoicepopup from "@/Components/Invoice/UploadInvoicePopup";
 
 interface TableRow {
   invoicedate: string;
@@ -317,7 +318,7 @@ const Invoices = () => {
           </div>
         </div>
         <div className="pl-24 below-md:hidden">
-          <button
+          {/* <button
             className="w-[159px] h-[35px] bg-[#168A6F] hover:bg-[#11735C] text-white  gap-[0.25rem] font-medium  rounded-md text-[13px] flex items-center justify-center "
             onClick={handleButtonClick}
           >
@@ -329,7 +330,8 @@ const Invoices = () => {
             ref={fileInputRef}
             onChange={handleFileChange}
             className="hidden"
-          />
+          /> */}
+          <UploadInvoicepopup />
         </div>
       </div>
       {/* Mobile View : Card section */}
@@ -378,25 +380,7 @@ const Invoices = () => {
           </div>
         ))}
         <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
-          <button
-            className="focus:outline-none flex items-center bg-[#168A6F]  justify-center  w-[56px] h-[56px] rounded-xl relative"
-            onTouchStart={handlePressStart} // For mobile devices
-            onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
-            onClick={handleButtonClick}
-          >
-            <img
-              src="/images/Mobileuploadicon.svg"
-              alt="Upload Invoice"
-              className="w-[18px] h-[18px]"
-            />
-            {showTooltip && (
-              <div className="absolute bottom-[75px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
-                Upload Invoice
-                {/* Tooltip Pointer */}
-                <div className="absolute top-full right-[20%] transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#79747E]"></div>
-              </div>
-            )}
-          </button>
+          <UploadInvoicepopup />
         </div>
       </div>
 
