@@ -66,9 +66,9 @@ const closeModal = () => setIsOpen(false);
           className="bg-[#168A6F] hover:bg-[#11735C] shadow-lg text-white w-[159px] text-[13px] gap-[0.25rem] font-medium h-[35px] rounded-md flex items-center justify-center "
         >
            <img
-              src="/images/Mobileuploadicon.svg"
+              src="/images/webuploadicon.svg"
               alt="Upload Invoice"
-              className="w-[18px] h-[18px]"
+             
             />
           Upload Invoice
         </button>
