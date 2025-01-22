@@ -301,7 +301,7 @@ const Invoices = () => {
             <DateRangePicker />
           </div>
 
-          <div className="flex shadow border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
+          <div className="flex border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
             <input
               type="search"
               value={globalFilter ?? ""}
