@@ -55,11 +55,9 @@ const summary: FC = () => {
     type: "",
   });
 
-  
-
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
-  }
+  };
 
   const handleError = (message: string) => {
     setCustomToast({
@@ -77,15 +75,12 @@ const summary: FC = () => {
         handleError(response?.message);
       }
     } catch (error) {
-     console.error("Error fetching stores:", error);
+      console.error("Error fetching stores:", error);
     }
-  
   };
 
   useEffect(() => {
-   
-      fetchDropdownData();
-    
+    fetchDropdownData();
   }, []);
 
   /**year composed chart*/
@@ -183,24 +178,26 @@ const summary: FC = () => {
 
       <div>
         <div className="z-[11] pb-6 below-md:pb-4 bg-[#f7f8f9] sticky pt-6 below-md:pt-4 pl-6 pr-6 below-md:px-3">
-          <div className="flex flex-row below-md:flex-col w-[50%] gap-3">
+          <div className="flex flex-row below-md:flex-col below-lg:w-[50%] w-[100%] gap-3">
             {/* First Dropdown */}
 
             <Dropdown
-                    options={store}
-                    selectedOption={ selectedOption?.name || "Store" } 
-                    onSelect={(selectedOption:any) => {
-                      setSelectedOption( {name : selectedOption.name , id: selectedOption.id}); 
-                      // setSelectedOption();
-                      setIsStoreDropdownOpen(false);  
-                    }}
-                    isOpen={isStoreDropdownOpen}
-                    toggleOpen={toggleStoreDropdown}
-                    widthchange="w-full"
-                   
-                  />
+              options={store}
+              selectedOption={selectedOption?.name || "Store"}
+              onSelect={(selectedOption: any) => {
+                setSelectedOption({
+                  name: selectedOption.name,
+                  id: selectedOption.id,
+                });
+                // setSelectedOption();
+                setIsStoreDropdownOpen(false);
+              }}
+              isOpen={isStoreDropdownOpen}
+              toggleOpen={toggleStoreDropdown}
+              widthchange="w-full"
+            />
             <div className=" w-full">
-              <DateRangePicker />
+              <DateRangePicker widthchang="w-full" />
             </div>
           </div>
         </div>
