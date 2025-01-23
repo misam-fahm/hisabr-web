@@ -56,7 +56,26 @@ const AddNewItems = ({setAddItems}:any) => {
   const selectedDqCategory = watch("dqcategory");
   const selectedCOGSTracking = watch("cogstrackingcategory");
   const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+
+  const closeModal = async () => {
+    setIsOpen(false);
+
+    methods.reset({
+      categoryId:null,
+      dqcategoryId:null,
+      cogstrackingcategoryId:null,
+      category:"",
+      dqcategory:"",
+      cogstrackingcategory:"",
+      name: "",
+      packsize: "",
+      units: "",
+      weight: "",
+     
+    });
+    
+  };
+  
 
   const onSubmit = async (data: any) => {
     setCustomToast({ toastMessage: "", toastType: "" });

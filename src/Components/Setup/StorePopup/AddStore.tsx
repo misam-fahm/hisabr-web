@@ -63,7 +63,14 @@ const AddStore = ({ setAddStore }:any) => {
  
 
   const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const closeModal = () => {
+    setIsOpen(false),
+    setRoyalty(""),
+    setCounty(""),
+    setStoreName(""),
+    setOwner("")
+   
+  };
 
   const onSubmit = async (data: any) => {
     setCustomToast({ toastMessage: "", toastType: "" });

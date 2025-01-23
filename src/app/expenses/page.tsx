@@ -21,6 +21,7 @@ import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastN
 import { sendApiRequest } from "@/utils/apiUtils";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import DeletePopup from "@/Components/UI/Delete/DeletePopup";
 
 interface TableRow {
   expensedate: string;
@@ -28,7 +29,9 @@ interface TableRow {
   amount: string;
   description: string;
   expensename: string;
+  id:any;
 }
+
 
 const Expenses: FC = () => {
 
@@ -49,7 +52,6 @@ const Expenses: FC = () => {
     type: "",
   });
   
-
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "date",
@@ -67,7 +69,7 @@ const Expenses: FC = () => {
         return <span className="">{truncatedDescription}</span>;
       },
       // cell: (info) => <span>{info.row.original.storename}</span>,
-      size: 120,
+      size: 110,
     },
     {
       accessorKey: "amount",
@@ -75,7 +77,7 @@ const Expenses: FC = () => {
       cell: (info) => (
         <span className=" flex justify-end  mr-3">{info.row.original.amount}</span>
       ),
-      size: 80,
+      size: 60,
     },
     {
       accessorKey: "description",
@@ -115,11 +117,11 @@ const Expenses: FC = () => {
     {
       id: "delete",
       header: () => <div className="text-center"></div>,
-      cell: () => (
+      cell: (info) => (
         <>
           <span className="flex justify-center ">
             {" "}
-            <DeleteExpense />
+            <DeletePopup message={"Expenses"} jsonData={ {mode: "deleteexpense",id:Number(info.row.original.id)}} setUpdatedData={setAddExpenses} />
           </span>
         </>
       ),
@@ -324,7 +326,7 @@ const Expenses: FC = () => {
                 <div className="flex gap-5 mb-1 px-4 py-4">
                   <>
                     <EditExpense initialData={card} setAddExpenses={setAddExpenses}  />
-                    <DeleteExpense />
+                    <DeletePopup message={"Expenses"} jsonData={ {mode: "deleteexpense",id:Number(card.id)}} setUpdatedData={setAddExpenses} />
                   </>
                 </div>
               </div>

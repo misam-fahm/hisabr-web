@@ -4,14 +4,10 @@ import { sendApiRequest } from "@/utils/apiUtils";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import ToastNotification, { ToastNotificationProps } from "../UI/ToastNotification/ToastNotification";
+import ToastNotification, { ToastNotificationProps } from "../ToastNotification/ToastNotification";
 
-interface JsonData {
-  mode: string;
-  id:number | null
-}
 
-const DeleteExpense = ({ initialData , setAddExpenses}:any) => {
+const DeletePopup = ({ setUpdatedData ,jsonData , message }:any) => {
 
 
   const [isOpen, setIsOpen] = useState(false);
@@ -25,11 +21,6 @@ const DeleteExpense = ({ initialData , setAddExpenses}:any) => {
  
 
   const handleSubmit = async () => {
-
-    const jsonData: JsonData = {
-      mode: "deleteexpense",
-      id:Number(initialData?.id)
-    };
   
     try {
       const result: any = await sendApiRequest(jsonData);
@@ -41,7 +32,7 @@ const DeleteExpense = ({ initialData , setAddExpenses}:any) => {
           type: status === 200 ? "success" : "error",
         });
         setTimeout(() => {
-          setAddExpenses(true);
+            setUpdatedData(true);
           closeModal();
         }, 300);
       };
@@ -81,7 +72,7 @@ const DeleteExpense = ({ initialData , setAddExpenses}:any) => {
               </DialogTitle>
               <div className="flex flex-col mt-4 justify-center items-center text-[#5E6366] font-medium  text-[15px]">
                 <p className=" below-md:text-[12px]  below-md:font-normal">
-                  Are you sure you want to delete this item?
+                  Are you sure you want to delete this {message}?
                 </p>
                 <p className=" below-md:text-[12px] below-md:font-normal">
                   This action cannot be undone.
@@ -115,4 +106,4 @@ const DeleteExpense = ({ initialData , setAddExpenses}:any) => {
   )
 }
 
-export default DeleteExpense
+export default DeletePopup

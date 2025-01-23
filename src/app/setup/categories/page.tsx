@@ -17,6 +17,7 @@ import EditCategories from "@/Components/Setup/CategoriesPopup/EditCategories";
 import DeleteCategories from "@/Components/Setup/CategoriesPopup/DeleteCategories";
 import { sendApiRequest } from "@/utils/apiUtils";
 import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import DeletePopup from "@/Components/UI/Delete/DeletePopup";
 
 interface TableRow {
   categoryname: string;
@@ -68,9 +69,9 @@ const Page: FC = () => {
       header: () => (
         <div className="flex justify-center items-center"></div>
       ),
-      cell: () => (
+      cell: (info) => (
         <span className="flex justify-center">
-          <DeleteCategories />
+          <DeletePopup message={"category"} jsonData={ {mode: "deletecategory",categoryid:Number(info.row.original.categoryid)}} setUpdatedData={setAddCategories} />
         </span>
       ),
       size: 50,

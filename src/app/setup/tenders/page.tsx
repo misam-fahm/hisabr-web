@@ -16,11 +16,13 @@ import EditTenders from "@/Components/Setup/TendersPopup/EditTenders";
 import Pagination from "@/Components/UI/Pagination/Pagination";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import { sendApiRequest } from "@/utils/apiUtils";
+import DeletePopup from "@/Components/UI/Delete/DeletePopup";
 
 interface TableRow {
   commission: string;
   tendername: string;
   tendertypename: string;
+  tenderid:any;
 }
 
 const Page: FC = () => {
@@ -66,9 +68,9 @@ const Page: FC = () => {
     {
       id: "delete",
       header: () => <div className="text-center "></div>,
-      cell: () => (
+      cell: (info) => (
         <span className="flex justify-center">
-          <DeleteTenders />
+          <DeletePopup message={"Tender"} jsonData={ {mode: "deletetender",tenderid:Number(info.row.original.tenderid)}} setUpdatedData={setAddTender} />
         </span>
       ),
       size: 30,
@@ -189,7 +191,7 @@ const Page: FC = () => {
                 </>
                 {/* Delete */}
                 <>
-                  <DeleteTenders />
+                <DeletePopup message={"Tender"} jsonData={ {mode: "deletetender",tenderid:Number(row.original.tenderid)}} setUpdatedData={setAddTender} />
                 </>
               </div>
             </div>
