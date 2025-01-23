@@ -44,9 +44,9 @@ const Home: FC = () => {
   const [store, setStore] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
-      message: "",
-      type: "",
-    });
+    message: "",
+    type: "",
+  });
   const [selectedOption2, setSelectedOption2] = useState<string>("2021");
   const [isOpen2, setIsOpen2] = useState<boolean>(false);
 
@@ -62,25 +62,20 @@ const Home: FC = () => {
   };
 
   const fetchDropdownData = async () => {
-      try {
-        const response = await sendApiRequest({ mode: "getallstores" });
-        if (response?.status === 200) {
-          setStore(response?.data?.stores || []);
-        } else {
-          handleError(response?.message);
-        }
-      } catch (error) {
-        console.error("Error fetching stores:", error);
+    try {
+      const response = await sendApiRequest({ mode: "getallstores" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+      } else {
+        handleError(response?.message);
       }
-    
-    };
-    useEffect(() => {
-     
-      fetchDropdownData();
-    
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+  };
+  useEffect(() => {
+    fetchDropdownData();
   }, []);
-
-  const options2 = ["2024", "2023", "2022", "2021"];
 
   const toggleDropdown2 = () => setIsOpen2(!isOpen2);
 
@@ -88,9 +83,15 @@ const Home: FC = () => {
     setSelectedOption(option);
     setIsOpen(false);
   };
+  const options2 = [
+    { id: 1, name: "2024" },
+    { id: 2, name: "2023" },
+    { id: 3, name: "2022" },
+    { id: 4, name: "2021" },
+  ];
 
-  const handleSelect2 = (option2: string) => {
-    setSelectedOption2(option2);
+  const handleSelect2 = (option: { id: number; name: string }) => {
+    setSelectedOption2(option.name);
     setIsOpen2(false);
   };
 
@@ -130,7 +131,7 @@ const Home: FC = () => {
   //fifth link(customer count)
 
   const handleClick5 = () => {
-    localStorage.setItem('showBackIcon', 'true');
+    localStorage.setItem("showBackIcon", "true");
     router.push("/expenses");
   };
 
@@ -679,7 +680,7 @@ const Home: FC = () => {
 
           {/** third grid  */}
           <div className=" bg-white below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-full items-stretch">
-            <div className="flex flex-row mt-4 justify-between px-6">
+            <div className="flex flex-row mt-4 justify-between px-6 pb-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/items.svg" />
                 <p className="text-[#334155]  text-[16px] font-bold">Items</p>
@@ -690,7 +691,7 @@ const Home: FC = () => {
             </div>
 
             <div className="w-full overflow-hidden overflow-y-auto overflow-x-auto  max-h-[130px] custom-scrollbar ">
-              <table className="w-full  bg-white border border-gray-200 mt-6">
+              <table className="w-full  bg-white border border-gray-200">
                 <tbody>
                   {tableData2.map((row, index) => (
                     <tr

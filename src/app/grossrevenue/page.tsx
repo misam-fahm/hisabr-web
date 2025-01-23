@@ -210,9 +210,9 @@ const DetailsPage: React.FC = () => {
   const [store, setStore] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
-      message: "",
-      type: "",
-    });
+    message: "",
+    type: "",
+  });
   const [selectedOption2, setSelectedOption2] = useState<string>("2021");
   const [isOpen2, setIsOpen2] = useState<boolean>(false);
   const [selectedOption3, setSelectedOption3] = useState<string>("2021");
@@ -245,7 +245,6 @@ const DetailsPage: React.FC = () => {
     setIsStoreDropdownOpen((prev) => !prev);
   };
 
-  
   const handleError = (message: string) => {
     setCustomToast({
       message,
@@ -254,45 +253,59 @@ const DetailsPage: React.FC = () => {
   };
 
   const fetchDropdownData = async () => {
-      try {
-        const response = await sendApiRequest({ mode: "getallstores" });
-        if (response?.status === 200) {
-          setStore(response?.data?.stores || []);
-        } else {
-          handleError(response?.message);
-        }
-      } catch (error) {
-        console.error("Error fetching stores:", error);
+    try {
+      const response = await sendApiRequest({ mode: "getallstores" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+      } else {
+        handleError(response?.message);
       }
-    };
-    useEffect(() => {
-      fetchDropdownData();
-    }, []);
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+  };
+  useEffect(() => {
+    fetchDropdownData();
+  }, []);
 
+  const options2 = [
+    { id: 1, name: "2024" },
+    { id: 2, name: "2023" },
+    { id: 3, name: "2022" },
+    { id: 4, name: "2021" },
+  ];
 
-  const options2 = ["2024", "2023", "2022", "2021"];
-  const options3 = ["2024", "2023", "2022", "2021"];
-  const options4 = ["2024", "2023", "2022", "2021"];
-
-  
+  const options3 = [
+    { id: 1, name: "2024" },
+    { id: 2, name: "2023" },
+    { id: 3, name: "2022" },
+    { id: 4, name: "2021" },
+  ];
+  const options4 = [
+    { id: 1, name: "2024" },
+    { id: 2, name: "2023" },
+    { id: 3, name: "2022" },
+    { id: 4, name: "2021" },
+  ];
   const toggleDropdown2 = () => setIsOpen2(!isOpen2);
   const toggleDropdown3 = () => setIsOpen3(!isOpen3);
   const toggleDropdown4 = () => setIsOpen4(!isOpen4);
 
-  const handleSelect2 = (option2: string) => {
-    setSelectedOption2(option2);
+  const handleSelect2 = (option: { id: number; name: string }) => {
+    setSelectedOption2(option.name);
     setIsOpen2(false);
   };
 
-  const handleSelect3 = (option3: string) => {
-    setSelectedOption3(option3);
+  const handleSelect3 = (option3: { id: number; name: string }) => {
+    setSelectedOption3(option3.name);
     setIsOpen3(false);
   };
 
-  const handleSelect4 = (option4: string) => {
-    setSelectedOption4(option4);
+  const handleSelect4 = (option4: { id: number; name: string }) => {
+    setSelectedOption4(option4.name);
     setIsOpen4(false);
   };
+
   const fileInputRef: any = useRef(null);
   const handleButtonClick = () => {
     // Programmatically trigger the hidden file input

@@ -55,11 +55,9 @@ const summary: FC = () => {
     type: "",
   });
 
-  
-
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
-  }
+  };
 
   const handleError = (message: string) => {
     setCustomToast({
@@ -77,43 +75,47 @@ const summary: FC = () => {
         handleError(response?.message);
       }
     } catch (error) {
-     console.error("Error fetching stores:", error);
+      console.error("Error fetching stores:", error);
     }
-  
   };
 
   useEffect(() => {
-   
-      fetchDropdownData();
-    
+    fetchDropdownData();
   }, []);
 
   /**year composed chart*/
 
-  const [selectedOption2, setSelectedOption2] = useState<string | undefined>(
-    undefined
-  );
+  const [selectedOption2, setSelectedOption2] = useState<string>("Year");
   const [isOpen2, setIsOpen2] = useState<boolean>(false);
 
-  const options2 = ["2024", "2023", "2022", "2021"];
+  const options2 = [
+    { id: 1, name: "2024" },
+    { id: 2, name: "2023" },
+    { id: 3, name: "2022" },
+    { id: 4, name: "2021" },
+  ];
+
   const toggleDropdown2 = () => setIsOpen2(!isOpen2);
 
-  const handleSelect2 = (option2: string) => {
-    setSelectedOption2(option2);
+  const handleSelect2 = (option: { id: number; name: string }) => {
+    setSelectedOption2(option.name);
     setIsOpen2(false);
   };
 
   /**sales */
-  const [selectedOption3, setSelectedOption3] = useState<string | undefined>(
-    undefined
-  );
+  const [selectedOption3, setSelectedOption3] = useState<string>("Year");
   const [isOpen3, setIsOpen3] = useState<boolean>(false);
 
-  const options3 = ["2024", "2023", "2022", "2021"];
+  const options3 = [
+    { id: 1, name: "2024" },
+    { id: 2, name: "2023" },
+    { id: 3, name: "2022" },
+    { id: 4, name: "2021" },
+  ];
   const toggleDropdown3 = () => setIsOpen3(!isOpen3);
 
-  const handleSelect3 = (option3: string) => {
-    setSelectedOption3(option3);
+  const handleSelect3 = (option3: { id: number; name: string }) => {
+    setSelectedOption3(option3.name);
     setIsOpen3(false);
   };
 
@@ -131,16 +133,19 @@ const summary: FC = () => {
 
   /**invoices */
 
-  const [selectedOption5, setSelectedOption5] = useState<string | undefined>(
-    undefined
-  );
+  const [selectedOption5, setSelectedOption5] = useState<string>("Year");
   const [isOpen5, setIsOpen5] = useState<boolean>(false);
 
-  const options5 = ["2024", "2023", "2022", "2021"];
+  const options5 = [
+    { id: 1, name: "2024" },
+    { id: 2, name: "2023" },
+    { id: 3, name: "2022" },
+    { id: 4, name: "2021" },
+  ];
   const toggleDropdown5 = () => setIsOpen5(!isOpen5);
 
-  const handleSelect5 = (option5: string) => {
-    setSelectedOption5(option5);
+  const handleSelect5 = (option5: { id: number; name: string }) => {
+    setSelectedOption5(option5.name);
     setIsOpen5(false);
   };
 
@@ -158,16 +163,19 @@ const summary: FC = () => {
 
   /**yearly sales */
 
-  const [selectedOption7, setSelectedOption7] = useState<string | undefined>(
-    undefined
-  );
+  const [selectedOption7, setSelectedOption7] = useState<string>("Year");
   const [isOpen7, setIsOpen7] = useState<boolean>(false);
 
-  const options7 = ["2024", "2023", "2022", "2021"];
+  const options7 = [
+    { id: 1, name: "2024" },
+    { id: 2, name: "2023" },
+    { id: 3, name: "2022" },
+    { id: 4, name: "2021" },
+  ];
   const toggleDropdown7 = () => setIsOpen7(!isOpen7);
 
-  const handleSelect7 = (option7: string) => {
-    setSelectedOption7(option7);
+  const handleSelect7 = (option7: { id: number; name: string }) => {
+    setSelectedOption7(option7.name);
     setIsOpen7(false);
   };
   return (
@@ -183,24 +191,26 @@ const summary: FC = () => {
 
       <div>
         <div className="z-[11] pb-6 below-md:pb-4 bg-[#f7f8f9] sticky pt-6 below-md:pt-4 pl-6 pr-6 below-md:px-3">
-          <div className="flex flex-row below-md:flex-col w-[50%] gap-3">
+          <div className="flex flex-row below-md:flex-col below-lg:w-[50%] w-[100%] gap-3">
             {/* First Dropdown */}
 
             <Dropdown
-                    options={store}
-                    selectedOption={ selectedOption?.name || "Store" } 
-                    onSelect={(selectedOption:any) => {
-                      setSelectedOption( {name : selectedOption.name , id: selectedOption.id}); 
-                      // setSelectedOption();
-                      setIsStoreDropdownOpen(false);  
-                    }}
-                    isOpen={isStoreDropdownOpen}
-                    toggleOpen={toggleStoreDropdown}
-                    widthchange="w-full"
-                   
-                  />
+              options={store}
+              selectedOption={selectedOption?.name || "Store"}
+              onSelect={(selectedOption: any) => {
+                setSelectedOption({
+                  name: selectedOption.name,
+                  id: selectedOption.id,
+                });
+                // setSelectedOption();
+                setIsStoreDropdownOpen(false);
+              }}
+              isOpen={isStoreDropdownOpen}
+              toggleOpen={toggleStoreDropdown}
+              widthchange="w-full"
+            />
             <div className=" w-full">
-              <DateRangePicker />
+              <DateRangePicker widthchang="w-full" />
             </div>
           </div>
         </div>
