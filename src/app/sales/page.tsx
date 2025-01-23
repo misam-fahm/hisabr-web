@@ -379,13 +379,13 @@ const Sales: FC = () => {
               <DateRangePicker />
             </div>
             <div className="flex flex-row gap-3 w-full">
-              <div className=" w-full below-md:w-full relative below-md:hidden tablet:w-full">
+              <div className=" w-full rounded border border-gray-300 below-md:w-full bg-[#ffff] relative below-md:hidden tablet:w-full">
                 <input
                   type="search"
                   value={globalFilter ?? ""}
                   onChange={(e) => setGlobalFilter(e.target.value)}
                   placeholder="Search"
-                  className="w-full cursor-pointer py-[10px] pr-7 pl-3 h-[35px] shadow rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                  className="w-full cursor-pointer py-[10px] pr-7 pl-3 h-[35px] text-[12px] placeholder:text-[#636363]  focus:outline-none "
                 />
                 <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
                   <img
@@ -395,11 +395,11 @@ const Sales: FC = () => {
                 </div>
               </div>
 
-              <div className="tablet:hidden below-md:w-full relative below-lg:hidden">
+              <div className="tablet:hidden below-md:w-full relative below-lg:hidden border border-gray-300">
                 <input
                   type="search"
                   placeholder="Search"
-                  className=" py-[10px] px-3 h-[35px] w-full shadow pr-7 pl-3 rounded-md text-[12px] placeholder:text-[#636363] border-none focus:outline-none focus:ring-1 focus:ring-[white]"
+                  className=" py-[10px] px-3 h-[35px] w-full shadow pr-7 pl-3 rounded text-[12px] placeholder:text-[#636363]  focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
                 <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
                   <img

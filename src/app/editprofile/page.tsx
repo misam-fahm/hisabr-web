@@ -20,31 +20,64 @@ const EditProfile = () => {
   const { watch, register, formState } = methods;
   const { errors } = formState;
 
+  const handleBack = () => {
+    router.push("/myprofile");
+  };
+
+
   return (
 
-    <main className='w-full below-md:mt-[100px] px-4'>
-      <div className='py-4 flex justify-end below-md:hidden '>
-        <button className='bg-[#C8C8C87A] w-[104px] h-[37px] text-[#6F6F6F] border rounded-md ' onClick={() => router.back()}>Back
-        </button>
+    <main className='w-full below-md:mt-4 px-6'>
+       <div>
+        <img
+          onClick={handleBack}
+          alt="Back Arrow"
+          className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
+          src="/images/webbackicon.svg"
+        ></img>
       </div>
+     
 
-      <div className='w-full max-h-[calc(100vh-10px)] overflow-auto  below-md:h-auto border rounded-md shadow bg-white px-8 below-md:px-0 py-5 '>
-        <div className='flex  below-md:justify-center items-center gap-4'>
-          <img
-            className="w-[72px] h-[70] mr-4 rounded-full"
-            src="/images/admin.png"
-            alt="Admin"
-          />
-          <Text className='text-[#4C535F] text-[18px] font-[600px]'> Saheel</Text>
-        </div>
+      <div className='w-full max-h-[calc(100vh-10px)] overflow-auto  below-md:h-auto border rounded-md shadow bg-white px-8 below-md:px-0 py-8 below-md:py-5'>
+      <div className='flex justify-between below-md:justify-center below-md:flex-col below-md:items-centeritems-center'>
+                    <div className='flex items-center gap-4 below-md:gap-2 below-md:flex-col below-md:items-center'>
+                        <img
+                            className="w-[72px] h-[70]  rounded-full"
+                            src="/images/admin.png"
+                            alt="Admin"
+                        />
+                        <div className='flex flex-col below-md:items-center'>
+                            <text className='text-[#4C535F] text-[18px] font-[600px]'> Saheel</text>
+                            <text className=' text-gray-300 text-[12px] font-normal'>Saheel@gmail.com</text>
+                        </div>
+                    </div>
+                    <div className='space-x-3 below-md:hidden'>
+                    <button
+                        className="px-4 py-2 text-[#6F6F6F] text-[13px] w-[101px] h-[37px] bg-[#E4E4E4] rounded-md hover:bg-[#C9C9C9]"
+                        onClick={() => router.push("/editprofile")}
+                    >
+                        Cancel
+                    </button>
 
-        <div className='mt-4 px-6'>
+                    {/* Submit Button */}
+                    <button
+                        className="px-4 py-2 text-white text-[13px] w-[101px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-[#11735C]"
+                        onClick={() => router.push("/editprofile")}
+                    >
+                        Save
+                    </button>
+                    </div>
+
+
+                </div>
+
+        <div className='mt-9'>
           <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)}>
 
               {/* Expense Type and Description */}
-              <div className="grid grid-cols-2 gap-8 mb-4 below-md:flex below-md:flex-col  below-md:justify-center">
-                <div className='w-[350px]'>
+              <div className="grid grid-cols-2 gap-9 below-md:flex below-md:flex-col  below-md:justify-center below-md:px-5">
+                <div className='w-[350px] below-md:w-full'>
 
                   <InputField
                     type="text"
@@ -62,7 +95,7 @@ const EditProfile = () => {
                     variant="outline"
                   />
                 </div>
-                <div className='w-[350px]'>
+                <div className='w-[350px] below-md:w-full'>
                   <InputField
                     type="email"
                     label="Email"
@@ -79,7 +112,7 @@ const EditProfile = () => {
                     variant="outline"
                   />
                 </div>
-                <div className='w-[350px]'>
+                <div className='w-[350px] below-md:w-full'>
                   <InputField
                     type="text"
                     label="Username"
@@ -96,7 +129,7 @@ const EditProfile = () => {
                     variant="outline"
                   />
                 </div>
-                <div className='w-[350px]'>
+                <div className='w-[350px] below-md:w-full'>
                   <InputField
                     type="phone"
                     label="Phonenumber"
@@ -113,17 +146,21 @@ const EditProfile = () => {
                     variant="outline"
                   />
                 </div>
-              </div>
-
-              {/* Submit Button */}
-              <div className="flex items-center justify-start mt-10 gap-8">
-
+                <div className="below-lg:hidden space-x-3 ">
                 <button
-                  type="submit"
-                  className="px-4 py-2 text-white text-[14px] w-[165px] below-md:w-full h-[37px] bg-[#1AA47D] rounded-md hover:bg-green-700"
-                >
-                  Update Profile
-                </button>
+                        className="px-4 py-2 text-white text-[13px] w-[101px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-[#11735C]"
+                        onClick={() => router.push("/editprofile")}
+                    >
+                        Save
+                    </button>
+                    <button
+                        className="px-4 py-2 text-[#6F6F6F] text-[13px] w-[101px] h-[37px] bg-[#E4E4E4] rounded-md hover:bg-[#C9C9C9]"
+                        onClick={() => router.push("/editprofile")}
+                    >
+                        Cancel
+                    </button>
+
+                </div>
               </div>
             </form>
           </FormProvider>
