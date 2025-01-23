@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
+import moment from "moment";
 // import Image from "next/image"
 import {
   useReactTable,
@@ -33,10 +33,6 @@ interface TableRow {
   total: string;
   invoicenumber: string;
 }
-
-
-
-
 
 const Invoices = () => {
   const router = useRouter();
@@ -64,9 +60,7 @@ const Invoices = () => {
        
       },
       size: 100, // Adjust the size as needed
-    },
-    
-    
+    },    
     {
       accessorKey: "total",
       header: () => <div className="text-right pr-8">Total</div>,
@@ -174,10 +168,59 @@ const Invoices = () => {
     // Programmatically trigger the hidden file input
     fileInputRef.current.click();
   };
-  const handleFileChange = (event: any) => {
+  const handleFileChange = async (event: any) => {
     const file = event.target.files[0];
     if (file) {
       console.log("Selected file:", file.name);
+      if (file && file.type === "application/pdf") {
+        const formData = new FormData();
+        formData.append("file", file);
+        try {
+          const response = await fetch("https://hisabr-pdf-extractor.vercel.app/convert-pdf", {
+            method: "POST",
+            body: formData,
+          });
+    
+          const responseData = await response.json();
+          console.log("Response:", responseData);
+          if (response.ok) {
+            const jsonData: any = {
+              mode: "insertinvoice",
+              invoicenumber: responseData?.invoice_details?.invoice_number,
+              invoicedate: moment(moment(responseData?.invoice_details?.invoice_date, 'DD/MM/YYYY').toDate()).format('YYYY-MM-DD'),
+              storename: "13246",
+              duedate: "",
+              total: responseData?.invoice_details?.invoice_total,
+              sellername: "Gordon",
+            };
+            const result: any = await sendApiRequest(jsonData);
+            if (result?.status === 200) {      
+              const val: any = {
+                invoiceDetails: responseData?.invoice_items || [],
+              };        
+              const res: any = await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
+            } else {
+              setTimeout(() => {
+                setCustomToast({
+                  message: "Failed to insert invoice details",
+                  type: "error",
+                });
+              }, 0);
+            }
+            
+          } else {
+            alert("Failed to upload file.");
+          }
+        } catch (error) {
+          console.error("Error uploading file:", error);
+          alert("An error occurred.");
+        }
+      } else {
+        alert("Please upload a PDF file.");
+      }
+    } else  {
+      alert("Please select a file.");
+      return;
     }
   };
   /**dropdown */
@@ -301,7 +344,7 @@ const Invoices = () => {
           </div>
         </div>
         <div className="pl-24 below-md:hidden">
-          {/* <button
+          <button
             className="w-[159px] h-[35px] bg-[#168A6F] hover:bg-[#11735C] text-white  gap-[0.25rem] font-medium  rounded-md text-[13px] flex items-center justify-center "
             onClick={handleButtonClick}
           >
@@ -313,8 +356,8 @@ const Invoices = () => {
             ref={fileInputRef}
             onChange={handleFileChange}
             className="hidden"
-          /> */}
-          <UploadInvoicepopup />
+          />
+          {/* <UploadInvoicepopup /> */}
         </div>
       </div>
       {/* Mobile View : Card section */}
