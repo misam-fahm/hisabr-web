@@ -17,7 +17,7 @@ const LoginForm = () => {
 
   return (
     <FormProvider {...methods}>
-      <div className="bg-[#334155] w-full h-[100vh] flex justify-center below-md:flex-col">
+      <div className="bg-[#0F1044] w-full h-[100vh] flex justify-center below-md:flex-col">
         <div className="w-[50%] below-md:w-full flex justify-center items-center h-full below-md:h-auto">
           <img
             className="w-auto h-[200px] below-md:h-[150px]"
@@ -81,7 +81,7 @@ const LoginForm = () => {
                   placeholder="Enter Password"
                   variant="outline"                />
                 <div className="flex justify-end mt-2">
-              <p className=" text-[#3BFCC6] font-normal text-[14px] cursor-pointer"   onClick={() => (window.location.href = "/forgotpassword")} >
+              <p className=" text-[#3BFCC6] font-normal text-[13px] cursor-pointer"   onClick={() => (window.location.href = "/forgotpassword")} >
               Forgot Password?
               </p>
               </div> 
@@ -89,7 +89,7 @@ const LoginForm = () => {
             
               <button
                 type="submit"
-                className="bg-[#1AA47D] w-[400px] below-md:w-full text-white py-2 px-4 rounded "
+                className="bg-[#1AA47D] w-[400px] below-md:w-full font-bold text-[14px] text-white py-2 px-4 rounded "
               >
                 GET STARTED
               </button>
