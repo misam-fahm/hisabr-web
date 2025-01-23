@@ -165,8 +165,8 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
           className={`flex gap-x-4 mt-[13px] ${open ? "pl-3" : "pl-3"}  below-md:pl-1 ${open ? "ml-[13px]" : "ml-[3px]"}`}
         >
           <img
-            src={open ? "/images/logo.svg" : "/images/halflogo.svg"}
-            className={`cursor-pointer ${open ? "w-[136px] -mt-4" : "w-[36px]"} `}
+            src={open ? "/images/hisabrlogo.svg" : "/images/halflogo.svg"}
+            className={`cursor-pointer ${open ? "w-[136px] -mt-1 " : "w-[36px] mb-2"} `}
           />
           {title === "My Profile" ||
           title === "Edit Profile" ||
@@ -199,7 +199,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
                   }
                   className={`text-[#FFFFFFCC] text-[14px] flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#A9A5CA33] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] mr-5 rounded-tr-full rounded-br-full
             ${currentPath === menu.path ? " bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]" : ""}
-            ${open ? "mt-1" : "mt-2"} 
+            ${open ? "mt-0.5" : "mt-1"} 
             ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""}
             ${
               menu.title === "SETUP"
