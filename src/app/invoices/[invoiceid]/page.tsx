@@ -1,5 +1,8 @@
 'use client';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation';
+import { sendApiRequest } from '@/utils/apiUtils';
+import { ToastNotificationProps } from '@/Components/UI/ToastNotification/ToastNotification';
 
 interface TableRow {
   itemCode: string;
@@ -15,6 +18,15 @@ interface TableRow {
   total: string;
 }
 const InvoiceDetails = () => {
+
+  const {invoiceid} = useParams(); 
+  const [data, setData] = useState<TableRow[]>([]);
+  const [totalItems, setTotalItems] = useState<number>(0); 
+  const [loading, setLoading] = useState<boolean>(true);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
 
   const tableData = [
     {
@@ -71,7 +83,37 @@ const InvoiceDetails = () => {
     },
   ];
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response: any = await sendApiRequest({
+          mode: "getinvoicedetails",
+          invoiceid:Number(invoiceid)
+        });
 
+        if (response?.status === 200) {
+          setData(response?.data?.invoicedetails || []);
+          response?.data?.total > 0 &&
+            setTotalItems(response?.data?.total || 0);
+        } else {
+          setCustomToast({
+            ...customToast,
+            message: response?.message,
+            type: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+console.log("invoiceid",invoiceid)
   return (
     <main
       className="max-h-[calc(100vh-80px)] w-full overflow-auto px-4 below-md:px-3"
@@ -159,19 +201,19 @@ const InvoiceDetails = () => {
           <div className='max-h-[calc(100vh-420px)] overflow-x-auto overflow-y-auto' style={{ scrollbarWidth: "thin" }}>
             <table className='w-full  text-[14px] table-auto shadow rounded-md'>
               <tbody>
-                {tableData.map((row, index) => (
+                {data?.map((row:any, index :any) => (
                   <tr key={index}
                     className={index % 2 === 0 ? 'bg-white' : 'bg-[#F3F3F6]'}>
-                    <td className="px-4 py-1.5 text-left text-[#636363]">{row.itemCode}</td>
+                    <td className="px-4 py-1.5 text-left text-[#636363]">{row.itemcode}</td>
                     <td className="py-1.5 text-left text-[#636363] break-all whitespace-normal overflow-hidden w-[10%]">{row.description}</td>
-                    <td className="py-1.5 px-4 text-left text-[#636363]">{row.brand}</td>
+                    <td className="py-1.5 px-4 text-left text-[#636363]">{"-"}</td>
                     <td className="py-1.5 px-4 text-center min-w-[5%] text-[#636363]">{row.category}</td>
                     <td className="py-1.5 px-6 text-right text-[#636363] min-w-[8%]">{row.quantity}</td>
-                    <td className="py-1.5 px-4 text-center text-[#636363] min-w-[5%]">{row.units}</td>
-                    <td className="py-1.5 px-4 text-center text-[#636363]">{row.packSize}</td>
-                    <td className="py-1.5 px-4 text-right text-[#636363]">{row.invtValue}</td>
-                    <td className="py-1.5 px-4 text-right text-[#030202]">{row.unitPrice}</td>
-                    <td className="py-1.5 px-4 text-right text-[#636363] ">{row.tax}</td>
+                    <td className="py-1.5 px-4 text-center text-[#636363] min-w-[5%]">{row.unit}</td>
+                    <td className="py-1.5 px-4 text-center text-[#636363]">{row.packsize}</td>
+                    <td className="py-1.5 px-4 text-right text-[#636363]">{row.invtvalue}</td>
+                    <td className="py-1.5 px-4 text-right text-[#030202]">{row.unitprice}</td>
+                    <td className="py-1.5 px-4 text-right text-[#636363] ">{0}</td>
                     <td className="py-1.5 px-4 text-right text-[#636363]">{row.total}</td>
                   </tr>
                 ))}

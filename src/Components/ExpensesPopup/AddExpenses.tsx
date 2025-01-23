@@ -86,7 +86,19 @@ const AddExpenses = ({ setAddExpenses }: any) => {
    
     const openModal = async () => {
       setIsOpen(true);
-  
+      methods.reset({
+        store: "",
+        storeId: null,
+        expenseType: "",
+        expenseTypeId: null,
+        date: null,
+        description: "",
+        amount: "",
+      });
+    
+      setDescription("");
+      setAmount("");
+    
    
         try {
           const response: any = await sendApiRequest({ mode: "getallstores" });

@@ -25,10 +25,13 @@ import UploadInvoicepopup from "@/Components/Invoice/UploadInvoicePopup";
 
 interface TableRow {
   invoicedate: string;
-  storename: number;
-  invoiceitems: any;
+  storename: string;
+  sellername:string;
+  invoiceid:number;
+  quantity: number;
+  duedate:string;
   total: string;
-  name: string;
+  invoicenumber: string;
 }
 
 
@@ -51,34 +54,14 @@ const Invoices = () => {
     {
       accessorKey: "storename",
       header: () => <div className="text-left">Store</div>,
-      cell: (info) => <span>{info.getValue() as number}</span>,
+      cell: (info) => <span>{info.getValue() as string}</span>,
       size: 30,
     },
     {
-      accessorKey: "invoiceitems",
+      accessorKey: "quantity",
       header: () => <div className="text-right">Quantity</div>,
-      cell: (info) => {
-        // Get the value and ensure it's an array
-        const items:any = Array.isArray(info.getValue()) ? info.getValue() : [];
-    
-        // Map and extract quantities safely
-        const quantities = items.map((item) => {
-          // Safely access the `quantity` field
-          if (item && typeof item === "object" && "quantity" in item) {
-            const quantity = item.quantity;
-            // Check if quantity is a valid primitive value
-            return typeof quantity === "object" ? JSON.stringify(quantity) : quantity;
-          }
-          // Fallback if quantity is missing or invalid
-          return 0;
-        });
-    
-        // Render the quantities
-        return (
-          <span className="flex justify-end">
-            {quantities.join(", ")}
-          </span>
-        );
+      cell: (info) => { <span className="flex justify-end"> {info.getValue() as number} </span>
+       
       },
       size: 100, // Adjust the size as needed
     },
@@ -93,7 +76,7 @@ const Invoices = () => {
       size: 70,
     },
     {
-      accessorKey: "name",
+      accessorKey: "sellername",
       header: () => <div className="text-left">Name</div>,
       cell: (info) => (
         <span className="text-left ">{info.getValue() as string}</span>
@@ -103,9 +86,9 @@ const Invoices = () => {
     {
       id: "view",
       header: () => <div className="text-left"></div>,
-      cell: () => (
+      cell: (info) => (
         <button
-          onClick={() => (window.location.href = "/invoices/invoicedetails")}
+          onClick={() => (window.location.href = `/invoices/${info.row.original.invoiceid}`)}
           className="text-green-500 hover:text-green-700 text-center ml-2"
         >
           <img src="/images/vieweyeicon.svg" alt="View Icon" 
@@ -344,7 +327,7 @@ const Invoices = () => {
             <div className="flex justify-between items-start">
               <div className="flex gap-4 px-4 py-4 text-[#334155]">
                 <p className="text-[14px] font-bold">{card.date}</p>
-                <p className="text-[14px] font-bold">{card.name}</p>
+                <p className="text-[14px] font-bold">{card.sellername}</p>
               </div>
 
               <div className="flex px-4 py-4">
@@ -373,7 +356,7 @@ const Invoices = () => {
               </div>
               <div className="flex flex-col text-[14px] text-right space-y-3">
                 <p className="text-[#1A1A1A]">{card.storename}</p>
-                <p className="text-[#000000]">{0}</p>
+                <p className="text-[#000000]">{card.quantity}</p>
                 <p className="text-[#1A1A1A]">{card.total}</p>
               </div>
             </div>

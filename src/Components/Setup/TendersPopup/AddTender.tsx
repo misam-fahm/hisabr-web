@@ -37,7 +37,17 @@ const AddTender = ({ setAddTender  }:any) => {
     });
   
    const selectedTenderType = watch("tendertype"); 
-   const openModal = () => setIsOpen(true);
+   const openModal = async () => {
+    setIsOpen(true);
+
+    methods.reset({
+      tendertypeId:null,
+      tendertype: "",
+     
+    });
+    setName("");
+    setCommission(""); 
+  };
    const closeModal = () => {setIsOpen(false)};
 
    const handleChange = (data: any) => {

@@ -19,6 +19,7 @@ import Pagination from "@/Components/UI/Pagination/Pagination";
 import DeleteItems from "@/Components/Setup/ItemsPopup/DeleteItems";
 import EditItem from "@/Components/Setup/ItemsPopup/EditItem";
 import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import DeletePopup from "@/Components/UI/Delete/DeletePopup";
 
 interface TableRow {
   itemname: string;
@@ -91,9 +92,9 @@ const Page: FC = () => {
     {
       id: "delete",
       header: () => <div className="text-center"></div>,
-      cell: () => (
+      cell: (info) => (
         <span className="flex justify-center">
-          <DeleteItems />
+         <DeletePopup message={"Item"} jsonData={ {mode: "deleteitem",itemid:Number(info.row.original.itemid)}} setUpdatedData={setAddItems} />
         </span>
       ),
       size: 50,
@@ -198,7 +199,7 @@ const Page: FC = () => {
                   </>
                   {/* Delete */}
                   <>
-                    <DeleteItems />
+                  <DeletePopup message={"Item"} jsonData={ {mode: "deleteitem",itemid:Number(row.itemid)}} setUpdatedData={setAddItems} />
                   </>
                 </div>
               </div>
