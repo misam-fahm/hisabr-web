@@ -1,11 +1,21 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { InputField } from "@/Components/UI/Themes/InputField";
 import Dropdown from "@/Components/UI/Themes/DropDown";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { sendApiRequest } from "@/utils/apiUtils";
 
 const Page = () => {
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
   const methods = useForm();
   const { watch, setValue } = methods;
 
@@ -13,8 +23,37 @@ const Page = () => {
     console.log(data);
   };
 
-  const [selectedOption, setSelectedOption] = useState<string>("All stores");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+  };
+
+  const handleError = (message: string) => {
+    setCustomToast({
+      message,
+      type: "error",
+    });
+  };
+
+  const fetchDropdownData = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getallstores" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+
+  };
+  useEffect(() => {
+
+    fetchDropdownData();
+
+  }, []);
+
+
 
   const [payrolltax, setPayrollTax] = useState("");
   const handleChangePayrollTax = (data: any) => {
@@ -94,107 +133,101 @@ const Page = () => {
     methods.setValue("repair", data); // Update form state in react-hook-form
   };
 
-  const handleSelect = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
-  };
-  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const toggleDropdown1 = () => {
-    setIsStoreDropdownOpen((prev) => !prev);
-  };
-  const options = ["Store 1", "Store 2", "Store 3", "All Store"];
-  const selectedStore = watch("store"); // Watch the "store" field for changes
+
 
   return (
     <FormProvider {...methods}>
-      <main 
-      className="max-h-[calc(100vh-60px)] px-5 overflow-auto"
-      style={{ scrollbarWidth: "thin" }}>
-      <form
-        onSubmit={methods.handleSubmit(onSubmit)}
-        className="w-full flex flex-col overflow-auto below-md:h-[850px] p-5"
-      >
-        <div  className="bg-white py-6 px-8 rounded-lg shadow-lg block md:hidden  ">
-        <p className="text-[12px] font-normal mt-1 text-[#5E6366]">
+      <main
+        className="max-h-[calc(100vh-60px)] below-lg:px-4 overflow-auto"
+        style={{ scrollbarWidth: "thin" }}>
+        <form
+          onSubmit={methods.handleSubmit(onSubmit)}
+          className="w-full flex flex-col overflow-auto below-md:h-auto p-5"
+        >
+          <div className="bg-white py-6 px-8 rounded-lg shadow-lg block md:hidden">
+            <p className="text-[12px] font-normal mt-0 text-[#5E6366]">
               Streamline and configure operational expenses for accurate
               tracking
             </p>
-            <div className=" pt-8">
-            <p className="text-[14px] font-medium text-[#5E6366]">
-              Store Selection :
-            </p>
-            <Dropdown
-              options={options}
-              selectedOption={selectedStore || "Store"}
-              onSelect={(selectedOption) => {
-                setValue("store", selectedOption);
-                setIsStoreDropdownOpen(false);
-              }}
-              isOpen={isStoreDropdownOpen}
-              toggleOpen={toggleDropdown1}
-              widthchange="w-[25%] mt-4"
-            />
-          </div>
-          <div className="pt-4">
-            <p className="text-[14px] font-medium text-[#5E6366]">
-              Yearly Expenses :
-            </p>
+            <div className="pt-6">
+              <p className="text-[13px] font-medium text-[#5E6366]">
+                Store Selection :
+              </p>
+              <Dropdown
+                options={store}
+                selectedOption={selectedOption?.name || "Store"}
+                onSelect={(selectedOption: any) => {
+                  setSelectedOption({
+                    name: selectedOption.name,
+                    id: selectedOption.id,
+                  });
+                  setIsStoreDropdownOpen(false);
+                }}
+                isOpen={isStoreDropdownOpen}
+                toggleOpen={toggleStoreDropdown}
+                widthchange="w-[25%] mt-4"
+              />
+            </div>
+            <div className="pt-4">
+              <p className="text-[13px] font-medium text-[#5E6366]">
+                Yearly Expenses :
+              </p>
 
-            <div className="pt-4">
-              <InputField
-                type="text"
-                label="Insurance"
-                borderClassName=" border border-gray-300"
-                labelBackgroundColor="bg-white"
-                value={insurance}
-                textColor="text-[#636363]"
-                {...methods?.register("insurance", {
-                //  required: "Insurance is required",
-                })}
-                errors={methods.formState.errors.insurance}
-                variant="outline"
-                onChange={(e: any) => handleChangesetInsurance(e.target.value)}
-              />
+              <div className="pt-4">
+                <InputField
+                  type="text"
+                  label="Insurance"
+                  borderClassName=" border border-gray-300"
+                  labelBackgroundColor="bg-white"
+                  value={insurance}
+                  textColor="text-[#636363]"
+                  {...methods?.register("insurance", {
+                    //  required: "Insurance is required",
+                  })}
+                  errors={methods.formState.errors.insurance}
+                  variant="outline"
+                  onChange={(e: any) => handleChangesetInsurance(e.target.value)}
+                />
+              </div>
+              <div className="pt-4">
+                <InputField
+                  type="text"
+                  label="Property Tax"
+                  borderClassName=" border border-gray-300"
+                  labelBackgroundColor="bg-white"
+                  value={propertytax}
+                  textColor="text-[#636363]"
+                  {...methods?.register("propertytax", {
+                    // required: "Property Tax is required",
+                  })}
+                  errors={methods.formState.errors.propertytax}
+                  placeholder="propertytax"
+                  variant="outline"
+                  onChange={(e: any) =>
+                    handleChangesetPropertyTax(e.target.value)
+                  }
+                />
+              </div>
+              <div className="pt-4">
+                <InputField
+                  type="text"
+                  label="Trash"
+                  borderClassName=" border border-gray-300"
+                  labelBackgroundColor="bg-white"
+                  value={trash}
+                  textColor="text-[#636363]"
+                  {...methods?.register("trash", {
+                    // required: "Trash is required",
+                  })}
+                  errors={methods.formState.errors.trash}
+                  placeholder="trash"
+                  variant="outline"
+                  onChange={(e: any) => handleChangesetTrash(e.target.value)}
+                />
+              </div>
             </div>
             <div className="pt-4">
-              <InputField
-                type="text"
-                label="Property Tax"
-                borderClassName=" border border-gray-300"
-                labelBackgroundColor="bg-white"
-                value={propertytax}
-                textColor="text-[#636363]"
-                {...methods?.register("propertytax", {
-                 // required: "Property Tax is required",
-                })}
-                errors={methods.formState.errors.propertytax}
-                placeholder="propertytax"
-                variant="outline"
-                onChange={(e: any) =>
-                  handleChangesetPropertyTax(e.target.value)
-                }
-              />
-            </div>
-            <div className="pt-4">
-              <InputField
-                type="text"
-                label="Trash"
-                borderClassName=" border border-gray-300"
-                labelBackgroundColor="bg-white"
-                value={trash}
-                textColor="text-[#636363]"
-                {...methods?.register("trash", {
-                 // required: "Trash is required",
-                })}
-                errors={methods.formState.errors.trash}
-                placeholder="trash"
-                variant="outline"
-                onChange={(e: any) => handleChangesetTrash(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="pt-4">
-              <p className="text-[14px] font-medium text-[#5E6366]">
+              <p className="text-[13px] font-medium text-[#5E6366]">
                 Monthly Expenses :
               </p>
 
@@ -207,7 +240,7 @@ const Page = () => {
                   value={rentMortgage}
                   textColor="text-[#636363]"
                   {...methods?.register("rentMortgage", {
-                   // required: "Rent/Mortgage is required",
+                    // required: "Rent/Mortgage is required",
                   })}
                   errors={methods.formState.errors.rentMortgage}
                   placeholder="rentMortgage"
@@ -226,7 +259,7 @@ const Page = () => {
                   value={payrolltax}
                   textColor="text-[#636363]"
                   {...methods?.register("payrolltax", {
-                  //  required: "Payroll Tax (%) is required",
+                    //  required: "Payroll Tax (%) is required",
                   })}
                   errors={methods.formState.errors.payrolltax}
                   placeholder="payrolltax"
@@ -243,7 +276,7 @@ const Page = () => {
                   value={laboursalary}
                   textColor="text-[#636363]"
                   {...methods?.register("laboursalary", {
-                  //  required: "Labour Salary is required",
+                    //  required: "Labour Salary is required",
                   })}
                   errors={methods.formState.errors.laboursalary}
                   placeholder="laboursalary"
@@ -262,7 +295,7 @@ const Page = () => {
                   value={operatorsalary}
                   textColor="text-[#636363]"
                   {...methods?.register("operatorsalary", {
-                  // required: "Operator Salary is required",
+                    // required: "Operator Salary is required",
                   })}
                   errors={methods.formState.errors.operatorsalary}
                   placeholder="operatorsalary"
@@ -281,7 +314,7 @@ const Page = () => {
                   value={nucO2}
                   textColor="text-[#636363]"
                   {...methods?.register("nucO2", {
-                  //  required: "NUCO2 is required",
+                    //  required: "NUCO2 is required",
                   })}
                   errors={methods.formState.errors.nucO2}
                   placeholder="nucO2"
@@ -289,12 +322,12 @@ const Page = () => {
                   onChange={(e: any) => handleChangeNUCO2(e.target.value)}
                 />
               </div>
-              
+
             </div>
 
             <div className="pt-4">
-              <p className="text-[14px] font-medium text-[#5E6366]">
-              Other Expenses :
+              <p className="text-[13px] font-medium text-[#5E6366]">
+                Other Expenses :
               </p>
 
               <div className="pt-4">
@@ -306,7 +339,7 @@ const Page = () => {
                   value={internet}
                   textColor="text-[#636363]"
                   {...methods?.register("internet", {
-                   // required: "Internet is required",
+                    // required: "Internet is required",
                   })}
                   errors={methods.formState.errors.internet}
                   placeholder="internet"
@@ -325,7 +358,7 @@ const Page = () => {
                   value={waterbill}
                   textColor="text-[#636363]"
                   {...methods?.register("waterbill", {
-                   // required: "Water Bill is required",
+                    // required: "Water Bill is required",
                   })}
                   errors={methods.formState.errors.waterbill}
                   placeholder="payrolltax"
@@ -380,7 +413,7 @@ const Page = () => {
                   value={repair}
                   textColor="text-[#636363]"
                   {...methods?.register("repair", {
-                  //  required: "Repair is required",
+                    //  required: "Repair is required",
                   })}
                   errors={methods.formState.errors.repair}
                   placeholder="repair"
@@ -389,309 +422,312 @@ const Page = () => {
                 />
               </div>
             </div>
-            <div  className="pt-4">
-              <button className="bg-[#168A6F] hover:bg-[#11735C] text-[14px]  font-semibold text-white rounded-md  h-[35px] w-[118px]">
+            <div className="pt-4">
+              <button className="bg-[#168A6F] hover:bg-[#11735C] text-[13px]  font-semibold text-white rounded-md  h-[35px] w-[118px]">
                 Add
               </button>
             </div>
-        </div>
+          </div>
 
-         {/* Desktop View */}
-        <div className="bg-white py-6 px-8 rounded-lg shadow-lg hidden md:block">
-          
-            
+          {/* Desktop View */}
+          <div className="bg-white py-6 px-8 rounded-lg shadow-lg hidden md:block">
+
+
             <p className="text-[12px] font-normal mt-1 text-[#5E6366]">
               Streamline and configure operational expenses for accurate
               tracking
             </p>
-        
 
-          <div className="flex pt-8">
-            <p className="w-[16%] text-[14px] font-medium text-[#5E6366]">
-              Store Selection :
-            </p>
-            <Dropdown
-              options={options}
-              selectedOption={selectedStore || "Store"}
-              onSelect={(selectedOption) => {
-                setValue("store", selectedOption);
-                setIsStoreDropdownOpen(false);
-              }}
-              isOpen={isStoreDropdownOpen}
-              toggleOpen={toggleDropdown1}
-              widthchange="w-[25%]"
-            />
-          </div>
 
-          <div className="flex pt-8">
-            <p className="w-[16%] text-[14px] font-medium text-[#5E6366]">
-              Yearly Expenses :
-            </p>
-
-            <div className=" w-[25%] mr-5">
-              <InputField
-                type="text"
-                label="Insurance"
-                borderClassName=" border border-gray-300"
-                labelBackgroundColor="bg-white"
-                value={insurance}
-                textColor="text-[#636363]"
-                {...methods?.register("insurance", {
-                //  required: "Insurance is required",
-                })}
-                errors={methods.formState.errors.insurance}
-                variant="outline"
-                onChange={(e: any) => handleChangesetInsurance(e.target.value)}
+            <div className="flex pt-7">
+              <p className="w-[16%] text-[13px] font-medium text-[#5E6366]">
+                Store Selection :
+              </p>
+              <Dropdown
+                options={store}
+                selectedOption={selectedOption?.name || "Store"}
+                onSelect={(selectedOption: any) => {
+                  setSelectedOption({
+                    name: selectedOption.name,
+                    id: selectedOption.id,
+                  });
+                  setIsStoreDropdownOpen(false);
+                }}
+                isOpen={isStoreDropdownOpen}
+                toggleOpen={toggleStoreDropdown}
+                widthchange="w-[25%]"
               />
             </div>
-            <div className="w-[25%] below-md:w-full">
-              <InputField
-                type="text"
-                label="Property Tax"
-                borderClassName=" border border-gray-300"
-                labelBackgroundColor="bg-white"
-                value={propertytax}
-                textColor="text-[#636363]"
-                {...methods?.register("propertytax", {
-                 // required: "Property Tax is required",
-                })}
-                errors={methods.formState.errors.propertytax}
-                placeholder="propertytax"
-                variant="outline"
-                onChange={(e: any) =>
-                  handleChangesetPropertyTax(e.target.value)
-                }
-              />
-            </div>
-            <div className="w-[25%]  ml-5 below-md:w-full">
-              <InputField
-                type="text"
-                label="Trash"
-                borderClassName=" border border-gray-300"
-                labelBackgroundColor="bg-white"
-                value={trash}
-                textColor="text-[#636363]"
-                {...methods?.register("trash", {
-                 // required: "Trash is required",
-                })}
-                errors={methods.formState.errors.trash}
-                placeholder="trash"
-                variant="outline"
-                onChange={(e: any) => handleChangesetTrash(e.target.value)}
-              />
-            </div>
-          </div>
-          <div>
-            <div className="flex pt-8">
-              <p className="w-[16%] text-[14px] font-medium text-[#5E6366]">
-                Monthly Expenses :
+
+            <div className="flex pt-7">
+              <p className="w-[16%] text-[13px] font-medium text-[#5E6366]">
+                Yearly Expenses :
               </p>
 
               <div className=" w-[25%] mr-5">
                 <InputField
                   type="text"
-                  label="Rent/Mortgage"
+                  label="Insurance"
                   borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
-                  value={rentMortgage}
+                  value={insurance}
                   textColor="text-[#636363]"
-                  {...methods?.register("rentMortgage", {
-                   // required: "Rent/Mortgage is required",
+                  {...methods?.register("insurance", {
+                    //  required: "Insurance is required",
                   })}
-                  errors={methods.formState.errors.rentMortgage}
-                  placeholder="rentMortgage"
+                  errors={methods.formState.errors.insurance}
                   variant="outline"
-                  onChange={(e: any) =>
-                    handleChangesetRentMortgage(e.target.value)
-                  }
+                  onChange={(e: any) => handleChangesetInsurance(e.target.value)}
                 />
               </div>
               <div className="w-[25%] below-md:w-full">
                 <InputField
                   type="text"
-                  label="Payroll Tax (%)"
+                  label="Property Tax"
                   borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
-                  value={payrolltax}
+                  value={propertytax}
                   textColor="text-[#636363]"
-                  {...methods?.register("payrolltax", {
-                  //  required: "Payroll Tax (%) is required",
+                  {...methods?.register("propertytax", {
+                    // required: "Property Tax is required",
                   })}
-                  errors={methods.formState.errors.payrolltax}
-                  placeholder="payrolltax"
-                  variant="outline"
-                  onChange={(e: any) => handleChangePayrollTax(e.target.value)}
-                />
-              </div>
-              <div className="w-[25%]  ml-5 below-md:w-full">
-                <InputField
-                  type="text"
-                  label="Labour Salary"
-                  borderClassName=" border border-gray-300"
-                  labelBackgroundColor="bg-white"
-                  value={laboursalary}
-                  textColor="text-[#636363]"
-                  {...methods?.register("laboursalary", {
-                  //  required: "Labour Salary is required",
-                  })}
-                  errors={methods.formState.errors.laboursalary}
-                  placeholder="laboursalary"
+                  errors={methods.formState.errors.propertytax}
+                  placeholder="propertytax"
                   variant="outline"
                   onChange={(e: any) =>
-                    handleChangesetLabourSalary(e.target.value)
-                  }
-                />
-              </div>
-            </div>
-            <div className="flex mt-8">
-              
-              <div className="w-[25%]  ml-[16%] below-md:w-full">
-                <InputField
-                  type="text"
-                  label="Operator Salary"
-                  borderClassName=" border border-gray-300"
-                  labelBackgroundColor="bg-white"
-                  value={operatorsalary}
-                  textColor="text-[#636363]"
-                  {...methods?.register("operatorsalary", {
-                  // required: "Operator Salary is required",
-                  })}
-                  errors={methods.formState.errors.operatorsalary}
-                  placeholder="operatorsalary"
-                  variant="outline"
-                  onChange={(e: any) =>
-                    handleChangeOperatorSalary(e.target.value)
+                    handleChangesetPropertyTax(e.target.value)
                   }
                 />
               </div>
               <div className="w-[25%]  ml-5 below-md:w-full">
                 <InputField
                   type="text"
-                  label="NUCO2"
+                  label="Trash"
                   borderClassName=" border border-gray-300"
                   labelBackgroundColor="bg-white"
-                  value={nucO2}
+                  value={trash}
                   textColor="text-[#636363]"
-                  {...methods?.register("nucO2", {
-                  //  required: "NUCO2 is required",
+                  {...methods?.register("trash", {
+                    // required: "Trash is required",
                   })}
-                  errors={methods.formState.errors.nucO2}
-                  placeholder="nucO2"
+                  errors={methods.formState.errors.trash}
+                  placeholder="trash"
                   variant="outline"
-                  onChange={(e: any) => handleChangeNUCO2(e.target.value)}
+                  onChange={(e: any) => handleChangesetTrash(e.target.value)}
                 />
               </div>
             </div>
-          </div>
-          <div>
-            <div className="flex pt-8">
-              <p className="w-[16%] text-[14px] font-medium text-[#5E6366]">
-              Other Expenses :
-              </p>
+            <div>
+              <div className="flex pt-7">
+                <p className="w-[16%] text-[13px] font-medium text-[#5E6366]">
+                  Monthly Expenses :
+                </p>
 
-              <div className=" w-[25%] mr-5">
-                <InputField
-                  type="text"
-                  label="Internet"
-                  borderClassName=" border border-gray-300"
-                  labelBackgroundColor="bg-white"
-                  value={internet}
-                  textColor="text-[#636363]"
-                  {...methods?.register("internet", {
-                   // required: "Internet is required",
-                  })}
-                  errors={methods.formState.errors.internet}
-                  placeholder="internet"
-                  variant="outline"
-                  onChange={(e: any) =>
-                    handleChangesetInternet(e.target.value)
-                  }
-                />
+                <div className=" w-[25%] mr-5">
+                  <InputField
+                    type="text"
+                    label="Rent/Mortgage"
+                    borderClassName=" border border-gray-300"
+                    labelBackgroundColor="bg-white"
+                    value={rentMortgage}
+                    textColor="text-[#636363]"
+                    {...methods?.register("rentMortgage", {
+                      // required: "Rent/Mortgage is required",
+                    })}
+                    errors={methods.formState.errors.rentMortgage}
+                    placeholder="rentMortgage"
+                    variant="outline"
+                    onChange={(e: any) =>
+                      handleChangesetRentMortgage(e.target.value)
+                    }
+                  />
+                </div>
+                <div className="w-[25%] below-md:w-full">
+                  <InputField
+                    type="text"
+                    label="Payroll Tax (%)"
+                    borderClassName=" border border-gray-300"
+                    labelBackgroundColor="bg-white"
+                    value={payrolltax}
+                    textColor="text-[#636363]"
+                    {...methods?.register("payrolltax", {
+                      //  required: "Payroll Tax (%) is required",
+                    })}
+                    errors={methods.formState.errors.payrolltax}
+                    placeholder="payrolltax"
+                    variant="outline"
+                    onChange={(e: any) => handleChangePayrollTax(e.target.value)}
+                  />
+                </div>
+                <div className="w-[25%]  ml-5 below-md:w-full">
+                  <InputField
+                    type="text"
+                    label="Labour Salary"
+                    borderClassName=" border border-gray-300"
+                    labelBackgroundColor="bg-white"
+                    value={laboursalary}
+                    textColor="text-[#636363]"
+                    {...methods?.register("laboursalary", {
+                      //  required: "Labour Salary is required",
+                    })}
+                    errors={methods.formState.errors.laboursalary}
+                    placeholder="laboursalary"
+                    variant="outline"
+                    onChange={(e: any) =>
+                      handleChangesetLabourSalary(e.target.value)
+                    }
+                  />
+                </div>
               </div>
-              <div className="w-[25%] below-md:w-full">
-                <InputField
-                  type="text"
-                  label="Water Bill"
-                  borderClassName=" border border-gray-300"
-                  labelBackgroundColor="bg-white"
-                  value={waterbill}
-                  textColor="text-[#636363]"
-                  {...methods?.register("waterbill", {
-                   // required: "Water Bill is required",
-                  })}
-                  errors={methods.formState.errors.waterbill}
-                  placeholder="payrolltax"
-                  variant="outline"
-                  onChange={(e: any) => handleChangewaterbill(e.target.value)}
-                />
-              </div>
-              <div className="w-[25%]  ml-5 below-md:w-full">
-                <InputField
-                  type="text"
-                  label="Gas Bill"
-                  borderClassName=" border border-gray-300"
-                  labelBackgroundColor="bg-white"
-                  value={gasbill}
-                  textColor="text-[#636363]"
-                  {...methods?.register("gasbill", {
-                    //required: "Gas Bill is required",
-                  })}
-                  errors={methods.formState.errors.gasbill}
-                  placeholder="gasbill"
-                  variant="outline"
-                  onChange={(e: any) =>
-                    handleChangesetGasBill(e.target.value)
-                  }
-                />
+              <div className="flex mt-8">
+
+                <div className="w-[25%]  ml-[16%] below-md:w-full">
+                  <InputField
+                    type="text"
+                    label="Operator Salary"
+                    borderClassName=" border border-gray-300"
+                    labelBackgroundColor="bg-white"
+                    value={operatorsalary}
+                    textColor="text-[#636363]"
+                    {...methods?.register("operatorsalary", {
+                      // required: "Operator Salary is required",
+                    })}
+                    errors={methods.formState.errors.operatorsalary}
+                    placeholder="operatorsalary"
+                    variant="outline"
+                    onChange={(e: any) =>
+                      handleChangeOperatorSalary(e.target.value)
+                    }
+                  />
+                </div>
+                <div className="w-[25%]  ml-5 below-md:w-full">
+                  <InputField
+                    type="text"
+                    label="NUCO2"
+                    borderClassName=" border border-gray-300"
+                    labelBackgroundColor="bg-white"
+                    value={nucO2}
+                    textColor="text-[#636363]"
+                    {...methods?.register("nucO2", {
+                      //  required: "NUCO2 is required",
+                    })}
+                    errors={methods.formState.errors.nucO2}
+                    placeholder="nucO2"
+                    variant="outline"
+                    onChange={(e: any) => handleChangeNUCO2(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
-            <div className="flex mt-8">
-              
-              <div className="w-[25%]  ml-[16%] below-md:w-full">
-                <InputField
-                  type="text"
-                  label="PAR"
-                  borderClassName=" border border-gray-300"
-                  labelBackgroundColor="bg-white"
-                  value={par}
-                  textColor="text-[#636363]"
-                  {...methods?.register("par", {
-                    //required: "PAR is required",
-                  })}
-                  errors={methods.formState.errors.par}
-                  placeholder="par"
-                  variant="outline"
-                  onChange={(e: any) =>
-                    handleChangePAR(e.target.value)
-                  }
-                />
+            <div>
+              <div className="flex pt-7">
+                <p className="w-[16%] text-[13px] font-medium text-[#5E6366]">
+                  Other Expenses :
+                </p>
+
+                <div className=" w-[25%] mr-5">
+                  <InputField
+                    type="text"
+                    label="Internet"
+                    borderClassName=" border border-gray-300"
+                    labelBackgroundColor="bg-white"
+                    value={internet}
+                    textColor="text-[#636363]"
+                    {...methods?.register("internet", {
+                      // required: "Internet is required",
+                    })}
+                    errors={methods.formState.errors.internet}
+                    placeholder="internet"
+                    variant="outline"
+                    onChange={(e: any) =>
+                      handleChangesetInternet(e.target.value)
+                    }
+                  />
+                </div>
+                <div className="w-[25%] below-md:w-full">
+                  <InputField
+                    type="text"
+                    label="Water Bill"
+                    borderClassName=" border border-gray-300"
+                    labelBackgroundColor="bg-white"
+                    value={waterbill}
+                    textColor="text-[#636363]"
+                    {...methods?.register("waterbill", {
+                      // required: "Water Bill is required",
+                    })}
+                    errors={methods.formState.errors.waterbill}
+                    placeholder="payrolltax"
+                    variant="outline"
+                    onChange={(e: any) => handleChangewaterbill(e.target.value)}
+                  />
+                </div>
+                <div className="w-[25%]  ml-5 below-md:w-full">
+                  <InputField
+                    type="text"
+                    label="Gas Bill"
+                    borderClassName=" border border-gray-300"
+                    labelBackgroundColor="bg-white"
+                    value={gasbill}
+                    textColor="text-[#636363]"
+                    {...methods?.register("gasbill", {
+                      //required: "Gas Bill is required",
+                    })}
+                    errors={methods.formState.errors.gasbill}
+                    placeholder="gasbill"
+                    variant="outline"
+                    onChange={(e: any) =>
+                      handleChangesetGasBill(e.target.value)
+                    }
+                  />
+                </div>
               </div>
-              <div className="w-[25%]  ml-5 below-md:w-full">
-                <InputField
-                  type="text"
-                  label="Repair"
-                  borderClassName=" border border-gray-300"
-                  labelBackgroundColor="bg-white"
-                  value={repair}
-                  textColor="text-[#636363]"
-                  {...methods?.register("repair", {
-                  //  required: "Repair is required",
-                  })}
-                  errors={methods.formState.errors.repair}
-                  placeholder="repair"
-                  variant="outline"
-                  onChange={(e: any) => handleChangeRepair(e.target.value)}
-                />
+              <div className="flex mt-8">
+
+                <div className="w-[25%]  ml-[16%] below-md:w-full">
+                  <InputField
+                    type="text"
+                    label="PAR"
+                    borderClassName=" border border-gray-300"
+                    labelBackgroundColor="bg-white"
+                    value={par}
+                    textColor="text-[#636363]"
+                    {...methods?.register("par", {
+                      //required: "PAR is required",
+                    })}
+                    errors={methods.formState.errors.par}
+                    placeholder="par"
+                    variant="outline"
+                    onChange={(e: any) =>
+                      handleChangePAR(e.target.value)
+                    }
+                  />
+                </div>
+                <div className="w-[25%]  ml-5 below-md:w-full">
+                  <InputField
+                    type="text"
+                    label="Repair"
+                    borderClassName=" border border-gray-300"
+                    labelBackgroundColor="bg-white"
+                    value={repair}
+                    textColor="text-[#636363]"
+                    {...methods?.register("repair", {
+                      //  required: "Repair is required",
+                    })}
+                    errors={methods.formState.errors.repair}
+                    placeholder="repair"
+                    variant="outline"
+                    onChange={(e: any) => handleChangeRepair(e.target.value)}
+                  />
+                </div>
               </div>
-            </div>
-            <div  className="flex justify-end">
-              <button className="bg-[#168A6F] hover:bg-[#11735C] text-[13px]  font-medium text-white rounded-md  h-[35px] w-[118px]">
-                Add
-              </button>
+              <div className="flex justify-end mr-10">
+                <button className="bg-[#168A6F] hover:bg-[#11735C] text-[13px]  font-medium text-white rounded-md  h-[35px] w-[118px]">
+                  Add
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
       </main>
     </FormProvider>
   );

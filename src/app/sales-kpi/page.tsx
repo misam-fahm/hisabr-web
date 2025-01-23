@@ -108,7 +108,7 @@ const SalesKPI: FC = () => {
           <div className="below-md:hidden tablet:hidden">
             <button className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[170px] h-[35px] rounded-md text-white text-[13px] font-medium">
               <img
-                src="/images/uploadIcon.svg"
+                src="/images/saleskpireport.svg"
                 alt="Upload Icon"
                 className="mr-1"
               />
@@ -127,7 +127,7 @@ const SalesKPI: FC = () => {
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 20%{" "}
                 <span className="text-[#575F6D] font-normal">
-                  more than last year
+                  increase in sales
                 </span>
               </p>
             </div>
@@ -141,9 +141,9 @@ const SalesKPI: FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
               <p className="text-[11px] text-[#388E3C] font-semibold ">
-                65.2%{" "}
+                65%{" "}
                 <span className="text-[#575F6D] font-normal">
-                  of total revenue achieved
+                  of total revenue
                 </span>
               </p>
             </div>
@@ -161,7 +161,7 @@ const SalesKPI: FC = () => {
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 40%{" "}
                 <span className="text-[#575F6D] font-normal">
-                  increase compare to last year
+                  growth in Customers
                 </span>
               </p>
             </div>
@@ -197,8 +197,9 @@ const SalesKPI: FC = () => {
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
+                8.6%{" "}
                 <span className="text-[#575F6D] font-normal">
-                  Estimated tax liablity
+                  of total expenses
                 </span>
               </p>
             </div>

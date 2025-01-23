@@ -27,7 +27,7 @@ interface TableRow {
 
 const Page: FC = () => {
   const [data, setData] = useState<TableRow[]>([]);
-  const [totalItems, setTotalItems] = useState<number>(0); 
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
@@ -51,7 +51,9 @@ const Page: FC = () => {
       accessorKey: "commission",
       header: () => <div className="text-right mr-16">Commission</div>,
       cell: (info) => (
-        <div className="text-right mr-14">{info?.row?.original?.commission}</div>
+        <div className="text-right mr-14">
+          {info?.row?.original?.commission}
+        </div>
       ),
       size: 120,
     },
@@ -60,7 +62,10 @@ const Page: FC = () => {
       header: () => <div className="text-center  "></div>,
       cell: (info) => (
         <span className="flex justify-center">
-          <EditTenders initialData = {info.row.original} setAddTender={setAddTender} />
+          <EditTenders
+            initialData={info.row.original}
+            setAddTender={setAddTender}
+          />
         </span>
       ),
       size: 30,
@@ -110,8 +115,7 @@ const Page: FC = () => {
 
       if (response?.status === 200) {
         setData(response?.data?.tenders || []);
-        response?.data?.total > 0 &&
-          setTotalItems(response?.data?.total || 0);
+        response?.data?.total > 0 && setTotalItems(response?.data?.total || 0);
       } else {
         setCustomToast({
           ...customToast,
@@ -123,21 +127,21 @@ const Page: FC = () => {
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
-      setAddTender(false)
+      setAddTender(false);
     }
   };
 
   useEffect(() => {
     fetchData();
-  }, [pageIndex, pageSize , isOpenAddTender]);
+  }, [pageIndex, pageSize, isOpenAddTender]);
 
   /**go back button */
   const router = useRouter();
   const handleBack = () => {
-    router.back();
+    router.push("/");
   };
 
-  const handleAddTender = (newExpense:any) => {
+  const handleAddTender = (newExpense: any) => {
     setData((prevExpenses) => [...prevExpenses, newExpense]);
   };
 
@@ -148,7 +152,7 @@ const Page: FC = () => {
     >
       <div className="flex  justify-between my-6">
         <div
-          className="flex items-start cursor-pointer   below-md:hidden"
+          className="flex items-start cursor-pointer below-md:hidden"
           onClick={() => window.history.back()}
         >
           <img
@@ -160,7 +164,7 @@ const Page: FC = () => {
         </div>
         <div className="gap-2 below-md:hidden">
           {" "}
-          <AddTender  setAddTender={setAddTender}/>
+          <AddTender setAddTender={setAddTender} />
         </div>
       </div>
 
@@ -187,7 +191,10 @@ const Page: FC = () => {
               <div className="flex items-center">
                 {/* Edit */}
                 <>
-                  <EditTenders initialData = {row.original} setAddTender={setAddTender} />
+                  <EditTenders
+                    initialData={row.original}
+                    setAddTender={setAddTender}
+                  />
                 </>
                 {/* Delete */}
                 <>
@@ -201,7 +208,9 @@ const Page: FC = () => {
 
             <div className="  flex justify-between">
               <span className=" text-[#636363] text-[13px] mb-2">Type</span>{" "}
-              <span className=" text-[14px]">{row?.original?.tendertypename}</span>
+              <span className=" text-[14px]">
+                {row?.original?.tendertypename}
+              </span>
             </div>
 
             <div className=" mt-1 flex justify-between">
@@ -215,7 +224,7 @@ const Page: FC = () => {
         {/* Add Tender bottom */}
         <div className="block pl-24 ">
           {" "}
-          <AddTender  setAddTender={setAddTender} />
+          <AddTender setAddTender={setAddTender} />
         </div>
       </div>
 
@@ -251,47 +260,46 @@ const Page: FC = () => {
           >
             <table className="w-full border-collapse border-gray-200 table-fixed">
               <tbody>
-              {loading
-                    ? Array.from({ length: 10 }).map((_, index) => (
-                        <tr
-                          key={index}
-                          className={
-                            index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                          }
-                        >
-                          {columns.map((column, colIndex) => (
-                            <td
-                              key={colIndex}
-                              className="px-4 py-1.5"
-                              style={{ width: `${column.size}px` }}
-                            >
-                              <Skeleton height={30} />
-                            </td>
-                          ))}
-                        </tr>
-                      ))
-                    : 
-                 table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={
-                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                    }
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="px-4 py-1.5 text-[#636363] text-[14px]"
-                        style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                {loading
+                  ? Array.from({ length: 10 }).map((_, index) => (
+                      <tr
+                        key={index}
+                        className={
+                          index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
+                        {columns.map((column, colIndex) => (
+                          <td
+                            key={colIndex}
+                            className="px-4 py-1.5"
+                            style={{ width: `${column.size}px` }}
+                          >
+                            <Skeleton height={30} />
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  : table.getRowModel().rows.map((row) => (
+                      <tr
+                        key={row.id}
+                        className={
+                          row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <td
+                            key={cell.id}
+                            className="px-4 py-1.5 text-[#636363] text-[14px]"
+                            style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
                     ))}
-                  </tr>
-                ))}
               </tbody>
             </table>
           </div>

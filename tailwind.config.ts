@@ -20,7 +20,7 @@ export default {
       screens: {
         "below-md": { max: "768px" },
         tablet: { min: "769px", max: "1024px" },
-        "tablet-home": { min: "769px", max: "1200px" },
+        "tablet-home": { min: "769px", max: "1350px" },
         "below-lg": { min: "1025px" },
       },
     },
