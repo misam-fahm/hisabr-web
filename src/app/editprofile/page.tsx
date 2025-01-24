@@ -28,7 +28,7 @@ const EditProfile = () => {
   return (
 
     <main className='w-full below-md:mt-4 px-6'>
-       <div>
+      <div>
         <img
           onClick={handleBack}
           alt="Back Arrow"
@@ -36,40 +36,38 @@ const EditProfile = () => {
           src="/images/webbackicon.svg"
         ></img>
       </div>
-     
+
 
       <div className='w-full max-h-[calc(100vh-10px)] overflow-auto  below-md:h-auto border rounded-md shadow bg-white px-8 below-md:px-0 py-8 below-md:py-5'>
-      <div className='flex justify-between below-md:justify-center below-md:flex-col below-md:items-centeritems-center'>
-                    <div className='flex items-center gap-4 below-md:gap-2 below-md:flex-col below-md:items-center'>
-                        <img
-                            className="w-[72px] h-[70]  rounded-full"
-                            src="/images/admin.png"
-                            alt="Admin"
-                        />
-                        <div className='flex flex-col below-md:items-center'>
-                            <text className='text-[#4C535F] text-[18px] font-[600px]'> Saheel</text>
-                            <text className=' text-gray-300 text-[12px] font-normal'>Saheel@gmail.com</text>
-                        </div>
-                    </div>
-                    <div className='space-x-3 below-md:hidden'>
-                    <button
-                        className="px-4 py-2 text-[#6F6F6F] text-[13px] w-[101px] h-[37px] bg-[#E4E4E4] rounded-md hover:bg-[#C9C9C9]"
-                        onClick={() => router.push("/editprofile")}
-                    >
-                        Cancel
-                    </button>
+        <div className='flex justify-between below-md:justify-center below-md:flex-col below-md:items-centeritems-center'>
+          <div className='flex items-center gap-4 below-md:gap-2 below-md:flex-col below-md:items-center'>
+            <img
+              className="w-[72px] h-[70]  rounded-full"
+              src="/images/admin.png"
+              alt="Admin"
+            />
+            <div className='flex flex-col below-md:items-center'>
+              <p className='text-[#4C535F] text-[18px] font-[600px]'> Saheel</p>
+              <p className=' text-gray-300 text-[12px] font-normal'>Saheel@gmail.com</p>
+            </div>
+          </div>
+          <div className='space-x-3 below-md:hidden'>
+            <button
+              className="px-4 py-2 text-[#6F6F6F] text-[13px] w-[101px] h-[37px] bg-[#E4E4E4] rounded-md hover:bg-[#C9C9C9]"
+            >
+              Cancel
+            </button>
 
-                    {/* Submit Button */}
-                    <button
-                        className="px-4 py-2 text-white text-[13px] w-[101px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-[#11735C]"
-                        onClick={() => router.push("/editprofile")}
-                    >
-                        Save
-                    </button>
-                    </div>
+            {/* Submit Button */}
+            <button
+              className="px-4 py-2 text-white text-[13px] w-[101px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-[#11735C]"
+            >
+              Save
+            </button>
+          </div>
 
 
-                </div>
+        </div>
 
         <div className='mt-9'>
           <FormProvider {...methods}>
@@ -147,18 +145,16 @@ const EditProfile = () => {
                   />
                 </div>
                 <div className="below-lg:hidden space-x-3 ">
-                <button
-                        className="px-4 py-2 text-white text-[13px] w-[101px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-[#11735C]"
-                        onClick={() => router.push("/editprofile")}
-                    >
-                        Save
-                    </button>
-                    <button
-                        className="px-4 py-2 text-[#6F6F6F] text-[13px] w-[101px] h-[37px] bg-[#E4E4E4] rounded-md hover:bg-[#C9C9C9]"
-                        onClick={() => router.push("/editprofile")}
-                    >
-                        Cancel
-                    </button>
+                  <button
+                    className="px-4 py-2 text-white text-[13px] w-[101px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-[#11735C]"
+                  >
+                    Save
+                  </button>
+                  <button
+                    className="px-4 py-2 text-[#6F6F6F] text-[13px] w-[101px] h-[37px] bg-[#E4E4E4] rounded-md hover:bg-[#C9C9C9]"
+                  >
+                    Cancel
+                  </button>
 
                 </div>
               </div>

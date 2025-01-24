@@ -60,17 +60,24 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
             <img src="/images/left.svg" alt="Previous" />
           </button>
 
-          {Array.from({ length: pageCount }, (_, index) => {
-            const pageIndex = index;
+          {Array.from({ length: Math.min(3, pageCount) }, (_, index) => {
+            // Calculate the range of visible pages
+            const startPage = Math.max(
+              0,
+              Math.min(
+                table.getState().pagination.pageIndex - 1,
+                pageCount - 3
+              )
+            );
+            const pageIndex = startPage + index;
             return (
               <button
                 key={pageIndex}
                 onClick={() => table.setPageIndex(pageIndex)}
-                className={`w-8 h-8 rounded-md text-[12px] flex items-center justify-center ${
-                  table.getState().pagination.pageIndex === pageIndex
+                className={`w-8 h-8 rounded-md text-[12px] flex items-center justify-center ${table.getState().pagination.pageIndex === pageIndex
                     ? "text-white bg-[#1AA47D]" // Green for active
                     : "text-gray-700 bg-[#EBEFF6]" // Grey for inactive
-                }`}
+                  }`}
               >
                 {pageIndex + 1}
               </button>
@@ -95,9 +102,8 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
               >
                 <span className="mr-2">Page {pageIndex + 1}</span>
                 <svg
-                  className={`w-4 h-4 transform transition-transform duration-200 ${
-                    isDropdownOpen ? "rotate-180" : "rotate-0"
-                  }`}
+                  className={`w-4 h-4 transform transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : "rotate-0"
+                    }`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -113,17 +119,15 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
               </button>
               {isDropdownOpen && (
                 <ul
-                  className={`absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-40 scrollbar-thin overflow-y-auto ${
-                    isDropdownOpen ? "bottom-full mb-2" : "top-full mt-2"
-                  }`}
+                  className={`absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-40 scrollbar-thin overflow-y-auto ${isDropdownOpen ? "bottom-full mb-2" : "top-full mt-2"
+                    }`}
                 >
                   {Array.from({ length: pageCount }, (_, index) => (
                     <li
                       key={index}
                       onClick={() => handlePageSelect(index)}
-                      className={`px-4 py-1.5 text-[12px] text-gray-700 cursor-pointer hover:bg-gray-100 ${
-                        pageIndex === index ? "text-gray-700" : ""
-                      } ${index !== pageCount - 1 ? "border-b border-gray-300" : ""}`}
+                      className={`px-4 py-1.5 text-[12px] text-gray-700 cursor-pointer hover:bg-gray-100 ${pageIndex === index ? "text-gray-700" : ""
+                        } ${index !== pageCount - 1 ? "border-b border-gray-300" : ""}`}
                     >
                       Page {index + 1}
                     </li>

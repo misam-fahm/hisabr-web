@@ -5,7 +5,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/ExpensesPopup/AddExpenses";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -29,19 +30,21 @@ interface TableRow {
   amount: string;
   description: string;
   expensename: string;
-  id:any;
+  id: any;
 }
 
 
 const Expenses: FC = () => {
-
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const [showBackIcon, setShowBackIcon] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef(null);
   const [isScrollbarVisible, setIsScrollbarVisible] = useState(false);
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [data, setData] = useState<TableRow[]>([]);
-  const [totalItems, setTotalItems] = useState<number>(0); 
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
@@ -51,7 +54,9 @@ const Expenses: FC = () => {
     message: "",
     type: "",
   });
-  
+
+
+
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "date",
@@ -63,9 +68,9 @@ const Expenses: FC = () => {
       accessorKey: "store",
       header: () => <div className="text-left">Store</div>,
       cell: (info) => {
-        const Storename:any = info.row.original.storename;
+        const Storename: any = info.row.original.storename;
         const truncatedDescription =
-        Storename?.length > 15 ? `${Storename.slice(0, 15)}...` : Storename;
+          Storename?.length > 15 ? `${Storename.slice(0, 15)}...` : Storename;
         return <span className="">{truncatedDescription}</span>;
       },
       // cell: (info) => <span>{info.row.original.storename}</span>,
@@ -94,9 +99,9 @@ const Expenses: FC = () => {
       accessorKey: "type",
       header: () => <div className="text-left">Type</div>,
       cell: (info) => {
-        const expensename:any = info.row.original.expensename;
+        const expensename: any = info.row.original.expensename;
         const truncatedDescription =
-        expensename?.length > 15 ? `${expensename.slice(0, 15)}...` : expensename;
+          expensename?.length > 15 ? `${expensename.slice(0, 15)}...` : expensename;
         return <span className="text-left">{truncatedDescription}</span>;
       },
       // cell: (info) => <span className="">{info.row.original.expensename}</span>,
@@ -108,7 +113,7 @@ const Expenses: FC = () => {
       cell: (info) => (
         <>
           <span className="flex justify-center">
-            <EditExpense initialData={info.row.original} setAddExpenses={setAddExpenses}  />
+            <EditExpense initialData={info.row.original} setAddExpenses={setAddExpenses} />
           </span>
         </>
       ),
@@ -121,17 +126,17 @@ const Expenses: FC = () => {
         <>
           <span className="flex justify-center ">
             {" "}
-            <DeletePopup message={"Expenses"} jsonData={ {mode: "deleteexpense",id:Number(info.row.original.id)}} setUpdatedData={setAddExpenses} />
+            <DeletePopup message={"Expenses"} jsonData={{ mode: "deleteexpense", id: Number(info.row.original.id) }} setUpdatedData={setAddExpenses} />
           </span>
         </>
       ),
       size: 40,
     },
-    
+
   ];
- 
+
   const table = useReactTable({
-    
+
     data: data,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -182,9 +187,9 @@ const Expenses: FC = () => {
     };
 
     fetchData();
-  }, [pageIndex, pageSize , isOpenAddExpenses]);
- 
- 
+  }, [pageIndex, pageSize, isOpenAddExpenses]);
+
+
 
   const handleClick = () => {
     if (searchInputRef.current) {
@@ -215,20 +220,15 @@ const Expenses: FC = () => {
       } catch (error) {
         console.error("Error fetching stores:", error);
       }
-    
+
     };
-   
-      fetchDropdownData();
-    
+
+    fetchDropdownData();
+
   }, []);
 
- 
-  const handleBack = () => {
-    router.push("/");
-  };
-  
   const checkScrollbarVisibility = () => {
-    const container:any = containerRef.current;
+    const container: any = containerRef.current;
     if (container) {
       const hasScrollbar = container.scrollHeight > container.clientHeight;
       setIsScrollbarVisible(hasScrollbar);
@@ -244,8 +244,8 @@ const Expenses: FC = () => {
       checkScrollbarVisibility();
     });
     observer?.observe(container, {
-      childList: true, 
-      subtree: true,   
+      childList: true,
+      subtree: true,
     });
 
     window?.addEventListener("resize", checkScrollbarVisibility);
@@ -256,6 +256,26 @@ const Expenses: FC = () => {
     };
   }, [table]);
 
+  useEffect(() => {
+    // Check if "fromHome" is in the query params
+    const fromHome = searchParams?.get("fromHome") === "true";
+
+    if (fromHome) {
+      setShowBackIcon(true);
+
+      // Remove "fromHome" from the URL
+      const currentUrl = window.location.pathname;
+      router.replace(currentUrl);
+    }
+    // Mark loading as false after processing
+    setIsLoading(false);
+  }, [searchParams, router]);
+  // Delay rendering until the query is processed
+  if (isLoading) {
+    return null; // Or a loading spinner if desired
+  }
+
+
   return (
     <main
       className="max-h-[calc(100vh-50px)] px-6 below-md:px-3 overflow-auto"
@@ -263,28 +283,30 @@ const Expenses: FC = () => {
     >
       <>
         <div>
-          <img
-            onClick={handleBack}
-            alt="Back Arrow"
-            className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
-            src="/images/webbackicon.svg"
-          ></img>
+          {showBackIcon && (
+            <img
+              onClick={() => router.back()}
+              alt="Back Arrow"
+              className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
+              src="/images/webbackicon.svg"
+            ></img>
+          )}
         </div>
-        <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-4 mb-6">
+        <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
           <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
-          <Dropdown
-                    options={store}
-                    selectedOption={ selectedOption?.name || "Store" } 
-                    onSelect={(selectedOption:any) => {
-                      setSelectedOption( {name : selectedOption.name , id: selectedOption.id}); 
-                      // setSelectedOption();
-                      setIsStoreDropdownOpen(false);  
-                    }}
-                    isOpen={isStoreDropdownOpen}
-                    toggleOpen={toggleStoreDropdown}
-                    widthchange="w-full"
-                   
-                  />
+            <Dropdown
+              options={store}
+              selectedOption={selectedOption?.name || "Store"}
+              onSelect={(selectedOption: any) => {
+                setSelectedOption({ name: selectedOption.name, id: selectedOption.id });
+                // setSelectedOption();
+                setIsStoreDropdownOpen(false);
+              }}
+              isOpen={isStoreDropdownOpen}
+              toggleOpen={toggleStoreDropdown}
+              widthchange="w-full"
+
+            />
             <div className="w-full tablet:w-full below-md:w-full h-[35px]">
               <DateRangePicker />
             </div>
@@ -325,8 +347,8 @@ const Expenses: FC = () => {
 
                 <div className="flex gap-5 mb-1 px-4 py-4">
                   <>
-                    <EditExpense initialData={card} setAddExpenses={setAddExpenses}  />
-                    <DeletePopup message={"Expenses"} jsonData={ {mode: "deleteexpense",id:Number(card.id)}} setUpdatedData={setAddExpenses} />
+                    <EditExpense initialData={card} setAddExpenses={setAddExpenses} />
+                    <DeletePopup message={"Expenses"} jsonData={{ mode: "deleteexpense", id: Number(card.id) }} setUpdatedData={setAddExpenses} />
                   </>
                 </div>
               </div>
@@ -391,7 +413,7 @@ const Expenses: FC = () => {
             >
               <table className="w-full border-collapse text-[12px] text-white table-fixed">
                 <tbody>
-                {loading ? (
+                  {loading ? (
                     Array.from({ length: 10 })?.map((_, index) => (
                       <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
                         {columns.map((column, colIndex) => (
@@ -406,35 +428,35 @@ const Expenses: FC = () => {
                       </tr>
                     ))
                   ) :
-                  table.getRowModel().rows.map((row) => (
-                    <tr
-                      key={row.id}
-                      className={
-                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                      }
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <td
-                          key={cell.id}
-                          className="px-4 py-1.5 text-[#636363] text-[14px] "
-                          style={{ width: `${cell.column.getSize()}px` }}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
+                    table.getRowModel().rows.map((row) => (
+                      <tr
+                        key={row.id}
+                        className={
+                          row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <td
+                            key={cell.id}
+                            className="px-4 py-1.5 text-[#636363] text-[14px] "
+                            style={{ width: `${cell.column.getSize()}px` }}
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
                 </tbody>
               </table>
-              </div>
+            </div>
           </div>
         </div>
         {/* Pagination Numbers */}
         <div className="mt-4  below-md:hidden">
-        <Pagination table={table} totalItems={totalItems} />
+          <Pagination table={table} totalItems={totalItems} />
         </div>
       </>
     </main>
