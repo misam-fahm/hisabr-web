@@ -84,100 +84,125 @@ const summary: FC = () => {
   }, []);
 
   /**year composed chart*/
-
-  const [selectedOption2, setSelectedOption2] = useState<string>("Year");
-  const [isOpen2, setIsOpen2] = useState<boolean>(false);
-
-  const options2 = [
-    { id: 1, name: "2024" },
-    { id: 2, name: "2023" },
-    { id: 3, name: "2022" },
-    { id: 4, name: "2021" },
-  ];
-
-  const toggleDropdown2 = () => setIsOpen2(!isOpen2);
-
-  const handleSelect2 = (option: { id: number; name: string }) => {
-    setSelectedOption2(option.name);
-    setIsOpen2(false);
-  };
+  const [selectedYearOption1, setSelectedYearOption1] =
+    useState<string>("Year");
+  const [isYearOpen1, setIsYearOpen1] = useState<boolean>(false);
 
   /**sales */
-  const [selectedOption3, setSelectedOption3] = useState<string>("Year");
-  const [isOpen3, setIsOpen3] = useState<boolean>(false);
-
-  const options3 = [
-    { id: 1, name: "2024" },
-    { id: 2, name: "2023" },
-    { id: 3, name: "2022" },
-    { id: 4, name: "2021" },
-  ];
-  const toggleDropdown3 = () => setIsOpen3(!isOpen3);
-
-  const handleSelect3 = (option3: { id: number; name: string }) => {
-    setSelectedOption3(option3.name);
-    setIsOpen3(false);
-  };
-
-  /**yearly, quarterly.. */
-  const [selectedOption4, setSelectedOption4] = useState<string>("Yearly");
-  const [isOpen4, setIsOpen4] = useState<boolean>(false);
-
-  const options4 = ["Yearly", "Quarterly", "Monthly", "Weekly"];
-  const toggleDropdown4 = () => setIsOpen4(!isOpen4);
-
-  const handleSelect4 = (option4: string) => {
-    setSelectedOption4(option4);
-    setIsOpen4(false);
-  };
+  const [selectedYearOption2, setSelectedYearOption2] =
+    useState<string>("Year");
+  const [isYearOpen2, setIsYearOpen2] = useState<boolean>(false);
 
   /**invoices */
-
-  const [selectedOption5, setSelectedOption5] = useState<string>("Year");
-  const [isOpen5, setIsOpen5] = useState<boolean>(false);
-
-  const options5 = [
-    { id: 1, name: "2024" },
-    { id: 2, name: "2023" },
-    { id: 3, name: "2022" },
-    { id: 4, name: "2021" },
-  ];
-  const toggleDropdown5 = () => setIsOpen5(!isOpen5);
-
-  const handleSelect5 = (option5: { id: number; name: string }) => {
-    setSelectedOption5(option5.name);
-    setIsOpen5(false);
-  };
-
-  /**yearly, quarterly.. */
-  const [selectedOption6, setSelectedOption6] = useState<string>("Yearly");
-  const [isOpen6, setIsOpen6] = useState<boolean>(false);
-
-  const options6 = ["Yearly", "Quarterly", "Monthly", "Weekly"];
-  const toggleDropdown6 = () => setIsOpen6(!isOpen6);
-
-  const handleSelect6 = (option6: string) => {
-    setSelectedOption6(option6);
-    setIsOpen6(false);
-  };
+  const [selectedYearOption3, setSelectedYearOption3] =
+    useState<string>("Year");
+  const [isYearOpen3, setIsYearOpen3] = useState<boolean>(false);
 
   /**yearly sales */
+  const [selectedYearOption4, setSelectedYearOption4] =
+    useState<string>("Year");
+  const [isYearOpen4, setIsYearOpen4] = useState<boolean>(false);
 
-  const [selectedOption7, setSelectedOption7] = useState<string>("Year");
-  const [isOpen7, setIsOpen7] = useState<boolean>(false);
+  /**sales ..yearly, quarterly.. */
+  const [selectedDurationOption1, setSelectedDurationOption1] =
+    useState<string>("Yearly");
+  const [isDurationOpen1, setIsDurationOpen1] = useState<boolean>(false);
 
-  const options7 = [
+  /**invoices.. yearly, quarterly.. */
+  const [selectedDurationOption2, setSelectedDurationOption2] =
+    useState<string>("Yearly");
+  const [isDurationOpen2, setIsDurationOpen2] = useState<boolean>(false);
+
+  const Yearoptions = [
     { id: 1, name: "2024" },
     { id: 2, name: "2023" },
     { id: 3, name: "2022" },
     { id: 4, name: "2021" },
   ];
-  const toggleDropdown7 = () => setIsOpen7(!isOpen7);
 
-  const handleSelect7 = (option7: { id: number; name: string }) => {
-    setSelectedOption7(option7.name);
-    setIsOpen7(false);
+  const DurationOptions = [
+    { id: 1, name: "Yearly" },
+    { id: 2, name: "Quarterly" },
+    { id: 3, name: "Monthly" },
+    { id: 4, name: "Weekly" },
+  ];
+
+  const toggleYearDropdown = (id: number) => {
+    switch (id) {
+      case 1:
+        setIsYearOpen1(!isYearOpen1);
+        break;
+      case 2:
+        setIsYearOpen2(!isYearOpen2);
+        break;
+      case 3:
+        setIsYearOpen3(!isYearOpen3);
+        break;
+      case 4:
+        setIsYearOpen4(!isYearOpen4);
+        break;
+      default:
+        break;
+    }
   };
+
+  const toggleDurationDropdown = (id: number) => {
+    switch (id) {
+      case 1:
+        setIsDurationOpen1(!isDurationOpen1);
+        break;
+      case 2:
+        setIsDurationOpen2(!isDurationOpen2);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleYearSelect = (
+    option: { id: number; name: string },
+    dropdownId: number
+  ) => {
+    switch (dropdownId) {
+      case 1:
+        setSelectedYearOption1(option.name);
+        setIsYearOpen1(false);
+        break;
+      case 2:
+        setSelectedYearOption2(option.name);
+        setIsYearOpen2(false);
+        break;
+      case 3:
+        setSelectedYearOption3(option.name);
+        setIsYearOpen3(false);
+        break;
+      case 4:
+        setSelectedYearOption4(option.name);
+        setIsYearOpen4(false);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleDurationSelect = (
+    option: { id: number; name: string },
+    dropdownId: number
+  ) => {
+    switch (dropdownId) {
+      case 1:
+        setSelectedDurationOption1(option.name);
+        setIsDurationOpen1(false);
+        break;
+      case 2:
+        setSelectedDurationOption2(option.name);
+        setIsDurationOpen2(false);
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <main
       className="max-h-[calc(100vh-60px)] overflow-auto"
@@ -281,12 +306,12 @@ const summary: FC = () => {
               </div>
               <div className="mb-6 relative below-md:w-full below-md:max-w-[40%]  rounded ">
                 <Dropdown
-                  options={options2}
+                  options={Yearoptions}
                   shadowclassName="shadow-none border border-gray-200"
-                  selectedOption={selectedOption2}
-                  onSelect={handleSelect2}
-                  isOpen={isOpen2}
-                  toggleOpen={toggleDropdown2}
+                  selectedOption={selectedYearOption1}
+                  onSelect={(option) => handleYearSelect(option, 1)}
+                  isOpen={isYearOpen1}
+                  toggleOpen={() => toggleYearDropdown(1)}
                   className="below-md:w-full"
                   widthchange="below-lg:w-[130px] tablet:w-[130px]"
                 />
@@ -318,11 +343,11 @@ const summary: FC = () => {
                       <Dropdown
                         className="relative below-md:w-full"
                         shadowclassName="shadow-none border border-gray-200"
-                        options={options4}
-                        selectedOption={selectedOption4}
-                        onSelect={handleSelect4}
-                        isOpen={isOpen4}
-                        toggleOpen={toggleDropdown4}
+                        options={DurationOptions}
+                        selectedOption={selectedDurationOption1}
+                        onSelect={(option) => handleDurationSelect(option, 1)}
+                        isOpen={isDurationOpen1}
+                        toggleOpen={() => toggleDurationDropdown(1)}
                         widthchange="below-lg:w-[130px] tablet:w-[130px]"
                       />
                     </div>
@@ -332,11 +357,11 @@ const summary: FC = () => {
                       <Dropdown
                         className="relative w-full below-md:w-full"
                         shadowclassName="shadow-none border border-gray-200"
-                        options={options3}
-                        selectedOption={selectedOption3}
-                        onSelect={handleSelect3}
-                        isOpen={isOpen3}
-                        toggleOpen={toggleDropdown3}
+                        options={Yearoptions}
+                        selectedOption={selectedYearOption2}
+                        onSelect={(option) => handleYearSelect(option, 2)}
+                        isOpen={isYearOpen2}
+                        toggleOpen={() => toggleYearDropdown(2)}
                         widthchange="below-lg:w-[130px] tablet:w-[130px]"
                       />
                     </div>
@@ -364,25 +389,24 @@ const summary: FC = () => {
                       <Dropdown
                         className="relative below-md:w-full"
                         shadowclassName="shadow-none border border-gray-200"
-                        options={options6}
-                        selectedOption={selectedOption6}
-                        onSelect={handleSelect6}
-                        isOpen={isOpen6}
-                        toggleOpen={toggleDropdown6}
+                        options={DurationOptions}
+                        selectedOption={selectedDurationOption2}
+                        onSelect={(option) => handleDurationSelect(option, 2)}
+                        isOpen={isDurationOpen2}
+                        toggleOpen={() => toggleDurationDropdown(2)}
                         widthchange="below-lg:w-[130px] tablet:w-[130px]"
                       />
                     </div>
-
                     {/* Year Dropdown */}
                     <div className="relative below-md:w-full rounded">
                       <Dropdown
                         className="relative w-full below-md:w-full"
                         shadowclassName="shadow-none border border-gray-200"
-                        options={options5}
-                        selectedOption={selectedOption5}
-                        onSelect={handleSelect5}
-                        isOpen={isOpen5}
-                        toggleOpen={toggleDropdown5}
+                        options={Yearoptions}
+                        selectedOption={selectedYearOption3}
+                        onSelect={(option) => handleYearSelect(option, 3)}
+                        isOpen={isYearOpen3}
+                        toggleOpen={() => toggleYearDropdown(3)}
                         widthchange="below-lg:w-[130px] tablet:w-[130px]"
                       />
                     </div>
@@ -422,11 +446,11 @@ const summary: FC = () => {
                     <Dropdown
                       className="relative below-md:w-full rounded"
                       shadowclassName="shadow-none border border-gray-200"
-                      options={options7}
-                      selectedOption={selectedOption7}
-                      onSelect={handleSelect7}
-                      isOpen={isOpen7}
-                      toggleOpen={toggleDropdown7}
+                      options={Yearoptions}
+                      selectedOption={selectedYearOption4}
+                      onSelect={(option) => handleYearSelect(option, 4)}
+                      isOpen={isYearOpen4}
+                      toggleOpen={() => toggleYearDropdown(4)}
                       widthchange="below-lg:w-[130px] tablet:w-[130px]"
                     />
                   </div>
