@@ -5,6 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -36,8 +37,8 @@ interface TableRow {
 
 const Invoices = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [showBackIcon, setShowBackIcon] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
@@ -59,7 +60,7 @@ const Invoices = () => {
       accessorKey: "quantity",
       header: () => <div className="text-right">Quantity</div>,
       cell: (info) =>
-      <span className="flex justify-end"> {info.getValue() as number}</span>,
+        <span className="flex justify-end"> {info.getValue() as number}</span>,
       size: 100,
     },
     {
@@ -259,11 +260,11 @@ const Invoices = () => {
         handleError(response?.message);
       }
     } catch (error) {
-     console.error("Error fetching stores:", error);
-    }  
+      console.error("Error fetching stores:", error);
+    }
   };
-  useEffect(() => {   
-      fetchDropdownData();    
+  useEffect(() => {
+    fetchDropdownData();
   }, []);
   // const calendarRef = useRef<DatePicker | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -288,11 +289,25 @@ const Invoices = () => {
   const handlePressEnd = () => {
     setShowTooltip(false);
   };
+  useEffect(() => {
+    // Ensure this code only runs on the client-side (after the page has mounted)
+    if (typeof window !== "undefined") {
+      const fromHome = searchParams?.get("fromHome") === "true";
 
-  const handleBack = () => {
-    router.push("/");
-  };
- 
+      if (fromHome) {
+        setShowBackIcon(true);
+
+        // Remove "fromHome" from the URL (to avoid showing it on page reload)
+        const currentUrl = window.location.pathname;
+        router.replace(currentUrl); // Update the URL without the query parameter
+      }
+    }
+  }, [searchParams, router]); // Dependency on searchParams to check when they change
+
+  // const handleBack = () => {
+  //   router.push("/");
+  // };
+
 
   return (
     <main
@@ -300,14 +315,14 @@ const Invoices = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <div>
-      {showBackIcon && (
-        <img
-        onClick={() => router.back()}
-          alt="Back Arrow"
-          className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
-          src="/images/webbackicon.svg"
-        ></img>
-      )}
+        {showBackIcon && (
+          <img
+            onClick={() => router.back()}
+            alt="Back Arrow"
+            className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
+            src="/images/webbackicon.svg"
+          ></img>
+        )}
       </div>
       <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
         <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">

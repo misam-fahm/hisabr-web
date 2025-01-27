@@ -1,11 +1,11 @@
 "use client";
-
 import React, { FC, useState, useRef, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/ExpensesPopup/AddExpenses";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import {
   useReactTable,
@@ -36,8 +36,8 @@ interface TableRow {
 
 const Expenses: FC = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [showBackIcon, setShowBackIcon] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef(null);
   const [isScrollbarVisible, setIsScrollbarVisible] = useState(false);
@@ -255,6 +255,24 @@ const Expenses: FC = () => {
     };
   }, [table]);
 
+  useEffect(() => {
+    // Ensure this code only runs on the client-side (after the page has mounted)
+    if (typeof window !== "undefined") {
+      const fromHome = searchParams?.get("fromHome") === "true";
+
+      if (fromHome) {
+        setShowBackIcon(true);
+
+        // Remove "fromHome" from the URL (to avoid showing it on page reload)
+        const currentUrl = window.location.pathname;
+        router.replace(currentUrl); // Update the URL without the query parameter
+      }
+    }
+  }, [searchParams, router]); // Dependency on searchParams to check when they change
+
+
+
+ 
 
   return (
     <main

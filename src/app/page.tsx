@@ -103,6 +103,7 @@ const Home: FC = () => {
   const router = useRouter();
 
   const [grossrevenue, setgrossrevenue] = useState(false);
+  
 
   useEffect(() => {
     // Ensure the back icon is hidden on the home page
@@ -117,7 +118,7 @@ const Home: FC = () => {
   /**second link(tender) */
 
   const handleClick2 = () => {
-    router.push("/setup/tenders"); // Navigates to the 'details' page
+    router.push("/setup/tenders?fromHome=true"); // Navigates to the 'details' page
   };
 
   //forth link(customer count)
@@ -129,25 +130,25 @@ const Home: FC = () => {
   //fifth link(customer count)
 
   const handleClick5 = () => {
-    router.push("/expenses");
+    router.push("/expenses?fromHome=true");
   };
 
   //sixth link(customer count)
 
   const handleClick6 = () => {
-    router.push("/invoices"); // Navigates to the 'details' page
+    router.push("/invoices?fromHome=true"); // Navigates to the 'details' page
   };
 
   //seventh link(customer count)//
 
   const handleClick7 = () => {
-    router.push("/expenses"); // Navigates to the 'details' page
+    router.push("/expenses?fromHome=true"); // Navigates to the 'details' page
   };
 
   //eighth link(customer count)
 
   const handleClick8 = () => {
-    router.push("/invoices"); // Navigates to the 'details' page
+    router.push("/invoices?fromHome=true"); // Navigates to the 'details' page
   };
 
   return (
