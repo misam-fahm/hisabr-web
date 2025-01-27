@@ -60,8 +60,8 @@ const Invoices = () => {
       accessorKey: "quantity",
       header: () => <div className="text-right">Quantity</div>,
       cell: (info) =>{
-        <span className="flex justify-end"> {info.getValue() as number} </span>,
-      }
+        <span className="flex justify-end"> {info.getValue() as number} </span>
+      },
       size: 100, // Adjust the size as needed
     },
     {
