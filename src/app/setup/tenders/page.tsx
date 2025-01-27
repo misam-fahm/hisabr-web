@@ -1,6 +1,7 @@
 "use client";
 import React, { FC, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import {
   useReactTable,
   getCoreRowModel,
@@ -27,6 +28,7 @@ interface TableRow {
 
 const Page: FC = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [showBackIcon, setShowBackIcon] = useState(false);
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
@@ -142,6 +144,22 @@ const Page: FC = () => {
   const handleAddTender = (newExpense: any) => {
     setData((prevExpenses) => [...prevExpenses, newExpense]);
   };
+
+   useEffect(() => {
+      // Ensure this code only runs on the client-side (after the page has mounted)
+      if (typeof window !== "undefined") {
+        const fromHome = searchParams?.get("fromHome") === "true";
+  
+        if (fromHome) {
+          setShowBackIcon(true);
+  
+          // Remove "fromHome" from the URL (to avoid showing it on page reload)
+          const currentUrl = window.location.pathname;
+          router.replace(currentUrl); // Update the URL without the query parameter
+        }
+      }
+    }, [searchParams, router]); // Dependency on searchParams to check when they change
+  
 
 
 
