@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import AddExpenses from "@/Components/ExpensesPopup/AddExpenses";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import {
   useReactTable,
@@ -35,7 +35,6 @@ interface TableRow {
 
 
 const Expenses: FC = () => {
-  const searchParams = useSearchParams();
   const router = useRouter();
   const [showBackIcon, setShowBackIcon] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -255,25 +254,6 @@ const Expenses: FC = () => {
       window?.removeEventListener("resize", checkScrollbarVisibility);
     };
   }, [table]);
-
-  useEffect(() => {
-    // Check if "fromHome" is in the query params
-    const fromHome = searchParams?.get("fromHome") === "true";
-
-    if (fromHome) {
-      setShowBackIcon(true);
-
-      // Remove "fromHome" from the URL
-      const currentUrl = window.location.pathname;
-      router.replace(currentUrl);
-    }
-    // Mark loading as false after processing
-    setIsLoading(false);
-  }, [searchParams, router]);
-  // Delay rendering until the query is processed
-  if (isLoading) {
-    return null; // Or a loading spinner if desired
-  }
 
 
   return (
