@@ -34,28 +34,53 @@ const DetailsPage: React.FC = () => {
     }
   };
 
-  const [selectedOption2, setSelectedOption2] = useState<string>("2021");
-  const [isOpen2, setIsOpen2] = useState<boolean>(false);
-  const [selectedOption3, setSelectedOption3] = useState<string>("2021");
-  const [isOpen3, setIsOpen3] = useState<boolean>(false);
+  /**main dropdown */
+  const [selectedYearOption1, setSelectedYearOption1] =
+    useState<string>("2021");
+  const [isYearOpen1, setIsYearOpen1] = useState<boolean>(false);
 
-  const options2 = [
+  /**Customer Count */
+  const [selectedYearOption2, setSelectedYearOption2] =
+    useState<string>("2021");
+  const [isYearOpen2, setIsYearOpen2] = useState<boolean>(false);
+
+  const Yearoptions = [
     { id: 1, name: "2024" },
     { id: 2, name: "2023" },
     { id: 3, name: "2022" },
     { id: 4, name: "2021" },
   ];
 
-  const options3 = [
-    { id: 1, name: "2024" },
-    { id: 2, name: "2023" },
-    { id: 3, name: "2022" },
-    { id: 4, name: "2021" },
-  ];
+  const toggleYearDropdown = (id: number) => {
+    switch (id) {
+      case 1:
+        setIsYearOpen1(!isYearOpen1);
+        break;
+      case 2:
+        setIsYearOpen2(!isYearOpen2);
+        break;
+      default:
+        break;
+    }
+  };
 
-  const toggleDropdown2 = () => setIsOpen2(!isOpen2);
-  const toggleDropdown3 = () => setIsOpen3(!isOpen3);
-
+  const handleYearSelect = (
+    option: { id: number; name: string },
+    dropdownId: number
+  ) => {
+    switch (dropdownId) {
+      case 1:
+        setSelectedYearOption1(option.name);
+        setIsYearOpen1(false);
+        break;
+      case 2:
+        setSelectedYearOption2(option.name);
+        setIsYearOpen2(false);
+        break;
+      default:
+        break;
+    }
+  };
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
   };
@@ -82,16 +107,6 @@ const DetailsPage: React.FC = () => {
   useEffect(() => {
     fetchDropdownData();
   }, []);
-
-  const handleSelect2 = (option: { id: number; name: string }) => {
-    setSelectedOption2(option.name);
-    setIsOpen2(false);
-  };
-
-  const handleSelect3 = (option3: { id: number; name: string }) => {
-    setSelectedOption3(option3.name);
-    setIsOpen3(false);
-  };
 
   return (
     <main
@@ -136,11 +151,11 @@ const DetailsPage: React.FC = () => {
             {/* Second Dropdown */}
 
             <Dropdown
-              options={options2}
-              selectedOption={selectedOption2}
-              onSelect={handleSelect2}
-              isOpen={isOpen2}
-              toggleOpen={toggleDropdown2}
+              options={Yearoptions}
+              selectedOption={selectedYearOption1}
+              onSelect={(option) => handleYearSelect(option, 1)}
+              isOpen={isYearOpen1}
+              toggleOpen={() => toggleYearDropdown(1)}
             />
           </div>
         </div>
@@ -222,17 +237,17 @@ const DetailsPage: React.FC = () => {
                   <Dropdown
                     className="relative below-md:w-full"
                     shadowclassName="shadow-none border border-gray-200"
-                    options={options3}
-                    selectedOption={selectedOption3}
-                    onSelect={handleSelect3}
-                    isOpen={isOpen3}
-                    toggleOpen={toggleDropdown3}
+                    options={Yearoptions}
+                    selectedOption={selectedYearOption2}
+                    onSelect={(option) => handleYearSelect(option, 2)}
+                    toggleOpen={() => toggleYearDropdown(2)}
+                    isOpen={isYearOpen2}
                     widthchange="below-lg:w-[130px]"
                   />
                 </div>
               </div>
               <div className="pb-2">
-                <BarChart4 selectedYear={Number(selectedOption3)} />
+                <BarChart4 selectedYear={Number(selectedYearOption2)} />
               </div>
             </div>
           </div>

@@ -59,10 +59,9 @@ const Invoices = () => {
     {
       accessorKey: "quantity",
       header: () => <div className="text-right">Quantity</div>,
-      cell: (info) => {
-        <span className="flex justify-end"> {info.getValue() as number} </span>
-
-      },
+      cell: (info) =>{
+        <span className="flex justify-end"> {info.getValue() as number} </span>,
+      }
       size: 100, // Adjust the size as needed
     },
     {
@@ -191,11 +190,16 @@ const Invoices = () => {
             const jsonData: any = {
               mode: "insertinvoice",
               invoicenumber: responseData?.invoice_details?.invoice_number,
-              invoicedate: moment(moment(responseData?.invoice_details?.invoice_date, 'DD/MM/YYYY').toDate()).format('YYYY-MM-DD'),
+              invoicedate: moment(moment(responseData?.invoice_details?.invoice_date, 'MM/DD/YYYY').toDate()).format('YYYY-MM-DD'),
               storename: "13246",
-              duedate: "",
+              duedate: moment(moment(responseData?.invoice_details?.due_date, 'MM/DD/YYYY').toDate()).format('YYYY-MM-DD'),
               total: responseData?.invoice_details?.invoice_total,
-              sellername: "Gordon",
+              sellername: responseData?.invoice_details?.seller_name,
+              quantity: responseData?.invoice_details?.qty_ship_total,
+              producttotal: responseData?.invoice_details?.product_total,
+              subtotal: responseData?.invoice_details?.sub_total,
+              misc: responseData?.invoice_details?.misc,
+              tax: responseData?.invoice_details?.tax
             };
             const result: any = await sendApiRequest(jsonData);
             if (result?.status === 200) {
@@ -237,8 +241,6 @@ const Invoices = () => {
     type: "",
   });
 
-
-
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
   }
@@ -259,15 +261,11 @@ const Invoices = () => {
         handleError(response?.message);
       }
     } catch (error) {
-      console.error("Error fetching stores:", error);
-    }
-
+     console.error("Error fetching stores:", error);
+    }  
   };
-
-  useEffect(() => {
-
-    fetchDropdownData();
-
+  useEffect(() => {   
+      fetchDropdownData();    
   }, []);
   // const calendarRef = useRef<DatePicker | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -314,7 +312,6 @@ const Invoices = () => {
   if (isLoading) {
     return null; // Or a loading spinner if desired
   }
-
 
   return (
     <main
