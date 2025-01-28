@@ -469,7 +469,7 @@ const DetailsPage: React.FC = () => {
               <div className="flex flex-row justify-between mx-6 mt-5 mb-5">
                 <div>
                   <p className="text-[#393E47] text-[16px] font-bold mb-3">
-                    Monthyl Revenue
+                    Monthly Revenue
                   </p>
                 </div>
                 <div className="relative below-md:w-[35%]">
