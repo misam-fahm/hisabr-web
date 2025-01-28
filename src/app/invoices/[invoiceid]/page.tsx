@@ -132,27 +132,27 @@ const InvoiceDetails = () => {
       <div className="flex gap-6 pt-4 pb-4 w-full below-md:flex below-md:flex-col below-md:gap-3">
 
         {/* Left Panel - Invoice Details */}
-        <div className="space-y-2 shadow border bg-[#FFFFFF] rounded-lg w-full max-w-[299px] below-md:w-full p-4 items-start">
-          <div className="flex flex-col below-md:flex-row justify-between gap-[4px]">
+        <div className="space-y-2 shadow border bg-[#FFFFFF] rounded-lg w-full max-w-[299px] below-md:w-full p-4  items-start ">
+          <div className="flex  justify-between ">
             <p className="text-[#636363] text-[12px]">Date</p>
             <p className="text-[#636363] text-[13px] font-semibold">{data?.invoicedate}</p>
           </div>
-          <div className="flex flex-col below-md:flex-row justify-between gap-[4px]">
+          <div className="flex  justify-between pt-2">
             <span className="text-[#636363] text-[12px]">Invoice Number</span>
             <span className="text-[#636363] text-[13px] font-semibold">{data?.invoicenumber}</span>
           </div>
-          <div className="flex  flex-col below-md:flex-row justify-between gap-[4px]">
+          <div className="flex   justify-between pt-2">
             <span className="text-[#636363] text-[12px]">Store Name</span>
             <span className="text-[#636363]  text-[13px] font-semibold">{data?.storename}</span>
           </div>
-          <div className="flex flex-col below-md:flex-row justify-between gap-[4px]">
+          <div className="flex   justify-between pt-2">
             <span className="text-[12px] text-[#636363]">Due Date</span>
             <span className="text-[13px] text-[#636363] font-semibold">{data?.duedate}</span>
           </div>
         </div>
         <div className='flex justify-between w-full'>
           {/* Right Panel - Totals */}
-          <div className="shadow border rounded-lg w-full max-w-[369px] bg-[#FFFFFF] below-md:w-full p-4 flex flex-col gap-3">
+          <div className="shadow border rounded-lg w-full max-w-[369px] bg-[#FFFFFF] below-md:w-full p-4 flex flex-col gap-2">
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Product Total</span>
               <span className="text-[#636363] text-[13px] font-semibold">${data?.producttotal}</span>
@@ -162,20 +162,20 @@ const InvoiceDetails = () => {
               <span className="text-[#636363] text-[13px] font-semibold">${data?.subtotal}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-[#636363] text-[12px]">Tax 1</span>
+              <span className="text-[#636363] text-[12px]">Total Tax </span>
               <span className="text-[#636363] text-[13px] font-semibold">${data?.tax}</span>
             </div>
-            <div className="flex justify-between">
+            {/* <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Tax 2</span>
               <span className="text-[#636363] text-[13px] font-semibold"></span>
-            </div>
+            </div> */}
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Miscellaneous</span>
               <span className="text-[#636363] text-[13px] font-semibold">${data?.misc}</span>
             </div>
-            <div className="flex justify-between border-t pt-2 mt-2">
-              <span className="text-[#636363] text-[14px] font-semibold">Total</span>
-              <span className="text-[#636363] text-[14px] font-semibold">${data?.total}</span>
+            <div className="flex justify-between border-t pt-2">
+              <span className="text-[#636363] text-[12px] font-semibold">Total</span>
+              <span className="text-[#636363] text-[12px] font-semibold">${data?.total}</span>
             </div>
           </div>
         </div>
@@ -186,38 +186,38 @@ const InvoiceDetails = () => {
           <table className='w-full table-auto border-collapse text-[15px] text-white'>
             <thead className='bg-[#0F1044] '>
               <tr>
-                <th className="px-4 py-2 text-left font-normal w-[10%]">Item Code</th>
-                <th className="py-2 text-left font-normal w-[15%]">Description</th>
-                <th className="px-4 py-2 text-left font-normal w-[10%]">Brand</th>
-                <th className="px-4 py-2 text-left font-normal  w-[100px]">Category</th>
-                <th className="px-4 py-2 text-left font-normal w-[8%]">Quantity</th>
-                <th className="px-3 py-2 text-left font-normal w-[5%]">Units</th>
-                <th className="px-4 py-2 text-center whitespace-nowrap w-[100px] font-normal">Pack Size</th>
-                <th className="px-4 py-2 text-right  w-[120px] whitespace-nowrap font-normal">Invt Value</th>
-                <th className="px-4 py-2 text-right  w-[100px] whitespace-nowrap font-normal">Unit Price</th>
-                <th className="px-4 py-2 text-right  w-[100px] font-normal">Tax</th>
-                <th className="px-4 py-2 text-right  w-[100px] font-normal">Total</th>
-                <th className="w-[8px]">{ }</th>
+                <th className="w-[150px] px-4 py-2 text-start font-normal ">Item Code</th>
+                <th className="py-2 w-[180px] px-4 text-start font-normal ">Description</th>
+                <th className="py-2 w-[100px] text-start font-normal ">Brand</th>
+                <th className="py-2 w-[100px] text-start   font-normal ">Category</th>
+                <th className="py-2 w-[100px] text-start  font-normal ">Quantity</th>
+                <th className="py-2 w-[100px] text-start  font-normal ">Units</th>
+                <th className="py-2 w-[100px] text-start whitespace-nowrap font-normal">Pack Size</th>
+                <th className="py-2 w-[100px] text-start whitespace-nowrap font-normal">Invt Value</th>
+                <th className="py-2 w-[100px] text-start    whitespace-nowrap font-normal">Unit Price</th>
+                <th className="py-2 w-[100px] text-end px-4  font-normal">Tax</th>
+                <th className="py-2 w-[100px] text-end px-4  font-normal">Total</th>
+               
               </tr>
             </thead>
           </table>
-          <div className='max-h-[calc(100vh-420px)] overflow-x-auto overflow-y-auto' style={{ scrollbarWidth: "thin" }}>
+          <div className='max-h-[calc(100vh-370px)] overflow-x-auto overflow-y-auto' style={{ scrollbarWidth: "thin" }}>
             <table className='w-full  text-[14px] table-auto shadow rounded-md'>
               <tbody>
                 {data?.invoicedetail?.map((row: any, index: any) => (
                   <tr key={index}
                     className={index % 2 === 0 ? 'bg-white' : 'bg-[#F3F3F6]'}>
-                    <td className="px-4 py-1.5 w-[10%] text-left text-[#636363]">{row?.itemcode}</td>
-                    <td className="py-1.5 text-left text-[#636363] break-all whitespace-normal overflow-hidden w-[15%]">{row?.description}</td>
-                    <td className="py-1.5  w-[10%] px-4 text-left text-[#636363]">{row?.brand}</td>
-                    <td className="py-1.5 px-4 text-center w-[100px] text-[#636363]">{row?.category}</td>
-                    <td className="py-1.5 px-6 text-right text-[#636363] w-[8%]">{row?.quantity}</td>
-                    <td className="py-1.5 px-4 text-center text-[#636363] w-[5%]">{row?.unit}</td>
-                    <td className="py-1.5 px-4  w-[100px] text-center text-[#636363]">{row?.packsize}</td>
-                    <td className="py-1.5 px-4  w-[120px] text-right text-[#636363]">{row?.invtvalue}</td>
-                    <td className="py-1.5 px-4  w-[100px] text-right text-[#030202]">{row?.unitprice}</td>
-                    <td className="py-1.5 px-4  w-[100px] text-right text-[#636363]">{row?.tax}</td>
-                    <td className="py-1.5 px-4  w-[100px] text-right text-[#636363]">{row?.total}</td>
+                    <td className="w-[140px] py-1.5 text-start px-4 text-[#636363]">{row?.itemcode}</td>
+                    <td className="py-1.5 w-[180px] text-start px-4 text-[#636363] break-all whitespace-normal overflow-hidden">{row?.description}</td>
+                    <td className="py-1.5 w-[100px] text-start px-4  text-[#636363]">{row?.brand}</td>
+                    <td className="py-1.5 w-[100px] text-start  px-2   text-[#636363]">{row?.category}</td>
+                    <td className="py-1.5 w-[100px] text-end px-5   text-[#636363] ">{row?.quantity}</td>
+                    <td className="py-1.5 w-[100px] text-start px-4   text-[#636363] ">{row?.unit}</td>
+                    <td className="py-1.5 w-[100px] text-end px-4    text-[#636363]">{row?.packsize}</td>
+                    <td className="py-1.5 w-[100px] text-end px-4   text-[#636363]">{row?.invtvalue}</td>
+                    <td className="py-1.5 w-[100px] text-end  px-4  text-[#030202]">{row?.unitprice}</td>
+                    <td className="py-1.5 w-[100px] text-end px-4   text-[#636363]">{row?.tax}</td>
+                    <td className="py-1.5 w-[100px] text-end px-4   text-[#636363]">{row?.extendedprice}</td>
                   </tr>
                 ))}
               </tbody>
@@ -237,7 +237,7 @@ const InvoiceDetails = () => {
                   <span className="text-black text-[14px] font-bold">{items?.itemCode}</span>
                   <span className="text-black text-[16px] font-bold">{items?.description}</span>
                 </div>
-                <hr className='w-full h-[1px] my-2' color='lightgrey' />
+                <hr className='w-full h-[1px] my-2' color='lightgrey'/>
                 <div className="flex justify-between">
                   <span className="text-[#636363] text-[12px]">Brand</span>
                   <span className="text-[#636363] text-[14px]">{items?.brand}</span>
@@ -272,7 +272,7 @@ const InvoiceDetails = () => {
                 </div>
                 <div className="flex justify-between border-t pt-2 mt-2">
                   <span className="text-[#636363] text-[14px] font-semibold">Total</span>
-                  <span className="text-[#636363] text-[14px] font-semibold">${items?.total}</span>
+                  <span className="text-[#636363] text-[14px] font-semibold">${items?.producttotal}</span>
                 </div>
               </div>
             </div>

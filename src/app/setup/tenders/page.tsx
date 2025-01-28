@@ -1,7 +1,7 @@
 "use client";
 import React, { FC, useEffect, useState } from "react";
-import { useRouter , useSearchParams} from "next/navigation";
-
+import { useRouter } from "next/navigation";
+//import { useSearchParams } from "next/navigation";
 import {
   useReactTable,
   getCoreRowModel,
@@ -28,7 +28,7 @@ interface TableRow {
 
 const Page: FC = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
+ // const searchParams = useSearchParams();
   const [showBackIcon, setShowBackIcon] = useState(false);
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
@@ -145,20 +145,23 @@ const Page: FC = () => {
     setData((prevExpenses) => [...prevExpenses, newExpense]);
   };
 
-   useEffect(() => {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Parse query parameters from window.location.search
+      const params = new URLSearchParams(window.location.search);
+      const fromHome = params.get("fromHome") === "true";
 
-      if (typeof window !== "undefined") {
-        const fromHome = searchParams?.get("fromHome") === "true";
-  
-        if (fromHome) {
-          setShowBackIcon(true);
-          const currentUrl = window?.location?.pathname;
-          router?.replace(currentUrl); 
-        }
+      if (fromHome) {
+        setShowBackIcon(true);
+
+        // Remove the query parameter by replacing the URL
+        const currentUrl = window.location.pathname; // URL without query params
+        window.history.replaceState({}, "", currentUrl);
       }
-    }, [searchParams, router]); 
-  
+    }
+  }, []);
 
+  
 
 
   return (
@@ -237,7 +240,7 @@ const Page: FC = () => {
           </div>
         ))}
         {/* Add Tender bottom */}
-        <div className="block pl-24 ">
+        <div className="block pl-24">
           {" "}
           <AddTender setAddTender={setAddTender} />
         </div>

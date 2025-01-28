@@ -4,9 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import Images from "../UI/Themes/Image";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { useParams } from 'next/navigation';
 
 const Header: React.FC = () => {
-  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const currentPath = usePathname();
@@ -14,9 +14,7 @@ const Header: React.FC = () => {
   const [title, setTitle] = useState("");
   const [isRotated, setIsRotated] = useState(false);
 
-  const handleRedirect = () => {
-    router.push("/myprofile");
-  };
+   const {invoiceid} = useParams(); 
 
   useEffect(() => {
     setIsClient(true); // Ensuring we are on the client side
@@ -49,7 +47,7 @@ const Header: React.FC = () => {
         case "invoices":
           newTitle = "Invoices";
           break;
-        case "invoicedetails":
+        case `invoices/${invoiceid}` :
           newTitle = "Invoices/Invoice Details";
           break;
         case "expenses":
@@ -70,14 +68,14 @@ const Header: React.FC = () => {
         case "setup/configuration":
           newTitle = "Configuration";
           break;
-        case "grossrevenue":
-          newTitle = "Gross Revenue";
+        case "details1":
+          newTitle = "Gross Revenue Analysis";
           break;
         case "details2":
           newTitle = " Tender Analysis";
           break;
-        case "customercount":
-          newTitle = "Customer Count";
+        case "details4":
+          newTitle = "Customer Count Analysis";
           break;
         case "details5":
           newTitle = "Operating Expense Analysis";
@@ -86,7 +84,7 @@ const Header: React.FC = () => {
           newTitle = " Cost Analysis";
           break;
         case "details7":
-          newTitle = "Labour Analysis";
+          newTitle = "Labor Analysis";
           break;
         case "details8":
           newTitle = "Items Analysis";
@@ -129,7 +127,7 @@ const Header: React.FC = () => {
 
   return (
     <main className="w-full sticky z-30 bg-[#ffff] h-[50px] flex justify-center items-center shadow ">
-      <div className="flex  justify-between below-md:justify-center  items-center  w-full">
+      <div className="flex justify-between below-md:justify-center  items-center  w-full">
         <div className=" flex justify-center items-center pl-8 below-md:pl-0 ">
           {" "}
           <text className="text-[18px] font-bold text-defaultblack ">
@@ -156,7 +154,7 @@ const Header: React.FC = () => {
               className="w-10 h-10 flex items-center justify-center "
             >
               <img
-                src="/images/profiledropdownside.svg"
+                src="/images/ProfileDropdown.svg"
                 alt="Menu Icon"
                 className={`transition-transform duration-300 ${
                   isRotated ? "rotate-180" : "rotate-0"
@@ -168,19 +166,16 @@ const Header: React.FC = () => {
             {isOpen && (
               <div className="absolute right-0 mt-3 mr-2 pl-4 w-52 bg-white shadow-lg rounded-lg">
                 <ul className="py-2 ">
-                  <li
-                    className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]"
-                    onClick={handleRedirect}
-                  >
+                  <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
                     <img
-                      src="/images/userprofile.svg"
+                      src="/images/Profile.svg"
                       className="inline-block mr-2"
                     />
                     My Profile
                   </li>
                   <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
                     <img
-                      src="/images/headerlogouticon.svg"
+                      src="/images/logout2.svg"
                       className="inline-block mr-2"
                     />
                     Logout
