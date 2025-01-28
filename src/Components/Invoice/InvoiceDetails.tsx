@@ -1,6 +1,5 @@
 'use client';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation';
 import { sendApiRequest } from '@/utils/apiUtils';
 import { ToastNotificationProps } from '@/Components/UI/ToastNotification/ToastNotification';
 
@@ -17,12 +16,8 @@ interface TableRow {
   tax: string;
   total: string;
 }
-const InvoiceDetails = () => {
+const InvoiceDetails = (invoiceid :any) => {
 
-
-
-  const {invoiceid}:any = useParams(); // Extract the encoded ID from the URL
-  const decodedInvoiceId = atob(invoiceid);
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0); 
   const [loading, setLoading] = useState<boolean>(true);
@@ -31,70 +26,14 @@ const InvoiceDetails = () => {
     type: "",
   });
 
-  const tableData = [
-    {
-      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-    },
-    {
-      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-    },
-    {
-      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-    },
-    {
-      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-    },
-    {
-      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-    },
-    {
-      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-    },
-    {
-      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-    },
-    {
-      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-    },
-    {
-      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-    },
-    {
-      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-    },
-    {
-      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-    },
-    {
-      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-    },
-    {
-      itemCode: '67452', description: 'Cheese Amer Shrp 160C', brand: 'Dairy', category: 'DY', quantity: 2, units: 'CS',
-      packSize: '4*2 LB', invtValue: 11.56, unitPrice: 46.30, tax: '-', total: '46.30'
-    },
-  ];
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-       
-
         const response: any = await sendApiRequest({
           mode: "getinvoicedetails",
-          invoiceid: Number(decodedInvoiceId)
+          invoiceid:Number(invoiceid)
         });
 
         if (response?.status === 200) {
@@ -118,7 +57,7 @@ const InvoiceDetails = () => {
     fetchData();
   }, []);
 
-  console.log("decodedInvoiceId",decodedInvoiceId)
+console.log("invoiceid",invoiceid)
   return (
     <main
       className="max-h-[calc(100vh-80px)] w-full overflow-auto px-4 below-md:px-3"
@@ -231,7 +170,7 @@ const InvoiceDetails = () => {
 
       {/*card content for Mobile View*/}
       <div className='hidden  below-md:block'>
-        {tableData?.map((items, index) => (
+        {data?.map((items:any, index:any) => (
           <React.Fragment key={index}>
             <div className='flex justify-between w-full mb-4  '>
 
