@@ -211,7 +211,7 @@ const InvoiceDetails = () => {
                     <td className="py-1.5 px-4  w-[120px] text-right text-[#636363]">{row?.invtvalue}</td>
                     <td className="py-1.5 px-4  w-[100px] text-right text-[#030202]">{row?.unitprice}</td>
                     <td className="py-1.5 px-4  w-[100px] text-right text-[#636363]">{row?.tax}</td>
-                    <td className="py-1.5 px-4  w-[100px] text-right text-[#636363]">{row?.total}</td>
+                    <td className="py-1.5 px-4  w-[100px] text-right text-[#636363]">{row?.producttotal}</td>
                   </tr>
                 ))}
               </tbody>
@@ -266,7 +266,7 @@ const InvoiceDetails = () => {
                 </div>
                 <div className="flex justify-between border-t pt-2 mt-2">
                   <span className="text-[#636363] text-[14px] font-semibold">Total</span>
-                  <span className="text-[#636363] text-[14px] font-semibold">${items?.total}</span>
+                  <span className="text-[#636363] text-[14px] font-semibold">${items?.producttotal}</span>
                 </div>
               </div>
             </div>
