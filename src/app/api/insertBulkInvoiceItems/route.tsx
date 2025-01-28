@@ -15,7 +15,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     // Prepare the query and values
     const pool = getPool();
-    const query = 'INSERT INTO hisabr.invoicedetails (invoiceid, itemcode, description, brand, category, quantity, unit, packsize, invtvalue, unitprice, tax) VALUES ?';
+    const query = 'INSERT INTO hisabr.invoicedetails (invoiceid, itemcode, description, brand, category, quantity, unit, packsize, invtvalue, unitprice, tax, extendedprice) VALUES ?';
     const values = invoiceDetails?.map((i: any) => [
                         invoiceid,
                         i?.item_code,
@@ -27,7 +27,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
                         i?.pack,
                         i?.invent_value,
                         i?.unit_price,
-                        i?.tax
+                        i?.tax,
+                        i?.extended_price
                       ]);
     // Ensure each user has first_name, last_name, and email properties
     // const values = users.map(user => [user.first_name, user.last_name, user.email]);

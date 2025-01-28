@@ -169,7 +169,7 @@ const InvoiceDetails = () => {
             </div>
             <div className="flex justify-between border-t pt-2">
               <span className="text-[#636363] text-[12px] font-semibold">Total</span>
-              <span className="text-[#636363] text-[12px] font-semibold">${data?.extendedprice}</span>
+              <span className="text-[#636363] text-[12px] font-semibold">${data?.total}</span>
             </div>
           </div>
         </div>
@@ -190,8 +190,9 @@ const InvoiceDetails = () => {
                 <th className="py-2 w-[100px] text-start whitespace-nowrap font-normal">Invt Value</th>
                 <th className="py-2 w-[100px] text-start    whitespace-nowrap font-normal">Unit Price</th>
                 <th className="py-2 w-[100px] text-end px-4  font-normal">Tax</th>
+                <th className="py-2 w-[100px] text-end  font-normal">Ext Price</th>
                 <th className="py-2 w-[100px] text-end px-4  font-normal">Total</th>
-                <th className="w-[px]">{ }</th>
+               
               </tr>
             </thead>
           </table>
@@ -211,6 +212,7 @@ const InvoiceDetails = () => {
                     <td className="py-1.5 w-[100px] text-end px-4   text-[#636363]">{row?.invtvalue}</td>
                     <td className="py-1.5 w-[100px] text-end  px-4  text-[#030202]">{row?.unitprice}</td>
                     <td className="py-1.5 w-[100px] text-end px-4   text-[#636363]">{row?.tax}</td>
+                    <td className="py-1.5 w-[100px] text-end px-4   text-[#636363]">{row?.extendedprice}</td>
                     <td className="py-1.5 w-[100px] text-start  px-4  text-[#636363]">{row?.total}</td>
                   </tr>
                 ))}
@@ -266,7 +268,7 @@ const InvoiceDetails = () => {
                 </div>
                 <div className="flex justify-between border-t pt-2 mt-2">
                   <span className="text-[#636363] text-[14px] font-semibold">Total</span>
-                  <span className="text-[#636363] text-[14px] font-semibold">${items?.total}</span>
+                  <span className="text-[#636363] text-[14px] font-semibold">${items?.producttotal}</span>
                 </div>
               </div>
             </div>
