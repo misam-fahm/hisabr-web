@@ -43,6 +43,14 @@ const Invoices = () => {
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [globalFilter, setGlobalFilter] = React.useState("");
+
+  const navigateToInvoice = (invoiceId: any) => {
+    const encodedId = btoa(invoiceId);
+    // Make the Base64 URL-safe by replacing `+` with `-`, `/` with `_`, and removing the padding (`=`):
+    const urlSafeEncodedId = encodedId.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    router.push(`/invoices/${urlSafeEncodedId}`);
+  };
+
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "invoicedate",
@@ -83,8 +91,9 @@ const Invoices = () => {
       id: "view",
       header: () => <div className="text-left"></div>,
       cell: (info) => (
+        
         <button
-          onClick={() => (window.location.href = `/invoices/${info.row.original.invoiceid}`)}
+        onClick={() =>   navigateToInvoice(info.row.original.invoiceid)}
           className="text-green-500 hover:text-green-700 text-center ml-2"
         >
           <img src="/images/vieweyeicon.svg" alt="View Icon"

@@ -20,8 +20,11 @@ interface TableRow {
 }
 const InvoiceDetails = () => {
 
-  const {invoiceid} = useParams(); 
-  const [data, setData] = useState<any>({});
+
+
+  const {invoiceid}:any = useParams(); // Extract the encoded ID from the URL
+  const decodedInvoiceId = atob(invoiceid);
+  const [data, setData] = useState<any>([]);
   const [totalItems, setTotalItems] = useState<number>(0); 
   const [loading, setLoading] = useState<boolean>(true);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
@@ -88,9 +91,11 @@ const InvoiceDetails = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
+       
+
         const response: any = await sendApiRequest({
           mode: "getinvoicedetails",
-          invoiceid:Number(invoiceid)
+          invoiceid: Number(decodedInvoiceId)
         });
 
         if (response?.status === 200) {
@@ -113,6 +118,7 @@ const InvoiceDetails = () => {
     fetchData();
   }, []);
 
+  console.log("decodedInvoiceId",decodedInvoiceId)
   return (
     <main
       className="max-h-[calc(100vh-80px)] w-full overflow-auto px-4 below-md:px-3"
