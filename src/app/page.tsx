@@ -103,6 +103,7 @@ const Home: FC = () => {
   const router = useRouter();
 
   const [grossrevenue, setgrossrevenue] = useState(false);
+  
 
   useEffect(() => {
     // Ensure the back icon is hidden on the home page
