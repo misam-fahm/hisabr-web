@@ -171,7 +171,7 @@ const Page: FC = () => {
         {/* <AddCategories /> */}
       </div>
 
-      <div className="overflow-hidden max-w-full ">
+      <div className="overflow-hidden max-w-full">
         {/* Mobile view */}
         <div
           className="block md:hidden"
