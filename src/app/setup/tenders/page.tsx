@@ -240,7 +240,7 @@ const Page: FC = () => {
           </div>
         ))}
         {/* Add Tender bottom */}
-        <div className="block pl-24 ">
+        <div className="block pl-24">
           {" "}
           <AddTender setAddTender={setAddTender} />
         </div>
