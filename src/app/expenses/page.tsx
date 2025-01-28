@@ -5,7 +5,7 @@ import AddExpenses from "@/Components/ExpensesPopup/AddExpenses";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
+
 
 import {
   useReactTable,
@@ -36,8 +36,9 @@ interface TableRow {
 
 const Expenses: FC = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
+ // const searchParams = useSearchParams() || new URLSearchParams();
   const [showBackIcon, setShowBackIcon] = useState(false);
+  //const [isLoading, setIsLoading] = useState(true);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef(null);
   const [isScrollbarVisible, setIsScrollbarVisible] = useState(false);
@@ -53,8 +54,6 @@ const Expenses: FC = () => {
     message: "",
     type: "",
   });
-
-
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -256,21 +255,33 @@ const Expenses: FC = () => {
   }, [table]);
 
   useEffect(() => {
-    // Ensure this code only runs on the client-side (after the page has mounted)
-    if (typeof window !== "undefined") {
-      const fromHome = searchParams?.get("fromHome") === "true";
-
+    if (typeof window !== undefined){
+      const params = new URLSearchParams(window.location.search)
+      const fromHome = params.get("fromHome") === "true";
       if (fromHome) {
         setShowBackIcon(true);
 
-        // Remove "fromHome" from the URL (to avoid showing it on page reload)
-        const currentUrl = window.location.pathname;
-        router.replace(currentUrl); // Update the URL without the query parameter
-      }
+      // Remove "fromHome" from the URL to avoid showing it on page reload
+      const currentUrl = window.location.pathname;
+      // // Create a new URLSearchParams object and remove 'fromHome'
+      // const newSearchParams = new URLSearchParams(searchParams);
+      // newSearchParams.delete("fromHome");
+      // const newUrl = `${currentUrl}?${newSearchParams.toString()}`;
+      // //router.replace(currentUrl);
+      window.history.replaceState({},"",currentUrl)
+
+      //router.replace(newUrl);
+
     }
-  }, [searchParams, router]); // Dependency on searchParams to check when they change
+  }
+  }, []);
+
+  // if (isLoading) {
+  //   return null; // Or a loading spinner
+  // }
 
 
+ 
 
  
 

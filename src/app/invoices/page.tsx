@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
+//import { useSearchParams } from "next/navigation";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -37,7 +37,7 @@ interface TableRow {
 
 const Invoices = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  //const searchParams = useSearchParams();
   const [showBackIcon, setShowBackIcon] = useState(false);
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
@@ -292,17 +292,18 @@ const Invoices = () => {
   useEffect(() => {
     // Ensure this code only runs on the client-side (after the page has mounted)
     if (typeof window !== "undefined") {
-      const fromHome = searchParams?.get("fromHome") === "true";
+      const params = new URLSearchParams(window.location.search)
+      const fromHome = params.get("fromHome") === "true";
 
       if (fromHome) {
         setShowBackIcon(true);
 
         // Remove "fromHome" from the URL (to avoid showing it on page reload)
         const currentUrl = window.location.pathname;
-        router.replace(currentUrl); // Update the URL without the query parameter
+        window.history.replaceState({},"",currentUrl) // Update the URL without the query parameter
       }
     }
-  }, [searchParams, router]); // Dependency on searchParams to check when they change
+  }, []); // Dependency on searchParams to check when they change
 
   // const handleBack = () => {
   //   router.push("/");
