@@ -47,8 +47,6 @@ const Home: FC = () => {
     message: "",
     type: "",
   });
-  const [selectedOption2, setSelectedOption2] = useState<string>("2021");
-  const [isOpen2, setIsOpen2] = useState<boolean>(false);
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -77,22 +75,22 @@ const Home: FC = () => {
     fetchDropdownData();
   }, []);
 
-  const toggleDropdown2 = () => setIsOpen2(!isOpen2);
+  //year dropdown
+  const [selectedYearOption, setSelectedYearOption] = useState<string>("2021");
+  const [isYearOpen, setIsYearOpen] = useState<boolean>(false);
 
-  const handleSelect = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
-  };
-  const options2 = [
+  const Yearoptions = [
     { id: 1, name: "2024" },
     { id: 2, name: "2023" },
     { id: 3, name: "2022" },
     { id: 4, name: "2021" },
   ];
 
-  const handleSelect2 = (option: { id: number; name: string }) => {
-    setSelectedOption2(option.name);
-    setIsOpen2(false);
+  const toggleYearDropdown = () => setIsYearOpen(!isYearOpen);
+
+  const handleYearSelect = (option: { id: number; name: string }) => {
+    setSelectedYearOption(option.name);
+    setIsYearOpen(false);
   };
 
   const totalRevenue = tableData.reduce((sum, row) => sum + row.revenue, 0);
@@ -105,6 +103,7 @@ const Home: FC = () => {
   const router = useRouter();
 
   const [grossrevenue, setgrossrevenue] = useState(false);
+  
 
   useEffect(() => {
     // Ensure the back icon is hidden on the home page
@@ -119,7 +118,7 @@ const Home: FC = () => {
   /**second link(tender) */
 
   const handleClick2 = () => {
-    router.push("/setup/tenders"); // Navigates to the 'details' page
+    router.push("/setup/tenders?fromHome=true"); // Navigates to the 'details' page
   };
 
   //forth link(customer count)
@@ -131,26 +130,25 @@ const Home: FC = () => {
   //fifth link(customer count)
 
   const handleClick5 = () => {
-    localStorage.setItem("showBackIcon", "true");
-    router.push("/expenses");
+    router.push("/expenses?fromHome=true");
   };
 
   //sixth link(customer count)
 
   const handleClick6 = () => {
-    router.push("/invoices"); // Navigates to the 'details' page
+    router.push("/invoices?fromHome=true"); // Navigates to the 'details' page
   };
 
   //seventh link(customer count)//
 
   const handleClick7 = () => {
-    router.push("/expenses"); // Navigates to the 'details' page
+    router.push("/expenses?fromHome=true"); // Navigates to the 'details' page
   };
 
   //eighth link(customer count)
 
   const handleClick8 = () => {
-    router.push("/invoices"); // Navigates to the 'details' page
+    router.push("/invoices?fromHome=true"); // Navigates to the 'details' page
   };
 
   return (
@@ -186,11 +184,11 @@ const Home: FC = () => {
           {/* Second Dropdown */}
 
           <Dropdown
-            options={options2}
-            selectedOption={selectedOption2}
-            onSelect={handleSelect2}
-            isOpen={isOpen2}
-            toggleOpen={toggleDropdown2}
+            options={Yearoptions}
+            selectedOption={selectedYearOption}
+            onSelect={handleYearSelect}
+            isOpen={isYearOpen}
+            toggleOpen={toggleYearDropdown}
           />
         </div>
       </div>

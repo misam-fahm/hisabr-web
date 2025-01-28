@@ -299,11 +299,9 @@ const Sales: FC = () => {
     type: "",
   });
 
-  
-
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
-  }
+  };
 
   const handleError = (message: string) => {
     setCustomToast({
@@ -321,15 +319,12 @@ const Sales: FC = () => {
         handleError(response?.message);
       }
     } catch (error) {
-     console.error("Error fetching stores:", error);
+      console.error("Error fetching stores:", error);
     }
-  
   };
 
   useEffect(() => {
-   
-      fetchDropdownData();
-    
+    fetchDropdownData();
   }, []);
 
   const filteredData = data.filter((item) =>
@@ -363,29 +358,31 @@ const Sales: FC = () => {
           <div className="flex flex-row below-md:flex-col w-full  gap-3">
             {/* Dropdown Button */}
             <Dropdown
-                    options={store}
-                    selectedOption={ selectedOption?.name || "Store" } 
-                    onSelect={(selectedOption:any) => {
-                      setSelectedOption( {name : selectedOption.name , id: selectedOption.id}); 
-                      // setSelectedOption();
-                      setIsStoreDropdownOpen(false);  
-                    }}
-                    isOpen={isStoreDropdownOpen}
-                    toggleOpen={toggleStoreDropdown}
-                    widthchange="w-full"
-                   
-                  />
+              options={store}
+              selectedOption={selectedOption?.name || "Store"}
+              onSelect={(selectedOption: any) => {
+                setSelectedOption({
+                  name: selectedOption.name,
+                  id: selectedOption.id,
+                });
+                // setSelectedOption();
+                setIsStoreDropdownOpen(false);
+              }}
+              isOpen={isStoreDropdownOpen}
+              toggleOpen={toggleStoreDropdown}
+              widthchange="w-full"
+            />
             <div className="w-full tablet:w-full below-md:w-full">
               <DateRangePicker />
             </div>
-            <div className="flex flex-row gap-3 w-full">
+            <div className="flex flex-row gap-3 w-full ">
               <div className=" w-full rounded border border-gray-300 below-md:w-full bg-[#ffff] relative below-md:hidden tablet:w-full">
                 <input
                   type="search"
                   value={globalFilter ?? ""}
                   onChange={(e) => setGlobalFilter(e.target.value)}
                   placeholder="Search"
-                  className="w-full cursor-pointer py-[10px] pr-7 pl-3 h-[35px] text-[12px] placeholder:text-[#636363]  focus:outline-none "
+                  className="w-full rounded cursor-pointer py-[10px] pr-7 pl-3 h-[35px] text-[12px] placeholder:text-[#636363]  focus:outline-none "
                 />
                 <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
                   <img
@@ -395,11 +392,11 @@ const Sales: FC = () => {
                 </div>
               </div>
 
-              <div className="tablet:hidden below-md:w-full relative below-lg:hidden border border-gray-300">
+              <div className="tablet:hidden rounded below-md:w-full relative below-lg:hidden border border-gray-300">
                 <input
                   type="search"
                   placeholder="Search"
-                  className=" py-[10px] px-3 h-[35px] w-full shadow pr-7 pl-3 rounded text-[12px] placeholder:text-[#636363]  focus:outline-none focus:ring-1 focus:ring-[white]"
+                  className=" py-[10px] rounded px-3 h-[35px] w-full pr-7 pl-3 text-[12px] placeholder:text-[#636363]  focus:outline-none focus:ring-1 focus:ring-[white]"
                 />
                 <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
                   <img

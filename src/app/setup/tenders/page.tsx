@@ -1,6 +1,7 @@
 "use client";
 import React, { FC, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter , useSearchParams} from "next/navigation";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -26,6 +27,9 @@ interface TableRow {
 }
 
 const Page: FC = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [showBackIcon, setShowBackIcon] = useState(false);
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
@@ -135,15 +139,27 @@ const Page: FC = () => {
     fetchData();
   }, [pageIndex, pageSize, isOpenAddTender]);
 
-  /**go back button */
-  const router = useRouter();
-  const handleBack = () => {
-    router.push("/");
-  };
+  
 
   const handleAddTender = (newExpense: any) => {
     setData((prevExpenses) => [...prevExpenses, newExpense]);
   };
+
+   useEffect(() => {
+
+      if (typeof window !== "undefined") {
+        const fromHome = searchParams?.get("fromHome") === "true";
+  
+        if (fromHome) {
+          setShowBackIcon(true);
+          const currentUrl = window?.location?.pathname;
+          router?.replace(currentUrl); 
+        }
+      }
+    }, [searchParams, router]); 
+  
+
+
 
   return (
     <main
@@ -151,16 +167,15 @@ const Page: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="flex  justify-between my-6">
-        <div
-          className="flex items-start cursor-pointer below-md:hidden"
-          onClick={() => window.history.back()}
-        >
+        <div>
+        {showBackIcon && (
           <img
-            onClick={handleBack}
+            onClick={() => router.back()}
             src="/images/webbackicon.svg"
             alt="Back Arrow"
             className="w-7 h-7"
           />
+        )}
         </div>
         <div className="gap-2 below-md:hidden">
           {" "}

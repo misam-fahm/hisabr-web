@@ -316,7 +316,7 @@ const SalesKPI: FC = () => {
           onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
         >
           <img
-            src="/images/uploadIcon.svg"
+            src="/images/saleskpireport.svg"
             alt="Upload Icon"
             className="w-[18px]"
           />

@@ -5,11 +5,11 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
-
+import moment from "moment";
 // import Image from "next/image"
 import {
   useReactTable,
@@ -27,22 +27,20 @@ import UploadInvoicepopup from "@/Components/Invoice/UploadInvoicePopup";
 interface TableRow {
   invoicedate: string;
   storename: string;
-  sellername:string;
-  invoiceid:any;
+  sellername: string;
+  invoiceid: number;
   quantity: number;
-  duedate:string;
+  duedate: string;
   total: string;
   invoicenumber: string;
 }
 
-
-
-
-
 const Invoices = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [showBackIcon, setShowBackIcon] = useState(false);
   const [data, setData] = useState<TableRow[]>([]);
-  const [totalItems, setTotalItems] = useState<number>(0); 
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [globalFilter, setGlobalFilter] = React.useState("");
 
@@ -69,13 +67,10 @@ const Invoices = () => {
     {
       accessorKey: "quantity",
       header: () => <div className="text-right">Quantity</div>,
-      cell: (info) => { <span className="flex justify-end"> {info.getValue() as number} </span>
-       
-      },
-      size: 100, // Adjust the size as needed
+      cell: (info) =>
+        <span className="flex justify-end"> {info.getValue() as number}</span>,
+      size: 100,
     },
-    
-    
     {
       accessorKey: "total",
       header: () => <div className="text-right pr-8">Total</div>,
@@ -101,8 +96,8 @@ const Invoices = () => {
         onClick={() =>   navigateToInvoice(info.row.original.invoiceid)}
           className="text-green-500 hover:text-green-700 text-center ml-2"
         >
-          <img src="/images/vieweyeicon.svg" alt="View Icon" 
-          className=" w-4 h-4 below-md:h-5 below-md:w-5 "/>
+          <img src="/images/vieweyeicon.svg" alt="View Icon"
+            className=" w-4 h-4 below-md:h-5 below-md:w-5 " />
         </button>
       ),
       size: 30,
@@ -111,7 +106,7 @@ const Invoices = () => {
 
   const formattedData = data?.map((item) => {
     const rawDate = new Date(item?.invoicedate);
-  
+
     // Format the date as MM-DD-YY
     const formattedDate = `${(rawDate?.getMonth() + 1)
       .toString()
@@ -119,14 +114,14 @@ const Invoices = () => {
         2,
         "0"
       )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
-      .getFullYear()
-      .toString()
-      .slice(-2)}`;
-  
+        .getFullYear()
+        .toString()
+        .slice(-2)}`;
+
     return { ...item, date: formattedDate };
   });
 
-  
+
   const table = useReactTable({
     data: data,
     columns,
@@ -145,7 +140,7 @@ const Invoices = () => {
     manualPagination: true, // Enable manual pagination
     pageCount: Math.ceil(totalItems / 10),
   });
- 
+
   const { pageIndex, pageSize } = table.getState().pagination;
 
   useEffect(() => {
@@ -177,17 +172,71 @@ const Invoices = () => {
     };
 
     fetchData();
-  }, [pageIndex, pageSize ]);
+  }, [pageIndex, pageSize]);
 
   const fileInputRef: any = useRef(null);
   const handleButtonClick = () => {
     // Programmatically trigger the hidden file input
     fileInputRef.current.click();
   };
-  const handleFileChange = (event: any) => {
+  const handleFileChange = async (event: any) => {
     const file = event.target.files[0];
     if (file) {
       console.log("Selected file:", file.name);
+      if (file && file.type === "application/pdf") {
+        const formData = new FormData();
+        formData.append("file", file);
+        try {
+          const response = await fetch("https://hisabr-pdf-extractor.vercel.app/convert-pdf", {
+            method: "POST",
+            body: formData,
+          });
+
+          const responseData = await response.json();
+          console.log("Response:", responseData);
+          if (response.ok) {
+            const jsonData: any = {
+              mode: "insertinvoice",
+              invoicenumber: responseData?.invoice_details?.invoice_number,
+              invoicedate: moment(moment(responseData?.invoice_details?.invoice_date, 'MM/DD/YYYY').toDate()).format('YYYY-MM-DD'),
+              storename: "13246",
+              duedate: moment(moment(responseData?.invoice_details?.due_date, 'MM/DD/YYYY').toDate()).format('YYYY-MM-DD'),
+              total: responseData?.invoice_details?.invoice_total,
+              sellername: responseData?.invoice_details?.seller_name,
+              quantity: responseData?.invoice_details?.qty_ship_total,
+              producttotal: responseData?.invoice_details?.product_total,
+              subtotal: responseData?.invoice_details?.sub_total,
+              misc: responseData?.invoice_details?.misc,
+              tax: responseData?.invoice_details?.tax
+            };
+            const result: any = await sendApiRequest(jsonData);
+            if (result?.status === 200) {
+              const val: any = {
+                invoiceDetails: responseData?.invoice_items || [],
+              };
+              const res: any = await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
+            } else {
+              setTimeout(() => {
+                setCustomToast({
+                  message: "Failed to insert invoice details",
+                  type: "error",
+                });
+              }, 0);
+            }
+
+          } else {
+            alert("Failed to upload file.");
+          }
+        } catch (error) {
+          console.error("Error uploading file:", error);
+          alert("An error occurred.");
+        }
+      } else {
+        alert("Please upload a PDF file.");
+      }
+    } else {
+      alert("Please select a file.");
+      return;
     }
   };
   /**dropdown */
@@ -199,8 +248,6 @@ const Invoices = () => {
     message: "",
     type: "",
   });
-
-  
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -222,15 +269,11 @@ const Invoices = () => {
         handleError(response?.message);
       }
     } catch (error) {
-     console.error("Error fetching stores:", error);
+      console.error("Error fetching stores:", error);
     }
-  
   };
-
   useEffect(() => {
-   
-      fetchDropdownData();
-    
+    fetchDropdownData();
   }, []);
   // const calendarRef = useRef<DatePicker | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -255,10 +298,24 @@ const Invoices = () => {
   const handlePressEnd = () => {
     setShowTooltip(false);
   };
+  useEffect(() => {
+    // Ensure this code only runs on the client-side (after the page has mounted)
+    if (typeof window !== "undefined") {
+      const fromHome = searchParams?.get("fromHome") === "true";
 
-  const handleBack = () => {
-    router.push("/");
-  };
+      if (fromHome) {
+        setShowBackIcon(true);
+
+        // Remove "fromHome" from the URL (to avoid showing it on page reload)
+        const currentUrl = window.location.pathname;
+        router.replace(currentUrl); // Update the URL without the query parameter
+      }
+    }
+  }, [searchParams, router]); // Dependency on searchParams to check when they change
+
+  // const handleBack = () => {
+  //   router.push("/");
+  // };
 
 
   return (
@@ -267,28 +324,30 @@ const Invoices = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <div>
-        <img
-          onClick={handleBack}
-          alt="Back Arrow"
-          className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
-          src="/images/webbackicon.svg"
-        ></img>
+        {showBackIcon && (
+          <img
+            onClick={() => router.back()}
+            alt="Back Arrow"
+            className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
+            src="/images/webbackicon.svg"
+          ></img>
+        )}
       </div>
-      <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-4 mb-6">
+      <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
         <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
-        <Dropdown
-                    options={store}
-                    selectedOption={ selectedOption?.name || "Store" } 
-                    onSelect={(selectedOption:any) => {
-                      setSelectedOption( {name : selectedOption.name , id: selectedOption.id}); 
-                      // setSelectedOption();
-                      setIsStoreDropdownOpen(false);  
-                    }}
-                    isOpen={isStoreDropdownOpen}
-                    toggleOpen={toggleStoreDropdown}
-                    widthchange="w-full"
-                   
-                  />
+          <Dropdown
+            options={store}
+            selectedOption={selectedOption?.name || "Store"}
+            onSelect={(selectedOption: any) => {
+              setSelectedOption({ name: selectedOption.name, id: selectedOption.id });
+              // setSelectedOption();
+              setIsStoreDropdownOpen(false);
+            }}
+            isOpen={isStoreDropdownOpen}
+            toggleOpen={toggleStoreDropdown}
+            widthchange="w-full"
+
+          />
 
           <div className="below-lg:w-full tablet:w-full below-md:w-full">
             <DateRangePicker />
@@ -311,7 +370,7 @@ const Invoices = () => {
           </div>
         </div>
         <div className="pl-24 below-md:hidden">
-          {/* <button
+          <button
             className="w-[159px] h-[35px] bg-[#168A6F] hover:bg-[#11735C] text-white  gap-[0.25rem] font-medium  rounded-md text-[13px] flex items-center justify-center "
             onClick={handleButtonClick}
           >
@@ -323,8 +382,8 @@ const Invoices = () => {
             ref={fileInputRef}
             onChange={handleFileChange}
             className="hidden"
-          /> */}
-          <UploadInvoicepopup />
+          />
+          {/* <UploadInvoicepopup /> */}
         </div>
       </div>
       {/* Mobile View : Card section */}
@@ -393,9 +452,9 @@ const Invoices = () => {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </th>
                   ))}
                 </tr>
@@ -408,42 +467,42 @@ const Invoices = () => {
           >
             <table className="w-full border-collapse text-[12px] text-white table-fixed">
               <tbody>
-              {loading ? (
-                    Array.from({ length: 10 })?.map((_, index) => (
-                      <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
-                        {columns.map((column, colIndex) => (
-                          <td
-                            key={colIndex}
-                            className="px-4 py-1.5"
-                            style={{ width: `${column.size}px` }}
-                          >
-                            <Skeleton height={30} />
-                          </td>
-                        ))}
-                      </tr>
-                    ))
-                  ) :
-                 table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={
-                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                    }
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="px-4 py-1.5 text-[#636363] text-[14px]"
-                        style={{ width: `${cell.column.getSize()}px` }}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+                {loading ? (
+                  Array.from({ length: 10 })?.map((_, index) => (
+                    <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+                      {columns.map((column, colIndex) => (
+                        <td
+                          key={colIndex}
+                          className="px-4 py-1.5"
+                          style={{ width: `${column.size}px` }}
+                        >
+                          <Skeleton height={30} />
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                ) :
+                  table.getRowModel().rows.map((row) => (
+                    <tr
+                      key={row.id}
+                      className={
+                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                      }
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          key={cell.id}
+                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          style={{ width: `${cell.column.getSize()}px` }}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
