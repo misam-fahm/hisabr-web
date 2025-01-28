@@ -190,7 +190,6 @@ const InvoiceDetails = () => {
                 <th className="py-2 w-[100px] text-start whitespace-nowrap font-normal">Invt Value</th>
                 <th className="py-2 w-[100px] text-start    whitespace-nowrap font-normal">Unit Price</th>
                 <th className="py-2 w-[100px] text-end px-4  font-normal">Tax</th>
-                <th className="py-2 w-[100px] text-end  font-normal">Ext Price</th>
                 <th className="py-2 w-[100px] text-end px-4  font-normal">Total</th>
                
               </tr>
@@ -213,7 +212,6 @@ const InvoiceDetails = () => {
                     <td className="py-1.5 w-[100px] text-end  px-4  text-[#030202]">{row?.unitprice}</td>
                     <td className="py-1.5 w-[100px] text-end px-4   text-[#636363]">{row?.tax}</td>
                     <td className="py-1.5 w-[100px] text-end px-4   text-[#636363]">{row?.extendedprice}</td>
-                    <td className="py-1.5 w-[100px] text-start  px-4  text-[#636363]">{row?.total}</td>
                   </tr>
                 ))}
               </tbody>
