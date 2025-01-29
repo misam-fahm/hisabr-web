@@ -193,7 +193,7 @@ const Page: FC = () => {
                 <span className="font-bold text-[14px] text-[#334155]">
                   {row?.itemname}
                 </span>
-                <div className="flex items-center">
+                <div className="flex items-center gap-4">
                   <>
                     <EditItem rowData={row} setAddItems={setAddItems} />
                   </>
