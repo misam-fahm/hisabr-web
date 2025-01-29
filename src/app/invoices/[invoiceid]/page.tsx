@@ -121,18 +121,18 @@ const InvoiceDetails = () => {
   console.log("decodedInvoiceId",decodedInvoiceId)
   return (
     <main
-      className="max-h-[calc(100vh-80px)] w-full overflow-auto px-4 below-md:px-3"
+      className="max-h-[calc(100vh-80px)] overflow-auto px-6 below-md:px-3"
       style={{ scrollbarWidth: "thin" }}
     >
       <div className='block below-md:hidden'>
-        <div className='flex items-start pt-4 cursor-pointer' onClick={() => window.history.back()}>
+        <div className='flex items-start my-4 cursor-pointer' onClick={() => window.history.back()}>
           <img src='/images/webbackicon.svg' alt='Back Arrow' className='w-7 h-7' />
         </div>
       </div>
-      <div className="flex gap-6 pt-4 pb-4 w-full below-md:flex below-md:flex-col below-md:gap-3">
+      <div className="flex gap-6  w-[70%] below-md:w-[100%] below-md:flex below-md:flex-col below-md:gap-4 mt-6 mb-6 below-md:mt-4 below-md:mb-4">
 
         {/* Left Panel - Invoice Details */}
-        <div className="space-y-2 shadow border bg-[#FFFFFF] rounded-lg w-full max-w-[299px] below-md:w-full p-4  items-start ">
+        <div className="space-y-2 shadow border bg-[#FFFFFF] rounded-lg w-full  below-md:w-full p-4  items-start ">
           <div className="flex  justify-between ">
             <p className="text-[#636363] text-[12px]">Date</p>
             <p className="text-[#636363] text-[13px] font-semibold">{data?.invoicedate}</p>
@@ -152,7 +152,7 @@ const InvoiceDetails = () => {
         </div>
         <div className='flex justify-between w-full'>
           {/* Right Panel - Totals */}
-          <div className="shadow border rounded-lg w-full max-w-[369px] bg-[#FFFFFF] below-md:w-full p-4 flex flex-col gap-2">
+          <div className="shadow border rounded-lg w-full  bg-[#FFFFFF] below-md:w-full p-4 flex flex-col gap-2">
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Product Total</span>
               <span className="text-[#636363] text-[13px] font-semibold">${data?.producttotal}</span>
@@ -215,7 +215,7 @@ const InvoiceDetails = () => {
                     <td className="py-1.5 w-[100px] text-start px-4   text-[#636363] ">{row?.unit}</td>
                     <td className="py-1.5 w-[100px] text-end px-4    text-[#636363]">{row?.packsize}</td>
                     <td className="py-1.5 w-[100px] text-end px-4   text-[#636363]">{row?.invtvalue}</td>
-                    <td className="py-1.5 w-[100px] text-end  px-4  text-[#030202]">{row?.unitprice}</td>
+                    <td className="py-1.5 w-[100px] text-end  px-4  text-[#636363]">{row?.unitprice}</td>
                     <td className="py-1.5 w-[100px] text-end px-4   text-[#636363]">{row?.tax}</td>
                     <td className="py-1.5 w-[100px] text-end px-4   text-[#636363]">{row?.extendedprice}</td>
                   </tr>
