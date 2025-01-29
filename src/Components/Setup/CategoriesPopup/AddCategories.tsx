@@ -202,7 +202,7 @@ const AddCategories = ({ setAddCategories }:any) => {
             <div className="mt-4">
               <FormProvider {...methods}>
                 <form onSubmit={methods.handleSubmit(onSubmit)}>
-                  <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-5">
                     {/* Category Name Input */}
                     <InputField
                       type="text"
