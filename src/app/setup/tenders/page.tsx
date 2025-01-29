@@ -169,7 +169,7 @@ const Page: FC = () => {
       className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-4 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className="flex  justify-between my-6">
+      <div className="flex below-md:hidden justify-between my-6">
         <div>
         {showBackIcon && (
           <img
