@@ -24,7 +24,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
                         i?.category,
                         i?.qty_ship,
                         i?.unit,
-                        i?.pack,
+                        i?.pack_size,
                         i?.invent_value,
                         i?.unit_price,
                         i?.tax,
