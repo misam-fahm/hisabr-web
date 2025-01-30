@@ -100,7 +100,8 @@ const Dropdown = ({
                 // onClick={() => onSelect(option)}
                 className="cursor-pointer px-4 py-2 hover:bg-gray-100 border-b last:border-none"
               >
-                {option?.name}
+                {option?.name?.length > 38 ? option.name.slice(0, 38) + "..." : option.name}
+
               </div>
             ))}
         </div>

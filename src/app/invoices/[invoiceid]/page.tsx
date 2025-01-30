@@ -69,12 +69,11 @@ const InvoiceDetails = () => {
       className="max-h-[calc(100vh-80px)] overflow-auto px-6 below-md:px-3"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className='block below-md:hidden'>
-        <div className='flex items-start my-4 cursor-pointer' onClick={() => window.history.back()}>
+      <div className='flex w-full items-star'>
+        <div className='w-[14%] below-md:hidden items-start my-4 cursor-pointer' onClick={() => window.history.back()}>
           <img src='/images/webbackicon.svg' alt='Back Arrow' className='w-7 h-7' />
         </div>
-      </div>
-      <div className="flex gap-6  w-[70%] below-md:w-[100%] below-md:flex below-md:flex-col below-md:gap-4 mt-6 mb-6 below-md:mt-4 below-md:mb-4">
+        <div className="flex justify-center gap-6  w-[70%] below-md:w-[100%] below-md:flex below-md:flex-col below-md:gap-4 mt-6 mb-6 below-md:mt-4 below-md:mb-4">
 
         {/* Left Panel - Invoice Details */}
         <div className="space-y-2 shadow border bg-[#FFFFFF] rounded-lg w-full  below-md:w-full p-4  items-start ">
@@ -125,6 +124,8 @@ const InvoiceDetails = () => {
           </div>
         </div>
       </div>
+      </div>
+      
       {/*table content*/}
       <div className=' shadow-sm  border border-b border-[#E4E4EF] block below-md:hidden rounded-md '>
         <div className='overflow-x-auto  rounded-md'>
