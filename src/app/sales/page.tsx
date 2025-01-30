@@ -16,6 +16,7 @@ import {
 } from "@tanstack/react-table";
 import { sendApiRequest } from "@/utils/apiUtils";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import moment from "moment";
 
 interface TableRow {
   date: string;
@@ -262,10 +263,96 @@ const Sales: FC = () => {
     },
   ];
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
-      console.log("Selected file:", file);
+      if (file && file.type === "application/pdf") {
+        const formData = new FormData();
+        formData.append("file", file);
+        try {
+          const response = await fetch("https://hisabr-pdf-extractor.vercel.app/process-sales", {
+            method: "POST",
+            body: formData,
+          });
+
+          const responseData = await response.json();
+          console.log("Response:", responseData);
+          if (response.ok) {
+            const convertDate = new Date(responseData?.sales_date);
+            const formattedDate = convertDate?.getFullYear() + '-' +
+                      (convertDate?.getMonth() + 1)?.toString()?.padStart(2, '0') + '-' +
+                      convertDate?.getDate()?.toString()?.padStart(2, '0');
+            const jsonData: any = {
+              mode: "insertsales",
+			        sales_date: formattedDate,
+			        store_name: responseData?.store_name,
+              gross_sales_amt: responseData?.gross_sales,
+              net_sales_amt: responseData?.net_sales,
+              total_sales_count: responseData?.total_no_sales_count,
+              total_item_sales_amt: responseData?.total_item_sales,
+              taxable_item_sales_amt: responseData?.taxable_item_sales,
+              non_taxable_item_sales_amt: responseData?.non_taxable_item_sales,
+              orders_count: responseData?.order_count,
+              order_average_amt: responseData?.order_average,
+              guests_count: responseData?.guest_count,
+              tax_amt: responseData?.tax_amt,
+              surcharges_amt: responseData?.surcharges,
+              deposits_accepted_amt: responseData?.deposits_accepted_amount,
+              deposits_redeemed_amt: responseData?.deposits_redeemed_amount,
+              cash_deposits_accepted_amt: responseData?.cash_deposits_accepted,
+              non_cash_payments_amt: responseData?.non_cash_payments,
+              cash_tips_received_amt: responseData?.cash_tips_received,
+              total_cash_amt: responseData?.total_cash_amount,
+              cash_back_amt: responseData?.cash_back_amount,
+              paid_in_amt: responseData?.paid_in,
+              paid_out_amt: responseData?.paid_out,
+              discounts_amt: responseData?.discounts,
+              promotions_amt: responseData?.promotions,
+              refunds_amt: responseData?.refunds,
+              labor_cost_amt: responseData?.labor_cost,
+              labor_hours: responseData?.labor_hours,
+              labor_percent: responseData?.labor_percent,
+              sales_per_labor_hour_amt: responseData?.sales_per_labor_hour,
+              gift_card_issue_count: responseData?.gift_card_issue_count,
+              gift_card_issue_amt: responseData?.gift_card_issue_amount,
+              gift_card_reload_count: responseData?.gift_card_reload_count,
+              gift_card_reload_amt: responseData?.gift_card_reload_amount,
+              gift_card_promotions_amt: responseData?.gift_card_promotions,
+              gift_card_cash_out_count: responseData?.gift_card_cash_out_count,
+              gift_card_cash_out_amt: responseData?.gift_card_cash_out_amount,
+              voids_amt: responseData?.voids,
+              non_revenue_items_amt: responseData?.non_revenue_items,
+              donation_count: responseData?.donation_count,
+              donation_total_amt: responseData?.donation_total_amount
+            };
+            const result: any = await sendApiRequest(jsonData);
+            if (result?.status === 200) {
+              // const val: any = {
+              //   invoiceDetails: responseData?.invoice_items || [],
+              // };
+              // const res: any = await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
+            } else {
+              setTimeout(() => {
+                setCustomToast({
+                  message: "Failed to insert invoice details",
+                  type: "error",
+                });
+              }, 0);
+            }
+
+          } else {
+            alert("Failed to upload file.");
+          }
+        } catch (error) {
+          console.error("Error uploading file:", error);
+          alert("An error occurred.");
+        }
+      } else {
+        alert("Please upload a PDF file.");
+      }
+    } else {
+      alert("Please select a file.");
+      return;
     }
   };
 

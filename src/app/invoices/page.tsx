@@ -186,7 +186,7 @@ const Invoices = () => {
         const formData = new FormData();
         formData.append("file", file);
         try {
-          const response = await fetch("https://hisabr-pdf-extractor.vercel.app/convert-pdf", {
+          const response = await fetch("https://hisabr-pdf-extractor.vercel.app/process-invoice", {
             method: "POST",
             body: formData,
           });
