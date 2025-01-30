@@ -41,10 +41,10 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
 
   return totalItems > 0 ? (
     <main>
-      <div className="mt-4 flex gap-2 justify-between items-center below-md:hidden">
+      <div className="mt-4 relative flex below-md:flex-col gap-2 justify-between items-center ">
         {/* Page Range Display */}
         <div>
-          <span className="text-[#8899A8] text-[12px] font-medium ml-3">
+          <span className="text-[#8899A8] text-[12px] font-medium ml-3 below-md:ml-0">
             {startItem} - {endItem} of {totalItems}
           </span>
         </div>
@@ -95,10 +95,10 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
 
           {/* Dropdown for Page Selection */}
           <div>
-            <div className="w-full relative" ref={dropdownRef}>
+            <div className="w-full  relative" ref={dropdownRef}>
               <button
                 onClick={toggleDropdown}
-                className="pl-2 pr-2 py-[6px] w-full rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381] flex items-center justify-between gap-9"
+                className="pl-2 pr-2 py-[6px] w-full below-md:w-[90px] rounded-md text-[12px] border-2 bg-[#f7f8f9] cursor-pointer border-[#D8D8DB6E] text-[#637381] flex items-center justify-between gap-9 below-md:gap-0"
               >
                 <span className="mr-2">Page {pageIndex + 1}</span>
                 <svg
@@ -119,7 +119,7 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
               </button>
               {isDropdownOpen && (
                 <ul
-                  className={`absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-40 scrollbar-thin overflow-y-auto ${isDropdownOpen ? "bottom-full mb-2" : "top-full mt-2"
+                  className={`absolute z-10 w-full  bg-white border border-gray-300 rounded-md shadow-lg max-h-40 scrollbar-thin overflow-y-auto ${isDropdownOpen ? "bottom-full mb-2" : "top-full mt-2"
                     }`}
                 >
                   {Array.from({ length: pageCount }, (_, index) => (

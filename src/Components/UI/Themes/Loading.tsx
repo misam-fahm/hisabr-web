@@ -1,13 +1,10 @@
+
 import React from 'react';
 
-const Loading = ({ numberOfColumns }) => {
+const Loading = () => {
   return (
-    <tr>
-      <td colSpan={numberOfColumns} style={{ 
-            textAlign: 'center', 
-            verticalAlign: 'middle', 
-            padding: '20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+ <main className=' w-full  absolute inset-0 z-30 backdrop-blur-sm flex justify-center'>
+        <div className='flex justify-center absolute    top-[40%]  left-[45%]'>
         <img
           src="/images/CircleLoader.gif" // URL for loading gif (you can replace it with your own gif URL)
           alt="Loading..."
@@ -15,8 +12,7 @@ const Loading = ({ numberOfColumns }) => {
         />
         {/* <span>Loading...</span> */}
         </div>
-      </td>
-    </tr>
+        </main>
   );
 };
 
