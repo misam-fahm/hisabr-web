@@ -157,7 +157,7 @@ const SalesKPI: FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Customer Count
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">161,358</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 40%{" "}
                 <span className="text-[#575F6D] font-normal">

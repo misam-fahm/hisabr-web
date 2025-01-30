@@ -434,8 +434,9 @@ const Invoices = () => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search)
       const fromHome = params.get("fromHome") === "true";
+      const fromItemsAnalysis = params.has("fromItemsAnalysis");
 
-      if (fromHome) {
+      if (fromHome || fromItemsAnalysis) {
         setShowBackIcon(true);
 
         // Remove "fromHome" from the URL (to avoid showing it on page reload)

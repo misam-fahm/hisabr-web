@@ -22,10 +22,10 @@ const InvoiceDetails = () => {
 
 
 
-  const {invoiceid}:any = useParams(); // Extract the encoded ID from the URL
+  const { invoiceid }: any = useParams(); // Extract the encoded ID from the URL
   const decodedInvoiceId = atob(invoiceid);
   const [data, setData] = useState<any>([]);
-  const [totalItems, setTotalItems] = useState<number>(0); 
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
@@ -36,7 +36,7 @@ const InvoiceDetails = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-       
+
 
         const response: any = await sendApiRequest({
           mode: "getinvoicedetails",
@@ -69,62 +69,63 @@ const InvoiceDetails = () => {
       className="max-h-[calc(100vh-80px)] overflow-auto px-6 below-md:px-3"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className='block below-md:hidden'>
-        <div className='flex items-start my-4 cursor-pointer' onClick={() => window.history.back()}>
+      <div className='flex w-full items-start mt-6 mb-6 below-md:mt-4 below-md:mb-4'>
+        <div className='w-[14%] below-md:hidden items-start  cursor-pointer' onClick={() => window.history.back()}>
           <img src='/images/webbackicon.svg' alt='Back Arrow' className='w-7 h-7' />
         </div>
-      </div>
-      <div className="flex gap-6  w-[70%] below-md:w-[100%] below-md:flex below-md:flex-col below-md:gap-4 mt-6 mb-6 below-md:mt-4 below-md:mb-4">
+        <div className="flex justify-center gap-6  w-[70%] below-md:w-[100%] below-md:flex below-md:flex-col below-md:gap-4">
 
-        {/* Left Panel - Invoice Details */}
-        <div className="space-y-2 shadow border bg-[#FFFFFF] rounded-lg w-full  below-md:w-full p-4  items-start ">
-          <div className="flex  justify-between ">
-            <p className="text-[#636363] text-[12px]">Date</p>
-            <p className="text-[#636363] text-[13px] font-semibold">{data?.invoicedate}</p>
-          </div>
-          <div className="flex  justify-between pt-2">
-            <span className="text-[#636363] text-[12px]">Invoice Number</span>
-            <span className="text-[#636363] text-[13px] font-semibold">{data?.invoicenumber}</span>
-          </div>
-          <div className="flex   justify-between pt-2">
-            <span className="text-[#636363] text-[12px]">Store Name</span>
-            <span className="text-[#636363]  text-[13px] font-semibold">{data?.storename}</span>
-          </div>
-          <div className="flex   justify-between pt-2">
-            <span className="text-[12px] text-[#636363]">Due Date</span>
-            <span className="text-[13px] text-[#636363] font-semibold">{data?.duedate}</span>
-          </div>
-        </div>
-        <div className='flex justify-between w-full'>
-          {/* Right Panel - Totals */}
-          <div className="shadow border rounded-lg w-full  bg-[#FFFFFF] below-md:w-full p-4 flex flex-col gap-2">
-            <div className="flex justify-between">
-              <span className="text-[#636363] text-[12px]">Product Total</span>
-              <span className="text-[#636363] text-[13px] font-semibold">${data?.producttotal}</span>
+          {/* Left Panel - Invoice Details */}
+          <div className="space-y-2 shadow border bg-[#FFFFFF] rounded-lg w-full  below-md:w-full p-4  items-start ">
+            <div className="flex  justify-between ">
+              <p className="text-[#636363] text-[12px]">Date</p>
+              <p className="text-[#636363] text-[13px] font-semibold">{data?.invoicedate}</p>
             </div>
-            <div className="flex justify-between">
-              <span className="text-[#636363] text-[12px]">Sub Total</span>
-              <span className="text-[#636363] text-[13px] font-semibold">${data?.subtotal}</span>
+            <div className="flex  justify-between pt-2">
+              <span className="text-[#636363] text-[12px]">Invoice Number</span>
+              <span className="text-[#636363] text-[13px] font-semibold">{data?.invoicenumber}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-[#636363] text-[12px]">Total Tax </span>
-              <span className="text-[#636363] text-[13px] font-semibold">${data?.tax}</span>
+            <div className="flex   justify-between pt-2">
+              <span className="text-[#636363] text-[12px]">Store Name</span>
+              <span className="text-[#636363]  text-[13px] font-semibold">{data?.storename}</span>
             </div>
-            {/* <div className="flex justify-between">
+            <div className="flex   justify-between pt-2">
+              <span className="text-[12px] text-[#636363]">Due Date</span>
+              <span className="text-[13px] text-[#636363] font-semibold">{data?.duedate}</span>
+            </div>
+          </div>
+          <div className='flex justify-between w-full'>
+            {/* Right Panel - Totals */}
+            <div className="shadow border rounded-lg w-full  bg-[#FFFFFF] below-md:w-full p-4 flex flex-col gap-2">
+              <div className="flex justify-between">
+                <span className="text-[#636363] text-[12px]">Product Total</span>
+                <span className="text-[#636363] text-[13px] font-semibold">${data?.producttotal}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#636363] text-[12px]">Sub Total</span>
+                <span className="text-[#636363] text-[13px] font-semibold">${data?.subtotal}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#636363] text-[12px]">Total Tax </span>
+                <span className="text-[#636363] text-[13px] font-semibold">${data?.tax}</span>
+              </div>
+              {/* <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Tax 2</span>
               <span className="text-[#636363] text-[13px] font-semibold"></span>
             </div> */}
-            <div className="flex justify-between">
-              <span className="text-[#636363] text-[12px]">Miscellaneous</span>
-              <span className="text-[#636363] text-[13px] font-semibold">${data?.misc}</span>
-            </div>
-            <div className="flex justify-between border-t pt-2">
-              <span className="text-[#636363] text-[12px] font-semibold">Total</span>
-              <span className="text-[#636363] text-[12px] font-semibold">${data?.total}</span>
+              <div className="flex justify-between">
+                <span className="text-[#636363] text-[12px]">Miscellaneous</span>
+                <span className="text-[#636363] text-[13px] font-semibold">${data?.misc}</span>
+              </div>
+              <div className="flex justify-between border-t pt-2">
+                <span className="text-[#636363] text-[12px] font-semibold">Total</span>
+                <span className="text-[#636363] text-[12px] font-semibold">${data?.total}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
       {/*table content*/}
       <div className=' shadow-sm  border border-b border-[#E4E4EF] block below-md:hidden rounded-md '>
         <div className='overflow-x-auto  rounded-md'>
@@ -142,11 +143,11 @@ const InvoiceDetails = () => {
                 <th className="py-2 w-[100px] text-start    whitespace-nowrap font-normal">Unit Price</th>
                 <th className="py-2 w-[100px] text-end px-4  font-normal">Tax</th>
                 <th className="py-2 w-[100px] text-end px-4  font-normal">Total</th>
-               
+
               </tr>
             </thead>
           </table>
-          <div className='max-h-[calc(100vh-370px)] overflow-x-auto overflow-y-auto' style={{ scrollbarWidth: "thin" }}>
+          <div className='max-h-[calc(100vh-340px)] overflow-x-auto overflow-y-auto' style={{ scrollbarWidth: "thin" }}>
             <table className='w-full  text-[14px] table-auto shadow rounded-md'>
               <tbody>
                 {data?.invoicedetail?.map((row: any, index: any) => (
@@ -182,7 +183,7 @@ const InvoiceDetails = () => {
                   <span className="text-black text-[14px] font-bold">{items?.itemCode}</span>
                   <span className="text-black text-[16px] font-bold">{items?.description}</span>
                 </div>
-                <hr className='w-full h-[1px] my-2' color='lightgrey'/>
+                <hr className='w-full h-[1px] my-2' color='lightgrey' />
                 <div className="flex justify-between">
                   <span className="text-[#636363] text-[12px]">Brand</span>
                   <span className="text-[#636363] text-[14px]">{items?.brand}</span>
