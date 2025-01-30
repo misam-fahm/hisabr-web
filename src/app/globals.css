@@ -150,11 +150,9 @@ body {
 
 /* styles.css or globals.css for DatePicker*/
 .react-datepicker__day--disabled {
-  pointer-events: none;
-  cursor: not-allowed;
-  color: #d3d3d3 !important; /* Light gray for disabled dates */
+  cursor: not-allowed !important;
 }
 
 .react-datepicker__day--disabled:hover {
-  background-color: transparent; /* Prevent hover effect */
+  background-color: transparent !important;
 }
