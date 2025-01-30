@@ -147,7 +147,7 @@ const InvoiceDetails = () => {
               </tr>
             </thead>
           </table>
-          <div className='max-h-[calc(100vh-338px)] overflow-x-auto overflow-y-auto' style={{ scrollbarWidth: "thin" }}>
+          <div className='max-h-[calc(100vh-340px)] overflow-x-auto overflow-y-auto' style={{ scrollbarWidth: "thin" }}>
             <table className='w-full  text-[14px] table-auto shadow rounded-md'>
               <tbody>
                 {data?.invoicedetail?.map((row: any, index: any) => (
