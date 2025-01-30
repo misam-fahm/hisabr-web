@@ -280,13 +280,6 @@ const formattedData = data?.map((item) => {
     fetchData();
   }, [pageIndex, pageSize]);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      console.log("Selected file:", file);
-    }
-  };
-
   const handleUploadClick = () => {
     document.getElementById("fileInput")?.click(); // Programmatically click the hidden input
   };
