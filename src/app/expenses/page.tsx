@@ -258,20 +258,11 @@ const Expenses: FC = () => {
     if (typeof window !== undefined){
       const params = new URLSearchParams(window.location.search)
       const fromHome = params.get("fromHome") === "true";
-      if (fromHome) {
+      const fromLabourAnalysis = params.has("fromLabourAnalysis");
+      if (fromHome || fromLabourAnalysis) {
         setShowBackIcon(true);
-
-      // Remove "fromHome" from the URL to avoid showing it on page reload
       const currentUrl = window.location.pathname;
-      // // Create a new URLSearchParams object and remove 'fromHome'
-      // const newSearchParams = new URLSearchParams(searchParams);
-      // newSearchParams.delete("fromHome");
-      // const newUrl = `${currentUrl}?${newSearchParams.toString()}`;
-      // //router.replace(currentUrl);
       window.history.replaceState({},"",currentUrl)
-
-      //router.replace(newUrl);
-
     }
   }
   }, []);

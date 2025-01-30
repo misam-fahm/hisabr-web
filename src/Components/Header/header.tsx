@@ -46,13 +46,31 @@ const Header: React.FC = () => {
           newTitle = "Sales/ Sales Details";
           break;
         case "invoices":
-          newTitle = "Invoices";
+          if (typeof window !== "undefined") {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("fromItemsAnalysis") === "true") {
+              newTitle = "Items Analysis";
+            } else if (params.get("fromHome") === "true") {
+              newTitle = "Cost Analysis";
+            } else {
+              newTitle = "Invoices";
+            }
+          }
           break;
         case `invoices/${invoiceid}` :
           newTitle = "Invoices/Invoice Details";
           break;
         case "expenses":
-          newTitle = "Expenses";
+          if (typeof window !== "undefined") { 
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("fromLabourAnalysis") === "true") {
+              newTitle = "Labour Analysis"; 
+            } else if (params.get("fromHome") === "true") {
+              newTitle = "Operating Expense Analysis";
+            } else {
+              newTitle = "Expenses"; 
+            }
+          }
           break;
         case "setup/categories":
           newTitle = "Categories";
@@ -61,7 +79,10 @@ const Header: React.FC = () => {
           newTitle = "Items";
           break;
         case "setup/tenders":
-          newTitle = "Tenders";
+          if (typeof window !== "undefined") { 
+            const params = new URLSearchParams(window.location.search);
+            newTitle = params.get("fromHome") === "true" ? "Tenders Analysis" : "Tenders";
+          }
           break;
         case "setup/stores":
           newTitle = "Stores";
@@ -69,13 +90,10 @@ const Header: React.FC = () => {
         case "setup/configuration":
           newTitle = "Configuration";
           break;
-        case "details1":
+        case "grossrevenue":
           newTitle = "Gross Revenue Analysis";
           break;
-        case "details2":
-          newTitle = " Tender Analysis";
-          break;
-        case "details4":
+        case "customercount":
           newTitle = "Customer Count Analysis";
           break;
         case "details5":
