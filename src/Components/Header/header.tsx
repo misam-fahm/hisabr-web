@@ -63,46 +63,53 @@ const Header: React.FC = () => {
             newTitle = "Sales/ Sales Details";
             break;
           case "invoices":
-            newTitle = "Invoices";
-            break;
+          if (typeof window !== "undefined") {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("fromItemsAnalysis") === "true") {
+              newTitle = "Items Analysis";
+            } else if (params.get("fromHome") === "true") {
+              newTitle = "Cost Analysis";
+            } else {
+              newTitle = "Invoices";
+            }
+          }
+          break;
           case "expenses":
-            newTitle = "Expenses";
+            if (typeof window !== "undefined") { 
+              const params = new URLSearchParams(window.location.search);
+              if (params.get("fromLabourAnalysis") === "true") {
+                newTitle = "Labour Analysis"; 
+              } else if (params.get("fromHome") === "true") {
+                newTitle = "Operating Expense Analysis";
+              } else {
+                newTitle = "Expenses"; 
+              }
+            }
             break;
+  
           case "setup/categories":
             newTitle = "Categories";
             break;
           case "setup/items":
             newTitle = "Items";
             break;
-          case "setup/tenders":
-            newTitle = "Tenders";
-            break;
+            case "setup/tenders":
+              if (typeof window !== "undefined") { 
+                const params = new URLSearchParams(window.location.search);
+                newTitle = params.get("fromHome") === "true" ? "Tenders Analysis" : "Tenders";
+              }
+              break;
           case "setup/stores":
             newTitle = "Stores";
             break;
           case "setup/configuration":
             newTitle = "Configuration";
             break;
-          case "details1":
+          case "grossrevenue":
             newTitle = "Gross Revenue Analysis";
             break;
-          case "details2":
-            newTitle = "Tender Analysis";
-            break;
-          case "details4":
+          case "customercount":
             newTitle = "Customer Count Analysis";
-            break;
-          case "details5":
-            newTitle = "Operating Expense Analysis";
-            break;
-          case "details6":
-            newTitle = "Cost Analysis";
-            break;
-          case "details7":
-            newTitle = "Labor Analysis";
-            break;
-          case "details8":
-            newTitle = "Items Analysis";
             break;
           case "logout":
             newTitle = "Logout";

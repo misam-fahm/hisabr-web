@@ -45,7 +45,7 @@ const Page: FC = () => {
         const storeName = info.row.original.storename as string;
         return (
           <span>
-            {storeName.length > 23 ? storeName.substring(0, 20) + "..." : storeName}
+            {storeName?.length > 23 ? storeName.substring(0, 20) + "..." : storeName}
           </span>
         );
       },
@@ -77,7 +77,7 @@ const Page: FC = () => {
         const location = info.row.original.location as string;
         return (
           <div>
-            {location.length > 23 ? location.substring(0, 20) + "..." : location}
+            {location?.length > 23 ? location.substring(0, 20) + "..." : location}
           </div>
         );
       },
@@ -91,7 +91,7 @@ const Page: FC = () => {
         const owner = info.row.original.owner as string;
         return (
           <div>
-            {owner.length > 23 ? owner.substring(0, 20) + "..." : owner}
+            {owner?.length > 23 ? owner.substring(0, 20) + "..." : owner}
           </div>
         );
       },
