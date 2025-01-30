@@ -142,13 +142,13 @@ const Home: FC = () => {
   //seventh link(customer count)//
 
   const handleClick7 = () => {
-    router.push("/expenses?fromHome=true"); // Navigates to the 'details' page
+    router.push("/expenses?fromLabourAnalysis=true"); // Navigates to the 'details' page
   };
 
   //eighth link(customer count)
 
   const handleClick8 = () => {
-    router.push("/invoices?fromHome=true"); // Navigates to the 'details' page
+    router.push("/invoices?fromItemsAnalysis=true"); // Navigates to the 'details' page
   };
 
   return (
