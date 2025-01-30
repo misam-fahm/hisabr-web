@@ -95,7 +95,7 @@ const LineChart: FC = () => {
 
   const options: ChartOptions<"line"> = {
     responsive: true,
-    //maintainAspectRatio: false, // Allow the chart to resize dynamically
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "bottom" as const,
@@ -158,8 +158,8 @@ const LineChart: FC = () => {
   }
 
   return (
-    <div className="p-[8px] w-full h-full">
-      <Line data={data} options={options} />
+    <div className="p-[8px] h-[300px]">
+      <Line data={data}  options={options} />
     </div>
   );
 };

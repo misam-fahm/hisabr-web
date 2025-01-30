@@ -41,9 +41,17 @@ const Page: FC = () => {
     {
       accessorKey: "store",
       header: () => <div className="text-left">Store</div>,
-      cell: (info) => <span>{info.row.original.storename}</span>,
+      cell: (info) => {
+        const storeName = info.row.original.storename as string;
+        return (
+          <span>
+            {storeName.length > 23 ? storeName.substring(0, 20) + "..." : storeName}
+          </span>
+        );
+      },
       size: 100,
     },
+    
     {
       accessorKey: "date",
       header: () => <div className="text-left">Date</div>,
@@ -65,15 +73,31 @@ const Page: FC = () => {
     {
       accessorKey: "location",
       header: () => <div className="text-left">Location</div>,
-      cell: (info) => <div>{info.row.original.location}</div>,
+      cell: (info) => {
+        const location = info.row.original.location as string;
+        return (
+          <div>
+            {location.length > 23 ? location.substring(0, 20) + "..." : location}
+          </div>
+        );
+      },
       size: 120,
     },
+    
     {
       accessorKey: "user",
-      header: () => <div className="text-left ">Owner</div>,
-      cell: (info) => <div>{info.row.original.owner}</div>,
+      header: () => <div className="text-left">Owner</div>,
+      cell: (info) => {
+        const owner = info.row.original.owner as string;
+        return (
+          <div>
+            {owner.length > 23 ? owner.substring(0, 20) + "..." : owner}
+          </div>
+        );
+      },
       size: 100,
     },
+    
     {
       accessorKey: "county",
       header: () => <div className="text-right ">County</div>,

@@ -37,7 +37,6 @@ interface TableRow {
 
 const Invoices = () => {
   const router = useRouter();
-  //const searchParams = useSearchParams();
   const [showBackIcon, setShowBackIcon] = useState(false);
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
