@@ -206,7 +206,7 @@ const Invoices = () => {
               producttotal: responseData?.invoice_details?.product_total,
               subtotal: responseData?.invoice_details?.sub_total,
               misc: responseData?.invoice_details?.misc,
-              tax: responseData?.invoice_details?.tax
+              tax: responseData?.invoice_details?.tax_total
             };
             const result: any = await sendApiRequest(jsonData);
             if (result?.status === 200) {
