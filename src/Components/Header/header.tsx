@@ -14,7 +14,19 @@ const Header: React.FC = () => {
   const [title, setTitle] = useState("");
   const [isRotated, setIsRotated] = useState(false);
 
-   const {invoiceid} = useParams(); 
+   const {invoiceid}:any = useParams(); 
+   const safeDecodeBase64 = (str: string | undefined): string => {
+    if (!str) return ""; // Return an empty string if undefined or empty
+    try {
+      return atob(str.replace(/\-/g, "+").replace(/_/g, "/"));
+    } catch (error) {
+      console.error("Invalid Base64 string:", str);
+      return ""; // Return empty string on failure
+    }
+  };
+  
+  const decodedId = safeDecodeBase64(invoiceid);
+   
 
   useEffect(() => {
     setIsClient(true); // Ensuring we are on the client side
@@ -22,85 +34,92 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     if (isClient) {
-      const currentRoute = currentPath.replace("/", "");
-
+      let currentRoute = currentPath.replace(/^\/|\/$/g, ""); // Remove leading/trailing slashes
+      let normalizedDecodedId = decodedId?.trim(); // Ensure no extra spaces
+  
+      console.log("Current Path:", currentRoute);
+      console.log("Decoded ID:", normalizedDecodedId);
+  
       let newTitle = "";
-      switch (currentRoute?.toLowerCase()) {
-        case "myprofile":
-          newTitle = "My Profile";
-          break;
-        case "editprofile":
-          newTitle = "Edit Profile";
-          break;
-        case "sales-kpi":
-          newTitle = "Sales Kpi";
-          break;
-        case "summary":
-          newTitle = "Summary";
-          break;
-        case "sales":
-          newTitle = "Sales";
-          break;
-        case "sales/sales_view":
-          newTitle = "Sales/ Sales Details";
-          break;
-        case "invoices":
-          newTitle = "Invoices";
-          break;
-        case `invoices/${invoiceid}` :
-          newTitle = "Invoices/Invoice Details";
-          break;
-        case "expenses":
-          newTitle = "Expenses";
-          break;
-        case "setup/categories":
-          newTitle = "Categories";
-          break;
-        case "setup/items":
-          newTitle = "Items";
-          break;
-        case "setup/tenders":
-          newTitle = "Tenders";
-          break;
-        case "setup/stores":
-          newTitle = "Stores";
-          break;
-        case "setup/configuration":
-          newTitle = "Configuration";
-          break;
-        case "details1":
-          newTitle = "Gross Revenue Analysis";
-          break;
-        case "details2":
-          newTitle = " Tender Analysis";
-          break;
-        case "details4":
-          newTitle = "Customer Count Analysis";
-          break;
-        case "details5":
-          newTitle = "Operating Expense Analysis";
-          break;
-        case "details6":
-          newTitle = " Cost Analysis";
-          break;
-        case "details7":
-          newTitle = "Labor Analysis";
-          break;
-        case "details8":
-          newTitle = "Items Analysis";
-          break;
-
-        case "logout":
-          newTitle = "Logout";
-          break;
-        default:
-          newTitle = "Home";
+  
+      if (currentRoute.startsWith("invoices/") && normalizedDecodedId) {
+        newTitle = "Invoices/Invoice Details";
+      } else {
+        switch (currentRoute?.toLowerCase()) {
+          case "myprofile":
+            newTitle = "My Profile";
+            break;
+          case "editprofile":
+            newTitle = "Edit Profile";
+            break;
+          case "sales-kpi":
+            newTitle = "Sales Kpi";
+            break;
+          case "summary":
+            newTitle = "Summary";
+            break;
+          case "sales":
+            newTitle = "Sales";
+            break;
+          case "sales/sales_view":
+            newTitle = "Sales/ Sales Details";
+            break;
+          case "invoices":
+            newTitle = "Invoices";
+            break;
+          case "expenses":
+            newTitle = "Expenses";
+            break;
+          case "setup/categories":
+            newTitle = "Categories";
+            break;
+          case "setup/items":
+            newTitle = "Items";
+            break;
+          case "setup/tenders":
+            newTitle = "Tenders";
+            break;
+          case "setup/stores":
+            newTitle = "Stores";
+            break;
+          case "setup/configuration":
+            newTitle = "Configuration";
+            break;
+          case "details1":
+            newTitle = "Gross Revenue Analysis";
+            break;
+          case "details2":
+            newTitle = "Tender Analysis";
+            break;
+          case "details4":
+            newTitle = "Customer Count Analysis";
+            break;
+          case "details5":
+            newTitle = "Operating Expense Analysis";
+            break;
+          case "details6":
+            newTitle = "Cost Analysis";
+            break;
+          case "details7":
+            newTitle = "Labor Analysis";
+            break;
+          case "details8":
+            newTitle = "Items Analysis";
+            break;
+          case "logout":
+            newTitle = "Logout";
+            break;
+          default:
+            newTitle = "Home";
+        }
       }
-
+  
+      console.log("Final Title:", newTitle);
       setTitle(newTitle);
       document.title = newTitle;
     }
-  }, [isClient, currentPath]);
+  }, [isClient, currentPath, decodedId]);
+  
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
@@ -124,6 +143,8 @@ const Header: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  console.log("invoiceid",decodedId)
 
   return (
     <main className="w-full sticky z-30 bg-[#ffff] h-[50px] flex justify-center items-center shadow ">

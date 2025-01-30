@@ -84,8 +84,8 @@ const EditItems = ({rowData , setAddItems}:any) => {
       packsize: data?.packsize,
       units: data?.units,
       weight:data?.weight,
-      cogstrackcategoryid: data?.cogstrackingcategoryId,
-      dqcategoryid: data?.dqcategoryId,
+      cogstrackcategoryid: data?.cogstrackingcategoryId ? data?.cogstrackingcategoryId : rowData?.cogstrackcategoryid ,
+      dqcategoryid: data?.dqcategoryId ? data?.dqcategoryId : rowData?.dqcategoryid,
       itemid: Number(rowData?.itemid)
     };
 
