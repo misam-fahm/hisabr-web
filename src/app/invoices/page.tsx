@@ -46,7 +46,7 @@ const Invoices = () => {
   const navigateToInvoice = (invoiceId: any) => {
     const encodedId = btoa(invoiceId);
     // Make the Base64 URL-safe by replacing `+` with `-`, `/` with `_`, and removing the padding (`=`):
-    const urlSafeEncodedId = encodedId.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    const urlSafeEncodedId = encodedId?.replace(/\+/g, '-')?.replace(/\//g, '_')?.replace(/=+$/, '');
     router.push(`/invoices/${urlSafeEncodedId}`);
   };
 
@@ -206,7 +206,7 @@ const Invoices = () => {
               producttotal: responseData?.invoice_details?.product_total,
               subtotal: responseData?.invoice_details?.sub_total,
               misc: responseData?.invoice_details?.misc,
-              tax: responseData?.invoice_details?.tax
+              tax: responseData?.invoice_details?.tax_total
             };
             const result: any = await sendApiRequest(jsonData);
             if (result?.status === 200) {

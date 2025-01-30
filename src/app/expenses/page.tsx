@@ -38,7 +38,6 @@ const Expenses: FC = () => {
   const router = useRouter();
  // const searchParams = useSearchParams() || new URLSearchParams();
   const [showBackIcon, setShowBackIcon] = useState(false);
-  //const [isLoading, setIsLoading] = useState(true);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef(null);
   const [isScrollbarVisible, setIsScrollbarVisible] = useState(false);
@@ -55,6 +54,8 @@ const Expenses: FC = () => {
     type: "",
   });
 
+
+
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "date",
@@ -66,9 +67,9 @@ const Expenses: FC = () => {
       accessorKey: "store",
       header: () => <div className="text-left">Store</div>,
       cell: (info) => {
-        const Storename: any = info.row.original.storename;
+        const Storename: any = info?.row?.original?.storename;
         const truncatedDescription =
-          Storename?.length > 15 ? `${Storename.slice(0, 15)}...` : Storename;
+          Storename?.length > 15 ? `${Storename?.slice(0, 15)}...` : Storename;
         return <span className="">{truncatedDescription}</span>;
       },
       // cell: (info) => <span>{info.row.original.storename}</span>,
@@ -86,9 +87,9 @@ const Expenses: FC = () => {
       accessorKey: "description",
       header: () => <div className="text-left ml-2">Description</div>,
       cell: (info) => {
-        const description = info.row.original.description;
+        const description = info?.row?.original?.description;
         const truncatedDescription =
-          description?.length > 50 ? `${description.slice(0, 55)}...` : description;
+          description?.length > 50 ? `${description?.slice(0, 55)}...` : description;
         return <div className="text-left  ml-3">{truncatedDescription}</div>;
       },
       size: 190,
@@ -97,9 +98,9 @@ const Expenses: FC = () => {
       accessorKey: "type",
       header: () => <div className="text-left">Type</div>,
       cell: (info) => {
-        const expensename: any = info.row.original.expensename;
+        const expensename: any = info?.row?.original?.expensename;
         const truncatedDescription =
-          expensename?.length > 15 ? `${expensename.slice(0, 15)}...` : expensename;
+          expensename?.length > 15 ? `${expensename?.slice(0, 15)}...` : expensename;
         return <span className="text-left">{truncatedDescription}</span>;
       },
       // cell: (info) => <span className="">{info.row.original.expensename}</span>,
@@ -111,7 +112,7 @@ const Expenses: FC = () => {
       cell: (info) => (
         <>
           <span className="flex justify-center">
-            <EditExpense initialData={info.row.original} setAddExpenses={setAddExpenses} />
+            <EditExpense initialData={info?.row?.original} setAddExpenses={setAddExpenses} />
           </span>
         </>
       ),
@@ -124,7 +125,7 @@ const Expenses: FC = () => {
         <>
           <span className="flex justify-center ">
             {" "}
-            <DeletePopup message={"Expenses"} jsonData={{ mode: "deleteexpense", id: Number(info.row.original.id) }} setUpdatedData={setAddExpenses} />
+            <DeletePopup message={"Expenses"} jsonData={{ mode: "deleteexpense", id: Number(info?.row?.original?.id) }} setUpdatedData={setAddExpenses} />
           </span>
         </>
       ),
@@ -272,7 +273,7 @@ const Expenses: FC = () => {
   // }
 
 
- 
+
 
  
 
