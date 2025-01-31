@@ -20,17 +20,6 @@ const [customToast, setCustomToast] = useState<ToastNotificationProps>({
   type: "",
 });
 
-const handlePressStart = () => {
-    setShowTooltip(true);
-
-    setTimeout(() => {
-      setShowTooltip(false);
-    }, 2000);
-  };
-
-  const handlePressEnd = () => {
-    setShowTooltip(false);
-  };
 
   
 const openModal = async () => {
@@ -74,27 +63,7 @@ const closeModal = () => setIsOpen(false);
         </button>
       </div>
 
-      <div className="hidden below-md:block sticky ">
-          <button
-            className="focus:outline-none flex items-center bg-[#168A6F]  justify-center  w-[56px] h-[56px] rounded-xl relative"
-            onTouchStart={handlePressStart} // For mobile devices
-            onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
-            onClick={openModal}
-          >
-            <img
-              src="/images/mobileuploadicon.svg"
-              alt="Upload Invoice"
-              className="w-[18px] h-[18px]"
-            />
-            {showTooltip && (
-              <div className="absolute bottom-[75px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
-                Upload Invoice
-                {/* Tooltip Pointer */}
-                <div className="absolute top-full right-[20%] transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#79747E]"></div>
-              </div>
-            )}
-             </button>
-        </div>
+    
       {/* Dialog for the modal */}
       <Dialog
         open={isOpen}

@@ -1,117 +1,161 @@
 "use client";
 
-import React from "react";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { sendApiRequest } from "@/utils/apiUtils";
+import React, { useEffect, useState } from "react";
 
 interface TableData {
   category: string;
-  rows: { description: string; value: string }[];
+  rows: { description: string; value: any }[];
 }
 
+
+const TableComponent: React.FC<any> = ({SalesId}:any) => {
+
+  const [saleDetails, setDataApi] = useState<any>([]);
+  const [totalItems, setTotalItems] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+
+  
 const data: TableData[] = [
   {
     category: "General Information",
     rows: [
-      { description: "Date", value: "2022-01-02" },
-      { description: "Store", value: "13246" },
+      { description: "Date", value: saleDetails?.sales_date},
+      { description: "Store", value: saleDetails?.store_name},
     ],
   },
   {
     category: "Sales Data",
     rows: [
-      { description: "Gross", value: "$4,132.25" },
-      { description: "Net", value: "$4,058.08" },
-      { description: "Order Count", value: "296" },
-      { description: "Guest Count", value: "296" },
-      { description: "Total Sales Count", value: "--" },
-      { description: "Average", value: "$13.71" },
+      { description: "Gross", value: "$" + saleDetails?.gross_sales_amt },
+      { description: "Net", value:saleDetails?.net_sales_amt },
+      { description: "Order Count", value: saleDetails?.orders_count },
+      { description: "Guest Count", value: saleDetails?.guests_count },
+      { description: "Total Sales Count", value:saleDetails?.total_sales_count ? saleDetails?.total_sales_count : "--" },
+      { description: "Average", value:"$" + saleDetails?.order_average_amt},
     ],
   },
   {
     category: "Item Sales",
     rows: [
-      { description: "Total Item Sales", value: "$4,132.25" },
-      { description: "Taxable Item Sales", value: "$4,058.08" },
-      { description: "Non-Taxable Item Sales", value: "$0.00" },
+      { description: "Total Item Sales", value: "$" + (saleDetails?.total_item_sales_amt === null ? "0" :saleDetails?.total_item_sales_amt )  },
+      { description: "Taxable Item Sales", value: "$" +  (saleDetails?.total_item_sales_amt === null ? "0" :saleDetails?.taxable_item_sales_amt )},
+      { description: "Non-Taxable Item Sales", value: "$" + saleDetails?.non_taxable_item_sales_amt },
     ],
   },
   {
     category: "Tips",
-    rows: [{ description: "Cash Tips Received", value: "$0.00" }],
+    rows: [{ description: "Cash Tips Received", value: "$" + saleDetails?.cash_tips_received_amt }],
   },
   {
     category: "Taxes",
-    rows: [{ description: "Tax", value: "$284.06" }],
+    rows: [{ description: "Tax", value: "$" + saleDetails?.tax_amt }],
   },
   {
     category: "Deposits",
     rows: [
-      { description: "Deposits Accepted Amount", value: "$0.00" },
-      { description: "Deposits Redeemed Amount", value: "$0.00" },
-      { description: "Cash Deposits Accepted", value: "$0.00" },
-      { description: "Deposits Redeemed", value: "$0.00" },
+      { description: "Deposits Accepted Amount", value: "$" + saleDetails?.deposits_accepted_amt },
+      { description: "Deposits Redeemed Amount", value: "$" + saleDetails?.deposits_redeemed_amt },
+      { description: "Cash Deposits Accepted", value: "$" + saleDetails?.cash_deposits_accepted_amt },
+      { description: "Deposits Redeemed", value: "$" + saleDetails?.deposits_redeemed_amt },
     ],
   },
   {
     category: "Labor Costs",
     rows: [
-      { description: "Labour Cost", value: "$687.94" },
-      { description: "Labour Hours", value: "62.58" },
-      { description: "Labor Percent", value: "16.95%" },
-      { description: "Sales Per Labor Hour", value: "$66.03" },
+      { description: "Labour Cost", value: "$" + saleDetails?.labor_cost_amt},
+      { description: "Labour Hours", value:  saleDetails?.labor_hours },
+      { description: "Labor Percent", value: saleDetails?.labor_percent + "%"  },
+      { description: "Sales Per Labor Hour", value: "$" + saleDetails?.sales_per_labor_hour_amt },
     ],
   },
   {
     category: "Payments",
     rows: [
-      { description: "Sales Per Labor Hour", value: "$66.03" },
-      { description: "Paid In", value: "$0.00" },
-      { description: "Paid Out", value: "$0.00" },
+      { description: "Paid In", value: "$" + saleDetails?.paid_in_amt },
+      { description: "Paid Out", value: "$" + saleDetails?.paid_out_amt },
     ],
   },
   {
     category: "Discounts & Promotions",
     rows: [
-      { description: "Discounts", value: "--" },
-      { description: "Promotions", value: "--" },
-      { description: "Gift Card Promotions", value: "--" },
+      { description: "Discounts", value:"$" + saleDetails?.discounts_amt ? saleDetails?.discounts_amt : "--" },
+      { description: "Promotions", value:"$" + saleDetails?.promotions_amt ? saleDetails?.promotions_amt : "--" },
+      { description: "Gift Card Promotions", value:"$" + saleDetails?.gift_card_promotions_amt ? saleDetails?.gift_card_promotions_amt : "--" },
     ],
   },
   {
     category: "Refunds",
     rows: [
-      { description: "Refunds", value: "--" },
-      { description: "Voids", value: "--" },
+      { description: "Refunds", value:"$" + saleDetails?.voids_amt ? saleDetails?.voids_amt : "--" },
+      { description: "Voids", value:"$" + saleDetails?.refunds_amt ? saleDetails?.refunds_amt : "--" },
     ],
   },
   {
     category: "Gift Card Details",
     rows: [
-      { description: "Gift Card Issue Count", value: "--" },
-      { description: "Gift Card Issue Amount", value: "--" },
-      { description: "Gift Card Reload Count", value: "--" },
-      { description: "Gift Card Reload Amount", value: "--" },
-      { description: "Gift Card Cash Out Count", value: "--" },
-      { description: "Gift Card Cash Out Amount", value: "--" },
+      { description: "Gift Card Issue Count", value: saleDetails?.gift_card_issue_count ? saleDetails?.gift_card_issue_count : "--" },
+      { description: "Gift Card Issue Amount", value:"$" + saleDetails?.gift_card_issue_amt ? saleDetails?.gift_card_issue_amt : "--" },
+      { description: "Gift Card Reload Count", value: saleDetails?.gift_card_reload_count ? saleDetails?.gift_card_reload_count : "--" },
+      { description: "Gift Card Reload Amount", value:"$" + saleDetails?.gift_card_reload_amt ? saleDetails?.gift_card_reload_amt : "--" },
+      { description: "Gift Card Cash Out Count", value: saleDetails?.gift_card_cash_out_count ? saleDetails?.gift_card_cash_out_count :"--" },
+      { description: "Gift Card Cash Out Amount", value:"$" + saleDetails?.gift_card_cash_out_amt ?  saleDetails?.gift_card_cash_out_amt : "--" },
     ],
   },
   {
     category: "Non-Revenue Items",
-    rows: [{ description: "Non-Revenue Items", value: "$3,455.10" }],
+    rows: [{ description: "Non-Revenue Items", value: "$"+ saleDetails?.non_revenue_items_amt == null  ? 0 :  saleDetails?.non_revenue_items_amt  }],
   },
   {
     category: "Cash Details",
-    rows: [{ description: "Total Cash", value: "$887.04" }],
+    rows: [{ description: "Total Cash", value: "$" + saleDetails?.total_cash_amt ? saleDetails?.total_cash_amt : "0" }],
   },
   {
     category: "Donations",
     rows: [
-      { description: "Donation Count", value: "0" },
-      { description: "Donation Total", value: "$0.00" },
+      { description: "Donation Count", value: saleDetails?.donation_count },
+      { description: "Donation Total",  value:"$" + saleDetails?.donation_total_amt},
     ],
   },
 ];
 
-const TableComponent: React.FC = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+
+
+        const response: any = await sendApiRequest({
+          mode: "getsalesdetails",
+          salesid: Number(SalesId)
+        });
+
+        if (response?.status === 200) {
+          setDataApi(response?.data?.sales[0] || []);
+          // response?.data?.total > 0 &&
+          //   setTotalItems(response?.data?.total || 0);
+        } else {
+          setCustomToast({
+            ...customToast,
+            message: response?.message,
+            type: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+
   return (
     <main>
       <div className="below-md:hidden  overflow-x-auto rounded-lg shadow-sm border border-[#E4E4EF]">
