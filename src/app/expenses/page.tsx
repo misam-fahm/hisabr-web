@@ -268,10 +268,6 @@ const Expenses: FC = () => {
   }
   }, []);
 
-  // if (isLoading) {
-  //   return null; // Or a loading spinner
-  // }
-
 
 
 

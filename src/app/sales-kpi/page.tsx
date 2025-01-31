@@ -7,6 +7,16 @@ import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastN
 import { sendApiRequest } from "@/utils/apiUtils";
 
 const SalesKPI: FC = () => {
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+  const [showTooltip, setShowTooltip] = useState(false);
+
   const tableData = [
     { label: "Profit", amount: "10,000", per: "65%", color: "#53755599" },
     { label: "Labour Cost", amount: "2,000", per: "20%", color: "#DAB777" },
@@ -20,16 +30,6 @@ const SalesKPI: FC = () => {
     },
     { label: "COGS", amount: "30,000", per: "45%", color: "#AC8892" },
   ];
-
-  /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<any>();
-  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [store, setStore] = useState<any[]>([]);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
-    message: "",
-    type: "",
-  });
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -58,9 +58,6 @@ const SalesKPI: FC = () => {
     fetchDropdownData();
   }, []);
 
-  //tooltip for mobile
-  const [showTooltip, setShowTooltip] = useState(false);
-
   const handlePressStart = () => {
     setShowTooltip(true);
 
@@ -78,12 +75,6 @@ const SalesKPI: FC = () => {
       className="max-h-[calc(100vh-60px)] min-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      {/* <div className="below-md:flex below-md:justify-center">
-        <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-20 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
-          Sales KPI
-        </p>
-      </div> */}
-
       <div>
         <div className="flex flex-row below-md:flex-col below-md:items-end sticky  justify-between pt-6 below-md:pt-4 below-md:px-3  pl-6 pr-6 pb-6 below-md:pb-4 bg-[#f7f8f9] ">
           <div className="flex flex-row below-md:flex-col w-full gap-3">
@@ -118,7 +109,6 @@ const SalesKPI: FC = () => {
         </div>
 
         {/* grid 1 */}
-
         <div className="grid grid-cols-4 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3  pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
@@ -189,7 +179,6 @@ const SalesKPI: FC = () => {
           </div>
 
           {/* grid 2 */}
-
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
@@ -308,7 +297,6 @@ const SalesKPI: FC = () => {
           </div>
         </div>
       </div>
-
       <div className="below-lg:hidden flex justify-end fixed bottom-5 right-5">
         <button
           className="focus:outline-none flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] w-[56px] h-[56px] rounded-xl relative"
