@@ -18,6 +18,7 @@ import {
 import { sendApiRequest } from "@/utils/apiUtils";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import moment from "moment";
+import Loading from "@/Components/UI/Themes/Loading";
 
 interface TableRow {
   sales_date: string;
@@ -26,6 +27,7 @@ interface TableRow {
   total_sales_count: number;
   total_item_sales_amt: string;
   net_sales_amt: string;
+  salesid:number;
   order_average_amt: string;
 }
 
@@ -35,6 +37,7 @@ const Sales: FC = () => {
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+  const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
@@ -43,9 +46,11 @@ const Sales: FC = () => {
     type: "",
   });
   const [globalFilter, setGlobalFilter] = React.useState("");
-  
-  const handleImageClick = () => {
-    router.push("/sales/sales_view"); 
+
+  const navigateToSalesView = (salesId: any) => {
+    const encodedId = btoa(salesId);
+    const urlSafeEncodedId = encodedId?.replace(/\+/g, '-')?.replace(/\//g, '_')?.replace(/=+$/, '');
+    router.push(`/sales/${urlSafeEncodedId}`);
   };
 
   const columns: ColumnDef<TableRow>[] = [
@@ -104,9 +109,9 @@ const Sales: FC = () => {
     {
       id: "view",
       header: () => <div className="text-center"></div>,
-      cell: () => (
+      cell: (info) => (
         <span className="flex justify-center">
-          <button onClick={handleImageClick}>
+          <button   onClick={() =>   navigateToSalesView(info.row.original.salesid)}>
             <Images
               src="/images/vieweyeicon.svg"
               alt="Eye Icon"
@@ -119,9 +124,97 @@ const Sales: FC = () => {
     },
   ];
 
+  const formattedData = data?.map((item) => {
+    const rawDate = new Date(item?.sales_date);
+  
+    // Format the date as MM-DD-YY
+    const formattedDate = `${(rawDate?.getMonth() + 1)
+      .toString()
+      .padStart(
+        2,
+        "0"
+      )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
+      .getFullYear()
+      .toString()
+      .slice(-2)}`;
+  
+    return { ...item, date: formattedDate };
+  });
+  
+
+  const table = useReactTable({
+    data: formattedData,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      globalFilter,
+    },
+    initialState: {
+      pagination: {
+        pageSize: 10,
+        pageIndex: 0,
+      },
+    },
+    manualPagination: true, // Enable manual pagination
+    pageCount: Math.ceil(totalItems / 10),
+  });
+
+  const { pageIndex, pageSize } = table.getState().pagination;
+  
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getsales",
+        page: table.getState().pagination.pageIndex + 1,
+        limit: table.getState().pagination.pageSize,
+      });
+  
+      if (response?.status === 200) {
+        setData(response?.data?.sales || []);
+        if (response?.data?.total > 0) {
+          setTotalItems(response?.data?.total || 0);
+        }
+      } else {
+        setCustomToast({
+          message: response?.message || "Failed to fetch sales.",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+   
+  useEffect(() => {
+    fetchData();
+  }, [pageIndex, pageSize]);
+
+  const fetchDropdownData = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getallstores" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDropdownData();
+  }, []);
+
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
+      setUploadPdfLoading(true);
       if (file && file.type === "application/pdf") {
         const formData = new FormData();
         formData.append("file", file);
@@ -187,6 +280,7 @@ const Sales: FC = () => {
               //   invoiceDetails: responseData?.invoice_items || [],
               // };
               // const res: any = await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
+              fetchData();
             } else {
               setTimeout(() => {
                 setCustomToast({
@@ -201,6 +295,8 @@ const Sales: FC = () => {
         } catch (error) {
           console.error("Error uploading file:", error);
           alert("An error occurred.");
+        }finally {
+          setUploadPdfLoading(false); // Hide loader after upload
         }
       } else {
         alert("Please upload a PDF file.");
@@ -211,75 +307,11 @@ const Sales: FC = () => {
     }
   };
   
-const formattedData = data?.map((item) => {
-  const rawDate = new Date(item?.sales_date);
-
-  // Format the date as MM-DD-YY
-  const formattedDate = `${(rawDate?.getMonth() + 1)
-    .toString()
-    .padStart(
-      2,
-      "0"
-    )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
-    .getFullYear()
-    .toString()
-    .slice(-2)}`;
-
-  return { ...item, date: formattedDate };
-});
-
-  const table = useReactTable({
-    data: formattedData,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      globalFilter,
-    },
-    initialState: {
-      pagination: {
-        pageSize: 10,
-        pageIndex: 0,
-      },
-    },
-    manualPagination: true, // Enable manual pagination
-    pageCount: Math.ceil(totalItems / 10),
-  });
-
-  const { pageIndex, pageSize } = table.getState().pagination;
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const response: any = await sendApiRequest({
-        mode: "getsales",
-        page: table.getState().pagination.pageIndex + 1,
-        limit: table.getState().pagination.pageSize,
-      });
-  
-      if (response?.status === 200) {
-        setData(response?.data?.sales || []);
-        if (response?.data?.total > 0) {
-          setTotalItems(response?.data?.total || 0);
-        }
-      } else {
-        setCustomToast({
-          message: response?.message || "Failed to fetch sales.",
-          type: "error",
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
+  const handleImageClick = () => {
+    router.push("/sales/sales_view"); 
   };
-  
-  // Fetch data on component mount and whenever pageIndex/pageSize changes
-  useEffect(() => {
-    fetchData();
-  }, [pageIndex, pageSize]);
 
+  
   const handleUploadClick = () => {
     document.getElementById("fileInput")?.click(); // Programmatically click the hidden input
   };
@@ -294,29 +326,6 @@ const formattedData = data?.map((item) => {
       type: "error",
     });
   };
-
-  const fetchDropdownData = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getallstores" });
-      if (response?.status === 200) {
-        setStore(response?.data?.stores || []);
-      } else {
-        handleError(response?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchDropdownData();
-  }, []);
-
-  const filteredData = data.filter((item) =>
-    JSON.stringify(item)
-      .toLowerCase()
-      .includes(globalFilter?.toLowerCase() || "")
-  );
 
   //tooltip for mobile
   const [showTooltip, setShowTooltip] = useState(false);
@@ -335,9 +344,10 @@ const formattedData = data?.map((item) => {
 
   return (
     <main
-      className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] tablet:max-h-[calc(100vh-0)] overflow-auto"
+      className="max-h-[calc(100vh-60px)] relative below-md:max-h-[calc(100vh-0)] tablet:max-h-[calc(100vh-0)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
+      {uploadPdfloading && ( <Loading /> )}
       <div className="px-6 mt-6 below-md:px-3 below-md:mt-0 tablet:mt-4">
         <div className="flex flex-row below-md:flex-col pb-6 sticky z-20  below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
           <div className="flex flex-row below-md:flex-col w-full  gap-3">
@@ -496,7 +506,7 @@ const formattedData = data?.map((item) => {
         </div>
 
         {/* Pagination */}
-        <div className="tablet:hidden">
+        <div className="block below-md:hidden">
           <Pagination table={table} totalItems={totalItems} />
         </div>
 
@@ -549,9 +559,10 @@ const formattedData = data?.map((item) => {
        )}
           </div>
         </div>
+       
       </div>
 
-      <div className="below-lg:hidden flex justify-end fixed bottom-5 right-5">
+      <div className="below-lg:hidden flex justify-end fixed bottom-16 right-3">
         <button
           className="focus:outline-none flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] w-[56px] h-[56px] rounded-xl relative"
           onTouchStart={handlePressStart} // For mobile devices
@@ -572,6 +583,9 @@ const formattedData = data?.map((item) => {
           )}
         </button>
       </div>
+      <div className="hidden below-md:block">
+          <Pagination table={table} totalItems={totalItems} />
+        </div>
     </main>
   );
 };
