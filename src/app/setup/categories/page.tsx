@@ -32,6 +32,12 @@ const Page: FC = () => {
   const [totalItems, setTotalItems] = useState<number>(0); // Total number of items from the API
   const [loading, setLoading] = useState<boolean>(true); // Loading state for API call
   const [isOpenAddCategories, setAddCategories] = useState(false);
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -77,7 +83,7 @@ const Page: FC = () => {
       size: 50,
     },
   ];
-  const [globalFilter, setGlobalFilter] = useState("");
+ 
   const table = useReactTable({
     data,
     columns,
@@ -94,16 +100,9 @@ const Page: FC = () => {
     manualPagination: true, // Enable manual pagination
     pageCount: Math.ceil(totalItems / 10), // Calculate page count based on totalItems
   });
-
   const { pageIndex, pageSize } = table.getState().pagination;
-  // const totalItems = table.getFilteredRowModel().rows.length;
-  const startItem = pageIndex * pageSize + 1;
-  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
-  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
-    message: "",
-    type: "",
-  });
-
+   // const totalItems = table.getFilteredRowModel().rows.length;
+ 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);

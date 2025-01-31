@@ -9,19 +9,32 @@ import { sendApiRequest } from "@/utils/apiUtils";
 
 const Page = () => {
   const methods = useForm();
-  const { watch, setValue ,clearErrors} = methods;
+  const { watch, setValue, clearErrors } = methods;
 
-  const selectedStore = watch("store"); 
-  
+  const selectedStore = watch("store");
+
   //const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
+  const [payrolltax, setPayrollTax] = useState("");
+  const [laboursalary, setLabourSalary] = useState("");
+  const [rentMortgage, setRentMortgage] = useState("");
+  const [insurance, setInsurance] = useState("");
+  const [propertytax, setPropertyTax] = useState("");
+  const [trash, setTrash] = useState("");
+  const [operatorsalary, setOeratorSlary] = useState("");
+  const [nucO2, setNUCO2] = useState("");
+  const [internet, setInternet] = useState("");
+  const [waterbill, setWaterBill] = useState("");
+  const [gasbill, setGasBill] = useState("");
+  const [par, setPAR] = useState("");
+  const [repair, setRepair] = useState("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
   });
-  
+
   const onSubmit = (data: any) => {
     console.log(data);
   };
@@ -48,147 +61,120 @@ const Page = () => {
     } catch (error) {
       console.error("Error fetching stores:", error);
     }
-
   };
   useEffect(() => {
-
     fetchDropdownData();
-
   }, []);
 
-
-
-  const [payrolltax, setPayrollTax] = useState("");
   const handleChangePayrollTax = (data: any) => {
     setPayrollTax(data); // Update local state
     methods.setValue("payrolltax", data); // Update form state in react-hook-form
   };
 
-  const [laboursalary, setLabourSalary] = useState("");
   const handleChangesetLabourSalary = (data: any) => {
     setLabourSalary(data); // Update local state
     methods.setValue("laboursalary", data); // Update form state in react-hook-form
   };
 
-  const [rentMortgage, setRentMortgage] = useState("");
   const handleChangesetRentMortgage = (data: any) => {
     setRentMortgage(data); // Update local state
     methods.setValue("rent", data); // Update form state in react-hook-form
   };
 
-  const [insurance, setInsurance] = useState("");
   const handleChangesetInsurance = (data: any) => {
     setInsurance(data); // Update local state
     methods.setValue("insurance", data); // Update form state in react-hook-form
   };
 
-  const [propertytax, setPropertyTax] = useState("");
   const handleChangesetPropertyTax = (data: any) => {
     setPropertyTax(data); // Update local state
     methods.setValue("propertytax", data); // Update form state in react-hook-form
   };
 
-  const [trash, setTrash] = useState("");
   const handleChangesetTrash = (data: any) => {
     setTrash(data); // Update local state
     methods.setValue("trash", data); // Update form state in react-hook-form
   };
 
-  const [operatorsalary, setOeratorSlary] = useState("");
   const handleChangeOperatorSalary = (data: any) => {
     setOeratorSlary(data); // Update local state
     methods.setValue("operatorsalary", data); // Update form state in react-hook-form
   };
 
-  const [nucO2, setNUCO2] = useState("");
   const handleChangeNUCO2 = (data: any) => {
     setNUCO2(data); // Update local state
     methods.setValue("nucO2", data); // Update form state in react-hook-form
   };
 
-  const [internet, setInternet] = useState("");
   const handleChangesetInternet = (data: any) => {
     setInternet(data); // Update local state
     methods.setValue("internet", data); // Update form state in react-hook-form
   };
 
-  const [waterbill, setWaterBill] = useState("");
   const handleChangewaterbill = (data: any) => {
     setWaterBill(data); // Update local state
     methods.setValue("waterbill", data); // Update form state in react-hook-form
   };
 
-  const [gasbill, setGasBill] = useState("");
   const handleChangesetGasBill = (data: any) => {
     setGasBill(data); // Update local state
     methods.setValue("waterbill", data); // Update form state in react-hook-form
   };
 
-  const [par, setPAR] = useState("");
   const handleChangePAR = (data: any) => {
     setPAR(data); // Update local state
     methods.setValue("par", data); // Update form state in react-hook-form
   };
 
-  const [repair, setRepair] = useState("");
   const handleChangeRepair = (data: any) => {
     setRepair(data); // Update local state
     methods.setValue("repair", data); // Update form state in react-hook-form
   };
-
-console.log("selectedStore",selectedStore)
+  console.log("selectedStore", selectedStore)
 
   return (
-   
-      <main
-        className="max-h-[calc(100vh-60px)] below-lg:px-4 overflow-auto"
-        style={{ scrollbarWidth: "thin" }}>
-           <FormProvider {...methods}>
+
+    <main
+      className="max-h-[calc(100vh-50px)] below-lg:px-4 overflow-auto "
+      style={{ scrollbarWidth: "thin" }}>
+      <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="w-full flex flex-col overflow-auto below-md:h-auto p-5"
+          className="w-full flex flex-col overflow-auto below-md:h-auto p-5 "
         >
-
           {/* Desktop View */}
-          <div className="bg-white py-6 px-8  rounded-lg shadow-lg">
-
-
+          <div className="bg-white px-8 py-6 rounded-lg shadow-lg">
             <p className="text-[12px] font-normal mt-1 below-md:mt-0 text-[#5E6366]">
               Streamline and configure operational expenses for accurate
               tracking
             </p>
-
-
             <div className="below-lg:flex pt-7 below-md:pt-6">
               <p className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366]">
                 Store Selection :
               </p>
-              
               <Dropdown
-                    options={store}
-                    selectedOption={selectedStore || "Store"} 
-                    onSelect={(selectedOption) => {
-                      setValue("store", selectedOption.name); 
-                      setValue("storeId", selectedOption.id);
-                      setIsStoreDropdownOpen(false); 
-                      clearErrors("store"); 
+                options={store}
+                selectedOption={selectedStore || "Store"}
+                onSelect={(selectedOption) => {
+                  setValue("store", selectedOption.name);
+                  setValue("storeId", selectedOption.id);
+                  setIsStoreDropdownOpen(false);
+                  clearErrors("store");
 
-                    }}
-                    isOpen={isStoreDropdownOpen}
-                    toggleOpen={toggleStoreDropdown}
-                    widthchange="w-[25%] below-md:mt-4"
-                    {...methods.register("store", {
-                      required: "Store Selection is required",
-                    })}
-                    errors={methods.formState.errors.store} 
-                  />
+                }}
+                isOpen={isStoreDropdownOpen}
+                toggleOpen={toggleStoreDropdown}
+                widthchange="w-[25%] below-md:mt-4"
+                {...methods.register("store", {
+                  required: "Store Selection is required",
+                })}
+                errors={methods.formState.errors.store}
+              />
             </div>
-
             <div className="below-lg:flex pt-7 below-md:pt-4">
               <p className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366]">
                 Yearly Expenses :
               </p>
-
               <div className="below-lg:w-[25%] below-lg:mr-5 below-md:pt-4">
                 <InputField
                   type="text"
@@ -224,30 +210,12 @@ console.log("selectedStore",selectedStore)
                   }
                 />
               </div>
-              <div className="below-lg:w-[25%]  below-lg:ml-5 below-md:w-full below-md:pt-4">
-                <InputField
-                  type="text"
-                  label="Trash"
-                  borderClassName=" border border-gray-300"
-                  labelBackgroundColor="bg-white"
-                  value={trash}
-                  textColor="text-[#636363]"
-                  {...methods?.register("trash", {
-                    // required: "Trash is required",
-                  })}
-                  errors={methods.formState.errors.trash}
-                  placeholder="trash"
-                  variant="outline"
-                  onChange={(e: any) => handleChangesetTrash(e.target.value)}
-                />
-              </div>
             </div>
             <div>
               <div className="below-lg:flex pt-7 below-md:pt-4">
                 <p className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366]">
                   Monthly Expenses :
                 </p>
-
                 <div className="below-lg:w-[25%] below-lg:mr-5 below-md:pt-4">
                   <InputField
                     type="text"
@@ -287,7 +255,7 @@ console.log("selectedStore",selectedStore)
                 <div className="below-lg:w-[25%]  below-lg:ml-5 below-md:w-full below-md:pt-4">
                   <InputField
                     type="text"
-                    label="Labour Salary"
+                    label="Labour/Operator Salary"
                     borderClassName=" border border-gray-300"
                     labelBackgroundColor="bg-white"
                     value={laboursalary}
@@ -305,27 +273,7 @@ console.log("selectedStore",selectedStore)
                 </div>
               </div>
               <div className="below-lg:flex below-lg:mt-8">
-
                 <div className="below-lg:w-[25%]  below-lg:ml-[16%] below-md:w-full below-md:pt-4">
-                  <InputField
-                    type="text"
-                    label="Operator Salary"
-                    borderClassName=" border border-gray-300"
-                    labelBackgroundColor="bg-white"
-                    value={operatorsalary}
-                    textColor="text-[#636363]"
-                    {...methods?.register("operatorsalary", {
-                      // required: "Operator Salary is required",
-                    })}
-                    errors={methods.formState.errors.operatorsalary}
-                    placeholder="operatorsalary"
-                    variant="outline"
-                    onChange={(e: any) =>
-                      handleChangeOperatorSalary(e.target.value)
-                    }
-                  />
-                </div>
-                <div className="below-lg:w-[25%]  below-lg:ml-5 below-md:w-full below-md:pt-4">
                   <InputField
                     type="text"
                     label="NUCO2"
@@ -342,15 +290,24 @@ console.log("selectedStore",selectedStore)
                     onChange={(e: any) => handleChangeNUCO2(e.target.value)}
                   />
                 </div>
+                <div className="below-lg:w-[25%]  below-lg:ml-5 below-md:w-full below-md:pt-4">
+                <InputField
+                  type="text"
+                  label="Trash"
+                  borderClassName=" border border-gray-300"
+                  labelBackgroundColor="bg-white"
+                  value={trash}
+                  textColor="text-[#636363]"
+                  {...methods?.register("trash", {
+                    // required: "Trash is required",
+                  })}
+                  errors={methods.formState.errors.trash}
+                  placeholder="trash"
+                  variant="outline"
+                  onChange={(e: any) => handleChangesetTrash(e.target.value)}
+                />
               </div>
-            </div>
-            <div>
-              <div className="below-lg:flex below-lg:pt-7 below-md:pt-4">
-                <p className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366]">
-                  Other Expenses :
-                </p>
-
-                <div className="below-lg:w-[25%] below-lg:mr-5 below-md:pt-4">
+              <div className="below-lg:w-[25%] below-lg:ml-5 below-md:pt-4">
                   <InputField
                     type="text"
                     label="Internet"
@@ -368,7 +325,35 @@ console.log("selectedStore",selectedStore)
                       handleChangesetInternet(e.target.value)
                     }
                   />
+                </div> 
+              </div>
+              <div className="below-lg:flex below-lg:mt-8">
+              <div className="below-lg:w-[25%]  below-lg:ml-[16%] below-md:w-full below-md:pt-4">
+                  <InputField
+                    type="text"
+                    label="PAR"
+                    borderClassName=" border border-gray-300"
+                    labelBackgroundColor="bg-white"
+                    value={par}
+                    textColor="text-[#636363]"
+                    {...methods?.register("par", {
+                      //required: "PAR is required",
+                    })}
+                    errors={methods.formState.errors.par}
+                    placeholder="par"
+                    variant="outline"
+                    onChange={(e: any) =>
+                      handleChangePAR(e.target.value)
+                    }
+                  />
                 </div>
+              </div>
+            </div>
+            <div>
+              <div className="below-lg:flex below-lg:pt-7 below-md:pt-4">
+                <p className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366]">
+                  Other Expenses :
+                </p>
                 <div className="below-lg:w-[25%] below-md:w-full below-md:pt-4">
                   <InputField
                     type="text"
@@ -405,28 +390,6 @@ console.log("selectedStore",selectedStore)
                     }
                   />
                 </div>
-              </div>
-              <div className="below-lg:flex below-lg:mt-8">
-
-                <div className="below-lg:w-[25%]  below-lg:ml-[16%] below-md:w-full below-md:pt-4">
-                  <InputField
-                    type="text"
-                    label="PAR"
-                    borderClassName=" border border-gray-300"
-                    labelBackgroundColor="bg-white"
-                    value={par}
-                    textColor="text-[#636363]"
-                    {...methods?.register("par", {
-                      //required: "PAR is required",
-                    })}
-                    errors={methods.formState.errors.par}
-                    placeholder="par"
-                    variant="outline"
-                    onChange={(e: any) =>
-                      handleChangePAR(e.target.value)
-                    }
-                  />
-                </div>
                 <div className="below-lg:w-[25%]  below-lg:ml-5 below-md:w-full below-md:pt-4 ">
                   <InputField
                     type="text"
@@ -445,7 +408,7 @@ console.log("selectedStore",selectedStore)
                   />
                 </div>
               </div>
-              <div className="below-lg:flex below-lg:justify-end below-lg:mr-10 below-md:pt-4">
+              <div className="below-lg:flex below-lg:justify-end below-lg:mr-10 below-md:pt-4 below-lg:my-6">
                 <button className="bg-[#168A6F] hover:bg-[#11735C] text-[13px]  font-medium text-white rounded-md  h-[35px] w-[118px]">
                   Add
                 </button>
@@ -453,9 +416,8 @@ console.log("selectedStore",selectedStore)
             </div>
           </div>
         </form>
-        </FormProvider>
-      </main>
-    
+      </FormProvider>
+    </main>
   );
 };
 
