@@ -112,6 +112,7 @@ const Invoices = () => {
     },
   ];
 
+
   const navigateToInvoice = (invoiceId: any) => {
     const encodedId = btoa(invoiceId);
     const urlSafeEncodedId = encodedId?.replace(/\+/g, '-')?.replace(/\//g, '_')?.replace(/=+$/, '');
@@ -202,6 +203,17 @@ const Invoices = () => {
   };
   useEffect(() => {
     fetchDropdownData();
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search)
+      const fromHome = params.get("fromHome") === "true";
+      const fromItemsAnalysis = params.has("fromItemsAnalysis");
+
+      if (fromHome || fromItemsAnalysis) {
+        setShowBackIcon(true);
+        const currentUrl = window.location.pathname;
+        window.history.replaceState({},"",currentUrl) // Update the URL without the query parameter
+      }
+    }
   }, []);
 
   const handleButtonClick = () => {
@@ -304,21 +316,6 @@ const Invoices = () => {
     }
   };
 
-  
-  useEffect(() => {
-    // Ensure this code only runs on the client-side (after the page has mounted)
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search)
-      const fromHome = params.get("fromHome") === "true";
-      const fromItemsAnalysis = params.has("fromItemsAnalysis");
-
-      if (fromHome || fromItemsAnalysis) {
-        setShowBackIcon(true);
-        const currentUrl = window.location.pathname;
-        window.history.replaceState({},"",currentUrl) // Update the URL without the query parameter
-      }
-    }
-  }, []); 
 
   const handlePressStart = () => {
     setShowTooltip(true);

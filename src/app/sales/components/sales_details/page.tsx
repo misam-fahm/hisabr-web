@@ -84,27 +84,27 @@ const data: TableData[] = [
   {
     category: "Discounts & Promotions",
     rows: [
-      { description: "Discounts", value: saleDetails?.discounts_amt ? saleDetails?.discounts_amt : "--" },
-      { description: "Promotions", value: saleDetails?.promotions_amt ? saleDetails?.promotions_amt : "--" },
-      { description: "Gift Card Promotions", value: saleDetails?.gift_card_promotions_amt ? saleDetails?.gift_card_promotions_amt : "--" },
+      { description: "Discounts", value:"$" + saleDetails?.discounts_amt ? saleDetails?.discounts_amt : "--" },
+      { description: "Promotions", value:"$" + saleDetails?.promotions_amt ? saleDetails?.promotions_amt : "--" },
+      { description: "Gift Card Promotions", value:"$" + saleDetails?.gift_card_promotions_amt ? saleDetails?.gift_card_promotions_amt : "--" },
     ],
   },
   {
     category: "Refunds",
     rows: [
-      { description: "Refunds", value: saleDetails?.voids_amt ? saleDetails?.voids_amt : "--" },
-      { description: "Voids", value: saleDetails?.refunds_amt ? saleDetails?.refunds_amt : "--" },
+      { description: "Refunds", value:"$" + saleDetails?.voids_amt ? saleDetails?.voids_amt : "--" },
+      { description: "Voids", value:"$" + saleDetails?.refunds_amt ? saleDetails?.refunds_amt : "--" },
     ],
   },
   {
     category: "Gift Card Details",
     rows: [
       { description: "Gift Card Issue Count", value: saleDetails?.gift_card_issue_count ? saleDetails?.gift_card_issue_count : "--" },
-      { description: "Gift Card Issue Amount", value: saleDetails?.gift_card_issue_amt ? saleDetails?.gift_card_issue_amt : "--" },
+      { description: "Gift Card Issue Amount", value:"$" + saleDetails?.gift_card_issue_amt ? saleDetails?.gift_card_issue_amt : "--" },
       { description: "Gift Card Reload Count", value: saleDetails?.gift_card_reload_count ? saleDetails?.gift_card_reload_count : "--" },
-      { description: "Gift Card Reload Amount", value: saleDetails?.gift_card_reload_amt ? saleDetails?.gift_card_reload_amt : "--" },
+      { description: "Gift Card Reload Amount", value:"$" + saleDetails?.gift_card_reload_amt ? saleDetails?.gift_card_reload_amt : "--" },
       { description: "Gift Card Cash Out Count", value: saleDetails?.gift_card_cash_out_count ? saleDetails?.gift_card_cash_out_count :"--" },
-      { description: "Gift Card Cash Out Amount", value: saleDetails?.gift_card_cash_out_amt ?  saleDetails?.gift_card_cash_out_amt : "--" },
+      { description: "Gift Card Cash Out Amount", value:"$" + saleDetails?.gift_card_cash_out_amt ?  saleDetails?.gift_card_cash_out_amt : "--" },
     ],
   },
   {
@@ -119,7 +119,7 @@ const data: TableData[] = [
     category: "Donations",
     rows: [
       { description: "Donation Count", value: saleDetails?.donation_count },
-      { description: "Donation Total", value: saleDetails?.donation_total_amt},
+      { description: "Donation Total",  value:"$" + saleDetails?.donation_total_amt},
     ],
   },
 ];
