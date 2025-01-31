@@ -218,7 +218,7 @@ const InvoiceDetails = () => {
                 </div>
                 <div className="flex justify-between border-t pt-2 mt-2">
                   <span className="text-[#636363] text-[14px] font-semibold">Total</span>
-                  <span className="text-[#636363] text-[14px] font-semibold">${row?.producttotal}</span>
+                  <span className="text-[#636363] text-[14px] font-semibold">${row?.extendedprice}</span>
                 </div>
               </div>
             </div>

@@ -39,6 +39,8 @@ const tableData2: TableRow2[] = [
 ];
 
 const Home: FC = () => {
+  const router = useRouter();
+  const [grossrevenue, setgrossrevenue] = useState(false);
   const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
@@ -47,6 +49,15 @@ const Home: FC = () => {
     message: "",
     type: "",
   });
+  const [selectedYearOption, setSelectedYearOption] = useState<string>("2021");
+  const [isYearOpen, setIsYearOpen] = useState<boolean>(false);
+
+  const Yearoptions = [
+    { id: 1, name: "2024" },
+    { id: 2, name: "2023" },
+    { id: 3, name: "2022" },
+    { id: 4, name: "2021" },
+  ];
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -75,24 +86,12 @@ const Home: FC = () => {
     fetchDropdownData();
   }, []);
 
-  //year dropdown
-  const [selectedYearOption, setSelectedYearOption] = useState<string>("2021");
-  const [isYearOpen, setIsYearOpen] = useState<boolean>(false);
-
-  const Yearoptions = [
-    { id: 1, name: "2024" },
-    { id: 2, name: "2023" },
-    { id: 3, name: "2022" },
-    { id: 4, name: "2021" },
-  ];
-
+  
   const toggleYearDropdown = () => setIsYearOpen(!isYearOpen);
-
   const handleYearSelect = (option: { id: number; name: string }) => {
     setSelectedYearOption(option.name);
     setIsYearOpen(false);
   };
-
   const totalRevenue = tableData.reduce((sum, row) => sum + row.revenue, 0);
   const totalAmount = tableData.reduce(
     (sum, row) => sum + (row.amount ?? 0),
@@ -100,11 +99,6 @@ const Home: FC = () => {
   );
 
   /**first link(gross revenue) */
-  const router = useRouter();
-
-  const [grossrevenue, setgrossrevenue] = useState(false);
-  
-
   useEffect(() => {
     // Ensure the back icon is hidden on the home page
     sessionStorage.setItem("showBackIcon", "false");
@@ -116,39 +110,33 @@ const Home: FC = () => {
   };
 
   /**second link(tender) */
-
   const handleClick2 = () => {
-    router.push("/setup/tenders?fromHome=true"); // Navigates to the 'details' page
+    router.push("/setup/tenders?fromHome=true"); 
   };
 
   //forth link(customer count)
-
   const handleClick4 = () => {
-    router.push("/customercount"); // Navigates to the 'details' page
+    router.push("/customercount"); 
   };
 
   //fifth link(customer count)
-
   const handleClick5 = () => {
     router.push("/expenses?fromHome=true");
   };
 
   //sixth link(customer count)
-
   const handleClick6 = () => {
-    router.push("/invoices?fromHome=true"); // Navigates to the 'details' page
+    router.push("/invoices?fromHome=true"); 
   };
 
   //seventh link(customer count)//
-
   const handleClick7 = () => {
-    router.push("/expenses?fromLabourAnalysis=true"); // Navigates to the 'details' page
+    router.push("/expenses?fromLabourAnalysis=true"); 
   };
 
   //eighth link(customer count)
-
   const handleClick8 = () => {
-    router.push("/invoices?fromItemsAnalysis=true"); // Navigates to the 'details' page
+    router.push("/invoices?fromItemsAnalysis=true"); 
   };
 
   return (
@@ -156,18 +144,10 @@ const Home: FC = () => {
       className="max-h-[calc(100vh-60px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      {/* <div className="below-md:flex below-md:justify-center ">
-        <p className="text-[18px] font-bold text-defaultblack fixed top-0 z-30 mt-5 below-md:pl-0 below-md:pr-0 pl-6 pr-6">
-          Home
-        </p>
-      </div> */}
-
       <div className="flex flex-row items-center gap-3 pt-6 below-md:pt-4 sticky  bg-[#f7f8f9] px-6 below-md:px-3">
         {/* Dropdowns grouped together */}
         <div className="flex flex-row gap-3 w-full below-md:flex-col ">
-          {/* Dropdown 1 */}
           {/* First Dropdown */}
-
           <Dropdown
             options={store}
             selectedOption={selectedOption?.name || "Store"}
@@ -182,7 +162,6 @@ const Home: FC = () => {
             toggleOpen={toggleStoreDropdown}
           />
           {/* Second Dropdown */}
-
           <Dropdown
             options={Yearoptions}
             selectedOption={selectedYearOption}
@@ -192,7 +171,6 @@ const Home: FC = () => {
           />
         </div>
       </div>
-
       <div className=" px-6 below-md:px-3 pt-3 below-md:pt-0">
         <div className="grid grid-cols-2 gap-7 below-md:grid-cols-1 tablet:grid-cols-1 tablet:gap-3 tablet:grid-rows-2 below-md:grid-rows-2 below-md:gap-1 below-md:mt-1 w-full items-stretch ">
           {/* Gross Revenue Card */}
@@ -291,7 +269,6 @@ const Home: FC = () => {
         </div>
 
         {/* 1st grid*/}
-
         <div className="grid  grid-cols-3 below-md:grid-cols-1 tablet-home:grid-cols-2 gap-7 mb-4 below-md:gap-1 below-md:mt-1  below-md:flex-col items-stretch">
           <div className=" bg-white mt-6 below-md:mt-3 pb-6 border-t-4 border-[#C2D1C3]  rounded-md shadow-md below-md:shadow-none w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6">
