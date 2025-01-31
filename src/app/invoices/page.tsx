@@ -24,7 +24,6 @@ import { sendApiRequest } from "@/utils/apiUtils";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import UploadInvoicepopup from "@/Components/Invoice/UploadInvoicePopup";
 import Loading from "@/Components/UI/Themes/Loading";
-
 interface TableRow {
   invoicedate: string;
   storename: string;
@@ -47,6 +46,7 @@ const Invoices = () => {
   const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
+  const [showTooltip, setShowTooltip] = useState(false);
   const fileInputRef: any = useRef(null);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
@@ -64,18 +64,24 @@ const Invoices = () => {
       accessorKey: "storename",
       header: () => <div className="text-left">Store</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
-      size: 30,
+      size: 55,
+    },
+    {
+      accessorKey: "invoicenumber",
+      header: () => <div className="text-left">Invoice#</div>,
+      cell: (info) => <span className="text-left pl-1">{info.getValue() as string}</span>,
+      size:30
     },
     {
       accessorKey: "quantity",
       header: () => <div className="text-right">Quantity</div>,
       cell: (info) =>
         <span className="flex justify-end"> {info.getValue() as number}</span>,
-      size: 100,
+      size: 90,
     },
     {
       accessorKey: "total",
-      header: () => <div className="text-right pr-8">Total</div>,
+      header: () => <div className="text-right pr-9">Total</div>,
       cell: (info) => (
         <span className="flex justify-end pr-8">{info.getValue() as string}</span>
       ),
@@ -128,8 +134,7 @@ const Invoices = () => {
 
     return { ...item, date: formattedDate };
   });
-
-
+  
   const table = useReactTable({
     data: data,
     columns,
@@ -293,6 +298,7 @@ const Invoices = () => {
 
   const searchInputRef = useRef<HTMLInputElement>(null);
   const handleClick = () => {
+    // Focus the input field when the image is clicked
     if (searchInputRef.current) {
       searchInputRef.current.focus();
     }
@@ -314,14 +320,25 @@ const Invoices = () => {
     }
   }, []); 
 
- 
+  const handlePressStart = () => {
+    setShowTooltip(true);
+
+    setTimeout(() => {
+      setShowTooltip(false);
+    }, 2000);
+  };
+
+  const handlePressEnd = () => {
+    setShowTooltip(false);
+  };
+
 
   return (
     <main
       className="max-h-[calc(100vh-80px)] relative px-6 below-md:px-3 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-       {uploadPdfloading && (  <Loading  />)}
+      {uploadPdfloading && ( <Loading /> )}
       <div>
         {showBackIcon && (
           <img
@@ -332,7 +349,6 @@ const Invoices = () => {
           ></img>
         )}
       </div>
-   
       <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
         <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
           <Dropdown
@@ -346,13 +362,10 @@ const Invoices = () => {
             isOpen={isStoreDropdownOpen}
             toggleOpen={toggleStoreDropdown}
             widthchange="w-full"
-
           />
-
           <div className="below-lg:w-full tablet:w-full below-md:w-full">
             <DateRangePicker />
           </div>
-
           <div className="flex border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
             <input
               type="search"
@@ -401,7 +414,7 @@ const Invoices = () => {
 
               <div className="flex px-4 py-4">
                 <button
-                  onClick={() => (window.location.href = "/invoices/invoicedetails")}
+                  onClick={() =>   navigateToInvoice(card.invoiceid)}
                   className="text-green-500 hover:text-green-700"
                 >
                   <img
@@ -432,11 +445,35 @@ const Invoices = () => {
           </div>
         ))}
         <div className="fixed bottom-[70px] right-3">
-          <UploadInvoicepopup />
+        <button
+            className="focus:outline-none flex items-center bg-[#168A6F]  justify-center  w-[56px] h-[56px] rounded-xl relative"
+            onTouchStart={handlePressStart} // For mobile devices
+            onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
+            onClick={handleButtonClick}
+          >
+            <img
+              src="/images/mobileuploadicon.svg"
+              alt="Upload Invoice"
+              className="w-[18px] h-[18px]"
+            />
+            {showTooltip && (
+              <div className="absolute bottom-[75px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
+                Upload Invoice
+                {/* Tooltip Pointer */}
+                <div className="absolute top-full right-[20%] transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#79747E]"></div>
+              </div>
+            )}
+          </button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+          />
         </div>
         <div className="hidden below-md:block ">
-        <Pagination table={table} totalItems={totalItems} />
-      </div>
+          <Pagination table={table} totalItems={totalItems} />
+        </div>
       </div>
 
       {/*Web View : Invoice Table */}

@@ -203,7 +203,7 @@ const AddNewItems = ({setAddItems}:any) => {
         message={customToast.toastMessage}
         type={customToast.toastType}
       />
-      <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
+      <div className="hidden below-md:block justify-end fixed bottom-16 right-5">
         <button
           onClick={openModal}
           className="focus:outline-none flex items-center justify-center bg-[#168A6F]  w-[56px] h-[56px] rounded-xl relative"
@@ -234,22 +234,24 @@ const AddNewItems = ({setAddItems}:any) => {
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] h-auto below-md:w-[94%] below-md:h-auto px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
-            <div className="relative">
-              <div className="flex justify-center">
-                <DialogTitle
-                  as="h3"
-                  className=" font-medium  text-[#3D3D3D] opacity-80"
-                >
-                  Add Item
-                </DialogTitle>
-              </div>
-              <img
-                onClick={closeModal}
-                src="/images/cancelicon.svg"
-                alt="Cancel"
-                className="absolute top-1.5 right-0 cursor-pointer"
-              />
-            </div>
+             <div className="relative">
+                          <div className="flex justify-center">
+                            <DialogTitle
+                              as="h3"
+                              className="text-[16px]  font-bold leading-custom text-[#3D3D3D]"
+                            >
+                              Add Item
+                            </DialogTitle>
+                          </div>
+                          <img
+                            onClick={closeModal}
+                            src="/images/cancelicon.svg"
+                            alt="Cancel"
+                            className="absolute top-1.5 right-0 cursor-pointer"
+                          />
+            
+                        </div>
+            
 
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>

@@ -17,6 +17,8 @@ import {
 } from "@tanstack/react-table";
 import { sendApiRequest } from "@/utils/apiUtils";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import moment from "moment";
+import Loading from "@/Components/UI/Themes/Loading";
 
 interface TableRow {
   sales_date: string;
@@ -31,20 +33,25 @@ interface TableRow {
 
 
 const Sales: FC = () => {
-
   const router = useRouter();
-
-  const handleImageClick = () => {
-    router.push("/sales/sales_view"); 
-  };
+  const [data, setData] = useState<TableRow[]>([]);
+  const [totalItems, setTotalItems] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+  const [globalFilter, setGlobalFilter] = React.useState("");
 
   const navigateToSalesView = (salesId: any) => {
     const encodedId = btoa(salesId);
-    // Make the Base64 URL-safe by replacing `+` with `-`, `/` with `_`, and removing the padding (`=`):
     const urlSafeEncodedId = encodedId?.replace(/\+/g, '-')?.replace(/\//g, '_')?.replace(/=+$/, '');
     router.push(`/sales/${urlSafeEncodedId}`);
   };
-
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -117,36 +124,23 @@ const Sales: FC = () => {
     },
   ];
 
- 
-  const [data, setData] = useState<TableRow[]>([]);
-  const [totalItems, setTotalItems] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [selectedOption, setSelectedOption] = useState<any>();
-  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [store, setStore] = useState<any[]>([]);
-  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
-    message: "",
-    type: "",
-  });
-  const [globalFilter, setGlobalFilter] = React.useState("");
-
+  const formattedData = data?.map((item) => {
+    const rawDate = new Date(item?.sales_date);
   
-const formattedData = data?.map((item) => {
-  const rawDate = new Date(item?.sales_date);
-
-  // Format the date as MM-DD-YY
-  const formattedDate = `${(rawDate?.getMonth() + 1)
-    .toString()
-    .padStart(
-      2,
-      "0"
-    )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
-    .getFullYear()
-    .toString()
-    .slice(-2)}`;
-
-  return { ...item, date: formattedDate };
-});
+    // Format the date as MM-DD-YY
+    const formattedDate = `${(rawDate?.getMonth() + 1)
+      .toString()
+      .padStart(
+        2,
+        "0"
+      )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
+      .getFullYear()
+      .toString()
+      .slice(-2)}`;
+  
+    return { ...item, date: formattedDate };
+  });
+  
 
   const table = useReactTable({
     data: formattedData,
@@ -168,8 +162,7 @@ const formattedData = data?.map((item) => {
   });
 
   const { pageIndex, pageSize } = table.getState().pagination;
-
-
+  
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -196,33 +189,10 @@ const formattedData = data?.map((item) => {
       setLoading(false);
     }
   };
-  
-  // Fetch data on component mount and whenever pageIndex/pageSize changes
+   
   useEffect(() => {
     fetchData();
   }, [pageIndex, pageSize]);
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      console.log("Selected file:", file);
-    }
-  };
-
-  const handleUploadClick = () => {
-    document.getElementById("fileInput")?.click(); // Programmatically click the hidden input
-  };
-
-  const toggleStoreDropdown = () => {
-    setIsStoreDropdownOpen((prev) => !prev);
-  };
-
-  const handleError = (message: string) => {
-    setCustomToast({
-      message,
-      type: "error",
-    });
-  };
 
   const fetchDropdownData = async () => {
     try {
@@ -241,11 +211,121 @@ const formattedData = data?.map((item) => {
     fetchDropdownData();
   }, []);
 
-  const filteredData = data.filter((item) =>
-    JSON.stringify(item)
-      .toLowerCase()
-      .includes(globalFilter?.toLowerCase() || "")
-  );
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      setUploadPdfLoading(true);
+      if (file && file.type === "application/pdf") {
+        const formData = new FormData();
+        formData.append("file", file);
+        try {
+          const response = await fetch("https://hisabr-pdf-extractor.vercel.app/process-sales", {
+            method: "POST",
+            body: formData,
+          });
+
+          const responseData = await response.json();
+          console.log("Response:", responseData);
+          if (response.ok) {
+            const convertDate = new Date(responseData?.sales_date);
+            const formattedDate = convertDate?.getFullYear() + '-' +
+                      (convertDate?.getMonth() + 1)?.toString()?.padStart(2, '0') + '-' +
+                      convertDate?.getDate()?.toString()?.padStart(2, '0');
+            const jsonData: any = {
+              mode: "insertsales",
+			        sales_date: formattedDate,
+			        store_name: responseData?.store_name,
+              gross_sales_amt: responseData?.gross_sales,
+              net_sales_amt: responseData?.net_sales,
+              total_sales_count: responseData?.total_no_sales_count,
+              total_item_sales_amt: responseData?.total_item_sales,
+              taxable_item_sales_amt: responseData?.taxable_item_sales,
+              non_taxable_item_sales_amt: responseData?.non_taxable_item_sales,
+              orders_count: responseData?.order_count,
+              order_average_amt: responseData?.order_average,
+              guests_count: responseData?.guest_count,
+              tax_amt: responseData?.tax_amt,
+              surcharges_amt: responseData?.surcharges,
+              deposits_accepted_amt: responseData?.deposits_accepted_amount,
+              deposits_redeemed_amt: responseData?.deposits_redeemed_amount,
+              cash_deposits_accepted_amt: responseData?.cash_deposits_accepted,
+              non_cash_payments_amt: responseData?.non_cash_payments,
+              cash_tips_received_amt: responseData?.cash_tips_received,
+              total_cash_amt: responseData?.total_cash_amount,
+              cash_back_amt: responseData?.cash_back_amount,
+              paid_in_amt: responseData?.paid_in,
+              paid_out_amt: responseData?.paid_out,
+              discounts_amt: responseData?.discounts,
+              promotions_amt: responseData?.promotions,
+              refunds_amt: responseData?.refunds,
+              labor_cost_amt: responseData?.labor_cost,
+              labor_hours: responseData?.labor_hours,
+              labor_percent: responseData?.labor_percent,
+              sales_per_labor_hour_amt: responseData?.sales_per_labor_hour,
+              gift_card_issue_count: responseData?.gift_card_issue_count,
+              gift_card_issue_amt: responseData?.gift_card_issue_amount,
+              gift_card_reload_count: responseData?.gift_card_reload_count,
+              gift_card_reload_amt: responseData?.gift_card_reload_amount,
+              gift_card_promotions_amt: responseData?.gift_card_promotions,
+              gift_card_cash_out_count: responseData?.gift_card_cash_out_count,
+              gift_card_cash_out_amt: responseData?.gift_card_cash_out_amount,
+              voids_amt: responseData?.voids,
+              non_revenue_items_amt: responseData?.non_revenue_items,
+              donation_count: responseData?.donation_count,
+              donation_total_amt: responseData?.donation_total_amount
+            };
+            const result: any = await sendApiRequest(jsonData);
+            if (result?.status === 200) {
+              // const val: any = {
+              //   invoiceDetails: responseData?.invoice_items || [],
+              // };
+              // const res: any = await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
+              fetchData();
+            } else {
+              setTimeout(() => {
+                setCustomToast({
+                  message: "Failed to insert invoice details",
+                  type: "error",
+                });
+              }, 0);
+            }
+          } else {
+            alert("Failed to upload file.");
+          }
+        } catch (error) {
+          console.error("Error uploading file:", error);
+          alert("An error occurred.");
+        }finally {
+          setUploadPdfLoading(false); // Hide loader after upload
+        }
+      } else {
+        alert("Please upload a PDF file.");
+      }
+    } else {
+      alert("Please select a file.");
+      return;
+    }
+  };
+  
+  const handleImageClick = () => {
+    router.push("/sales/sales_view"); 
+  };
+
+  
+  const handleUploadClick = () => {
+    document.getElementById("fileInput")?.click(); // Programmatically click the hidden input
+  };
+
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+  };
+
+  const handleError = (message: string) => {
+    setCustomToast({
+      message,
+      type: "error",
+    });
+  };
 
   //tooltip for mobile
   const [showTooltip, setShowTooltip] = useState(false);
@@ -264,9 +344,10 @@ const formattedData = data?.map((item) => {
 
   return (
     <main
-      className="max-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] tablet:max-h-[calc(100vh-0)] overflow-auto"
+      className="max-h-[calc(100vh-60px)] relative below-md:max-h-[calc(100vh-0)] tablet:max-h-[calc(100vh-0)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
+      {uploadPdfloading && ( <Loading /> )}
       <div className="px-6 mt-6 below-md:px-3 below-md:mt-0 tablet:mt-4">
         <div className="flex flex-row below-md:flex-col pb-6 sticky z-20  below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
           <div className="flex flex-row below-md:flex-col w-full  gap-3">
@@ -425,7 +506,7 @@ const formattedData = data?.map((item) => {
         </div>
 
         {/* Pagination */}
-        <div className="tablet:hidden">
+        <div className="block below-md:hidden">
           <Pagination table={table} totalItems={totalItems} />
         </div>
 
@@ -446,11 +527,8 @@ const formattedData = data?.map((item) => {
                       className="w-5 h-5"
                     />
                   </div>
-                </div>
-               
-              </div>
-              
-            
+                </div>               
+              </div>            
               <div className="space-y-3 mb-2 px-2">
                 <div className="flex justify-between text-sm">
                   <p className="text-[#808080] text-[13px]">Store</p>
@@ -481,9 +559,10 @@ const formattedData = data?.map((item) => {
        )}
           </div>
         </div>
+       
       </div>
 
-      <div className="below-lg:hidden flex justify-end fixed bottom-5 right-5">
+      <div className="below-lg:hidden flex justify-end fixed bottom-16 right-3">
         <button
           className="focus:outline-none flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] w-[56px] h-[56px] rounded-xl relative"
           onTouchStart={handlePressStart} // For mobile devices
@@ -504,6 +583,9 @@ const formattedData = data?.map((item) => {
           )}
         </button>
       </div>
+      <div className="hidden below-md:block">
+          <Pagination table={table} totalItems={totalItems} />
+        </div>
     </main>
   );
 };

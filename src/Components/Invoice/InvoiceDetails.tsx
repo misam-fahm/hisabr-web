@@ -96,6 +96,10 @@ console.log("invoiceid",invoiceid)
               <span className="text-[#636363] text-[12px]">Product Total</span>
               <span className="text-[#636363] text-[13px] font-semibold">$8,068.89</span>
             </div>
+            {/* <div className="flex justify-between">
+              <span className="text-[#636363] text-[12px]">Miscellaneous</span>
+              <span className="text-[#636363] text-[13px] font-semibold">$0</span>
+            </div> */}
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Sub Total</span>
               <span className="text-[#636363] text-[13px] font-semibold">$8,076.39</span>
@@ -107,10 +111,6 @@ console.log("invoiceid",invoiceid)
             <div className="flex justify-between">
               <span className="text-[#636363] text-[12px]">Tax 2</span>
               <span className="text-[#636363] text-[13px] font-semibold">$1.52</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-[#636363] text-[12px]">Miscellaneous</span>
-              <span className="text-[#636363] text-[13px] font-semibold">$0</span>
             </div>
             <div className="flex justify-between border-t pt-2 mt-2">
               <span className="text-[#636363] text-[14px] font-semibold">Total</span>

@@ -17,17 +17,17 @@ interface JsonData {
   tenderid: number | null;
 }
 
-const EditTender = ({ initialData ,setAddTender}:any) => {
+const EditTender = ({ initialData, setAddTender }: any) => {
   const methods = useForm<any>({
     defaultValues: initialData, // Prepopulate form with existing data
   });
 
-  const [commission, setCommission] = useState( initialData?.commission);
+  const [commission, setCommission] = useState(initialData?.commission);
   const [name, setName] = useState(initialData?.tendername);
   const [isTenderDropdownOpen, setIsTenderDropdownOpen] = useState(false);
   const [tenderType, setTenderType] = useState<any[]>([]);
-  const { register, setValue, handleSubmit, watch ,clearErrors,trigger} = methods;
-  const selectedTenderType = watch("tendertype");  
+  const { register, setValue, handleSubmit, watch, clearErrors, trigger } = methods;
+  const selectedTenderType = watch("tendertype");
   const { control } = useForm(); // Initialize React Hook Form
   const [isOpen, setIsOpen] = useState(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
@@ -74,25 +74,25 @@ const EditTender = ({ initialData ,setAddTender}:any) => {
 
   useEffect(() => {
     if (isOpen) {
-    fetchData();
+      fetchData();
     }
   }, [isOpen]);
 
- 
+
   const onSubmit = async (data: any) => {
-   
+
     const jsonData: JsonData = {
       mode: "updatetender",
       tendertypeid: data?.tendertypeId ? data?.tendertypeId : initialData?.tendertypeid,
       tendername: data?.name?.trim(),
       commission: Number(data?.commission),
-      tenderid:Number(initialData?.tenderid)
+      tenderid: Number(initialData?.tenderid)
     };
-    
+
     try {
       const result: any = await sendApiRequest(jsonData);
-      const { status , data: responseData  } = result;
-    
+      const { status, data: responseData } = result;
+
 
       if (status === 200) {
         setCustomToast({
@@ -109,14 +109,14 @@ const EditTender = ({ initialData ,setAddTender}:any) => {
       console.error("Error submitting form:", error);
     }
   };
-  
+
   return (
     <>
-     <ToastNotification
+      <ToastNotification
         message={customToast.message}
         type={customToast.type}
       />
-       <div>
+      <div>
         <button onClick={openModal}>
           <img
             src="/images/editpencilicon.svg"
@@ -136,26 +136,29 @@ const EditTender = ({ initialData ,setAddTender}:any) => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] h-auto below-md:w-[94%] below-md:h-auto px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
             <div className="relative">
+              <div className="flex justify-center">
+                <DialogTitle
+                  as="h3"
+                  className="text-[16px]  font-bold leading-custom text-[#3D3D3D]"
+                >
+
+                  Edit Tender
+                </DialogTitle>
+              </div>
               <img
                 onClick={closeModal}
                 src="/images/cancelicon.svg"
                 alt="Cancel"
-                className="absolute top-0 right-0 cursor-pointer"
+                className="absolute top-1.5 right-0 cursor-pointer"
               />
-              <div className="flex justify-center mt-1">
-                <DialogTitle
-                  as="h3"
-                  className=" font-medium  text-[#3D3D3D] opacity-80"
-                >
-                  Edit Tender
-                </DialogTitle>
-              </div>
+
             </div>
+
 
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col mt-4 gap-4">
-                 
+
                   <div className="w-full flex mt-4">
                     {/* Description Input Field */}
                     <InputField
@@ -175,23 +178,23 @@ const EditTender = ({ initialData ,setAddTender}:any) => {
                     />
                   </div>
                   <div className="w-full flex mt-4">
-                  <Dropdown
+                    <Dropdown
                       options={tenderType}
-                      selectedOption={selectedTenderType ? selectedTenderType  :  initialData?.tendertypename ? initialData?.tendertypename  : "Tender Type" } 
+                      selectedOption={selectedTenderType ? selectedTenderType : initialData?.tendertypename ? initialData?.tendertypename : "Tender Type"}
                       onSelect={(selectedValue) => {
-                        setValue( "tendertype", selectedValue ? selectedValue?.name : initialData?.tendertypename );
-                        setValue("tendertypeId", selectedValue ? selectedValue?.id : initialData?.tendertypeid  );
-                        setIsTenderDropdownOpen(false); 
-                        clearErrors("tendertype"); 
+                        setValue("tendertype", selectedValue ? selectedValue?.name : initialData?.tendertypename);
+                        setValue("tendertypeId", selectedValue ? selectedValue?.id : initialData?.tendertypeid);
+                        setIsTenderDropdownOpen(false);
+                        clearErrors("tendertype");
                       }}
-                      
+
                       isOpen={isTenderDropdownOpen}
                       toggleOpen={toggleDropdownTenderType}
                       widthchange="w-full"
-                      // {...register("tendertype", {
-                      //   required: "Tender Type is required",
-                      // })}
-                      // errors={methods.formState.errors.tendertype} 
+                    // {...register("tendertype", {
+                    //   required: "Tender Type is required",
+                    // })}
+                    // errors={methods.formState.errors.tendertype} 
                     />
                   </div>
                   <div className="w-full flex mt-4">

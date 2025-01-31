@@ -268,10 +268,6 @@ const Expenses: FC = () => {
   }
   }, []);
 
-  // if (isLoading) {
-  //   return null; // Or a loading spinner
-  // }
-
 
 
 
@@ -334,7 +330,7 @@ const Expenses: FC = () => {
         </div>
 
         {/*Mobile View : Card section */}
-        <div className="block md:hidden mb-16">
+        <div className="block md:hidden mb-5">
           {data?.map((card, index) => (
             <div
               key={index}
@@ -375,6 +371,9 @@ const Expenses: FC = () => {
           <div className=" fixed hidden below-md:block">
             {" "}
             <AddExpenses setAddExpenses={setAddExpenses} />
+          </div>
+          <div className="hidden below-md:block ">
+          <Pagination table={table} totalItems={totalItems} />
           </div>
         </div>
 

@@ -28,16 +28,17 @@ interface TableRow {
 
 const Page: FC = () => {
   const router = useRouter();
- // const searchParams = useSearchParams();
   const [showBackIcon, setShowBackIcon] = useState(false);
+  const [globalFilter, setGlobalFilter] = React.useState("");
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isOpenAddTender, setAddTender] = useState(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
   });
-  const [isOpenAddTender, setAddTender] = useState(false);
+  
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "name",
@@ -86,7 +87,7 @@ const Page: FC = () => {
     },
   ];
 
-  const [globalFilter, setGlobalFilter] = React.useState("");
+ 
   const table = useReactTable({
     data,
     columns,
@@ -116,7 +117,6 @@ const Page: FC = () => {
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
       });
-
       if (response?.status === 200) {
         setData(response?.data?.tenders || []);
         response?.data?.total > 0 && setTotalItems(response?.data?.total || 0);
@@ -134,12 +134,9 @@ const Page: FC = () => {
       setAddTender(false);
     }
   };
-
   useEffect(() => {
     fetchData();
   }, [pageIndex, pageSize, isOpenAddTender]);
-
-  
 
   const handleAddTender = (newExpense: any) => {
     setData((prevExpenses) => [...prevExpenses, newExpense]);
@@ -147,23 +144,17 @@ const Page: FC = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // Parse query parameters from window.location.search
       const params = new URLSearchParams(window.location.search);
       const fromHome = params.get("fromHome") === "true";
-
       if (fromHome) {
         setShowBackIcon(true);
-
-        // Remove the query parameter by replacing the URL
-        const currentUrl = window.location.pathname; // URL without query params
+        const currentUrl = window.location.pathname; 
         window.history.replaceState({}, "", currentUrl);
       }
     }
   }, []);
 
   
-
-
   return (
     <main
       className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-4 overflow-auto"
@@ -185,7 +176,6 @@ const Page: FC = () => {
           <AddTender setAddTender={setAddTender} />
         </div>
       </div>
-
       {/* mobile view */}
       <div
         className="block md:hidden"
@@ -220,17 +210,14 @@ const Page: FC = () => {
                 </>
               </div>
             </div>
-
             {/* Border */}
             <div className=" border-b bg-gray-200 my-3"></div>
-
             <div className="  flex justify-between">
               <span className=" text-[#636363] text-[13px] mb-2">Type</span>{" "}
               <span className=" text-[14px]">
                 {row?.original?.tendertypename}
               </span>
             </div>
-
             <div className=" mt-1 flex justify-between">
               <span className=" text-[#636363] text-[13px] mb-2">
                 Commission
@@ -244,8 +231,10 @@ const Page: FC = () => {
           {" "}
           <AddTender setAddTender={setAddTender} />
         </div>
+        <div className="hidden below-md:block ">
+          <Pagination table={table} totalItems={totalItems} />
+          </div>
       </div>
-
       {/* Desktop View */}
       <div className="overflow-x-auto border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block shadow-sm">
         <div className="overflow-hidden max-w-full">
@@ -271,7 +260,6 @@ const Page: FC = () => {
               ))}
             </thead>
           </table>
-
           <div
             className="w-full overflow-y-auto scrollbar-thin flex-grow"
             style={{ maxHeight: "calc(100vh - 270px)" }}
@@ -323,8 +311,9 @@ const Page: FC = () => {
           </div>
         </div>
       </div>
-
+      <div className="mt-4 below-md:hidden">
       <Pagination table={table} totalItems={totalItems} />
+      </div>
     </main>
   );
 };

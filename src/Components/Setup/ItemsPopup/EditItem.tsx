@@ -240,21 +240,23 @@ const EditItems = ({rowData , setAddItems}:any) => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] h-auto below-md:w-[94%] below-md:h-auto px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
             <div className="relative">
-              <img
-                onClick={closeModal}
-                src="/images/CancelIcon.svg"
-                alt="Cancel"
-                className="absolute top-0 right-0 cursor-pointer"
-              />
-              <div className="flex justify-center mt-1">
-                <DialogTitle
-                  as="h3"
-                  className=" font-medium  text-[#3D3D3D] opacity-80"
-                >
-                  Edit Item
-                </DialogTitle>
-              </div>
-            </div>
+                         <div className="flex justify-center">
+                           <DialogTitle
+                             as="h3"
+                             className="text-[16px]  font-bold leading-custom text-[#3D3D3D]"
+                           >
+                             Edit Item
+                           </DialogTitle>
+                         </div>
+                         <img
+                           onClick={closeModal}
+                           src="/images/cancelicon.svg"
+                           alt="Cancel"
+                           className="absolute top-1.5 right-0 cursor-pointer"
+                         />
+           
+                       </div>
+           
 
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>

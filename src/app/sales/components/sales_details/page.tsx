@@ -44,7 +44,7 @@ const data: TableData[] = [
     category: "Item Sales",
     rows: [
       { description: "Total Item Sales", value: "$" + (saleDetails?.total_item_sales_amt === null ? "0" :saleDetails?.total_item_sales_amt )  },
-      { description: "Taxable Item Sales", value: "$" +  (saleDetails?.total_item_sales_amt === "null" ? "0" :saleDetails?.taxable_item_sales_amt )},
+      { description: "Taxable Item Sales", value: "$" +  (saleDetails?.total_item_sales_amt === null ? "0" :saleDetails?.taxable_item_sales_amt )},
       { description: "Non-Taxable Item Sales", value: "$" + saleDetails?.non_taxable_item_sales_amt },
     ],
   },
