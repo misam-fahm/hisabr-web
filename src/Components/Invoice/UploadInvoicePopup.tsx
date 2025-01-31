@@ -82,7 +82,7 @@ const closeModal = () => setIsOpen(false);
             onClick={openModal}
           >
             <img
-              src="/images/mobileuploadicon.svg"
+              src="/images/uploadIcon.svg"
               alt="Upload Invoice"
               className="w-[18px] h-[18px]"
             />

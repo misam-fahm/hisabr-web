@@ -368,7 +368,7 @@ const Expenses: FC = () => {
               </div>
             </div>
           ))}
-          <div className=" fixed hidden below-md:block">
+          <div className=" fixed hidden below-md:block bottom-[70px] right-3">
             {" "}
             <AddExpenses setAddExpenses={setAddExpenses} />
           </div>
