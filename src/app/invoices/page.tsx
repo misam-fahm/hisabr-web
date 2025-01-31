@@ -406,7 +406,7 @@ const Invoices = () => {
 
               <div className="flex px-4 py-4">
                 <button
-                  onClick={() => (window.location.href = "/invoices/invoicedetails")}
+                  onClick={() =>   navigateToInvoice(card.invoiceid)}
                   className="text-green-500 hover:text-green-700"
                 >
                   <img

@@ -187,23 +187,25 @@ const EditExpense = ({ initialData , setAddExpenses}:any) => {
       <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[335px] h-[430px] below-md:w-[94%] below-md:h-[450] px-6 below-md:px-4 py-3 bg-white rounded-lg shadow-lg flex flex-col">
-            <div className="relative">
-              <img
-                onClick={closeModal}
-                src="/images/cancelicon.svg"
-                alt="Cancel"
-                className="absolute top-0 right-0 cursor-pointer"
-              />
-              <div className="flex justify-center mt-1">
-                <DialogTitle
-                  as="h3"
-                  className="text-[16px]  font-bold leading-custom text-[#3D3D3D]"
-                >
-                  Edit Expense
-                </DialogTitle>
-              </div>
-            </div>
+          <DialogPanel className="w-[335px] h-auto below-md:w-[94%] below-md:h-[450] px-6 below-md:px-4 py-6 bg-white rounded-lg shadow-lg flex flex-col">
+             <div className="relative">
+                          <div className="flex justify-center">
+                            <DialogTitle
+                              as="h3"
+                              className="text-[16px]  font-bold leading-custom text-[#3D3D3D]"
+                            >
+                              Edit Expense
+                            </DialogTitle>
+                          </div>
+                          <img
+                            onClick={closeModal}
+                            src="/images/cancelicon.svg"
+                            alt="Cancel"
+                            className="absolute top-1.5 right-0 cursor-pointer"
+                          />
+            
+                        </div>
+            
 
 
             {/* EditExpense Form */}
@@ -211,7 +213,7 @@ const EditExpense = ({ initialData , setAddExpenses}:any) => {
               <form
                 onSubmit={methods.handleSubmit(onSubmit)}
               >
-                <div className="flex flex-col h-full mt-4 gap-6">
+                <div className="flex flex-col mt-4 gap-6">
                 <Dropdown
                     options={store}
                     selectedOption={selectedStore ? selectedStore || "Store" : initialData?.storename } 

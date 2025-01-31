@@ -1,10 +1,10 @@
 "use client";
 
-import React, {useState } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/UI/Themes/DropDown";
-import { FormProvider, useForm,} from "react-hook-form";
+import { FormProvider, useForm, } from "react-hook-form";
 import { format } from "date-fns";
 import { InputField } from "../UI/Themes/InputField";
 import CustomDatePicker from "../UI/Themes/CustomDatePicker";
@@ -34,25 +34,25 @@ interface CustomToast {
 const AddExpenses = ({ setAddExpenses }: any) => {
 
   const methods = useForm();
-  const { setValue, watch , clearErrors } = methods;
+  const { setValue, watch, clearErrors } = methods;
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
-  const {control,handleSubmit,register,formState: { errors },} = useForm<ExpenseFormInputs>(); 
+  const { control, handleSubmit, register, formState: { errors }, } = useForm<ExpenseFormInputs>();
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [isExpenseDropdownOpen, setIsExpenseDropdownOpen] = useState(false); 
-  const selectedStore = watch("store"); 
-  const selectedExpense = watch("expenseType"); 
+  const [isExpenseDropdownOpen, setIsExpenseDropdownOpen] = useState(false);
+  const selectedStore = watch("store");
+  const selectedExpense = watch("expenseType");
   // const [isStoreFetched, setIsStoreFetched] = useState(false);
   // const [isExpenseFetched, setIsExpenseFetched] = useState(false);
   const [expensetypes, setExpensetypes] = useState<any[]>([]);
   const [store, setStore] = useState<any[]>([]);
   const [customToast, setCustomToast] = useState<CustomToast>({
-      toastMessage: "",
-      toastType: "",
-    });
-  
+    toastMessage: "",
+    toastType: "",
+  });
+
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -60,7 +60,7 @@ const AddExpenses = ({ setAddExpenses }: any) => {
   };
   const toggleExpenseDropdown = () => {
     setIsExpenseDropdownOpen((prev) => !prev);
-    setIsStoreDropdownOpen(false); 
+    setIsStoreDropdownOpen(false);
   };
 
 
@@ -73,115 +73,115 @@ const AddExpenses = ({ setAddExpenses }: any) => {
   const handlePressEnd = () => {
     setShowTooltip(false);
   };
- 
-    const handleChange = (data: any) => {
-      setDescription(data);
-      methods.setValue("description", data); 
+
+  const handleChange = (data: any) => {
+    setDescription(data);
+    methods.setValue("description", data);
+  };
+
+  const handleChangeAmount = (data: any) => {
+    setAmount(data);
+    methods.setValue("amount", data);
+  };
+
+  const openModal = async () => {
+    setIsOpen(true);
+    methods.reset({
+      store: "",
+      storeId: null,
+      expenseType: "",
+      expenseTypeId: null,
+      date: null,
+      description: "",
+      amount: "",
+    });
+
+    setDescription("");
+    setAmount("");
+
+
+    try {
+      const response: any = await sendApiRequest({ mode: "getallstores" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+        // setIsStoreFetched(true);
+      } else {
+        setCustomToast({
+          ...customToast,
+          toastMessage: response?.message,
+          toastType: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+
+
+
+    try {
+      const response: any = await sendApiRequest({ mode: "getallexpensetypes" });
+      if (response?.status === 200) {
+        setExpensetypes(response?.data?.expensetypes || []);
+        // setIsExpenseFetched(true); 
+      } else {
+        setCustomToast({
+          ...customToast,
+          toastMessage: response?.message,
+          toastType: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching expense types:", error);
+    }
+
+  };
+  const closeModal = () => setIsOpen(false);
+
+  // const onSubmit = (data: any) => {
+  //   const payload = {
+  //     date: format(data?.date , "MM-dd-yyyy"),
+  //        expenseType: data?.expenseTypeId,
+  //      store: data?.storeId,
+  //    description: data?.description,
+  //        amount: data?.amount,
+  //   };
+  //   console.log("Form Data with IDs:", payload);
+  // };
+
+  const onSubmit = async (data: any) => {
+
+    const jsonData: JsonData = {
+      mode: "insertexpense",
+      expensedate: format(data?.date, "yyyy-MM-dd"),
+      expenseid: data?.expenseTypeId,
+      storeid: data?.storeId,
+      description: data?.description,
+      amount: Number(data?.amount),
     };
 
-    const handleChangeAmount = (data: any) => {
-      setAmount(data);
-      methods.setValue("amount", data);
-    };
-   
-    const openModal = async () => {
-      setIsOpen(true);
-      methods.reset({
-        store: "",
-        storeId: null,
-        expenseType: "",
-        expenseTypeId: null,
-        date: null,
-        description: "",
-        amount: "",
-      });
-    
-      setDescription("");
-      setAmount("");
-    
-   
-        try {
-          const response: any = await sendApiRequest({ mode: "getallstores" });
-          if (response?.status === 200) {
-            setStore(response?.data?.stores || []);
-            // setIsStoreFetched(true);
-          } else {
-            setCustomToast({
-              ...customToast,
-              toastMessage: response?.message,
-              toastType: "error",
-            });
-          }
-        } catch (error) {
-          console.error("Error fetching stores:", error);
-        }
-      
-  
-     
-        try {
-          const response: any = await sendApiRequest({ mode: "getallexpensetypes" });
-          if (response?.status === 200) {
-            setExpensetypes(response?.data?.expensetypes || []);
-            // setIsExpenseFetched(true); 
-          } else {
-            setCustomToast({
-              ...customToast,
-              toastMessage: response?.message,
-              toastType: "error",
-            });
-          }
-        } catch (error) {
-          console.error("Error fetching expense types:", error);
-        }
-      
-    };
-    const closeModal = () => setIsOpen(false);
-
-    // const onSubmit = (data: any) => {
-    //   const payload = {
-    //     date: format(data?.date , "MM-dd-yyyy"),
-    //        expenseType: data?.expenseTypeId,
-    //      store: data?.storeId,
-    //    description: data?.description,
-    //        amount: data?.amount,
-    //   };
-    //   console.log("Form Data with IDs:", payload);
-    // };
-
-    const onSubmit = async (data: any) => {
-      
-      const jsonData: JsonData = {
-        mode: "insertexpense",
-        expensedate: format(data?.date, "yyyy-MM-dd"),
-        expenseid: data?.expenseTypeId,
-        storeid: data?.storeId,
-        description: data?.description,
-        amount: Number(data?.amount),
-      };
-    
-      try {
-        const result: any = await sendApiRequest(jsonData);
-        const { status, data: responseData } = result; // Assuming responseData contains the new expense data or its ID
-        setTimeout(() => {
+    try {
+      const result: any = await sendApiRequest(jsonData);
+      const { status, data: responseData } = result; // Assuming responseData contains the new expense data or its ID
+      setTimeout(() => {
         setCustomToast({
           toastMessage: status === 200 ? "Item added successfully!" : "Failed to add item.",
           toastType: status === 200 ? "success" : "error",
         });
       }, 0);
-        if (status === 200) {
-          closeModal();
-          setAddExpenses(true)
-        }
-      } catch (error :any) {
-        setTimeout(() => {
-          setCustomToast({
-            toastMessage: error?.message,
-            toastType: "error",
-          });
-        }, 0);
+      if (status === 200) {
+        closeModal();
+        setAddExpenses(true)
       }
-    };
-    
+    } catch (error: any) {
+      setTimeout(() => {
+        setCustomToast({
+          toastMessage: error?.message,
+          toastType: "error",
+        });
+      }, 0);
+    }
+  };
+
 
   return (
     <>
@@ -192,8 +192,8 @@ const AddExpenses = ({ setAddExpenses }: any) => {
       <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
         <button
           onClick={openModal}
-          onTouchStart={handlePressStart} 
-          onMouseLeave={handlePressEnd} 
+          onTouchStart={handlePressStart}
+          onMouseLeave={handlePressEnd}
           className="focus:outline-none flex items-center justify-center bg-[#168A6F]  w-[56px] h-[56px] rounded-xl relative"
         >
           <img
@@ -228,15 +228,9 @@ const AddExpenses = ({ setAddExpenses }: any) => {
       >
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-[335px] h-[430px] below-md:w-[94%] below-md:h-[450px] px-6 below-md:px-4 py-3 bg-white rounded-lg shadow-lg flex flex-col">
+          <DialogPanel className="w-[335px] h-auto below-md:w-[94%] below-md:h-[450px] px-6 below-md:px-4 py-6 bg-white rounded-lg shadow-lg flex flex-col">
             <div className="relative">
-              <img
-                onClick={closeModal}
-                src="/images/cancelicon.svg"
-                alt="Cancel"
-                className="absolute top-0 right-0 cursor-pointer"
-              />
-              <div className="flex justify-center mt-1">
+              <div className="flex justify-center">
                 <DialogTitle
                   as="h3"
                   className="text-[16px]  font-bold leading-custom text-[#3D3D3D]"
@@ -244,23 +238,30 @@ const AddExpenses = ({ setAddExpenses }: any) => {
                   Add Expense
                 </DialogTitle>
               </div>
+              <img
+                onClick={closeModal}
+                src="/images/cancelicon.svg"
+                alt="Cancel"
+                className="absolute top-1.5 right-0 cursor-pointer"
+              />
+
             </div>
 
             <FormProvider {...methods}>
               <form
                 onSubmit={methods.handleSubmit(onSubmit)}
               >
-                <div className="flex flex-col h-full mt-4 gap-6">
+                <div className="flex flex-col  mt-4 gap-6">
 
                   {/* Store Input Field */}
                   <Dropdown
                     options={store}
-                    selectedOption={selectedStore || "Store"} 
+                    selectedOption={selectedStore || "Store"}
                     onSelect={(selectedOption) => {
-                      setValue("store", selectedOption.name); 
+                      setValue("store", selectedOption.name);
                       setValue("storeId", selectedOption.id);
-                      setIsStoreDropdownOpen(false); 
-                      clearErrors("store"); 
+                      setIsStoreDropdownOpen(false);
+                      clearErrors("store");
 
                     }}
                     isOpen={isStoreDropdownOpen}
@@ -269,17 +270,17 @@ const AddExpenses = ({ setAddExpenses }: any) => {
                     {...methods.register("store", {
                       required: "Store Selection is required",
                     })}
-                    errors={methods.formState.errors.store} 
+                    errors={methods.formState.errors.store}
                   />
                   {/* Expense Type Input Field */}
                   <Dropdown
                     options={expensetypes}
-                    selectedOption={selectedExpense || "Expense Type"} 
+                    selectedOption={selectedExpense || "Expense Type"}
                     onSelect={(selectedOption) => {
                       setValue("expenseType", selectedOption.name);
                       setValue("expenseTypeId", selectedOption.id);
                       setIsExpenseDropdownOpen(false);
-                      clearErrors("expenseType"); 
+                      clearErrors("expenseType");
 
                     }}
                     isOpen={isExpenseDropdownOpen}
@@ -291,30 +292,15 @@ const AddExpenses = ({ setAddExpenses }: any) => {
                     errors={methods.formState.errors.expenseType} // Explicitly cast the type
                   />
 
-                  {/* Date input field */}
-                  {/* <Controller
-                    name="date"
-                    control={control}
-                    rules={{ required: "Date is required" }}
-                    render={({ field }) => (
-                      <CustomDatePicker
-                        value={field.value}
-                        onChange={(date) => field.onChange(date)} // Pass the date to React Hook Form
-                        placeholder="Date"
-                      />
-                    )}
-                  />
-                  {errors.date && (
-                    <p className="text-red-500 text-sm mt-1">{errors.date.message}</p>
-                  )} */}
+
                   <CustomDatePicker
-                       value={methods.watch("date")}
-                       onChange={(date) =>
-                       methods.setValue("date", date, { shouldValidate: true })
-                     }
-                       placeholder="Date"
-                       errors={methods.formState.errors.date?.message}
-                      /> 
+                    value={methods.watch("date")}
+                    onChange={(date) =>
+                      methods.setValue("date", date, { shouldValidate: true })
+                    }
+                    placeholder="Date"
+                    errors={methods.formState.errors.date?.message}
+                  />
                   {/* Description field */}
                   <InputField
                     type="text"
