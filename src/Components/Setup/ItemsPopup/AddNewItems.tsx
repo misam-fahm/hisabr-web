@@ -203,7 +203,7 @@ const AddNewItems = ({setAddItems}:any) => {
         message={customToast.toastMessage}
         type={customToast.toastType}
       />
-      <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
+      <div className="hidden below-md:block justify-end fixed bottom-16 right-5">
         <button
           onClick={openModal}
           className="focus:outline-none flex items-center justify-center bg-[#168A6F]  w-[56px] h-[56px] rounded-xl relative"

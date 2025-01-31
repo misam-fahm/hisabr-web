@@ -248,6 +248,9 @@ const Page: FC = () => {
           {" "}
           <AddStore setAddStore={setopenAddStore} />
         </div>
+        <div className="hidden below-md:block ">
+          <Pagination table={table} totalItems={totalItems} />
+          </div>
       </div>
 
       {/* Desktop View */}
@@ -323,8 +326,9 @@ const Page: FC = () => {
           </div>
         </div>
       </div>
-
+      <div className="mt-4 below-md:hidden">
       <Pagination table={table} totalItems={totalItems} />
+      </div>
     </main>
   );
 };

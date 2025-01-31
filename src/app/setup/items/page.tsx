@@ -236,8 +236,11 @@ const Page: FC = () => {
           ))) : (
             <div>No data available</div>)}
           {/* Add NewItems bottom */}
-          <div className=" fixed bottom-[20px] below-lg:hidden right-3">
+          <div className=" block pl-24">
             <AddNewItems setAddItems={setAddItems} />
+          </div>
+          <div className="hidden below-md:block ">
+          <Pagination table={table} totalItems={totalItems} />
           </div>
         </div>
 

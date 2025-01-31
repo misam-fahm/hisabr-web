@@ -189,7 +189,7 @@ const AddExpenses = ({ setAddExpenses }: any) => {
         message={customToast.toastMessage}
         type={customToast.toastType}
       />
-      <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
+      <div className="hidden below-md:block justify-end fixed bottom-16 right-5">
         <button
           onClick={openModal}
           onTouchStart={handlePressStart}
