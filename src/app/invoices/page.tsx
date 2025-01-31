@@ -23,7 +23,7 @@ import Pagination from "@/Components/UI/Pagination/Pagination";
 import { sendApiRequest } from "@/utils/apiUtils";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import UploadInvoicepopup from "@/Components/Invoice/UploadInvoicePopup";
-
+import Loading from "@/Components/UI/Themes/Loading";
 interface TableRow {
   invoicedate: string;
   storename: string;
@@ -42,6 +42,47 @@ const Invoices = () => {
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [globalFilter, setGlobalFilter] = React.useState("");
+  const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+
+  const fetchDropdownData = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getallstores" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Ensure this code only runs on the client-side (after the page has mounted)
+    fetchDropdownData();
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search)
+      const fromHome = params.get("fromHome") === "true";
+      const fromItemsAnalysis = params.has("fromItemsAnalysis");
+
+      if (fromHome || fromItemsAnalysis) {
+        setShowBackIcon(true);
+
+        // Remove "fromHome" from the URL (to avoid showing it on page reload)
+        const currentUrl = window.location.pathname;
+        window.history.replaceState({},"",currentUrl) // Update the URL without the query parameter
+      }
+    }
+  }, []);
 
   const navigateToInvoice = (invoiceId: any) => {
     const encodedId = btoa(invoiceId);
@@ -119,8 +160,7 @@ const Invoices = () => {
 
     return { ...item, date: formattedDate };
   });
-
-
+  
   const table = useReactTable({
     data: data,
     columns,
@@ -141,35 +181,34 @@ const Invoices = () => {
   });
 
   const { pageIndex, pageSize } = table.getState().pagination;
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getinvoices",
+        page: table.getState().pagination.pageIndex + 1,
+        limit: table.getState().pagination.pageSize,
+      });
+
+      if (response?.status === 200) {
+        setData(response?.data?.invoices || []);
+        response?.data?.total > 0 &&
+          setTotalItems(response?.data?.total || 0);
+      } else {
+        setCustomToast({
+          ...customToast,
+          message: response?.message,
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response: any = await sendApiRequest({
-          mode: "getinvoices",
-          page: table.getState().pagination.pageIndex + 1,
-          limit: table.getState().pagination.pageSize,
-        });
-
-        if (response?.status === 200) {
-          setData(response?.data?.invoices || []);
-          response?.data?.total > 0 &&
-            setTotalItems(response?.data?.total || 0);
-        } else {
-          setCustomToast({
-            ...customToast,
-            message: response?.message,
-            type: "error",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, [pageIndex, pageSize]);
 
@@ -186,7 +225,7 @@ const Invoices = () => {
         const formData = new FormData();
         formData.append("file", file);
         try {
-          const response = await fetch("https://hisabr-pdf-extractor.vercel.app/convert-pdf", {
+          const response = await fetch("https://hisabr-pdf-extractor.vercel.app/process-invoice", {
             method: "POST",
             body: formData,
           });
@@ -214,6 +253,9 @@ const Invoices = () => {
                 invoiceDetails: responseData?.invoice_items || [],
               };
               const res: any = await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
+              if (res?.status === 200) {
+                fetchData();
+              }
             } else {
               setTimeout(() => {
                 setCustomToast({
@@ -222,31 +264,34 @@ const Invoices = () => {
                 });
               }, 0);
             }
-
           } else {
-            alert("Failed to upload file.");
+            setCustomToast({
+              message: "An error occurred while uploading the file.",
+              type: "error",
+            });
           }
         } catch (error) {
           console.error("Error uploading file:", error);
           alert("An error occurred.");
+        } finally {
+          setUploadPdfLoading(false); // Hide loader after upload
         }
       } else {
-        alert("Please upload a PDF file.");
+        setCustomToast({
+          message: "Please upload a PDF file.",
+          type: "error",
+        });
+        // alert("Please upload a PDF file.");
       }
     } else {
-      alert("Please select a file.");
+      // alert("Please select a file.");
+      setCustomToast({
+        message: "Please select a file.",
+        type: "error",
+      });
       return;
     }
   };
-  /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<any>();
-  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [store, setStore] = useState<any[]>([]);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
-    message: "",
-    type: "",
-  });
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -257,23 +302,8 @@ const Invoices = () => {
       message,
       type: "error",
     });
-  };
-
-  const fetchDropdownData = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getallstores" });
-      if (response?.status === 200) {
-        setStore(response?.data?.stores || []);
-      } else {
-        handleError(response?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
-    }
-  };
-  useEffect(() => {
-    fetchDropdownData();
-  }, []);
+  };  
+  
   // const calendarRef = useRef<DatePicker | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const handleClick = () => {
@@ -282,9 +312,6 @@ const Invoices = () => {
       searchInputRef.current.focus();
     }
   };
-
-  //tooltip for mobile
-  const [showTooltip, setShowTooltip] = useState(false);
 
   const handlePressStart = () => {
     setShowTooltip(true);
@@ -296,34 +323,14 @@ const Invoices = () => {
 
   const handlePressEnd = () => {
     setShowTooltip(false);
-  };
-  useEffect(() => {
-    // Ensure this code only runs on the client-side (after the page has mounted)
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search)
-      const fromHome = params.get("fromHome") === "true";
-      const fromItemsAnalysis = params.has("fromItemsAnalysis");
-
-      if (fromHome || fromItemsAnalysis) {
-        setShowBackIcon(true);
-
-        // Remove "fromHome" from the URL (to avoid showing it on page reload)
-        const currentUrl = window.location.pathname;
-        window.history.replaceState({},"",currentUrl) // Update the URL without the query parameter
-      }
-    }
-  }, []); // Dependency on searchParams to check when they change
-
-  // const handleBack = () => {
-  //   router.push("/");
-  // };
-
+  };  
 
   return (
     <main
-      className="max-h-[calc(100vh-80px)] px-6 below-md:px-3 overflow-auto"
+      className="max-h-[calc(100vh-80px)] relative px-6 below-md:px-3 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
+      {uploadPdfloading && ( <Loading /> )}
       <div>
         {showBackIcon && (
           <img
@@ -347,13 +354,10 @@ const Invoices = () => {
             isOpen={isStoreDropdownOpen}
             toggleOpen={toggleStoreDropdown}
             widthchange="w-full"
-
           />
-
           <div className="below-lg:w-full tablet:w-full below-md:w-full">
             <DateRangePicker />
           </div>
-
           <div className="flex border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
             <input
               type="search"
@@ -388,7 +392,7 @@ const Invoices = () => {
         </div>
       </div>
       {/* Mobile View : Card section */}
-      <div className="block md:hidden">
+      <div className="block md:hidden relative">
         {formattedData.map((card, index) => (
           <div
             key={index}
@@ -432,8 +436,11 @@ const Invoices = () => {
             </div>
           </div>
         ))}
-        <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
+        <div className="fixed bottom-[70px] right-3">
           <UploadInvoicepopup />
+        </div>
+        <div className="hidden below-md:block ">
+          <Pagination table={table} totalItems={totalItems} />
         </div>
       </div>
 

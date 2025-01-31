@@ -74,7 +74,7 @@ const closeModal = () => setIsOpen(false);
         </button>
       </div>
 
-      <div className="hidden below-md:block justify-end fixed bottom-5 right-5">
+      <div className="hidden below-md:block sticky ">
           <button
             className="focus:outline-none flex items-center bg-[#168A6F]  justify-center  w-[56px] h-[56px] rounded-xl relative"
             onTouchStart={handlePressStart} // For mobile devices
