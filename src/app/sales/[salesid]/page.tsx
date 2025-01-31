@@ -7,21 +7,27 @@ import Discounts from "../components/discounts/page";
 import Destinations from "../components/destinations/page";
 import Promotions from "../components/promotions/page";
 import CashSkims from "../components/cash-skims/page";
-import { useRouter } from "next/navigation";
+import { useRouter,useParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
-const tabContent: Record<string, JSX.Element> = {
-  "Sales Details": <SalesDetails />,
-  Tenders: <Tenders />,
-  "Revenue Center": <Revenue />,
-  Taxes: <Taxes />,
-  Discounts: <Discounts />,
-  Destinations: <Destinations />,
-  Promotions: <Promotions />,
-  "Cash Skims": <CashSkims />,
-};
+
 
 const DetailsPage: React.FC = () => {
+
+  const { salesid }: any = useParams(); // Extract the encoded ID from the URL
+  const decodedSalesId = atob(salesid);
+
+  const tabContent: Record<any, JSX.Element> = {
+    "Sales Details": <SalesDetails SalesId ={decodedSalesId} />,
+    Tenders: <Tenders />,
+    "Revenue Center": <Revenue />,
+    Taxes: <Taxes />,
+    Discounts: <Discounts />,
+    Destinations: <Destinations />,
+    Promotions: <Promotions />,
+    "Cash Skims": <CashSkims />,
+  };
+
   const [activeTab, setActiveTab] =
     useState<keyof typeof tabContent>("Sales Details");
   const [showLeftArrow, setShowLeftArrow] = useState(false);
