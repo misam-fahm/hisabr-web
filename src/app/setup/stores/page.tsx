@@ -234,6 +234,9 @@ const Page: FC = () => {
           {" "}
           <AddStore setAddStore={setopenAddStore} />
         </div>
+        <div className="hidden below-md:block ">
+          <Pagination table={table} totalItems={totalItems} />
+          </div>
       </div>
       {/* Desktop View */}
       <div className="overflow-x-auto shadow-sm border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block">
@@ -307,7 +310,9 @@ const Page: FC = () => {
           </div>
         </div>
       </div>
+      <div className="mt-4 below-md:hidden">
       <Pagination table={table} totalItems={totalItems} />
+      </div>
     </main>
   );
 };

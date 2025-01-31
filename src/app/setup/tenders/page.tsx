@@ -231,6 +231,9 @@ const Page: FC = () => {
           {" "}
           <AddTender setAddTender={setAddTender} />
         </div>
+        <div className="hidden below-md:block ">
+          <Pagination table={table} totalItems={totalItems} />
+          </div>
       </div>
       {/* Desktop View */}
       <div className="overflow-x-auto border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block shadow-sm">
@@ -308,7 +311,9 @@ const Page: FC = () => {
           </div>
         </div>
       </div>
+      <div className="mt-4 below-md:hidden">
       <Pagination table={table} totalItems={totalItems} />
+      </div>
     </main>
   );
 };

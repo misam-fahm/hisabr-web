@@ -203,8 +203,11 @@ const Page: FC = () => {
             <div>No data available</div>
           )}
           {/* Add NewItem bottom */}
-          <div className="block pl-24 ">
+          <div className="block pl-24">
             <AddCategories setAddCategories={setAddCategories}/>
+          </div>
+          <div className="hidden below-md:block ">
+          <Pagination table={table} totalItems={totalItems} />
           </div>
         </div>
 
@@ -288,8 +291,9 @@ const Page: FC = () => {
           </div>
         </div>
       </div>
-
+      <div className="mt-4 below-md:hidden">
       <Pagination table={table} totalItems={totalItems} />
+      </div>
     </main>
   );
 };
