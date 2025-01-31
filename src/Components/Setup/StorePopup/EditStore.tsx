@@ -15,7 +15,7 @@ interface JsonData {
   location: string;
   owner: string;
   county: number | null;
-  royalty: number | null;
+  //royalty: number | null;
   storeid: number | null;
 }
 
@@ -24,7 +24,7 @@ const EditStore = ({ initialData, setAddStore, isOpenAddStore }: any) => {
     defaultValues: initialData, // Prepopulate form with existing data
   });
 
-  const [royalty, setRoyalty] = useState(initialData?.royalty);
+  //const [royalty, setRoyalty] = useState(initialData?.royalty);
   const [county, setCounty] = useState(initialData?.county);
   const [storeName, setStoreName] = useState(initialData?.storename);
   const [owner, setOwner] = useState(initialData?.owner);
@@ -39,10 +39,10 @@ const EditStore = ({ initialData, setAddStore, isOpenAddStore }: any) => {
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
-  const handleChange = (data: any) => {
-    setRoyalty(data);
-    methods.setValue("royalty", data);
-  };
+  // const handleChange = (data: any) => {
+  //   setRoyalty(data);
+  //   methods.setValue("royalty", data);
+  // };
 
   const handleChangeCounty = (data: any) => {
     setCounty(data);
@@ -74,7 +74,7 @@ const EditStore = ({ initialData, setAddStore, isOpenAddStore }: any) => {
       location: data?.location || "",
       owner: data?.owner || "",
       county: data?.county || "",
-      royalty: data?.royalty || 0,
+     // royalty: data?.royalty || 0,
       storeid: initialData?.storeid
     };
 
@@ -108,8 +108,6 @@ const EditStore = ({ initialData, setAddStore, isOpenAddStore }: any) => {
       console.error("Error submitting form:", error);
     }
   };
-
-
 
   return (
     <>
@@ -231,13 +229,13 @@ const EditStore = ({ initialData, setAddStore, isOpenAddStore }: any) => {
                       {...methods?.register("county", {
                         required: "County is required",
                       })}
-                      errors={methods.formState.errors.royalty}
+                      errors={methods.formState.errors.county}
                       placeholder="County"
                       variant="outline"
                       onChange={(e: any) => handleChangeCounty(e.target.value)}
                     />
                   </div>
-                  <div className="w-full flex mt-4">
+                  {/* <div className="w-full flex mt-4">
                     <InputField
                       type="text"
                       label="Royalty"
@@ -253,7 +251,7 @@ const EditStore = ({ initialData, setAddStore, isOpenAddStore }: any) => {
                       variant="outline"
                       onChange={(e: any) => handleChange(e.target.value)}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="flex flex-col items-center py-4">
                     <div className="flex justify-between gap-3 items-center w-full">

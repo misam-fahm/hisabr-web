@@ -13,7 +13,7 @@ interface JsonData {
   location: string;
   owner: string;
   county: number | null;
-  royalty: number | null;
+  // royalty: number | null;
 }
 
 interface CustomToast {
@@ -23,7 +23,7 @@ interface CustomToast {
 
 const AddStore = ({ setAddStore }: any) => {
   const methods = useForm();
-  const [royalty, setRoyalty] = useState("");
+  // const [royalty, setRoyalty] = useState("");
   const [county, setCounty] = useState("");
   const [storeName, setStoreName] = useState("");
   const [location, setLocation] = useState("");
@@ -34,10 +34,10 @@ const AddStore = ({ setAddStore }: any) => {
     toastType: "",
   });
 
-  const handleChange = (data: any) => {
-    setRoyalty(data);
-    methods.setValue("royalty", data);
-  };
+  // const handleChange = (data: any) => {
+  //   setRoyalty(data);
+  //   methods.setValue("royalty", data);
+  // };
 
   const handleChangeCounty = (data: any) => {
     setCounty(data);
@@ -58,13 +58,10 @@ const AddStore = ({ setAddStore }: any) => {
     methods.setValue("location", data);
   };
 
-
-
-
   const openModal = () => setIsOpen(true);
   const closeModal = () => {
     setIsOpen(false),
-      setRoyalty(""),
+      // setRoyalty(""),
       setCounty(""),
       setStoreName(""),
       setOwner("")
@@ -79,7 +76,7 @@ const AddStore = ({ setAddStore }: any) => {
       location: data?.location || "",
       owner: data?.owner || "",
       county: data?.county || "",
-      royalty: data?.royalty || 0,
+      // royalty: data?.royalty || 0,
     };
 
     try {
@@ -240,13 +237,13 @@ const AddStore = ({ setAddStore }: any) => {
                       {...methods?.register("county", {
                         required: "County is required",
                       })}
-                      errors={methods.formState.errors.royalty}
+                      errors={methods.formState.errors.county}
                       placeholder="County"
                       variant="outline"
                       onChange={(e: any) => handleChangeCounty(e.target.value)}
                     />
                   </div>
-                  <div className="w-full flex mt-4">
+                  {/* <div className="w-full flex mt-4">
                     <InputField
                       type="text"
                       label="Royalty"
@@ -262,7 +259,7 @@ const AddStore = ({ setAddStore }: any) => {
                       variant="outline"
                       onChange={(e: any) => handleChange(e.target.value)}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="flex flex-col items-center py-4">
                     <div className="flex justify-between gap-3 items-center w-full">
