@@ -102,6 +102,10 @@ const InvoiceDetails = () => {
                 <span className="text-[#636363] text-[13px] font-semibold">${data?.producttotal}</span>
               </div>
               <div className="flex justify-between">
+                <span className="text-[#636363] text-[12px]">Miscellaneous</span>
+                <span className="text-[#636363] text-[13px] font-semibold">${data?.misc}</span>
+              </div>
+              <div className="flex justify-between">
                 <span className="text-[#636363] text-[12px]">Sub Total</span>
                 <span className="text-[#636363] text-[13px] font-semibold">${data?.subtotal}</span>
               </div>
@@ -113,10 +117,6 @@ const InvoiceDetails = () => {
               <span className="text-[#636363] text-[12px]">Tax 2</span>
               <span className="text-[#636363] text-[13px] font-semibold"></span>
             </div> */}
-              <div className="flex justify-between">
-                <span className="text-[#636363] text-[12px]">Miscellaneous</span>
-                <span className="text-[#636363] text-[13px] font-semibold">${data?.misc}</span>
-              </div>
               <div className="flex justify-between border-t pt-2">
                 <span className="text-[#636363] text-[12px] font-semibold">Total</span>
                 <span className="text-[#636363] text-[12px] font-semibold">${data?.total}</span>
@@ -174,51 +174,51 @@ const InvoiceDetails = () => {
 
       {/*card content for Mobile View*/}
       <div className='hidden  below-md:block'>
-        {data?.invoicedetail?.map((items: any, index: any) => (
+        {data?.invoicedetail?.map((row: any, index: any) => (
           <React.Fragment key={index}>
             <div className='flex justify-between w-full mb-4'>
               {/* Right Panel - Totals */}
               <div className="shadow border rounded-lg w-full gap-3 px-4 flex flex-col py-4 ">
                 <div className='flex gap-12 px-1'>
-                  <span className="text-black text-[14px] font-bold">{items?.itemCode}</span>
-                  <span className="text-black text-[16px] font-bold">{items?.description}</span>
+                  <span className="text-black text-[14px] font-bold">{row?.itemCode}</span>
+                  <span className="text-black text-[16px] font-bold">{row?.description}</span>
                 </div>
                 <hr className='w-full h-[1px] my-2' color='lightgrey' />
                 <div className="flex justify-between">
                   <span className="text-[#636363] text-[12px]">Brand</span>
-                  <span className="text-[#636363] text-[14px]">{items?.brand}</span>
+                  <span className="text-[#636363] text-[14px]">{row?.brand}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#636363] text-[12px]">Category</span>
-                  <span className="text-[#636363] text-[14px]">{items?.category}</span>
+                  <span className="text-[#636363] text-[14px]">{row?.category}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#636363] text-[12px]">Quantity</span>
-                  <span className="text-[#636363] text-[14px]">{items?.quantity}</span>
+                  <span className="text-[#636363] text-[14px]">{row?.quantity}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#636363] text-[12px]">Units</span>
-                  <span className="text-[#636363] text-[14px]">{items?.unit}</span>
+                  <span className="text-[#636363] text-[14px]">{row?.unit}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#636363] text-[12px]">Pack Size</span>
-                  <span className="text-[#636363] text-[14px]">{items?.packsize}</span>
+                  <span className="text-[#636363] text-[14px]">{row?.packsize}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#636363] text-[12px]">Invt Value</span>
-                  <span className="text-[#636363] text-[14px]">${items?.invtvalue}</span>
+                  <span className="text-[#636363] text-[14px]">${row?.invtvalue}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#636363] text-[12px]">Unit Price</span>
-                  <span className="text-[#636363] text-[14px]">${items?.unitprice}</span>
+                  <span className="text-[#636363] text-[14px]">${row?.unitprice}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#636363] text-[12px]">Tax</span>
-                  <span className="text-[#636363] text-[14px]">${items?.tax}</span>
+                  <span className="text-[#636363] text-[14px]">${row?.tax}</span>
                 </div>
                 <div className="flex justify-between border-t pt-2 mt-2">
                   <span className="text-[#636363] text-[14px] font-semibold">Total</span>
-                  <span className="text-[#636363] text-[14px] font-semibold">${items?.producttotal}</span>
+                  <span className="text-[#636363] text-[14px] font-semibold">${row?.producttotal}</span>
                 </div>
               </div>
             </div>

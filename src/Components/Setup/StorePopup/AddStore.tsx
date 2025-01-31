@@ -9,9 +9,9 @@ import ToastNotification, { ToastNotificationProps } from "@/Components/UI/Toast
 
 interface JsonData {
   mode: string;
-  storename:string;
+  storename: string;
   location: string;
-  owner:string;
+  owner: string;
   county: number | null;
   royalty: number | null;
 }
@@ -22,7 +22,7 @@ interface CustomToast {
 }
 
 
-const AddStore = ({ setAddStore }:any) => {
+const AddStore = ({ setAddStore }: any) => {
   const methods = useForm();
   const [royalty, setRoyalty] = useState("");
   const [county, setCounty] = useState("");
@@ -31,45 +31,45 @@ const AddStore = ({ setAddStore }:any) => {
   const [owner, setOwner] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [customToast, setCustomToast] = useState<CustomToast>({
-      toastMessage: "",
-      toastType: "",
-    });
- 
+    toastMessage: "",
+    toastType: "",
+  });
+
   const handleChange = (data: any) => {
     setRoyalty(data);
     methods.setValue("royalty", data);
   };
- 
+
   const handleChangeCounty = (data: any) => {
-    setCounty(data); 
-    methods.setValue("county", data); 
+    setCounty(data);
+    methods.setValue("county", data);
   };
 
   const handleChangesetStoreName = (data: any) => {
-    setStoreName(data); 
-    methods.setValue("storeName", data); 
+    setStoreName(data);
+    methods.setValue("storeName", data);
   }
   const handleChangeUser = (data: any) => {
-    setOwner(data); 
-    methods.setValue("owner", data); 
+    setOwner(data);
+    methods.setValue("owner", data);
   };
 
   const handleChangeLocation = (data: any) => {
-    setLocation(data); 
-    methods.setValue("location", data); 
+    setLocation(data);
+    methods.setValue("location", data);
   };
 
 
- 
+
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => {
     setIsOpen(false),
-    setRoyalty(""),
-    setCounty(""),
-    setStoreName(""),
-    setOwner("")
-   
+      setRoyalty(""),
+      setCounty(""),
+      setStoreName(""),
+      setOwner("")
+
   };
 
   const onSubmit = async (data: any) => {
@@ -82,21 +82,21 @@ const AddStore = ({ setAddStore }:any) => {
       county: data?.county || "",
       royalty: data?.royalty || 0,
     };
-  
+
     try {
       const result: any = await sendApiRequest(jsonData);
       if (!result || typeof result !== "object") {
         throw new Error("Invalid API response.");
       }
-  
+
       const { status, data: responseData } = result;
       setTimeout(() => {
-      setCustomToast({
-        toastMessage: status === 200 ? "Item added successfully!" : "Failed to add item.",
-        toastType: status === 200 ? "success" : "error",
-      });
-    }, 0);
-  
+        setCustomToast({
+          toastMessage: status === 200 ? "Item added successfully!" : "Failed to add item.",
+          toastType: status === 200 ? "success" : "error",
+        });
+      }, 0);
+
       if (status === 200) {
         closeModal();
         setAddStore(true)
@@ -110,11 +110,11 @@ const AddStore = ({ setAddStore }:any) => {
       }, 0);
     }
   };
-  
+
 
   return (
     <>
-    <ToastNotification
+      <ToastNotification
         message={customToast.toastMessage}
         type={customToast.toastType}
       />
@@ -150,21 +150,23 @@ const AddStore = ({ setAddStore }:any) => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] h-auto below-md:w-[94%] below-md:h-auto px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
             <div className="relative">
-              <img
-                onClick={closeModal}
-                src="/images/cancelicon.svg"
-                alt="Cancel"
-                className="absolute top-0 right-0 cursor-pointer"
-              />
-              <div className="flex justify-center mt-1">
+              <div className="flex justify-center">
                 <DialogTitle
                   as="h3"
-                  className=" font-medium  text-[#3D3D3D] opacity-80"
+                  className="text-[16px]  font-bold leading-custom text-[#3D3D3D]"
                 >
                   Add Store
                 </DialogTitle>
               </div>
+              <img
+                onClick={closeModal}
+                src="/images/cancelicon.svg"
+                alt="Cancel"
+                className="absolute top-1.5 right-0 cursor-pointer"
+              />
+
             </div>
+
 
             <FormProvider {...methods}>
               <form onSubmit={methods.handleSubmit(onSubmit)}>

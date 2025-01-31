@@ -15,49 +15,49 @@ interface JsonData {
   tendertypeid: number | null;
   tendername: string;
   commission: number | null;
- 
+
 }
 interface CustomToast {
   toastMessage: string;
   toastType: string;
 }
 
-const AddTender = ({ setAddTender  }:any) => {
+const AddTender = ({ setAddTender }: any) => {
 
   const methods = useForm();
   const [commission, setCommission] = useState("");
   const [name, setName] = useState("");
   const [isTenderDropdownOpen, setIsTenderDropdownOpen] = useState(false);
   const [tenderType, setTenderType] = useState<any[]>([]);
-  const { register, setValue, watch ,clearErrors} = methods;
+  const { register, setValue, watch, clearErrors } = methods;
   const [isOpen, setIsOpen] = useState(false);
   const [customToast, setCustomToast] = useState<CustomToast>({
-      toastMessage: "",
-      toastType: "",
-    });
-  
-   const selectedTenderType = watch("tendertype"); 
-   const openModal = async () => {
+    toastMessage: "",
+    toastType: "",
+  });
+
+  const selectedTenderType = watch("tendertype");
+  const openModal = async () => {
     setIsOpen(true);
 
     methods.reset({
-      tendertypeId:null,
+      tendertypeId: null,
       tendertype: "",
-     
+
     });
     setName("");
-    setCommission(""); 
+    setCommission("");
   };
-   const closeModal = () => {setIsOpen(false)};
+  const closeModal = () => { setIsOpen(false) };
 
-   const handleChange = (data: any) => {
+  const handleChange = (data: any) => {
     setCommission(data);
-    methods.setValue("commission", data); 
+    methods.setValue("commission", data);
   };
 
   const handleChangeName = (data: any) => {
-    setName(data); 
-    methods.setValue("county", name); 
+    setName(data);
+    methods.setValue("county", name);
   };
 
   const toggleDropdownTenderType = () => {
@@ -88,7 +88,7 @@ const AddTender = ({ setAddTender  }:any) => {
     fetchData();
   }, []);
 
- 
+
   const onSubmit = async (data: any) => {
     setCustomToast({ toastMessage: "", toastType: "" });
     const jsonData: JsonData = {
@@ -97,15 +97,15 @@ const AddTender = ({ setAddTender  }:any) => {
       tendername: data?.name?.trim(),
       commission: Number(data?.commission),
     };
-    
+
     try {
       const result: any = await sendApiRequest(jsonData);
-      const { status , data: responseData  } = result;
+      const { status, data: responseData } = result;
       setTimeout(() => {
-      setCustomToast({
-        toastMessage: status === 200 ? "Item added successfully!" : "Failed to add item.",
-        toastType: status === 200 ? "success" : "error",
-      });
+        setCustomToast({
+          toastMessage: status === 200 ? "Item added successfully!" : "Failed to add item.",
+          toastType: status === 200 ? "success" : "error",
+        });
       }, 0);
       if (status === 200) {
         setAddTender(true)
@@ -120,11 +120,11 @@ const AddTender = ({ setAddTender  }:any) => {
       }, 0);
     }
   };
-  
+
 
   return (
     <>
-     <ToastNotification
+      <ToastNotification
         message={customToast.toastMessage}
         type={customToast.toastType}
       />
@@ -160,26 +160,28 @@ const AddTender = ({ setAddTender  }:any) => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] h-auto below-md:w-[94%] below-md:h-auto px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
             <div className="relative">
-              <img
-                onClick={closeModal}
-                src="/images/cancelicon.svg"
-                alt="Cancel"
-                className="absolute top-0 right-0 cursor-pointer"
-              />
-              <div className="flex justify-center mt-1">
+              <div className="flex justify-center">
                 <DialogTitle
                   as="h3"
-                  className=" font-medium  text-[#3D3D3D] opacity-80"
+                  className="text-[16px]  font-bold leading-custom text-[#3D3D3D]"
                 >
                   Add Tender
                 </DialogTitle>
               </div>
+              <img
+                onClick={closeModal}
+                src="/images/cancelicon.svg"
+                alt="Cancel"
+                className="absolute top-1.5 right-0 cursor-pointer"
+              />
+
             </div>
+
 
             <FormProvider {...methods}>
               <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <div className="flex flex-col mt-4 gap-4">
-                 
+
                   <div className="w-full flex mt-4">
                     {/* Description Input Field */}
                     <InputField
@@ -199,14 +201,14 @@ const AddTender = ({ setAddTender  }:any) => {
                     />
                   </div>
                   <div className="w-full flex mt-4">
-                  <Dropdown
+                    <Dropdown
                       options={tenderType}
-                      selectedOption={selectedTenderType || "Tender Type" } 
+                      selectedOption={selectedTenderType || "Tender Type"}
                       onSelect={(selectedValue) => {
                         setValue("tendertype", selectedValue?.name);
                         setValue("tendertypeId", selectedValue?.id);
-                        setIsTenderDropdownOpen(false); 
-                        clearErrors("tendertype"); 
+                        setIsTenderDropdownOpen(false);
+                        clearErrors("tendertype");
                       }}
                       isOpen={isTenderDropdownOpen}
                       toggleOpen={toggleDropdownTenderType}
@@ -214,9 +216,9 @@ const AddTender = ({ setAddTender  }:any) => {
                       {...register("tendertype", {
                         required: "Tender Type is required",
                       })}
-                      errors={methods.formState.errors.type} 
+                      errors={methods.formState.errors.type}
                     />
-                  
+
                   </div>
                   <div className="w-full flex mt-4">
                     <InputField

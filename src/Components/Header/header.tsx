@@ -66,9 +66,9 @@ const Header: React.FC = () => {
           if (typeof window !== "undefined") {
             const params = new URLSearchParams(window.location.search);
             if (params.get("fromItemsAnalysis") === "true") {
-              newTitle = "Items Analysis";
+              newTitle = "Items";
             } else if (params.get("fromHome") === "true") {
-              newTitle = "Cost Analysis";
+              newTitle = "Cost";
             } else {
               newTitle = "Invoices";
             }
@@ -78,9 +78,9 @@ const Header: React.FC = () => {
             if (typeof window !== "undefined") { 
               const params = new URLSearchParams(window.location.search);
               if (params.get("fromLabourAnalysis") === "true") {
-                newTitle = "Labour Analysis"; 
+                newTitle = "Labour"; 
               } else if (params.get("fromHome") === "true") {
-                newTitle = "Operating Expense Analysis";
+                newTitle = "Operating Expense";
               } else {
                 newTitle = "Expenses"; 
               }
@@ -93,12 +93,9 @@ const Header: React.FC = () => {
           case "setup/items":
             newTitle = "Items";
             break;
-            case "setup/tenders":
-              if (typeof window !== "undefined") { 
-                const params = new URLSearchParams(window.location.search);
-                newTitle = params.get("fromHome") === "true" ? "Tenders Analysis" : "Tenders";
-              }
-              break;
+          case "setup/tenders":
+            newTitle ="Tenders";
+            break;
           case "setup/stores":
             newTitle = "Stores";
             break;
@@ -106,10 +103,10 @@ const Header: React.FC = () => {
             newTitle = "Configuration";
             break;
           case "grossrevenue":
-            newTitle = "Gross Revenue Analysis";
+            newTitle = "Gross Revenue";
             break;
           case "customercount":
-            newTitle = "Customer Count Analysis";
+            newTitle = "Customer Count";
             break;
           case "logout":
             newTitle = "Logout";

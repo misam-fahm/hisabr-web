@@ -11,15 +11,15 @@ interface JsonData {
   mode: string;
   categoryname: string;
   description: string;
-  categoryid:number;
+  categoryid: number;
 }
 
-const EditCategories = ({ rowData ,setAddCategories }: any ) => {
+const EditCategories = ({ rowData, setAddCategories }: any) => {
   const methods = useForm<any>({
-    defaultValues: rowData, 
+    defaultValues: rowData,
   });
 
-  const [categoryNameData, setCategoryName] = useState( rowData?.categoryname);
+  const [categoryNameData, setCategoryName] = useState(rowData?.categoryname);
   const [descriptionData, setDescription] = useState(rowData?.description);
   const [isOpen, setIsOpen] = useState(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
@@ -31,8 +31,8 @@ const EditCategories = ({ rowData ,setAddCategories }: any ) => {
   const closeModal = () => setIsOpen(false);
 
   const handleChange = (data: any) => {
-    setCategoryName(data); 
-    methods.setValue("categoryname", data); 
+    setCategoryName(data);
+    methods.setValue("categoryname", data);
   };
 
   const handleChangeName = (data: any) => {
@@ -41,12 +41,12 @@ const EditCategories = ({ rowData ,setAddCategories }: any ) => {
   };
 
   const onSubmit = async (data: any) => {
-    
+
     const jsonData: JsonData = {
       mode: "updatecategory",
       categoryname: data?.categoryname,
       description: data?.description,
-      categoryid: Number (data?.categoryid)
+      categoryid: Number(data?.categoryid)
     };
 
 
@@ -69,13 +69,13 @@ const EditCategories = ({ rowData ,setAddCategories }: any ) => {
           closeModal();
         }, 300);
       };
-    
-      
+
+
     } catch (error) {
       setCustomToast({ message: "Error adding item", type: "error" });
       console.error("Error submitting form:", error);
     }
-    
+
   };
 
   return (
@@ -100,22 +100,24 @@ const EditCategories = ({ rowData ,setAddCategories }: any ) => {
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] below-md:w-[345px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
-            <div className="flex justify-end">
-              {/* <DialogTitle as="h3" className="font-medium text-gray-900">
-                Edit Category
-              </DialogTitle> */}
+            <div className="relative">
+              <div className="flex justify-center">
+                <DialogTitle
+                  as="h3"
+                  className="text-[16px]  font-bold leading-custom text-[#3D3D3D]"
+                >
+                  Edit Category
+                </DialogTitle>
+              </div>
               <img
                 onClick={closeModal}
                 src="/images/cancelicon.svg"
-                alt="Close"
-                className="cursor-pointer"
+                alt="Cancel"
+                className="absolute top-1.5 right-0 cursor-pointer"
               />
+
             </div>
-            <div>
-            <DialogTitle as="h3" className=" flex justify-center font-medium  text-[#3D3D3D] opacity-80">
-                Edit  Category
-              </DialogTitle>
-            </div>
+
 
             {/* Form Section */}
             <div className="mt-4">
@@ -128,7 +130,7 @@ const EditCategories = ({ rowData ,setAddCategories }: any ) => {
                       label="Category Name"
                       borderClassName="border border-gray-300"
                       labelBackgroundColor="bg-white"
-                      value={categoryNameData }
+                      value={categoryNameData}
                       textColor="text-[#636363]"
                       {...methods.register("categoryname", {
                         required: "Category name is required",
