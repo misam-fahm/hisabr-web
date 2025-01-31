@@ -430,11 +430,13 @@ const Invoices = () => {
             <div className="flex justify-between items-center px-4 py-3">
               <div className="flex flex-col text-[13px] space-y-3">
                 <p className="text-[#636363]">Store</p>
+                <p className="text-[#636363]">Invoice#</p>
                 <p className="text-[#636363]">quantity</p>
                 <p className="text-[#636363]">total</p>
               </div>
               <div className="flex flex-col text-[14px] text-right space-y-3">
                 <p className="text-[#1A1A1A]">{card.storename}</p>
+                <p className="text-[#1A1A1A]">{card.invoicenumber}</p>
                 <p className="text-[#000000]">{card.quantity}</p>
                 <p className="text-[#1A1A1A]">{card.total}</p>
               </div>
