@@ -28,12 +28,12 @@ const data: TableData[] = [
       { description: "Date", value: saleDetails?.sales_date},
       { description: "Store", value: saleDetails?.store_name},
     ],
-  },
+  },  
   {
     category: "Sales Data",
     rows: [
       { description: "Gross", value: "$" + saleDetails?.gross_sales_amt },
-      { description: "Net", value:saleDetails?.net_sales_amt },
+      { description: "Net", value: saleDetails?.net_sales_amt ? "$" + saleDetails?.net_sales_amt : "$0"},
       { description: "Order Count", value: saleDetails?.orders_count },
       { description: "Guest Count", value: saleDetails?.guests_count },
       { description: "Total Sales Count", value:saleDetails?.total_sales_count ? saleDetails?.total_sales_count : "--" },
@@ -84,27 +84,27 @@ const data: TableData[] = [
   {
     category: "Discounts & Promotions",
     rows: [
-      { description: "Discounts", value:"$" + saleDetails?.discounts_amt ? saleDetails?.discounts_amt : "--" },
-      { description: "Promotions", value:"$" + saleDetails?.promotions_amt ? saleDetails?.promotions_amt : "--" },
-      { description: "Gift Card Promotions", value:"$" + saleDetails?.gift_card_promotions_amt ? saleDetails?.gift_card_promotions_amt : "--" },
+      { description: "Discounts", value: saleDetails?.discounts_amt ? "$" + saleDetails?.discounts_amt : "--" },
+      { description: "Promotions", value:saleDetails?.promotions_amt ? "$" +  saleDetails?.promotions_amt : "--" },
+      { description: "Gift Card Promotions", value: saleDetails?.gift_card_promotions_amt ? "$" + saleDetails?.gift_card_promotions_amt : "--" },
     ],
   },
   {
     category: "Refunds",
     rows: [
-      { description: "Refunds", value:"$" + saleDetails?.voids_amt ? saleDetails?.voids_amt : "--" },
-      { description: "Voids", value:"$" + saleDetails?.refunds_amt ? saleDetails?.refunds_amt : "--" },
+      { description: "Refunds",value:saleDetails?.refunds_amt ? "$" +  saleDetails?.refunds_amt : "--" } ,
+      { description: "Voids",value: saleDetails?.voids_amt ? "$" + saleDetails?.voids_amt : "--" } ,
     ],
   },
   {
     category: "Gift Card Details",
     rows: [
       { description: "Gift Card Issue Count", value: saleDetails?.gift_card_issue_count ? saleDetails?.gift_card_issue_count : "--" },
-      { description: "Gift Card Issue Amount", value:"$" + saleDetails?.gift_card_issue_amt ? saleDetails?.gift_card_issue_amt : "--" },
+      { description: "Gift Card Issue Amount", value: saleDetails?.gift_card_issue_amt ?"$" + saleDetails?.gift_card_issue_amt : "$0" },
       { description: "Gift Card Reload Count", value: saleDetails?.gift_card_reload_count ? saleDetails?.gift_card_reload_count : "--" },
-      { description: "Gift Card Reload Amount", value:"$" + saleDetails?.gift_card_reload_amt ? saleDetails?.gift_card_reload_amt : "--" },
+      { description: "Gift Card Reload Amount", value: saleDetails?.gift_card_reload_amt ? "$" + saleDetails?.gift_card_reload_amt : "$0" },
       { description: "Gift Card Cash Out Count", value: saleDetails?.gift_card_cash_out_count ? saleDetails?.gift_card_cash_out_count :"--" },
-      { description: "Gift Card Cash Out Amount", value:"$" + saleDetails?.gift_card_cash_out_amt ?  saleDetails?.gift_card_cash_out_amt : "--" },
+      { description: "Gift Card Cash Out Amount", value: saleDetails?.gift_card_cash_out_amt ? "$" + saleDetails?.gift_card_cash_out_amt : "$0" },
     ],
   },
   {
@@ -113,13 +113,13 @@ const data: TableData[] = [
   },
   {
     category: "Cash Details",
-    rows: [{ description: "Total Cash", value: "$" + saleDetails?.total_cash_amt ? saleDetails?.total_cash_amt : "0" }],
+    rows: [{ description: "Total Cash", value:  saleDetails?.total_cash_amt ? "$" + saleDetails?.total_cash_amt : "0" }],
   },
   {
     category: "Donations",
     rows: [
       { description: "Donation Count", value: saleDetails?.donation_count },
-      { description: "Donation Total",  value:"$" + saleDetails?.donation_total_amt},
+      { description: "Donation Total",  value: "$" + saleDetails?.donation_total_amt},
     ],
   },
 ];
