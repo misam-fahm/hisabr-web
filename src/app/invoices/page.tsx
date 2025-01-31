@@ -44,13 +44,14 @@ const Invoices = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = React.useState("");
-
-  const navigateToInvoice = (invoiceId: any) => {
-    const encodedId = btoa(invoiceId);
-    // Make the Base64 URL-safe by replacing `+` with `-`, `/` with `_`, and removing the padding (`=`):
-    const urlSafeEncodedId = encodedId?.replace(/\+/g, '-')?.replace(/\//g, '_')?.replace(/=+$/, '');
-    router.push(`/invoices/${urlSafeEncodedId}`);
-  };
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
+  const fileInputRef: any = useRef(null);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -105,6 +106,12 @@ const Invoices = () => {
     },
   ];
 
+  const navigateToInvoice = (invoiceId: any) => {
+    const encodedId = btoa(invoiceId);
+    const urlSafeEncodedId = encodedId?.replace(/\+/g, '-')?.replace(/\//g, '_')?.replace(/=+$/, '');
+    router.push(`/invoices/${urlSafeEncodedId}`);
+  };
+
   const formattedData = data?.map((item) => {
     const rawDate = new Date(item?.invoicedate);
 
@@ -142,121 +149,55 @@ const Invoices = () => {
     pageCount: Math.ceil(totalItems / 10),
   });
 
-  const { pageIndex, pageSize } = table.getState().pagination;
+  const { pageIndex, pageSize } = table.getState().pagination; 
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const response: any = await sendApiRequest({
-  //         mode: "getinvoices",
-  //         page: table.getState().pagination.pageIndex + 1,
-  //         limit: table.getState().pagination.pageSize,
-  //       });
-
-  //       if (response?.status === 200) {
-  //         setData(response?.data?.invoices || []);
-  //         response?.data?.total > 0 &&
-  //           setTotalItems(response?.data?.total || 0);
-  //       } else {
-  //         setCustomToast({
-  //           ...customToast,
-  //           message: response?.message,
-  //           type: "error",
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [pageIndex, pageSize]);
-
-  const fileInputRef: any = useRef(null);
-
-  // const handleButtonClick = () => {
-  //   // Programmatically trigger the hidden file input
-  //   fileInputRef.current.click();
-  // };
-
-  // const handleFileChange = async (event: any) => {
-  //   const file = event.target.files[0];
-
-  //   if (!file) {
-  //     alert("Please select a file.");
-  //     return;
-  //   }
+   // Function to fetch data and update state
+   const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getinvoices",
+        page: table.getState().pagination.pageIndex + 1,
+        limit: table.getState().pagination.pageSize,
+      });
   
-  //   if (file.type !== "application/pdf") {
-  //     alert("Please upload a PDF file.");
-  //     return;
-  //   }
-  
-  //   setLoading(true); 
-    
-  //   if (file) {
-    
-  //     if (file && file.type === "application/pdf") {
-  //       const formData = new FormData();
-  //       formData.append("file", file);
-  //       try {
-  //         const response = await fetch("https://hisabr-pdf-extractor.vercel.app/convert-pdf", {
-  //           method: "POST",
-  //           body: formData,
-  //         });
+      if (response?.status === 200) {
+        setData(response?.data?.invoices || []);
+        if (response?.data?.total > 0) {
+          setTotalItems(response?.data?.total || 0);
+        }
+      } else {
+        setCustomToast({
+          message: response?.message || "Failed to fetch invoices.",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  //         const responseData = await response.json();
-  //         console.log("Response:", responseData);
-  //         if (response.ok) {
-  //           const jsonData: any = {
-  //             mode: "insertinvoice",
-  //             invoicenumber: responseData?.invoice_details?.invoice_number,
-  //             invoicedate: moment(moment(responseData?.invoice_details?.invoice_date, 'MM/DD/YYYY').toDate()).format('YYYY-MM-DD'),
-  //             storename: "13246",
-  //             duedate: moment(moment(responseData?.invoice_details?.due_date, 'MM/DD/YYYY').toDate()).format('YYYY-MM-DD'),
-  //             total: responseData?.invoice_details?.invoice_total,
-  //             sellername: responseData?.invoice_details?.seller_name,
-  //             quantity: responseData?.invoice_details?.qty_ship_total,
-  //             producttotal: responseData?.invoice_details?.product_total,
-  //             subtotal: responseData?.invoice_details?.sub_total,
-  //             misc: responseData?.invoice_details?.misc,
-  //             tax: responseData?.invoice_details?.tax
-  //           };
-  //           const result: any = await sendApiRequest(jsonData);
-  //           if (result?.status === 200) {
-  //             const val: any = {
-  //               invoiceDetails: responseData?.invoice_items || [],
-  //             };
-  //             const res: any = await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
-  //           } else {
-  //             setTimeout(() => {
-  //               setCustomToast({
-  //                 message: "Failed to insert invoice details",
-  //                 type: "error",
-  //               });
-  //             }, 0);
-  //           }
+  useEffect(() => {
+    fetchData();
+  }, [pageIndex, pageSize]);
 
-  //         } else {
-  //           alert("Failed to upload file.");
-  //         }
-  //       } catch (error) {
-  //         console.error("Error uploading file:", error);
-  //         alert("An error occurred.");
-  //       }finally {
-  //         setLoading(false); // Hide loader after upload
-  //       }
-  //     } else {
-  //       alert("Please upload a PDF file.");
-  //     }
-  //   } else {
-  //     alert("Please select a file.");
-  //     return;
-  //   }
-  // };
+  const fetchDropdownData = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getallstores" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+  };
+  useEffect(() => {
+    fetchDropdownData();
+  }, []);
 
   const handleButtonClick = () => {
     fileInputRef.current.click();
@@ -319,7 +260,7 @@ const Invoices = () => {
           invoiceDetails: responseData?.invoice_items || [],
         };
         await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
-        fetchData(); // Fetch the latest data after a successful upload
+        fetchData(); 
       } else {
         setCustomToast({
           message: "Failed to insert invoice details",
@@ -337,50 +278,6 @@ const Invoices = () => {
     }
   };
   
-  // Function to fetch data and update state
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const response: any = await sendApiRequest({
-        mode: "getinvoices",
-        page: table.getState().pagination.pageIndex + 1,
-        limit: table.getState().pagination.pageSize,
-      });
-  
-      if (response?.status === 200) {
-        setData(response?.data?.invoices || []);
-        if (response?.data?.total > 0) {
-          setTotalItems(response?.data?.total || 0);
-        }
-      } else {
-        setCustomToast({
-          message: response?.message || "Failed to fetch invoices.",
-          type: "error",
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  // Fetch data on component mount and whenever pageIndex/pageSize changes
-  useEffect(() => {
-    fetchData();
-  }, [pageIndex, pageSize]);
-  
-
-  /**dropdown */
-  const [selectedOption, setSelectedOption] = useState<any>();
-  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [store, setStore] = useState<any[]>([]);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
-    message: "",
-    type: "",
-  });
-
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
   }
@@ -392,21 +289,7 @@ const Invoices = () => {
     });
   };
 
-  const fetchDropdownData = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getallstores" });
-      if (response?.status === 200) {
-        setStore(response?.data?.stores || []);
-      } else {
-        handleError(response?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
-    }
-  };
-  useEffect(() => {
-    fetchDropdownData();
-  }, []);
+
 
   const searchInputRef = useRef<HTMLInputElement>(null);
   const handleClick = () => {
@@ -415,20 +298,7 @@ const Invoices = () => {
     }
   };
 
-  //tooltip for mobile
-  const [showTooltip, setShowTooltip] = useState(false);
-
-  const handlePressStart = () => {
-    setShowTooltip(true);
-
-    setTimeout(() => {
-      setShowTooltip(false);
-    }, 2000);
-  };
-
-  const handlePressEnd = () => {
-    setShowTooltip(false);
-  };
+  
   useEffect(() => {
     // Ensure this code only runs on the client-side (after the page has mounted)
     if (typeof window !== "undefined") {
@@ -438,18 +308,13 @@ const Invoices = () => {
 
       if (fromHome || fromItemsAnalysis) {
         setShowBackIcon(true);
-
-        // Remove "fromHome" from the URL (to avoid showing it on page reload)
         const currentUrl = window.location.pathname;
         window.history.replaceState({},"",currentUrl) // Update the URL without the query parameter
       }
     }
-  }, []); // Dependency on searchParams to check when they change
+  }, []); 
 
-  // const handleBack = () => {
-  //   router.push("/");
-  // };
-
+ 
 
   return (
     <main

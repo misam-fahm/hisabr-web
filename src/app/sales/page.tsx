@@ -25,6 +25,7 @@ interface TableRow {
   total_sales_count: number;
   total_item_sales_amt: string;
   net_sales_amt: string;
+  salesid:number;
   order_average_amt: string;
 }
 
@@ -36,6 +37,14 @@ const Sales: FC = () => {
   const handleImageClick = () => {
     router.push("/sales/sales_view"); 
   };
+
+  const navigateToSalesView = (salesId: any) => {
+    const encodedId = btoa(salesId);
+    // Make the Base64 URL-safe by replacing `+` with `-`, `/` with `_`, and removing the padding (`=`):
+    const urlSafeEncodedId = encodedId?.replace(/\+/g, '-')?.replace(/\//g, '_')?.replace(/=+$/, '');
+    router.push(`/sales/${urlSafeEncodedId}`);
+  };
+
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -93,9 +102,9 @@ const Sales: FC = () => {
     {
       id: "view",
       header: () => <div className="text-center"></div>,
-      cell: () => (
+      cell: (info) => (
         <span className="flex justify-center">
-          <button onClick={handleImageClick}>
+          <button   onClick={() =>   navigateToSalesView(info.row.original.salesid)}>
             <Images
               src="/images/vieweyeicon.svg"
               alt="Eye Icon"
