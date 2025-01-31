@@ -311,10 +311,7 @@ const Page: FC = () => {
           </div>
         </div>
       </div>
-<<<<<<< HEAD
       <div className="mt-4 below-md:hidden">
-=======
->>>>>>> production
       <Pagination table={table} totalItems={totalItems} />
       </div>
     </main>
