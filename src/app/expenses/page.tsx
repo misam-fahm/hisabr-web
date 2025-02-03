@@ -348,7 +348,11 @@ const Expenses: FC = () => {
             >
               <div className="flex justify-between items-start">
                 <div className="flex gap-4 px-3 py-4">
-                  <p className="text-[14px] font-bold">{card.expensedate}</p>
+                  <p className="text-[14px] font-bold">{new Date(card.expensedate).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "2-digit",
+      })}</p>
                   <p className="text-[14px] font-bold">{card.expensename}</p>
                 </div>
 
