@@ -61,7 +61,7 @@ const Page: FC = () => {
         return (
           <span>
             {validDate && !isNaN(validDate.getTime())
-              ? format(validDate, "MM-dd-yyyy")
+              ? format(validDate, "MM-dd-yy")
               : ""}
           </span>
         );

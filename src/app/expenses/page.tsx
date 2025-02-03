@@ -60,9 +60,14 @@ const Expenses: FC = () => {
     {
       accessorKey: "date",
       header: () => <div className="text-left ">Date</div>,
-      cell: (info) => <span>{info.row.original.expensedate}</span>,
+      cell: (info) => <span>{new Date(info.row.original.expensedate).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "2-digit",
+      })}</span>,
       size: 80,
     },
+    
     {
       accessorKey: "store",
       header: () => <div className="text-left">Store</div>,
