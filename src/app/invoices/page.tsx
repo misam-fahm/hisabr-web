@@ -48,6 +48,8 @@ const Invoices = () => {
   const [store, setStore] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
@@ -356,7 +358,12 @@ const Invoices = () => {
             widthchange="w-full"
           />
           <div className="below-lg:w-full tablet:w-full below-md:w-full">
-            <DateRangePicker />
+            <DateRangePicker 
+              startDate = {startDate}
+              endDate = {endDate}
+              setStartDate = {setStartDate}
+              setEndDate = {setEndDate}
+            />
           </div>
           <div className="flex border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
             <input

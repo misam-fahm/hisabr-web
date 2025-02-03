@@ -29,7 +29,6 @@ interface TableRow {
   order_average_amt: string;
 }
 
-
 const Sales: FC = () => {
   const router = useRouter();
   const [data, setData] = useState<TableRow[]>([]);
@@ -38,6 +37,8 @@ const Sales: FC = () => {
   const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
@@ -358,7 +359,12 @@ const formattedData = data?.map((item) => {
               widthchange="w-full"
             />
             <div className="w-full tablet:w-full below-md:w-full">
-              <DateRangePicker />
+              <DateRangePicker 
+                startDate = {startDate}
+                endDate = {endDate}
+                setStartDate = {setStartDate}
+                setEndDate = {setEndDate}
+              />
             </div>
             <div className="flex flex-row gap-3 w-full ">
               <div className=" w-full rounded border border-gray-300 below-md:w-full bg-[#ffff] relative below-md:hidden tablet:w-full">

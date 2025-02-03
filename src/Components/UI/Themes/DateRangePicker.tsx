@@ -5,9 +5,23 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { enGB } from "date-fns/locale";
 
-const DateRangePicker = ({ widthchang,}: { widthchang?: string }) => {
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+const DateRangePicker = ({ 
+    widthchang, 
+    startDate, 
+    endDate,
+    setStartDate,
+    setEndDate,
+    fetchData
+  } : { 
+    widthchang?: string, 
+    startDate: any, 
+    endDate: any,
+    setStartDate: any,
+    setEndDate: any,
+    fetchData?: any
+  }) => {
+  // const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  // const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
   const [lastSelectedDate, setLastSelectedDate] = useState<Date | undefined>(
     undefined
@@ -114,7 +128,10 @@ const DateRangePicker = ({ widthchang,}: { widthchang?: string }) => {
             <div>
               <button
                 className="bg-[#334155] mt-4 text-white px-4 py-2 w-[100%] text-[12px] font-normal rounded-xl"
-                onClick={() => setIsOpen(false)}
+                onClick={async () => {
+                  setIsOpen(false);
+                  await fetchData();
+                }}
               >
                 Set Date
               </button>
