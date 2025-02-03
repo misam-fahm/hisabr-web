@@ -36,12 +36,12 @@ const Page: FC = () => {
   const [data, setData] = useState<TableRow[]>([]); // Data state for table rows
   const [totalItems, setTotalItems] = useState<number>(0); // Total number of items from the API
   const [loading, setLoading] = useState<boolean>(true);
+  const [isOpenAddItems, setAddItems] = useState(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
   });
-  const [isOpenAddItems, setAddItems] = useState(false);
-
+  
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "itemname",
@@ -122,8 +122,6 @@ const Page: FC = () => {
 
   const { pageIndex, pageSize } = table.getState().pagination;
   // const totalItems = table.getFilteredRowModel().rows.length;
-  const startItem = pageIndex * pageSize + 1;
-  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -170,7 +168,6 @@ const Page: FC = () => {
         <AddNewItems setAddItems={setAddItems} />
         {/* <AddCategories /> */}
       </div>
-
       <div className="overflow-hidden max-w-full">
         {/* Mobile view */}
         <div
@@ -203,10 +200,8 @@ const Page: FC = () => {
                   </>
                 </div>
               </div>
-
               {/* Border */}
               <div className=" border-b bg-gray-200 my-3"></div>
-
               {/* Category */}
               <div className="flex justify-between">
                 <span className=" text-[#636363] text-[13px] mb-2">
@@ -214,7 +209,6 @@ const Page: FC = () => {
                 </span>{" "}
                 <span className="text-[14px]">{row?.categoryname}</span>
               </div>
-
               {/* Price */}
               <div className="mt-1 flex justify-between">
                 <span className=" text-[#636363] text-[13px] mb-2">Price</span>{" "}
@@ -236,11 +230,13 @@ const Page: FC = () => {
           ))) : (
             <div>No data available</div>)}
           {/* Add NewItems bottom */}
-          <div className=" fixed bottom-[20px] below-lg:hidden right-3">
+          <div className=" block pl-24">
             <AddNewItems setAddItems={setAddItems} />
           </div>
+          <div className="hidden below-md:block ">
+          <Pagination table={table} totalItems={totalItems} />
+          </div>
         </div>
-
         {/* Desktop View */}
         <div className="overflow-x-auto shadow-md border-collapse border border-gray-200 rounded-lg  hidden flex-col md:block">
           <div className="overflow-hidden max-w-full">
@@ -266,7 +262,6 @@ const Page: FC = () => {
                 ))}
               </thead>
             </table>
-
             <div
               className="w-full overflow-y-auto scrollbar-thin flex-grow"
               style={{ maxHeight: "calc(100vh - 270px)" }}
@@ -327,13 +322,6 @@ const Page: FC = () => {
       </div>
 
       <div className="mt-4 below-md:hidden">
-        {/* Page Range Display */}
-        {/* <div>
-            <span className="text-[#8899A8] text-[12px] font-medium ml-3">
-              {startItem} - {endItem} of {totalItems}
-            </span>
-          </div> */}
-
         <Pagination table={table} totalItems={totalItems} />
       </div>
     </main>

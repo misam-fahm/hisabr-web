@@ -31,12 +31,12 @@ const Page: FC = () => {
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0); 
   const [loading, setLoading] = useState<boolean>(true);
+  const [isOpenAddStore, setopenAddStore] = useState(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
   });
-  const [isOpenAddStore, setopenAddStore] = useState(false);
-
+  
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "store",
@@ -51,7 +51,6 @@ const Page: FC = () => {
       },
       size: 100,
     },
-    
     {
       accessorKey: "date",
       header: () => <div className="text-left">Date</div>,
@@ -62,14 +61,13 @@ const Page: FC = () => {
         return (
           <span>
             {validDate && !isNaN(validDate.getTime())
-              ? format(validDate, "MM-dd-yyyy")
+              ? format(validDate, "MM-dd-yy")
               : ""}
           </span>
         );
       },
       size: 100,
     },
-  
     {
       accessorKey: "location",
       header: () => <div className="text-left">Location</div>,
@@ -83,7 +81,6 @@ const Page: FC = () => {
       },
       size: 120,
     },
-    
     {
       accessorKey: "user",
       header: () => <div className="text-left">Owner</div>,
@@ -97,7 +94,6 @@ const Page: FC = () => {
       },
       size: 100,
     },
-    
     {
       accessorKey: "county",
       header: () => <div className="text-right ">County</div>,
@@ -144,8 +140,6 @@ const Page: FC = () => {
   });
 
   const { pageIndex, pageSize } = table.getState().pagination;
-  const startItem = pageIndex * pageSize + 1;
-  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   const fetchData = async () => {
     setLoading(true);
@@ -155,12 +149,10 @@ const Page: FC = () => {
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
       });
-
       if (response?.status === 200) {
         setData(response?.data?.stores || []);
         response?.data?.total > 0 &&
           setTotalItems(response?.data?.total || 0);
-
       } else {
         setCustomToast({
           ...customToast,
@@ -174,9 +166,7 @@ const Page: FC = () => {
       setLoading(false);
        setopenAddStore(false)
     }
-  };
-
-  
+  }; 
   useEffect(() => {
     fetchData();
   }, [pageIndex, pageSize , isOpenAddStore]);
@@ -190,7 +180,6 @@ const Page: FC = () => {
       <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
         <AddStore setAddStore={setopenAddStore} />
       </div>
-
       {/* Mobile View */}
       <div
         className="block md:hidden"
@@ -216,14 +205,12 @@ const Page: FC = () => {
                 <EditStore initialData = {row.original} isOpenAddStore={isOpenAddStore} setAddStore={setopenAddStore} />
               </div>
             </div>
-
             {/* Border */}
             <div className=" border-b bg-gray-200 my-3"></div>
             <div className="text-[14px] mt-1 flex justify-between">
               <span className="text-[#636363] text-[13px] mb-2">Date</span>
               <span className="text-[14px]"> {row.getValue("date")}</span>
             </div>
-
             <div className=" mt-1 flex justify-between">
               <span className="text-[#636363] text-[13px] mb-2">Location</span>{" "}
               <span className="text-[14px]">{row.getValue("location")}</span>
@@ -242,14 +229,15 @@ const Page: FC = () => {
             </div>
           </div>
         ))}
-
         {/* Add Store bottom */}
         <div className="block pl-24 ">
           {" "}
           <AddStore setAddStore={setopenAddStore} />
         </div>
+        <div className="hidden below-md:block ">
+          <Pagination table={table} totalItems={totalItems} />
+          </div>
       </div>
-
       {/* Desktop View */}
       <div className="overflow-x-auto shadow-sm border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block">
         <div className="overflow-hidden max-w-full">
@@ -275,7 +263,6 @@ const Page: FC = () => {
               ))}
             </thead>
           </table>
-
           <div
             className="w-full overflow-y-auto scrollbar-thin flex-grow"
             style={{ maxHeight: "calc(100vh - 270px)" }}
@@ -323,8 +310,9 @@ const Page: FC = () => {
           </div>
         </div>
       </div>
-
+      <div className="mt-4 below-md:hidden">
       <Pagination table={table} totalItems={totalItems} />
+      </div>
     </main>
   );
 };

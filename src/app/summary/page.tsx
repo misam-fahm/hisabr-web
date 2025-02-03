@@ -46,7 +46,6 @@ const data = [
 ];
 
 const summary: FC = () => {
-  /**dropdown */
   const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
@@ -54,60 +53,26 @@ const summary: FC = () => {
     message: "",
     type: "",
   });
-
-  const toggleStoreDropdown = () => {
-    setIsStoreDropdownOpen((prev) => !prev);
-  };
-
-  const handleError = (message: string) => {
-    setCustomToast({
-      message,
-      type: "error",
-    });
-  };
-
-  const fetchDropdownData = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getallstores" });
-      if (response?.status === 200) {
-        setStore(response?.data?.stores || []);
-      } else {
-        handleError(response?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchDropdownData();
-  }, []);
-
   /**year composed chart*/
   const [selectedYearOption1, setSelectedYearOption1] =
     useState<string>("Year");
   const [isYearOpen1, setIsYearOpen1] = useState<boolean>(false);
-
   /**sales */
   const [selectedYearOption2, setSelectedYearOption2] =
     useState<string>("Year");
   const [isYearOpen2, setIsYearOpen2] = useState<boolean>(false);
-
   /**invoices */
   const [selectedYearOption3, setSelectedYearOption3] =
     useState<string>("Year");
   const [isYearOpen3, setIsYearOpen3] = useState<boolean>(false);
-
   /**yearly sales */
   const [selectedYearOption4, setSelectedYearOption4] =
     useState<string>("Year");
   const [isYearOpen4, setIsYearOpen4] = useState<boolean>(false);
-
   /**sales ..yearly, quarterly.. */
   const [selectedDurationOption1, setSelectedDurationOption1] =
     useState<string>("Yearly");
   const [isDurationOpen1, setIsDurationOpen1] = useState<boolean>(false);
-
   /**invoices.. yearly, quarterly.. */
   const [selectedDurationOption2, setSelectedDurationOption2] =
     useState<string>("Yearly");
@@ -119,7 +84,6 @@ const summary: FC = () => {
     { id: 3, name: "2022" },
     { id: 4, name: "2021" },
   ];
-
   const DurationOptions = [
     { id: 1, name: "Yearly" },
     { id: 2, name: "Quarterly" },
@@ -145,7 +109,6 @@ const summary: FC = () => {
         break;
     }
   };
-
   const toggleDurationDropdown = (id: number) => {
     switch (id) {
       case 1:
@@ -158,7 +121,6 @@ const summary: FC = () => {
         break;
     }
   };
-
   const handleYearSelect = (
     option: { id: number; name: string },
     dropdownId: number
@@ -184,7 +146,6 @@ const summary: FC = () => {
         break;
     }
   };
-
   const handleDurationSelect = (
     option: { id: number; name: string },
     dropdownId: number
@@ -202,23 +163,41 @@ const summary: FC = () => {
         break;
     }
   };
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+  };
+  const handleError = (message: string) => {
+    setCustomToast({
+      message,
+      type: "error",
+    });
+  };
+  const fetchDropdownData = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getallstores" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+  };
+  useEffect(() => {
+    fetchDropdownData();
+  }, []);
+
 
   return (
     <main
       className="max-h-[calc(100vh-60px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      {/* <div className="below-md:flex below-md:justify-center">
-        <p className="text-[18px] below-md:pl-0 below-md:pr-0 font-bold text-defaultblack fixed top-0 z-20 mt-5 pl-6 pr-6">
-          Summary
-        </p>
-      </div> */}
-
       <div>
         <div className="z-[11] pb-6 below-md:pb-4 bg-[#f7f8f9] sticky pt-6 below-md:pt-4 pl-6 pr-6 below-md:px-3">
           <div className="flex flex-row below-md:flex-col below-lg:w-[50%] w-[100%] gap-3">
             {/* First Dropdown */}
-
             <Dropdown
               options={store}
               selectedOption={selectedOption?.name || "Store"}
@@ -227,7 +206,6 @@ const summary: FC = () => {
                   name: selectedOption.name,
                   id: selectedOption.id,
                 });
-                // setSelectedOption();
                 setIsStoreDropdownOpen(false);
               }}
               isOpen={isStoreDropdownOpen}
@@ -239,7 +217,6 @@ const summary: FC = () => {
             </div>
           </div>
         </div>
-
         <div className=" pl-6 pr-6 below-md:px-3 ">
           <div className="flex flex-row below-md:flex-col tablet:flex-col w-full h-full gap-6 below-md:gap-3 tablet:gap-3  items-stretch">
             <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full  p-4 justify-between items-stretch">
@@ -261,7 +238,6 @@ const summary: FC = () => {
                 <img src="./images/summarytotalsales.svg" />
               </div>
             </div>
-
             <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
               <div>
                 <p className="text-[14px] text-[#575F6DCC] font-medium">

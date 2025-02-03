@@ -60,9 +60,14 @@ const Expenses: FC = () => {
     {
       accessorKey: "date",
       header: () => <div className="text-left ">Date</div>,
-      cell: (info) => <span>{info.row.original.expensedate}</span>,
+      cell: (info) => <span>{new Date(info.row.original.expensedate).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "2-digit",
+      })}</span>,
       size: 80,
     },
+    
     {
       accessorKey: "store",
       header: () => <div className="text-left">Store</div>,
@@ -268,10 +273,6 @@ const Expenses: FC = () => {
   }
   }, []);
 
-  // if (isLoading) {
-  //   return null; // Or a loading spinner
-  // }
-
 
 
 
@@ -334,7 +335,7 @@ const Expenses: FC = () => {
         </div>
 
         {/*Mobile View : Card section */}
-        <div className="block md:hidden mb-16">
+        <div className="block md:hidden mb-5">
           {data?.map((card, index) => (
             <div
               key={index}
@@ -372,9 +373,12 @@ const Expenses: FC = () => {
               </div>
             </div>
           ))}
-          <div className=" fixed hidden below-md:block">
+          <div className=" fixed hidden below-md:block bottom-[70px] right-3">
             {" "}
             <AddExpenses setAddExpenses={setAddExpenses} />
+          </div>
+          <div className="hidden below-md:block ">
+          <Pagination table={table} totalItems={totalItems} />
           </div>
         </div>
 
