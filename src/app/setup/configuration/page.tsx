@@ -4,8 +4,31 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { InputField } from "@/Components/UI/Themes/InputField";
 import Dropdown from "@/Components/UI/Themes/DropDown";
-import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import { sendApiRequest } from "@/utils/apiUtils";
+
+interface JsonData {
+  mode: string;
+  insurance: number;
+  propertytax: number;
+  rentmortgage: number;
+  payroll: number;
+  laborsalary: number;
+  nuco2: number;
+  trash: number;
+  internet: number;
+  par: number;
+  royalty: number;
+  waterbill: number;
+  gasbill: number;
+  repair: number;
+  storeid:number;
+}
+
+interface CustomToast {
+  toastMessage: string;
+  toastType: string;
+}
 
 const Page = () => {
   const methods = useForm();
@@ -16,14 +39,13 @@ const Page = () => {
   //const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
-  const [payrolltax, setPayrollTax] = useState("");
-  const [laboursalary, setLabourSalary] = useState("");
-  const [rentMortgage, setRentMortgage] = useState("");
+  const [payroll, setPayrollTax] = useState("");
+  const [laborsalary, setLabourSalary] = useState("");
+  const [rentmortgage, setRentMortgage] = useState("");
   const [insurance, setInsurance] = useState("");
   const [propertytax, setPropertyTax] = useState("");
   const [trash, setTrash] = useState("");
-  const [operatorsalary, setOeratorSlary] = useState("");
-  const [nucO2, setNUCO2] = useState("");
+  const [nuco2, setNUCO2] = useState("");
   const [internet, setInternet] = useState("");
   const [waterbill, setWaterBill] = useState("");
   const [gasbill, setGasBill] = useState("");
@@ -31,14 +53,14 @@ const Page = () => {
   const [royalty, setRoyalty] = useState("");
   const [repair, setRepair] = useState("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
-    message: "",
-    type: "",
+  const [customToast, setCustomToast] = useState<CustomToast>({
+    toastMessage: "",
+    toastType: "",
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-  };
+  // const onSubmit = (data: any) => {
+  //   console.log(data);
+  // };
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -46,8 +68,8 @@ const Page = () => {
 
   const handleError = (message: string) => {
     setCustomToast({
-      message,
-      type: "error",
+      toastMessage:message  ,
+      toastType: "error",
     });
   };
 
@@ -69,17 +91,17 @@ const Page = () => {
 
   const handleChangePayrollTax = (data: any) => {
     setPayrollTax(data); // Update local state
-    methods.setValue("payrolltax", data); // Update form state in react-hook-form
+    methods.setValue("payroll", data); // Update form state in react-hook-form
   };
 
   const handleChangesetLabourSalary = (data: any) => {
     setLabourSalary(data); // Update local state
-    methods.setValue("laboursalary", data); // Update form state in react-hook-form
+    methods.setValue("laborsalary", data); // Update form state in react-hook-form
   };
 
   const handleChangesetRentMortgage = (data: any) => {
     setRentMortgage(data); // Update local state
-    methods.setValue("rent", data); // Update form state in react-hook-form
+    methods.setValue("rentmortgage", data); // Update form state in react-hook-form
   };
 
   const handleChangesetInsurance = (data: any) => {
@@ -97,14 +119,9 @@ const Page = () => {
     methods.setValue("trash", data); // Update form state in react-hook-form
   };
 
-  const handleChangeOperatorSalary = (data: any) => {
-    setOeratorSlary(data); // Update local state
-    methods.setValue("operatorsalary", data); // Update form state in react-hook-form
-  };
-
   const handleChangeNUCO2 = (data: any) => {
     setNUCO2(data); // Update local state
-    methods.setValue("nucO2", data); // Update form state in react-hook-form
+    methods.setValue("nuco2", data); // Update form state in react-hook-form
   };
 
   const handleChangesetInternet = (data: any) => {
@@ -137,7 +154,70 @@ const Page = () => {
   };
   console.log("selectedStore", selectedStore);
 
+  const onSubmit = async (data: any) => {
+    console.log(data);
+    try {
+      setCustomToast({ toastMessage: "", toastType: "" });
+      const jsonData: JsonData = {
+        mode: "updateStoreConfig",
+        insurance:Number (insurance),
+        propertytax: Number (propertytax),
+        rentmortgage:Number (rentmortgage),
+        payroll:Number (payroll),
+        laborsalary:Number (laborsalary),
+        nuco2:Number (nuco2),
+        trash:Number (trash),
+        internet:Number (internet),
+        par:Number (par),
+        royalty:Number (royalty),
+        waterbill:Number (waterbill),
+        gasbill:Number (gasbill),
+        repair:Number (repair),
+        storeid:Number(data.storeId),
+      };
+
+      const result: any = await sendApiRequest(jsonData);
+      setTimeout(() => {
+        setCustomToast({
+          toastMessage:
+            result?.status === 200
+              ? "Category added successfully!"
+              : "Failed to add category.",
+          toastType: result?.status === 200 ? "success" : "error",
+        });
+      }, 0);
+
+      if (result?.status === 200) {
+        setInsurance("");
+        setPropertyTax("");
+        setRentMortgage("");
+        setPayrollTax("");
+        setLabourSalary("");
+        setNUCO2("");
+        setTrash("");
+        setInternet("");
+        setPAR("");
+        setRoyalty("");
+        setWaterBill("");
+        setGasBill("");
+        setRepair("");
+      }
+    } catch (error: any) {
+      setTimeout(() => {
+        setCustomToast({
+          toastMessage: error?.message,
+          toastType: "error",
+        });
+      }, 0);
+    }
+  };
+
   return (
+    <>
+    <ToastNotification
+    message={customToast.toastMessage}
+    type={customToast.toastType}
+  />
     <main
       className="max-h-[calc(100vh-50px)] below-lg:px-4 overflow-auto "
       style={{ scrollbarWidth: "thin" }}
@@ -234,14 +314,14 @@ const Page = () => {
                     label="Rent/Mortgage"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={rentMortgage}
+                    value={rentmortgage}
                     textColor="text-[#636363]"
                     placeholder="Rent/Mortgage"
-                    {...methods?.register("rentMortgage", {
+                    {...methods?.register("rentmortgage", {
                       maxLength: 10, // Limit to 10 characters
                       pattern: /^[0-9]*$/, // Only numbers allowed
                     })}
-                    errors={methods.formState.errors.rentMortgage}
+                    errors={methods.formState.errors.rentmortgage}
                     variant="outline"
                     onChange={(e) =>
                       handleChangesetRentMortgage(
@@ -256,14 +336,14 @@ const Page = () => {
                     label="Payroll Tax (%)"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={payrolltax}
+                    value={payroll}
                     textColor="text-[#636363]"
                     placeholder="Payroll Tax (%)"
-                    {...methods?.register("payrolltax", {
+                    {...methods?.register("payroll", {
                       maxLength: 3, // Limit to 10 characters
                       pattern: /^[0-9]*$/, // Only numbers allowed
                     })}
-                    errors={methods.formState.errors.payrolltax}
+                    errors={methods.formState.errors.payroll}
                     variant="outline"
                     onChange={(e) =>
                       handleChangePayrollTax(
@@ -278,14 +358,14 @@ const Page = () => {
                     label="Labour/Operator Salary"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={laboursalary}
+                    value={laborsalary}
                     textColor="text-[#636363]"
                     placeholder="Labour Salary"
-                    {...methods?.register("laboursalary", {
+                    {...methods?.register("laborsalary", {
                       maxLength: 10, // Limit to 10 characters
                       pattern: /^[0-9]*$/, // Only numbers allowed
                     })}
-                    errors={methods.formState.errors.laboursalary}
+                    errors={methods.formState.errors.laborsalary}
                     variant="outline"
                     onChange={(e) =>
                       handleChangesetLabourSalary(
@@ -302,14 +382,14 @@ const Page = () => {
                     label="NUCO2"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={nucO2}
+                    value={nuco2}
                     textColor="text-[#636363]"
                     placeholder="NUCO2"
-                    {...methods?.register("nucO2", {
+                    {...methods?.register("nuco2", {
                       maxLength: 10, // Limit to 10 characters
                       pattern: /^[0-9]*$/, // Only numbers allowed
                     })}
-                    errors={methods.formState.errors.nucO2}
+                    errors={methods.formState.errors.nuco2}
                     variant="outline"
                     onChange={(e) =>
                       handleChangeNUCO2(
@@ -339,7 +419,6 @@ const Page = () => {
                       )
                     }
                   />
-                  
                 </div>
                 <div className="below-lg:w-[25%] below-lg:ml-5 below-md:pt-4">
                   <InputField
@@ -483,7 +562,7 @@ const Page = () => {
                   />
                 </div>
               </div>
-              <div className="below-lg:flex below-lg:justify-end below-lg:mr-10 below-md:pt-4 below-lg:my-4">
+              <div className="below-lg:flex below-lg:justify-end below-lg:mr-10 below-md:pt-4 below-lg:pt-4">
                 <button className="bg-[#168A6F] hover:bg-[#11735C] text-[13px]  font-medium text-white rounded-md  h-[35px] w-[118px]">
                   Save
                 </button>
@@ -493,7 +572,9 @@ const Page = () => {
         </form>
       </FormProvider>
     </main>
+    </>
   );
 };
+
 
 export default Page;
