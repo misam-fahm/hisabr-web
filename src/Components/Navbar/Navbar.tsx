@@ -166,7 +166,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
           className={`flex gap-x-4 mt-[13px] ${open ? "pl-3" : "pl-3"}  below-md:pl-1 ${open ? "ml-[13px]" : "ml-[3px]"}`}
         >
           <img
-            src={open ? "/images/hisabrlogo.svg" : "/images/halflogo.svg"}
+            src={open ? "/images/hisabarlogo.svg" : "/images/halflogo.svg"}
             className={`cursor-pointer ${open ? "w-[136px] -mt-1 " : "w-[36px] mb-2"} `}
           />
           {title === "My Profile" ||

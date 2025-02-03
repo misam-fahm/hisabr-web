@@ -7,7 +7,7 @@ import Discounts from "../components/discounts/page";
 import Destinations from "../components/destinations/page";
 import Promotions from "../components/promotions/page";
 import CashSkims from "../components/cash-skims/page";
-import { useRouter,useParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 
@@ -18,7 +18,7 @@ const DetailsPage: React.FC = () => {
   const decodedSalesId = atob(salesid);
 
   const tabContent: Record<any, JSX.Element> = {
-    "Sales Details": <SalesDetails SalesId ={decodedSalesId} />,
+    "Sales Details": <SalesDetails SalesId={decodedSalesId} />,
     Tenders: <Tenders />,
     "Revenue Center": <Revenue />,
     Taxes: <Taxes />,
@@ -90,57 +90,58 @@ const DetailsPage: React.FC = () => {
       />
 
       <div className="py-3 pb-6 bg-[#f7f8f9] pl-6 pr-6 below-md:px-4">
-        <img
-          onClick={handleBack}
-          alt="Back Arrow"
-          className="w-7 h-7 mb-1 below-md:hidden cursor-pointer"
-          src="/images/webbackicon.svg"
-        ></img>
-        <div className="flex flex-row justify-between items-center gap-6">
-          <div className="below-md:w-full tablet:w-full border-b-[2px] border-[#E1E0E0D1] relative flex items-center">
-            {/* Left Arrow */}
-            {showLeftArrow && (
-              <img
-                onClick={() => scrollTabs("left")}
-                className="below-md:block tablet:block hidden px-2 text-[#334155] text-xl"
-                src="/images/leftarrow.svg"
-              />
-            )}
+        <div className="flex items-center gap-4">
+          <img
+            onClick={handleBack}
+            alt="Back Arrow"
+            className="w-7 h-7 below-md:hidden cursor-pointer"
+            src="/images/webbackicon.svg"
+          ></img>
+          <div className="flex flex-row justify-between items-center gap-6">
+            <div className="below-md:w-full tablet:w-full border-b-[2px] border-[#E1E0E0D1] relative flex items-center">
+              {/* Left Arrow */}
+              {showLeftArrow && (
+                <img
+                  onClick={() => scrollTabs("left")}
+                  className="below-md:block tablet:block hidden px-2 text-[#334155] text-xl"
+                  src="/images/leftarrow.svg"
+                />
+              )}
 
-            {/* Scrollable Tabs */}
-            <div
-              id="tabContainer"
-              className="flex-1 flex scrollable-container
+              {/* Scrollable Tabs */}
+              <div
+                id="tabContainer"
+                className="flex-1 flex scrollable-container
              below-md:overflow-y-hidden  tablet:overflow-y-hidden space-x-8 
              px-0 below-md:space-x-6 tablet:space-x-6 whitespace-nowrap scroll-smooth"
-            >
-              {tabs.map((tab, index) => (
-                <button
-                  key={tab}
-                  onClick={() => handleTabClick(tab)}
-                  className={`relative py-2 px-[1px] outline-none font-medium ${
-                    activeTab === tab
-                      ? "text-[#334155] text-[14px] after:content-[''] after:absolute after:w-full after:h-[2px] below-md:after:h-[3px] tablet:after:h-[3px] after:bg-[#334155] after:bottom-[-2px] after:left-0 after:rounded-full"
-                      : "text-[#334155B2] text-[14px] hover:text-[#334155]"
-                  }`}
-                  style={{
-                    borderBottom:
-                      activeTab === tab ? "none" : "2px solid transparent",
-                  }}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
+              >
+                {tabs.map((tab, index) => (
+                  <button
+                    key={tab}
+                    onClick={() => handleTabClick(tab)}
+                    className={`relative py-2 px-[1px] outline-none font-medium ${activeTab === tab
+                        ? "text-[#334155] text-[14px] after:content-[''] after:absolute after:w-full after:h-[2px] below-md:after:h-[3px] tablet:after:h-[3px] after:bg-[#334155] after:bottom-[-2px] after:left-0 after:rounded-full"
+                        : "text-[#334155B2] text-[14px] hover:text-[#334155]"
+                      }`}
+                    style={{
+                      borderBottom:
+                        activeTab === tab ? "none" : "2px solid transparent",
+                    }}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
 
-            {/* Right Arrow */}
-            {showRightArrow && (
-              <img
-                onClick={() => scrollTabs("right")}
-                className="below-md:block tablet:block hidden px-2 cursor-pointer"
-                src="/images/rightarrow.svg"
-              />
-            )}
+              {/* Right Arrow */}
+              {showRightArrow && (
+                <img
+                  onClick={() => scrollTabs("right")}
+                  className="below-md:block tablet:block hidden px-2 cursor-pointer"
+                  src="/images/rightarrow.svg"
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
