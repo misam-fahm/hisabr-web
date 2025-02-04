@@ -134,7 +134,7 @@ const InvoiceDetails = () => {
               <tr>
                 <th className="w-[150px] px-4 py-2 text-start font-normal ">Item Code</th>
                 <th className="py-2 w-[180px] px-4 text-start font-normal ">Description</th>
-                <th className="py-2 w-[100px] text-start font-normal ">Brand</th>
+                <th className="py-2 w-[100px]  text-start font-normal ">Brand</th>
                 <th className="py-2 w-[100px] text-start   font-normal ">Category</th>
                 <th className="py-2 w-[100px] text-start  font-normal ">Quantity</th>
                 <th className="py-2 w-[100px] text-start  font-normal ">Units</th>
@@ -155,15 +155,15 @@ const InvoiceDetails = () => {
                     className={index % 2 === 0 ? 'bg-white' : 'bg-[#F3F3F6]'}>
                     <td className="w-[140px] py-1.5 text-start px-4 text-[#636363]">{row?.itemcode}</td>
                     <td className="py-1.5 w-[180px] text-start px-4 text-[#636363] break-all whitespace-normal overflow-hidden">{row?.description}</td>
-                    <td className="py-1.5 w-[100px] text-start px-4  text-[#636363]">{row?.brand}</td>
-                    <td className="py-1.5 w-[100px] text-start  px-2   text-[#636363]">{row?.category}</td>
-                    <td className="py-1.5 w-[100px] text-end px-5   text-[#636363] ">{row?.quantity}</td>
-                    <td className="py-1.5 w-[100px] text-start px-4   text-[#636363] ">{row?.unit}</td>
-                    <td className="py-1.5 w-[100px] text-end px-4    text-[#636363]">{row?.packsize}</td>
-                    <td className="py-1.5 w-[100px] text-end px-4   text-[#636363]">{row?.invtvalue}</td>
-                    <td className="py-1.5 w-[100px] text-end  px-4  text-[#636363]">{row?.unitprice}</td>
-                    <td className="py-1.5 w-[100px] text-end px-4   text-[#636363]">{row?.tax}</td>
-                    <td className="py-1.5 w-[100px] text-end px-4   text-[#636363]">{row?.extendedprice}</td>
+                    <td className="py-1.5 w-[100px] text-center px-4 text-[#636363]">{row?.brand}</td>
+                    <td className="py-1.5 w-[100px] text-center px-2 text-[#636363]">{row?.category}</td>
+                    <td className="py-1.5 w-[100px] text-end px-5 text-[#636363] ">{row?.quantity}</td>
+                    <td className="py-1.5 w-[100px] text-center px-4 text-[#636363] ">{row?.unit}</td>
+                    <td className="py-1.5 w-[100px] text-end px-4 text-[#636363]">{row?.packsize}</td>
+                    <td className="py-1.5 w-[100px] text-end px-4 text-[#636363]">{row?.invtvalue}</td>
+                    <td className="py-1.5 w-[100px] text-end  px-4 text-[#636363]">{row?.unitprice}</td>
+                    <td className="py-1.5 w-[100px] text-end px-4 text-[#636363]">{row?.tax}</td>
+                    <td className="py-1.5 w-[100px] text-end px-4 text-[#636363]">{row?.extendedprice}</td>
                   </tr>
                 ))}
               </tbody>

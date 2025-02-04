@@ -17,6 +17,7 @@ const Header: React.FC = () => {
   const [isRotated, setIsRotated] = useState(false);
 
    const {invoiceid}:any = useParams(); 
+   const { salesid }: any = useParams();   
    const safeDecodeBase64 = (str: string | undefined): string => {
     if (!str) return ""; 
     try {
@@ -26,7 +27,12 @@ const Header: React.FC = () => {
       return ""; 
     }
   };
+
   
+
+
+
+  const decodedSaleId=safeDecodeBase64(salesid);
   const decodedId = safeDecodeBase64(invoiceid);
    
 
@@ -36,13 +42,17 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     if (isClient) {
-      let currentRoute = currentPath.replace(/^\/|\/$/g, ""); 
+      let currentRoute = currentPath.replace(/^\/|\/$/g, "");
+      let normalizedDecodedSaleId  = decodedSaleId?.trim(); 
       let normalizedDecodedId = decodedId?.trim(); 
       let newTitle = "";
   
       if (currentRoute.startsWith("invoices/") && normalizedDecodedId) {
         newTitle = "Invoices/Invoice Details";
-      } else {
+      }else if (currentRoute.startsWith("sales/") && normalizedDecodedSaleId){
+        newTitle= "Sales/ Sales Details";
+      }
+       else {
         switch (currentRoute?.toLowerCase()) {
           case "myprofile":
             newTitle = "My Profile";
@@ -58,9 +68,6 @@ const Header: React.FC = () => {
             break;
           case "sales":
             newTitle = "Sales";
-            break;
-          case "sales/sales_view":
-            newTitle = "Sales/ Sales Details";
             break;
           case "invoices":
           if (typeof window !== "undefined") {
