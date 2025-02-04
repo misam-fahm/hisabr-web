@@ -5,12 +5,17 @@ import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import { sendApiRequest } from "@/utils/apiUtils";
+import { format } from 'date-fns';
 
 const SalesKPI: FC = () => {
   const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [data, setData] = useState<any>([]);
+  const [isFirstCall, setIsFirstCall] = useState<boolean>(true);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
@@ -31,6 +36,13 @@ const SalesKPI: FC = () => {
     { label: "COGS", amount: "30,000", per: "45%", color: "#AC8892" },
   ];
 
+  useEffect(() => {
+    if (startDate && endDate && isFirstCall) {
+      fetchData();
+      setIsFirstCall(false);
+    }
+  }, [startDate, endDate]);
+
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
   };
@@ -41,6 +53,33 @@ const SalesKPI: FC = () => {
       type: "error",
     });
   };
+
+  const fetchData = async () => {
+    try {
+      if (startDate && endDate) {
+        const response: any = await sendApiRequest({
+          mode: "getsaleskpi",
+          storename: selectedOption?.name || "13246",
+          startdate: startDate && format(startDate, 'yyyy-MM-dd'),
+          enddate: endDate && format(endDate, 'yyyy-MM-dd'),
+        });
+
+        if (response?.status === 200) {
+          setData(response?.data?.saleskpi[0] || []);
+          // response?.data?.total > 0 &&
+          //   setTotalItems(response?.data?.saleskpi[0] || 0);
+        } else {
+          setCustomToast({
+            ...customToast,
+            message: response?.message,
+            type: "error",
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+  }
+};
 
   const fetchDropdownData = async () => {
     try {
@@ -54,7 +93,11 @@ const SalesKPI: FC = () => {
       console.error("Error fetching stores:", error);
     }
   };
+
   useEffect(() => {
+    const currentYear = new Date().getFullYear();
+    setStartDate(new Date(`${currentYear}-01-01`));
+    setEndDate(new Date(`${currentYear}-12-31`));
     fetchDropdownData();
   }, []);
 
@@ -93,7 +136,12 @@ const SalesKPI: FC = () => {
             />
 
             <div className="w-[260px] tablet:w-full below-md:w-full">
-              <DateRangePicker />
+              <DateRangePicker 
+                startDate = {startDate}
+                endDate = {endDate}
+                setStartDate = {setStartDate}
+                setEndDate = {setEndDate}
+                fetchData = {fetchData}/>
             </div>
           </div>
           <div className="below-md:hidden tablet:hidden">
@@ -113,7 +161,7 @@ const SalesKPI: FC = () => {
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">Sales</p>
-              <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.net_sales ? `$${data?.net_sales.toLocaleString()}` : '$00,000'}</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 20%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -129,7 +177,7 @@ const SalesKPI: FC = () => {
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div className="w-[75%]">
               <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
-              <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">$</p>
               <p className="text-[11px] text-[#388E3C] font-semibold ">
                 65%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -147,7 +195,7 @@ const SalesKPI: FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Customer Count
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">161,358</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.customer_count ? `${data?.customer_count}` : '00,000'}</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 40%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -165,7 +213,7 @@ const SalesKPI: FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Labour Cost
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.labour_cost ? `$${data?.labour_cost.toLocaleString()}` : '$00,000'}</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 16%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -184,7 +232,7 @@ const SalesKPI: FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Sales Tax
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.tax_amt ? `$${data?.tax_amt.toLocaleString()}` : '$00,000'}</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 8.6%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -202,7 +250,12 @@ const SalesKPI: FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Royalty
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">
+                {data?.net_sales 
+                  ? `$${(data.net_sales * 0.09).toFixed(2).toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
+                  : '$00,000'
+                }
+              </p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 9.0%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -220,7 +273,7 @@ const SalesKPI: FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Operating Expenses
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">$</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 0%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -236,7 +289,7 @@ const SalesKPI: FC = () => {
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">COGS</p>
-              <p className="text-[16px] text-[#2D3748] font-bold">$161,358</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.producttotal ? `$${data?.producttotal.toLocaleString()}` : '$00,000'}</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 9.8%{" "}
                 <span className="text-[#575F6D] font-normal">

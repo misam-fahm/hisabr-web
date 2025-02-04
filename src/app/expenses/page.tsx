@@ -49,20 +49,25 @@ const Expenses: FC = () => {
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
   const [isOpenAddExpenses, setAddExpenses] = useState(false);
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
   });
 
-
-
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "date",
       header: () => <div className="text-left ">Date</div>,
-      cell: (info) => <span>{info.row.original.expensedate}</span>,
+      cell: (info) => <span>{new Date(info.row.original.expensedate).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "2-digit",
+      })}</span>,
       size: 80,
     },
+    
     {
       accessorKey: "store",
       header: () => <div className="text-left">Store</div>,
@@ -305,7 +310,12 @@ const Expenses: FC = () => {
 
             />
             <div className="w-full tablet:w-full below-md:w-full h-[35px]">
-              <DateRangePicker />
+              <DateRangePicker 
+                startDate = {startDate}
+                endDate = {endDate}
+                setStartDate = {setStartDate}
+                setEndDate = {setEndDate}
+              />
             </div>
 
             <div className="flex  border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
@@ -338,7 +348,11 @@ const Expenses: FC = () => {
             >
               <div className="flex justify-between items-start">
                 <div className="flex gap-4 px-3 py-4">
-                  <p className="text-[14px] font-bold">{card.expensedate}</p>
+                  <p className="text-[14px] font-bold">{new Date(card.expensedate).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "2-digit",
+      })}</p>
                   <p className="text-[14px] font-bold">{card.expensename}</p>
                 </div>
 

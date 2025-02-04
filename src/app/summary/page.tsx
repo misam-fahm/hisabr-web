@@ -49,6 +49,8 @@ const summary: FC = () => {
   const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
@@ -213,7 +215,13 @@ const summary: FC = () => {
               widthchange="w-full"
             />
             <div className=" w-full">
-              <DateRangePicker widthchang="w-full" />
+              <DateRangePicker 
+                widthchang="w-full" 
+                startDate = {startDate}
+                endDate = {endDate}
+                setStartDate = {setStartDate}
+                setEndDate = {setEndDate}
+              />
             </div>
           </div>
         </div>
