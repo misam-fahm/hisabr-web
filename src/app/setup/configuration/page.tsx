@@ -4,7 +4,7 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { InputField } from "@/Components/UI/Themes/InputField";
 import Dropdown from "@/Components/UI/Themes/DropDown";
-import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import { sendApiRequest } from "@/utils/apiUtils";
 
 interface JsonData {
@@ -60,17 +60,13 @@ const Page = () => {
     toastType: "",
   });
 
-  // const onSubmit = (data: any) => {
-  //   console.log(data);
-  // };
-
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
   };
 
   const handleError = (message: string) => {
     setCustomToast({
-      toastMessage:message  ,
+      toastMessage:message,
       toastType: "error",
     });
   };
@@ -91,6 +87,38 @@ const Page = () => {
     fetchDropdownData();
   }, []);
 
+ 
+  const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response: any = await sendApiRequest({
+          mode: "getStoreConfig",
+          storeid : methods.watch("storeId") || 62,
+        });
+        if (response?.status === 200) {
+          const storeData = response?.data?.store[0] || {};
+          setData(storeData);
+          Object.keys(storeData).forEach((key) => {
+            methods.setValue(key, storeData[key] ?? ""); // Set each field value
+          });
+        } else {
+          setCustomToast({
+            ...customToast,
+            toastMessage: response?.message,
+            toastType: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }; 
+    useEffect(() => {
+      fetchData();
+    }, []);
+
+ 
   const handleChangePayrollTax = (data: any) => {
     setPayrollTax(data); // Update local state
     methods.setValue("payrolltax", data); // Update form state in react-hook-form
@@ -103,7 +131,7 @@ const Page = () => {
 
   const handleChangesetRentMortgage = (data: any) => {
     setRentMortgage(data); // Update local state
-    methods.setValue("rentmortgage", data); // Update form state in react-hook-form
+    methods.setValue("rent", data); // Update form state in react-hook-form
   };
 
   const handleChangesetInsurance = (data: any) => {
@@ -121,9 +149,14 @@ const Page = () => {
     methods.setValue("trash", data); // Update form state in react-hook-form
   };
 
+  // const handleChangeOperatorSalary = (data: any) => {
+  //   setOeratorSlary(data); // Update local state
+  //   methods.setValue("operatorsalary", data); // Update form state in react-hook-form
+  // };
+
   const handleChangeNUCO2 = (data: any) => {
     setNUCO2(data); // Update local state
-    methods.setValue("nuco2", data); // Update form state in react-hook-form
+    methods.setValue("nucO2", data); // Update form state in react-hook-form
   };
 
   const handleChangesetInternet = (data: any) => {
@@ -214,39 +247,9 @@ const Page = () => {
     }
   };
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const response: any = await sendApiRequest({
-        mode: "getStoreConfig",
-        storeid : methods.watch("storeId") || 62,
-      });
-      if (response?.status === 200) {
-        const storeData = response?.data?.store[0] || {};
-        setData(storeData);
-      } else {
-        setCustomToast({
-          ...customToast,
-          toastMessage: response?.message,
-          toastType: "error",
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  }; 
-  useEffect(() => {
-    fetchData();
-  }, []);
+
 
   return (
-    <>
-    <ToastNotification
-    message={customToast.toastMessage}
-    type={customToast.toastType}
-  />
     <main
       className="max-h-[calc(100vh-50px)] below-lg:px-4 overflow-auto "
       style={{ scrollbarWidth: "thin" }}
@@ -294,7 +297,7 @@ const Page = () => {
                   label="Insurance"
                   borderClassName="border border-gray-300"
                   labelBackgroundColor="bg-white"
-                  value={insurance}
+                  value={methods.watch("insurance_exp") ?? ""}
                   textColor="text-[#636363]"
                   {...methods?.register("insurance", {
                     maxLength: 10, // Limit to 10 characters
@@ -315,7 +318,7 @@ const Page = () => {
                   label="Property Tax"
                   borderClassName="border border-gray-300"
                   labelBackgroundColor="bg-white"
-                  value={propertytax}
+                  value={methods.watch("property_tax_exp") ?? ""}
                   textColor="text-[#636363]"
                   placeholder="Property Tax"
                   {...methods?.register("propertytax", {
@@ -346,11 +349,11 @@ const Page = () => {
                     value={rentMortgage}
                     textColor="text-[#636363]"
                     placeholder="Rent/Mortgage"
-                    {...methods?.register("rentmortgage", {
+                    {...methods?.register("rentMortgage", {
                       maxLength: 10, // Limit to 10 characters
                       pattern: /^[0-9]*$/, // Only numbers allowed
                     })}
-                    errors={methods.formState.errors.rentmortgage}
+                    errors={methods.formState.errors.rentMortgage}
                     variant="outline"
                     onChange={(e) =>
                       handleChangesetRentMortgage(
@@ -372,7 +375,7 @@ const Page = () => {
                       maxLength: 3, // Limit to 10 characters
                       pattern: /^[0-9]*$/, // Only numbers allowed
                     })}
-                    errors={methods.formState.errors.payroll}
+                    errors={methods.formState.errors.payrolltax}
                     variant="outline"
                     onChange={(e) =>
                       handleChangePayrollTax(
@@ -384,17 +387,17 @@ const Page = () => {
                 <div className="below-lg:w-[25%]  below-lg:ml-5 below-md:w-full below-md:pt-4">
                   <InputField
                     type="text"
-                    label="Labour/Operator Salary"
+                    label="Operator/Labour Salary"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
                     value={labouroperatsalary}
                     textColor="text-[#636363]"
                     placeholder="Labour Salary"
-                    {...methods?.register("laborsalary", {
+                    {...methods?.register("laboursalary", {
                       maxLength: 10, // Limit to 10 characters
                       pattern: /^[0-9]*$/, // Only numbers allowed
                     })}
-                    errors={methods.formState.errors.laborsalary}
+                    errors={methods.formState.errors.laboursalary}
                     variant="outline"
                     onChange={(e) =>
                       handleChangesetLabourSalary(
@@ -414,11 +417,11 @@ const Page = () => {
                     value={nucO2}
                     textColor="text-[#636363]"
                     placeholder="NUCO2"
-                    {...methods?.register("nuco2", {
+                    {...methods?.register("nucO2", {
                       maxLength: 10, // Limit to 10 characters
                       pattern: /^[0-9]*$/, // Only numbers allowed
                     })}
-                    errors={methods.formState.errors.nuco2}
+                    errors={methods.formState.errors.nucO2}
                     variant="outline"
                     onChange={(e) =>
                       handleChangeNUCO2(
@@ -433,7 +436,7 @@ const Page = () => {
                     label="Trash"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={trash}
+                    value={methods.watch("trash") ?? ""}
                     textColor="text-[#636363]"
                     placeholder="Trash"
                     {...methods?.register("trash", {
@@ -448,6 +451,7 @@ const Page = () => {
                       )
                     }
                   />
+                  
                 </div>
                 <div className="below-lg:w-[25%] below-lg:ml-5 below-md:pt-4">
                   <InputField
@@ -455,7 +459,7 @@ const Page = () => {
                     label="Internet"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={internet}
+                    value={methods.watch("internet_exp") ?? ""}
                     textColor="text-[#636363]"
                     placeholder="Internet"
                     {...methods?.register("internet", {
@@ -479,7 +483,7 @@ const Page = () => {
                     label="PAR"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={par}
+                    value={methods.watch("par") ?? ""}
                     textColor="text-[#636363]"
                     placeholder="PAR"
                     {...methods?.register("par", {
@@ -501,7 +505,7 @@ const Page = () => {
                     label="Royalty"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={royalty}
+                    value={methods.watch("royalty") ?? ""}
                     textColor="text-[#636363]"
                     placeholder="Royalty"
                     {...methods?.register("royalty", {
@@ -530,7 +534,7 @@ const Page = () => {
                     label="Water Bill"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={waterbill}
+                    value={methods.watch("water_bill_exp") ?? ""}
                     textColor="text-[#636363]"
                     placeholder="Water Bill"
                     {...methods?.register("waterbill", {
@@ -552,7 +556,7 @@ const Page = () => {
                     label="Gas Bill"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={gasbill}
+                    value={methods.watch("gas_bill_exp") ?? ""}
                     textColor="text-[#636363]"
                     placeholder="Gas Bill"
                     {...methods?.register("gasbill", {
@@ -574,7 +578,7 @@ const Page = () => {
                     label="Repair"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={repair}
+                    value={methods.watch("repair_exp") ?? ""}
                     textColor="text-[#636363]"
                     placeholder="Repair"
                     {...methods?.register("repair", {
@@ -591,7 +595,7 @@ const Page = () => {
                   />
                 </div>
               </div>
-              <div className="below-lg:flex below-lg:justify-end below-lg:mr-10 below-md:pt-4 below-lg:pt-4">
+              <div className="below-lg:flex below-lg:justify-end below-lg:mr-10 below-md:pt-4 below-lg:my-4">
                 <button className="bg-[#168A6F] hover:bg-[#11735C] text-[13px]  font-medium text-white rounded-md  h-[35px] w-[118px]">
                   Save
                 </button>
@@ -601,9 +605,7 @@ const Page = () => {
         </form>
       </FormProvider>
     </main>
-    </>
   );
 };
-
 
 export default Page;
