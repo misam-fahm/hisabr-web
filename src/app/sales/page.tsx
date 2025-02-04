@@ -275,8 +275,58 @@ const Sales: FC = () => {
               donation_count: responseData?.donation_count,
               donation_total_amt: responseData?.donation_total_amount
             };
+            
             const result: any = await sendApiRequest(jsonData);
             if (result?.status === 200) {
+              const newTenderTxns = [];
+              const tenderTxns = responseData?.tenders;
+              const uniqueTenders = responseData?.tenders?.reduce((acc: any, item: any) => {
+                if (!acc.includes(item?.name)) {
+                  acc.push(item?.name);
+                }
+                return acc;
+              }, []);
+              console.log(uniqueTenders);
+
+              // if (uniqueTenders) {
+                // const tendersString = uniqueTenders?.map((item: any) => `"${item}"`).join(", ");
+                const responseTenders: any = await sendApiRequest({
+                  mode: "getTendersByNames",
+                  tenders: uniqueTenders
+                });
+
+                for (let item of tenderTxns) {
+                  // Check if a match exists in data2 by name
+                  const match = responseTenders?.data?.tenders?.find((i: any) => i?.tendername === item?.name);
+              
+                  if (match) {
+                    console.log('match',match);
+                    // If match found, add the code from data2
+                    newTenderTxns.push({ ...item, 
+                      tenderid: match.tenderid, 
+                      salesid: result?.data?.salesid,
+                      tender_date: formattedDate 
+                    });
+                  } else {
+                    // If no match found, call the insert API
+                    console.log("not match",item);
+                    const insertTender: any = await sendApiRequest({
+                      mode: "inserttender",
+                      tendername: item.name,
+                      tender_date: formattedDate
+                    });
+                    console.log('insert tender',insertTender);
+                    // const apiResponse = await insertItem(item);
+                    newTenderTxns.push({ ...item, 
+                      tenderid: insertTender?.data?.tenderid, 
+                      salesid: result?.data?.salesid,
+                      tender_date: formattedDate 
+                    });                    
+                  }
+                }              
+                console.log(result);
+              // };
+              await sendApiRequest(newTenderTxns, `insertBulkTenders`);
               // const val: any = {
               //   invoiceDetails: responseData?.invoice_items || [],
               // };
