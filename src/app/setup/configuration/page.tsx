@@ -35,24 +35,26 @@ const Page = () => {
   const { watch, setValue, clearErrors } = methods;
 
   const selectedStore = watch("store");
-
+  const[data,setData]= useState<any>();
   //const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
-  const [payroll, setPayrollTax] = useState("");
-  const [laborsalary, setLabourSalary] = useState("");
-  const [rentmortgage, setRentMortgage] = useState("");
+  const [payrolltax, setPayrollTax] = useState(data?.payroll_tax);
+  const [labouroperatsalary, setLabourOperatSalary] = useState(data?.labor_operat_salary_exp);
+  const [rentMortgage, setRentMortgage] = useState(data?.rent_mortgage_exp);
   const [insurance, setInsurance] = useState("");
   const [propertytax, setPropertyTax] = useState("");
   const [trash, setTrash] = useState("");
-  const [nuco2, setNUCO2] = useState("");
+  const [nucO2, setNUCO2] = useState(data?.nuco2);
+  const[loading,setLoading]=useState(true);
+ 
   const [internet, setInternet] = useState("");
   const [waterbill, setWaterBill] = useState("");
   const [gasbill, setGasBill] = useState("");
   const [par, setPAR] = useState("");
   const [royalty, setRoyalty] = useState("");
   const [repair, setRepair] = useState("");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  // const [isOpen, setIsOpen] = useState<boolean>(false);
   const [customToast, setCustomToast] = useState<CustomToast>({
     toastMessage: "",
     toastType: "",
@@ -91,11 +93,11 @@ const Page = () => {
 
   const handleChangePayrollTax = (data: any) => {
     setPayrollTax(data); // Update local state
-    methods.setValue("payroll", data); // Update form state in react-hook-form
+    methods.setValue("payrolltax", data); // Update form state in react-hook-form
   };
 
   const handleChangesetLabourSalary = (data: any) => {
-    setLabourSalary(data); // Update local state
+    setLabourOperatSalary(data); // Update local state
     methods.setValue("laborsalary", data); // Update form state in react-hook-form
   };
 
@@ -162,10 +164,10 @@ const Page = () => {
         mode: "updateStoreConfig",
         insurance:Number (insurance),
         propertytax: Number (propertytax),
-        rentmortgage:Number (rentmortgage),
-        payroll:Number (payroll),
-        laborsalary:Number (laborsalary),
-        nuco2:Number (nuco2),
+        rentmortgage:Number (rentMortgage),
+        payroll:Number (payrolltax),
+        laborsalary:Number (labouroperatsalary),
+        nuco2:Number (nucO2),
         trash:Number (trash),
         internet:Number (internet),
         par:Number (par),
@@ -192,7 +194,7 @@ const Page = () => {
         setPropertyTax("");
         setRentMortgage("");
         setPayrollTax("");
-        setLabourSalary("");
+        setLabourOperatSalary("");
         setNUCO2("");
         setTrash("");
         setInternet("");
@@ -211,6 +213,33 @@ const Page = () => {
       }, 0);
     }
   };
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getStoreConfig",
+        storeid : methods.watch("storeId") || 62,
+      });
+      if (response?.status === 200) {
+        const storeData = response?.data?.store[0] || {};
+        setData(storeData);
+      } else {
+        setCustomToast({
+          ...customToast,
+          toastMessage: response?.message,
+          toastType: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }; 
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -314,7 +343,7 @@ const Page = () => {
                     label="Rent/Mortgage"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={rentmortgage}
+                    value={rentMortgage}
                     textColor="text-[#636363]"
                     placeholder="Rent/Mortgage"
                     {...methods?.register("rentmortgage", {
@@ -336,10 +365,10 @@ const Page = () => {
                     label="Payroll Tax (%)"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={payroll}
+                    value={payrolltax}
                     textColor="text-[#636363]"
                     placeholder="Payroll Tax (%)"
-                    {...methods?.register("payroll", {
+                    {...methods?.register("payrolltax", {
                       maxLength: 3, // Limit to 10 characters
                       pattern: /^[0-9]*$/, // Only numbers allowed
                     })}
@@ -358,7 +387,7 @@ const Page = () => {
                     label="Labour/Operator Salary"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={laborsalary}
+                    value={labouroperatsalary}
                     textColor="text-[#636363]"
                     placeholder="Labour Salary"
                     {...methods?.register("laborsalary", {
@@ -382,7 +411,7 @@ const Page = () => {
                     label="NUCO2"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={nuco2}
+                    value={nucO2}
                     textColor="text-[#636363]"
                     placeholder="NUCO2"
                     {...methods?.register("nuco2", {
@@ -443,7 +472,7 @@ const Page = () => {
                   />
                 </div>
               </div>
-              <div className=" flex below-lg:flex below-lg:mt-8">
+              <div className=" flex below-lg:flex below-lg:mt-8 below-md:flex-col">
                 <div className="below-lg:w-[25%]  below-lg:ml-[16%] below-md:w-full below-md:pt-4">
                   <InputField
                     type="text"
