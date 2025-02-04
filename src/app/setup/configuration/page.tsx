@@ -22,7 +22,7 @@ interface JsonData {
   waterbill: number;
   gasbill: number;
   repair: number;
-  storeid:number;
+  storeid: number;
 }
 
 interface CustomToast {
@@ -35,30 +35,47 @@ const Page = () => {
   const { watch, setValue, clearErrors } = methods;
 
   const selectedStore = watch("store");
-  const[data,setData]= useState<any>();
+  const [data, setData] = useState<any>();
+
   //const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
-  const [payrolltax, setPayrollTax] = useState(data?.payroll_tax);
-  const [labouroperatsalary, setLabourOperatSalary] = useState(data?.labor_operat_salary_exp);
-  const [rentMortgage, setRentMortgage] = useState(data?.rent_mortgage_exp);
-  const [insurance, setInsurance] = useState("");
-  const [propertytax, setPropertyTax] = useState("");
-  const [trash, setTrash] = useState("");
-  const [nucO2, setNUCO2] = useState(data?.nuco2);
-  const[loading,setLoading]=useState(true);
- 
-  const [internet, setInternet] = useState("");
-  const [waterbill, setWaterBill] = useState("");
-  const [gasbill, setGasBill] = useState("");
-  const [par, setPAR] = useState("");
-  const [royalty, setRoyalty] = useState("");
-  const [repair, setRepair] = useState("");
-  // const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [payrolltax, setPayrollTax] = useState(data?.payroll_tax || "");
+  const [labouroperatsalary, setLabourOperatSalary] = useState(data?.labor_operat_salary_exp || "");
+  const [rentMortgage, setRentMortgage] = useState(data?.rent_mortgage_exp || "");
+  const [insurance, setInsurance] = useState(data?.insurance_exp || "");
+  const [propertytax, setPropertyTax] = useState(data?.property_tax_exp || "");
+  const [trash, setTrash] = useState(data?.trash || "");
+  const [nucO2, setNUCO2] = useState(data?.nuco2 || "");
+  const [internet, setInternet] = useState(data?.internet_exp || "");
+  const [waterbill, setWaterBill] = useState(data?.water_bill_exp || "");
+  const [gasbill, setGasBill] = useState(data?.gas_bill_exp || "");
+  const [par, setPAR] = useState(data?.par || "");
+  const [royalty, setRoyalty] = useState(data?.royalty || "");
+  const [repair, setRepair] = useState(data?.repair_exp || "");
+  const [loading, setLoading] = useState(true);
   const [customToast, setCustomToast] = useState<CustomToast>({
     toastMessage: "",
     toastType: "",
   });
+
+  useEffect(() => {
+    if (data) {
+      setPropertyTax(data.property_tax_exp || "");
+      setLabourOperatSalary(data.labor_operat_salary_exp || "");
+      setRentMortgage(data.rent_mortgage_exp || "");
+      setInsurance(data.insurance_exp || "");
+      setTrash(data.trash || "");
+      setNUCO2(data.nuco2 || "");
+      setInternet(data.internet_exp || "");
+      setWaterBill(data.water_bill_exp || "");
+      setGasBill(data.gas_bill_exp || "");
+      setPAR(data.par || "");
+      setRoyalty(data.royalty || "");
+      setRepair(data.repair_exp || "");
+    }
+  }, [data]);
+
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -66,7 +83,7 @@ const Page = () => {
 
   const handleError = (message: string) => {
     setCustomToast({
-      toastMessage:message,
+      toastMessage: message,
       toastType: "error",
     });
   };
@@ -87,38 +104,34 @@ const Page = () => {
     fetchDropdownData();
   }, []);
 
- 
-  const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response: any = await sendApiRequest({
-          mode: "getStoreConfig",
-          storeid : methods.watch("storeId") || 62,
-        });
-        if (response?.status === 200) {
-          const storeData = response?.data?.store[0] || {};
-          setData(storeData);
-          Object.keys(storeData).forEach((key) => {
-            methods.setValue(key, storeData[key] ?? ""); // Set each field value
-          });
-        } else {
-          setCustomToast({
-            ...customToast,
-            toastMessage: response?.message,
-            toastType: "error",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    }; 
-    useEffect(() => {
-      fetchData();
-    }, []);
 
- 
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getStoreConfig",
+        storeid: methods.watch("storeId") || 62,
+      });
+      if (response?.status === 200) {
+        setData(response?.data?.store[0] || []);
+      } else {
+        setCustomToast({
+          ...customToast,
+          toastMessage: response?.message,
+          toastType: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
   const handleChangePayrollTax = (data: any) => {
     setPayrollTax(data); // Update local state
     methods.setValue("payrolltax", data); // Update form state in react-hook-form
@@ -195,20 +208,20 @@ const Page = () => {
       setCustomToast({ toastMessage: "", toastType: "" });
       const jsonData: JsonData = {
         mode: "updateStoreConfig",
-        insurance:Number (insurance),
-        propertytax: Number (propertytax),
-        rentmortgage:Number (rentMortgage),
-        payroll:Number (payrolltax),
-        laborsalary:Number (labouroperatsalary),
-        nuco2:Number (nucO2),
-        trash:Number (trash),
-        internet:Number (internet),
-        par:Number (par),
-        royalty:Number (royalty),
-        waterbill:Number (waterbill),
-        gasbill:Number (gasbill),
-        repair:Number (repair),
-        storeid:Number(data.storeId),
+        insurance: Number(insurance),
+        propertytax: Number(propertytax),
+        rentmortgage: Number(rentMortgage),
+        payroll: Number(payrolltax),
+        laborsalary: Number(labouroperatsalary),
+        nuco2: Number(nucO2),
+        trash: Number(trash),
+        internet: Number(internet),
+        par: Number(par),
+        royalty: Number(royalty),
+        waterbill: Number(waterbill),
+        gasbill: Number(gasbill),
+        repair: Number(repair),
+        storeid: Number(data.storeId),
       };
 
       const result: any = await sendApiRequest(jsonData);
@@ -297,7 +310,7 @@ const Page = () => {
                   label="Insurance"
                   borderClassName="border border-gray-300"
                   labelBackgroundColor="bg-white"
-                  value={methods.watch("insurance_exp") ?? ""}
+                  value={insurance}
                   textColor="text-[#636363]"
                   {...methods?.register("insurance", {
                     maxLength: 10, // Limit to 10 characters
@@ -318,7 +331,7 @@ const Page = () => {
                   label="Property Tax"
                   borderClassName="border border-gray-300"
                   labelBackgroundColor="bg-white"
-                  value={methods.watch("property_tax_exp") ?? ""}
+                  value={propertytax}
                   textColor="text-[#636363]"
                   placeholder="Property Tax"
                   {...methods?.register("propertytax", {
@@ -436,7 +449,7 @@ const Page = () => {
                     label="Trash"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={methods.watch("trash") ?? ""}
+                    value={trash}
                     textColor="text-[#636363]"
                     placeholder="Trash"
                     {...methods?.register("trash", {
@@ -451,7 +464,7 @@ const Page = () => {
                       )
                     }
                   />
-                  
+
                 </div>
                 <div className="below-lg:w-[25%] below-lg:ml-5 below-md:pt-4">
                   <InputField
@@ -459,7 +472,7 @@ const Page = () => {
                     label="Internet"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={methods.watch("internet_exp") ?? ""}
+                    value={internet}
                     textColor="text-[#636363]"
                     placeholder="Internet"
                     {...methods?.register("internet", {
@@ -483,7 +496,7 @@ const Page = () => {
                     label="PAR"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={methods.watch("par") ?? ""}
+                    value={par}
                     textColor="text-[#636363]"
                     placeholder="PAR"
                     {...methods?.register("par", {
@@ -505,7 +518,7 @@ const Page = () => {
                     label="Royalty"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={methods.watch("royalty") ?? ""}
+                    value={royalty}
                     textColor="text-[#636363]"
                     placeholder="Royalty"
                     {...methods?.register("royalty", {
@@ -534,7 +547,7 @@ const Page = () => {
                     label="Water Bill"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={methods.watch("water_bill_exp") ?? ""}
+                    value={waterbill}
                     textColor="text-[#636363]"
                     placeholder="Water Bill"
                     {...methods?.register("waterbill", {
@@ -556,7 +569,7 @@ const Page = () => {
                     label="Gas Bill"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={methods.watch("gas_bill_exp") ?? ""}
+                    value={gasbill}
                     textColor="text-[#636363]"
                     placeholder="Gas Bill"
                     {...methods?.register("gasbill", {
@@ -578,7 +591,7 @@ const Page = () => {
                     label="Repair"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={methods.watch("repair_exp") ?? ""}
+                    value={repair}
                     textColor="text-[#636363]"
                     placeholder="Repair"
                     {...methods?.register("repair", {
