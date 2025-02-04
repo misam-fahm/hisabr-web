@@ -46,9 +46,14 @@ const Page: FC = () => {
     {
       accessorKey: "itemname",
       header: () => <div className="text-left">Name</div>,
-      cell: (info) => <span>{info.getValue() as string}</span>,
+      cell: (info) => {
+        const value = info.getValue() as string;
+        const truncatedValue = value.length > 22 ? value.slice(0, 22) + "..." : value;
+        return <span title={value}>{truncatedValue}</span>;
+      },
       size: 160,
     },
+    
     {
       accessorKey: "categoryname",
       header: () => <div className="text-left">Category</div>,

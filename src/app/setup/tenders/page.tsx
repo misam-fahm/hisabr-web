@@ -23,7 +23,7 @@ interface TableRow {
   commission: string;
   tendername: string;
   tendertypename: string;
-  tenderid:any;
+  tenderid: any;
 }
 
 const Page: FC = () => {
@@ -38,14 +38,20 @@ const Page: FC = () => {
     message: "",
     type: "",
   });
-  
+
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "name",
       header: () => <div className="text-left">Name</div>,
-      cell: (info) => <span>{info?.row?.original?.tendername}</span>,
+      cell: (info) => {
+        const value = info?.row?.original?.tendername || "";
+        const truncatedValue =
+          value.length > 32 ? value.slice(0, 32) + "..." : value;
+        return <span title={value}>{truncatedValue}</span>;
+      },
       size: 160,
     },
+
     {
       accessorKey: "type",
       header: () => <div className="text-left">Type</div>,
@@ -80,14 +86,20 @@ const Page: FC = () => {
       header: () => <div className="text-center "></div>,
       cell: (info) => (
         <span className="flex justify-center">
-          <DeletePopup message={"Tender"} jsonData={ {mode: "deletetender",tenderid:Number(info.row.original.tenderid)}} setUpdatedData={setAddTender} />
+          <DeletePopup
+            message={"Tender"}
+            jsonData={{
+              mode: "deletetender",
+              tenderid: Number(info.row.original.tenderid),
+            }}
+            setUpdatedData={setAddTender}
+          />
         </span>
       ),
       size: 30,
     },
   ];
 
- 
   const table = useReactTable({
     data,
     columns,
@@ -148,13 +160,12 @@ const Page: FC = () => {
       const fromHome = params.get("fromHome") === "true";
       if (fromHome) {
         setShowBackIcon(true);
-        const currentUrl = window.location.pathname; 
+        const currentUrl = window.location.pathname;
         window.history.replaceState({}, "", currentUrl);
       }
     }
   }, []);
 
-  
   return (
     <main
       className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-4 overflow-auto"
@@ -162,14 +173,14 @@ const Page: FC = () => {
     >
       <div className="flex below-md:hidden justify-between my-6">
         <div>
-        {showBackIcon && (
-          <img
-            onClick={() => router.back()}
-            src="/images/webbackicon.svg"
-            alt="Back Arrow"
-            className="w-7 h-7"
-          />
-        )}
+          {showBackIcon && (
+            <img
+              onClick={() => router.back()}
+              src="/images/webbackicon.svg"
+              alt="Back Arrow"
+              className="w-7 h-7"
+            />
+          )}
         </div>
         <div className="gap-2 below-md:hidden">
           {" "}
@@ -206,7 +217,14 @@ const Page: FC = () => {
                 </>
                 {/* Delete */}
                 <>
-                <DeletePopup message={"Tender"} jsonData={ {mode: "deletetender",tenderid:Number(row.original.tenderid)}} setUpdatedData={setAddTender} />
+                  <DeletePopup
+                    message={"Tender"}
+                    jsonData={{
+                      mode: "deletetender",
+                      tenderid: Number(row.original.tenderid),
+                    }}
+                    setUpdatedData={setAddTender}
+                  />
                 </>
               </div>
             </div>
@@ -233,7 +251,7 @@ const Page: FC = () => {
         </div>
         <div className="hidden below-md:block ">
           <Pagination table={table} totalItems={totalItems} />
-          </div>
+        </div>
       </div>
       {/* Desktop View */}
       <div className="overflow-x-auto border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block shadow-sm">
@@ -312,7 +330,7 @@ const Page: FC = () => {
         </div>
       </div>
       <div className="mt-4 below-md:hidden">
-      <Pagination table={table} totalItems={totalItems} />
+        <Pagination table={table} totalItems={totalItems} />
       </div>
     </main>
   );
