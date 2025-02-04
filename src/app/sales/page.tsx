@@ -213,6 +213,10 @@ const Sales: FC = () => {
   }, []);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomToast({
+      message: "",
+      type: "",
+    });
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       setUploadPdfLoading(true);
@@ -278,7 +282,7 @@ const Sales: FC = () => {
             
             const result: any = await sendApiRequest(jsonData);
             if (result?.status === 200) {
-              const newTenderTxns = [];
+              const newTenderTxns: any = [];
               const tenderTxns = responseData?.tenders;
               const uniqueTenders = responseData?.tenders?.reduce((acc: any, item: any) => {
                 if (!acc.includes(item?.name)) {
@@ -286,7 +290,6 @@ const Sales: FC = () => {
                 }
                 return acc;
               }, []);
-              console.log(uniqueTenders);
 
               // if (uniqueTenders) {
                 // const tendersString = uniqueTenders?.map((item: any) => `"${item}"`).join(", ");
@@ -296,35 +299,27 @@ const Sales: FC = () => {
                 });
 
                 for (let item of tenderTxns) {
-                  // Check if a match exists in data2 by name
                   const match = responseTenders?.data?.tenders?.find((i: any) => i?.tendername === item?.name);
               
                   if (match) {
-                    console.log('match',match);
-                    // If match found, add the code from data2
                     newTenderTxns.push({ ...item, 
                       tenderid: match.tenderid, 
                       salesid: result?.data?.salesid,
                       tender_date: formattedDate 
                     });
                   } else {
-                    // If no match found, call the insert API
-                    console.log("not match",item);
                     const insertTender: any = await sendApiRequest({
                       mode: "inserttender",
                       tendername: item.name,
                       tender_date: formattedDate
                     });
-                    console.log('insert tender',insertTender);
-                    // const apiResponse = await insertItem(item);
                     newTenderTxns.push({ ...item, 
                       tenderid: insertTender?.data?.tenderid, 
                       salesid: result?.data?.salesid,
                       tender_date: formattedDate 
                     });                    
                   }
-                }              
-                console.log(result);
+                }
               // };
               await sendApiRequest(newTenderTxns, `insertBulkTenders`);
               // const val: any = {
@@ -335,13 +330,19 @@ const Sales: FC = () => {
             } else {
               setTimeout(() => {
                 setCustomToast({
-                  message: "Failed to insert invoice details",
+                  message: "Failed to insert sales details",
                   type: "error",
                 });
               }, 0);
             }
           } else {
-            alert("Failed to upload file.");
+            setTimeout(() => {
+              setCustomToast({
+                message: "Failed to upload file.",
+                type: "error",
+              });
+            }, 0);
+            // alert("Failed to upload file.");
           }
         } catch (error) {
           console.error("Error uploading file:", error);
@@ -350,10 +351,22 @@ const Sales: FC = () => {
           setUploadPdfLoading(false); // Hide loader after upload
         }
       } else {
-        alert("Please upload a PDF file.");
+        setTimeout(() => {
+          setCustomToast({
+            message: "Please upload a PDF file.",
+            type: "error",
+          });
+        }, 0);
+        // alert("Please upload a PDF file.");
       }
     } else {
-      alert("Please select a file.");
+      setTimeout(() => {
+        setCustomToast({
+          message: "Please select a file.",
+          type: "error",
+        });
+      }, 0);
+      // alert("Please select a file.");
       return;
     }
   };
