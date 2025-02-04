@@ -7,6 +7,29 @@ import Dropdown from "@/Components/UI/Themes/DropDown";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import { sendApiRequest } from "@/utils/apiUtils";
 
+interface JsonData {
+  mode: string;
+  insurance: number;
+  propertytax: number;
+  rentmortgage: number;
+  payroll: number;
+  laborsalary: number;
+  nuco2: number;
+  trash: number;
+  internet: number;
+  par: number;
+  royalty: number;
+  waterbill: number;
+  gasbill: number;
+  repair: number;
+  storeid:number;
+}
+
+interface CustomToast {
+  toastMessage: string;
+  toastType: string;
+}
+
 const Page = () => {
   const methods = useForm();
   const { watch, setValue, clearErrors } = methods;
@@ -19,22 +42,22 @@ const Page = () => {
   const [payrolltax, setPayrollTax] = useState(data?.payroll_tax);
   const [labouroperatsalary, setLabourOperatSalary] = useState(data?.labor_operat_salary_exp);
   const [rentMortgage, setRentMortgage] = useState(data?.rent_mortgage_exp);
-  const [insurance, setInsurance] = useState(data?.insurance_exp);
-  const [propertytax, setPropertyTax] = useState(data?.property_tax_exp);
-  const [trash, setTrash] = useState(data?.trash);
- // const [operatorsalary, setOeratorSlary] = useState("");
+  const [insurance, setInsurance] = useState("");
+  const [propertytax, setPropertyTax] = useState("");
+  const [trash, setTrash] = useState("");
   const [nucO2, setNUCO2] = useState(data?.nuco2);
-  const [internet, setInternet] = useState(data?.internet_exp);
-  const [waterbill, setWaterBill] = useState(data?.water_bill_exp);
-  const [gasbill, setGasBill] = useState(data?.gas_bill_exp);
-  const [par, setPAR] = useState(data?.par);
-  const [royalty, setRoyalty] = useState(data?.royalty);
-  const [repair, setRepair] = useState(data?.repair_exp);
   const[loading,setLoading]=useState(true);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
-    message: "",
-    type: "",
+ 
+  const [internet, setInternet] = useState("");
+  const [waterbill, setWaterBill] = useState("");
+  const [gasbill, setGasBill] = useState("");
+  const [par, setPAR] = useState("");
+  const [royalty, setRoyalty] = useState("");
+  const [repair, setRepair] = useState("");
+  // const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [customToast, setCustomToast] = useState<CustomToast>({
+    toastMessage: "",
+    toastType: "",
   });
 
   const toggleStoreDropdown = () => {
@@ -43,8 +66,8 @@ const Page = () => {
 
   const handleError = (message: string) => {
     setCustomToast({
-      message,
-      type: "error",
+      toastMessage:message,
+      toastType: "error",
     });
   };
 
@@ -64,10 +87,7 @@ const Page = () => {
     fetchDropdownData();
   }, []);
 
-  const onSubmit =  async (data: any) => {
-    console.log(data);
-  };
-
+ 
   const fetchData = async () => {
       setLoading(true);
       try {
@@ -84,8 +104,8 @@ const Page = () => {
         } else {
           setCustomToast({
             ...customToast,
-            message: response?.message,
-            type: "error",
+            toastMessage: response?.message,
+            toastType: "error",
           });
         }
       } catch (error) {
@@ -106,7 +126,7 @@ const Page = () => {
 
   const handleChangesetLabourSalary = (data: any) => {
     setLabourOperatSalary(data); // Update local state
-    methods.setValue("labouroperatsalary", data); // Update form state in react-hook-form
+    methods.setValue("laborsalary", data); // Update form state in react-hook-form
   };
 
   const handleChangesetRentMortgage = (data: any) => {
@@ -167,7 +187,67 @@ const Page = () => {
     setRepair(data); // Update local state
     methods.setValue("repair", data); // Update form state in react-hook-form
   };
-  console.log("Store", methods.watch("storeId"));
+  console.log("selectedStore", selectedStore);
+
+  const onSubmit = async (data: any) => {
+    console.log(data);
+    try {
+      setCustomToast({ toastMessage: "", toastType: "" });
+      const jsonData: JsonData = {
+        mode: "updateStoreConfig",
+        insurance:Number (insurance),
+        propertytax: Number (propertytax),
+        rentmortgage:Number (rentMortgage),
+        payroll:Number (payrolltax),
+        laborsalary:Number (labouroperatsalary),
+        nuco2:Number (nucO2),
+        trash:Number (trash),
+        internet:Number (internet),
+        par:Number (par),
+        royalty:Number (royalty),
+        waterbill:Number (waterbill),
+        gasbill:Number (gasbill),
+        repair:Number (repair),
+        storeid:Number(data.storeId),
+      };
+
+      const result: any = await sendApiRequest(jsonData);
+      setTimeout(() => {
+        setCustomToast({
+          toastMessage:
+            result?.status === 200
+              ? "Category added successfully!"
+              : "Failed to add category.",
+          toastType: result?.status === 200 ? "success" : "error",
+        });
+      }, 0);
+
+      if (result?.status === 200) {
+        setInsurance("");
+        setPropertyTax("");
+        setRentMortgage("");
+        setPayrollTax("");
+        setLabourOperatSalary("");
+        setNUCO2("");
+        setTrash("");
+        setInternet("");
+        setPAR("");
+        setRoyalty("");
+        setWaterBill("");
+        setGasBill("");
+        setRepair("");
+      }
+    } catch (error: any) {
+      setTimeout(() => {
+        setCustomToast({
+          toastMessage: error?.message,
+          toastType: "error",
+        });
+      }, 0);
+    }
+  };
+
+
 
   return (
     <main
@@ -266,7 +346,7 @@ const Page = () => {
                     label="Rent/Mortgage"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={methods.watch("rent_mortgage_exp") ?? ""}
+                    value={rentMortgage}
                     textColor="text-[#636363]"
                     placeholder="Rent/Mortgage"
                     {...methods?.register("rentMortgage", {
@@ -288,7 +368,7 @@ const Page = () => {
                     label="Payroll Tax (%)"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={methods.watch("payroll_tax") ?? ""}
+                    value={payrolltax}
                     textColor="text-[#636363]"
                     placeholder="Payroll Tax (%)"
                     {...methods?.register("payrolltax", {
@@ -310,7 +390,7 @@ const Page = () => {
                     label="Operator/Labour Salary"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={methods.watch("labor_operat_salary_exp") ?? ""}
+                    value={labouroperatsalary}
                     textColor="text-[#636363]"
                     placeholder="Labour Salary"
                     {...methods?.register("laboursalary", {
@@ -334,7 +414,7 @@ const Page = () => {
                     label="NUCO2"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
-                    value={methods.watch("nuco2") ?? ""}
+                    value={nucO2}
                     textColor="text-[#636363]"
                     placeholder="NUCO2"
                     {...methods?.register("nucO2", {
@@ -396,7 +476,7 @@ const Page = () => {
                   />
                 </div>
               </div>
-              <div className=" flex below-lg:flex below-lg:mt-8">
+              <div className=" flex below-lg:flex below-lg:mt-8 below-md:flex-col">
                 <div className="below-lg:w-[25%]  below-lg:ml-[16%] below-md:w-full below-md:pt-4">
                   <InputField
                     type="text"
