@@ -205,7 +205,7 @@ const Page: FC = () => {
             <div className="flex justify-between items-center">
               {/* Name */}
               <span className="font-bold text-[14px] text-[#334155]">
-                {row?.original?.tendername}
+                {row?.original?.tendername.length>30?row?.original?.tendername.slice(0,30)+"...":row?.original?.tendername}
               </span>
               <div className="flex items-center gap-4">
                 {/* Edit */}

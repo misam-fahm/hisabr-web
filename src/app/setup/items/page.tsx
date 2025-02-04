@@ -193,7 +193,7 @@ const Page: FC = () => {
               <div className="flex justify-between items-center">
                 {/* Name */}
                 <span className="font-bold text-[14px] text-[#334155]">
-                  {row?.itemname}
+                  {row?.itemname.length>22?row?.itemname.slice(0,22)+"...":row?.itemname}
                 </span>
                 <div className="flex items-center gap-4">
                   <>

@@ -16,7 +16,9 @@ import AddCategories from "@/Components/Setup/CategoriesPopup/AddCategories";
 import EditCategories from "@/Components/Setup/CategoriesPopup/EditCategories";
 import DeleteCategories from "@/Components/Setup/CategoriesPopup/DeleteCategories";
 import { sendApiRequest } from "@/utils/apiUtils";
-import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, {
+  ToastNotificationProps,
+} from "@/Components/UI/ToastNotification/ToastNotification";
 import DeletePopup from "@/Components/UI/Delete/DeletePopup";
 
 interface TableRow {
@@ -38,20 +40,31 @@ const Page: FC = () => {
     type: "",
   });
 
-
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "categoryname",
       header: () => <div className="text-left">Name</div>,
-      cell: (info) => <span>{info.getValue() as string}</span>,
+      cell: (info) => {
+        const value = info.getValue() as string;
+        const truncatedValue =
+          value.length > 30 ? value.substring(0, 30) + "..." : value;
+        return <span title={value}>{truncatedValue}</span>;
+      },
       size: 200,
     },
+
     {
       accessorKey: "description",
       header: () => <div className="text-left">Description</div>,
-      cell: (info) => <span>{info.getValue() as string}</span>,
+      cell: (info) => {
+        const value = info.getValue() as string;
+        const truncatedValue =
+          value.length > 35 ? value.substring(0, 35) + "..." : value;
+        return <span title={value}>{truncatedValue}</span>;
+      },
       size: 250,
     },
+
     {
       accessorKey: "itemcount",
       header: () => <div className="text-right mr-14">No. of Items</div>,
@@ -65,25 +78,33 @@ const Page: FC = () => {
       header: () => <div className=" flex justify-center items-center"></div>,
       cell: (info) => (
         <span className="flex justify-center">
-         <EditCategories rowData={info.row.original} setAddCategories={setAddCategories} />
+          <EditCategories
+            rowData={info.row.original}
+            setAddCategories={setAddCategories}
+          />
         </span>
       ),
       size: 50,
     },
     {
       id: "delete",
-      header: () => (
-        <div className="flex justify-center items-center"></div>
-      ),
+      header: () => <div className="flex justify-center items-center"></div>,
       cell: (info) => (
         <span className="flex justify-center">
-          <DeletePopup message={"category"} jsonData={ {mode: "deletecategory",categoryid:Number(info.row.original.categoryid)}} setUpdatedData={setAddCategories} />
+          <DeletePopup
+            message={"category"}
+            jsonData={{
+              mode: "deletecategory",
+              categoryid: Number(info.row.original.categoryid),
+            }}
+            setUpdatedData={setAddCategories}
+          />
         </span>
       ),
       size: 50,
     },
   ];
- 
+
   const table = useReactTable({
     data,
     columns,
@@ -101,8 +122,8 @@ const Page: FC = () => {
     pageCount: Math.ceil(totalItems / 10), // Calculate page count based on totalItems
   });
   const { pageIndex, pageSize } = table.getState().pagination;
-   // const totalItems = table.getFilteredRowModel().rows.length;
- 
+  // const totalItems = table.getFilteredRowModel().rows.length;
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -128,12 +149,12 @@ const Page: FC = () => {
         console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
-        setAddCategories(false)
+        setAddCategories(false);
       }
     };
 
     fetchData();
-  }, [pageIndex, pageSize ,isOpenAddCategories]);
+  }, [pageIndex, pageSize, isOpenAddCategories]);
 
   return (
     <main
@@ -169,11 +190,16 @@ const Page: FC = () => {
                 <div className="flex justify-between items-center">
                   {/* Name */}
                   <span className="font-bold text-[14px] text-[#334155]">
-                    {row?.categoryname}
+                    {row?.categoryname.length > 20
+                      ? row?.categoryname.slice(0, 20) + "..."
+                      : row?.categoryname}
                   </span>
                   <div className="flex items-center ">
                     {/* Edit */}
-                    <EditCategories rowData={row} setAddCategories={setAddCategories} />
+                    <EditCategories
+                      rowData={row}
+                      setAddCategories={setAddCategories}
+                    />
                     {/* Delete */}
                     <>
                       <DeleteCategories />
@@ -188,7 +214,12 @@ const Page: FC = () => {
                   <span className=" text-[#636363] text-[13px] mb-2">
                     Description
                   </span>{" "}
-                  <span className="text-[14px]"> {row?.description}</span>
+                  <span className="text-[14px]">
+                    {" "}
+                    {row?.description.length > 20
+                      ? row?.description.slice(0, 22) + "..."
+                      : row?.description}
+                  </span>
                 </div>
 
                 <div className="mt-1 flex justify-between">
@@ -204,10 +235,10 @@ const Page: FC = () => {
           )}
           {/* Add NewItem bottom */}
           <div className="block pl-24">
-            <AddCategories setAddCategories={setAddCategories}/>
+            <AddCategories setAddCategories={setAddCategories} />
           </div>
           <div className="hidden below-md:block ">
-          <Pagination table={table} totalItems={totalItems} />
+            <Pagination table={table} totalItems={totalItems} />
           </div>
         </div>
 
@@ -245,10 +276,15 @@ const Page: FC = () => {
                 <tbody>
                   {loading ? (
                     Array.from({ length: 10 }).map((_, index) => (
-                      <tr key={`skeleton-row-${index}`} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+                      <tr
+                        key={`skeleton-row-${index}`}
+                        className={
+                          index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
+                      >
                         {columns.map((column, colIndex) => (
                           <td
-                          key={`skeleton-col-${index}-${colIndex}`}
+                            key={`skeleton-col-${index}-${colIndex}`}
                             className="px-4 py-1.5"
                             style={{ width: `${column.size}px` }}
                           >
@@ -266,9 +302,8 @@ const Page: FC = () => {
                         }
                       >
                         {row.getVisibleCells().map((cell) => (
-                          
                           <td
-                          key={`cell-${cell?.id}`} 
+                            key={`cell-${cell?.id}`}
                             className="px-4 py-1.5 text-[#636363] text-[14px]"
                             style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
                           >
@@ -292,7 +327,7 @@ const Page: FC = () => {
         </div>
       </div>
       <div className="mt-4 below-md:hidden">
-      <Pagination table={table} totalItems={totalItems} />
+        <Pagination table={table} totalItems={totalItems} />
       </div>
     </main>
   );
