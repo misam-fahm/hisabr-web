@@ -80,7 +80,7 @@ const AddNewItems = ({setAddItems}:any) => {
   const onSubmit = async (data: any) => {
     setCustomToast({ toastMessage: "", toastType: "" });
     const jsonData: JsonData = {
-      mode: "insertitem",
+      mode: "insertItem",
       categoryid: data?.categoryId,
       itemname: data?.name?.trim(),
       packsize: data?.packsize,
@@ -131,7 +131,7 @@ const AddNewItems = ({setAddItems}:any) => {
     const fetchDataCategoriesDropdown = async () => {
       try {
         const response: any = await sendApiRequest({
-          mode: "getallcategories",
+          mode: "getAllCategories",
         });
 
         if (response?.status === 200) {
@@ -151,7 +151,7 @@ const AddNewItems = ({setAddItems}:any) => {
     const fetchDataDQcategoryDropdown = async () => {
       try {
         const response: any = await sendApiRequest({
-          mode: "getalldqcategory",
+          mode: "getAllDQCategory",
         });
 
         if (response?.status === 200) {
@@ -171,7 +171,7 @@ const AddNewItems = ({setAddItems}:any) => {
     const fetchDataCogstrackcategoryDropdown = async () => {
       try {
         const response: any = await sendApiRequest({
-          mode: "getallcogstrackcategory",
+          mode: "getAllCogsTrackCategory",
         });
 
         if (response?.status === 200) {

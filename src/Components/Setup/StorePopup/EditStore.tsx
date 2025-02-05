@@ -69,7 +69,7 @@ const EditStore = ({ initialData, setAddStore, isOpenAddStore }: any) => {
 
   const onSubmit = async (data: any) => {
     const jsonData: JsonData = {
-      mode: "updatestore",
+      mode: "updateStore",
       storename: data?.storeName || "",
       location: data?.location || "",
       owner: data?.owner || "",

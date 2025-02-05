@@ -39,7 +39,7 @@ const InvoiceDetails = () => {
 
 
         const response: any = await sendApiRequest({
-          mode: "getinvoicedetails",
+          mode: "getInvoiceDetails",
           invoiceid: Number(decodedInvoiceId)
         });
 

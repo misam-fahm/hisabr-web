@@ -328,7 +328,7 @@ const DetailsPage: React.FC = () => {
       setLoading(true);
       try {
         const response: any = await sendApiRequest({
-          mode: "getinvoices",
+          mode: "getInvoices",
           page: table.getState().pagination.pageIndex + 1,
           limit: table.getState().pagination.pageSize,
         });
@@ -377,7 +377,7 @@ const DetailsPage: React.FC = () => {
           console.log("Response:", responseData);
           if (response.ok) {
             const jsonData: any = {
-              mode: "insertinvoice",
+              mode: "insertInvoice",
               invoicenumber: responseData?.invoice_details?.invoice_number,
               invoicedate: moment(moment(responseData?.invoice_details?.invoice_date, 'MM/DD/YYYY').toDate()).format('YYYY-MM-DD'),
               storename: "13246",
@@ -438,7 +438,7 @@ const DetailsPage: React.FC = () => {
 
   const fetchDropdownData = async () => {
     try {
-      const response = await sendApiRequest({ mode: "getallstores" });
+      const response = await sendApiRequest({ mode: "getAllStores" });
       if (response?.status === 200) {
         setStore(response?.data?.stores || []);
       } else {
