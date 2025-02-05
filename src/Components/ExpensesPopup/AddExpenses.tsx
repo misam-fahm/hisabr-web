@@ -101,7 +101,7 @@ const AddExpenses = ({ setAddExpenses }: any) => {
 
 
     try {
-      const response: any = await sendApiRequest({ mode: "getallstores" });
+      const response: any = await sendApiRequest({ mode: "getAllStores" });
       if (response?.status === 200) {
         setStore(response?.data?.stores || []);
         // setIsStoreFetched(true);
@@ -119,7 +119,7 @@ const AddExpenses = ({ setAddExpenses }: any) => {
 
 
     try {
-      const response: any = await sendApiRequest({ mode: "getallexpensetypes" });
+      const response: any = await sendApiRequest({ mode: "getAllExpenseTypes" });
       if (response?.status === 200) {
         setExpensetypes(response?.data?.expensetypes || []);
         // setIsExpenseFetched(true); 
@@ -151,7 +151,7 @@ const AddExpenses = ({ setAddExpenses }: any) => {
   const onSubmit = async (data: any) => {
 
     const jsonData: JsonData = {
-      mode: "insertexpense",
+      mode: "insertExpense",
       expensedate: format(data?.date, "yyyy-MM-dd"),
       expenseid: data?.expenseTypeId,
       storeid: data?.storeId,

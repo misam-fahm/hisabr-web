@@ -89,7 +89,7 @@ const Page: FC = () => {
           <DeletePopup
             message={"Tender"}
             jsonData={{
-              mode: "deletetender",
+              mode: "deleteTender",
               tenderid: Number(info.row.original.tenderid),
             }}
             setUpdatedData={setAddTender}
@@ -125,7 +125,7 @@ const Page: FC = () => {
     setLoading(true);
     try {
       const response: any = await sendApiRequest({
-        mode: "gettenders",
+        mode: "getTenders",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
       });
@@ -220,7 +220,7 @@ const Page: FC = () => {
                   <DeletePopup
                     message={"Tender"}
                     jsonData={{
-                      mode: "deletetender",
+                      mode: "deleteTender",
                       tenderid: Number(row.original.tenderid),
                     }}
                     setUpdatedData={setAddTender}

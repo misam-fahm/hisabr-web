@@ -27,7 +27,7 @@ const DeleteExpense = ({ initialData , setAddExpenses}:any) => {
   const handleSubmit = async () => {
 
     const jsonData: JsonData = {
-      mode: "deleteexpense",
+      mode: "deleteExpense",
       id:Number(initialData?.id)
     };
   

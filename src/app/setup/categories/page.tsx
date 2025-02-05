@@ -77,7 +77,7 @@ const Page: FC = () => {
       ),
       cell: (info) => (
         <span className="flex justify-center">
-          <DeletePopup message={"Category"} jsonData={ {mode: "deletecategory",categoryid:Number(info.row.original.categoryid)}} setUpdatedData={setAddCategories} />
+          <DeletePopup message={"Category"} jsonData={ {mode: "deleteCategory",categoryid:Number(info.row.original.categoryid)}} setUpdatedData={setAddCategories} />
         </span>
       ),
       size: 50,
@@ -108,7 +108,7 @@ const Page: FC = () => {
       setLoading(true);
       try {
         const response: any = await sendApiRequest({
-          mode: "getcategories",
+          mode: "getCategories",
           page: table.getState().pagination.pageIndex + 1,
           limit: table.getState().pagination.pageSize,
         });

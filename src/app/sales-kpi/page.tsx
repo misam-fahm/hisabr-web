@@ -58,7 +58,7 @@ const SalesKPI: FC = () => {
     try {
       if (startDate && endDate) {
         const response: any = await sendApiRequest({
-          mode: "getsaleskpi",
+          mode: "getSalesKpi",
           storename: selectedOption?.name || "13246",
           startdate: startDate && format(startDate, 'yyyy-MM-dd'),
           enddate: endDate && format(endDate, 'yyyy-MM-dd'),
@@ -83,7 +83,7 @@ const SalesKPI: FC = () => {
 
   const fetchDropdownData = async () => {
     try {
-      const response = await sendApiRequest({ mode: "getallstores" });
+      const response = await sendApiRequest({ mode: "getAllStores" });
       if (response?.status === 200) {
         setStore(response?.data?.stores || []);
       } else {

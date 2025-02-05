@@ -94,7 +94,7 @@ const DetailsPage: React.FC = () => {
 
   const fetchDropdownData = async () => {
     try {
-      const response = await sendApiRequest({ mode: "getallstores" });
+      const response = await sendApiRequest({ mode: "getAllStores" });
       if (response?.status === 200) {
         setStore(response?.data?.stores || []);
       } else {

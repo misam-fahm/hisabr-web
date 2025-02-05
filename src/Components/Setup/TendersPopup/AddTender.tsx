@@ -68,7 +68,7 @@ const AddTender = ({ setAddTender }: any) => {
     const fetchData = async () => {
       try {
         const response: any = await sendApiRequest({
-          mode: "getalltendertypes",
+          mode: "getAllTenderTypes",
         });
 
         if (response?.status === 200) {
@@ -92,7 +92,7 @@ const AddTender = ({ setAddTender }: any) => {
   const onSubmit = async (data: any) => {
     setCustomToast({ toastMessage: "", toastType: "" });
     const jsonData: JsonData = {
-      mode: "inserttender",
+      mode: "insertTender",
       tendertypeid: data?.tendertypeId,
       tendername: data?.name?.trim(),
       commission: Number(data?.commission),

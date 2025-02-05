@@ -55,7 +55,7 @@ const EditTender = ({ initialData, setAddTender }: any) => {
   const fetchData = async () => {
     try {
       const response: any = await sendApiRequest({
-        mode: "getalltendertypes",
+        mode: "getAllTenderTypes",
       });
 
       if (response?.status === 200) {
@@ -82,7 +82,7 @@ const EditTender = ({ initialData, setAddTender }: any) => {
   const onSubmit = async (data: any) => {
 
     const jsonData: JsonData = {
-      mode: "updatetender",
+      mode: "updateTender",
       tendertypeid: data?.tendertypeId ? data?.tendertypeId : initialData?.tendertypeid,
       tendername: data?.name?.trim(),
       commission: Number(data?.commission),

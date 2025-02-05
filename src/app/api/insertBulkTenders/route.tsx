@@ -15,7 +15,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     console.log('reqBody');
     // Prepare the query and values
     const pool = getPool();
-    const query = 'INSERT INTO hisabr.tender_txns (tenderid, salesid, tender_date, quantity, payments, tips, total, percent) VALUES ?';
+    const query = 'INSERT INTO hisabr.tender_txns (tender_id, sales_id, tender_date, quantity, payments, tips, total, percent) VALUES ?';
     const values = reqBody?.map((i: any) => [
         i?.tenderid,
         i?.salesid,

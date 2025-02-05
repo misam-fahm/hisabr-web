@@ -43,7 +43,7 @@ const EditCategories = ({ rowData, setAddCategories }: any) => {
   const onSubmit = async (data: any) => {
 
     const jsonData: JsonData = {
-      mode: "updatecategory",
+      mode: "updateCategory",
       categoryname: data?.categoryname,
       description: data?.description,
       categoryid: Number(data?.categoryid)

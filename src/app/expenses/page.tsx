@@ -130,7 +130,7 @@ const Expenses: FC = () => {
         <>
           <span className="flex justify-center ">
             {" "}
-            <DeletePopup message={"Expenses"} jsonData={{ mode: "deleteexpense", id: Number(info?.row?.original?.id) }} setUpdatedData={setAddExpenses} />
+            <DeletePopup message={"Expenses"} jsonData={{ mode: "deleteExpense", id: Number(info?.row?.original?.id) }} setUpdatedData={setAddExpenses} />
           </span>
         </>
       ),
@@ -166,7 +166,7 @@ const Expenses: FC = () => {
       setLoading(true);
       try {
         const response: any = await sendApiRequest({
-          mode: "getexpenses",
+          mode: "getExpenses",
           page: table.getState().pagination.pageIndex + 1,
           limit: table.getState().pagination.pageSize,
         });
@@ -215,7 +215,7 @@ const Expenses: FC = () => {
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
-        const response = await sendApiRequest({ mode: "getallstores" });
+        const response = await sendApiRequest({ mode: "getAllStores" });
         if (response?.status === 200) {
           setStore(response?.data?.stores || []);
         } else {
@@ -359,7 +359,7 @@ const Expenses: FC = () => {
                 <div className="flex gap-5 mb-1 px-4 py-4">
                   <>
                     <EditExpense initialData={card} setAddExpenses={setAddExpenses} />
-                    <DeletePopup message={"Expense"} jsonData={{ mode: "deleteexpense", id: Number(card.id) }} setUpdatedData={setAddExpenses} />
+                    <DeletePopup message={"Expense"} jsonData={{ mode: "deleteExpense", id: Number(card.id) }} setUpdatedData={setAddExpenses} />
                   </>
                 </div>
               </div>
