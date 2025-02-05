@@ -55,13 +55,13 @@ const EditCategories = ({ rowData, setAddCategories }: any) => {
       const { status } = result;
       setCustomToast({
         message:
-          status === 200 ? "Item updated successfully!" : "Failed to add item.",
+          status === 200 ? "Category updated successfully!" : "Failed to add item.",
         type: status === 200 ? "success" : "error",
       });
 
       if (status === 200) {
         setCustomToast({
-          message: status === 200 ? "Item updated successfully!" : "Failed to add item.",
+          message: status === 200 ? "Category updated successfully!" : "Failed to add item.",
           type: status === 200 ? "success" : "error",
         });
         setTimeout(() => {

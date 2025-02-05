@@ -110,7 +110,7 @@ const Page = () => {
     try {
       const response: any = await sendApiRequest({
         mode: "getStoreConfig",
-        storeid: methods.watch("storeId") || 62,
+        storeid: methods.watch("storeId") || 68,
       });
       if (response?.status === 200) {
         setData(response?.data?.store[0] || []);
@@ -209,15 +209,15 @@ const Page = () => {
       const jsonData: JsonData = {
         mode: "updateStoreConfig",
         insurance: Number(insurance),
-        propertytax: Number(propertytax),
+        propertytax: Number(propertytax)/100,
         rentmortgage: Number(rentMortgage),
-        payroll: Number(payrolltax),
+        payroll: parseFloat(payrolltax) || 0,
         laborsalary: Number(labouroperatsalary),
         nuco2: Number(nucO2),
         trash: Number(trash),
         internet: Number(internet),
         par: Number(par),
-        royalty: Number(royalty),
+        royalty: parseFloat(royalty) || 0, 
         waterbill: Number(waterbill),
         gasbill: Number(gasbill),
         repair: Number(repair),
@@ -280,7 +280,7 @@ const Page = () => {
             </p>
             <div className="below-lg:flex pt-7 below-md:pt-6">
               <p className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366]">
-                Store Selection :
+              Select Store:
               </p>
               <Dropdown
                 options={store}
@@ -302,7 +302,7 @@ const Page = () => {
             </div>
             <div className="below-lg:flex pt-7 below-md:pt-4">
               <p className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366]">
-                Yearly Expenses :
+                Yearly Expenses:
               </p>
               <div className="below-lg:w-[25%] below-lg:mr-5 below-md:pt-4">
                 <InputField
@@ -351,7 +351,7 @@ const Page = () => {
             <div>
               <div className="below-lg:flex pt-7 below-md:pt-4">
                 <p className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366]">
-                  Monthly Expenses :
+                  Monthly Expenses:
                 </p>
                 <div className="below-lg:w-[25%] below-lg:mr-5 below-md:pt-4">
                   <InputField
@@ -386,13 +386,14 @@ const Page = () => {
                     placeholder="Payroll Tax (%)"
                     {...methods?.register("payrolltax", {
                       maxLength: 3, // Limit to 10 characters
-                      pattern: /^[0-9]*$/, // Only numbers allowed
+                      pattern: /^[0-9]*\.?[0-9]*$/,// Only numbers allowed
                     })}
                     errors={methods.formState.errors.payrolltax}
                     variant="outline"
                     onChange={(e) =>
                       handleChangePayrollTax(
-                        e.target.value.replace(/\D/g, "").slice(0, 3)
+                        e.target.value.replace(/[^0-9.]/g, "")
+                        //e.target.value.replace(/\D/g, "").slice(0, 3)
                       )
                     }
                   />
@@ -515,21 +516,23 @@ const Page = () => {
                 <div className="below-lg:w-[25%] below-lg:ml-5  below-md:w-full below-md:pt-4">
                   <InputField
                     type="text"
-                    label="Royalty"
+                    label="Royalty (%)"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
                     value={royalty}
                     textColor="text-[#636363]"
                     placeholder="Royalty"
                     {...methods?.register("royalty", {
-                      maxLength: 3, // Limit to 10 characters
-                      pattern: /^[0-9]*$/, // Only numbers allowed
-                    })}
+                      maxLength: 5, 
+                      pattern: /^[0-9]*\.?[0-9]*$/,                   
+                     })}
                     errors={methods.formState.errors.royalty}
                     variant="outline"
                     onChange={(e) =>
                       handleChangeRoyalty(
-                        e.target.value.replace(/\D/g, "").slice(0, 3)
+                        e.target.value          //.replace(/\D/g, "")
+                        .replace(/[^0-9.]/g, "") 
+                        //.slice(0, 3)
                       )
                     }
                   />
@@ -538,9 +541,10 @@ const Page = () => {
             </div>
             <div>
               <div className="below-lg:flex below-lg:pt-7 below-md:pt-4">
-                <p className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366]">
-                  Other Expenses :
-                </p>
+                <div className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366] flex flex-col items-center relative right-4">
+                <p>Other Expenses</p>
+                <p >(Monthly):</p>
+                </div>
                 <div className="below-lg:w-[25%] below-md:w-full below-md:pt-4">
                   <InputField
                     type="text"

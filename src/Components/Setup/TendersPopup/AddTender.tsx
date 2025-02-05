@@ -223,7 +223,7 @@ const AddTender = ({ setAddTender }: any) => {
                   <div className="w-full flex mt-4">
                     <InputField
                       type="text"
-                      label="Commission"
+                      label="Commission(%)"
                       borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={commission}
