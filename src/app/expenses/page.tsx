@@ -359,7 +359,7 @@ const Expenses: FC = () => {
                 <div className="flex gap-5 mb-1 px-4 py-4">
                   <>
                     <EditExpense initialData={card} setAddExpenses={setAddExpenses} />
-                    <DeletePopup message={"Expenses"} jsonData={{ mode: "deleteExpense", id: Number(card.id) }} setUpdatedData={setAddExpenses} />
+                    <DeletePopup message={"Expense"} jsonData={{ mode: "deleteExpense", id: Number(card.id) }} setUpdatedData={setAddExpenses} />
                   </>
                 </div>
               </div>

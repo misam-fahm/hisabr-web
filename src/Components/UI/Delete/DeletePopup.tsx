@@ -28,14 +28,18 @@ const DeletePopup = ({ setUpdatedData ,jsonData , message }:any) => {
 
       if (status === 200) {
         setCustomToast({
-          message: status === 200 ? "Item delete successfully!" : "Failed to delete item.",
-          type: status === 200 ? "success" : "error",
+          message: `${message} deleted successfully!` , // Dynamic success message
+          type: "success",
+          // message: status === 200 ? "Item delete successfully!" : "Failed to delete item.",
+          // type: status === 200 ? "success" : "error",
         });
         setTimeout(() => {
             setUpdatedData(true);
           closeModal();
         }, 300);
-      };
+      }else {
+        setCustomToast({ message: `Failed to delete ${message}.`, type: "error" });
+      }
 
     } catch (error) {
       setCustomToast({ message: "Error delete item", type: "error" });
@@ -68,7 +72,7 @@ const DeletePopup = ({ setUpdatedData ,jsonData , message }:any) => {
           <DialogPanel className=" h-auto below-md:w-[335px]  px-6 py-6 bg-white rounded-lg shadow-lg flex flex-col">
             <div>
               <DialogTitle as="h3" className=" flex justify-center text-[16px] font font-semibold leading-4 text-[#5E6366] ">
-                Delete Item
+                {message} Delete
               </DialogTitle>
               <div className="flex flex-col mt-4 justify-center items-center text-[#5E6366] font-medium  text-[15px]">
                 <p className=" below-md:text-[12px]  below-md:font-normal">

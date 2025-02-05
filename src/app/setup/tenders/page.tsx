@@ -60,7 +60,7 @@ const Page: FC = () => {
     },
     {
       accessorKey: "commission",
-      header: () => <div className="text-right mr-16">Commission</div>,
+      header: () => <div className="text-right mr-16">Commission(%)</div>,
       cell: (info) => (
         <div className="text-right mr-14">
           {info?.row?.original?.commission}

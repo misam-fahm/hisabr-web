@@ -77,7 +77,7 @@ const Page: FC = () => {
       ),
       cell: (info) => (
         <span className="flex justify-center">
-          <DeletePopup message={"category"} jsonData={ {mode: "deleteCategory",categoryid:Number(info.row.original.categoryid)}} setUpdatedData={setAddCategories} />
+          <DeletePopup message={"Category"} jsonData={ {mode: "deleteCategory",categoryid:Number(info.row.original.categoryid)}} setUpdatedData={setAddCategories} />
         </span>
       ),
       size: 50,

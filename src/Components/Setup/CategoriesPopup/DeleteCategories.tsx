@@ -70,7 +70,7 @@ const DeleteCategories = () => {
                 as="h3"
                 className=" flex justify-center text-[#5E6366] font  font-semibold text-[16px]"
               >
-                Delete Item
+                Category Delete 
               </DialogTitle>
               <div className="flex flex-col mt-4 justify-center items-center text-[#5E6366] font-medium text-[15px]">
                 <p className=" below-md:text-[12px]  below-md:placeholder:font-normal">
