@@ -155,7 +155,7 @@ const Page: FC = () => {
     setLoading(true);
     try {
       const response: any = await sendApiRequest({
-        mode: "getstores",
+        mode: "getStores",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
       });

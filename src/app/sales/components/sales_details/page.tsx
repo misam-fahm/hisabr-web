@@ -131,7 +131,7 @@ const data: TableData[] = [
 
 
         const response: any = await sendApiRequest({
-          mode: "getsalesdetails",
+          mode: "getSalesDetails",
           salesid: Number(SalesId)
         });
 

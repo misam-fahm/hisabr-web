@@ -70,7 +70,7 @@ const EditExpense = ({ initialData , setAddExpenses}:any) => {
  
   const fetchDropdownData = async () => {
     try {
-      const response = await sendApiRequest({ mode: "getallstores" });
+      const response = await sendApiRequest({ mode: "getAllStores" });
       if (response?.status === 200) {
         setStore(response?.data?.stores || []);
       } else {
@@ -81,7 +81,7 @@ const EditExpense = ({ initialData , setAddExpenses}:any) => {
     }
   
     try {
-      const response = await sendApiRequest({ mode: "getallexpensetypes" });
+      const response = await sendApiRequest({ mode: "getAllExpenseTypes" });
       if (response?.status === 200) {
         setExpensetypes(response?.data?.expensetypes || []);
       } else {
@@ -115,7 +115,7 @@ const EditExpense = ({ initialData , setAddExpenses}:any) => {
       return;
     }
     const jsonData: JsonData = {
-      mode: "updateexpense",
+      mode: "updateExpense",
       expensedate: format(data?.date, "yyyy-MM-dd"),
       expenseid: data?.expenseTypeId,
       storeid: data?.storeId,

@@ -55,7 +55,7 @@ const AddNewItems = () => {
       const fetchData = async () => {
         try {
           const response: any = await sendApiRequest({
-            mode: "getallcategories",
+            mode: "getAllCategories",
           });
   
           if (response?.status === 200) {

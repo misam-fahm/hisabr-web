@@ -168,7 +168,7 @@ const Sales: FC = () => {
     setLoading(true);
     try {
       const response: any = await sendApiRequest({
-        mode: "getsales",
+        mode: "getSales",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
       });
@@ -197,7 +197,7 @@ const Sales: FC = () => {
 
   const fetchDropdownData = async () => {
     try {
-      const response = await sendApiRequest({ mode: "getallstores" });
+      const response = await sendApiRequest({ mode: "getAllStores" });
       if (response?.status === 200) {
         setStore(response?.data?.stores || []);
       } else {
@@ -230,14 +230,20 @@ const Sales: FC = () => {
           });
 
           const responseData = await response.json();
-          console.log("Response:", responseData);
           if (response.ok) {
+            let getStore: any = [];
+            if (responseData?.store_name !== "Not Found") {
+              getStore = await sendApiRequest({
+                mode: "getStoreByName",
+                storename: responseData?.store_name
+              });
+            }
             const convertDate = new Date(responseData?.sales_date);
             const formattedDate = convertDate?.getFullYear() + '-' +
                       (convertDate?.getMonth() + 1)?.toString()?.padStart(2, '0') + '-' +
                       convertDate?.getDate()?.toString()?.padStart(2, '0');
             const jsonData: any = {
-              mode: "insertsales",
+              mode: "insertSales",
 			        sales_date: formattedDate,
 			        store_name: responseData?.store_name,
               gross_sales_amt: responseData?.gross_sales,
@@ -277,7 +283,8 @@ const Sales: FC = () => {
               voids_amt: responseData?.voids,
               non_revenue_items_amt: responseData?.non_revenue_items,
               donation_count: responseData?.donation_count,
-              donation_total_amt: responseData?.donation_total_amount
+              donation_total_amt: responseData?.donation_total_amount,
+              storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null
             };
             
             const result: any = await sendApiRequest(jsonData);
@@ -309,7 +316,7 @@ const Sales: FC = () => {
                     });
                   } else {
                     const insertTender: any = await sendApiRequest({
-                      mode: "inserttender",
+                      mode: "insertTender",
                       tendername: item.name,
                       tender_date: formattedDate
                     });

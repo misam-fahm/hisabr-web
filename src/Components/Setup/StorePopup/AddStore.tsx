@@ -71,7 +71,7 @@ const AddStore = ({ setAddStore }: any) => {
   const onSubmit = async (data: any) => {
     setCustomToast({ toastMessage: "", toastType: "" });
     const jsonData: JsonData = {
-      mode: "insertstore",
+      mode: "insertStore",
       storename: data?.storeName || "",
       location: data?.location || "",
       owner: data?.owner || "",

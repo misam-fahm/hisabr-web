@@ -78,7 +78,7 @@ const EditItems = ({rowData , setAddItems}:any) => {
   const onSubmit = async (data: any) => {
    console.log("data",data)
     const jsonData: JsonData = {
-      mode: "updateitem",
+      mode: "updateItem",
       categoryid: data?.categoryId  ? data?.categoryId :  rowData?.categoryid,
       itemname: data?.name?.trim(),
       packsize: data?.packsize,
@@ -133,7 +133,7 @@ const EditItems = ({rowData , setAddItems}:any) => {
     const fetchDataCategoriesDropdown = async () => {
       try {
         const response: any = await sendApiRequest({
-          mode: "getallcategories",
+          mode: "getAllCategories",
         });
 
         if (response?.status === 200) {
@@ -153,7 +153,7 @@ const EditItems = ({rowData , setAddItems}:any) => {
     const fetchDataDQcategoryDropdown = async () => {
       try {
         const response: any = await sendApiRequest({
-          mode: "getalldqcategory",
+          mode: "getAllDQCategory",
         });
 
         if (response?.status === 200) {
@@ -173,7 +173,7 @@ const EditItems = ({rowData , setAddItems}:any) => {
     const fetchDataCogstrackcategoryDropdown = async () => {
       try {
         const response: any = await sendApiRequest({
-          mode: "getallcogstrackcategory",
+          mode: "getAllCogsTrackCategory",
         });
 
         if (response?.status === 200) {
