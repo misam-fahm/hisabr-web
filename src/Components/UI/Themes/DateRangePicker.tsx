@@ -11,7 +11,8 @@ const DateRangePicker = ({
     endDate,
     setStartDate,
     setEndDate,
-    fetchData
+    fetchData,
+    fetchDataForTender
   } : { 
     widthchang?: string, 
     startDate: any, 
@@ -19,6 +20,7 @@ const DateRangePicker = ({
     setStartDate: any,
     setEndDate: any,
     fetchData?: any
+    fetchDataForTender?:any
   }) => {
   // const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   // const [endDate, setEndDate] = useState<Date | undefined>(undefined);
@@ -130,7 +132,7 @@ const DateRangePicker = ({
                 className="bg-[#334155] mt-4 text-white px-4 py-2 w-[100%] text-[12px] font-normal rounded-xl"
                 onClick={async () => {
                   setIsOpen(false);
-                  await fetchData();
+                  await fetchData(); fetchDataForTender();
                 }}
               >
                 Set Date

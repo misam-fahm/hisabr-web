@@ -11,8 +11,13 @@ import {
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const DonutChart: React.FC = () => {
+const DonutChart = ({values}:any ) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  const royality =  values?.net_sales 
+    ? `$${(values.net_sales * 0.09).toFixed(2).toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
+    : '$00,000'
+  
 
   useEffect(() => {
     const checkMobile = () => {
@@ -31,7 +36,7 @@ const DonutChart: React.FC = () => {
     labels: ["Profit", "Labour Cost", "Sales Tax", "ROYALTY", "COGS"],
     datasets: [
       {
-        data: [65.2, 16.0, 8.6, 9.0, 9.8],
+        data: [65.2, values?.labour_cost, values?.tax_amt, 9.0, 9.8],
         backgroundColor: [
           "#53755599", // profit
           "#DAB777", // Labour cost
