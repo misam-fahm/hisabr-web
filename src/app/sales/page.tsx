@@ -598,7 +598,7 @@ const Sales: FC = () => {
                   </div>
                   <div>
                     <img
-                      onClick={handleImageClick}
+                      onClick={() => navigateToSalesView(items.salesid)}
                       src="/images/vieweyeicon.svg"
                       className="w-5 h-5"
                     />
