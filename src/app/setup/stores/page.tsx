@@ -29,14 +29,14 @@ interface TableRow {
 const Page: FC = () => {
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [data, setData] = useState<TableRow[]>([]);
-  const [totalItems, setTotalItems] = useState<number>(0); 
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [isOpenAddStore, setopenAddStore] = useState(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
   });
-  
+
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "store",
@@ -45,7 +45,9 @@ const Page: FC = () => {
         const storeName = info.row.original.storename as string;
         return (
           <span>
-            {storeName?.length > 23 ? storeName.substring(0, 20) + "..." : storeName}
+            {storeName?.length > 23
+              ? storeName.substring(0, 20) + "..."
+              : storeName}
           </span>
         );
       },
@@ -57,7 +59,7 @@ const Page: FC = () => {
       cell: (info) => {
         const rawDate = info.row.original.createdate;
         const validDate = rawDate ? new Date(rawDate) : null;
-      
+
         return (
           <span>
             {validDate && !isNaN(validDate.getTime())
@@ -75,7 +77,9 @@ const Page: FC = () => {
         const location = info.row.original.location as string;
         return (
           <div>
-            {location?.length > 23 ? location.substring(0, 20) + "..." : location}
+            {location?.length > 23
+              ? location.substring(0, 20) + "..."
+              : location}
           </div>
         );
       },
@@ -105,7 +109,9 @@ const Page: FC = () => {
     {
       accessorKey: "royalty",
       header: () => <div className="text-right">Royalty</div>,
-      cell: (info) => <div className=" text-right ">{info.row.original.royalty}</div>,
+      cell: (info) => (
+        <div className=" text-right ">{info.row.original.royalty}</div>
+      ),
       size: 80,
     },
     {
@@ -113,13 +119,17 @@ const Page: FC = () => {
       header: () => <div className="text-center"></div>,
       cell: (info) => (
         <span className="flex justify-center">
-          <EditStore initialData = {info.row.original} isOpenAddStore={isOpenAddStore} setAddStore={setopenAddStore} />
+          <EditStore
+            initialData={info.row.original}
+            isOpenAddStore={isOpenAddStore}
+            setAddStore={setopenAddStore}
+          />
         </span>
       ),
       size: 50,
     },
   ];
-  
+
   const table = useReactTable({
     data,
     columns,
@@ -145,14 +155,13 @@ const Page: FC = () => {
     setLoading(true);
     try {
       const response: any = await sendApiRequest({
-        mode: "getstores",
+        mode: "getStores",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
       });
       if (response?.status === 200) {
         setData(response?.data?.stores || []);
-        response?.data?.total > 0 &&
-          setTotalItems(response?.data?.total || 0);
+        response?.data?.total > 0 && setTotalItems(response?.data?.total || 0);
       } else {
         setCustomToast({
           ...customToast,
@@ -164,13 +173,12 @@ const Page: FC = () => {
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
-       setopenAddStore(false)
+      setopenAddStore(false);
     }
-  }; 
+  };
   useEffect(() => {
     fetchData();
-  }, [pageIndex, pageSize , isOpenAddStore]);
-
+  }, [pageIndex, pageSize, isOpenAddStore]);
 
   return (
     <main
@@ -198,34 +206,57 @@ const Page: FC = () => {
             <div className="flex justify-between items-center">
               {/* Name */}
               <span className="font-bold text-[14px] text-[#334155]">
-                {row.getValue("store")}
+                {row.original.storename.length > 35
+                  ? row.original.storename.slice(0, 35) + "..."
+                  : row.original.storename}
               </span>
+
               <div className="flex items-center gap-3">
                 {/* Edit */}
-                <EditStore initialData = {row.original} isOpenAddStore={isOpenAddStore} setAddStore={setopenAddStore} />
+                <EditStore
+                  initialData={row.original}
+                  isOpenAddStore={isOpenAddStore}
+                  setAddStore={setopenAddStore}
+                />
               </div>
             </div>
             {/* Border */}
             <div className=" border-b bg-gray-200 my-3"></div>
             <div className="text-[14px] mt-1 flex justify-between">
               <span className="text-[#636363] text-[13px] mb-2">Date</span>
-              <span className="text-[14px]"> {row.getValue("date")}</span>
+              <span className="text-[14px]">
+                {new Date(row.original.createdate)
+                  .toLocaleDateString("en-US", {
+                    month: "2-digit",
+                    day: "2-digit",
+                    year: "2-digit",
+                  })
+                  .replace(/\//g, "-")}
+              </span>
             </div>
             <div className=" mt-1 flex justify-between">
               <span className="text-[#636363] text-[13px] mb-2">Location</span>{" "}
-              <span className="text-[14px]">{row.getValue("location")}</span>
+              <span className="text-[14px]">
+                {row.original.location.length > 26
+                  ? row.original.location.slice(0, 26) + "..."
+                  : row.original.location}
+              </span>
             </div>
             <div className="mt-1 flex justify-between">
-              <span className="text-[#636363] text-[13px] mb-2">User</span>{" "}
-              <span className="text-[14px]">{row.getValue("user")}</span>
+              <span className="text-[#636363] text-[13px] mb-2">Owner</span>{" "}
+              <span className="text-[14px]">
+                {row.original.owner.length > 25
+                  ? row.original.owner.slice(0, 25) + "..."
+                  : row.original.owner}
+              </span>
             </div>
             <div className=" mt-1 flex justify-between">
               <span className="text-[#636363] text-[13px] mb-2">County</span>{" "}
-              <span className="text-[14px]">{row.getValue("county")}</span>
+              <span className="text-[14px]">{row.original.county}</span>
             </div>
             <div className="mt-1 flex justify-between">
               <span className="text-[#636363] text-[13px] mb-2">Royalty</span>{" "}
-              <span className="text-[14px]">{row.getValue("royalty")}</span>
+              <span className="text-[14px]">{row.original.royalty}</span>
             </div>
           </div>
         ))}
@@ -236,7 +267,7 @@ const Page: FC = () => {
         </div>
         <div className="hidden below-md:block ">
           <Pagination table={table} totalItems={totalItems} />
-          </div>
+        </div>
       </div>
       {/* Desktop View */}
       <div className="overflow-x-auto shadow-sm border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block">
@@ -269,9 +300,14 @@ const Page: FC = () => {
           >
             <table className="w-full border-collapse border-gray-200 table-fixed">
               <tbody>
-              {loading ? (
-                    Array.from({ length: 10 })?.map((_, index) => (
-                      <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+                {loading
+                  ? Array.from({ length: 10 })?.map((_, index) => (
+                      <tr
+                        key={index}
+                        className={
+                          index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
+                      >
                         {columns.map((column, colIndex) => (
                           <td
                             key={colIndex}
@@ -283,35 +319,34 @@ const Page: FC = () => {
                         ))}
                       </tr>
                     ))
-                  ) :
-                  table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={
-                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                    }
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="px-4 py-1.5 text-[#636363] text-[14px]"
-                        style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                  : table.getRowModel().rows.map((row) => (
+                      <tr
+                        key={row.id}
+                        className={
+                          row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
+                        {row.getVisibleCells().map((cell) => (
+                          <td
+                            key={cell.id}
+                            className="px-4 py-1.5 text-[#636363] text-[14px]"
+                            style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
                     ))}
-                  </tr>
-                ))}
               </tbody>
             </table>
           </div>
         </div>
       </div>
       <div className="mt-4 below-md:hidden">
-      <Pagination table={table} totalItems={totalItems} />
+        <Pagination table={table} totalItems={totalItems} />
       </div>
     </main>
   );

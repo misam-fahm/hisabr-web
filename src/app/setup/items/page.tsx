@@ -46,9 +46,14 @@ const Page: FC = () => {
     {
       accessorKey: "itemname",
       header: () => <div className="text-left">Name</div>,
-      cell: (info) => <span>{info.getValue() as string}</span>,
+      cell: (info) => {
+        const value = info.getValue() as string;
+        const truncatedValue = value.length > 22 ? value.slice(0, 22) + "..." : value;
+        return <span title={value}>{truncatedValue}</span>;
+      },
       size: 160,
     },
+    
     {
       accessorKey: "categoryname",
       header: () => <div className="text-left">Category</div>,
@@ -94,7 +99,7 @@ const Page: FC = () => {
       header: () => <div className="text-center"></div>,
       cell: (info) => (
         <span className="flex justify-center">
-         <DeletePopup message={"Item"} jsonData={ {mode: "deleteitem",itemid:Number(info.row.original.itemid)}} setUpdatedData={setAddItems} />
+         <DeletePopup message={"Item"} jsonData={ {mode: "deleteItem",itemid:Number(info.row.original.itemid)}} setUpdatedData={setAddItems} />
         </span>
       ),
       size: 50,
@@ -128,7 +133,7 @@ const Page: FC = () => {
       setLoading(true);
       try {
         const response: any = await sendApiRequest({
-          mode: "getitems",
+          mode: "getItems",
           page: table.getState().pagination.pageIndex + 1,
           limit: table.getState().pagination.pageSize,
         });
@@ -196,7 +201,7 @@ const Page: FC = () => {
                   </>
                   {/* Delete */}
                   <>
-                  <DeletePopup message={"Item"} jsonData={ {mode: "deleteitem",itemid:Number(row.itemid)}} setUpdatedData={setAddItems} />
+                  <DeletePopup message={"Item"} jsonData={ {mode: "deleteItem",itemid:Number(row.itemid)}} setUpdatedData={setAddItems} />
                   </>
                 </div>
               </div>

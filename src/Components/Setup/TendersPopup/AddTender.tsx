@@ -68,7 +68,7 @@ const AddTender = ({ setAddTender }: any) => {
     const fetchData = async () => {
       try {
         const response: any = await sendApiRequest({
-          mode: "getalltendertypes",
+          mode: "getAllTenderTypes",
         });
 
         if (response?.status === 200) {
@@ -92,7 +92,7 @@ const AddTender = ({ setAddTender }: any) => {
   const onSubmit = async (data: any) => {
     setCustomToast({ toastMessage: "", toastType: "" });
     const jsonData: JsonData = {
-      mode: "inserttender",
+      mode: "insertTender",
       tendertypeid: data?.tendertypeId,
       tendername: data?.name?.trim(),
       commission: Number(data?.commission),
@@ -223,7 +223,7 @@ const AddTender = ({ setAddTender }: any) => {
                   <div className="w-full flex mt-4">
                     <InputField
                       type="text"
-                      label="Commission"
+                      label="Commission(%)"
                       borderClassName=" border border-gray-300"
                       labelBackgroundColor="bg-white"
                       value={commission}

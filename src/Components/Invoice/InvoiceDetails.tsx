@@ -32,7 +32,7 @@ const InvoiceDetails = (invoiceid :any) => {
       setLoading(true);
       try {
         const response: any = await sendApiRequest({
-          mode: "getinvoicedetails",
+          mode: "getInvoiceDetails",
           invoiceid:Number(invoiceid)
         });
 

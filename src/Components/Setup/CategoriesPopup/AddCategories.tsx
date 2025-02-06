@@ -79,7 +79,7 @@ const AddCategories = ({ setAddCategories }: any) => {
     try {
       setCustomToast({ toastMessage: "", toastType: "" });
       const jsonData: JsonData = {
-        mode: "insertcategory",
+        mode: "insertCategory",
         categoryname: categoryName.trim(),
         description: description.trim(),
       };

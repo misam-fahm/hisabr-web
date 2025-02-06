@@ -3,37 +3,36 @@ import { getPool } from '../../../lib/dbUtils';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
     try {
-        const invoiceid = req.nextUrl.searchParams.get('invoiceid');
-        const { invoiceDetails } = await req.json(); // Expecting an array of user data from the client
+        const reqBody = await req.json(); // Expecting an array of user data from the client
 
-    if (!Array.isArray(invoiceDetails) || invoiceDetails?.length === 0) {
+    if (!Array.isArray(reqBody) || reqBody?.length === 0) {
         return new NextResponse(
             JSON.stringify({ status: 400, error: 'No data provided or invalid format' }),
             { status: 400 }
         );
     }
-
+    console.log(reqBody);
+    console.log('reqBody');
     // Prepare the query and values
     const pool = getPool();
-    const query = 'INSERT INTO hisabr.invoice_details (invoice_id, item_code, description, brand, category, quantity, unit, pack_size, invt_value, unit_price, tax, extended_price) VALUES ?';
-    const values = invoiceDetails?.map((i: any) => [
-                        invoiceid,
-                        i?.item_code,
-                        i?.item_description,
-                        i?.brand,
-                        i?.category,
-                        i?.qty_ship,
-                        i?.unit,
-                        i?.pack_size,
-                        i?.invent_value,
-                        i?.unit_price,
-                        i?.tax,
-                        i?.extended_price
-                      ]);
+    const query = 'INSERT INTO hisabr.tender_txns (tender_id, sales_id, tender_date, quantity, payments, tips, total, percent) VALUES ?';
+    const values = reqBody?.map((i: any) => [
+        i?.tenderid,
+        i?.salesid,
+        i?.tender_date,
+        i?.quantity,
+        i?.payments,
+        i?.tips,
+        i?.total,
+        i?.percent
+    ]);
+    console.log(values);
+    console.log("values");
     // Ensure each user has first_name, last_name, and email properties
     // const values = users.map(user => [user.first_name, user.last_name, user.email]);
         const result = pool.query(query, [values]);
         const results = result[0];
+        console.log(result);
         // pool.query(query, [values], (error, results) => {
         // if (error) {
         //   console.error(error);
