@@ -82,8 +82,8 @@ const SalesKPI: FC = () => {
     try {
       if (startDate && endDate) {
         const response: any = await sendApiRequest({
-          mode: "getsaleskpi",
-          storename: selectedOption?.id || 69,
+          mode: "getSalesKpi",
+          storeid: selectedOption?.id || 69,
           startdate: startDate && format(startDate, 'yyyy-MM-dd'),
           enddate: endDate && format(endDate, 'yyyy-MM-dd'),
         });
@@ -110,6 +110,7 @@ const fetchDataForTender = async () => {
     if (startDate && endDate) {
       const response: any = await sendApiRequest({
         mode: "getLatestTenders",
+        storeid: selectedOption?.id || 69,
         startdate: startDate && format(startDate, 'yyyy-MM-dd'),
         enddate: endDate && format(endDate, 'yyyy-MM-dd'),
       });
@@ -165,11 +166,11 @@ const fetchDataForTender = async () => {
   };
 
 
-  const handleClick2 = () => {
+  const handleClickForTender = () => {
     router.push("/setup/tenders?fromHome=true"); 
   };
 
-  const handleClick8 = () => {
+  const handleClickForInvoice = () => {
     router.push("/invoices?fromItemsAnalysis=true"); 
   };
 
@@ -424,7 +425,7 @@ const fetchDataForTender = async () => {
               </div>
               <div className="cursor-pointer">
                 <img
-                  onClick={handleClick2}
+                  onClick={handleClickForTender}
                   src="/images/underdetails.svg"
                   alt="Details"
                 />
@@ -497,7 +498,7 @@ const fetchDataForTender = async () => {
                 <p className="text-[#334155]  text-[16px] font-bold">Items</p>
               </div>
               <div className="cursor-pointer">
-                <img src="/images/underdetails.svg" onClick={handleClick8} />
+                <img src="/images/underdetails.svg" onClick={handleClickForInvoice} />
               </div>
             </div>
 
