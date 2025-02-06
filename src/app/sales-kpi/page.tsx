@@ -3,11 +3,33 @@ import { FC, useEffect, useState } from "react";
 import DonutChart from "@/Components/Charts-Graph/DonutChart";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
+import { useRouter } from "next/navigation";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import { sendApiRequest } from "@/utils/apiUtils";
 import { format } from 'date-fns';
 
+
+
 const SalesKPI: FC = () => {
+
+  const router = useRouter();
+
+  const tableDataForTender: any[] = [
+    { name: "Cash", revenue: 10000, commission: "", amount: 0 },
+    { name: "Amex", revenue: 15000, commission: "3.0%", amount: 450.0 },
+    { name: "Master", revenue: 20000, commission: "2.5%", amount: 500.0 },
+    { name: "VISA", revenue: 18000, commission: "2.0%", amount: 360.0 },
+  ];
+
+  const tableDataForItems: any[] = [
+    { name: "Beverage", revenue: 93, commission: "248.00" },
+    { name: "Cakes", revenue: 77, commission: "350.00" },
+    { name: "Food", revenue: 56, commission: "450.00" },
+    { name: "Novelties-Boxed", revenue: 93, commission: "248.00" },
+    { name: "Soft Serve", revenue: 77, commission: "350.00" },
+    { name: "Donations", revenue: 56, commission: "450.00" },
+  ];
+
   const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
@@ -15,6 +37,7 @@ const SalesKPI: FC = () => {
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [data, setData] = useState<any>([]);
+  const [tender, setTender] = useState<any>([]);
   const [isFirstCall, setIsFirstCall] = useState<boolean>(true);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
@@ -24,21 +47,22 @@ const SalesKPI: FC = () => {
 
   const tableData = [
     { label: "Profit", amount: "10,000", per: "65%", color: "#53755599" },
-    { label: "Labour Cost", amount: "2,000", per: "20%", color: "#DAB777" },
-    { label: "Sales Tax", amount: "50,000", per: "75%", color: "#653C597A" },
-    { label: "Royalty", amount: "20,000", per: "25%", color: "#79AFC7" },
+    { label: "Labour Cost", amount: data?.labour_cost || 0   , per: "16%", color: "#DAB777" },
+    { label: "Sales Tax", amount: data?.tax_amt || 0 , per: "8.6%", color: "#653C597A" },
+    { label: "Royalty", amount: (data.net_sales * 0.09).toFixed(2).toLocaleString() || 0, per: "9.0%", color: "#79AFC7" },
     {
       label: "Operating Expenses",
       amount: "50,000",
-      per: "75%",
+      per: "0%",
       color: "#29507B",
     },
-    { label: "COGS", amount: "30,000", per: "45%", color: "#AC8892" },
+    { label: "COGS", amount: data.producttotal || 0, per: "9.8%", color: "#AC8892" },
   ];
 
   useEffect(() => {
     if (startDate && endDate && isFirstCall) {
       fetchData();
+      fetchDataForTender();
       setIsFirstCall(false);
     }
   }, [startDate, endDate]);
@@ -59,7 +83,7 @@ const SalesKPI: FC = () => {
       if (startDate && endDate) {
         const response: any = await sendApiRequest({
           mode: "getsaleskpi",
-          storename: selectedOption?.name || "13246",
+          storename: selectedOption?.id || 69,
           startdate: startDate && format(startDate, 'yyyy-MM-dd'),
           enddate: endDate && format(endDate, 'yyyy-MM-dd'),
         });
@@ -80,6 +104,33 @@ const SalesKPI: FC = () => {
       console.error("Error fetching data:", error);
   }
 };
+
+const fetchDataForTender = async () => {
+  try {
+    if (startDate && endDate) {
+      const response: any = await sendApiRequest({
+        mode: "getLatestTenders",
+        startdate: startDate && format(startDate, 'yyyy-MM-dd'),
+        enddate: endDate && format(endDate, 'yyyy-MM-dd'),
+      });
+
+      if (response?.status === 200) {
+        setTender(response?.data?.tenders || []);
+        // response?.data?.total > 0 &&
+        //   setTotalItems(response?.data?.saleskpi[0] || 0);
+      } else {
+        setCustomToast({
+          ...customToast,
+          message: response?.message,
+          type: "error",
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+}
+};
+
 
   const fetchDropdownData = async () => {
     try {
@@ -113,6 +164,19 @@ const SalesKPI: FC = () => {
     setShowTooltip(false);
   };
 
+
+  const handleClick2 = () => {
+    router.push("/setup/tenders?fromHome=true"); 
+  };
+
+  const handleClick8 = () => {
+    router.push("/invoices?fromItemsAnalysis=true"); 
+  };
+
+  const totalPayments = tender?.reduce((sum:any, row:any) => sum + (row.payments || 0), 0);
+  const totalCommission = tender?.reduce((sum:any, row:any) => sum + ((row.payments || 0) * (row.commission || 0)) / 100, 0);
+  const totalFinalAmount = totalPayments + totalCommission;
+
   return (
     <main
       className="max-h-[calc(100vh-60px)] min-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] overflow-auto"
@@ -141,7 +205,9 @@ const SalesKPI: FC = () => {
                 endDate = {endDate}
                 setStartDate = {setStartDate}
                 setEndDate = {setEndDate}
-                fetchData = {fetchData}/>
+                fetchData = {fetchData}
+                fetchDataForTender={fetchDataForTender}
+                />
             </div>
           </div>
           <div className="below-md:hidden tablet:hidden">
@@ -162,12 +228,12 @@ const SalesKPI: FC = () => {
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">Sales</p>
               <p className="text-[16px] text-[#2D3748] font-bold">{data?.net_sales ? `$${data?.net_sales.toLocaleString()}` : '$00,000'}</p>
-              <p className="text-[11px] text-[#388E3C] font-semibold">
+              {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 20%{" "}
                 <span className="text-[#575F6D] font-normal">
                   increase in sales
                 </span>
-              </p>
+              </p> */}
             </div>
             <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
               <img src="./images/saleskpisales.svg" />
@@ -178,12 +244,12 @@ const SalesKPI: FC = () => {
             <div className="w-[75%]">
               <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
               <p className="text-[16px] text-[#2D3748] font-bold">$</p>
-              <p className="text-[11px] text-[#388E3C] font-semibold ">
+              {/* <p className="text-[11px] text-[#388E3C] font-semibold ">
                 65%{" "}
                 <span className="text-[#575F6D] font-normal">
                   of total revenue
                 </span>
-              </p>
+              </p> */}
             </div>
             <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
               <img src="./images/saleskpiprofit.svg" />
@@ -196,12 +262,12 @@ const SalesKPI: FC = () => {
                 Customer Count
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">{data?.customer_count ? `${data?.customer_count}` : '00,000'}</p>
-              <p className="text-[11px] text-[#388E3C] font-semibold">
+              {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 40%{" "}
                 <span className="text-[#575F6D] font-normal">
                   growth in Customers
                 </span>
-              </p>
+              </p> */}
             </div>
             <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
               <img src="./images/saleskpicustomercount.svg" />
@@ -214,12 +280,12 @@ const SalesKPI: FC = () => {
                 Labour Cost
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">{data?.labour_cost ? `$${data?.labour_cost.toLocaleString()}` : '$00,000'}</p>
-              <p className="text-[11px] text-[#388E3C] font-semibold">
+              {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 16%{" "}
                 <span className="text-[#575F6D] font-normal">
                   of total expenses
                 </span>
-              </p>
+              </p> */}
             </div>
             <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
               <img src="./images/labour.svg" />
@@ -233,12 +299,12 @@ const SalesKPI: FC = () => {
                 Sales Tax
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">{data?.tax_amt ? `$${data?.tax_amt.toLocaleString()}` : '$00,000'}</p>
-              <p className="text-[11px] text-[#388E3C] font-semibold">
+              {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 8.6%{" "}
                 <span className="text-[#575F6D] font-normal">
                   of total expenses
                 </span>
-              </p>
+              </p> */}
             </div>
             <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
               <img src="./images/saleskpisalestax.svg" />
@@ -256,12 +322,12 @@ const SalesKPI: FC = () => {
                   : '$00,000'
                 }
               </p>
-              <p className="text-[11px] text-[#388E3C] font-semibold">
+              {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 9.0%{" "}
                 <span className="text-[#575F6D] font-normal">
                   of total expenses
                 </span>
-              </p>
+              </p> */}
             </div>
             <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
               <img src="./images/saleskpiroyalty.svg" />
@@ -274,12 +340,12 @@ const SalesKPI: FC = () => {
                 Operating Expenses
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">$</p>
-              <p className="text-[11px] text-[#388E3C] font-semibold">
+              {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 0%{" "}
                 <span className="text-[#575F6D] font-normal">
                   of total expenses
                 </span>
-              </p>
+              </p> */}
             </div>
             <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
               <img src="./images/saleskpioperatingexpenses.svg" />
@@ -290,12 +356,12 @@ const SalesKPI: FC = () => {
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">COGS</p>
               <p className="text-[16px] text-[#2D3748] font-bold">{data?.producttotal ? `$${data?.producttotal.toLocaleString()}` : '$00,000'}</p>
-              <p className="text-[11px] text-[#388E3C] font-semibold">
+              {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 9.8%{" "}
                 <span className="text-[#575F6D] font-normal">
                   of total expenses
                 </span>
-              </p>
+              </p> */}
             </div>
             <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
               <img src="./images/saleskpicogs.svg" />
@@ -309,7 +375,7 @@ const SalesKPI: FC = () => {
           </div>
           <div className="flex flex-row items-center below-md:flex-col tablet:flex-col mx-3">
             <div className="-my-12">
-              <DonutChart />
+              <DonutChart values={data} />
             </div>
             <div className="overflow-x-auto w-full custom-scrollbar">
               <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
@@ -318,7 +384,7 @@ const SalesKPI: FC = () => {
                     <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-left border border-solid border-blueGray-300 py-1 text-sm  border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium ">
                       Label
                     </th>
-                    <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-center border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium ">
+                    <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-right border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium ">
                       Amount
                     </th>
                     <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-center border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
@@ -336,7 +402,7 @@ const SalesKPI: FC = () => {
                         ></div>
                         {row.label}
                       </td>
-                      <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-center border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+                      <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-right border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
                         $ {row.amount}
                       </td>
                       <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-center border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
@@ -345,6 +411,134 @@ const SalesKPI: FC = () => {
                     </tr>
                   ))}
                 </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between px-6 py-6">
+        <div className="bg-white  border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-[49%] items-stretch">
+            <div className="flex flex-row mt-4 justify-between px-3">
+              <div className="flex flex-row gap-2">
+                <img src="/images/persentage.svg" alt="Tender" />
+                <p className="text-[#334155] text-[16px] font-bold">Tender</p>
+              </div>
+              <div className="cursor-pointer">
+                <img
+                  onClick={handleClick2}
+                  src="/images/underdetails.svg"
+                  alt="Details"
+                />
+              </div>
+            </div>
+            <div className="overflow-hidden  overflow-x-auto overflow-y-auto max-h-[42vh] below-md:max-h-[27vh] custom-scrollbar">
+              <table className="w-full bg-white border border-gray-200 mt-6">
+                <thead className="bg-[#FAFBFB] shadow-md">
+                  <tr className="text-left text-gray-600 font-semibold">
+                    <th className="px-4 py-1.5 border-b border-gray-200 text-[14px]">
+                      Name
+                    </th>
+                    <th className="px-4 py-1.5 border-b text-right border-gray-200 text-[14px]">
+                      Revenue
+                    </th>
+                    <th className="px-4 py-1.5 text-right border-b border-gray-200 text-[14px]">
+                      Commission
+                    </th>
+                    <th className="px-4 py-1.5 border-b text-right border-gray-200 text-[14px]">
+                      Amount
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tender?.map((row:any, index:any) => (
+                    <tr
+                      key={index}
+                      className={index % 2 === 0 ? "bg-white" : "bg-[#FAFBFB]"}
+                    >
+                      <td className="px-4 py-1.5 text-[14px] border-b border-gray-200 text-gray-600">
+                        {row.tendername ? row.tendername : "--"}
+                      </td>
+                      <td className="px-4 py-1.5 text-[14px] border-b text-right border-gray-200 text-[#334155] font-medium">
+                        { row.payments ? "$" + row.payments?.toLocaleString() : "--"}
+                      </td>
+                      <td className="px-4 py-1.5 border-b border-gray-200 text-gray-600 text-[14px] font-medium text-right">
+                        {row.commission ? row.commission + "%" : "--" }
+                      </td>
+                      <td className="px-4 py-1.5 border-b text-right border-gray-200 text-[#3F526D] text-[14px] font-medium">
+                              {row.payments && row.commission !== undefined
+                                   ? `$${(row.payments + (row.payments * row.commission) / 100).toFixed(2)}`
+                                   : "--"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot className="bg-white">
+                  <tr className="font-medium text-[#E31212] text-[14px]">
+                    <td className="px-4 py-1.5 border-t border-gray-200">
+                      Total
+                    </td>
+                    <td className="px-4 py-1.5 border-t text-right border-gray-200">
+                        {totalPayments ?  "$" + totalPayments  : "--"}
+                    </td>
+                    <td className="px-4 py-1.5 border-t text-right border-gray-200"> 
+                       {totalCommission ? "$" + totalCommission :"--"}
+                       </td>
+                    <td className="px-4 py-1.5 border-t text-right border-gray-200">
+                    {totalFinalAmount ? "$" + totalFinalAmount  :"--"}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+          <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[49%] items-stretch">
+            <div className="flex flex-row mt-4 justify-between px-6 pb-3">
+              <div className="flex flex-row gap-2 ">
+                <img src="/images/items.svg" />
+                <p className="text-[#334155]  text-[16px] font-bold">Items</p>
+              </div>
+              <div className="cursor-pointer">
+                <img src="/images/underdetails.svg" onClick={handleClick8} />
+              </div>
+            </div>
+
+            <div className="overflow-hidden  overflow-x-auto overflow-y-auto max-h-[42vh] below-md:max-h-[27vh] custom-scrollbar ">
+              <table className="w-full  bg-white border border-gray-200">
+                <tbody>
+                  {tableDataForItems?.map((row, index) => (
+                    <tr
+                      key={index}
+                      className={`${
+                        index % 2 === 1
+                          ? "bg-white"
+                          : "bg-[#FAFBFB] text-[14px]"
+                      }`}
+                    >
+                      <td className="pl-6 px-2 py-1 text-left border-b border-gray-200 text-gray-600 font-medium text-[14px]">
+                        {row.name}
+                      </td>
+                      <td className="px-2 py-1 border-b text-right font-medium border-gray-200 text-[#334155] text-[14px] ">
+                        {row.revenue.toLocaleString()}
+                      </td>
+                      <td className="px-2 py-1 border-b text-right border-gray-200 text-[14px] font-medium text-[#334155]">
+                        ${row.commission}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot className="-bottom-1 bg-white sticky">
+                  <tr className=" text-[#E31212] text-[14px]">
+                    <td className="pl-6 px-2 py-1 border-t text-left border-gray-200 font-medium">
+                      Total
+                    </td>
+                    <td className=" px-2 py-1 border-t text-right border-gray-200 text-[14px] font-medium">
+                      $ 80000
+                    </td>
+
+                    <td className="px-2 py-1 border-t text-right border-gray-200 text-[14px] font-medium">
+                      $ 1000000
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
             </div>
           </div>
