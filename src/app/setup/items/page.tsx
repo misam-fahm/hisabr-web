@@ -20,6 +20,7 @@ import DeleteItems from "@/Components/Setup/ItemsPopup/DeleteItems";
 import EditItem from "@/Components/Setup/ItemsPopup/EditItem";
 import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import DeletePopup from "@/Components/UI/Delete/DeletePopup";
+import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 
 interface TableRow {
   itemname: string;
@@ -291,7 +292,14 @@ const Page: FC = () => {
                             </td>
                           ))}
                         </tr>
-                      ))
+                      )) : table.getRowModel().rows.length === 0 ? (
+                        /* Show No Data Found Message If No Data Available */
+                        <tr>
+                          <td colSpan={columns.length} className="py-6 text-center">
+                            <NoDataFound />
+                          </td>
+                        </tr>
+                      )
                     : data && data.length > 0 ? (
                       table.getRowModel().rows.map((row) => (
                         <tr
