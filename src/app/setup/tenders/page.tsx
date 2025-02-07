@@ -18,6 +18,7 @@ import Pagination from "@/Components/UI/Pagination/Pagination";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import { sendApiRequest } from "@/utils/apiUtils";
 import DeletePopup from "@/Components/UI/Delete/DeletePopup";
+import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 
 interface TableRow {
   commission: string;
@@ -302,7 +303,14 @@ const Page: FC = () => {
                           </td>
                         ))}
                       </tr>
-                    ))
+                    )) : table.getRowModel().rows.length === 0 ? (
+                      /* Show No Data Found Message If No Data Available */
+                      <tr>
+                        <td colSpan={columns.length} className="py-6 text-center">
+                          <NoDataFound />
+                        </td>
+                      </tr>
+                    )
                   : table.getRowModel().rows.map((row) => (
                       <tr
                         key={row.id}
