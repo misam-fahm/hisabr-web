@@ -14,10 +14,29 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const DonutChart = ({values}:any ) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
-  const royality =  values?.net_sales 
-    ? `$${(values.net_sales * 0.09).toFixed(2).toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
-    : '$00,000'
-  
+
+  const labourCost = Number(values?.labour_cost) || 0;
+  const taxAmount = Number(values?.tax_amt) || 0;
+  const royalty = values?.net_sales ? Number((values.net_sales * 0.09).toFixed(2)) : 0;
+  const operatingExpenses = values?.labour_cost ?  109817 : 0;
+
+  const total = labourCost + taxAmount + royalty + operatingExpenses;
+
+  const hasData = total > 0;
+
+  // Prevent division by zero
+  const percentages = total > 0 ? {
+    labourCost: ((labourCost / total) * 100).toFixed(2),
+    taxAmount: ((taxAmount / total) * 100).toFixed(2),
+    royalty: ((royalty / total) * 100).toFixed(2),
+    operatingExpenses: ((operatingExpenses / total) * 100).toFixed(2),
+  } : {
+    labourCost: 0,
+    taxAmount: 0,
+    royalty: 0,
+    operatingExpenses: 0,
+  };
+
 
   useEffect(() => {
     const checkMobile = () => {
@@ -32,22 +51,37 @@ const DonutChart = ({values}:any ) => {
     };
   }, []);
 
-  const data = {
-    labels: ["Profit", "Labour Cost", "Sales Tax", "ROYALTY", "COGS"],
-    datasets: [
-      {
-        data: [65.2, values?.labour_cost, values?.tax_amt, 9.0, 9.8],
-        backgroundColor: [
-          "#53755599", // profit
-          "#DAB777", // Labour cost
-          "#653C597A", // Sales Tax
-          "#79AFC7", // Royalty
-          "#AC8892", // Cogs
-        ],
-        borderWidth: 2,
+  const data = hasData
+  ? {
+      labels: ["Labour Cost", "Sales Tax", "ROYALTY", "Operating Expenses"],
+      datasets: [
+        {
+          data: [
+            Number(percentages?.labourCost) || 0,
+            Number(percentages?.taxAmount) || 0,
+            Number(percentages?.royalty) || 0,
+            Number(percentages?.operatingExpenses) || 0,
+          ],
+          backgroundColor: ["#53755599", "#DAB777", "#653C597A", "#79AFC7"],
+          borderWidth: 2,
+        },
+      ],
+    }
+  : {
+      labels: ["No Data Available"],
+      legend: {
+        display: hasData, // Hide legend when no data
       },
-    ],
-  };
+      datasets: [
+        {
+          data: [100], // Dummy data to keep the chart structure
+          backgroundColor: ["#E0E0E0"], // Grey color for empty state
+          borderWidth: 2,
+        },
+      ],
+      
+    };
+
 
   const options: ChartOptions<"doughnut"> = {
     responsive: true,
@@ -59,8 +93,8 @@ const DonutChart = ({values}:any ) => {
     cutout: "70%", // Donut hole size
     layout: {
       padding: {
-        left: 105,
-        right: 85,
+        left: 120,
+        right: 120,
       },
     },
   };
@@ -86,21 +120,21 @@ const DonutChart = ({values}:any ) => {
         "#998156",
         "#675660B8",
         "#5E6B7E",
-        "#5A3D5599",
+       
       ];
       const labelColors = [
         "#3A3A3A",
         "#4A4A4A",
         "#5A5A5A",
         "#6A6A6A",
-        "#7A7A7A",
+       
       ];
       const valueColors = [
         "#0A0A0A",
         "#0A0A0A",
         "#0A0A0A",
         "#0A0A0A",
-        "#0A0A0A",
+      
       ];
 
       meta.data.forEach((arc, index) => {
@@ -172,16 +206,17 @@ const DonutChart = ({values}:any ) => {
         );
 
         ctx.restore();
-
+     
         ctx.save();
         ctx.font = "700 12px Arial";
         ctx.fillStyle = valueColors[index];
         ctx.textAlign = angle > Math.PI ? "right" : "left";
-        ctx.fillText(
-          `${chartData.datasets[0].data[index]}%`,
-          labelX + (angle > Math.PI ? -5 : 5),
-          labelY + 15
-        );
+        
+          ctx.fillText(
+            `${chartData.datasets[0].data[index]}%`,
+            labelX + (angle > Math.PI ? -5 : 5),
+            labelY + 15
+          );
         ctx.restore();
       });
     },
