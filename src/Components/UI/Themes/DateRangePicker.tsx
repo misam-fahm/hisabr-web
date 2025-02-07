@@ -93,7 +93,7 @@ const DateRangePicker = ({
               }
               return "";
             }}
-          />
+             />
           <div className="flex flex-row justify-between items-center border-[#DBDBDB] border-t-[1px]">
             {startDate && endDate ? (
               <>

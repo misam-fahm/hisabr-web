@@ -24,6 +24,7 @@ import { sendApiRequest } from "@/utils/apiUtils";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import UploadInvoicepopup from "@/Components/Invoice/UploadInvoicePopup";
 import Loading from "@/Components/UI/Themes/Loading";
+import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 interface TableRow {
   invoicedate: string;
   storename: string;
@@ -535,7 +536,15 @@ const Invoices = () => {
                       ))}
                     </tr>
                   ))
-                ) :
+                ) : table.getRowModel().rows.length === 0 ? (
+                  /* Show No Data Found Message If No Data Available */
+                  <tr>
+                    <td colSpan={columns.length} className="py-6 text-center">
+                      <NoDataFound />
+                    </td>
+                  </tr>
+                )
+                :
                   table.getRowModel().rows.map((row) => (
                     <tr
                       key={row.id}

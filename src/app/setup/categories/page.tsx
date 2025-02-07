@@ -18,6 +18,7 @@ import DeleteCategories from "@/Components/Setup/CategoriesPopup/DeleteCategorie
 import { sendApiRequest } from "@/utils/apiUtils";
 import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import DeletePopup from "@/Components/UI/Delete/DeletePopup";
+import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 
 interface TableRow {
   categoryname: string;
@@ -257,7 +258,15 @@ const Page: FC = () => {
                         ))}
                       </tr>
                     ))
-                  ) : data && data.length > 0 ? (
+                  ) : table.getRowModel().rows.length === 0 ? (
+                    /* Show No Data Found Message If No Data Available */
+                    <tr>
+                      <td colSpan={columns.length} className="py-6 text-center">
+                        <NoDataFound />
+                      </td>
+                    </tr>
+                  ) 
+                  : data && data.length > 0 ? (
                     table.getRowModel().rows.map((row) => (
                       <tr
                         key={row?.id}
