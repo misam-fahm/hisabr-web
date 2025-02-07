@@ -35,6 +35,7 @@ const Page = () => {
   const { watch, setValue, clearErrors } = methods;
 
   const selectedStore = watch("store");
+  const [storeId, setStoreId] = useState(null); // No default storeId initially
   const [data, setData] = useState<any>();
 
   //const [selectedOption, setSelectedOption] = useState<any>();
@@ -58,23 +59,6 @@ const Page = () => {
     toastMessage: "",
     toastType: "",
   });
-
-  useEffect(() => {
-    if (data) {
-      setPropertyTax(data.property_tax_exp || "");
-      setLabourOperatSalary(data.labor_operat_salary_exp || "");
-      setRentMortgage(data.rent_mortgage_exp || "");
-      setInsurance(data.insurance_exp || "");
-      setTrash(data.trash || "");
-      setNUCO2(data.nuco2 || "");
-      setInternet(data.internet_exp || "");
-      setWaterBill(data.water_bill_exp || "");
-      setGasBill(data.gas_bill_exp || "");
-      setPAR(data.par || "");
-      setRoyalty(data.royalty || "");
-      setRepair(data.repair_exp || "");
-    }
-  }, [data]);
 
 
   const toggleStoreDropdown = () => {
@@ -105,15 +89,32 @@ const Page = () => {
   }, []);
 
 
-  const fetchData = async () => {
+  const fetchData = async (storeId) => {
+    if (!storeId) return; // Don't fetch data if storeId is not set
     setLoading(true);
     try {
       const response: any = await sendApiRequest({
         mode: "getStoreConfig",
-        storeid: methods.watch("storeId") || 68,
+        storeid: storeId,
+        // storeid: methods.watch("storeId") || 69,
       });
       if (response?.status === 200) {
-        setData(response?.data?.store[0] || []);
+        // setData(response?.data?.store[0] || []);
+        const storeData = response?.data?.store[0] || {};
+        setData(storeData);
+         // Update state based on fetched data
+         setPropertyTax(storeData.property_tax_exp || "");
+         setLabourOperatSalary(storeData.labor_operat_salary_exp || "");
+         setRentMortgage(storeData.rent_mortgage_exp || "");
+         setInsurance(storeData.insurance_exp || "");
+         setTrash(storeData.trash || "");
+         setNUCO2(storeData.nuco2 || "");
+         setInternet(storeData.internet_exp || "");
+         setWaterBill(storeData.water_bill_exp || "");
+         setGasBill(storeData.gas_bill_exp || "");
+         setPAR(storeData.par || "");
+         setRoyalty(storeData.royalty || "");
+         setRepair(storeData.repair_exp || "");
       } else {
         setCustomToast({
           ...customToast,
@@ -128,9 +129,14 @@ const Page = () => {
     }
   };
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(storeId); // Fetch data when storeId changes
+  }, [storeId]);
 
+  // Handle dropdown change and set storeId
+  const handleStoreSelection = (selectedOption) => {
+    setStoreId(selectedOption.id); // Update the selected storeId
+    fetchData(selectedOption.id);  // Fetch data for the selected store
+  };
 
   const handleChangePayrollTax = (data: any) => {
     setPayrollTax(data); // Update local state
@@ -161,11 +167,6 @@ const Page = () => {
     setTrash(data); // Update local state
     methods.setValue("trash", data); // Update form state in react-hook-form
   };
-
-  // const handleChangeOperatorSalary = (data: any) => {
-  //   setOeratorSlary(data); // Update local state
-  //   methods.setValue("operatorsalary", data); // Update form state in react-hook-form
-  // };
 
   const handleChangeNUCO2 = (data: any) => {
     setNUCO2(data); // Update local state
@@ -209,7 +210,7 @@ const Page = () => {
       const jsonData: JsonData = {
         mode: "updateStoreConfig",
         insurance: Number(insurance),
-        propertytax: Number(propertytax)/100,
+        propertytax: Number(propertytax),
         rentmortgage: Number(rentMortgage),
         payroll: parseFloat(payrolltax) || 0,
         laborsalary: Number(labouroperatsalary),
@@ -236,19 +237,19 @@ const Page = () => {
       }, 0);
 
       if (result?.status === 200) {
-        setInsurance("");
-        setPropertyTax("");
-        setRentMortgage("");
-        setPayrollTax("");
-        setLabourOperatSalary("");
-        setNUCO2("");
-        setTrash("");
-        setInternet("");
-        setPAR("");
-        setRoyalty("");
-        setWaterBill("");
-        setGasBill("");
-        setRepair("");
+        setInsurance(result?.data?.insurance || "");
+        setPropertyTax(result?.data?.propertytax || "");
+        setRentMortgage(result?.data?.rentMortgage || "");
+        setPayrollTax(result?.data?.payrolltax || "");
+        setLabourOperatSalary(result?.data?.labouroperatsalary || "");
+        setNUCO2(result?.data?.nucO2 || "");
+        setTrash(result?.data?.trash || "");
+        setInternet(result?.data?.internet || "");
+        setPAR(result?.data?.par || "");
+        setRoyalty(result?.data?.royalty || "");
+        setWaterBill(result?.data?.waterbill || "");
+        setGasBill(result?.data?.gasbill || "");
+        setRepair(result?.data?.repair || "");
       }
     } catch (error: any) {
       setTimeout(() => {
@@ -286,6 +287,7 @@ const Page = () => {
                 options={store}
                 selectedOption={selectedStore || "Store"}
                 onSelect={(selectedOption) => {
+                  handleStoreSelection(selectedOption);
                   setValue("store", selectedOption.name);
                   setValue("storeId", selectedOption.id);
                   setIsStoreDropdownOpen(false);

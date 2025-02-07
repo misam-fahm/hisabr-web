@@ -89,6 +89,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
       src: "Configuration",
       path: "/setup/configuration",
     },
+
  
   ];
 

@@ -16,6 +16,7 @@ import { sendApiRequest } from "@/utils/apiUtils";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 
 interface TableRow {
   storename: string;
@@ -318,7 +319,14 @@ const Page: FC = () => {
                           </td>
                         ))}
                       </tr>
-                    ))
+                    )) : table.getRowModel().rows.length === 0 ? (
+                      /* Show No Data Found Message If No Data Available */
+                      <tr>
+                        <td colSpan={columns.length} className="py-6 text-center">
+                          <NoDataFound />
+                        </td>
+                      </tr>
+                    )
                   : table.getRowModel().rows.map((row) => (
                       <tr
                         key={row.id}
