@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import DatePicker from "react-datepicker";
+import "./datepicker.css"
 import "react-datepicker/dist/react-datepicker.css";
 import { enGB } from "date-fns/locale";
 
@@ -73,27 +74,105 @@ const DateRangePicker = ({
       </div>
 
       {isOpen && (
-        <div className="absolute top-[40px] below-md:top-[43px] left-0 z-50 bg-white shadow-lg p-4 rounded ">
+        <div className="absolute top-[40px] below-md:top-[43px] left-0 bg-white shadow-lg px-4 pb-4 rounded ">
           <DatePicker
-            selected={startDate}
-            onChange={handleDateChange}
-            startDate={startDate}
-            endDate={endDate}
-            selectsRange
-            inline
-            maxDate={new Date()}
-            locale={enGB}
-            formatWeekDay={(day) => day.slice(0, 3)}
-            dayClassName={(date) => {
-              if (
-                lastSelectedDate &&
-                date.getTime() === lastSelectedDate.getTime()
-              ) {
-                return "last-selected-day";
-              }
-              return "";
-            }}
-          />
+  selected={startDate}
+  onChange={handleDateChange}
+  startDate={startDate}
+  endDate={endDate}
+  selectsRange
+  inline
+  maxDate={new Date()}
+  locale={enGB}
+  formatWeekDay={(day) => day.slice(0, 3)}
+  dayClassName={(date) => {
+    if (lastSelectedDate && date.getTime() === lastSelectedDate.getTime()) {
+      return "last-selected-day";
+    }
+    return "";
+  }}
+  renderCustomHeader={({
+    date,
+    changeYear,
+    changeMonth,
+    decreaseMonth,
+    increaseMonth,
+    prevMonthButtonDisabled,
+    nextMonthButtonDisabled,
+  }) => {
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    // Get the current year and generate a list of years including the current year
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
+
+    return (
+      <div className="flex justify-between items-center">
+        {/* Previous Button */}
+        <button
+          onClick={decreaseMonth}
+          disabled={prevMonthButtonDisabled}
+          className="cursor-pointer bg-transparent border-none outline-none"
+        >
+          <img src="/images/LeftIcon.svg" alt="Previous" />
+        </button>
+        <div className="flex">
+  {/* Month Selector */}
+  <select
+    value={months[date.getMonth()]}
+    onChange={({ target: { value } }) => changeMonth(months.indexOf(value))}
+    className="react-datepicker__current-month  cursor-pointer bg-transparent border-none outline-none text-[#d3d3d3] appearance-none px-1 mr-0"
+  >
+    {months.map((month, index) => (
+      <option
+        key={index}
+        value={month}
+        style={{
+          backgroundColor: "#d3d3d3", // Option background
+          color: "#334155", // Text color
+          outline: "none", // Remove outline
+          borderRadius: "4px",
+        }}
+      >
+        {month}
+      </option>
+    ))}
+  </select>
+
+  {/* Year Selector */}
+  <select
+    value={date.getFullYear()}
+    onChange={({ target: { value } }) => changeYear(Number(value))}
+    className="react-datepicker__current-month cursor-pointer bg-transparent border-none outline-none text-[#d3d3d3] appearance-none px-1 mr-0"
+  >
+    {years.map((year) => (
+  <option
+  key={year}
+  value={year}
+  className="bg-gray-300 text-gray-800 border-none outline-none rounded px-2 py-1"
+>
+  {year}
+</option>
+    ))}
+  </select>
+</div>
+
+        {/* Next Button */}
+        <button
+          onClick={increaseMonth}
+          disabled={nextMonthButtonDisabled}
+          className="cursor-pointer bg-transparent border-none outline-none"
+        >
+          <img src="/images/RightIcon.svg" alt="Next" />
+        </button>
+      </div>
+    );
+  }}
+/>
+
           <div className="flex flex-row justify-between items-center border-[#DBDBDB] border-t-[1px]">
             {startDate && endDate ? (
               <>
