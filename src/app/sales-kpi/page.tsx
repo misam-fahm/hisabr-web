@@ -45,19 +45,42 @@ const SalesKPI: FC = () => {
   });
   const [showTooltip, setShowTooltip] = useState(false);
 
+  const labourCost = Number(data?.labour_cost) || 0;
+  const taxAmount = Number(data?.tax_amt) || 0;
+  const royalty = data?.net_sales ? Number((data.net_sales * 0.09).toFixed(2)) : 0;
+  const operatingExpenses = data?.labour_cost ? 109817 : 0;
+
+  const total = labourCost + taxAmount + royalty + operatingExpenses;
+
+  // Prevent division by zero
+  const percentages = total > 0 ? {
+    labourCost: ((labourCost / total) * 100).toFixed(2),
+    taxAmount: ((taxAmount / total) * 100).toFixed(2),
+    royalty: ((royalty / total) * 100).toFixed(2),
+    operatingExpenses: ((operatingExpenses / total) * 100).toFixed(2),
+  } : {
+    labourCost: 0,
+    taxAmount: 0,
+    royalty: 0,
+    operatingExpenses: 0,
+  };
+
+
+
   const tableData = [
-    { label: "Profit", amount: "10,000", per: "65%", color: "#53755599" },
-    { label: "Labour Cost", amount: data?.labour_cost || 0   , per: "16%", color: "#DAB777" },
-    { label: "Sales Tax", amount: data?.tax_amt || 0 , per: "8.6%", color: "#653C597A" },
-    { label: "Royalty", amount: (data.net_sales * 0.09).toFixed(2).toLocaleString() || 0, per: "9.0%", color: "#79AFC7" },
+    // { label: "Profit", amount: "10,000", per: "65%", color: "#53755599" },
+    { label: "Labour Cost", amount: (Math.round(data?.labour_cost ) || 0).toLocaleString(), per:  Number(percentages.labourCost), color: "#53755599" },
+    { label: "Sales Tax", amount:(Math.round(data?.tax_amt) || 0).toLocaleString(), per: Number(percentages.taxAmount), color: "#DAB777" },
+    { label: "Royalty", amount: (Math.round(data.net_sales * 0.09) || 0).toLocaleString(), per: Number(percentages.royalty), color: "#653C597A" },
     {
       label: "Operating Expenses",
-      amount: "50,000",
-      per: "0%",
-      color: "#29507B",
+      amount: data ?  (Math.round( operatingExpenses)).toLocaleString() : 0,
+      per:   percentages.operatingExpenses ?  Number(percentages.operatingExpenses) : 0,
+      color: "#79AFC7",
     },
-    { label: "COGS", amount: data.producttotal || 0, per: "9.8%", color: "#AC8892" },
+    // { label: "COGS", amount: (Math.round(data.producttotal) || 0).toLocaleString(), per: "9.8%", color: "#AC8892" },
   ];
+
 
   useEffect(() => {
     if (startDate && endDate && isFirstCall) {
@@ -228,7 +251,7 @@ const fetchDataForTender = async () => {
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">Sales</p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{data?.net_sales ? `$${data?.net_sales.toLocaleString()}` : '$00,000'}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.net_sales ? `$${Math.round(data?.net_sales)?.toLocaleString()}` : '$00,000'}</p>
               {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 20%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -262,7 +285,7 @@ const fetchDataForTender = async () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Customer Count
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{data?.customer_count ? `${data?.customer_count}` : '00,000'}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.customer_count ? `${Math.round(data?.customer_count)?.toLocaleString()}` : '00,000'}</p>
               {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 40%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -280,7 +303,7 @@ const fetchDataForTender = async () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Labour Cost
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{data?.labour_cost ? `$${data?.labour_cost.toLocaleString()}` : '$00,000'}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.labour_cost ? `$${ Math.round(data?.labour_cost)?.toLocaleString()}` : '$00,000'}</p>
               {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 16%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -299,7 +322,7 @@ const fetchDataForTender = async () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Sales Tax
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{data?.tax_amt ? `$${data?.tax_amt.toLocaleString()}` : '$00,000'}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.tax_amt ? `$${Math.round(data?.tax_amt)?.toLocaleString()}` : '$00,000'}</p>
               {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 8.6%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -319,7 +342,7 @@ const fetchDataForTender = async () => {
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">
                 {data?.net_sales 
-                  ? `$${(data.net_sales * 0.09).toFixed(2).toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
+                  ? `$${ Math.round(data.net_sales * 0.09)?.toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
                   : '$00,000'
                 }
               </p>
@@ -340,7 +363,7 @@ const fetchDataForTender = async () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Operating Expenses
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">$</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{ data ? `$${ Math.round(operatingExpenses)?.toLocaleString()}` : 0}</p>
               {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 0%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -356,7 +379,7 @@ const fetchDataForTender = async () => {
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">COGS</p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{data?.producttotal ? `$${data?.producttotal.toLocaleString()}` : '$00,000'}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.producttotal ? `$${Math.round(data?.producttotal)?.toLocaleString()}` : '$00,000'}</p>
               {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 9.8%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -374,11 +397,11 @@ const fetchDataForTender = async () => {
           <div className="w-full text-left font-bold mx-4 mt-6 text-[16px] text-[#334155]">
             Expense Distribution
           </div>
-          <div className="flex flex-row items-center below-md:flex-col tablet:flex-col mx-3">
+          <div className="flex flex-row items-center justify-between below-md:flex-col tablet:flex-col mx-3">
             <div className="-my-12">
               <DonutChart values={data} />
             </div>
-            <div className="overflow-x-auto w-full custom-scrollbar">
+            <div className="overflow-x-auto w-[50%] custom-scrollbar">
               <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
                 <thead>
                   <tr>
