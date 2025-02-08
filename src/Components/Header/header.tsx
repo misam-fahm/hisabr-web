@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { useParams } from 'next/navigation';
 
 const Header: React.FC = () => {
-
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -15,11 +14,10 @@ const Header: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
   const [title, setTitle] = useState("");
   const [isRotated, setIsRotated] = useState(false);
-
-   const {invoiceid}:any = useParams(); 
-   const { salesid }: any = useParams();   
-   const safeDecodeBase64 = (str: string | undefined): string => {
-    if (!str) return ""; 
+  const {invoiceid}:any = useParams(); 
+  const { salesid }: any = useParams();   
+  const safeDecodeBase64 = (str: string | undefined): string => {
+  if (!str) return ""; 
     try {
       return atob(str.replace(/\-/g, "+").replace(/_/g, "/"));
     } catch (error) {
@@ -27,14 +25,8 @@ const Header: React.FC = () => {
       return ""; 
     }
   };
-
-  
-
-
-
   const decodedSaleId=safeDecodeBase64(salesid);
   const decodedId = safeDecodeBase64(invoiceid);
-   
 
   useEffect(() => {
     setIsClient(true); 
@@ -92,8 +84,7 @@ const Header: React.FC = () => {
                 newTitle = "Expenses"; 
               }
             }
-            break;
-  
+            break;  
           case "setup/categories":
             newTitle = "Categories";
             break;
@@ -122,13 +113,10 @@ const Header: React.FC = () => {
             newTitle = "Home";
         }
       }
-  
-      console.log("Final Title:", newTitle);
       setTitle(newTitle);
       document.title = newTitle;
     }
   }, [isClient, currentPath, decodedId]);
-  
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
@@ -151,9 +139,12 @@ const Header: React.FC = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, []); 
 
- 
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // Remove the token
+    router.replace('/login'); // Redirect to login page
+  };
 
   return (
     <main className="w-full sticky z-30 bg-[#ffff] h-[50px] flex justify-center items-center shadow ">
@@ -205,7 +196,10 @@ const Header: React.FC = () => {
                     />
                     My Profile
                   </li>
-                  <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]">
+                  <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]"
+                    onClick={() =>
+                      handleLogout()
+                  }>
                     <img
                       src="/images/navbarlogouticon.svg"
                       className="inline-block mr-2"

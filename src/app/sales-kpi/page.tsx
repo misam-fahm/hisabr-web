@@ -6,8 +6,10 @@ import Dropdown from "@/Components/UI/Themes/DropDown";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import { sendApiRequest } from "@/utils/apiUtils";
 import { format } from 'date-fns';
+import { useRouter } from "next/navigation";
 
 const SalesKPI: FC = () => {
+  const router = useRouter();
   const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
@@ -15,12 +17,15 @@ const SalesKPI: FC = () => {
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [data, setData] = useState<any>([]);
-  const [isFirstCall, setIsFirstCall] = useState<boolean>(true);
+  // const [isFirstCall, setIsFirstCall] = useState<boolean>(true);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
   });
   const [showTooltip, setShowTooltip] = useState(false);
+  const [operatExpAmt, setOperatExpAmt] = useState(0);
+  const [royaltyAmt, setRoyaltyAmt] = useState(0);
+  const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
 
   const tableData = [
     { label: "Profit", amount: "10,000", per: "65%", color: "#53755599" },
@@ -37,11 +42,11 @@ const SalesKPI: FC = () => {
   ];
 
   useEffect(() => {
-    if (startDate && endDate && isFirstCall) {
+    if (startDate && endDate && selectedOption) {
       fetchData();
-      setIsFirstCall(false);
+      // setIsFirstCall(false);
     }
-  }, [startDate, endDate]);
+  }, [selectedOption]);
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -54,18 +59,34 @@ const SalesKPI: FC = () => {
     });
   };
 
+  const getMonthsDifference = () => {
+    // const start = new Date(startDate);
+    // const end = new Date(endDate);
+    if (startDate && endDate) {
+      const yearDiff = endDate.getFullYear() - startDate.getFullYear();
+      const monthDiff = endDate.getMonth() - startDate.getMonth();
+      return yearDiff * 12 + (monthDiff + 1);
+    }
+  };
+  
   const fetchData = async () => {
     try {
       if (startDate && endDate) {
         const response: any = await sendApiRequest({
           mode: "getSalesKpi",
-          storename: selectedOption?.name || "13246",
+          storeid: 69,
           startdate: startDate && format(startDate, 'yyyy-MM-dd'),
           enddate: endDate && format(endDate, 'yyyy-MM-dd'),
         });
 
         if (response?.status === 200) {
           setData(response?.data?.saleskpi[0] || []);
+          const months = getMonthsDifference() || 12;
+          console.log("diff months ",months);
+          const payrollTaxAmt = response?.data?.saleskpi[0]?.labour_cost * (response?.data?.saleskpi[0]?.payrolltax / 100);
+          const yearExpAmt = (response?.data?.saleskpi[0]?.Yearly_expense / 12) * months;
+          setOperatExpAmt(response?.data?.saleskpi[0]?.additional_expense + payrollTaxAmt + yearExpAmt);
+          setRoyaltyAmt(response?.data?.saleskpi[0]?.net_sales * (response?.data?.saleskpi[0]?.royalty || 0.09));
           // response?.data?.total > 0 &&
           //   setTotalItems(response?.data?.saleskpi[0] || 0);
         } else {
@@ -78,8 +99,8 @@ const SalesKPI: FC = () => {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-  }
-};
+    }
+  };
 
   const fetchDropdownData = async () => {
     try {
@@ -94,12 +115,52 @@ const SalesKPI: FC = () => {
     }
   };
 
+  const getUserStore = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getUserStore" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+        if (response?.data?.stores){
+          setSelectedOption({
+            name: response?.data?.stores[0]?.name,
+            id: response?.data?.stores[0]?.id,
+          });
+        }
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+  };
+
+  const verifyToken = async (token: string) => {
+    const res: any = await sendApiRequest({
+      token: token
+    }, `auth/verifyToken`);
+    res?.status === 200 
+      ? setIsVerifiedUser(true) 
+      : router.replace('/login');
+  };
+
   useEffect(() => {
-    const currentYear = new Date().getFullYear();
-    setStartDate(new Date(`${currentYear}-01-01`));
-    setEndDate(new Date(`${currentYear}-12-31`));
-    fetchDropdownData();
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.replace('/login');
+    } else {
+      verifyToken(token);
+    }    
   }, []);
+
+  useEffect(() => {
+    if (isVerifiedUser) {
+      const currentYear = new Date().getFullYear();
+      setStartDate(new Date(`${currentYear}-01-01`));
+      setEndDate(new Date(`${currentYear}-12-31`));
+      getUserStore();
+      // fetchDropdownData();
+    }
+  }, [isVerifiedUser]);
 
   const handlePressStart = () => {
     setShowTooltip(true);
@@ -114,7 +175,7 @@ const SalesKPI: FC = () => {
   };
 
   return (
-    <main
+    isVerifiedUser && <main
       className="max-h-[calc(100vh-60px)] min-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
@@ -161,7 +222,7 @@ const SalesKPI: FC = () => {
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">Sales</p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{data?.net_sales ? `$${data?.net_sales.toLocaleString()}` : '$00,000'}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.net_sales ? `$${data?.net_sales?.toLocaleString()}` : '$00,000'}</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 20%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -177,7 +238,10 @@ const SalesKPI: FC = () => {
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div className="w-[75%]">
               <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
-              <p className="text-[16px] text-[#2D3748] font-bold">$</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.net_sales ?
+                `$${(data?.net_sales - data?.producttotal - data?.labour_cost - operatExpAmt - royaltyAmt)?.toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
+                  : '$00,000'
+                }</p>
               <p className="text-[11px] text-[#388E3C] font-semibold ">
                 65%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -195,7 +259,7 @@ const SalesKPI: FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Customer Count
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{data?.customer_count ? `${data?.customer_count}` : '00,000'}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.customer_count ? `${data?.customer_count?.toLocaleString()}` : '00,000'}</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 40%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -213,7 +277,7 @@ const SalesKPI: FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Labour Cost
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{data?.labour_cost ? `$${data?.labour_cost.toLocaleString()}` : '$00,000'}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.labour_cost ? `$${data?.labour_cost?.toLocaleString()}` : '$00,000'}</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 16%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -232,7 +296,7 @@ const SalesKPI: FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Sales Tax
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{data?.tax_amt ? `$${data?.tax_amt.toLocaleString()}` : '$00,000'}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.tax_amt ? `$${data?.tax_amt?.toLocaleString()}` : '$00,000'}</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 8.6%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -251,8 +315,8 @@ const SalesKPI: FC = () => {
                 Royalty
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">
-                {data?.net_sales 
-                  ? `$${(data.net_sales * 0.09).toFixed(2).toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
+                {royaltyAmt 
+                  ? `$${royaltyAmt?.toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
                   : '$00,000'
                 }
               </p>
@@ -273,7 +337,10 @@ const SalesKPI: FC = () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Operating Expenses
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">$</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{operatExpAmt?
+                `$${operatExpAmt?.toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
+                  : '$00,000'
+                }</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 0%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -289,7 +356,7 @@ const SalesKPI: FC = () => {
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">COGS</p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{data?.producttotal ? `$${data?.producttotal.toLocaleString()}` : '$00,000'}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.producttotal ? `$${data?.producttotal?.toLocaleString()}` : '$00,000'}</p>
               <p className="text-[11px] text-[#388E3C] font-semibold">
                 9.8%{" "}
                 <span className="text-[#575F6D] font-normal">

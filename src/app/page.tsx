@@ -51,13 +51,36 @@ const Home: FC = () => {
   });
   const [selectedYearOption, setSelectedYearOption] = useState<string>("2021");
   const [isYearOpen, setIsYearOpen] = useState<boolean>(false);
-
+  const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
   const Yearoptions = [
     { id: 1, name: "2024" },
     { id: 2, name: "2023" },
     { id: 3, name: "2022" },
     { id: 4, name: "2021" },
   ];
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const verifyToken = async () => {
+      const res: any = await sendApiRequest({
+        token: token
+      }, `auth/verifyToken`);
+      // res?.status !== 200 && router.replace('/login');
+      if (res?.status === 200) {
+        setIsVerifiedUser(true);
+        // const decoded = decodeToken(token + "");
+        // decoded && setUserData(decoded);
+      } else {
+        router.replace('/login');
+      }
+    };
+
+    if (!token) {
+      router.replace('/login');
+    } else {
+      verifyToken();
+    }
+  }, []);
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -83,7 +106,7 @@ const Home: FC = () => {
     }
   };
   useEffect(() => {
-    fetchDropdownData();
+    isVerifiedUser && fetchDropdownData();
   }, []);
 
   
@@ -140,7 +163,7 @@ const Home: FC = () => {
   };
 
   return (
-    <main
+    isVerifiedUser && <main
       className="max-h-[calc(100vh-60px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >

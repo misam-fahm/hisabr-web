@@ -27,7 +27,6 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
   useEffect(() => {
     if (isClient) {
       const currentRoute = currentPath.replace("/", "");
-
       let newTitle = "";
       switch (currentRoute?.toLowerCase()) {
         case "myprofile":
@@ -59,7 +58,6 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 800px)");
-
     const handleResize = () => {
       setOpen(mediaQuery.matches);
     };
@@ -89,7 +87,6 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
       src: "Configuration",
       path: "/setup/configuration",
     },
- 
   ];
 
   const handleNavigation = (path: string, submenuTitle?: string) => {
@@ -119,6 +116,11 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
   const shouldHideHamburger = pathsToHideHamburger.some((path) =>
     currentPath.includes(path)
   );
+
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // Remove the token
+    router.replace('/login'); // Redirect to login page
+  };
 
   return (
     <main
@@ -227,7 +229,10 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
         </div>
 
         <div
-          className={`flex mt-5 gap-4 below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px]  ${open ? "mr-8" : "mr-7 below-md:bg-transparent below-md:shadow-none"} ml-3 rounded-md`}
+          className={`flex mt-5 gap-4 below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px]  ${open ? "mr-8" : "mr-7 below-md:bg-transparent below-md:shadow-none"} ml-3 rounded-md cursor-pointer`}
+          onClick={() =>
+            handleLogout()
+          }
         >
           <img src="/images/logout.svg" />
           {open && <p className="text-[14px] text-[#FFFFFFCC]">Logout</p>}

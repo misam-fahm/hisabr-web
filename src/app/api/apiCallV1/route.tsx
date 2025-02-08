@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { callStoredProcedure } from '../../../lib/dbUtils';
+import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     // Parse the incoming JSON request body
-    const reqData: any = await req.json();
+    let reqData: any = await req.json();
 
     // Validate that the required fields are present in reqData
     if (!reqData || !reqData.mode) {
@@ -13,6 +14,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         JSON.stringify({ status: 400, error: 'Bad request: Missing required fields' }),
         { status: 400 }
       );
+    }
+
+    if (reqData.password) {
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(reqData.password, saltRounds);
+      reqData.password = hashedPassword;
     }
 
     const result: any = await callStoredProcedure({

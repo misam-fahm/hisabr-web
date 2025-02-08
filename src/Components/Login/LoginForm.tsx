@@ -1,27 +1,88 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { InputField } from "../UI/Themes/InputField"; 
+import { InputField } from "../UI/Themes/InputField";
 import { Text } from "../UI/Themes/Text";
-
+import { sendApiRequest } from "@/utils/apiUtils";
+import ToastNotification from "../UI/ToastNotification/ToastNotification";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
+  const router = useRouter();
+  const methods = useForm();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [customToast, setCustomToast] = useState({
+    toastMessage: "",
+    toastType: "",
+  });
 
-  const methods = useForm(); 
- 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const onSubmit = async (data: any) => {
+    try {
+      setCustomToast({
+        ...customToast,
+        toastMessage: "",
+        toastType: "",
+      });
+      if (email && password) {
+        const getUser: any = await sendApiRequest({
+          mode: "getUserByEmail",
+          email: email,
+        });
+        if (getUser?.status === 200) {
+          const val: any = {
+            email: data?.email,
+            password: data?.password,
+            userid: getUser?.data?.user[0]?.userid,
+            dbPassword: getUser?.data?.user[0]?.password,
+            usertype: getUser?.data?.user[0]?.usertype,
+            storeid: getUser?.data?.user[0]?.storeid,
+          };
+          const result: any = await sendApiRequest(val, `auth/login`);
+          if (result?.status === 200 && result?.data?.token) {
+            localStorage.setItem('token', result?.data?.token);
+            router.replace("/");
+          } else {
+            // router.push("/login");
+          }
+        } else {
+          setCustomToast({
+            ...customToast,
+            toastMessage: "User not found",
+            toastType: "error",
+          });
+        }
+      } else {
+        setTimeout(() => {
+          setCustomToast({
+            toastMessage: email
+              ? "Please enter password"
+              : "Please enter email",
+            toastType: "error",
+          });
+        }, 0);
+      }
+    } catch (error: any) {
+      setTimeout(() => {
+        setCustomToast({
+          toastMessage: error?.message,
+          toastType: "error",
+        });
+      }, 0);
+    }
   };
-
-
 
   return (
     <FormProvider {...methods}>
+      <ToastNotification
+        message={customToast.toastMessage}
+        type={customToast.toastType}
+      />
       <div className="bg-[#0F1044] w-full h-[100vh] flex justify-center below-md:flex-col">
         <div className="w-[50%] below-md:w-full flex justify-center items-center h-full below-md:h-auto">
           <img
             className="w-auto h-[200px] below-md:h-[150px]"
-            src="/images/Hisabrfinallogo.png"
+            src="/images/HisabrFinalLogo.png"
             alt="Logo"
           />
         </div>
@@ -47,22 +108,26 @@ const LoginForm = () => {
             >
               <div className="w-[400px] below-md:w-full">
                 <InputField
-                  type={"email"} 
+                  type={"email"}
                   label="Email"
+                  value={email}
                   {...methods.register("email", {
                     required: "Email is required",
                     pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                    onChange: (e) => setEmail(e.target.value),
                   })}
                   errors={methods.formState.errors.email}
                   placeholder="Enter email"
-                  variant="outline"                />
+                  variant="outline"
+                />
               </div>
 
               <div className="w-[400px] below-md:w-full ">
                 <InputField
-                  type={"text"} 
+                  type={"password"}
                   label="Password"
-                  {...methods.register("Password", {
+                  value={password}
+                  {...methods.register("password", {
                     required: "Password is required",
                     minLength: {
                       value: 8,
@@ -76,17 +141,22 @@ const LoginForm = () => {
                       value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
                       message: "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
                     },
+                    onChange: (e) => setPassword(e.target.value),
                   })}
                   errors={methods.formState.errors.Password}
                   placeholder="Enter Password"
-                  variant="outline"                />
+                  variant="outline"
+                />
                 <div className="flex justify-end mt-2">
-              <p className=" text-[#3BFCC6] font-normal text-[13px] cursor-pointer"   onClick={() => (window.location.href = "/forgotpassword")} >
-              Forgot Password?
-              </p>
-              </div> 
+                  <p
+                    className=" text-[#3BFCC6] font-normal text-[13px] cursor-pointer"
+                    onClick={() => (window.location.href = "/forgotpassword")}
+                  >
+                    Forgot Password?
+                  </p>
+                </div>
               </div>
-            
+
               <button
                 type="submit"
                 className="bg-[#1AA47D] w-[400px] below-md:w-full font-bold text-[14px] text-white py-2 px-4 rounded "

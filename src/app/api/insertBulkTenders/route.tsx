@@ -15,7 +15,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     console.log('reqBody');
     // Prepare the query and values
     const pool = getPool();
-    const query = 'INSERT INTO hisabr.tender_txns (tender_id, sales_id, tender_date, quantity, payments, tips, total, percent) VALUES ?';
+    const query = 'INSERT INTO hisabr.tender_txns (tender_id, sales_id, tender_date, quantity, payments, tips, total, percent, store_id) VALUES ?';
     const values = reqBody?.map((i: any) => [
         i?.tenderid,
         i?.salesid,
@@ -24,15 +24,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         i?.payments,
         i?.tips,
         i?.total,
-        i?.percent
+        i?.percent,
+        i?.storeid
     ]);
-    console.log(values);
-    console.log("values");
+    // console.log(values);
+    // console.log("values");
     // Ensure each user has first_name, last_name, and email properties
     // const values = users.map(user => [user.first_name, user.last_name, user.email]);
         const result = pool.query(query, [values]);
         const results = result[0];
-        console.log(result);
+        // console.log(result);
         // pool.query(query, [values], (error, results) => {
         // if (error) {
         //   console.error(error);

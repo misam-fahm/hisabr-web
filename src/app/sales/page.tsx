@@ -312,17 +312,18 @@ const Sales: FC = () => {
                     newTenderTxns.push({ ...item, 
                       tenderid: match.tenderid, 
                       salesid: result?.data?.salesid,
+                      storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null,
                       tender_date: formattedDate 
                     });
                   } else {
                     const insertTender: any = await sendApiRequest({
                       mode: "insertTender",
-                      tendername: item.name,
-                      tender_date: formattedDate
+                      tendername: item.name
                     });
                     newTenderTxns.push({ ...item, 
                       tenderid: insertTender?.data?.tenderid, 
                       salesid: result?.data?.salesid,
+                      storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null,
                       tender_date: formattedDate 
                     });                    
                   }
