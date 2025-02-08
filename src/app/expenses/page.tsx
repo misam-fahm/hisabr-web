@@ -23,6 +23,7 @@ import { sendApiRequest } from "@/utils/apiUtils";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import DeletePopup from "@/Components/UI/Delete/DeletePopup";
+import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 
 interface TableRow {
   expensedate: string;
@@ -441,7 +442,14 @@ const Expenses: FC = () => {
                         ))}
                       </tr>
                     ))
-                  ) :
+                  ) : table.getRowModel().rows.length === 0 ? (
+                    /* Show No Data Found Message If No Data Available */
+                    <tr>
+                      <td colSpan={columns.length} className="py-6 text-center">
+                        <NoDataFound />
+                      </td>
+                    </tr>
+                  ) : 
                     table.getRowModel().rows.map((row) => (
                       <tr
                         key={row.id}

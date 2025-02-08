@@ -19,6 +19,7 @@ import { sendApiRequest } from "@/utils/apiUtils";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import moment from "moment";
 import Loading from "@/Components/UI/Themes/Loading";
+import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 
 interface TableRow {
   sales_date: string;
@@ -554,7 +555,15 @@ const Sales: FC = () => {
                       ))}
                     </tr>
                   ))
-                ) :
+                ) : table.getRowModel().rows.length === 0 ? (
+                  /* Show No Data Found Message If No Data Available */
+                  <tr>
+                    <td colSpan={columns.length} className="py-6 text-center">
+                      <NoDataFound />
+                    </td>
+                  </tr>
+                )
+                :
                   table.getRowModel().rows.map((row) => (
                     <tr
                       key={row.id}
