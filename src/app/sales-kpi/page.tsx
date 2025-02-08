@@ -7,9 +7,6 @@ import { useRouter } from "next/navigation";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import { sendApiRequest } from "@/utils/apiUtils";
 import { format } from 'date-fns';
-import { useRouter } from "next/navigation";
-
-
 
 const SalesKPI: FC = () => {
   const router = useRouter();
