@@ -13,7 +13,8 @@ const DateRangePicker = ({
     setStartDate,
     setEndDate,
     fetchData,
-    fetchDataForTender
+    fetchDataForTender,
+    fetchDataForItems
   } : { 
     widthchang?: string, 
     startDate: any, 
@@ -22,6 +23,7 @@ const DateRangePicker = ({
     setEndDate: any,
     fetchData?: any
     fetchDataForTender?:any
+    fetchDataForItems?:any
   }) => {
   // const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   // const [endDate, setEndDate] = useState<Date | undefined>(undefined);
@@ -66,15 +68,13 @@ const DateRangePicker = ({
         <span className="text-[#636363] text-[12px] px-3">
           {startDate && endDate
             ? `From: ${startDate.toLocaleDateString()} - To: ${endDate.toLocaleDateString()}`
-            : startDate
-              ? `Selected: ${startDate.toLocaleDateString()}`
-              : "Date Range"}
+           : "Date Range"}
         </span>
         <img className="pr-2" src="/images/calendericon.svg" alt="calendar" />
       </div>
 
       {isOpen && (
-        <div className="absolute top-[40px] below-md:top-[43px] left-0 bg-white shadow-lg px-4 pb-4 rounded ">
+        <div className="absolute top-[40px] z-40 below-md:top-[43px] left-0 bg-white shadow-lg px-4 pb-4 rounded ">
           <DatePicker
   selected={startDate}
   onChange={handleDateChange}
@@ -173,51 +173,57 @@ const DateRangePicker = ({
   }}
 />
 
-          <div className="flex flex-row justify-between items-center border-[#DBDBDB] border-t-[1px]">
-            {startDate && endDate ? (
-              <>
-                {/* "From" Box */}
-                <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 h-9 w-[30%] text-[11px] rounded-xl flex items-center justify-center">
-                  <span className="absolute -top-[10px] left-[30%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
-                    From
-                  </span>
-                  <p className="text-[10px]">
-                    {startDate.toLocaleDateString()}
-                  </p>
-                </div>
+<div className="flex flex-row justify-between items-center border-[#DBDBDB] border-t-[1px]">
+  
+    <>
+      {/* "From" Box */}
+      <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 h-9 w-[30%] text-[11px] rounded-xl flex items-center justify-center">
+        <span className="absolute -top-[10px] left-[30%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
+          From
+        </span>
+        {startDate && (
+        <p className="text-[10px]">{startDate.toLocaleDateString()}</p>)}
+      </div>
+      </>
+  
+  
+    <>
+      {/* "To" Box */}
+      <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 h-9 w-[30%] text-[11px] rounded-xl flex items-center justify-center">
+        <span className="absolute -top-[10px] left-[30%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
+          To
+        </span>
+        {endDate && (
+        <p className="text-[10px]">{endDate.toLocaleDateString()}</p>)}
+      </div>
+      </>
+  
+ 
 
-                {/* "To" Box */}
-                <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 h-9 w-[30%] text-[11px] rounded-xl flex items-center justify-center">
-                  <span className="absolute -top-[10px] left-[30%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
-                    To
-                  </span>
-                  <p className="text-[10px]">{endDate.toLocaleDateString()}</p>
-                </div>
-              </>
-            ) : (
-              // "Selected Date" Box
-              <div className="relative mt-4 border-[#282828] border-[1px] text-[#282828] px-3 h-9 w-[60%] text-[10px] rounded-xl flex items-center justify-center">
-                <span className="absolute -top-[10px] left-[15%] transform -translate-x-1/2 bg-white px-1 text-[10px] text-[#282828]">
-                  Date
-                </span>
-                <p className="text-[12px]">
-                  {startDate?.toLocaleDateString() || ""}
-                </p>
-              </div>
-            )}
+  <div>
+    <button
+      className="bg-[#334155] mt-4 text-white px-4 py-2 w-[100%] text-[12px] font-normal rounded-xl"
+      onClick={async () => {
+        setIsOpen(false);
+        await fetchData();  
+        if (typeof fetchDataForTender === "function") {
+          await fetchDataForTender();
+        } else {
+         ""
+        }
 
-            <div>
-              <button
-                className="bg-[#334155] mt-4 text-white px-4 py-2 w-[100%] text-[12px] font-normal rounded-xl"
-                onClick={async () => {
-                  setIsOpen(false);
-                  await fetchData(); fetchDataForTender();
-                }}
-              >
-                Set Date
-              </button>
-            </div>
-          </div>
+        if (typeof fetchDataForItems === "function") {
+          await fetchDataForItems();
+        } else {
+         ""
+        }
+        
+      }}
+    >
+      Set Date
+    </button>
+  </div>
+</div>
         </div>
        
       )}

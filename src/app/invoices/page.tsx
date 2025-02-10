@@ -21,6 +21,7 @@ import {
 } from "@tanstack/react-table";
 import Pagination from "@/Components/UI/Pagination/Pagination";
 import { sendApiRequest } from "@/utils/apiUtils";
+import { format } from 'date-fns';
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import UploadInvoicepopup from "@/Components/Invoice/UploadInvoicePopup";
 import Loading from "@/Components/UI/Themes/Loading";
@@ -55,6 +56,7 @@ const Invoices = () => {
     message: "",
     type: "",
   });
+  const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -122,22 +124,13 @@ const Invoices = () => {
     router.push(`/invoices/${urlSafeEncodedId}`);
   };
 
-  const formattedData = data?.map((item) => {
-    const rawDate = new Date(item?.invoicedate);
+  useEffect(() => {
+    if (startDate && endDate && selectedOption ) {
+      fetchData();
+    }
+  }, [selectedOption , globalFilter]);
 
-    // Format the date as MM-DD-YY
-    const formattedDate = `${(rawDate?.getMonth() + 1)
-      .toString()
-      .padStart(
-        2,
-        "0"
-      )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
-        .getFullYear()
-        .toString()
-        .slice(-2)}`;
-
-    return { ...item, date: formattedDate };
-  });
+  
   
   const table = useReactTable({
     data: data,
@@ -168,6 +161,10 @@ const Invoices = () => {
         mode: "getInvoices",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
+        storeid: selectedOption?.id || 69,
+        startdate: startDate && format(startDate, 'yyyy-MM-dd'),
+        enddate: endDate && format(endDate, 'yyyy-MM-dd'),
+        search:globalFilter
       });
   
       if (response?.status === 200) {
@@ -192,11 +189,18 @@ const Invoices = () => {
     fetchData();
   }, [pageIndex, pageSize]);
 
-  const fetchDropdownData = async () => {
+
+  const getUserStore = async () => {
     try {
-      const response = await sendApiRequest({ mode: "getAllStores" });
+      const response = await sendApiRequest({ mode: "getUserStore" });
       if (response?.status === 200) {
         setStore(response?.data?.stores || []);
+        if (response?.data?.stores){
+          setSelectedOption({
+            name: response?.data?.stores[0]?.name,
+            id: response?.data?.stores[0]?.id,
+          });
+        }
       } else {
         handleError(response?.message);
       }
@@ -204,8 +208,50 @@ const Invoices = () => {
       console.error("Error fetching stores:", error);
     }
   };
+
+  const verifyToken = async (token: string) => {
+    const res: any = await sendApiRequest({
+      token: token
+    }, `auth/verifyToken`);
+    res?.status === 200 
+      ? setIsVerifiedUser(true) 
+      : router.replace('/login');
+  };
+
   useEffect(() => {
-    fetchDropdownData();
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.replace('/login');
+    } else {
+      verifyToken(token);
+    }    
+  }, []);
+
+  useEffect(() => {
+    if (isVerifiedUser) {
+      const currentYear = new Date().getFullYear();
+      setStartDate(new Date(`${currentYear}-01-01`));
+      setEndDate(new Date(`${currentYear}-12-31`));
+      getUserStore();
+      // fetchDropdownData();
+    }
+  }, [isVerifiedUser]);
+
+
+  // const fetchDropdownData = async () => {
+  //   try {
+  //     const response = await sendApiRequest({ mode: "getAllStores" });
+  //     if (response?.status === 200) {
+  //       setStore(response?.data?.stores || []);
+  //     } else {
+  //       handleError(response?.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching stores:", error);
+  //   }
+  // };
+  
+  useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search)
       const fromHome = params.get("fromHome") === "true";
@@ -359,25 +405,28 @@ const Invoices = () => {
       </div>
       <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
         <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
-          <Dropdown
-            options={store}
-            selectedOption={selectedOption?.name || "Store"}
-            onSelect={(selectedOption: any) => {
-              setSelectedOption({ name: selectedOption.name, id: selectedOption.id });
-              // setSelectedOption();
-              setIsStoreDropdownOpen(false);
-            }}
-            isOpen={isStoreDropdownOpen}
-            toggleOpen={toggleStoreDropdown}
-            widthchange="w-full"
-          />
-          <div className="below-lg:w-full tablet:w-full below-md:w-full">
-            <DateRangePicker 
-              startDate = {startDate}
-              endDate = {endDate}
-              setStartDate = {setStartDate}
-              setEndDate = {setEndDate}
+        <Dropdown
+              options={store}
+              selectedOption={selectedOption?.name || "Store"}
+              onSelect={(selectedOption: any) => {
+                setSelectedOption({
+                  name: selectedOption.name,
+                  id: selectedOption.id,
+                });
+                setIsStoreDropdownOpen(false);
+              }}
+              isOpen={isStoreDropdownOpen}
+              toggleOpen={toggleStoreDropdown}
+              widthchange="w-full"
             />
+          <div className="below-lg:w-full tablet:w-full below-md:w-full">
+          <DateRangePicker 
+                startDate = {startDate}
+                endDate = {endDate}
+                setStartDate = {setStartDate}
+                setEndDate = {setEndDate}
+                fetchData = {fetchData}
+                />
           </div>
           <div className="flex border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
             <input
@@ -414,14 +463,14 @@ const Invoices = () => {
       </div>
       {/* Mobile View : Card section */}
       <div className="block md:hidden relative">
-        {formattedData.map((card, index) => (
+        {data?.map((card, index) => (
           <div
             key={index}
             className="flex flex-col w-full  rounded-lg bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3"
           >
             <div className="flex justify-between items-start">
               <div className="flex gap-4 px-4 py-4 text-[#334155]">
-                <p className="text-[14px] font-bold">{card.date}</p>
+                <p className="text-[14px] font-bold">{card.invoicedate}</p>
                 <p className="text-[14px] font-bold">{card.sellername}</p>
               </div>
 
@@ -492,7 +541,7 @@ const Invoices = () => {
       </div>
 
       {/*Web View : Invoice Table */}
-      <div className="overflow-x-auto  shadow-sm border-collapse border border-b border-[#E4E4EF] rounded-md  flex-grow flex flex-col below-md:hidden">
+      <div className="overflow-x-auto relative shadow-sm border-collapse border border-b border-[#E4E4EF] rounded-md  flex-grow flex flex-col below-md:hidden">
         <div className="overflow-hidden max-w-full rounded-md">
           <table className="w-full border-collapse text-[12px] rounded-md text-white table-fixed">
             <thead className="bg-[#0F1044] top-0 z-10">

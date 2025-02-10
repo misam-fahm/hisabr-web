@@ -11,16 +11,16 @@ import {
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const DonutChart = ({values}:any ) => {
+const DonutChart = ({values , operatExpAmt}:any ) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
 
   const labourCost = Number(values?.labour_cost) || 0;
   const taxAmount = Number(values?.tax_amt) || 0;
-  const royalty = values?.net_sales ? Number((values.net_sales * 0.09).toFixed(2)) : 0;
-  const operatingExpenses = values?.labour_cost ?  109817 : 0;
+  const royalty = values?.net_sales ? values?.net_sales * ((values?.royalty / 100) || 0.09) : 0;
+  
 
-  const total = labourCost + taxAmount + royalty + operatingExpenses;
+  const total = labourCost + taxAmount + royalty + operatExpAmt;
 
   const hasData = total > 0;
 
@@ -29,7 +29,7 @@ const DonutChart = ({values}:any ) => {
     labourCost: ((labourCost / total) * 100).toFixed(2),
     taxAmount: ((taxAmount / total) * 100).toFixed(2),
     royalty: ((royalty / total) * 100).toFixed(2),
-    operatingExpenses: ((operatingExpenses / total) * 100).toFixed(2),
+    operatingExpenses: ((operatExpAmt / total) * 100).toFixed(2),
   } : {
     labourCost: 0,
     taxAmount: 0,

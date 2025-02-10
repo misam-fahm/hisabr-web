@@ -1,75 +1,57 @@
 "use client";
 
-import React from "react";
+import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { sendApiRequest } from "@/utils/apiUtils";
+import React, { useEffect, useState } from "react";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
-const paymentData = [
-  {
-    name: "American Express",
-    quantity: 10,
-    payment: "$223.27",
-    tips: "$0.00",
-    total: "$223.27",
-    percent: "5.99%",
-  },
-  {
-    name: "Cash",
-    quantity: 75,
-    payment: "$772.21",
-    tips: "$0.00",
-    total: "$772.21",
-    percent: "20.71%",
-  },
-  {
-    name: "Delivery Doordash Integrated",
-    quantity: 6,
-    payment: "$112.36",
-    tips: "$0.00",
-    total: "$112.36",
-    percent: "3.01%",
-  },
-  {
-    name: "Discover",
-    quantity: 4,
-    payment: "$49.63",
-    tips: "$0.00",
-    total: "$49.63",
-    percent: "1.33%",
-  },
-  {
-    name: "Gift Card",
-    quantity: 26,
-    payment: "$209.21",
-    tips: "$0.00",
-    total: "$209.31",
-    percent: "5.61%",
-  },
-  {
-    name: "Master Card",
-    quantity: 37,
-    payment: "$510.21",
-    tips: "$0.00",
-    total: "$510.31",
-    percent: "13.6%",
-  },
-  {
-    name: "Mobile/ Web Order",
-    quantity: 3,
-    payment: "$54.75",
-    tips: "$0.00",
-    total: "$54.75",
-    percent: "1.47%",
-  },
-  {
-    name: "Visa",
-    quantity: 137,
-    payment: "$1,796.49",
-    tips: "$0.00",
-    total: "$1,796.49",
-    percent: "48.1%",
-  },
-];
 
-const PaymentTable: React.FC = () => {
+
+const PaymentTable: React.FC<any> = ( {SalesId} : any) => {
+
+  const [SaleTender, setDataApi] = useState<any>([]);
+  const [totalItems, setTotalItems] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+
+
+        const response: any = await sendApiRequest({
+          mode: "getTendersBySalesid",
+          salesid: Number(SalesId)
+        });
+
+        if (response?.status === 200) {
+          setDataApi(response?.data?.tenders || []);
+          // response?.data?.total > 0 &&
+          //   setTotalItems(response?.data?.total || 0);
+        } else {
+          setCustomToast({
+            ...customToast,
+            message: response?.message,
+            type: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+
   return (
     <main>
       <div className="overflow-x-auto rounded-lg mb-16 shadow-sm border border-[#E4E4EF] below-md:hidden">
@@ -85,32 +67,58 @@ const PaymentTable: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {paymentData.map((row, index) => (
-              <tr
-                key={index}
-                className={`${index % 2 === 0 ? "bg-[#F8F9FB]" : "bg-white"}`}
-              >
-                <td className="px-4 py-1.5 text-left text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
-                  {row.name}
-                </td>
-                <td className="px-5 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
-                  {row.quantity}
-                </td>
-                <td className="px-4 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
-                  {row.payment}
-                </td>
-                <td className="px-4 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
-                  {row.tips}
-                </td>
-                <td className="px-4 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
-                  {row.total}
-                </td>
-                <td className="px-4 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
-                  {row.percent}
-                </td>
-              </tr>
-            ))}
-          </tbody>
+  {loading ? (
+    Array.from({ length: 8 }).map((_, index) => (
+      <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+        {/* Ensure skeleton cells match the number of columns */}
+        {SaleTender?.length > 0 ? (
+          SaleTender.map((_, colIndex) => (
+            <td key={colIndex} className="px-4 py-1.5">
+              <Skeleton height={30} />
+            </td>
+          ))
+        ) : (
+          /* If SaleTender is empty, assume default columns */
+          Array.from({ length: 6 }).map((_, colIndex) => (
+            <td key={colIndex} className="px-4 py-1.5">
+              <Skeleton height={30} />
+            </td>
+          ))
+        )}
+      </tr>
+    ))
+  ) : SaleTender?.length === 0 ? (
+    <tr>
+      <td colSpan={6} className="py-6 text-center">
+        <NoDataFound />
+      </td>
+    </tr>
+  ) : (
+    SaleTender.map((row, index) => (
+      <tr key={index} className={index % 2 === 0 ? "bg-[#F8F9FB]" : "bg-white"}>
+        <td className="px-4 py-1.5 text-left text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+          {row.tendername}
+        </td>
+        <td className="px-5 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+          {row.quantity}
+        </td>
+        <td className="px-4 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+          ${row.payments}
+        </td>
+        <td className="px-4 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+          ${row.tips}
+        </td>
+        <td className="px-4 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+          ${row.total}
+        </td>
+        <td className="px-4 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+          {row.percent}%
+        </td>
+      </tr>
+    ))
+  )}
+</tbody>
+
         </table>
       </div>
 
