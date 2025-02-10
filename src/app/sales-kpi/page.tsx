@@ -553,7 +553,7 @@ const hasItems = items && items.length > 0;
                 />
               </div>
             </div>
-            <div className="overflow-hidden  overflow-x-auto overflow-y-auto max-h-[42vh] below-md:max-h-[27vh] custom-scrollbar ">
+            <div className="overflow-hidden  overflow-x-auto overflow-y-auto h-auto below-md:max-h-[27vh] custom-scrollbar ">
             <table className="w-full  bg-white  border border-gray-200">
                 <thead className="bg-[#FAFBFB] shadow-md">
                   <tr className="text-left text-gray-600 font-semibold">
@@ -593,11 +593,11 @@ const hasItems = items && items.length > 0;
                         { row.payments ? "$" + row.payments?.toLocaleString() : "--"}
                       </td>
                       <td className="px-4 py-1.5 border-b border-gray-200 text-gray-600 text-[14px] font-medium text-right">
-                        {row.commission ? row.commission + "%" : "--" }
+                        {row.commission ? row.commission + "%" : 0 }
                       </td>
                       <td className="px-4 py-1.5 border-b text-right border-gray-200 text-[#3F526D] text-[14px] font-medium">
                               {row.payments && row.commission !== undefined
-                                   ? `$${(row.payments + (row.payments * row.commission) / 100).toFixed(2)}`
+                                   ? `$${((row.payments * row.commission) / 100).toFixed(2)}`
                                    : "--"}
                       </td>
                     </tr>
@@ -605,18 +605,18 @@ const hasItems = items && items.length > 0;
                 </tbody>
                 { tender?.length === 0 ? "" : 
                 <tfoot className="bg-white">
-                  <tr className="font-medium text-[#E31212] text-[14px]">
+                  <tr className="font-medium text-black text-[14px]">
                     <td className="px-4 py-1.5 border-t border-gray-200">
                       Total
                     </td>
                     <td className="px-4 py-1.5 border-t text-right border-gray-200">
-                        {totalPayments ?  "$" + totalPayments  : "--"}
+                        {totalPayments ?  "$" + (totalPayments).toFixed(2)  : "--"}
                     </td>
                     <td className="px-4 py-1.5 border-t text-right border-gray-200"> 
-                       {totalCommission ? "$" + totalCommission :"--"}
+                       {/* {totalCommission ? "$" + (totalCommission).toFixed(2) :"--"} */}
                        </td>
                     <td className="px-4 py-1.5 border-t text-right border-gray-200">
-                    {totalFinalAmount ? "$" + totalFinalAmount  :"--"}
+                    {totalFinalAmount ? "$" + (totalFinalAmount).toFixed(2)  :"--"}
                     </td>
                   </tr>
                 </tfoot> }
@@ -634,7 +634,7 @@ const hasItems = items && items.length > 0;
               </div>
             </div>
 
-            <div className="overflow-hidden  overflow-x-auto overflow-y-auto max-h-[42vh] below-md:max-h-[27vh] custom-scrollbar ">
+            <div className="overflow-hidden  overflow-x-auto overflow-y-auto  below-md:max-h-[27vh] custom-scrollbar ">
               <table className="w-full  bg-white  border border-gray-200">
               <thead className="bg-[#FAFBFB] shadow-md">
                   <tr className="text-left text-gray-600 font-semibold">
@@ -681,7 +681,7 @@ const hasItems = items && items.length > 0;
                 </tbody>
                 {hasItems && (
       <tfoot className="-bottom-1 bg-white sticky">
-        <tr className="text-[#E31212] text-[14px]">
+        <tr className="text-[black] text-[14px]">
           <td className="px-4 py-1.5 border-t text-left border-gray-200 font-medium">
             Total
           </td>
