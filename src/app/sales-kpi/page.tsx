@@ -130,7 +130,7 @@ const SalesKPI: FC = () => {
           console.log("diff months ",months);
           const payrollTaxAmt = response?.data?.saleskpi[0]?.labour_cost * (response?.data?.saleskpi[0]?.payrolltax / 100);
           const yearExpAmt = (response?.data?.saleskpi[0]?.Yearly_expense / 12) * months;
-          setOperatExpAmt(response?.data?.saleskpi[0]?.additional_expense + payrollTaxAmt + yearExpAmt || 0);
+          setOperatExpAmt((response?.data?.saleskpi[0]?.additional_expense + payrollTaxAmt + yearExpAmt) + (response?.data?.saleskpi[0]?.monthly_expense * months) || 0);
           setRoyaltyAmt(response?.data?.saleskpi[0]?.net_sales * ((response?.data?.saleskpi[0]?.royalty / 100) || 0.09));
           // response?.data?.total > 0 &&
           //   setTotalItems(response?.data?.saleskpi[0] || 0);
