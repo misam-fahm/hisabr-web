@@ -1,11 +1,12 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { InputField } from "../UI/Themes/InputField"; 
 import { Text } from "../UI/Themes/Text";
 
 const LoginForm = () => {
   const methods = useForm(); 
+  const [email, setEmail] = useState("");
 
   const onSubmit = (data: any) => {
     console.log(data);
@@ -13,11 +14,11 @@ const LoginForm = () => {
 
   return (
     <FormProvider {...methods}>
-      <div className="bg-[#334155] w-full h-[100vh] flex justify-center below-md:flex-col">
+      <div className="bg-[#0F1044] w-full h-[100vh] flex justify-center below-md:flex-col">
         <div className="w-[50%] below-md:w-full flex justify-center items-center h-full  below-md:h-auto">
           <img
             className="w-auto h-[200px] below-md:h-[150px]"
-            src="/images/Hisabrfinallogo.png"
+            src="/images/HisabrNewLogo.svg"
             alt="Logo"
           />
         </div>
@@ -42,13 +43,21 @@ const LoginForm = () => {
               className="w-full mt-4 flex flex-col gap-6"
             >
               <div className="w-[400px] below-md:w-full">
-                <InputField
+              <InputField
+                  type="email"
                   label="Email"
+                  value={email}
+                    labelBackgroundColor="bg-[#0F1044]"
                   {...methods.register("email", {
                     required: "Email is required",
-                    pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                    pattern: {
+                      value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                      message: "Invalid email format",
+                    },
+                    onChange: (e) => setEmail(e.target.value),
                   })}
                   errors={methods.formState.errors.email}
+                   textColor="text-white"
                   placeholder="Enter email"
                   variant="outline"
                 />

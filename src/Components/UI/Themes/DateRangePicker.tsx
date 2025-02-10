@@ -13,7 +13,8 @@ const DateRangePicker = ({
     setStartDate,
     setEndDate,
     fetchData,
-    fetchDataForTender
+    fetchDataForTender,
+    fetchDataForItems
   } : { 
     widthchang?: string, 
     startDate: any, 
@@ -22,6 +23,7 @@ const DateRangePicker = ({
     setEndDate: any,
     fetchData?: any
     fetchDataForTender?:any
+    fetchDataForItems?:any
   }) => {
   // const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   // const [endDate, setEndDate] = useState<Date | undefined>(undefined);
@@ -74,7 +76,7 @@ const DateRangePicker = ({
       </div>
 
       {isOpen && (
-        <div className="absolute top-[40px] below-md:top-[43px] left-0 bg-white shadow-lg px-4 pb-4 rounded ">
+        <div className="absolute top-[40px] z-40 below-md:top-[43px] left-0 bg-white shadow-lg px-4 pb-4 rounded ">
           <DatePicker
   selected={startDate}
   onChange={handleDateChange}
@@ -207,15 +209,27 @@ const DateRangePicker = ({
             )}
 
             <div>
-              <button
-                className="bg-[#334155] mt-4 text-white px-4 py-2 w-[100%] text-[12px] font-normal rounded-xl"
-                onClick={async () => {
-                  setIsOpen(false);
-                  await fetchData(); fetchDataForTender();
-                }}
-              >
-                Set Date
-              </button>
+                <button
+                  className="bg-[#334155] mt-4 text-white px-4 py-2 w-[100%] text-[12px] font-normal rounded-xl"
+                  onClick={async () => {
+                    setIsOpen(false);
+                    await fetchData();  
+                    if (typeof fetchDataForTender === "function") {
+                      await fetchDataForTender();
+                    } else {
+                     ""
+                    }
+
+                    if (typeof fetchDataForItems === "function") {
+                      await fetchDataForItems();
+                    } else {
+                     ""
+                    }
+                    
+                  }}
+                >
+                  Set Date
+                </button>
             </div>
           </div>
         </div>
