@@ -3,6 +3,7 @@ import React, { FC, useEffect, useState } from "react";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Images from "@/Components/UI/Themes/Image";
 import { useRouter } from "next/navigation";
+import { format } from 'date-fns';
 import Pagination from "@/Components/UI/Pagination/Pagination";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import Skeleton from "react-loading-skeleton";
@@ -39,6 +40,7 @@ const Sales: FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<any>();
+  const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
@@ -126,26 +128,15 @@ const Sales: FC = () => {
     },
   ];
 
-  const formattedData = data?.map((item) => {
-    const rawDate = new Date(item?.sales_date);
-  
-    // Format the date as MM-DD-YY
-    const formattedDate = `${(rawDate?.getMonth() + 1)
-      .toString()
-      .padStart(
-        2,
-        "0"
-      )}-${rawDate?.getDate().toString().padStart(2, "0")}-${rawDate
-      .getFullYear()
-      .toString()
-      .slice(-2)}`;
-  
-    return { ...item, date: formattedDate };
-  });
-  
+
+  useEffect(() => {
+    if (startDate && endDate && selectedOption ) {
+      fetchData();
+    }
+  }, [selectedOption , globalFilter]);
 
   const table = useReactTable({
-    data: formattedData,
+    data: data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -172,6 +163,10 @@ const Sales: FC = () => {
         mode: "getSales",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
+        storeid: selectedOption?.id || 69,
+        startdate: startDate && format(startDate, 'yyyy-MM-dd'),
+        enddate: endDate && format(endDate, 'yyyy-MM-dd'),
+        search:globalFilter
       });
   
       if (response?.status === 200) {
@@ -196,11 +191,17 @@ const Sales: FC = () => {
     fetchData();
   }, [pageIndex, pageSize]);
 
-  const fetchDropdownData = async () => {
+  const getUserStore = async () => {
     try {
-      const response = await sendApiRequest({ mode: "getAllStores" });
+      const response = await sendApiRequest({ mode: "getUserStore" });
       if (response?.status === 200) {
         setStore(response?.data?.stores || []);
+        if (response?.data?.stores){
+          setSelectedOption({
+            name: response?.data?.stores[0]?.name,
+            id: response?.data?.stores[0]?.id,
+          });
+        }
       } else {
         handleError(response?.message);
       }
@@ -209,9 +210,48 @@ const Sales: FC = () => {
     }
   };
 
+  const verifyToken = async (token: string) => {
+    const res: any = await sendApiRequest({
+      token: token
+    }, `auth/verifyToken`);
+    res?.status === 200 
+      ? setIsVerifiedUser(true) 
+      : router.replace('/login');
+  };
+
   useEffect(() => {
-    fetchDropdownData();
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.replace('/login');
+    } else {
+      verifyToken(token);
+    }    
   }, []);
+
+  useEffect(() => {
+    if (isVerifiedUser) {
+      const currentYear = new Date().getFullYear();
+      setStartDate(new Date(`${currentYear}-01-01`));
+      setEndDate(new Date(`${currentYear}-12-31`));
+      getUserStore();
+      // fetchDropdownData();
+    }
+  }, [isVerifiedUser]);
+
+
+  // const fetchDropdownData = async () => {
+  //   try {
+  //     const response = await sendApiRequest({ mode: "getAllStores" });
+  //     if (response?.status === 200) {
+  //       setStore(response?.data?.stores || []);
+  //     } else {
+  //       handleError(response?.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching stores:", error);
+  //   }
+  // };
+
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setCustomToast({
@@ -433,7 +473,6 @@ const Sales: FC = () => {
                   name: selectedOption.name,
                   id: selectedOption.id,
                 });
-                // setSelectedOption();
                 setIsStoreDropdownOpen(false);
               }}
               isOpen={isStoreDropdownOpen}
@@ -441,12 +480,13 @@ const Sales: FC = () => {
               widthchange="w-full"
             />
             <div className="w-full tablet:w-full below-md:w-full">
-              <DateRangePicker 
+            <DateRangePicker 
                 startDate = {startDate}
                 endDate = {endDate}
                 setStartDate = {setStartDate}
                 setEndDate = {setEndDate}
-              />
+                fetchData = {fetchData}
+                />
             </div>
             <div className="flex flex-row gap-3 w-full ">
               <div className=" w-full rounded border border-gray-300 below-md:w-full bg-[#ffff] relative below-md:hidden tablet:w-full">

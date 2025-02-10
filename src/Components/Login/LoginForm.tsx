@@ -82,7 +82,7 @@ const LoginForm = () => {
         <div className="w-[50%] below-md:w-full flex justify-center items-center h-full below-md:h-auto">
           <img
             className="w-auto h-[200px] below-md:h-[150px]"
-            src="/images/HisabrFinalLogo.png"
+            src="/images/HisabrNewLogo.svg"
             alt="Logo"
           />
         </div>
@@ -108,46 +108,52 @@ const LoginForm = () => {
             >
               <div className="w-[400px] below-md:w-full">
                 <InputField
-                  type={"email"}
+                  type="email"
                   label="Email"
                   value={email}
+                    labelBackgroundColor="bg-[#0F1044]"
                   {...methods.register("email", {
                     required: "Email is required",
-                    pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                    pattern: {
+                      value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                      message: "Invalid email format",
+                    },
                     onChange: (e) => setEmail(e.target.value),
                   })}
                   errors={methods.formState.errors.email}
+                   textColor="text-white"
                   placeholder="Enter email"
                   variant="outline"
                 />
               </div>
 
               <div className="w-[400px] below-md:w-full ">
-                <InputField
-                  type={"password"}
-                  label="Password"
-                  value={password}
-                  {...methods.register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 8,
-                      message: "Password must be at least 8 characters long",
-                    },
-                    maxLength: {
-                      value: 20,
-                      message: "Password cannot exceed 20 characters",
-                    },
-                    pattern: {
-                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                      message: "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
-                    },
-                    onChange: (e) => setPassword(e.target.value),
-                  })}
-                  errors={methods.formState.errors.Password}
-                  placeholder="Enter Password"
-                  variant="outline"
-                />
-                <div className="flex justify-end mt-2">
+              <InputField
+  type="text" // Changed from "password" to "text"
+  label="Password"
+  value={password}
+  {...methods.register("password", {
+    required: "Password is required",
+    minLength: {
+      value: 8,
+      message: "Password must be at least 8 characters long",
+    },
+    maxLength: {
+      value: 20,
+      message: "Password cannot exceed 20 characters",
+    },
+    pattern: {
+      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      message: "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+    },
+    onChange: (e) => setPassword(e.target.value),
+  })}
+  errors={methods.formState.errors.password} // Fixed casing
+  placeholder="Enter Password"
+  variant="outline"
+/>
+
+                <div className="flex justify-end mt-5">
                   <p
                     className=" text-[#3BFCC6] font-normal text-[13px] cursor-pointer"
                     onClick={() => (window.location.href = "/forgotpassword")}

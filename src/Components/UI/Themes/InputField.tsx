@@ -132,14 +132,14 @@ export function InputField(props: any): JSX.Element {
               htmlFor={fieldId}
               onClick={() => document.getElementById(fieldId)?.focus()}
               className={`text-darklightgrey absolute  ${isFocused || value ? `-top-2.5  text-[8px]  ${textColor ? textColor : "text-white"}` : textColor ? textColor : "text-white"}
-                    z-10   translate-all  ${labelBackgroundColor ? labelBackgroundColor : "bg-[#334155]"}  rounded-md ${textColor ? textColor : "text-white"} px-2 text-[8px] duration-300 peer-focus:px-2 ${
+                    z-10   translate-all  ${labelBackgroundColor ? labelBackgroundColor : "bg-[#0F1044]"}  rounded-md ${textColor ? textColor : "text-white"} px-2 text-[8px] duration-300 peer-focus:px-2 ${
                       errors && errors?.message
                         ? "peer-focus: text-red-500"
                         : borderClassName
                           ? "border border-white"
                           : "peer-focus:text-primary"
                     } !text-[12px] left-1   ${
-                      watch(name) && "  translate-all bg-[#334155] px-2"
+                      watch(name) && "  translate-all bg-[#0F1044] px-2"
                     }`}
             >
               {label}

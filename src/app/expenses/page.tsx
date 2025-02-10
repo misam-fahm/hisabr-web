@@ -5,7 +5,7 @@ import AddExpenses from "@/Components/ExpensesPopup/AddExpenses";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { useRouter } from "next/navigation";
-
+import { format } from 'date-fns';
 
 import {
   useReactTable,
@@ -52,6 +52,7 @@ const Expenses: FC = () => {
   const [isOpenAddExpenses, setAddExpenses] = useState(false);
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
@@ -162,39 +163,88 @@ const Expenses: FC = () => {
 
   const { pageIndex, pageSize } = table.getState().pagination;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response: any = await sendApiRequest({
-          mode: "getExpenses",
-          page: table.getState().pagination.pageIndex + 1,
-          limit: table.getState().pagination.pageSize,
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getExpenses",
+        page: table.getState().pagination.pageIndex + 1,
+        limit: table.getState().pagination.pageSize,
+        storeid: selectedOption?.id || 69,
+      startdate: startDate && format(startDate, 'yyyy-MM-dd'),
+      enddate: endDate && format(endDate, 'yyyy-MM-dd'),
+      search:globalFilter
+      });
+
+      if (response?.status === 200) {
+        setData(response?.data?.expenses || []);
+        response?.data?.total > 0 &&
+          setTotalItems(response?.data?.total || 0);
+      } else {
+        setCustomToast({
+          ...customToast,
+          message: response?.message,
+          type: "error",
         });
-
-        if (response?.status === 200) {
-          setData(response?.data?.expenses || []);
-          response?.data?.total > 0 &&
-            setTotalItems(response?.data?.total || 0);
-        } else {
-          setCustomToast({
-            ...customToast,
-            message: response?.message,
-            type: "error",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-        setAddExpenses(false)
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+      setAddExpenses(false)
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [pageIndex, pageSize, isOpenAddExpenses]);
 
+  const getUserStore = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getUserStore" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+        if (response?.data?.stores){
+          setSelectedOption({
+            name: response?.data?.stores[0]?.name,
+            id: response?.data?.stores[0]?.id,
+          });
+        }
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+  };
 
+  const verifyToken = async (token: string) => {
+    const res: any = await sendApiRequest({
+      token: token
+    }, `auth/verifyToken`);
+    res?.status === 200 
+      ? setIsVerifiedUser(true) 
+      : router.replace('/login');
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.replace('/login');
+    } else {
+      verifyToken(token);
+    }    
+  }, []);
+
+  useEffect(() => {
+    if (isVerifiedUser) {
+      const currentYear = new Date().getFullYear();
+      setStartDate(new Date(`${currentYear}-01-01`));
+      setEndDate(new Date(`${currentYear}-12-31`));
+      getUserStore();
+      // fetchDropdownData();
+    }
+  }, [isVerifiedUser]);
 
   const handleClick = () => {
     if (searchInputRef.current) {
@@ -213,24 +263,24 @@ const Expenses: FC = () => {
     });
   };
 
-  useEffect(() => {
-    const fetchDropdownData = async () => {
-      try {
-        const response = await sendApiRequest({ mode: "getAllStores" });
-        if (response?.status === 200) {
-          setStore(response?.data?.stores || []);
-        } else {
-          handleError(response?.message);
-        }
-      } catch (error) {
-        console.error("Error fetching stores:", error);
-      }
+  // useEffect(() => {
+  //   const fetchDropdownData = async () => {
+  //     try {
+  //       const response = await sendApiRequest({ mode: "getAllStores" });
+  //       if (response?.status === 200) {
+  //         setStore(response?.data?.stores || []);
+  //       } else {
+  //         handleError(response?.message);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching stores:", error);
+  //     }
 
-    };
+  //   };
 
-    fetchDropdownData();
+  //   fetchDropdownData();
 
-  }, []);
+  // }, []);
 
   const checkScrollbarVisibility = () => {
     const container: any = containerRef.current;
@@ -297,26 +347,28 @@ const Expenses: FC = () => {
         </div>
         <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
           <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
-            <Dropdown
+          <Dropdown
               options={store}
               selectedOption={selectedOption?.name || "Store"}
               onSelect={(selectedOption: any) => {
-                setSelectedOption({ name: selectedOption.name, id: selectedOption.id });
-                // setSelectedOption();
+                setSelectedOption({
+                  name: selectedOption.name,
+                  id: selectedOption.id,
+                });
                 setIsStoreDropdownOpen(false);
               }}
               isOpen={isStoreDropdownOpen}
               toggleOpen={toggleStoreDropdown}
               widthchange="w-full"
-
             />
             <div className="w-full tablet:w-full below-md:w-full h-[35px]">
-              <DateRangePicker 
+            <DateRangePicker 
                 startDate = {startDate}
                 endDate = {endDate}
                 setStartDate = {setStartDate}
                 setEndDate = {setEndDate}
-              />
+                fetchData = {fetchData}
+                />
             </div>
 
             <div className="flex  border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">

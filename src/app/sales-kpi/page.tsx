@@ -5,8 +5,11 @@ import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { useRouter } from "next/navigation";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import { sendApiRequest } from "@/utils/apiUtils";
 import { format } from 'date-fns';
+import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 
 const SalesKPI: FC = () => {
   const router = useRouter();
@@ -28,11 +31,13 @@ const SalesKPI: FC = () => {
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [data, setData] = useState<any>([]);
   // const [isFirstCall, setIsFirstCall] = useState<boolean>(true);
   const [tender, setTender] = useState<any>([]);
+  const [items, setItems] = useState<any>([]);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
@@ -44,17 +49,17 @@ const SalesKPI: FC = () => {
 
   const labourCost = Number(data?.labour_cost) || 0;
   const taxAmount = Number(data?.tax_amt) || 0;
-  const royalty = data?.net_sales ? Number((data.net_sales * 0.09).toFixed(2)) : 0;
-  const operatingExpenses = data?.labour_cost ? 109817 : 0;
+  // const royalty = data?.net_sales ? Number((data.net_sales * 0.09 /).toFixed(2)) : 0;
+  // const operatingExpenses = data?.labour_cost ? 109817 : 0;
 
-  const total = labourCost + taxAmount + royalty + operatingExpenses;
+  const total = labourCost + taxAmount + royaltyAmt + operatExpAmt;
 
   // Prevent division by zero
   const percentages = total > 0 ? {
     labourCost: ((labourCost / total) * 100).toFixed(2),
     taxAmount: ((taxAmount / total) * 100).toFixed(2),
-    royalty: ((royalty / total) * 100).toFixed(2),
-    operatingExpenses: ((operatingExpenses / total) * 100).toFixed(2),
+    royalty: ((royaltyAmt / total) * 100).toFixed(2),
+    operatingExpenses: ((operatExpAmt / total) * 100).toFixed(2),
   } : {
     labourCost: 0,
     taxAmount: 0,
@@ -68,10 +73,10 @@ const SalesKPI: FC = () => {
     // { label: "Profit", amount: "10,000", per: "65%", color: "#53755599" },
     { label: "Labour Cost", amount: (Math.round(data?.labour_cost ) || 0).toLocaleString(), per:  Number(percentages.labourCost), color: "#53755599" },
     { label: "Sales Tax", amount:(Math.round(data?.tax_amt) || 0).toLocaleString(), per: Number(percentages.taxAmount), color: "#DAB777" },
-    { label: "Royalty", amount: (Math.round(data.net_sales * 0.09) || 0).toLocaleString(), per: Number(percentages.royalty), color: "#653C597A" },
+    { label: "Royalty", amount: (Math.round(royaltyAmt) || 0).toLocaleString(), per: Number(percentages.royalty), color: "#653C597A" },
     {
       label: "Operating Expenses",
-      amount: data ?  (Math.round( operatingExpenses)).toLocaleString() : 0,
+      amount: data ?  (Math.round( operatExpAmt)).toLocaleString() : 0,
       per:   percentages.operatingExpenses ?  Number(percentages.operatingExpenses) : 0,
       color: "#79AFC7",
     },
@@ -84,6 +89,7 @@ const SalesKPI: FC = () => {
       fetchData();
       // setIsFirstCall(false);
       fetchDataForTender();
+      fetchDataForItems();
     }
   }, [selectedOption]);
 
@@ -124,8 +130,8 @@ const SalesKPI: FC = () => {
           console.log("diff months ",months);
           const payrollTaxAmt = response?.data?.saleskpi[0]?.labour_cost * (response?.data?.saleskpi[0]?.payrolltax / 100);
           const yearExpAmt = (response?.data?.saleskpi[0]?.Yearly_expense / 12) * months;
-          setOperatExpAmt(response?.data?.saleskpi[0]?.additional_expense + payrollTaxAmt + yearExpAmt);
-          setRoyaltyAmt(response?.data?.saleskpi[0]?.net_sales * (response?.data?.saleskpi[0]?.royalty || 0.09));
+          setOperatExpAmt(response?.data?.saleskpi[0]?.additional_expense + payrollTaxAmt + yearExpAmt || 0);
+          setRoyaltyAmt(response?.data?.saleskpi[0]?.net_sales * ((response?.data?.saleskpi[0]?.royalty / 100) || 0.09));
           // response?.data?.total > 0 &&
           //   setTotalItems(response?.data?.saleskpi[0] || 0);
         } else {
@@ -168,19 +174,46 @@ const fetchDataForTender = async () => {
 }
 };
 
+const fetchDataForItems = async () => {
+  try {
+    if (startDate && endDate) {
+      const response: any = await sendApiRequest({
+        mode: "getLatestItems",
+        storeid: selectedOption?.id || 69,
+        startdate: startDate && format(startDate, 'yyyy-MM-dd'),
+        enddate: endDate && format(endDate, 'yyyy-MM-dd'),
+      });
 
-  const fetchDropdownData = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getAllStores" });
       if (response?.status === 200) {
-        setStore(response?.data?.stores || []);
+        setItems(response?.data?.items || []);
+        // response?.data?.total > 0 &&
+        //   setTotalItems(response?.data?.saleskpi[0] || 0);
       } else {
-        handleError(response?.message);
+        setCustomToast({
+          ...customToast,
+          message: response?.message,
+          type: "error",
+        });
       }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
     }
-  };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+}
+};
+
+
+  // const fetchDropdownData = async () => {
+  //   try {
+  //     const response = await sendApiRequest({ mode: "getAllStores" });
+  //     if (response?.status === 200) {
+  //       setStore(response?.data?.stores || []);
+  //     } else {
+  //       handleError(response?.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching stores:", error);
+  //   }
+  // };
 
   const getUserStore = async () => {
     try {
@@ -254,6 +287,12 @@ const fetchDataForTender = async () => {
   const totalCommission = tender?.reduce((sum:any, row:any) => sum + ((row.payments || 0) * (row.commission || 0)) / 100, 0);
   const totalFinalAmount = totalPayments + totalCommission;
 
+  const totalQty = items?.reduce((acc:any, row:any) => acc + Number(row.totalqty), 0);
+const totalExtPrice = items?.reduce((acc:any, row:any) => acc + Number(row.totalextprice), 0);
+
+// Ensure there's no error when `items` is empty
+const hasItems = items && items.length > 0;
+
   return (
     isVerifiedUser && <main
       className="max-h-[calc(100vh-60px)] min-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] overflow-auto"
@@ -284,6 +323,7 @@ const fetchDataForTender = async () => {
                 setEndDate = {setEndDate}
                 fetchData = {fetchData}
                 fetchDataForTender={fetchDataForTender}
+                fetchDataForItems={fetchDataForItems}
                 />
             </div>
           </div>
@@ -321,7 +361,7 @@ const fetchDataForTender = async () => {
             <div className="w-[75%]">
               <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
               <p className="text-[16px] text-[#2D3748] font-bold">{data?.net_sales ?
-                `$${(data?.net_sales - data?.producttotal - data?.labour_cost - operatExpAmt - royaltyAmt)?.toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
+                `$${Math.round(data?.net_sales - data?.producttotal - data?.labour_cost - operatExpAmt - royaltyAmt)?.toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
                   : '$00,000'
                 }</p>
               {/* <p className="text-[11px] text-[#388E3C] font-semibold ">
@@ -341,7 +381,7 @@ const fetchDataForTender = async () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Customer Count
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{data?.customer_count ? `${data?.customer_count?.toLocaleString()}` : '00,000'}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.customer_count ? `${Math.round(data?.customer_count)?.toLocaleString()}` : '00,000'}</p>
               {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 40%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -359,7 +399,7 @@ const fetchDataForTender = async () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Labour Cost
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{data?.labour_cost ? `$${data?.labour_cost?.toLocaleString()}` : '$00,000'}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.labour_cost ? `$${Math.round(data?.labour_cost)?.toLocaleString()}` : '$00,000'}</p>
               {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 16%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -378,7 +418,7 @@ const fetchDataForTender = async () => {
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Sales Tax
               </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{data?.tax_amt ? `$${data?.tax_amt?.toLocaleString()}` : '$00,000'}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{data?.tax_amt ? `$${Math.round(data?.tax_amt)?.toLocaleString()}` : '$00,000'}</p>
               {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 8.6%{" "}
                 <span className="text-[#575F6D] font-normal">
@@ -398,7 +438,7 @@ const fetchDataForTender = async () => {
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">
                 {royaltyAmt 
-                  ? `$${royaltyAmt?.toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
+                  ? `$${Math.round(royaltyAmt)?.toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
                   : '$00,000'
                 }
               </p>
@@ -420,8 +460,8 @@ const fetchDataForTender = async () => {
                 Operating Expenses
               </p>
               <p className="text-[16px] text-[#2D3748] font-bold">{operatExpAmt?
-                `$${Math.round(operatExpAmt)?.toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
-                  : '$00,000'
+                `$${Math.round(operatExpAmt)?.toLocaleString()} `  // Calculate 9% and format it to 2 decimal places
+                  : '$000,000'
                 }</p>
               {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 0%{" "}
@@ -458,7 +498,7 @@ const fetchDataForTender = async () => {
           </div>
           <div className="flex flex-row items-center justify-between below-md:flex-col tablet:flex-col mx-3">
             <div className="-my-12">
-              <DonutChart values={data} />
+              <DonutChart values={data} operatExpAmt={operatExpAmt} />
             </div>
             <div className="overflow-x-auto w-[50%] custom-scrollbar">
               <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
@@ -499,8 +539,8 @@ const fetchDataForTender = async () => {
           </div>
         </div>
         <div className="flex justify-between px-6 py-6">
-        <div className="bg-white  border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-[49%] items-stretch">
-            <div className="flex flex-row mt-4 justify-between px-3">
+        <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[49%] items-stretch">
+            <div className="flex flex-row mt-4 justify-between px-6 pb-3">
               <div className="flex flex-row gap-2">
                 <img src="/images/persentage.svg" alt="Tender" />
                 <p className="text-[#334155] text-[16px] font-bold">Tender</p>
@@ -513,8 +553,8 @@ const fetchDataForTender = async () => {
                 />
               </div>
             </div>
-            <div className="overflow-hidden  overflow-x-auto overflow-y-auto max-h-[42vh] below-md:max-h-[27vh] custom-scrollbar">
-              <table className="w-full bg-white border border-gray-200 mt-6">
+            <div className="overflow-hidden  overflow-x-auto overflow-y-auto max-h-[42vh] below-md:max-h-[27vh] custom-scrollbar ">
+            <table className="w-full  bg-white  border border-gray-200">
                 <thead className="bg-[#FAFBFB] shadow-md">
                   <tr className="text-left text-gray-600 font-semibold">
                     <th className="px-4 py-1.5 border-b border-gray-200 text-[14px]">
@@ -531,8 +571,17 @@ const fetchDataForTender = async () => {
                     </th>
                   </tr>
                 </thead>
+
+                     
                 <tbody>
-                  {tender?.map((row:any, index:any) => (
+                { tender?.length === 0 ? (
+                            <tr >
+                                      <td colSpan={4} className=" ">
+                                            <NoDataFound />
+                                      </td>
+                           </tr>
+                 ) : ( 
+                tender?.map((row:any, index:any) => (
                     <tr
                       key={index}
                       className={index % 2 === 0 ? "bg-white" : "bg-[#FAFBFB]"}
@@ -552,8 +601,9 @@ const fetchDataForTender = async () => {
                                    : "--"}
                       </td>
                     </tr>
-                  ))}
+                  )))}
                 </tbody>
+                { tender?.length === 0 ? "" : 
                 <tfoot className="bg-white">
                   <tr className="font-medium text-[#E31212] text-[14px]">
                     <td className="px-4 py-1.5 border-t border-gray-200">
@@ -569,7 +619,7 @@ const fetchDataForTender = async () => {
                     {totalFinalAmount ? "$" + totalFinalAmount  :"--"}
                     </td>
                   </tr>
-                </tfoot>
+                </tfoot> }
               </table>
             </div>
           </div>
@@ -585,9 +635,30 @@ const fetchDataForTender = async () => {
             </div>
 
             <div className="overflow-hidden  overflow-x-auto overflow-y-auto max-h-[42vh] below-md:max-h-[27vh] custom-scrollbar ">
-              <table className="w-full  bg-white border border-gray-200">
+              <table className="w-full  bg-white  border border-gray-200">
+              <thead className="bg-[#FAFBFB] shadow-md">
+                  <tr className="text-left text-gray-600 font-semibold">
+                    <th className="px-4 py-1.5 border-b border-gray-200 text-[14px]">
+                      Name
+                    </th>
+                    <th className="px-4 py-1.5 border-b text-right border-gray-200 text-[14px]">
+                      Qty
+                    </th>
+
+                    <th className="px-4 py-1.5 border-b text-right border-gray-200 text-[14px]">
+                      Amount
+                    </th>
+                  </tr>
+                </thead>
                 <tbody>
-                  {tableDataForItems?.map((row, index) => (
+                { items?.length === 0 ? (
+    <tr >
+      <td  colSpan={3} className="">
+        <NoDataFound />
+      </td>
+    </tr>
+  ) : ( 
+                  items?.map((row:any, index:any) => (
                     <tr
                       key={index}
                       className={`${
@@ -596,32 +667,33 @@ const fetchDataForTender = async () => {
                           : "bg-[#FAFBFB] text-[14px]"
                       }`}
                     >
-                      <td className="pl-6 px-2 py-1 text-left border-b border-gray-200 text-gray-600 font-medium text-[14px]">
-                        {row.name}
+                      <td className="px-4 py-1.5  text-left border-b border-gray-200 text-gray-600 font-medium text-[14px]">
+                        {row.itemname}
                       </td>
-                      <td className="px-2 py-1 border-b text-right font-medium border-gray-200 text-[#334155] text-[14px] ">
-                        {row.revenue.toLocaleString()}
+                      <td className="px-4 py-1.5  border-b text-right font-medium border-gray-200 text-[#334155] text-[14px] ">
+                        {row.totalqty}
                       </td>
-                      <td className="px-2 py-1 border-b text-right border-gray-200 text-[14px] font-medium text-[#334155]">
-                        ${row.commission}
+                      <td className="px-4 py-1.5 border-b text-right border-gray-200 text-[14px] font-medium text-[#334155]">
+                        ${row.totalextprice}
                       </td>
                     </tr>
-                  ))}
+                  )))}
                 </tbody>
-                <tfoot className="-bottom-1 bg-white sticky">
-                  <tr className=" text-[#E31212] text-[14px]">
-                    <td className="pl-6 px-2 py-1 border-t text-left border-gray-200 font-medium">
-                      Total
-                    </td>
-                    <td className=" px-2 py-1 border-t text-right border-gray-200 text-[14px] font-medium">
-                      $ 80000
-                    </td>
-
-                    <td className="px-2 py-1 border-t text-right border-gray-200 text-[14px] font-medium">
-                      $ 1000000
-                    </td>
-                  </tr>
-                </tfoot>
+                {hasItems && (
+      <tfoot className="-bottom-1 bg-white sticky">
+        <tr className="text-[#E31212] text-[14px]">
+          <td className="px-4 py-1.5 border-t text-left border-gray-200 font-medium">
+            Total
+          </td>
+          <td className="px-4 py-1.5 border-t text-right border-gray-200 text-[14px] font-medium">
+            {totalQty}
+          </td>
+          <td className="px-4 py-1.5 border-t text-right border-gray-200 text-[14px] font-medium">
+            ${totalExtPrice.toFixed(2)}
+          </td>
+        </tr>
+      </tfoot>
+    )}
               </table>
             </div>
           </div>

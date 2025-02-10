@@ -1,8 +1,11 @@
 "use client";
 
+import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import { sendApiRequest } from "@/utils/apiUtils";
 import React, { useEffect, useState } from "react";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 interface TableData {
   category: string;
@@ -178,27 +181,57 @@ const data: TableData[] = [
               </tr>
             </thead>
             <tbody>
-              {data.map((section, index) => (
-                <React.Fragment key={index}>
-                  {section.rows.map((row, rowIndex) => (
-                    <tr
-                      key={rowIndex}
-                      className={`${rowIndex === 0 ? "bg-[#F8F9FCFA]" : ""}`} // Apply a background color for the first row of each section
-                    >
-                      <td className="px-4 py-1.5 text-left text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
-                        {rowIndex === 0 ? section.category : ""}
-                      </td>
-                      <td className="px-4 py-1.5 text-left text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
-                        {row.description}
-                      </td>
-                      <td className="px-4 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
-                        {row.value}
-                      </td>
-                    </tr>
-                  ))}
-                </React.Fragment>
-              ))}
-            </tbody>
+  {loading ? (
+    Array.from({ length: 5 }).map((_, sectionIndex) => ( // Loop through 5 sections for skeleton
+      <React.Fragment key={sectionIndex}>
+        {Array.from({ length: 3 }).map((_, rowIndex) => ( // Loop through 3 rows per section
+          <tr
+            key={rowIndex}
+            className={`${rowIndex === 0 ? "bg-[#F8F9FCFA]" : ""}`} // First row styling
+          >
+            <td className="px-4 py-1.5">
+              {rowIndex === 0 ? <Skeleton width={100} height={20} /> : ""}
+            </td>
+            <td className="px-4 py-1.5">
+              <Skeleton width={150} height={20} />
+            </td>
+            <td className="px-4 py-1.5 text-right">
+              <Skeleton width={80} height={20} />
+            </td>
+          </tr>
+        ))}
+      </React.Fragment>
+    ))
+  ) : data.length === 0 ? (
+    <tr>
+      <td colSpan={3} className="py-6 text-center">
+        <NoDataFound />
+      </td>
+    </tr>
+  ) : (
+    data.map((section, index) => (
+      <React.Fragment key={index}>
+        {section.rows.map((row, rowIndex) => (
+          <tr
+            key={rowIndex}
+            className={`${rowIndex === 0 ? "bg-[#F8F9FCFA]" : ""}`}
+          >
+            <td className="px-4 py-1.5 text-left text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+              {rowIndex === 0 ? section.category : ""}
+            </td>
+            <td className="px-4 py-1.5 text-left text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+              {row.description}
+            </td>
+            <td className="px-4 py-1.5 text-right text-[#636363] text-[14px] whitespace-nowrap overflow-x-auto custom-scrollbar">
+              {row.value}
+            </td>
+          </tr>
+        ))}
+      </React.Fragment>
+    ))
+  )}
+</tbody>
+
           </table>
         </div>
       </div>
