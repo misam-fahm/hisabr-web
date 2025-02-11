@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-
+import { useRouter } from "next/navigation";
 import { InputField } from "@/Components/UI/Themes/InputField";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
@@ -31,14 +31,14 @@ interface CustomToast {
 }
 
 const Page = () => {
+   const router = useRouter();
   const methods = useForm();
   const { watch, setValue, clearErrors } = methods;
 
-  const selectedStore = watch("store");
+  //const selectedStore = watch("store");
   const [storeId, setStoreId] = useState(null); // No default storeId initially
   const [data, setData] = useState<any>();
-
-  //const [selectedOption, setSelectedOption] = useState<any>();
+  const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
   const [payrolltax, setPayrollTax] = useState(data?.payroll_tax || "");
@@ -55,6 +55,7 @@ const Page = () => {
   const [royalty, setRoyalty] = useState(data?.royalty || "");
   const [repair, setRepair] = useState(data?.repair_exp || "");
   const [loading, setLoading] = useState(true);
+  const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
   const [customToast, setCustomToast] = useState<CustomToast>({
     toastMessage: "",
     toastType: "",
@@ -76,7 +77,7 @@ const Page = () => {
     try {
       const response = await sendApiRequest({ mode: "getAllStores" });
       if (response?.status === 200) {
-        setStore(response?.data?.stores || []);
+        setStore(response?.data?.stores || []);      
       } else {
         handleError(response?.message);
       }
@@ -84,9 +85,56 @@ const Page = () => {
       console.error("Error fetching stores:", error);
     }
   };
+  // useEffect(() => {
+  //   fetchDropdownData();
+  // }, []);
+
+  const getUserStore = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getUserStore" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+        if (response?.data?.stores){
+          setSelectedOption({
+            name: response?.data?.stores[0]?.name,
+            id: response?.data?.stores[0]?.id,
+          });
+        }
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+  };
+
+  const verifyToken = async (token: string) => {
+    const res: any = await sendApiRequest({
+      token: token
+    }, `auth/verifyToken`);
+    res?.status === 200 
+      ? setIsVerifiedUser(true) 
+      : router.replace('/login');
+  };
+
   useEffect(() => {
-    fetchDropdownData();
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.replace('/login');
+    } else {
+      verifyToken(token);
+    }    
   }, []);
+
+  useEffect(() => {
+    if (isVerifiedUser) {
+      // const currentYear = new Date().getFullYear();
+      // setStartDate(new Date(`${currentYear}-01-01`));
+      // setEndDate(new Date(`${currentYear}-12-31`));
+      getUserStore();
+      // fetchDropdownData();
+    }
+  }, [isVerifiedUser]);
 
 
   const fetchData = async (storeId) => {
@@ -95,7 +143,8 @@ const Page = () => {
     try {
       const response: any = await sendApiRequest({
         mode: "getStoreConfig",
-        storeid: storeId,
+        //storeid: storeId,
+        storeid: selectedOption?.id || 69,
         // storeid: methods.watch("storeId") || 69,
       });
       if (response?.status === 200) {
@@ -103,18 +152,22 @@ const Page = () => {
         const storeData = response?.data?.store[0] || {};
         setData(storeData);
          // Update state based on fetched data
-         setPropertyTax(storeData.property_tax_exp || "");
-         setLabourOperatSalary(storeData.labor_operat_salary_exp || "");
-         setRentMortgage(storeData.rent_mortgage_exp || "");
-         setInsurance(storeData.insurance_exp || "");
-         setTrash(storeData.trash || "");
-         setNUCO2(storeData.nuco2 || "");
-         setInternet(storeData.internet_exp || "");
-         setWaterBill(storeData.water_bill_exp || "");
-         setGasBill(storeData.gas_bill_exp || "");
-         setPAR(storeData.par || "");
-         setRoyalty(storeData.royalty || "");
-         setRepair(storeData.repair_exp || "");
+         setPropertyTax((storeData.property_tax_exp ?? 0).toString());
+         setLabourOperatSalary((storeData.labor_operat_salary_exp ?? 0).toString());
+         setRentMortgage((storeData.rent_mortgage_exp ?? 0).toString());
+         setPayrollTax((storeData.payroll_tax ?? 0).toString())
+         setInsurance((storeData.insurance_exp ?? 0).toString());
+         setTrash((storeData.trash ?? 0).toString());
+         setNUCO2((storeData.nuco2 ?? 0).toString());
+         setInternet((storeData.internet_exp ?? 0).toString());
+         setWaterBill((storeData.water_bill_exp ?? 0).toString());
+         setGasBill((storeData.gas_bill_exp ?? 0).toString());
+         setPAR((storeData.par ?? 0).toString());
+         setRoyalty((storeData.royalty ?? 0).toString());
+         setRepair((storeData.repair_exp ?? 0).toString());
+         setSelectedOption
+         setValue("storeId", storeData.id || 69); 
+        //  setStore((storeData.storename ?? ""));
       } else {
         setCustomToast({
           ...customToast,
@@ -129,14 +182,9 @@ const Page = () => {
     }
   };
   useEffect(() => {
-    fetchData(storeId); // Fetch data when storeId changes
-  }, [storeId]);
+    fetchData(selectedOption?.id || 69); // Fetch data when storeId changes
+  }, [selectedOption]);
 
-  // Handle dropdown change and set storeId
-  const handleStoreSelection = (selectedOption) => {
-    setStoreId(selectedOption.id); // Update the selected storeId
-    fetchData(selectedOption.id);  // Fetch data for the selected store
-  };
 
   const handleChangePayrollTax = (data: any) => {
     setPayrollTax(data); // Update local state
@@ -201,7 +249,7 @@ const Page = () => {
     setRepair(data); // Update local state
     methods.setValue("repair", data); // Update form state in react-hook-form
   };
-  console.log("selectedStore", selectedStore);
+  //console.log("selectedStore", selectedStore);
 
   const onSubmit = async (data: any) => {
     console.log(data);
@@ -264,7 +312,7 @@ const Page = () => {
 
 
   return (
-    <main
+    isVerifiedUser && <main
       className="max-h-[calc(100vh-50px)] below-lg:px-4 overflow-auto "
       style={{ scrollbarWidth: "thin" }}
     >
@@ -285,13 +333,13 @@ const Page = () => {
               </p>
               <Dropdown
                 options={store}
-                selectedOption={selectedStore || "Store"}
-                onSelect={(selectedOption) => {
-                  handleStoreSelection(selectedOption);
-                  setValue("store", selectedOption.name);
-                  setValue("storeId", selectedOption.id);
+                selectedOption={selectedOption?.name || "Store"}
+                onSelect={(selectedOption: any) => {
+                  setSelectedOption({
+                    name: selectedOption.name,
+                    id: selectedOption.id,
+                  });
                   setIsStoreDropdownOpen(false);
-                  clearErrors("store");
                 }}
                 isOpen={isStoreDropdownOpen}
                 toggleOpen={toggleStoreDropdown}
