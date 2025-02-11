@@ -68,27 +68,27 @@ const Invoices = () => {
     {
       accessorKey: "storename",
       header: () => <div className="text-left">Store</div>,
-      cell: (info) => <span>{info.getValue() as string}</span>,
+      cell: (info) => <span className="text-left">{info.getValue() as string}</span>,
       size: 55,
     },
     {
       accessorKey: "invoicenumber",
       header: () => <div className="text-left">Invoice#</div>,
-      cell: (info) => <span className="text-left pl-1">{info.getValue() as string}</span>,
+      cell: (info) => <span className="text-left ">{info.getValue() as string}</span>,
       size:30
     },
     {
       accessorKey: "quantity",
       header: () => <div className="text-right">Quantity</div>,
       cell: (info) =>
-        <span className="flex justify-end"> {info.getValue() as number}</span>,
+        <span className="text-right"> {info.getValue() as number}</span>,
       size: 90,
     },
     {
       accessorKey: "total",
-      header: () => <div className="text-right pr-9">Total</div>,
+      header: () => <div className="text-right ">Total</div>,
       cell: (info) => (
-        <span className="flex justify-end pr-8">{info.getValue() as string}</span>
+        <span className="text-right">{info.getValue() as string}</span>
       ),
       size: 70,
     },
@@ -569,7 +569,7 @@ const Invoices = () => {
             className="w-full overflow-y-auto scrollbar-thin flex-grow"
             style={{ maxHeight: "calc(100vh - 270px)" }}
           >
-            <table className="w-full border-collapse text-[12px] text-white table-fixed">
+            <table className="w-full border-collapse text-[12px] text-white ">
               <tbody>
                 {loading ? (
                   Array.from({ length: 10 })?.map((_, index) => (
