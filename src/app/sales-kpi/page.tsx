@@ -10,6 +10,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { sendApiRequest } from "@/utils/apiUtils";
 import { format } from 'date-fns';
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
+import Tooltip from "@/Components/UI/Toolstips/Tooltip";
 
 const SalesKPI: FC = () => {
   const router = useRouter();
@@ -285,7 +286,8 @@ const fetchDataForItems = async () => {
 
   const totalPayments = tender?.reduce((sum:any, row:any) => sum + (row.payments || 0), 0);
   const totalCommission = tender?.reduce((sum:any, row:any) => sum + ((row.payments || 0) * (row.commission || 0)) / 100, 0);
-  const totalFinalAmount = totalPayments + totalCommission;
+  const totalFinalAmount = tender?.reduce((sum: number, row: any) => sum + (row.payments * row.commission) / 100, 0) ?? 0;
+
 
   const totalQty = items?.reduce((acc:any, row:any) => acc + Number(row.totalqty), 0);
 const totalExtPrice = items?.reduce((acc:any, row:any) => acc + Number(row.totalextprice), 0);
@@ -510,7 +512,7 @@ const hasItems = items && items.length > 0;
                     <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-right border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium ">
                       Amount
                     </th>
-                    <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-center border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
+                    <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-right border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
                       %
                     </th>
                   </tr>
@@ -528,8 +530,8 @@ const hasItems = items && items.length > 0;
                       <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-right border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
                         $ {row.amount}
                       </td>
-                      <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-center border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-                        {row.per}
+                      <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-right border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+                        {(row.per).toFixed(2)}
                       </td>
                     </tr>
                   ))}
@@ -567,7 +569,7 @@ const hasItems = items && items.length > 0;
                       Commission
                     </th>
                     <th className="px-4 py-1.5 border-b text-right border-gray-200 text-[14px]">
-                      Amount
+                      Comm.Amt
                     </th>
                   </tr>
                 </thead>
@@ -587,13 +589,16 @@ const hasItems = items && items.length > 0;
                       className={index % 2 === 0 ? "bg-white" : "bg-[#FAFBFB]"}
                     >
                       <td className="px-4 py-1.5 text-[14px] border-b border-gray-200 text-gray-600">
-                        {row.tendername ? row.tendername : "--"}
+                      <Tooltip position="left" text= {row.tendername.length > 20 ? row.tendername : ""}>
+                                           {row.tendername.length > 20 ? row.tendername.substring(0, 20) + "..." : row.tendername || "--"}
+                      </Tooltip>
+
                       </td>
                       <td className="px-4 py-1.5 text-[14px] border-b text-right border-gray-200 text-[#334155] font-medium">
-                        { row.payments ? "$" + row.payments?.toLocaleString() : "--"}
+                        { row.payments ? "$" +( row.payments)?.toFixed(2) : 0}
                       </td>
                       <td className="px-4 py-1.5 border-b border-gray-200 text-gray-600 text-[14px] font-medium text-right">
-                        {row.commission ? row.commission + "%" : 0 }
+                        {row.commission ? (row.commission)?.toFixed(2) + "%" : 0.00 }
                       </td>
                       <td className="px-4 py-1.5 border-b text-right border-gray-200 text-[#3F526D] text-[14px] font-medium">
                               {row.payments && row.commission !== undefined
@@ -674,7 +679,7 @@ const hasItems = items && items.length > 0;
                         {row.totalqty}
                       </td>
                       <td className="px-4 py-1.5 border-b text-right border-gray-200 text-[14px] font-medium text-[#334155]">
-                        ${row.totalextprice}
+                        ${(row.totalextprice).toFixed(2)}
                       </td>
                     </tr>
                   )))}
