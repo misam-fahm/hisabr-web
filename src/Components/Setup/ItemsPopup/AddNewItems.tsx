@@ -49,6 +49,7 @@ const AddNewItems = ({setAddItems}:any) => {
      toastType: "",
    });
   const name = watch("name");
+  const code=watch("itemcode");
   const units = watch("units");
   const weight = watch("weight");
   const packsize = watch("packsize");
@@ -255,7 +256,7 @@ const AddNewItems = ({setAddItems}:any) => {
 
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex flex-col mt-4 gap-6">
+                <div className="flex flex-col mt-4 gap-5">
                   <div className="w-full flex ">
                     <Dropdown
                       options={categories}
@@ -268,7 +269,7 @@ const AddNewItems = ({setAddItems}:any) => {
                       }}
                       isOpen={isStoreDropdownOpen}
                       toggleOpen={toggleDropdownStore}
-                      widthchange="w-full flex justify-end"
+                      widthchange="w-full"
                       {...register("category", {
                         required: "Category is required",
                       })}
@@ -327,6 +328,24 @@ const AddNewItems = ({setAddItems}:any) => {
                       })}
                       errors={errors.name}
                       placeholder="Name"
+                      variant="outline"
+                      // onChange={(e:any) => handleChange("name", e.target.value)}
+                    />
+                  </div>
+                  <div className="w-full flex">
+                    <InputField
+                      type="text"
+                      label="Item Code"
+                      borderClassName=" border border-gray-300"
+                      labelBackgroundColor="bg-white"
+                      value={code || ""}
+                      
+                      textColor="text-[#636363]"
+                      {...register("code", {
+                        required: "Item code is required",
+                      })}
+                      errors={errors.code}
+                      placeholder="Item code"
                       variant="outline"
                       // onChange={(e:any) => handleChange("name", e.target.value)}
                     />

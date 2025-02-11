@@ -256,8 +256,9 @@ const Invoices = () => {
       const params = new URLSearchParams(window.location.search)
       const fromHome = params.get("fromHome") === "true";
       const fromItemsAnalysis = params.has("fromItemsAnalysis");
+      const fromSaleItems = params.has("fromSaleItems")
 
-      if (fromHome || fromItemsAnalysis) {
+      if (fromHome || fromItemsAnalysis || fromSaleItems) {
         setShowBackIcon(true);
         const currentUrl = window.location.pathname;
         window.history.replaceState({},"",currentUrl) // Update the URL without the query parameter
@@ -393,18 +394,16 @@ const Invoices = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       {uploadPdfloading && ( <Loading /> )}
-      <div>
+      <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
+        <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
         {showBackIcon && (
           <img
             onClick={() => router.back()}
             alt="Back Arrow"
-            className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
+            className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
             src="/images/webbackicon.svg"
           ></img>
         )}
-      </div>
-      <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
-        <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
         <Dropdown
               options={store}
               selectedOption={selectedOption?.name || "Store"}

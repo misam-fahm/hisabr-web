@@ -31,7 +31,7 @@ interface CustomToast {
 }
 
 const Page = () => {
-   const router = useRouter();
+  const router = useRouter();
   const methods = useForm();
   const { watch, setValue, clearErrors } = methods;
 
@@ -77,7 +77,7 @@ const Page = () => {
     try {
       const response = await sendApiRequest({ mode: "getAllStores" });
       if (response?.status === 200) {
-        setStore(response?.data?.stores || []);      
+        setStore(response?.data?.stores || []);
       } else {
         handleError(response?.message);
       }
@@ -94,7 +94,7 @@ const Page = () => {
       const response = await sendApiRequest({ mode: "getUserStore" });
       if (response?.status === 200) {
         setStore(response?.data?.stores || []);
-        if (response?.data?.stores){
+        if (response?.data?.stores) {
           setSelectedOption({
             name: response?.data?.stores[0]?.name,
             id: response?.data?.stores[0]?.id,
@@ -112,8 +112,8 @@ const Page = () => {
     const res: any = await sendApiRequest({
       token: token
     }, `auth/verifyToken`);
-    res?.status === 200 
-      ? setIsVerifiedUser(true) 
+    res?.status === 200
+      ? setIsVerifiedUser(true)
       : router.replace('/login');
   };
 
@@ -123,7 +123,7 @@ const Page = () => {
       router.replace('/login');
     } else {
       verifyToken(token);
-    }    
+    }
   }, []);
 
   useEffect(() => {
@@ -151,22 +151,22 @@ const Page = () => {
         // setData(response?.data?.store[0] || []);
         const storeData = response?.data?.store[0] || {};
         setData(storeData);
-         // Update state based on fetched data
-         setPropertyTax((storeData.property_tax_exp ?? 0).toString());
-         setLabourOperatSalary((storeData.labor_operat_salary_exp ?? 0).toString());
-         setRentMortgage((storeData.rent_mortgage_exp ?? 0).toString());
-         setPayrollTax((storeData.payroll_tax ?? 0).toString())
-         setInsurance((storeData.insurance_exp ?? 0).toString());
-         setTrash((storeData.trash ?? 0).toString());
-         setNUCO2((storeData.nuco2 ?? 0).toString());
-         setInternet((storeData.internet_exp ?? 0).toString());
-         setWaterBill((storeData.water_bill_exp ?? 0).toString());
-         setGasBill((storeData.gas_bill_exp ?? 0).toString());
-         setPAR((storeData.par ?? 0).toString());
-         setRoyalty((storeData.royalty ?? 0).toString());
-         setRepair((storeData.repair_exp ?? 0).toString());
-         setSelectedOption
-         setValue("storeId", storeData.id || 69); 
+        // Update state based on fetched data
+        setPropertyTax((storeData.property_tax_exp ?? 0).toString());
+        setLabourOperatSalary((storeData.labor_operat_salary_exp ?? 0).toString());
+        setRentMortgage((storeData.rent_mortgage_exp ?? 0).toString());
+        setPayrollTax(parseFloat(storeData.payroll_tax ?? 0).toFixed(2))
+        setInsurance((storeData.insurance_exp ?? 0).toString());
+        setTrash((storeData.trash ?? 0).toString());
+        setNUCO2((storeData.nuco2 ?? 0).toString());
+        setInternet((storeData.internet_exp ?? 0).toString());
+        setWaterBill((storeData.water_bill_exp ?? 0).toString());
+        setGasBill((storeData.gas_bill_exp ?? 0).toString());
+        setPAR((storeData.par ?? 0).toString());
+        setRoyalty(parseFloat(storeData.royalty ?? 0).toFixed(2));
+        setRepair((storeData.repair_exp ?? 0).toString());
+        // setSelectedOption
+        setValue("storeId", storeData.id || 69);
         //  setStore((storeData.storename ?? ""));
       } else {
         setCustomToast({
@@ -266,7 +266,7 @@ const Page = () => {
         trash: Number(trash),
         internet: Number(internet),
         par: Number(par),
-        royalty: parseFloat(royalty) || 0, 
+        royalty: parseFloat(royalty) || 0,
         waterbill: Number(waterbill),
         gasbill: Number(gasbill),
         repair: Number(repair),
@@ -329,8 +329,22 @@ const Page = () => {
             </p>
             <div className="below-lg:flex pt-7 below-md:pt-6">
               <p className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366]">
-              Select Store:
+                Select Store:
               </p>
+              {/* <Dropdown
+                options={store}
+                //selectedOption={selectedOption || { name: "Store", id: null }} // Default if no store selected
+                selectedOption={selectedOption?.name || "Store"} // ✅ Extract only the name
+                onSelect={(option: any) => {
+                  setSelectedOption({ name: option.name, id: option.id }); // ✅ Store full object
+                  setValue("store", option.id, { shouldValidate: true }); // ✅ Update form state
+                  setIsStoreDropdownOpen(false);
+                }}
+                isOpen={isStoreDropdownOpen}
+                toggleOpen={toggleStoreDropdown}
+                errors={methods.formState.errors.store}
+              /> */}
+
               <Dropdown
                 options={store}
                 selectedOption={selectedOption?.name || "Store"}
@@ -573,15 +587,15 @@ const Page = () => {
                     textColor="text-[#636363]"
                     placeholder="Royalty"
                     {...methods?.register("royalty", {
-                      maxLength: 5, 
-                      pattern: /^[0-9]*\.?[0-9]*$/,                   
-                     })}
+                      maxLength: 5,
+                      pattern: /^[0-9]*\.?[0-9]*$/,
+                    })}
                     errors={methods.formState.errors.royalty}
                     variant="outline"
                     onChange={(e) =>
                       handleChangeRoyalty(
                         e.target.value          //.replace(/\D/g, "")
-                        .replace(/[^0-9.]/g, "") 
+                          .replace(/[^0-9.]/g, "")
                         //.slice(0, 3)
                       )
                     }
@@ -592,8 +606,8 @@ const Page = () => {
             <div>
               <div className="below-lg:flex below-lg:pt-7 below-md:pt-4">
                 <div className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366] flex flex-col items-center relative right-4">
-                <p>Other Expenses</p>
-                <p >(Monthly):</p>
+                  <p>Other Expenses</p>
+                  <p >(Monthly):</p>
                 </div>
                 <div className="below-lg:w-[25%] below-md:w-full below-md:pt-4">
                   <InputField
