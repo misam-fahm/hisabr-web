@@ -495,7 +495,7 @@ const Sales: FC = () => {
                   value={globalFilter ?? ""}
                   onChange={(e) => setGlobalFilter(e.target.value)}
                   placeholder="Search"
-                  className="w-full rounded cursor-pointer py-[10px] pr-7 pl-3 h-[35px] text-[12px] placeholder:text-[#636363]  focus:outline-none "
+                  className="w-full rounded  py-[10px] pr-7 pl-3 h-[35px] text-[12px] placeholder:text-[#636363]  focus:outline-none "
                 />
                 <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
                   <img
