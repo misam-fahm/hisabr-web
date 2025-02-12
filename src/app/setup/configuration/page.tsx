@@ -263,15 +263,6 @@ const Page = () => {
           toastMessage: "Configuration added successfully!",
           toastType: "success",
         });
-      // setTimeout(() => {
-      //   setCustomToast({
-      //     toastMessage:
-      //       result?.status === 200
-      //         ? "Category added successfully!"
-      //         : "Failed to add category.",
-      //     toastType: result?.status === 200 ? "success" : "error",
-      //   });
-      // }, 0);
         setData(result?.data || {});
         setInsurance(result?.data?.insurance || "");
         setPropertyTax(result?.data?.propertytax || "");
