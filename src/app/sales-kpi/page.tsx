@@ -282,7 +282,7 @@ const fetchDataForItems = async () => {
   };
 
   const handleClickForInvoice = () => {
-    router.push("/invoices?fromItemsAnalysis=true"); 
+    router.push("/invoices?fromSaleItems=true"); 
   };
 
   const totalPayments = tender?.reduce((sum:any, row:any) => sum + (row.payments || 0), 0);

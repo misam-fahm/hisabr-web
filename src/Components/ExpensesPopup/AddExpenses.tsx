@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/UI/Themes/DropDown";
@@ -10,6 +10,7 @@ import { InputField } from "../UI/Themes/InputField";
 import CustomDatePicker from "../UI/Themes/CustomDatePicker";
 import { sendApiRequest } from "@/utils/apiUtils";
 import ToastNotification, { ToastNotificationProps } from "../UI/ToastNotification/ToastNotification";
+import router from "next/router";
 
 type ExpenseFormInputs = {
   expenseName: string;
@@ -40,6 +41,7 @@ const AddExpenses = ({ setAddExpenses }: any) => {
   const { control, handleSubmit, register, formState: { errors }, } = useForm<ExpenseFormInputs>();
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [isExpenseDropdownOpen, setIsExpenseDropdownOpen] = useState(false);
   const selectedStore = watch("store");
@@ -48,11 +50,11 @@ const AddExpenses = ({ setAddExpenses }: any) => {
   // const [isExpenseFetched, setIsExpenseFetched] = useState(false);
   const [expensetypes, setExpensetypes] = useState<any[]>([]);
   const [store, setStore] = useState<any[]>([]);
+  const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
   const [customToast, setCustomToast] = useState<CustomToast>({
     toastMessage: "",
     toastType: "",
   });
-
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -61,6 +63,13 @@ const AddExpenses = ({ setAddExpenses }: any) => {
   const toggleExpenseDropdown = () => {
     setIsExpenseDropdownOpen((prev) => !prev);
     setIsStoreDropdownOpen(false);
+  };
+
+  const handleError = (message: string) => {
+    setCustomToast({
+      toastMessage: message,
+      toastType: "error",
+    });
   };
 
 
@@ -84,6 +93,53 @@ const AddExpenses = ({ setAddExpenses }: any) => {
     methods.setValue("amount", data);
   };
 
+  const verifyToken = async (token: string) => {
+    const res: any = await sendApiRequest({
+      token: token
+    }, `auth/verifyToken`);
+    res?.status === 200
+      ? setIsVerifiedUser(true)
+      : router.replace('/login');
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.replace('/login');
+    } else {
+      verifyToken(token);
+    }
+  }, []);
+
+  const getUserStore = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getUserStore" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+        if (response?.data?.stores) {
+          setSelectedOption({
+            name: response?.data?.stores[0]?.name,
+            id: response?.data?.stores[0]?.id,
+          });
+        }
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+  };
+  useEffect(() => {
+    if (isVerifiedUser) {
+      // const currentYear = new Date().getFullYear();
+      // setStartDate(new Date(`${currentYear}-01-01`));
+      // setEndDate(new Date(`${currentYear}-12-31`));
+      getUserStore();
+      // fetchDropdownData();
+    }
+  }, [isVerifiedUser]);
+
+
   const openModal = async () => {
     setIsOpen(true);
     methods.reset({
@@ -98,24 +154,6 @@ const AddExpenses = ({ setAddExpenses }: any) => {
 
     setDescription("");
     setAmount("");
-
-
-    try {
-      const response: any = await sendApiRequest({ mode: "getAllStores" });
-      if (response?.status === 200) {
-        setStore(response?.data?.stores || []);
-        // setIsStoreFetched(true);
-      } else {
-        setCustomToast({
-          ...customToast,
-          toastMessage: response?.message,
-          toastType: "error",
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
-    }
-
 
 
     try {
@@ -155,6 +193,7 @@ const AddExpenses = ({ setAddExpenses }: any) => {
       expensedate: format(data?.date, "yyyy-MM-dd"),
       expenseid: data?.expenseTypeId,
       storeid: data?.storeId,
+      // storeid: selectedOption?.id || 69,
       description: data?.description,
       amount: Number(data?.amount),
     };
@@ -256,13 +295,13 @@ const AddExpenses = ({ setAddExpenses }: any) => {
                   {/* Store Input Field */}
                   <Dropdown
                     options={store}
-                    selectedOption={selectedStore || "Store"}
-                    onSelect={(selectedOption) => {
-                      setValue("store", selectedOption.name);
-                      setValue("storeId", selectedOption.id);
+                    selectedOption={selectedOption?.name || "Store"}
+                    onSelect={(selectedOption: any) => {
+                      setSelectedOption({
+                        name: selectedOption.name,
+                        id: selectedOption.id,
+                      });
                       setIsStoreDropdownOpen(false);
-                      clearErrors("store");
-
                     }}
                     isOpen={isStoreDropdownOpen}
                     toggleOpen={toggleStoreDropdown}

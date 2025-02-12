@@ -342,18 +342,16 @@ const Expenses: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <>
-        <div>
-          {showBackIcon && (
-            <img
-              onClick={() => router.back()}
-              alt="Back Arrow"
-              className="w-7 h-7 my-4 below-md:hidden cursor-pointer"
-              src="/images/webbackicon.svg"
-            ></img>
-          )}
-        </div>
         <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
           <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
+          {showBackIcon && (
+          <img
+            onClick={() => router.back()}
+            alt="Back Arrow"
+            className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
+            src="/images/webbackicon.svg"
+          ></img>
+        )}
           <Dropdown
               options={store}
               selectedOption={selectedOption?.name || "Store"}

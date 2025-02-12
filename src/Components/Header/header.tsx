@@ -68,7 +68,10 @@ const Header: React.FC = () => {
               newTitle = "Items";
             } else if (params.get("fromHome") === "true") {
               newTitle = "Cost";
-            } else {
+            } 
+            else if (params.get("fromHome") === "true") {
+              newTitle = "Invoices";
+             }else {
               newTitle = "Invoices";
             }
           }
