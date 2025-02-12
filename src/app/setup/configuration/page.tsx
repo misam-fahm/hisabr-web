@@ -73,122 +73,9 @@ const Page = () => {
     });
   };
 
-  const fetchDropdownData = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getAllStores" });
-      if (response?.status === 200) {
-        setStore(response?.data?.stores || []);
-      } else {
-        handleError(response?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
-    }
-  };
-  // useEffect(() => {
-  //   fetchDropdownData();
-  // }, []);
-
-  const getUserStore = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getUserStore" });
-      if (response?.status === 200) {
-        setStore(response?.data?.stores || []);
-        if (response?.data?.stores) {
-          setSelectedOption({
-            name: response?.data?.stores[0]?.name,
-            id: response?.data?.stores[0]?.id,
-          });
-        }
-      } else {
-        handleError(response?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
-    }
-  };
-
-  const verifyToken = async (token: string) => {
-    const res: any = await sendApiRequest({
-      token: token
-    }, `auth/verifyToken`);
-    res?.status === 200
-      ? setIsVerifiedUser(true)
-      : router.replace('/login');
-  };
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.replace('/login');
-    } else {
-      verifyToken(token);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isVerifiedUser) {
-      // const currentYear = new Date().getFullYear();
-      // setStartDate(new Date(`${currentYear}-01-01`));
-      // setEndDate(new Date(`${currentYear}-12-31`));
-      getUserStore();
-      // fetchDropdownData();
-    }
-  }, [isVerifiedUser]);
-
-
-  const fetchData = async (storeId) => {
-    if (!storeId) return; // Don't fetch data if storeId is not set
-    setLoading(true);
-    try {
-      const response: any = await sendApiRequest({
-        mode: "getStoreConfig",
-        //storeid: storeId,
-        storeid: selectedOption?.id || 69,
-        // storeid: methods.watch("storeId") || 69,
-      });
-      if (response?.status === 200) {
-        // setData(response?.data?.store[0] || []);
-        const storeData = response?.data?.store[0] || {};
-        setData(storeData);
-        // Update state based on fetched data
-        setPropertyTax((storeData.property_tax_exp ?? 0).toString());
-        setLabourOperatSalary((storeData.labor_operat_salary_exp ?? 0).toString());
-        setRentMortgage((storeData.rent_mortgage_exp ?? 0).toString());
-        setPayrollTax(parseFloat(storeData.payroll_tax ?? 0).toFixed(2))
-        setInsurance((storeData.insurance_exp ?? 0).toString());
-        setTrash((storeData.trash ?? 0).toString());
-        setNUCO2((storeData.nuco2 ?? 0).toString());
-        setInternet((storeData.internet_exp ?? 0).toString());
-        setWaterBill((storeData.water_bill_exp ?? 0).toString());
-        setGasBill((storeData.gas_bill_exp ?? 0).toString());
-        setPAR((storeData.par ?? 0).toString());
-        setRoyalty(parseFloat(storeData.royalty ?? 0).toFixed(2));
-        setRepair((storeData.repair_exp ?? 0).toString());
-        // setSelectedOption
-        setValue("storeId", storeData.id || 69);
-        //  setStore((storeData.storename ?? ""));
-      } else {
-        setCustomToast({
-          ...customToast,
-          toastMessage: response?.message,
-          toastType: "error",
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    fetchData(selectedOption?.id || 69); // Fetch data when storeId changes
-  }, [selectedOption]);
-
-
   const handleChangePayrollTax = (data: any) => {
     setPayrollTax(data); // Update local state
-    methods.setValue("payrolltax", data); // Update form state in react-hook-form
+    methods.setValue("payrolltax", parseFloat(data).toFixed(2), { shouldValidate: true }); // Update form state in react-hook-form
   };
 
   const handleChangesetLabourSalary = (data: any) => {
@@ -242,19 +129,111 @@ const Page = () => {
   };
   const handleChangeRoyalty = (data: any) => {
     setRoyalty(data); // Update local state
-    methods.setValue("royalty", data); // Update form state in react-hook-form
+    methods.setValue("royalty", parseFloat(data).toFixed(2), { shouldValidate: true }); // Update form state in react-hook-form
   };
 
   const handleChangeRepair = (data: any) => {
     setRepair(data); // Update local state
     methods.setValue("repair", data); // Update form state in react-hook-form
   };
-  //console.log("selectedStore", selectedStore);
 
-  const onSubmit = async (data: any) => {
-    console.log(data);
+  const getUserStore = async () => {
     try {
-      setCustomToast({ toastMessage: "", toastType: "" });
+      const response = await sendApiRequest({ mode: "getUserStore" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+        if (response?.data?.stores) {
+          setSelectedOption({
+            name: response?.data?.stores[0]?.name,
+            id: response?.data?.stores[0]?.id,
+          });
+        }
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+  };
+
+  const verifyToken = async (token: string) => {
+    const res: any = await sendApiRequest({
+      token: token
+    }, `auth/verifyToken`);
+    res?.status === 200
+      ? setIsVerifiedUser(true)
+      : router.replace('/login');
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.replace('/login');
+    } else {
+      verifyToken(token);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isVerifiedUser) {
+      getUserStore();
+    }
+  }, [isVerifiedUser]);
+
+
+  const fetchData = async (storeId) => {
+    if (!storeId) return; // Don't fetch data if storeId is not set
+    setLoading(true);
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getStoreConfig",
+        storeid: storeId || 69,
+        // storeid: methods.watch("storeId") || 69,
+      });
+      if (response?.status === 200) {
+        const storeData = response?.data?.store[0] || {};
+        setData(storeData);
+        setPropertyTax((storeData.property_tax_exp ?? 0).toString());
+        setLabourOperatSalary((storeData.labor_operat_salary_exp ?? 0).toString());
+        setRentMortgage((storeData.rent_mortgage_exp ?? 0).toString());
+        setPayrollTax(parseFloat(storeData.payroll_tax ?? 0).toFixed(2))
+        setInsurance((storeData.insurance_exp ?? 0).toString());
+        setTrash((storeData.trash ?? 0).toString());
+        setNUCO2((storeData.nuco2 ?? 0).toString());
+        setInternet((storeData.internet_exp ?? 0).toString());
+        setWaterBill((storeData.water_bill_exp ?? 0).toString());
+        setGasBill((storeData.gas_bill_exp ?? 0).toString());
+        setPAR((storeData.par ?? 0).toString());
+        setRoyalty(parseFloat(storeData.royalty ?? 0).toFixed(2));
+        setRepair((storeData.repair_exp ?? 0).toString());
+        setValue("storeId", storeData.id || 69);
+      } else {
+        setCustomToast({
+          ...customToast,
+          toastMessage: response?.message,
+          toastType: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    methods.setValue("store",selectedOption?.id || 69)
+    fetchData(selectedOption?.id || 69); // Fetch data when storeId changes
+  }, [selectedOption]);
+
+  
+  const onSubmit = async (data: any) => {
+    console.log("Submitting Data:", data);
+    try {
+      setCustomToast({
+        toastMessage: "Updating Configuration...",
+        toastType: "info",
+      });
+
       const jsonData: JsonData = {
         mode: "updateStoreConfig",
         insurance: Number(insurance),
@@ -273,18 +252,18 @@ const Page = () => {
         storeid: Number(data.storeId),
       };
 
+
       const result: any = await sendApiRequest(jsonData);
-      setTimeout(() => {
-        setCustomToast({
-          toastMessage:
-            result?.status === 200
-              ? "Category added successfully!"
-              : "Failed to add category.",
-          toastType: result?.status === 200 ? "success" : "error",
-        });
-      }, 0);
 
       if (result?.status === 200) {
+        console.log("Updated Data:", result?.data);
+
+
+        setCustomToast({
+          toastMessage: "Configuration added successfully!",
+          toastType: "success",
+        });
+        setData(result?.data || {});
         setInsurance(result?.data?.insurance || "");
         setPropertyTax(result?.data?.propertytax || "");
         setRentMortgage(result?.data?.rentMortgage || "");
@@ -298,14 +277,20 @@ const Page = () => {
         setWaterBill(result?.data?.waterbill || "");
         setGasBill(result?.data?.gasbill || "");
         setRepair(result?.data?.repair || "");
-      }
-    } catch (error: any) {
-      setTimeout(() => {
+        fetchData(data.storeId);
+      }else {
+        console.error("API Error:", result);
         setCustomToast({
-          toastMessage: error?.message,
+          toastMessage: result?.message || "Failed to update configuration.",
           toastType: "error",
         });
-      }, 0);
+      }
+    } catch (error: any) {
+      console.error("Catch Error:", error);
+      setCustomToast({
+        toastMessage: error?.message || "Something went wrong.",
+        toastType: "error",
+      });
     }
   };
 
