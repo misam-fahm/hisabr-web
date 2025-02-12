@@ -117,7 +117,7 @@ export function InputField(props: any): JSX.Element {
                       : "focus:border-white"
               } ${isDisabled && "cursor-not-allowed opacity-90"} focus:outline-none`}
             />
-            {rightIcon}
+          <div className="mr-3"> {rightIcon} </div> 
 
             {/* <label
                     className={`absolute left-2 top-1/2 transform -translate-y-1/2 px-1 text-sm bg-white transition-all ${

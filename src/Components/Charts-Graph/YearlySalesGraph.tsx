@@ -1,26 +1,35 @@
 "use client";
 
+import { AnyCnameRecord } from "dns";
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
-const data = [
-  { name: "Beverage", value: 200000 },
-  { name: "Cakes", value: 150000 },
-  { name: "Food", value: 100000 },
-  { name: "Novelties-Boxed", value: 80000 },
-  { name: "Soft Serve", value: 121645 }, // Total sums to 651,645
-];
+const colorMapping: { [key: string]: string } = {
+  "Beverages": "#376066CC",
+  "Seafood": "#DEC560",
+  "Frozen": "#5B7993",
+  "Meat": "red",
+  "Dessert": "brown",
+  "Grocery": "#796C79",
+  "Packaged & Other": "black",
+  "Dairy": "gray",
+  "Produce": "#796C79",
+  "Cleaning Products": "lightblue",
+  "Tortilla": "green",
+};
 
-const COLORS = ["#796C72", "#376066CC", "#DEC560", "#5B7993", "#C87F5E"];
+const DonutChart = ({ enhancedItems = [], totalExtPrice ,totalQty }: any) => {
+  const data: any = enhancedItems?.map((item: any) => ({
+    name: item.itemname, 
+    value: item.totalextprice, // Keep value as a number
+  })) || [];
 
-const DonutChart = () => {
-  const total = data.reduce((acc, item) => acc + item.value, 0);
+  if (data.length === 0) return <div>No data available</div>;
 
   return (
-    <div className="w-full h-[320px] flex justify-center items-center relative">
+    <div className="w-full h-auto flex justify-center items-center relative">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart className="relative z-30">
-          {/* Donut Chart */}
           <Pie
             data={data}
             cx="50%"
@@ -33,14 +42,12 @@ const DonutChart = () => {
             tabIndex={-1}
             style={{ outline: "none" }}
           >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-              />
+            {data.map((entry: any, index: any) => (
+              <Cell key={`cell-${index}`} fill={colorMapping[entry.name] || "#ccc"} />
             ))}
           </Pie>
           <Tooltip
+            formatter={(value: number) => [`$${value.toFixed(2)}`, "Sales"]}
             contentStyle={{
               backgroundColor: "#fff",
               outline: "none",
@@ -95,7 +102,7 @@ const DonutChart = () => {
             zIndex: "10",
           }}
         >
-          {total.toLocaleString()}
+          ${totalExtPrice?.toLocaleString()}
         </div>
       </div>
     </div>
@@ -103,3 +110,5 @@ const DonutChart = () => {
 };
 
 export default DonutChart;
+
+
