@@ -305,7 +305,7 @@ const summary: FC = () => {
           </div>
 
           <div className="flex flex-row below-md:flex-col tablet:flex-col w-full mt-6 below-md:mt-3 mb-9">
-            <div className="flex flex-col w-[65%] below-md:w-[100%] tablet:w-[100%]">
+            <div className="flex flex-col w-full below-md:w-[100%] tablet:w-[100%]">
               <div className="bg-white shadow-md rounded-md">
                 <div className="flex flex-row justify-between below-md:mx-3 mx-7 mt-6 mb-2">
                   {/* Sales Text */}
@@ -401,11 +401,11 @@ const summary: FC = () => {
                 </div>
               </div>
             </div>
-            <div className="w-[35%] below-md:w-[100%] bg-white ml-6 below-md:ml-0 tablet:ml-0 tablet:mt-6 tablet:w-full below-md:mt-3 shadow-md rounded-md">
+            {/* <div className="w-[35%] below-md:w-[100%] bg-white ml-6 below-md:ml-0 tablet:ml-0 tablet:mt-6 tablet:w-full below-md:mt-3 shadow-md rounded-md">
               <div className="flex flex-col">
-                {/* Header Section */}
+            
                 <div className="flex flex-row justify-between px-6 pt-6 items-start">
-                  {/* Sales Information */}
+             
                   <div>
                     <p className="text-[#393E47] font-bold text-[16px]">
                       Yearly Sales
@@ -425,7 +425,7 @@ const summary: FC = () => {
                     </div>
                   </div>
 
-                  {/* Dropdown */}
+          
                   <div className="mb-6 relative z-[40] below-md:w-[100%] below-md:max-w-[35%]">
                     <Dropdown
                       className="relative below-md:w-full rounded"
@@ -440,7 +440,7 @@ const summary: FC = () => {
                   </div>
                 </div>
 
-                {/* Pie Chart Section */}
+                
                 <div className="-my-5">
                   <YearlySalesGraph />
                 </div>
@@ -453,7 +453,7 @@ const summary: FC = () => {
                           key={index}
                           className="flex px-[15%] items-center justify-between py-2"
                         >
-                          {/* Color Circle */}
+                         
                           <div className="flex items-center">
                             <span
                               className="inline-block w-3 h-3 rounded-full mr-3"
@@ -463,7 +463,7 @@ const summary: FC = () => {
                               {item.label}
                             </span>
                           </div>
-                          {/* Value */}
+                         
                           <span className="font-semibold text-[#0A0A0A] text-[14px]">
                             {item.value}
                           </span>
@@ -473,7 +473,7 @@ const summary: FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

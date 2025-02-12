@@ -58,6 +58,13 @@ const Expenses: FC = () => {
     type: "",
   });
 
+  useEffect(() => {
+    if (startDate && endDate && selectedOption ) {
+      fetchData();
+    }
+  }, [selectedOption , globalFilter]);
+
+
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "date",
@@ -477,51 +484,47 @@ const Expenses: FC = () => {
               style={{ maxHeight: "calc(100vh - 270px)" }}
             >
               <table className="w-full border-collapse text-[12px] text-white table-fixed">
-                <tbody>
-                  {loading ? (
-                    Array.from({ length: 10 })?.map((_, index) => (
-                      <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
-                        {columns.map((column, colIndex) => (
-                          <td
-                            key={colIndex}
-                            className="px-4 py-1.5"
-                            style={{ width: `${column.size}px` }}
-                          >
-                            <Skeleton height={30} />
-                          </td>
-                        ))}
-                      </tr>
-                    ))
-                  ) : table.getRowModel().rows.length === 0 ? (
-                    /* Show No Data Found Message If No Data Available */
-                    <tr>
-                      <td colSpan={columns.length} className="py-6 text-center">
-                        <NoDataFound />
-                      </td>
-                    </tr>
-                  ) : 
-                    table.getRowModel().rows.map((row) => (
-                      <tr
-                        key={row.id}
-                        className={
-                          row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                        }
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <td
-                            key={cell.id}
-                            className="px-4 py-1.5 text-[#636363] text-[14px] "
-                            style={{ width: `${cell.column.getSize()}px` }}
-                          >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                </tbody>
+              <tbody>
+  {loading ? (
+    /* Show skeleton loaders while loading */
+    Array.from({ length: 10 })?.map((_, index) => (
+      <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+        {columns.map((column, colIndex) => (
+          <td
+            key={colIndex}
+            className="px-4 py-1.5"
+            style={{ width: `${column.size}px` }}
+          >
+            <Skeleton height={30} />
+          </td>
+        ))}
+      </tr>
+    ))
+  ) : data === null ? (
+    /* Show No Data Found message only if not loading */
+    <tr>
+      <td colSpan={columns.length} className="py-6 text-center">
+        <NoDataFound />
+      </td>
+    </tr>
+  ) : (
+    /* Render actual data */
+    table.getRowModel().rows.map((row) => (
+      <tr key={row.id} className={row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+        {row.getVisibleCells().map((cell) => (
+          <td
+            key={cell.id}
+            className="px-4 py-1.5 text-[#636363] text-[14px]"
+            style={{ width: `${cell.column.getSize()}px` }}
+          >
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </td>
+        ))}
+      </tr>
+    ))
+  )}
+</tbody>
+
               </table>
             </div>
           </div>

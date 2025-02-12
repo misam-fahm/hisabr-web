@@ -12,6 +12,7 @@ const LoginForm = () => {
   const methods = useForm();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [customToast, setCustomToast] = useState({
     toastMessage: "",
     toastType: "",
@@ -40,7 +41,7 @@ const LoginForm = () => {
           };
           const result: any = await sendApiRequest(val, `auth/login`);
           if (result?.status === 200 && result?.data?.token) {
-            localStorage.setItem('token', result?.data?.token);
+            localStorage.setItem("token", result?.data?.token);
             router.replace("/");
           } else {
             // router.push("/login");
@@ -110,8 +111,14 @@ const LoginForm = () => {
                 <InputField
                   type="email"
                   label="Email"
-                  value={email}
-                    labelBackgroundColor="bg-[#0F1044]"
+                  value={email ? email: ""}
+                  className="bg-gray-100 focus:bg-gray-100 autofill:bg-gray-100" // Custom class for autofill
+                  style={{
+                    backgroundColor: "#f3f4f6",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "white",
+                  }}
+                  labelBackgroundColor="bg-[#0F1044]"
                   {...methods.register("email", {
                     required: "Email is required",
                     pattern: {
@@ -121,37 +128,52 @@ const LoginForm = () => {
                     onChange: (e) => setEmail(e.target.value),
                   })}
                   errors={methods.formState.errors.email}
-                   textColor="text-white"
+                  textColor="text-white"
                   placeholder="Enter email"
                   variant="outline"
                 />
               </div>
 
               <div className="w-[400px] below-md:w-full ">
-              <InputField
-  type="text" // Changed from "password" to "text"
-  label="Password"
-  value={password}
-  {...methods.register("password", {
-    required: "Password is required",
-    minLength: {
-      value: 8,
-      message: "Password must be at least 8 characters long",
-    },
-    maxLength: {
-      value: 20,
-      message: "Password cannot exceed 20 characters",
-    },
-    pattern: {
-      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      message: "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
-    },
-    onChange: (e) => setPassword(e.target.value),
-  })}
-  errors={methods.formState.errors.password} // Fixed casing
-  placeholder="Enter Password"
-  variant="outline"
-/>
+                <InputField
+                  type={showPassword ? "text" : "password"} // Changed from "password" to "text"
+                  label="Password"
+                  value={password}
+                  className="bg-gray-100 focus:bg-gray-100 autofill:bg-gray-100" // Custom class for autofill
+                  style={{
+                    backgroundColor: "#f3f4f6",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "white",
+                  }}
+                  {...methods.register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 characters long",
+                    },
+                    maxLength: {
+                      value: 20,
+                      message: "Password cannot exceed 20 characters",
+                    },
+                    pattern: {
+                      value:
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                      message:
+                        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+                    },
+                    onChange: (e) => setPassword(e.target.value),
+                  })}
+                  rightIcon={
+                    <img
+                      src="/images/fieldeyeicon.svg"
+                      onClick={() => setShowPassword((prev: any) => !prev)}
+                      className="cursor-pointer"
+                    />
+                  }
+                  errors={methods.formState.errors.password} // Fixed casing
+                  placeholder="Enter Password"
+                  variant="outline"
+                />
 
                 <div className="flex justify-end mt-5">
                   <p

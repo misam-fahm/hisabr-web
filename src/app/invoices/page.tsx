@@ -584,7 +584,7 @@ const Invoices = () => {
                       ))}
                     </tr>
                   ))
-                ) : table.getRowModel().rows.length === 0 ? (
+                ) : data === null ? (
                   /* Show No Data Found Message If No Data Available */
                   <tr>
                     <td colSpan={columns.length} className="py-6 text-center">

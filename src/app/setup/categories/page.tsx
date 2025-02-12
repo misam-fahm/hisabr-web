@@ -53,14 +53,14 @@ const Page: FC = () => {
       cell: (info) => <span>{info.getValue() as string}</span>,
       size: 250,
     },
-    {
-      accessorKey: "itemcount",
-      header: () => <div className="text-right mr-14">No. of Items</div>,
-      cell: (info) => (
-        <div className="text-right mr-14">{info.getValue() as number}</div>
-      ),
-      size: 150,
-    },
+    // {
+    //   accessorKey: "itemcount",
+    //   header: () => <div className="text-right mr-14">No. of Items</div>,
+    //   cell: (info) => (
+    //     <div className="text-right mr-14">{info.getValue() as number}</div>
+    //   ),
+    //   size: 150,
+    // },
     {
       id: "edit",
       header: () => <div className=" flex justify-center items-center"></div>,
@@ -111,7 +111,7 @@ const Page: FC = () => {
         const response: any = await sendApiRequest({
           mode: "getCategories",
           page: table.getState().pagination.pageIndex + 1,
-          limit: table.getState().pagination.pageSize,
+          limit: 2000000,
         });
 
         if (response?.status === 200) {
@@ -192,12 +192,12 @@ const Page: FC = () => {
                   <span className="text-[14px]"> {row?.description}</span>
                 </div>
 
-                <div className="mt-1 flex justify-between">
+                {/* <div className="mt-1 flex justify-between">
                   <span className=" text-[#636363] text-[13px] mb-2">
                     No. of Items
                   </span>{" "}
                   <span className="text-[14px]"> {row?.noOfItems}</span>
-                </div>
+                </div> */}
               </div>
             ))
           ) : (
@@ -300,9 +300,9 @@ const Page: FC = () => {
           </div>
         </div>
       </div>
-      <div className="mt-4 below-md:hidden">
+      {/* <div className="mt-4 below-md:hidden">
       <Pagination table={table} totalItems={totalItems} />
-      </div>
+      </div> */}
     </main>
   );
 };
