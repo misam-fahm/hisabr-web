@@ -4,7 +4,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { InputField } from "@/Components/UI/Themes/InputField";
 import Dropdown from "@/Components/UI/Themes/DropDown";
-import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import { sendApiRequest } from "@/utils/apiUtils";
 
 interface JsonData {
@@ -229,10 +229,10 @@ const Page = () => {
   const onSubmit = async (data: any) => {
     console.log("Submitting Data:", data);
     try {
-      setCustomToast({
-        toastMessage: "Updating Configuration...",
-        toastType: "info",
-      });
+      // setCustomToast({
+      //   toastMessage: "Updating Configuration...",
+      //   toastType: "info",
+      // });
 
       const jsonData: JsonData = {
         mode: "updateStoreConfig",
@@ -298,16 +298,20 @@ const Page = () => {
 
   return (
     isVerifiedUser && <main
-      className="max-h-[calc(100vh-50px)] below-lg:px-4 overflow-auto "
+      className="max-h-[calc(100vh-50px)] below-lg:px-4 below-md:px-2 overflow-auto "
       style={{ scrollbarWidth: "thin" }}
     >
+      <ToastNotification
+        message={customToast.toastMessage}
+        type={customToast.toastType}
+      />
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="w-full flex flex-col overflow-auto below-md:h-auto p-5 "
+          className="w-full flex flex-col overflow-auto p-2 below-md:p-3"
         >
           {/* Desktop View */}
-          <div className="bg-white px-8 py-6 rounded-lg shadow-lg">
+          <div className="bg-white px-8 below-md:px-5 py-4 rounded-lg shadow-lg">
             <p className="text-[12px] font-normal mt-1 below-md:mt-0 text-[#5E6366]">
               Streamline and configure operational expenses for accurate
               tracking
@@ -316,20 +320,6 @@ const Page = () => {
               <p className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366]">
                 Select Store:
               </p>
-              {/* <Dropdown
-                options={store}
-                //selectedOption={selectedOption || { name: "Store", id: null }} // Default if no store selected
-                selectedOption={selectedOption?.name || "Store"} // ✅ Extract only the name
-                onSelect={(option: any) => {
-                  setSelectedOption({ name: option.name, id: option.id }); // ✅ Store full object
-                  setValue("store", option.id, { shouldValidate: true }); // ✅ Update form state
-                  setIsStoreDropdownOpen(false);
-                }}
-                isOpen={isStoreDropdownOpen}
-                toggleOpen={toggleStoreDropdown}
-                errors={methods.formState.errors.store}
-              /> */}
-
               <Dropdown
                 options={store}
                 selectedOption={selectedOption?.name || "Store"}
@@ -590,9 +580,10 @@ const Page = () => {
             </div>
             <div>
               <div className="below-lg:flex below-lg:pt-7 below-md:pt-4">
-                <div className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366] flex flex-col items-center relative right-4">
-                  <p>Other Expenses</p>
-                  <p >(Monthly):</p>
+                <div className="below-lg:w-[16%] text-[13px] font-medium text-[#5E6366] below-lg:flex below-lg:flex-col below-lg:items-center relative below-lg:right-4">
+                  <p className="below-lg:hidden">Other Expenses(Monthly):</p>
+                  <p className="below-md:hidden">Other Expenses</p>
+                  <p className="below-md:hidden">(Monthly):</p>
                 </div>
                 <div className="below-lg:w-[25%] below-md:w-full below-md:pt-4">
                   <InputField
