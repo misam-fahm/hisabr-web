@@ -168,7 +168,7 @@ const Invoices = () => {
       });
   
       if (response?.status === 200) {
-        setData(response?.data?.invoices || []);
+        setData(response?.data?.invoices);
         if (response?.data?.total > 0) {
           setTotalItems(response?.data?.total || 0);
         }

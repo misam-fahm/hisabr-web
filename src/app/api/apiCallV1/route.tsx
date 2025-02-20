@@ -47,7 +47,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (result[0][0]?.error_message) {
       return new NextResponse(
         JSON.stringify({ status: 400, error: result[0][0]?.error_message }),
-        { status: 400 }
+        { status: 200 }
       );
     }
 
