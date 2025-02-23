@@ -22,7 +22,7 @@ import {
 import Pagination from "@/Components/UI/Pagination/Pagination";
 import { sendApiRequest } from "@/utils/apiUtils";
 import { format } from 'date-fns';
-import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import UploadInvoicepopup from "@/Components/Invoice/UploadInvoicePopup";
 import Loading from "@/Components/UI/Themes/Loading";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
@@ -117,7 +117,6 @@ const Invoices = () => {
     },
   ];
 
-
   const navigateToInvoice = (invoiceId: any) => {
     const encodedId = btoa(invoiceId);
     const urlSafeEncodedId = encodedId?.replace(/\+/g, '-')?.replace(/\//g, '_')?.replace(/=+$/, '');
@@ -129,8 +128,6 @@ const Invoices = () => {
       fetchData();
     }
   }, [selectedOption , globalFilter]);
-
-  
   
   const table = useReactTable({
     data: data,
@@ -188,7 +185,6 @@ const Invoices = () => {
   useEffect(() => {
     fetchData();
   }, [pageIndex, pageSize]);
-
 
   const getUserStore = async () => {
     try {
@@ -286,7 +282,7 @@ const Invoices = () => {
     setUploadPdfLoading(true); // Show loader during upload
   
     try {
-      console.log("Selected file:", file.name);
+      // console.log("Selected file:", file.name);
       const formData = new FormData();
       formData.append("file", file);
   
@@ -299,7 +295,7 @@ const Invoices = () => {
       );
   
       const responseData = await response.json();
-      console.log("Response:", responseData);
+      // console.log("Response:", responseData);
   
       if (!response.ok) {
         throw new Error("Failed to upload file.");
@@ -312,35 +308,50 @@ const Invoices = () => {
           storename: responseData?.invoice_details?.store_name
         });
       }
-      const jsonData: any = {
-        mode: "insertInvoice",
-        invoicenumber: responseData?.invoice_details?.invoice_number,
-        invoicedate: moment(moment(responseData?.invoice_details?.invoice_date, "MM/DD/YYYY").toDate()).format("YYYY-MM-DD"),
-        storename: responseData?.invoice_details?.store_name,
-        duedate: moment(moment(responseData?.invoice_details?.due_date, "MM/DD/YYYY").toDate()).format("YYYY-MM-DD"),
-        total: responseData?.invoice_details?.invoice_total,
-        sellername: responseData?.invoice_details?.seller_name,
-        quantity: responseData?.invoice_details?.qty_ship_total,
-        producttotal: responseData?.invoice_details?.product_total,
-        subtotal: responseData?.invoice_details?.sub_total,
-        misc: responseData?.invoice_details?.misc,
-        tax: responseData?.invoice_details?.tax,
-        storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null
-      };
-  
-      const result: any = await sendApiRequest(jsonData);
-  
-      if (result?.status === 200) {
-        const val: any = {
-          invoiceDetails: responseData?.invoice_items || [],
+
+      const checkInvoiceUpload: any = await sendApiRequest({
+        mode: "checkInvoiceExist",
+        invoiceno: responseData?.invoice_details?.invoice_number,
+        storename: responseData?.invoice_details?.store_name
+      });
+
+      if (checkInvoiceUpload?.status === 200) {
+        const jsonData: any = {
+          mode: "insertInvoice",
+          invoicenumber: responseData?.invoice_details?.invoice_number,
+          invoicedate: moment(moment(responseData?.invoice_details?.invoice_date, "MM/DD/YYYY").toDate()).format("YYYY-MM-DD"),
+          storename: responseData?.invoice_details?.store_name,
+          duedate: moment(moment(responseData?.invoice_details?.due_date, "MM/DD/YYYY").toDate()).format("YYYY-MM-DD"),
+          total: responseData?.invoice_details?.invoice_total,
+          sellername: responseData?.invoice_details?.seller_name,
+          quantity: responseData?.invoice_details?.qty_ship_total,
+          producttotal: responseData?.invoice_details?.product_total,
+          subtotal: responseData?.invoice_details?.sub_total,
+          misc: responseData?.invoice_details?.misc,
+          tax: responseData?.invoice_details?.tax,
+          storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null
         };
-        await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
-        fetchData(); 
+    
+        const result: any = await sendApiRequest(jsonData);    
+        if (result?.status === 200) {
+          const val: any = {
+            invoiceDetails: responseData?.invoice_items || [],
+          };
+          await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
+          fetchData(); 
+        } else {
+          setCustomToast({
+            message: "Failed to insert invoice details",
+            type: "error",
+          });
+        }
       } else {
-        setCustomToast({
-          message: "Failed to insert invoice details",
-          type: "error",
-        });
+        setTimeout(() => {
+          setCustomToast({
+            message: "Invoice already uploaded",
+            type: "error",
+          });
+        }, 0);
       }
     } catch (error) {
       console.error("Error uploading file:", error);
@@ -364,8 +375,6 @@ const Invoices = () => {
     });
   };
 
-
-
   const searchInputRef = useRef<HTMLInputElement>(null);
   const handleClick = () => {
     // Focus the input field when the image is clicked
@@ -373,7 +382,6 @@ const Invoices = () => {
       searchInputRef.current.focus();
     }
   };
-
 
   const handlePressStart = () => {
     setShowTooltip(true);
@@ -387,12 +395,15 @@ const Invoices = () => {
     setShowTooltip(false);
   };
 
-
   return (
     <main
       className="max-h-[calc(100vh-80px)] relative px-6 below-md:px-3 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
+      <ToastNotification
+        message={customToast?.message}
+        type={customToast?.type}
+      />
       {uploadPdfloading && ( <Loading /> )}
       <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
         <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
