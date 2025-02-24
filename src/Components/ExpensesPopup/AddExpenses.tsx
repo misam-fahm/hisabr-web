@@ -32,10 +32,10 @@ interface CustomToast {
   toastType: string;
 }
 
-const AddExpenses = ({ setAddExpenses }: any) => {
+const AddExpenses = ({ setAddExpenses , SelectedStore }: any) => {
 
   const methods = useForm();
-  const { setValue, watch, clearErrors } = methods;
+  const { setValue, watch, trigger , clearErrors } = methods;
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const { control, handleSubmit, register, formState: { errors }, } = useForm<ExpenseFormInputs>();
@@ -116,12 +116,7 @@ const AddExpenses = ({ setAddExpenses }: any) => {
       const response = await sendApiRequest({ mode: "getUserStore" });
       if (response?.status === 200) {
         setStore(response?.data?.stores || []);
-        if (response?.data?.stores) {
-          setSelectedOption({
-            name: response?.data?.stores[0]?.name,
-            id: response?.data?.stores[0]?.id,
-          });
-        }
+      
       } else {
         handleError(response?.message);
       }
@@ -192,7 +187,7 @@ const AddExpenses = ({ setAddExpenses }: any) => {
       mode: "insertExpense",
       expensedate: format(data?.date, "yyyy-MM-dd"),
       expenseid: data?.expenseTypeId,
-      storeid: data?.storeId,
+      storeid: selectedOption?.id || selectedStore.id,
       // storeid: selectedOption?.id || 69,
       description: data?.description,
       amount: Number(data?.amount),
@@ -203,7 +198,7 @@ const AddExpenses = ({ setAddExpenses }: any) => {
       const { status, data: responseData } = result; // Assuming responseData contains the new expense data or its ID
       setTimeout(() => {
         setCustomToast({
-          toastMessage: status === 200 ? "Item added successfully!" : "Failed to add item.",
+          toastMessage: status === 200 ? "Expenses added successfully!" : "Failed to add item.",
           toastType: status === 200 ? "success" : "error",
         });
       }, 0);
@@ -220,7 +215,12 @@ const AddExpenses = ({ setAddExpenses }: any) => {
       }, 0);
     }
   };
-
+  useEffect(() => {
+    if (selectedOption || SelectedStore) {
+      methods.setValue("store", selectedOption?.id ? selectedOption?.id : SelectedStore?.id, { shouldValidate: true }); 
+    }
+    trigger("store");
+  }, [selectedOption , SelectedStore , isOpen]);
 
   return (
     <>
@@ -295,13 +295,15 @@ const AddExpenses = ({ setAddExpenses }: any) => {
                   {/* Store Input Field */}
                   <Dropdown
                     options={store}
-                    selectedOption={selectedOption?.name || "Store"}
+                    selectedOption={selectedOption?.name || SelectedStore?.name || "Store"}
                     onSelect={(selectedOption: any) => {
                       setSelectedOption({
-                        name: selectedOption.name,
-                        id: selectedOption.id,
+                        name: selectedOption.name ,
+                        id: selectedOption.id  ,
                       });
                       setIsStoreDropdownOpen(false);
+                      methods.setValue("store", selectedOption.id  ? selectedOption?.id : SelectedStore?.id , { shouldValidate: true });
+                      trigger("store");
                     }}
                     isOpen={isStoreDropdownOpen}
                     toggleOpen={toggleStoreDropdown}

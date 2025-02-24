@@ -27,10 +27,11 @@ interface TableRow {
   store_name: number;
   orders_count: number;
   total_sales_count: number;
-  total_item_sales_amt: string;
+  total_item_sales_amt: any;
   net_sales_amt: string;
+  uploaddate:string;
   salesid:number;
-  order_average_amt: string;
+  order_average_amt: any;
 }
 
 const Sales: FC = () => {
@@ -90,7 +91,7 @@ const Sales: FC = () => {
       accessorKey: "total_item_sales_amt",
       header: () => <div className="text-right mr-12">Amount</div>,
       cell: (info) => (
-        <div className="text-right mr-12">{info.getValue() as number}</div>
+        <div className="text-right mr-12">{(info.getValue() as number).toFixed(2)}</div>
       ),
       size: 133,
     },
@@ -98,18 +99,32 @@ const Sales: FC = () => {
       accessorKey: "net_sales_amt",
       header: () => <div className="text-right mr-10">Net</div>,
       cell: (info) => (
-        <div className="text-right mr-10">{info.getValue() as number}</div>
+        <div className="text-right mr-10">{(info.getValue() as number).toFixed(2)}</div>
       ),
       size: 120,
     },
     {
       accessorKey: "order_average_amt",
       header: () => <div className="text-right mr-8">Average</div>,
-      cell: (info) => (
-        <div className="text-right mr-8">{info.getValue() as number}</div>
-      ),
+      cell: (info) => {
+        const { total_item_sales_amt, total_sales_count } = info.row.original;
+        const average =
+          total_sales_count > 0 ? total_item_sales_amt / total_sales_count : 0;
+          
+        return <div className="text-right mr-8">{average.toFixed(2)}</div>;
+      },
       size: 120,
     },
+
+    {
+      accessorKey: "uploaddate",
+      header: () => <div className="text-left "> Uploaded On</div>,
+      cell: (info) => (
+        <span className="text-left ">{ format(info.getValue() as any ,'MM-dd-yyyy' )}</span>
+      ),
+      size: 100,
+    },
+
     {
       id: "view",
       header: () => <div className="text-center"></div>,
@@ -126,6 +141,7 @@ const Sales: FC = () => {
       ),
       size: 60,
     },
+   
   ];
 
 

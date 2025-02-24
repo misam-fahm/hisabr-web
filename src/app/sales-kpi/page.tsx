@@ -733,14 +733,14 @@ const enhancedItems = items?.map((item:any) => ({
                 {/* Header Section */}
                 <div className="flex flex-row justify-between px-6 pt-6 items-start">
                   {/* Sales Information */}
-                  <div>
-                    <p className="text-[#393E47] font-bold text-[16px]">
-                      Yearly Sales
+                  <div className="w-[50%] flex justify-center items-center">
+                    <p className="text-[#393E47]  font-bold text-[16px]">
+                    Sales by Items
                     </p>
-                    <p className="text-[#0A0A0A] font-bold text-[24px] mt-1">
-                      $ 591,187
-                    </p>
-                    <div className="flex flex-row gap-2 bg-[#ECFDF5] p-1 w-20 rounded-sm mt-2 items-center">
+                    {/* <p className="text-[#0A0A0A] font-bold text-[24px] mt-1">
+                      $ {totalExtPrice.toLocaleString()}
+                    </p> */}
+                    {/* <div className="flex flex-row gap-2 bg-[#ECFDF5] p-1 w-20 rounded-sm mt-2 items-center">
                       <img
                         src="/images/direction.svg"
                         alt="Growth Icon"
@@ -749,7 +749,7 @@ const enhancedItems = items?.map((item:any) => ({
                       <p className="text-[rgba(55, 96, 102, 0.8)] text-[12px]">
                         11.2%
                       </p>
-                    </div>
+                    </div> */}
                   </div>
 
                   {/* Dropdown */}

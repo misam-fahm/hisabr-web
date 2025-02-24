@@ -146,6 +146,7 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token'); // Remove the token
+    localStorage.removeItem('UserType');
     router.replace('/login'); // Redirect to login page
   };
 

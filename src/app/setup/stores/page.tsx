@@ -180,14 +180,14 @@ const Page: FC = () => {
   useEffect(() => {
     fetchData();
   }, [pageIndex, pageSize, isOpenAddStore]);
-
+const userType = localStorage.getItem("UserType")
   return (
     <main
       className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-4 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
-        <AddStore setAddStore={setopenAddStore} />
+       {userType === "A" && ( <AddStore setAddStore={setopenAddStore} />)}
       </div>
       {/* Mobile View */}
       <div
@@ -264,7 +264,7 @@ const Page: FC = () => {
         {/* Add Store bottom */}
         <div className="block pl-24 ">
           {" "}
-          <AddStore setAddStore={setopenAddStore} />
+          {userType === "A" && (  <AddStore setAddStore={setopenAddStore} />)}
         </div>
         <div className="hidden below-md:block ">
           <Pagination table={table} totalItems={totalItems} />

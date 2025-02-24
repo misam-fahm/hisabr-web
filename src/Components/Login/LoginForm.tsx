@@ -31,6 +31,7 @@ const LoginForm = () => {
           email: email,
         });
         if (getUser?.status === 200) {
+          localStorage.setItem("UserType",  getUser?.data?.user[0]?.usertype);
           const val: any = {
             email: data?.email,
             password: data?.password,
@@ -42,6 +43,7 @@ const LoginForm = () => {
           const result: any = await sendApiRequest(val, `auth/login`);
           if (result?.status === 200 && result?.data?.token) {
             localStorage.setItem("token", result?.data?.token);
+           
             router.replace("/");
           } else {
             // router.push("/login");

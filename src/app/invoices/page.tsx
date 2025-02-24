@@ -33,6 +33,7 @@ interface TableRow {
   invoiceid: number;
   quantity: number;
   duedate: string;
+  uploaddate:string,
   total: string;
   invoicenumber: string;
 }
@@ -98,6 +99,14 @@ const Invoices = () => {
       cell: (info) => (
         <span className="text-left ">{info.getValue() as string}</span>
       ),
+      size: 100,
+    },
+    {
+      accessorKey: "uploaddate",
+      header: () => <div className="text-left "> Uploaded On</div>,
+      cell: (info) => (
+        <span className="text-left ">{ format(info.getValue() as any ,'MM-dd-yyyy' )}</span>
+      ),
       size: 80,
     },
     {
@@ -115,6 +124,7 @@ const Invoices = () => {
       ),
       size: 30,
     },
+    
   ];
 
   const navigateToInvoice = (invoiceId: any) => {
