@@ -43,7 +43,7 @@ const Expenses: FC = () => {
   const containerRef = useRef(null);
   const [isScrollbarVisible, setIsScrollbarVisible] = useState(false);
   const [globalFilter, setGlobalFilter] = React.useState("");
-  const [data, setData] = useState<TableRow[]>([]);
+  const [data, setData] = useState<any>();
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedOption, setSelectedOption] = useState<any>();
@@ -184,8 +184,8 @@ const Expenses: FC = () => {
       });
 
       if (response?.status === 200) {
-        setData(response?.data?.expenses || []);
-        response?.data?.total > 0 &&
+        setData(response?.data?.expenses);
+        response?.data?.total >= 0 &&
           setTotalItems(response?.data?.total || 0);
       } else {
         setCustomToast({
@@ -334,7 +334,7 @@ const Expenses: FC = () => {
 
 
 
- 
+ console.log("aun",data)
 
   return (
     <main
@@ -393,7 +393,7 @@ const Expenses: FC = () => {
             </div>
           </div>
           <div className="block pl-24 below-md:hidden">
-            <AddExpenses setAddExpenses={setAddExpenses} />
+            <AddExpenses setAddExpenses={setAddExpenses}  SelectedStore = {selectedOption}/>
           </div>
         </div>
 
@@ -487,7 +487,7 @@ const Expenses: FC = () => {
               <tbody>
   {loading ? (
     /* Show skeleton loaders while loading */
-    Array.from({ length: 10 })?.map((_, index) => (
+    Array.from({ length: 10 }).map((_, index) => (
       <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
         {columns.map((column, colIndex) => (
           <td
@@ -500,14 +500,7 @@ const Expenses: FC = () => {
         ))}
       </tr>
     ))
-  ) : data === null ? (
-    /* Show No Data Found message only if not loading */
-    <tr>
-      <td colSpan={columns.length} className="py-6 text-center">
-        <NoDataFound />
-      </td>
-    </tr>
-  ) : (
+  ) : data && data.length > 0 ? (
     /* Render actual data */
     table.getRowModel().rows.map((row) => (
       <tr key={row.id} className={row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
@@ -522,8 +515,16 @@ const Expenses: FC = () => {
         ))}
       </tr>
     ))
+  ) : (
+    /* Show No Data Found only when data is fully loaded and empty */
+    <tr>
+      <td colSpan={columns.length} className="py-6 text-center">
+     <NoDataFound />
+      </td>
+    </tr>
   )}
 </tbody>
+
 
               </table>
             </div>

@@ -119,7 +119,9 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
 
   const handleLogout = () => {
     localStorage.removeItem('token'); // Remove the token
+    localStorage.removeItem('UserType');
     router.replace('/login'); // Redirect to login page
+   
   };
 
   return (
