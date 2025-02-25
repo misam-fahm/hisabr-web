@@ -185,9 +185,9 @@ const AddExpenses = ({ setAddExpenses , SelectedStore }: any) => {
 
     const jsonData: JsonData = {
       mode: "insertExpense",
-      expensedate: format(data?.date, "yyyy-MM-dd"),
+      expensedate: format(methods.watch("date") || today, "yyyy-MM-dd"),
       expenseid: data?.expenseTypeId,
-      storeid: selectedOption?.id || selectedStore.id,
+      storeid: Number(methods.watch("store")),
       // storeid: selectedOption?.id || 69,
       description: data?.description,
       amount: Number(data?.amount),
@@ -215,12 +215,18 @@ const AddExpenses = ({ setAddExpenses , SelectedStore }: any) => {
       }, 0);
     }
   };
+
+  const today = new Date();
+
   useEffect(() => {
     if (selectedOption || SelectedStore) {
       methods.setValue("store", selectedOption?.id ? selectedOption?.id : SelectedStore?.id, { shouldValidate: true }); 
     }
     trigger("store");
-  }, [selectedOption , SelectedStore , isOpen]);
+    if (!methods.watch("date")) {
+      methods.setValue("date", today, { shouldValidate: true });
+    }
+  }, [selectedOption , SelectedStore , methods, isOpen]);
 
   return (
     <>
@@ -335,13 +341,13 @@ const AddExpenses = ({ setAddExpenses , SelectedStore }: any) => {
 
 
                   <CustomDatePicker
-                    value={methods.watch("date")}
-                    onChange={(date) =>
-                      methods.setValue("date", date, { shouldValidate: true })
-                    }
-                    placeholder="Date"
-                    errors={methods.formState.errors.date?.message}
-                  />
+  value={methods.watch("date")}
+  onChange={(date) =>
+    methods.setValue("date", date, { shouldValidate: true })
+  }
+  placeholder="Date"
+  errors={methods.formState.errors.date?.message}
+/>
                   {/* Description field */}
                   <InputField
                     type="text"

@@ -74,7 +74,8 @@ const DateRangePicker = ({
       </div>
 
       {isOpen && (
-        <div className="absolute top-[40px] z-40 below-md:top-[43px] left-0 bg-white shadow-lg px-4 pb-4 rounded ">
+        <div className="absolute top-[40px] z-40 below-md:top-[43px] left-0 bg-white shadow-lg px-4 pb-4 rounded "
+        >
           <DatePicker
   selected={startDate}
   onChange={handleDateChange}

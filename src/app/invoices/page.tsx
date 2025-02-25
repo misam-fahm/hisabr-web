@@ -34,7 +34,7 @@ interface TableRow {
   quantity: number;
   duedate: string;
   uploaddate:string,
-  total: string;
+  total: any;
   invoicenumber: string;
 }
 
@@ -89,7 +89,7 @@ const Invoices = () => {
       accessorKey: "total",
       header: () => <div className="text-right pr-9">Total</div>,
       cell: (info) => (
-        <span className="flex justify-end pr-8">{info.getValue() as string}</span>
+        <span className="flex justify-end pr-8">{( info.row.original.total).toFixed(2)}</span>
       ),
       size: 70,
     },
@@ -407,9 +407,11 @@ const Invoices = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-80px)] relative px-6 below-md:px-3 overflow-auto"
-      style={{ scrollbarWidth: "thin" }}
-    >
+    className={`relative px-6 below-md:px-3 overflow-auto ${
+      data?.length > 10 ? "max-h-[calc(100vh-80px)]" : "h-[500px]"
+    }`}
+    style={{ scrollbarWidth: "thin" }}
+  >
       <ToastNotification
         message={customToast?.message}
         type={customToast?.type}
@@ -437,9 +439,9 @@ const Invoices = () => {
               }}
               isOpen={isStoreDropdownOpen}
               toggleOpen={toggleStoreDropdown}
-              widthchange="w-full"
+              widthchange="w-[60%]"
             />
-          <div className="below-lg:w-full tablet:w-full below-md:w-full">
+          <div className="below-lg:w-full  tablet:w-full below-md:w-full">
           <DateRangePicker 
                 startDate = {startDate}
                 endDate = {endDate}
@@ -586,7 +588,7 @@ const Invoices = () => {
             </thead>
           </table>
           <div
-            className="w-full overflow-y-auto scrollbar-thin flex-grow"
+            className="w-full relative overflow-y-auto scrollbar-thin flex-grow"
             style={{ maxHeight: "calc(100vh - 270px)" }}
           >
             <table className="w-full border-collapse text-[12px] text-white table-fixed">
