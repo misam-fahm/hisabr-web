@@ -180,7 +180,15 @@ const Page: FC = () => {
   useEffect(() => {
     fetchData();
   }, [pageIndex, pageSize, isOpenAddStore]);
-const userType = localStorage.getItem("UserType")
+
+  const [userType, setUserType] = useState<any>();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setUserType(localStorage.getItem("UserType"));
+    }
+  }, []);
+
   return (
     <main
       className="max-h-[calc(100vh-60px)] px-6 below-md:px-3  below-md:py-4 overflow-auto"

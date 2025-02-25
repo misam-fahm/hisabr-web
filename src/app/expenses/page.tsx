@@ -337,10 +337,14 @@ const Expenses: FC = () => {
  console.log("aun",data)
 
   return (
+
     <main
-      className="max-h-[calc(100vh-50px)] px-6 below-md:px-3 overflow-auto"
-      style={{ scrollbarWidth: "thin" }}
-    >
+    className={`relative px-6 below-md:px-3 overflow-auto border-none ${
+      data?.length > 10 ? "max-h-[calc(100vh-50px)]" : "h-[500px]"
+    }`}
+    style={{ scrollbarWidth: "thin" }}
+  >
+   
       <>
         <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
           <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
@@ -364,7 +368,7 @@ const Expenses: FC = () => {
               }}
               isOpen={isStoreDropdownOpen}
               toggleOpen={toggleStoreDropdown}
-              widthchange="w-full"
+              widthchange="w-[60%]"
             />
             <div className="w-full tablet:w-full below-md:w-full h-[35px]">
             <DateRangePicker 

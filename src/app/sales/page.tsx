@@ -487,9 +487,12 @@ const Sales: FC = () => {
 
   return (
     <main
-      className="max-h-[calc(100vh-60px)] relative below-md:max-h-[calc(100vh-0)] tablet:max-h-[calc(100vh-0)] overflow-auto"
-      style={{ scrollbarWidth: "thin" }}
-    >
+    className={`relative px-6 below-md:px-3 below-md:max-h-[calc(100vh-0)] tablet:max-h-[calc(100vh-0)] overflow-auto ${
+      data?.length > 10 ? "max-h-[calc(100vh-60px)]" : "h-[500px]"
+    }`}
+    style={{ scrollbarWidth: "thin" }}
+  >
+    
       <ToastNotification
         message={customToast?.message}
         type={customToast?.type}
@@ -511,7 +514,7 @@ const Sales: FC = () => {
               }}
               isOpen={isStoreDropdownOpen}
               toggleOpen={toggleStoreDropdown}
-              widthchange="w-full"
+              widthchange="w-[60%]"
             />
             <div className="w-full tablet:w-full below-md:w-full">
             <DateRangePicker 
