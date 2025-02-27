@@ -89,7 +89,7 @@ const Invoices = () => {
       accessorKey: "total",
       header: () => <div className="text-right pr-9">Total</div>,
       cell: (info) => (
-        <span className="flex justify-end pr-8">{( info.row.original.total).toFixed(2)}</span>
+        <span className="flex justify-end pr-8">{( info.row.original.total)?.toFixed(2)}</span>
       ),
       size: 70,
     },
@@ -176,7 +176,7 @@ const Invoices = () => {
   
       if (response?.status === 200) {
         setData(response?.data?.invoices);
-        if (response?.data?.total > 0) {
+        if (response?.data?.total >= 0) {
           setTotalItems(response?.data?.total || 0);
         }
       } else {

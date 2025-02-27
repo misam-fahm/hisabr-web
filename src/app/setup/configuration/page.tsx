@@ -12,7 +12,7 @@ interface JsonData {
   insurance: number;
   propertytax: number;
   rentmortgage: number;
-  payroll: number;
+  payroll: any;
   laborsalary: number;
   nuco2: number;
   trash: number;
@@ -73,10 +73,12 @@ const Page = () => {
     });
   };
 
-  const handleChangePayrollTax = (data: any) => {
+  const handlePayrollTax = (data: any) => {
+
     setPayrollTax(data); // Update local state
-    methods.setValue("payrolltax", parseFloat(data).toFixed(2), { shouldValidate: true }); // Update form state in react-hook-form
+    methods.setValue("payrolltax", parseFloat(data).toFixed(2), { shouldValidate: true });
   };
+
 
   const handleChangesetLabourSalary = (data: any) => {
     setLabourOperatSalary(data); // Update local state
@@ -95,7 +97,7 @@ const Page = () => {
 
   const handleChangesetPropertyTax = (data: any) => {
     setPropertyTax(data); // Update local state
-    methods.setValue("propertytax", data); // Update form state in react-hook-form
+    methods.setValue("payrolltax", data); // Update form state in react-hook-form
   };
 
   const handleChangesetTrash = (data: any) => {
@@ -294,7 +296,11 @@ const Page = () => {
     }
   };
 
-
+  console.log(methods?.formState?.errors && JSON.stringify(
+    Object.fromEntries(
+      Object.entries(methods?.formState?.errors).map(([key, val]:any) => [key, val.message])
+    )
+  ));
 
   return (
     isVerifiedUser && <main
@@ -415,7 +421,8 @@ const Page = () => {
                   />
                 </div>
                 <div className="below-lg:w-[25%] below-md:w-full below-md:pt-4">
-                  <InputField
+
+                <InputField
                     type="text"
                     label="Payroll Tax (%)"
                     borderClassName="border border-gray-300"
@@ -424,18 +431,20 @@ const Page = () => {
                     textColor="text-[#636363]"
                     placeholder="Payroll Tax (%)"
                     {...methods?.register("payrolltax", {
-                      maxLength: 3, // Limit to 10 characters
-                      pattern: /^[0-9]*\.?[0-9]*$/,// Only numbers allowed
+                      maxLength: 5,
+                      pattern: /^[0-9]*\.?[0-9]*$/,
                     })}
                     errors={methods.formState.errors.payrolltax}
                     variant="outline"
                     onChange={(e) =>
-                      handleChangePayrollTax(
-                        e.target.value.replace(/[^0-9.]/g, "")
-                        //e.target.value.replace(/\D/g, "").slice(0, 3)
+                      handlePayrollTax(
+                        e.target.value          //.replace(/\D/g, "")
+                          .replace(/[^0-9.]/g, "")
+                        //.slice(0, 3)
                       )
                     }
                   />
+
                 </div>
                 <div className="below-lg:w-[25%]  below-lg:ml-5 below-md:w-full below-md:pt-4">
                   <InputField

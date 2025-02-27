@@ -19,8 +19,14 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
   const currentPath = usePathname();
   const [isClient, setIsClient] = useState(false);
   const [title, setTitle] = useState("");
+  const [userType, setUserType] = useState<any>();
+
+ 
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setUserType(localStorage.getItem("UserType"));
+    }
     setIsClient(true);
   }, []);
 
@@ -78,9 +84,9 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
     { title: "Invoices", src: "invoices", path: "/invoices" },
     { title: "Expenses", src: "expences", path: "/expenses" },
     { type: "Setup", title: "SETUP" },
-    { title: "Categories", src: "Categories", path: "/setup/categories" },
+    ...(userType === "A" ? [{ title: "Categories", src: "Categories", path: "/setup/categories" }] : []),
     // { title: "Items", src: "Items2", path: "/setup/items" },
-    { title: "Tenders", src: "Tenders", path: "/setup/tenders" },
+    ...(userType === "A" ? [{ title: "Tenders", src: "Tenders", path: "/setup/tenders" }] : []),
     { title: "Stores", src: "Stores", path: "/setup/stores" },
     {
       title: "Configuration",
