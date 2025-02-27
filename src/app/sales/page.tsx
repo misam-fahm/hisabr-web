@@ -122,7 +122,7 @@ const Sales: FC = () => {
       cell: (info) => (
         <span className="text-left ">{ format(info.getValue() as any ,'MM-dd-yyyy' )}</span>
       ),
-      size: 100,
+      size: 120,
     },
 
     {
@@ -487,8 +487,8 @@ const Sales: FC = () => {
 
   return (
     <main
-    className={`relative px-6 below-md:px-3 below-md:max-h-[calc(100vh-0)] tablet:max-h-[calc(100vh-0)] overflow-auto ${
-      data?.length > 10 ? "max-h-[calc(100vh-60px)]" : "h-[500px]"
+    className={`relative px-6 below-md:px-3  overflow-auto ${
+      data?.length > 8 ? "max-h-[calc(100vh-60px)]" : "h-[500px]"
     }`}
     style={{ scrollbarWidth: "thin" }}
   >
