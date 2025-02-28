@@ -79,7 +79,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
   const Menus = [
     { title: "Home", src: "home1", path: "/" },
     { title: "Sales-KPI", src: "saleskpi", path: "/sales-kpi" },
-    { title: "Summary", src: "summary", path: "/summary" },
+    // { title: "Summary", src: "summary", path: "/summary" },
     { title: "Sales", src: "sales", path: "/sales" },
     { title: "Invoices", src: "invoices", path: "/invoices" },
     { title: "Expenses", src: "expences", path: "/expenses" },

@@ -5,6 +5,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { InputField } from '@/Components/UI/Themes/InputField';
 import { sendApiRequest } from '@/utils/apiUtils';
 import ToastNotification, { ToastNotificationProps } from '@/Components/UI/ToastNotification/ToastNotification';
+import { Text } from '@/Components/UI/Themes/Text';
+
 
 const ProfileShow = () => {
     const router = useRouter();
@@ -36,7 +38,7 @@ const ProfileShow = () => {
   
       if (response?.status === 200) {
         const userData = response.data.user[0];
-        setData(userData);
+        setData(response.data.user[0]);
         setFormData({
           FirstName: userData.firstname || "",
           email: userData.email || "",
@@ -138,7 +140,8 @@ const ProfileShow = () => {
     const handleEdit = () => setIsEditing(true);
     const handleCancel = () => setIsEditing(false);
 
-
+    const firstInitial = userData?.firstname?.charAt(0).toUpperCase() || "";
+    const lastInitial = userData?.lastname?.charAt(0).toUpperCase() || "";
 
     return (
         <main className='w-full below-md:mt-4 px-6'>
@@ -155,14 +158,17 @@ const ProfileShow = () => {
                 />
             </div>
             <div className='w-full max-h-[calc(100vh-10px)] overflow-auto below-md:h-auto border rounded-md shadow bg-white px-8 below-md:px-0 py-8'>
-                <div className='flex justify-end below-md:justify-center below-md:flex-col below-md:items-center items-center'>
-                    {/* <div className='flex items-center gap-4 below-md:gap-2 below-md:flex-col below-md:items-center'>
-                        <img className="w-[72px] h-[70] rounded-full" src="/images/admin.png" alt="Admin" />
+                <div className='flex justify-between below-md:justify-center below-md:flex-col below-md:items-center items-center'>
+                    <div className='flex items-center gap-4 below-md:gap-2 below-md:flex-col below-md:items-center'>
+                    <div className="w-[72px] h-[70px] rounded-full bg-[#29235bb1] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] text-defaultwhite flex gap-1 items-center justify-center">
+                               <span className='text-[30px]'>   {firstInitial || ""}</span>
+                               <span className='text-[30px] '>    {lastInitial || ""} </span>
+                    </div> 
                         <div className='flex flex-col below-md:items-center'>
-                            <p className='text-[#4C535F] text-[18px] font-[600px]'>{formData.FirstName}</p>
-                            <p className='text-gray-300 text-[12px] font-normal'>{formData.email}</p>
+                            <p className='text-[#4C535F] text-[18px] font-[600px]'>{userData?.firstname}</p>
+                            <p className='text-gray-300 text-[12px] font-normal'>{userData?.email}</p>
                         </div>
-                    </div> */}
+                    </div>
                     {!isEditing ? (
                         <button className="px-4 py-2 text-white text-[13px] w-[97px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-green-700 below-md:hidden" onClick={handleEdit}>
                             Edit
@@ -215,7 +221,7 @@ const ProfileShow = () => {
                                 ))}
                             </div>
                             {isEditing && (
-                                <div className="mt-6 fixed top-28 right-10 flex space-x-3">
+                                <div className="mt-6 flex space-x-3">
                                      <button type="button" className="px-4 py-2 text-[#6F6F6F] text-[13px] w-[101px] h-[37px] bg-[#E4E4E4] rounded-md hover:bg-[#C9C9C9]" onClick={handleCancel}>Cancel</button>
                                     <button type="submit" className="px-4 py-2 text-white text-[13px] w-[101px] h-[37px] bg-[#1AA47D] rounded-md hover:bg-[#11735C]">Save</button>
                                    

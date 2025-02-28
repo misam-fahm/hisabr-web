@@ -195,9 +195,9 @@ const Home: FC = () => {
         </div>
       </div>
       <div className=" px-6 below-md:px-3 pt-3 below-md:pt-0">
-        <div className="grid grid-cols-2 gap-7 below-md:grid-cols-1 tablet:grid-cols-1 tablet:gap-3 tablet:grid-rows-2 below-md:grid-rows-2 below-md:gap-1 below-md:mt-1 w-full items-stretch ">
+        <div className="grid grid-cols-1 gap-7 below-md:grid-cols-1 tablet:grid-cols-1 tablet:gap-3 tablet:grid-rows-2 below-md:grid-rows-2 below-md:gap-1 below-md:mt-1 w-full items-stretch ">
           {/* Gross Revenue Card */}
-          <div className="bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-full items-stretch">
+          <div className="bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-full ">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2">
                 <img src="/images/groce.svg" alt="Gross Revenue" />
@@ -219,7 +219,7 @@ const Home: FC = () => {
           </div>
 
           {/* Tender Table */}
-          <div className="bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-full items-stretch">
+          {/* <div className="bg-white mt-3 border-t-4 border-[#1F4372] border-opacity-30 rounded-md shadow-md below-md:shadow-none w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-3">
               <div className="flex flex-row gap-2">
                 <img src="/images/persentage.svg" alt="Tender" />
@@ -288,7 +288,7 @@ const Home: FC = () => {
                 </tfoot>
               </table>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* 1st grid*/}
@@ -677,7 +677,7 @@ const Home: FC = () => {
           </div>
 
           {/** third grid  */}
-          <div className=" bg-white below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-full items-stretch">
+          {/* <div className=" bg-white below-md:mt-3 border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-full items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6 pb-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/items.svg" />
@@ -728,7 +728,7 @@ const Home: FC = () => {
                 </tfoot>
               </table>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </main>

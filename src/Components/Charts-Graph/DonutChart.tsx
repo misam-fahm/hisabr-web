@@ -53,7 +53,7 @@ const DonutChart = ({values , operatExpAmt}:any ) => {
 
   const data = hasData
   ? {
-      labels: ["Labour Cost", "Sales Tax", "ROYALTY", "Operating Expenses"],
+      labels: ["Labour Cost", "Sales Tax", "ROYALTY", " Expenses"],
       datasets: [
         {
           data: [
