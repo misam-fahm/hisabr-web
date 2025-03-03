@@ -22,8 +22,8 @@ const ProfileShow = () => {
       });
       const [formData, setFormData] = useState({
         FirstName: "",
-        email: "",
         LastName: "",
+        email: "",
         phoneNumber: "",
       });
 
@@ -41,13 +41,13 @@ const ProfileShow = () => {
         setData(response.data.user[0]);
         setFormData({
           FirstName: userData.firstname || "",
-          email: userData.email || "",
           LastName: userData.lastname || "",
+          email: userData.email || "",
           phoneNumber: userData.phoneno || "",
         });
         methods.setValue("FirstName", userData.firstname || "");
-        methods.setValue("email", userData.email || "");
         methods.setValue("LastName", userData.lastname || "");
+        methods.setValue("email", userData.email || "");
         methods.setValue("phoneNumber", userData.phoneno || "");
         
       } else {
