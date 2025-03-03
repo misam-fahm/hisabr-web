@@ -335,7 +335,7 @@ const Invoices = () => {
           total: responseData?.invoice_details?.invoice_total,
           sellername: responseData?.invoice_details?.seller_name,
           quantity: responseData?.invoice_details?.qty_ship_total,
-          producttotal: responseData?.invoice_details?.product_total ? responseData?.invoice_details?.product_total : responseData?.invoice_details?.sub_total,
+          producttotal: responseData?.invoice_details?.product_total ?? responseData?.invoice_details?.sub_total,
           subtotal: responseData?.invoice_details?.sub_total,
           misc: responseData?.invoice_details?.misc,
           tax: responseData?.invoice_details?.tax,
