@@ -1,0 +1,428 @@
+"use client";
+import React, { FC, useEffect, useState } from "react";
+import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
+import Images from "@/Components/UI/Themes/Image";
+import { useRouter } from "next/navigation";
+import { format } from 'date-fns';
+import Pagination from "@/Components/UI/Pagination/Pagination";
+import Dropdown from "@/Components/UI/Themes/DropDown";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getFilteredRowModel,
+  flexRender,
+  ColumnDef,
+} from "@tanstack/react-table";
+import { sendApiRequest } from "@/utils/apiUtils";
+import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import moment from "moment";
+import Loading from "@/Components/UI/Themes/Loading";
+import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
+
+interface TableRow {
+  name: string;
+  totalqty: any;
+  totalextprice: any;
+  
+}
+
+const Sales: FC = () => {
+  const router = useRouter();
+  const [items, setItems] = useState<any>([]);
+  const [totalItems, setTotalItems] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+  const [globalFilter, setGlobalFilter] = React.useState("");
+
+  // const navigateToSalesView = (salesId: any) => {
+  //   const encodedId = btoa(salesId);
+  //   const urlSafeEncodedId = encodedId?.replace(/\+/g, '-')?.replace(/\//g, '_')?.replace(/=+$/, '');
+  //   router.push(`/sales/${urlSafeEncodedId}`);
+  // };
+
+  const columns: ColumnDef<TableRow>[] = [
+    {
+      accessorKey: "name",
+      header: () => <div className="text-left">Name</div>,
+      cell: (info) => <span>{info.getValue() as string}</span>,
+      size: 100,
+    },
+    
+    {
+      accessorKey: "totalqty",
+      header: () => <div className="text-right mr-10">Quantity</div>,
+      cell: (info) => (
+        <div className="text-right mr-10">{info.getValue() as number}</div>
+      ),
+      size: 120,
+    },
+    {
+      accessorKey: "totalextprice",
+      header: () => <div className="text-right mr-10">Amount</div>,
+      cell: (info) => (
+        <div className="text-right mr-10">{info.getValue() as number}</div>
+      ),
+      size: 120,
+    },
+   
+    
+  ];
+
+
+  useEffect(() => {
+    if (startDate && endDate && selectedOption ) {
+      fetchData();
+    }
+  }, [selectedOption , globalFilter]);
+
+  const table = useReactTable({
+    data: items,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      globalFilter,
+    },
+    initialState: {
+      pagination: {
+        pageSize: 10,
+        pageIndex: 0,
+      },
+    },
+    manualPagination: true, // Enable manual pagination
+    pageCount: Math.ceil(totalItems / 10),
+  });
+
+  const { pageIndex, pageSize } = table.getState().pagination;
+  
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getDqCategoryData",
+        storeid: selectedOption?.id || 69,
+        startdate: startDate && format(startDate, 'yyyy-MM-dd'),
+        enddate: endDate && format(endDate, 'yyyy-MM-dd'),
+        
+      });
+  
+      if (response?.status === 200) {
+        setItems(response?.data?.dqcategories);
+       
+      } else {
+        setCustomToast({
+          message: response?.message || "Failed to fetch sales.",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+   
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const getUserStore = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getUserStore" });
+      if (response?.status === 200) {
+        setStore(response?.data?.stores || []);
+        if (response?.data?.stores){
+          setSelectedOption({
+            name: response?.data?.stores[0]?.name,
+            id: response?.data?.stores[0]?.id,
+          });
+        }
+      } else {
+        handleError(response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+  };
+
+  const verifyToken = async (token: string) => {
+    const res: any = await sendApiRequest({
+      token: token
+    }, `auth/verifyToken`);
+    res?.status === 200 
+      ? setIsVerifiedUser(true) 
+      : router.replace('/login');
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.replace('/login');
+    } else {
+      verifyToken(token);
+    }    
+  }, []);
+
+  useEffect(() => {
+    if (isVerifiedUser) {
+      const currentYear = new Date().getFullYear();
+      setStartDate(new Date(`${currentYear}-01-01`));
+      setEndDate(new Date(`${currentYear}-12-31`));
+      getUserStore();
+      // fetchDropdownData();
+    }
+  }, [isVerifiedUser]);
+
+
+  // const fetchDropdownData = async () => {
+  //   try {
+  //     const response = await sendApiRequest({ mode: "getAllStores" });
+  //     if (response?.status === 200) {
+  //       setStore(response?.data?.stores || []);
+  //     } else {
+  //       handleError(response?.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching stores:", error);
+  //   }
+  // };
+
+
+
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+  };
+
+  const handleError = (message: string) => {
+    setCustomToast({
+      message,
+      type: "error",
+    });
+  };
+
+  const totalQty = items?.reduce((acc:any, row:any) => acc + Number(row.totalqty), 0);
+const totalExtPrice = items?.reduce((acc:any, row:any) => acc + Number(row.totalextprice), 0);
+
+// Ensure there's no error when `items` is empty
+const hasItems = items && items.length > 0;
+
+
+  return (
+    <main
+    className={`relative px-6 below-md:px-3  overflow-auto ${
+      items?.length > 8 ? "max-h-[calc(100vh-60px)]" : "h-[500px]"
+    }`}
+    style={{ scrollbarWidth: "thin" }}
+  >
+    
+      <ToastNotification
+        message={customToast?.message}
+        type={customToast?.type}
+      />
+      {uploadPdfloading && ( <Loading /> )}
+      <div className="px-6 mt-6 below-md:px-3 below-md:mt-0 tablet:mt-4">
+        <div className="flex flex-row below-md:flex-col pb-6 sticky z-20  w-[50%] below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
+          <div className="flex flex-row below-md:flex-col w-full  gap-3">
+            {/* Dropdown Button */}
+            <Dropdown
+              options={store}
+              selectedOption={selectedOption?.name || "Store"}
+              onSelect={(selectedOption: any) => {
+                setSelectedOption({
+                  name: selectedOption.name,
+                  id: selectedOption.id,
+                });
+                setIsStoreDropdownOpen(false);
+              }}
+              isOpen={isStoreDropdownOpen}
+              toggleOpen={toggleStoreDropdown}
+              widthchange="w-[60%]"
+            />
+            <div className="w-full tablet:w-full below-md:w-full">
+            <DateRangePicker 
+                startDate = {startDate}
+                endDate = {endDate}
+                setStartDate = {setStartDate}
+                setEndDate = {setEndDate}
+                fetchData = {fetchData}
+                />
+            </div>
+         
+          </div>
+
+       
+        </div>
+
+        {/** Table */}
+
+        {/* Table */}
+        {/* Desktop View */}
+        <div className="tablet:hidden overflow-x-auto border-collapse border border-[#E4E4EF] rounded-lg flex-grow hidden flex-col md:block shadow-sm">
+          <div className="overflow-hidden max-w-full">
+            <table className="w-full border-collapse border-gray-200 table-fixed shadow-lg">
+              <thead className="bg-[#334155]  top-0 z-10">
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        className="text-left px-4 py-2 text-[#FFFFFF] font-normal text-[15px] w-[100px]"
+                        style={{ width: `${header.column.getSize()}px` }} // Applying dynamic width
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+            </table>
+
+            <div
+              className="w-full overflow-y-auto scrollbar-thin flex-grow"
+              style={{ maxHeight: "calc(100vh - 270px)" }}
+            >
+              <table className="w-full border-collapse border-gray-200 table-fixed">
+                <tbody>
+                {loading ? (
+                  Array.from({ length: 8 })?.map((_, index) => (
+                    <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+                      {columns.map((column, colIndex) => (
+                        <td
+                          key={colIndex}
+                          className="px-4 py-1.5"
+                          style={{ width: `${column.size}px` }}
+                        >
+                          <Skeleton height={30} />
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                ) : items === null ? (
+                  /* Show No Data Found Message If No Data Available */
+                  <tr>
+                    <td colSpan={columns.length} className="py-6 text-center">
+                      <NoDataFound />
+                    </td>
+                  </tr>
+                )
+                :
+                  table.getRowModel().rows.map((row) => (
+                    <tr
+                      key={row.id}
+                      className={
+                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                      }
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          key={cell.id}
+                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+                {hasItems && (
+      <tfoot className="-bottom-1 bg-white sticky">
+        <tr className="text-[black] text-[14px]">
+          <td className="px-4 py-1.5 border-t text-left border-gray-200 font-medium">
+            Total
+          </td>
+          <td className="px-4 py-1.5 border-t  pr-14 text-right border-gray-200 text-[14px] font-medium">
+            {totalQty}
+          </td>
+          <td className="px-4 py-1.5 border-t pr-14 text-right border-gray-200 text-[14px] font-medium">
+            ${totalExtPrice.toFixed(2)}
+          </td>
+        </tr>
+      </tfoot>
+    )}
+              </table>
+            </div>
+          </div>
+        </div>
+
+       
+
+        {/* <div className="below-lg:hidden mb-8">
+          <div className="flex flex-col">
+            {data?.map((items,index)=> 
+            <div key={index} className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
+              <div className=" items-center mb-4 mt-2 px-2">
+                <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                
+                  <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                    <span>{items.sales_date}</span>
+                  </div>
+                  <div>
+                    <img
+                      onClick={() => navigateToSalesView(items.salesid)}
+                      src="/images/vieweyeicon.svg"
+                      className="w-5 h-5"
+                    />
+                  </div>
+                </div>               
+              </div>            
+              <div className="space-y-3 mb-2 px-2">
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[13px]">Store</p>
+                  <p className="text-[#1A1A1A] text-[14px]">{items.store_name}</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[13px]">Orders</p>
+                  <p className="text-[#1A1A1A] text-[14px]">{items.orders_count}</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[13px]">Quantity</p>
+                  <p className="text-[#1A1A1A] text-[14px]">{items.total_sales_count}</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[13px]">Amount</p>
+                  <p className="text-[#1A1A1A] text-[14px]">${items.total_item_sales_amt}</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[13px]">Net</p>
+                  <p className="text-[#1A1A1A] text-[14px]">${items.net_sales_amt}</p>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <p className="text-[#808080] text-[13px]">Average</p>
+                  <p className="text-[#1A1A1A] text-[14px]">${items.order_average_amt}</p>
+                </div>
+              </div>
+            </div>
+       )}
+          </div>
+        </div> */}
+       
+      </div>
+
+     
+    </main>
+  );
+};
+export default Sales;

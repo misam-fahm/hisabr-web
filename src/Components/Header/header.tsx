@@ -58,6 +58,9 @@ const Header: React.FC = () => {
           case "summary":
             newTitle = "Summary";
             break;
+            case "dqcategory":
+              newTitle = "DQ Category";
+              break;
           case "sales":
             newTitle = "Sales";
             break;

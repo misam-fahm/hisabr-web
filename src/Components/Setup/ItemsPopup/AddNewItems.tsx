@@ -48,7 +48,7 @@ const AddNewItems = ({setAddItems}:any) => {
      toastType: "",
    });
   const name = watch("name");
-  const itemcode = watch("itemcode");
+  const itemcode = watch("code");
   const units = watch("units");
   const weight = watch("weight");
   const packsize = watch("packsize");
