@@ -62,7 +62,7 @@ const Expenses: FC = () => {
     if (startDate && endDate && selectedOption ) {
       fetchData();
     }
-  }, [selectedOption , globalFilter]);
+  }, [selectedOption ]);
 
 
   const columns: ColumnDef<TableRow>[] = [
@@ -155,9 +155,7 @@ const Expenses: FC = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      globalFilter,
-    },
+   
     initialState: {
       pagination: {
         pageSize: 10,
@@ -205,6 +203,12 @@ const Expenses: FC = () => {
   useEffect(() => {
     fetchData();
   }, [pageIndex, pageSize, isOpenAddExpenses]);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      fetchData();
+    }
+  };
 
   const getUserStore = async () => {
     try {
@@ -331,10 +335,40 @@ const Expenses: FC = () => {
   }
   }, []);
 
+  const clearSearch = async () => {
+    setLoading(true);
+    setGlobalFilter("");
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getExpenses",
+        page: table.getState().pagination.pageIndex + 1,
+        limit: table.getState().pagination.pageSize,
+        storeid: selectedOption?.id || 69,
+      startdate: startDate && format(startDate, 'yyyy-MM-dd'),
+      enddate: endDate && format(endDate, 'yyyy-MM-dd'),
+      search:""
+      });
+
+      if (response?.status === 200) {
+        setData(response?.data?.expenses);
+        response?.data?.total >= 0 &&
+          setTotalItems(response?.data?.total || 0);
+      } else {
+        setCustomToast({
+          ...customToast,
+          message: response?.message,
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+      setAddExpenses(false)
+    }
+  };
 
 
-
- console.log("aun",data)
 
   return (
 
@@ -380,19 +414,25 @@ const Expenses: FC = () => {
                 />
             </div>
 
-            <div className="flex  border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
+            <div className="flex relative border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
               <input
-                type="search"
+                type="text"
                 value={globalFilter ?? ""}
                 onChange={(e) => setGlobalFilter(e.target.value)}
+                onKeyDown={handleKeyDown}
                 ref={searchInputRef}
                 placeholder="Search"
                 className="w-full h-[35px] bg-transparent  px-3 placeholder:text-[#636363] focus:outline-none"
-              ></input>
+              />
+              {globalFilter && (
+                    <div className="  absolute right-8 cursor-pointer">
+                 <img className="  " src="/images/cancelicon.svg"  onClick={clearSearch}  />
+                 </div>
+                )}
               <img
                 className="pr-2 cursor-pointer items-center"
                 src="/images/searchicon.svg"
-                onClick={handleClick}
+                onClick={fetchData}
               />
             </div>
           </div>

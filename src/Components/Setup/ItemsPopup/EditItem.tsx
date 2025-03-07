@@ -13,6 +13,7 @@ interface JsonData {
   mode: string;
   categoryid: number | null;
   itemname: string;
+  itemcode:any;
   packsize: string ;
   units:string ;
   weight: string | null;
@@ -41,10 +42,11 @@ const EditItems = ({rowData , setAddItems}:any) => {
     type: "",
   });
 
-  const [name, setName] = useState(rowData?.itemname);
-  const [weight, setWeight] = useState(rowData?.weight);
-  const [packsize, setPacksize] = useState(rowData?.packsize);
-  const [units, setUnits] = useState(rowData?.units);
+  const [name, setName] = useState(rowData?.itemname || "");
+  const [itemcode, setItemcode] = useState(rowData?.itemcode  || "");
+  const [weight, setWeight] = useState(rowData?.weight  || ""); 
+  const [packsize, setPacksize] = useState(rowData?.packsize  || "");
+  const [units, setUnits] = useState(rowData?.units  || "");
   const [defaultOption, setDefaultOption] = React.useState("DQ Category");
   const [defaultOptionForCoges, setDefaultOptionForCoges] = React.useState("COGS Tracking Category");
 
@@ -58,6 +60,11 @@ const EditItems = ({rowData , setAddItems}:any) => {
   const handleChangeName = (data: any) => {
     setName(data); // Update local state
     methods.setValue("name", data); // Update form state in react-hook-form
+  };
+
+  const handleChangeItemcode = (data: any) => {
+    setItemcode(data); // Update local state
+    methods.setValue("code", data); // Update form state in react-hook-form
   };
 
   const handleChangeweight = (data: any) => {
@@ -81,11 +88,12 @@ const EditItems = ({rowData , setAddItems}:any) => {
       mode: "updateItem",
       categoryid: data?.categoryId  ? data?.categoryId :  rowData?.categoryid,
       itemname: data?.name?.trim(),
+      itemcode:data?.code,
       packsize: data?.packsize,
       units: data?.units,
       weight:data?.weight,
-      cogstrackcategoryid: data?.cogstrackingcategoryId ? data?.cogstrackingcategoryId : rowData?.cogstrackcategoryid ,
-      dqcategoryid: data?.dqcategoryId ? data?.dqcategoryId : rowData?.dqcategoryid,
+      cogstrackcategoryid: data?.cogstrackingcategoryId ? data?.cogstrackingcategoryId : rowData?.cogstrackcategoryid || null,
+      dqcategoryid: data?.dqcategoryId ? data?.dqcategoryId : rowData?.dqcategoryid || null,
       itemid: Number(rowData?.itemid)
     };
 
@@ -339,6 +347,25 @@ const EditItems = ({rowData , setAddItems}:any) => {
                       onChange={(e: any) => handleChangeName(e.target.value)}
                     />
                   </div>
+
+                  <div className="w-full flex">
+                      <InputField
+                        type="text"
+                        label="Item Code"
+                        borderClassName=" border border-gray-300"
+                        labelBackgroundColor="bg-white"
+                        value={itemcode || ""}
+                        
+                        textColor="text-[#636363]"
+                        {...register("code", {
+                          required: "Item code is required",
+                        })}
+                        errors={errors.code}
+                        placeholder="Item code"
+                        variant="outline"
+                        onChange={(e:any) => handleChangeItemcode(e.target.value)}
+                      />
+                    </div>
 
                   <div className="w-full flex ">
                     <InputField
