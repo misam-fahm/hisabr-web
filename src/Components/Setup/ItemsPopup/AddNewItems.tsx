@@ -84,7 +84,7 @@ const AddNewItems = ({setAddItems}:any) => {
       weight: data?.weight,
       cogstrackcategoryid: data?.cogstrackingcategoryId,
       dqcategoryid: data?.dqcategoryId,
-      itemcode: data?.itemcode
+      itemcode: data?.code
     };
 
     try {

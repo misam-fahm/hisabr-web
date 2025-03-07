@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { sendApiRequest } from "@/utils/apiUtils";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -33,7 +33,9 @@ interface TableRow {
 }
 
 const Page: FC = () => {
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [globalFilter, setGlobalFilter] = React.useState("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [data, setData] = useState<TableRow[]>([]); // Data state for table rows
   const [totalItems, setTotalItems] = useState<number>(0); // Total number of items from the API
   const [loading, setLoading] = useState<boolean>(true);
@@ -107,15 +109,15 @@ const Page: FC = () => {
     },
   ];
 
+ 
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      globalFilter,
-    },
+   
     initialState: {
       pagination: {
         pageSize: 10,
@@ -126,19 +128,70 @@ const Page: FC = () => {
     pageCount: Math.ceil(totalItems / 10),
   });
 
+  // useEffect(() => {
+  //   const delayDebounceFn = setTimeout(() => {
+  //     if (globalFilter.length >= 3 || globalFilter === "") {
+  //       setSearchTerm(globalFilter);
+  //     }
+  //   }, 500);
+
+  //   return () => clearTimeout(delayDebounceFn);
+  // }, [globalFilter]);
+
   const { pageIndex, pageSize } = table.getState().pagination;
   // const totalItems = table.getFilteredRowModel().rows.length;
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getItems",
+        page: table.getState().pagination.pageIndex + 1,
+        limit: table.getState().pagination.pageSize,
+         search: globalFilter
+      });
+
+      if (response?.status === 200) {
+        setData(response?.data?.items || []);
+        response?.data?.total > 0 &&
+          setTotalItems(response?.data?.total || 0);
+      } else {
+        setCustomToast({
+          ...customToast,
+          message: response?.message,
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+      setAddItems(false)
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
+   
+      fetchData();
+    
+  }, [pageIndex, pageSize, isOpenAddItems]);
+
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      fetchData();
+    }
+  };
+    const clearSearch = async () => {
       setLoading(true);
+      setGlobalFilter("");
       try {
         const response: any = await sendApiRequest({
           mode: "getItems",
           page: table.getState().pagination.pageIndex + 1,
           limit: table.getState().pagination.pageSize,
+           search: ""
         });
-
+  
         if (response?.status === 200) {
           setData(response?.data?.items || []);
           response?.data?.total > 0 &&
@@ -158,9 +211,13 @@ const Page: FC = () => {
       }
     };
 
-    fetchData();
-  }, [pageIndex, pageSize , isOpenAddItems]);
-
+  
+  const handleClick = () => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    };
+    
+  };
   return (
     <main
       className="max-h-[calc(100vh-60px)] px-6 below-md:px-3 below-md:py-4 overflow-auto "
@@ -170,7 +227,28 @@ const Page: FC = () => {
         message={customToast.message}
         type={customToast.type}
       />
-      <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
+      <div className="flex flex-row justify-between w-full items-center  my-6">
+      <div className="flex  border border-gray-300 below-md:w-full relative text-[12px] bg-[#ffff] items-center rounded w-[40%] h-[35px]">
+              <input
+                type="text"
+                value={globalFilter ?? ""}
+                onChange={(e) => setGlobalFilter(e.target.value)}
+                onKeyDown={handleKeyDown}
+                ref={searchInputRef}
+                placeholder="Search"
+                className="w-full h-[35px] bg-transparent  px-3 placeholder:text-[#636363] focus:outline-none"
+                 />
+                  {globalFilter && (
+                    <div className="  absolute right-8 cursor-pointer">
+                 <img className="  " src="/images/cancelicon.svg" onClick={clearSearch} />
+                 </div>
+                )}
+              <img
+                className="pr-2 cursor-pointer items-center"
+                src="/images/searchicon.svg"
+                onClick={fetchData}
+              />
+            </div>
         <AddNewItems setAddItems={setAddItems} />
         {/* <AddCategories /> */}
       </div>
