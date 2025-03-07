@@ -273,6 +273,7 @@ const Invoices = () => {
   }, []);
 
   const handleButtonClick = () => {
+    fileInputRef.current.value = '';
     fileInputRef.current.click();
   };
   

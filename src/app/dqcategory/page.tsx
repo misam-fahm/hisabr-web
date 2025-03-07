@@ -76,11 +76,8 @@ const Sales: FC = () => {
         <div className="text-right mr-10">{info.getValue() as number}</div>
       ),
       size: 120,
-    },
-   
-    
+    },   
   ];
-
 
   useEffect(() => {
     if (startDate && endDate && selectedOption ) {
@@ -114,10 +111,10 @@ const Sales: FC = () => {
     try {
       const response: any = await sendApiRequest({
         mode: "getDqCategoryData",
+        sp: "GetDQCategoryData",
         storeid: selectedOption?.id || 69,
         startdate: startDate && format(startDate, 'yyyy-MM-dd'),
         enddate: endDate && format(endDate, 'yyyy-MM-dd'),
-        
       });
   
       if (response?.status === 200) {
@@ -219,8 +216,6 @@ const totalExtPrice = items?.reduce((acc:any, row:any) => acc + Number(row.total
 
 // Ensure there's no error when `items` is empty
 const hasItems = items && items.length > 0;
-
-
   return (
     <main
     className={`relative px-6 below-md:px-3  overflow-auto ${
@@ -260,11 +255,8 @@ const hasItems = items && items.length > 0;
                 setEndDate = {setEndDate}
                 fetchData = {fetchData}
                 />
-            </div>
-         
-          </div>
-
-       
+            </div>         
+          </div>       
         </div>
 
         {/** Table */}
@@ -367,8 +359,6 @@ const hasItems = items && items.length > 0;
           </div>
         </div>
 
-       
-
         {/* <div className="below-lg:hidden mb-8">
           <div className="flex flex-col">
             {data?.map((items,index)=> 
@@ -420,8 +410,6 @@ const hasItems = items && items.length > 0;
         </div> */}
        
       </div>
-
-     
     </main>
   );
 };

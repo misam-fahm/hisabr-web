@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useRef } from "react";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Images from "@/Components/UI/Themes/Image";
 import { useRouter } from "next/navigation";
@@ -51,7 +51,7 @@ const Sales: FC = () => {
     type: "",
   });
   const [globalFilter, setGlobalFilter] = React.useState("");
-
+  const fileInputRef: any = useRef(null);
   const navigateToSalesView = (salesId: any) => {
     const encodedId = btoa(salesId);
     const urlSafeEncodedId = encodedId?.replace(/\+/g, '-')?.replace(/\//g, '_')?.replace(/=+$/, '');
@@ -115,7 +115,6 @@ const Sales: FC = () => {
       },
       size: 120,
     },
-
     {
       accessorKey: "uploaddate",
       header: () => <div className="text-left "> Uploaded On</div>,
@@ -124,7 +123,6 @@ const Sales: FC = () => {
       ),
       size: 120,
     },
-
     {
       id: "view",
       header: () => <div className="text-center"></div>,
@@ -141,9 +139,7 @@ const Sales: FC = () => {
       ),
       size: 60,
     },
-   
   ];
-
 
   useEffect(() => {
     if (startDate && endDate && selectedOption ) {
@@ -254,7 +250,6 @@ const Sales: FC = () => {
     }
   }, [isVerifiedUser]);
 
-
   // const fetchDropdownData = async () => {
   //   try {
   //     const response = await sendApiRequest({ mode: "getAllStores" });
@@ -267,7 +262,6 @@ const Sales: FC = () => {
   //     console.error("Error fetching stores:", error);
   //   }
   // };
-
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setCustomToast({
@@ -453,10 +447,11 @@ const Sales: FC = () => {
   const handleImageClick = () => {
     router.push("/sales/sales_view"); 
   };
-
   
   const handleUploadClick = () => {
-    document.getElementById("fileInput")?.click(); // Programmatically click the hidden input
+    // document.getElementById("fileInput")?.click(); // Programmatically click the hidden input
+    fileInputRef.current.value = "";
+    fileInputRef.current?.click();
   };
 
   const toggleStoreDropdown = () => {
@@ -563,6 +558,7 @@ const Sales: FC = () => {
             <div className="below-md:hidden tablet:hidden">
               <input
                 type="file"
+                ref={fileInputRef}
                 id="fileInput"
                 style={{ display: "none" }}
                 onChange={handleFileChange}

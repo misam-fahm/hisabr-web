@@ -23,7 +23,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     const result: any = await callStoredProcedure({
-      procedureName: 'ApiCallV1',
+      procedureName: reqData.sp ?? 'ApiCallV1',
       jsonData: reqData, 
     });
 
