@@ -162,7 +162,7 @@ const ForgotPassword = () => {
               <p className=" text-[#3BFCC6] font-normal text-[14px] cursor-pointer" onClick={() => (window.location.href = "/login")} >
               Back to Sign In
               </p>
-              </div> 
+              </div>
 
               <button
                 type="submit"
