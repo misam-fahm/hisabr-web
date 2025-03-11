@@ -75,14 +75,14 @@ const Page: FC = () => {
     },
 
     {
-      accessorKey: "dqCategory",
+      accessorKey: "dqcategoryname",
       header: () => <div className="text-left">DQ-CTG</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
       size: 100,
     },
 
     {
-      accessorKey: "cogsCategory",
+      accessorKey: "cogscategoryname",
       header: () => <div className="text-left">COGS-CTG</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
       size: 140,
