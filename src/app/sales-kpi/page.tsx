@@ -619,15 +619,16 @@ const enhancedItems = items?.map((item:any) => ({
 
                       </td>
                       <td className="px-4 py-1.5 text-[14px] border-b text-right border-gray-200 text-[#334155] font-medium">
-                        { row.payments ? "$" +( row.payments)?.toFixed(2) : 0}
+                      {row.payments ? "$" + row.payments.toLocaleString() : "$0"}
+
                       </td>
                       <td className="px-4 py-1.5 border-b border-gray-200 text-gray-600 text-[14px] font-medium text-right">
                         {row.commission ? (row.commission)?.toFixed(2) + "%" : 0.00 }
                       </td>
                       <td className="px-4 py-1.5 border-b text-right border-gray-200 text-[#3F526D] text-[14px] font-medium">
-                              {row.payments && row.commission !== undefined
-                                   ? `$${((row.payments * row.commission) / 100).toFixed(2)}`
-                                   : "--"}
+                      {row.payments && row.commission !== undefined
+    ? `$${((row.payments * row.commission) / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    : "--"}
                       </td>
                     </tr>
                   )))}
@@ -639,13 +640,13 @@ const enhancedItems = items?.map((item:any) => ({
                       Total
                     </td>
                     <td className="px-4 py-1.5 border-t text-right border-gray-200">
-                        {totalPayments ?  "$" + (totalPayments).toFixed(2)  : "--"}
+                    {totalPayments ? "$" + totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "--"}
                     </td>
                     <td className="px-4 py-1.5 border-t text-right border-gray-200"> 
                        {/* {totalCommission ? "$" + (totalCommission).toFixed(2) :"--"} */}
                        </td>
                     <td className="px-4 py-1.5 border-t text-right border-gray-200">
-                    {totalFinalAmount ? "$" + (totalFinalAmount).toFixed(2)  :"--"}
+                    {totalFinalAmount ? "$" + totalFinalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "--"}
                     </td>
                   </tr>
                 </tfoot> }
@@ -704,7 +705,7 @@ const enhancedItems = items?.map((item:any) => ({
                         {row.totalqty}
                       </td>
                       <td className="px-4 py-1.5 border-b text-right border-gray-200 text-[14px] font-medium text-[#334155]">
-                        ${(row.totalextprice).toFixed(2)}
+                        {row.totalextprice ? `$${row.totalextprice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "--"}
                       </td>
                     </tr>
                   )))}
@@ -719,7 +720,7 @@ const enhancedItems = items?.map((item:any) => ({
             {totalQty}
           </td>
           <td className="px-4 py-1.5 border-t text-right border-gray-200 text-[14px] font-medium">
-            ${totalExtPrice.toFixed(2)}
+          {totalExtPrice ? `$${totalExtPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "--"}
           </td>
         </tr>
       </tfoot>
@@ -728,80 +729,82 @@ const enhancedItems = items?.map((item:any) => ({
             </div>
           </div>
       </div>
-          <div className="w-full px-3 below-md:w-[100%] mt-8 bg-white below-md:ml-0 tablet:ml-0 tablet:mt-6 tablet:w-full below-md:mt-3 shadow-md rounded-md">
-              <div className="flex flex-col">
-                {/* Header Section */}
-                <div className="flex flex-row justify-between px-6 pt-6 items-start">
-                  {/* Sales Information */}
-                  <div className="w-[50%] flex justify-center items-center">
-                    <p className="text-[#393E47]  font-bold text-[16px]">
-                    Sales by Items
-                    </p>
-                    {/* <p className="text-[#0A0A0A] font-bold text-[24px] mt-1">
-                      $ {totalExtPrice.toLocaleString()}
-                    </p> */}
-                    {/* <div className="flex flex-row gap-2 bg-[#ECFDF5] p-1 w-20 rounded-sm mt-2 items-center">
-                      <img
-                        src="/images/direction.svg"
-                        alt="Growth Icon"
-                        className="w-4 h-4"
-                      />
-                      <p className="text-[rgba(55, 96, 102, 0.8)] text-[12px]">
-                        11.2%
-                      </p>
-                    </div> */}
-                  </div>
+        {/*
+<div className="w-full px-3 below-md:w-[100%] mt-8 bg-white below-md:ml-0 tablet:ml-0 tablet:mt-6 tablet:w-full below-md:mt-3 shadow-md rounded-md">
+  <div className="flex flex-col">
+    {/* Header Section * /}
+    <div className="flex flex-row justify-between px-6 pt-6 items-start">
+      {/* Sales Information * /}
+      <div className="w-[50%] flex justify-center items-center">
+        <p className="text-[#393E47]  font-bold text-[16px]">
+        Sales by Items
+        </p>
+        {/* <p className="text-[#0A0A0A] font-bold text-[24px] mt-1">
+          $ {totalExtPrice.toLocaleString()}
+        </p> * /}
+        {/* <div className="flex flex-row gap-2 bg-[#ECFDF5] p-1 w-20 rounded-sm mt-2 items-center">
+          <img
+            src="/images/direction.svg"
+            alt="Growth Icon"
+            className="w-4 h-4"
+          />
+          <p className="text-[rgba(55, 96, 102, 0.8)] text-[12px]">
+            11.2%
+          </p>
+        </div> * /}
+      </div>
 
-                  {/* Dropdown */}
-                  <div className="mb-6 relative z-[40] below-md:w-[100%] below-md:max-w-[35%]">
-                    {/* <Dropdown
-                      className="relative below-md:w-full rounded"
-                      shadowclassName="shadow-none border border-gray-200"
-                      options={Yearoptions}
-                      selectedOption={selectedYearOption4}
-                      onSelect={(option) => handleYearSelect(option, 4)}
-                      isOpen={isYearOpen4}
-                      toggleOpen={() => toggleYearDropdown(4)}
-                      widthchange="below-lg:w-[130px] tablet:w-[130px]"
-                    /> */}
-                  </div>
-                </div>
+      {/* Dropdown * /}
+      <div className="mb-6 relative z-[40] below-md:w-[100%] below-md:max-w-[35%]">
+        {/* <Dropdown
+          className="relative below-md:w-full rounded"
+          shadowclassName="shadow-none border border-gray-200"
+          options={Yearoptions}
+          selectedOption={selectedYearOption4}
+          onSelect={(option) => handleYearSelect(option, 4)}
+          isOpen={isYearOpen4}
+          toggleOpen={() => toggleYearDropdown(4)}
+          widthchange="below-lg:w-[130px] tablet:w-[130px]"
+        /> * /}
+      </div>
+    </div>
 
-                {/* Pie Chart Section */}
-                <div className=" flex w-full justify-between flex-row gap-4">
-                  <YearlySalesGraph enhancedItems={enhancedItems} totalQty={totalQty}  totalExtPrice={totalExtPrice}/>
-              
+    {/* Pie Chart Section * /}
+    <div className=" flex w-full justify-between flex-row gap-4">
+      <YearlySalesGraph enhancedItems={enhancedItems} totalQty={totalQty}  totalExtPrice={totalExtPrice}/>
+  
 
-                <div className="w-full">
-                  <div className="w-full px-6 py-6 below-md:pb-12 tablet:pb-12">
-                    <ul>
-                      {enhancedItems?.map((item :any, index :any) => (
-                        <li
-                          key={index}
-                          className="flex px-[15%] items-center justify-between py-2"
-                        >
-                          {/* Color Circle */}
-                          <div className="flex items-center">
-                            <span
-                              className="inline-block w-3 h-3 rounded-full mr-3"
-                              style={{ backgroundColor: item.color }}
-                            ></span>
-                            <span className="text-[#000000B2] text-[12px]">
-                              {item.itemname}
-                            </span>
-                          </div>
-                          {/* Value */}
-                          <span className="font-semibold text-[#0A0A0A] text-[14px]">
-                            ${(item.totalextprice).toFixed(2)}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                </div>
+    <div className="w-full">
+      <div className="w-full px-6 py-6 below-md:pb-12 tablet:pb-12">
+        <ul>
+          {enhancedItems?.map((item :any, index :any) => (
+            <li
+              key={index}
+              className="flex px-[15%] items-center justify-between py-2"
+            >
+              {/* Color Circle * /}
+              <div className="flex items-center">
+                <span
+                  className="inline-block w-3 h-3 rounded-full mr-3"
+                  style={{ backgroundColor: item.color }}
+                ></span>
+                <span className="text-[#000000B2] text-[12px]">
+                  {item.itemname}
+                </span>
               </div>
-            </div>
+              {/* Value * /}
+              <span className="font-semibold text-[#0A0A0A] text-[14px]">
+                ${(item.totalextprice).toFixed(2)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+*/}
         </div>
       </div>
       <div className="below-lg:hidden flex justify-end fixed bottom-5 right-5">

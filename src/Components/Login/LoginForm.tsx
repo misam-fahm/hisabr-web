@@ -44,7 +44,7 @@ const LoginForm = () => {
           if (result?.status === 200 && result?.data?.token) {
             localStorage.setItem("token", result?.data?.token);
            
-            router.replace("/");
+            router.replace("/sales-kpi");
           } else {
             // router.push("/login");
           }
