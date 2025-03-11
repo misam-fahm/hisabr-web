@@ -32,6 +32,9 @@ interface TableRow {
   weight: string;
   itemid?: number;
   categoryid?: number;
+  itemcode: string;      // Add this
+  dqcategoryname: string; // Add this
+  cogscategoryname: string; // Add this
 }
 
 const Page: FC = () => {
@@ -320,6 +323,11 @@ const Page: FC = () => {
                 </div>
                 {/* Border */}
                 <div className=" border-b bg-gray-200 my-3"></div>
+                {/* Code */}
+        <div className="flex justify-between">
+          <span className=" text-[#636363] text-[13px] mb-2">Code</span>
+          <span className="text-[14px]">{row?.itemcode}</span>
+        </div>
                 {/* Category */}
                 <div className="flex justify-between">
                   <span className=" text-[#636363] text-[13px] mb-2">
@@ -327,10 +335,20 @@ const Page: FC = () => {
                   </span>{" "}
                   <span className="text-[14px]">{row?.categoryname}</span>
                 </div>
-                {/* Price */}
+                {/* DQ-CTG */}
+        <div className="flex justify-between mt-1">
+          <span className=" text-[#636363] text-[13px] mb-2">DQ-CTG</span>
+          <span className="text-[14px]">{row?.dqcategoryname}</span>
+        </div>
+        {/* COGS-CTG */}
+        <div className="flex justify-between mt-1">
+          <span className=" text-[#636363] text-[13px] mb-2">COGS-CTG</span>
+          <span className="text-[14px]">{row?.cogscategoryname}</span>
+        </div>
+                {/* packsize */}
                 <div className="mt-1 flex justify-between">
                   <span className=" text-[#636363] text-[13px] mb-2">
-                    Price
+                  packsize
                   </span>{" "}
                   <span className="text-[14px]">{row?.packsize}</span>
                 </div>
