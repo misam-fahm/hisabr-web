@@ -152,8 +152,9 @@ const Page: FC = () => {
 
       if (response?.status === 200) {
         setData(response?.data?.items || []);
-        response?.data?.total > 0 &&
-          setTotalItems(response?.data?.total || 0);
+        response?.data?.total > 0 && (
+          setTotalItems(response?.data?.total || 0)
+        );
       } else {
         setCustomToast({
           ...customToast,

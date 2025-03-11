@@ -263,7 +263,7 @@ const hasItems = items && items.length > 0;
 
         {/* Table */}
         {/* Desktop View */}
-        <div className="tablet:hidden overflow-x-auto border-collapse border border-[#E4E4EF] rounded-lg flex-grow hidden flex-col md:block shadow-sm">
+        {/* <div className="tablet:hidden overflow-x-auto border-collapse border border-[#E4E4EF] rounded-lg flex-grow hidden flex-col md:block shadow-sm">
           <div className="overflow-hidden max-w-full">
             <table className="w-full border-collapse border-gray-200 table-fixed shadow-lg">
               <thead className="bg-[#334155]  top-0 z-10">
@@ -309,7 +309,7 @@ const hasItems = items && items.length > 0;
                     </tr>
                   ))
                 ) : items === null ? (
-                  /* Show No Data Found Message If No Data Available */
+                  
                   <tr>
                     <td colSpan={columns.length} className="py-6 text-center">
                       <NoDataFound />
@@ -328,7 +328,7 @@ const hasItems = items && items.length > 0;
                         <td
                           key={cell.id}
                           className="px-4 py-1.5 text-[#636363] text-[14px]"
-                          style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                          style={{ width: `${cell.column.getSize()}px` }} 
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
@@ -357,8 +357,30 @@ const hasItems = items && items.length > 0;
               </table>
             </div>
           </div>
-        </div>
-
+        </div> */}
+        <div className="grid grid-cols-5 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3  pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
+           {items?.map((Items:any , index:any) => 
+          
+            // 
+           
+        <div key={index} className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4  p-4 justify-between items-stretch">
+            <div>
+              <p className="text-[14px] text-[#575F6DCC] font-medium">{Items.name}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{Items?.totalextprice ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}` : '$00,000'}</p>
+              {/* <p className="text-[11px] text-[#388E3C] font-semibold">
+                20%{" "}
+                <span className="text-[#575F6D] font-normal">
+                  increase in sales
+                </span>
+              </p> */}
+            </div>
+            <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+            <p className="text-[14px]  font-medium">{Items.totalqty}</p>
+            </div>
+          </div>
+          
+           )}
+           </div>
         {/* <div className="below-lg:hidden mb-8">
           <div className="flex flex-col">
             {data?.map((items,index)=> 
