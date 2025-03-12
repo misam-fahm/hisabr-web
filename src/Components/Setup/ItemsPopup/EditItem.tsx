@@ -134,9 +134,6 @@ const EditItems = ({rowData , setAddItems}:any) => {
   const toggleDropdownCOGSTracking = () => {
     setIsCOGSTrackingDropdownOpen((prev) => !prev);
   };
-
-
-
  
   const fetchDataCategoriesDropdown = async () => {
     try {
@@ -228,10 +225,6 @@ const EditItems = ({rowData , setAddItems}:any) => {
         setDefaultOptionForCoges("None");
       }
     }, [dqCategory, cogstracking]);
-
-
-
-
 
   return (
     <>
