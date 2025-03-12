@@ -20,7 +20,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
                         invoiceid,
                         i?.item_code,
                         i?.item_description,
-                        i?.brand || 'Other',
+                        i?.brand,
                         i?.category || 'OT',
                         i?.qty_ship,
                         i?.unit,
