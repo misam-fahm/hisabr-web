@@ -388,6 +388,7 @@ const Sales: FC = () => {
                     }
                   // };
                   await sendApiRequest(newTenderTxns, `insertBulkTenders`);
+                  await sendApiRequest(responseData?.revenue_centers, `insertBulkDQRevenueCenters?salesid=${result?.data?.salesid}`);
                   // const val: any = {
                   //   invoiceDetails: responseData?.invoice_items || [],
                   // };

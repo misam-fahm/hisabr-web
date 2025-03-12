@@ -32,6 +32,9 @@ interface TableRow {
   weight: string;
   itemid?: number;
   categoryid?: number;
+  itemcode: string;      // Add this
+  dqcategoryname: string; // Add this
+  cogscategoryname: string; // Add this
 }
 
 const Page: FC = () => {
@@ -174,19 +177,19 @@ const Page: FC = () => {
 
   const { pageIndex, pageSize } = table.getState().pagination;
   // const totalItems = table.getFilteredRowModel().rows.length;
-  const fetchData = async () => {
+  const fetchData = async (search: string = "") => {
     setLoading(true);
     try {
       const response: any = await sendApiRequest({
         mode: "getItems",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
-        search: globalFilter,
+        search: search,
       });
 
       if (response?.status === 200) {
         setData(response?.data?.items || []);
-        response?.data?.total > 0 && setTotalItems(response?.data?.total || 0);
+        table.getState().pagination.pageIndex == 0 && setTotalItems(response?.data?.total || 0);
       } else {
         setCustomToast({
           ...customToast,
@@ -203,35 +206,19 @@ const Page: FC = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(globalFilter);
   }, [pageIndex, pageSize, isOpenAddItems]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      fetchData();
+      table.getState().pagination.pageIndex == 0 ? fetchData(globalFilter) : table.setPageIndex(0);
     }
   };
   const clearSearch = async () => {
-    setLoading(true);
-    setGlobalFilter("");
     try {
-      const response: any = await sendApiRequest({
-        mode: "getItems",
-        page: table.getState().pagination.pageIndex + 1,
-        limit: table.getState().pagination.pageSize,
-        search: "",
-      });
-
-      if (response?.status === 200) {
-        setData(response?.data?.items || []);
-        response?.data?.total > 0 && setTotalItems(response?.data?.total || 0);
-      } else {
-        setCustomToast({
-          ...customToast,
-          message: response?.message,
-          type: "error",
-        });
-      }
+      setLoading(true);
+      setGlobalFilter("");
+      table.getState().pagination.pageIndex == 0 ? fetchData() : table.setPageIndex(0);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -277,7 +264,7 @@ const Page: FC = () => {
           <img
             className="pr-2 cursor-pointer items-center"
             src="/images/searchicon.svg"
-            onClick={fetchData}
+            onClick={() => table.getState().pagination.pageIndex == 0 ? fetchData(globalFilter) : table.setPageIndex(0)}
           />
         </div>
         <AddNewItems setAddItems={setAddItems} />
@@ -324,6 +311,11 @@ const Page: FC = () => {
                 </div>
                 {/* Border */}
                 <div className=" border-b bg-gray-200 my-3"></div>
+                {/* Code */}
+        <div className="flex justify-between">
+          <span className=" text-[#636363] text-[13px] mb-2">Code</span>
+          <span className="text-[14px]">{row?.itemcode}</span>
+        </div>
                 {/* Category */}
                 <div className="flex justify-between">
                   <span className=" text-[#636363] text-[13px] mb-2">
@@ -331,10 +323,20 @@ const Page: FC = () => {
                   </span>{" "}
                   <span className="text-[14px]">{row?.categoryname}</span>
                 </div>
-                {/* Price */}
+                {/* DQ-CTG */}
+        <div className="flex justify-between mt-1">
+          <span className=" text-[#636363] text-[13px] mb-2">DQ-CTG</span>
+          <span className="text-[14px]">{row?.dqcategoryname}</span>
+        </div>
+        {/* COGS-CTG */}
+        <div className="flex justify-between mt-1">
+          <span className=" text-[#636363] text-[13px] mb-2">COGS-CTG</span>
+          <span className="text-[14px]">{row?.cogscategoryname}</span>
+        </div>
+                {/* packsize */}
                 <div className="mt-1 flex justify-between">
                   <span className=" text-[#636363] text-[13px] mb-2">
-                    Price
+                  packsize
                   </span>{" "}
                   <span className="text-[14px]">{row?.packsize}</span>
                 </div>
