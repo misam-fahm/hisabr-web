@@ -173,19 +173,19 @@ const Page: FC = () => {
 
   const { pageIndex, pageSize } = table.getState().pagination;
   // const totalItems = table.getFilteredRowModel().rows.length;
-  const fetchData = async () => {
+  const fetchData = async (search: string = "") => {
     setLoading(true);
     try {
       const response: any = await sendApiRequest({
         mode: "getItems",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
-        search: globalFilter,
+        search: search,
       });
 
       if (response?.status === 200) {
         setData(response?.data?.items || []);
-        response?.data?.total > 0 && setTotalItems(response?.data?.total || 0);
+        table.getState().pagination.pageIndex == 0 && setTotalItems(response?.data?.total || 0);
       } else {
         setCustomToast({
           ...customToast,
@@ -202,35 +202,19 @@ const Page: FC = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(globalFilter);
   }, [pageIndex, pageSize, isOpenAddItems]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      fetchData();
+      table.getState().pagination.pageIndex == 0 ? fetchData(globalFilter) : table.setPageIndex(0);
     }
   };
   const clearSearch = async () => {
-    setLoading(true);
-    setGlobalFilter("");
     try {
-      const response: any = await sendApiRequest({
-        mode: "getItems",
-        page: table.getState().pagination.pageIndex + 1,
-        limit: table.getState().pagination.pageSize,
-        search: "",
-      });
-
-      if (response?.status === 200) {
-        setData(response?.data?.items || []);
-        response?.data?.total > 0 && setTotalItems(response?.data?.total || 0);
-      } else {
-        setCustomToast({
-          ...customToast,
-          message: response?.message,
-          type: "error",
-        });
-      }
+      setLoading(true);
+      setGlobalFilter("");
+      table.getState().pagination.pageIndex == 0 ? fetchData() : table.setPageIndex(0);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -276,7 +260,7 @@ const Page: FC = () => {
           <img
             className="pr-2 cursor-pointer items-center"
             src="/images/searchicon.svg"
-            onClick={fetchData}
+            onClick={() => table.getState().pagination.pageIndex == 0 ? fetchData(globalFilter) : table.setPageIndex(0)}
           />
         </div>
         <AddNewItems setAddItems={setAddItems} />

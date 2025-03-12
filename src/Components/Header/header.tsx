@@ -53,7 +53,7 @@ const Header: React.FC = () => {
             newTitle = "Edit Profile";
             break;
           case "sales-kpi":
-            newTitle = "Sales Kpi";
+            newTitle = "Dashboard";
             break;
           case "summary":
             newTitle = "Summary";
