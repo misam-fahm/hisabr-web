@@ -258,7 +258,7 @@ const Page: FC = () => {
       <div className="overflow-x-auto border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block shadow-sm">
         <div className="overflow-hidden max-w-full">
           <table className="w-full border-collapse border-gray-200 table-fixed shadow-lg">
-            <thead className="bg-[#334155] sticky top-0 z-10">
+            <thead className="bg-[#0F1044] sticky top-0 z-10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (

@@ -352,7 +352,7 @@ const enhancedItems = items?.map((item:any) => ({
                 />
             </div>
           </div>
-          <div className="below-md:hidden tablet:hidden">
+          {/* <div className="below-md:hidden tablet:hidden">
             <button className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[170px] h-[35px] rounded-md text-white text-[13px] font-medium">
               <img
                 src="/images/saleskpireport.svg"
@@ -361,7 +361,7 @@ const enhancedItems = items?.map((item:any) => ({
               />
               PI Report
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* grid 1 */}

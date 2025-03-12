@@ -157,8 +157,7 @@ const Page = () => {
       console.error("Error fetching stores:", error);
     }
   };
-
-  const verifyToken = async (token: string) => {
+const verifyToken = async (token: string) => {
     const res: any = await sendApiRequest({
       token: token
     }, `auth/verifyToken`);
@@ -181,8 +180,7 @@ const Page = () => {
       getUserStore();
     }
   }, [isVerifiedUser]);
-
-
+  
   const fetchData = async (storeId) => {
     if (!storeId) return; // Don't fetch data if storeId is not set
     setLoading(true);

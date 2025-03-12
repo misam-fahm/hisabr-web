@@ -23,7 +23,7 @@ import ToastNotification, {
 } from "@/Components/UI/ToastNotification/ToastNotification";
 import DeletePopup from "@/Components/UI/Delete/DeletePopup";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
-
+import Tooltip from "@/Components/UI/Toolstips/Tooltip";
 interface TableRow {
   itemname: string;
   categoryname: string;
@@ -62,30 +62,34 @@ const Page: FC = () => {
         const value = info.getValue() as string;
         const truncatedValue =
           value.length > 22 ? value.slice(0, 22) + "..." : value;
-        return <span title={value}>{truncatedValue}</span>;
+        return (
+          <Tooltip text={value} position="bottom">
+            <span className="cursor-pointer">{truncatedValue}</span>
+          </Tooltip>
+        );
       },
-      size: 200,
+      size: 170,
     },
 
     {
       accessorKey: "categoryname",
-      header: () => <div className="text-left">Category</div>,
+      header: () => <div className="text-left">Ctg</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
-      size: 120,
+      size: 60,
     },
 
     {
       accessorKey: "dqCategory",
-      header: () => <div className="text-left">DQ-CTG</div>,
+      header: () => <div className="text-left">DQ-ctg</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
       size: 100,
     },
 
     {
       accessorKey: "cogsCategory",
-      header: () => <div className="text-left">COGS-CTG</div>,
+      header: () => <div className="text-left">COGS-ctg</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
-      size: 140,
+      size: 100,
     },
 
     {
@@ -94,7 +98,7 @@ const Page: FC = () => {
       cell: (info) => (
         <div className="text-right">{info.getValue() as number}</div>
       ),
-      size: 100,
+      size: 80,
     },
     {
       accessorKey: "units",
@@ -102,15 +106,15 @@ const Page: FC = () => {
       cell: (info) => (
         <div className="text-right">{info.getValue() as string}</div>
       ),
-      size: 120,
+      size: 60,
     },
     {
       accessorKey: "weight",
-      header: () => <div className="text-left ml-12">Weight</div>,
+      header: () => <div className="text-left ">Weight</div>,
       cell: (info) => (
-        <div className="text-left ml-14">{info.getValue() as string}</div>
+        <div className="text-left ml-3 ">{info.getValue() as string}</div>
       ),
-      size: 120,
+      size: 60,
     },
     {
       id: "edit",
@@ -120,7 +124,7 @@ const Page: FC = () => {
           <EditItem rowData={info.row.original} setAddItems={setAddItems} />
         </span>
       ),
-      size: 50,
+      size: 45,
     },
     {
       id: "delete",
@@ -137,7 +141,7 @@ const Page: FC = () => {
           />
         </span>
       ),
-      size: 50,
+      size: 40,
     },
   ];
 
@@ -243,7 +247,7 @@ const Page: FC = () => {
   };
   return (
     <main
-      className="max-h-[calc(100vh-60px)] px-6 below-md:px-3 below-md:py-4 overflow-auto "
+      className="max-h-[calc(100vh-60px)] px-4 below-md:px-3 below-md:py-4 overflow-auto "
       style={{ scrollbarWidth: "thin" }}
     >
       <ToastNotification
@@ -365,7 +369,7 @@ const Page: FC = () => {
         <div className="overflow-x-auto shadow-md border-collapse border border-gray-200 rounded-lg  hidden flex-col md:block">
           <div className="overflow-hidden max-w-full">
             <table className="w-full  table-fixed">
-              <thead className="bg-[#334155] sticky top-0 z-10">
+              <thead className="bg-[#0F1044] sticky top-0 z-10">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (

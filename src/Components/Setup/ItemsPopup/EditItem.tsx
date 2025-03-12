@@ -7,31 +7,40 @@ import { FormProvider, useForm, Controller } from "react-hook-form";
 import { InputField } from "@/Components/UI/Themes/InputField";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { sendApiRequest } from "@/utils/apiUtils";
-import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, {
+  ToastNotificationProps,
+} from "@/Components/UI/ToastNotification/ToastNotification";
 
 interface JsonData {
   mode: string;
   categoryid: number | null;
   itemname: string;
-  itemcode:any;
-  packsize: string ;
-  units:string ;
+  itemcode: any;
+  packsize: string;
+  units: string;
   weight: string | null;
-  cogstrackcategoryid:number | null
-  dqcategoryid:number | null
-  itemid:number | null
+  cogstrackcategoryid: number | null;
+  dqcategoryid: number | null;
+  itemid: number | null;
 }
 
-
-const EditItems = ({rowData , setAddItems}:any) => {
+const EditItems = ({ rowData, setAddItems }: any) => {
   const methods = useForm<any>();
 
-  const { register, setValue, handleSubmit, watch, clearErrors, trigger, formState: { errors } } = methods;
- 
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    watch,
+    clearErrors,
+    trigger,
+    formState: { errors },
+  } = methods;
+
   const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
   const [dqCategory, setDqCategory] = useState<any[]>([]);
-  const [cogstracking, setCogstracking] = useState<any[]>([]); 
+  const [cogstracking, setCogstracking] = useState<any[]>([]);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [isdqCategoryDropdownOpen, setIsDQCategoryDropdownOpen] =
     useState(false);
@@ -43,17 +52,18 @@ const EditItems = ({rowData , setAddItems}:any) => {
   });
 
   const [name, setName] = useState(rowData?.itemname || "");
-  const [itemcode, setItemcode] = useState(rowData?.itemcode  || "");
-  const [weight, setWeight] = useState(rowData?.weight  || ""); 
-  const [packsize, setPacksize] = useState(rowData?.packsize  || "");
-  const [units, setUnits] = useState(rowData?.units  || "");
+  const [itemcode, setItemcode] = useState(rowData?.itemcode || "");
+  const [weight, setWeight] = useState(rowData?.weight || "");
+  const [packsize, setPacksize] = useState(rowData?.packsize || "");
+  const [units, setUnits] = useState(rowData?.units || "");
   const [defaultOption, setDefaultOption] = React.useState("DQ Category");
-  const [defaultOptionForCoges, setDefaultOptionForCoges] = React.useState("COGS Tracking Category");
+  const [defaultOptionForCoges, setDefaultOptionForCoges] = React.useState(
+    "COGS Tracking Category"
+  );
 
   const selectedCategory = watch("category");
   const selectedDqCategory = watch("dqcategory");
   const selectedCOGSTracking = watch("cogstrackingcategory");
-
 
   const closeModal = () => setIsOpen(false);
 
@@ -83,18 +93,22 @@ const EditItems = ({rowData , setAddItems}:any) => {
   };
 
   const onSubmit = async (data: any) => {
-   console.log("data",data)
+    console.log("data", data);
     const jsonData: JsonData = {
       mode: "updateItem",
-      categoryid: data?.categoryId  ? data?.categoryId :  rowData?.categoryid,
+      categoryid: data?.categoryId ? data?.categoryId : rowData?.categoryid,
       itemname: data?.name?.trim(),
-      itemcode:data?.code,
+      itemcode: data?.code,
       packsize: data?.packsize,
       units: data?.units,
-      weight:data?.weight,
-      cogstrackcategoryid: data?.cogstrackingcategoryId ? data?.cogstrackingcategoryId : rowData?.cogstrackcategoryid || null,
-      dqcategoryid: data?.dqcategoryId ? data?.dqcategoryId : rowData?.dqcategoryid || null,
-      itemid: Number(rowData?.itemid)
+      weight: data?.weight,
+      cogstrackcategoryid: data?.cogstrackingcategoryId
+        ? data?.cogstrackingcategoryId
+        : rowData?.cogstrackcategoryid || null,
+      dqcategoryid: data?.dqcategoryId
+        ? data?.dqcategoryId
+        : rowData?.dqcategoryid || null,
+      itemid: Number(rowData?.itemid),
     };
 
     try {
@@ -108,15 +122,17 @@ const EditItems = ({rowData , setAddItems}:any) => {
 
       if (status === 200) {
         setCustomToast({
-          message: status === 200 ? "Item updated successfully!" : "Failed to add item.",
+          message:
+            status === 200
+              ? "Item updated successfully!"
+              : "Failed to add item.",
           type: status === 200 ? "success" : "error",
         });
         setTimeout(() => {
-          setAddItems(true)
+          setAddItems(true);
           closeModal();
         }, 300);
-      };
-      
+      }
     } catch (error) {
       setCustomToast({ message: "Error adding item", type: "error" });
       console.error("Error submitting form:", error);
@@ -135,96 +151,91 @@ const EditItems = ({rowData , setAddItems}:any) => {
     setIsCOGSTrackingDropdownOpen((prev) => !prev);
   };
 
+  const fetchDataCategoriesDropdown = async () => {
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getAllCategories",
+      });
 
-
- 
-    const fetchDataCategoriesDropdown = async () => {
-      try {
-        const response: any = await sendApiRequest({
-          mode: "getAllCategories",
+      if (response?.status === 200) {
+        setCategories(response?.data?.categories || []);
+      } else {
+        setCustomToast({
+          ...customToast,
+          message: response?.message,
+          type: "error",
         });
-
-        if (response?.status === 200) {
-          setCategories(response?.data?.categories || []);
-        } else {
-          setCustomToast({
-            ...customToast,
-            message: response?.message,
-            type: "error",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-    const fetchDataDQcategoryDropdown = async () => {
-      try {
-        const response: any = await sendApiRequest({
-          mode: "getAllDQCategory",
+  const fetchDataDQcategoryDropdown = async () => {
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getAllDQCategory",
+      });
+
+      if (response?.status === 200) {
+        setDqCategory(response?.data?.dqcategory || []);
+      } else {
+        setCustomToast({
+          ...customToast,
+          message: response?.message,
+          type: "error",
         });
-
-        if (response?.status === 200) {
-          setDqCategory(response?.data?.dqcategory || []);
-        } else {
-          setCustomToast({
-            ...customToast,
-            message: response?.message,
-            type: "error",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-    const fetchDataCogstrackcategoryDropdown = async () => {
-      try {
-        const response: any = await sendApiRequest({
-          mode: "getAllCogsTrackCategory",
+  const fetchDataCogstrackcategoryDropdown = async () => {
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getAllCogsTrackCategory",
+      });
+
+      if (response?.status === 200) {
+        setCogstracking(response?.data?.cogstrackcategory || []);
+      } else {
+        setCustomToast({
+          ...customToast,
+          message: response?.message,
+          type: "error",
         });
-
-        if (response?.status === 200) {
-          setCogstracking(response?.data?.cogstrackcategory || []);
-        } else {
-          setCustomToast({
-            ...customToast,
-            message: response?.message,
-            type: "error",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-   const openModal = () => {
+  const openModal = () => {
     setIsOpen(true);
     fetchDataCategoriesDropdown();
     fetchDataDQcategoryDropdown();
-    fetchDataCogstrackcategoryDropdown();}
-  
- useEffect(() => {
-  if (dqCategory && rowData?.dqcategoryid) {
-    const option = dqCategory.find(option => option.id === rowData?.dqcategoryid);
-    setDefaultOption(option?.name || "DQ Category");
-  }
-  if (cogstracking && rowData?.cogstrackcategoryid) {
-    const option = cogstracking.find(option => option.id === rowData?.cogstrackcategoryid);
-    setDefaultOptionForCoges(option?.name || "COGS Tracking Category");
-  }
+    fetchDataCogstrackcategoryDropdown();
+  };
 
-  }, [dqCategory ,cogstracking ]);
-
-
-
-
-
-
+  useEffect(() => {
+    if (dqCategory && rowData?.dqcategoryid) {
+      const option = dqCategory.find(
+        (option) => option.id === rowData?.dqcategoryid
+      );
+      setDefaultOption(option?.name || "DQ Category");
+    }
+    if (cogstracking && rowData?.cogstrackcategoryid) {
+      const option = cogstracking.find(
+        (option) => option.id === rowData?.cogstrackcategoryid
+      );
+      setDefaultOptionForCoges(option?.name || "COGS Tracking Category");
+    }
+  }, [dqCategory, cogstracking]);
 
   return (
     <>
-     <ToastNotification
+      <ToastNotification
         message={customToast.message}
         type={customToast.type}
       />
@@ -248,34 +259,45 @@ const EditItems = ({rowData , setAddItems}:any) => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] h-auto below-md:w-[94%] below-md:h-auto px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
             <div className="relative">
-                         <div className="flex justify-center">
-                           <DialogTitle
-                             as="h3"
-                             className="text-[16px]  font-bold leading-custom text-[#3D3D3D]"
-                           >
-                             Edit Item
-                           </DialogTitle>
-                         </div>
-                         <img
-                           onClick={closeModal}
-                           src="/images/cancelicon.svg"
-                           alt="Cancel"
-                           className="absolute top-1.5 right-0 cursor-pointer"
-                         />
-           
-                       </div>
-           
-
+              <div className="flex justify-center">
+                <DialogTitle
+                  as="h3"
+                  className="text-[16px]  font-bold leading-custom text-[#3D3D3D]"
+                >
+                  Edit Item
+                </DialogTitle>
+              </div>
+              <img
+                onClick={closeModal}
+                src="/images/cancelicon.svg"
+                alt="Cancel"
+                className="absolute top-1.5 right-0 cursor-pointer"
+              />
+            </div>
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex flex-col mt-4 gap-6">
-                  <div className="w-full flex mt-4 ">
+                <div className="flex flex-col mt-2 gap-3">
+                  <div className="w-full flex ">
                     <Dropdown
                       options={categories}
-                      selectedOption={selectedCategory ? selectedCategory || "Category" : rowData?.categoryname}
+                      selectedOption={
+                        selectedCategory
+                          ? selectedCategory || "Category"
+                          : rowData?.categoryname
+                      }
                       onSelect={(selectedValue) => {
-                        setValue("category", selectedValue?.name ? selectedValue?.name : rowData?.categoryname);
-                        setValue("categoryId", selectedValue?.id ? selectedValue?.id : rowData?.categoryid );
+                        setValue(
+                          "category",
+                          selectedValue?.name
+                            ? selectedValue?.name
+                            : rowData?.categoryname
+                        );
+                        setValue(
+                          "categoryId",
+                          selectedValue?.id
+                            ? selectedValue?.id
+                            : rowData?.categoryid
+                        );
                         setIsStoreDropdownOpen(false);
                         clearErrors("category");
                       }}
@@ -292,34 +314,56 @@ const EditItems = ({rowData , setAddItems}:any) => {
                     <Dropdown
                       options={dqCategory}
                       selectedOption={
-                        selectedDqCategory
-                          ? selectedDqCategory
-                          : defaultOption
+                        selectedDqCategory ? selectedDqCategory : defaultOption
                       }
-                      onSelect={(selectedOption : any) => {
-                        setValue("dqcategory", selectedOption?.name ? selectedOption?.name : rowData?.dqCategoryname); 
-                        setValue("dqcategoryId", selectedOption?.id ? selectedOption?.id : rowData?.dqcategoryid ); 
-                        setIsDQCategoryDropdownOpen(false); 
-                        clearErrors("dqcategory"); 
+                      onSelect={(selectedOption: any) => {
+                        setValue(
+                          "dqcategory",
+                          selectedOption?.name
+                            ? selectedOption?.name
+                            : rowData?.dqCategoryname
+                        );
+                        setValue(
+                          "dqcategoryId",
+                          selectedOption?.id
+                            ? selectedOption?.id
+                            : rowData?.dqcategoryid
+                        );
+                        setIsDQCategoryDropdownOpen(false);
+                        clearErrors("dqcategory");
                       }}
                       isOpen={isdqCategoryDropdownOpen}
                       toggleOpen={toggleDropdownDQCategory}
                       widthchange="w-full "
                       {...methods.register("dqcategory", {
-                      //  required: "DQ Category should not be empty",
+                        //  required: "DQ Category should not be empty",
                       })}
                       errors={errors.dqcategory}
                     />
                   </div>
                   <div className="w-full">
                     <Dropdown
-                      options={cogstracking} 
-                      selectedOption={ selectedCOGSTracking ? selectedCOGSTracking ||  "COGS Tracking Category"  : defaultOptionForCoges  } 
-                      onSelect={(selected : any) => {
-                        setValue("cogstrackingcategory", selected?.name ? selected?.name : rowData?.cogstrackingcategoryname ); 
-                        setValue("cogstrackingcategoryId", selected?.id ? selected?.id :rowData?.cogstrackcategoryid); 
-                        setIsCOGSTrackingDropdownOpen(false); 
-                        clearErrors("cogstrackingcategory"); 
+                      options={cogstracking}
+                      selectedOption={
+                        selectedCOGSTracking
+                          ? selectedCOGSTracking || "COGS Tracking Category"
+                          : defaultOptionForCoges
+                      }
+                      onSelect={(selected: any) => {
+                        setValue(
+                          "cogstrackingcategory",
+                          selected?.name
+                            ? selected?.name
+                            : rowData?.cogstrackingcategoryname
+                        );
+                        setValue(
+                          "cogstrackingcategoryId",
+                          selected?.id
+                            ? selected?.id
+                            : rowData?.cogstrackcategoryid
+                        );
+                        setIsCOGSTrackingDropdownOpen(false);
+                        clearErrors("cogstrackingcategory");
                       }}
                       isOpen={iscogstrackingDropdownOpen}
                       toggleOpen={toggleDropdownCOGSTracking}
@@ -349,23 +393,24 @@ const EditItems = ({rowData , setAddItems}:any) => {
                   </div>
 
                   <div className="w-full flex">
-                      <InputField
-                        type="text"
-                        label="Item Code"
-                        borderClassName=" border border-gray-300"
-                        labelBackgroundColor="bg-white"
-                        value={itemcode || ""}
-                        
-                        textColor="text-[#636363]"
-                        {...register("code", {
-                          required: "Item code is required",
-                        })}
-                        errors={errors.code}
-                        placeholder="Item code"
-                        variant="outline"
-                        onChange={(e:any) => handleChangeItemcode(e.target.value)}
-                      />
-                    </div>
+                    <InputField
+                      type="text"
+                      label="Item Code"
+                      borderClassName=" border border-gray-300"
+                      labelBackgroundColor="bg-white"
+                      value={itemcode || ""}
+                      textColor="text-[#636363]"
+                      {...register("code", {
+                        required: "Item code is required",
+                      })}
+                      errors={errors.code}
+                      placeholder="Item code"
+                      variant="outline"
+                      onChange={(e: any) =>
+                        handleChangeItemcode(e.target.value)
+                      }
+                    />
+                  </div>
 
                   <div className="w-full flex ">
                     <InputField
@@ -373,7 +418,7 @@ const EditItems = ({rowData , setAddItems}:any) => {
                       label="Packsize"
                       borderClassName=" border border-gray-200"
                       labelBackgroundColor="bg-white"
-                      value={packsize || "" }
+                      value={packsize || ""}
                       textColor="text-[#4B4B4B]"
                       {...register("packsize", {
                         //required: "Pack Size is required",
@@ -381,7 +426,9 @@ const EditItems = ({rowData , setAddItems}:any) => {
                       errors={errors.packsize}
                       placeholder="Packsize"
                       variant="outline"
-                      onChange={(e: any) => handleChangepacksize(e.target.value)}
+                      onChange={(e: any) =>
+                        handleChangepacksize(e.target.value)
+                      }
                     />
                   </div>
                   <div className="w-full flex ">
@@ -393,7 +440,7 @@ const EditItems = ({rowData , setAddItems}:any) => {
                       value={units || ""}
                       textColor="text-[#4B4B4B]"
                       {...methods?.register("units", {
-                       // required: "Units is required",
+                        // required: "Units is required",
                       })}
                       errors={errors.units}
                       placeholder="Units"
@@ -408,10 +455,10 @@ const EditItems = ({rowData , setAddItems}:any) => {
                       label="Weight"
                       borderClassName=" border border-gray-200"
                       labelBackgroundColor="bg-white"
-                      value={weight }
+                      value={weight}
                       textColor="text-[#4B4B4B]"
                       {...methods?.register("weight", {
-                       // required: "Weight is required",
+                        // required: "Weight is required",
                       })}
                       errors={errors.weight}
                       placeholder="Weight"

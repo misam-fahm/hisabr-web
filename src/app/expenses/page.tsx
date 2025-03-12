@@ -5,7 +5,7 @@ import AddExpenses from "@/Components/ExpensesPopup/AddExpenses";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { useRouter } from "next/navigation";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
 import {
   useReactTable,
@@ -24,6 +24,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import DeletePopup from "@/Components/UI/Delete/DeletePopup";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
+import Tooltip from "@/Components/UI/Toolstips/Tooltip";
 
 interface TableRow {
   expensedate: string;
@@ -34,10 +35,9 @@ interface TableRow {
   id: any;
 }
 
-
 const Expenses: FC = () => {
   const router = useRouter();
- // const searchParams = useSearchParams() || new URLSearchParams();
+  // const searchParams = useSearchParams() || new URLSearchParams();
   const [showBackIcon, setShowBackIcon] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef(null);
@@ -59,24 +59,27 @@ const Expenses: FC = () => {
   });
 
   useEffect(() => {
-    if (startDate && endDate && selectedOption ) {
+    if (startDate && endDate && selectedOption) {
       fetchData();
     }
-  }, [selectedOption ]);
-
+  }, [selectedOption]);
 
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "date",
       header: () => <div className="text-left ">Date</div>,
-      cell: (info) => <span>{new Date(info.row.original.expensedate).toLocaleDateString("en-US", {
-        month: "2-digit",
-        day: "2-digit",
-        year: "2-digit",
-      })}</span>,
+      cell: (info) => (
+        <span>
+          {new Date(info.row.original.expensedate).toLocaleDateString("en-US", {
+            month: "2-digit",
+            day: "2-digit",
+            year: "2-digit",
+          })}
+        </span>
+      ),
       size: 80,
     },
-    
+
     {
       accessorKey: "store",
       header: () => <div className="text-left">Store</div>,
@@ -93,7 +96,9 @@ const Expenses: FC = () => {
       accessorKey: "amount",
       header: () => <div className=" flex justify-end   mr-3">Amount</div>,
       cell: (info) => (
-        <span className=" flex justify-end  mr-3">{info.row.original.amount}</span>
+        <span className=" flex justify-end  mr-3">
+          {info.row.original.amount}
+        </span>
       ),
       size: 60,
     },
@@ -102,9 +107,22 @@ const Expenses: FC = () => {
       header: () => <div className="text-left ml-2">Description</div>,
       cell: (info) => {
         const description = info?.row?.original?.description;
-        const truncatedDescription =
-          description?.length > 50 ? `${description?.slice(0, 55)}...` : description;
-        return <div className="text-left  ml-3">{truncatedDescription}</div>;
+        const isTruncated = description?.length > 50;
+        const truncatedDescription = isTruncated
+          ? `${description?.slice(0, 55)}...`
+          : description;
+
+        return isTruncated ? (
+          <Tooltip text={description} position="bottom">
+            {" "}
+            {/* Ensure 'text' is the correct prop for your Tooltip component */}
+            <div className="text-left ml-3 cursor-pointer">
+              {truncatedDescription}
+            </div>
+          </Tooltip>
+        ) : (
+          <div className="text-left ml-3">{description}</div>
+        );
       },
       size: 190,
     },
@@ -113,11 +131,21 @@ const Expenses: FC = () => {
       header: () => <div className="text-left">Type</div>,
       cell: (info) => {
         const expensename: any = info?.row?.original?.expensename;
-        const truncatedDescription =
-          expensename?.length > 15 ? `${expensename?.slice(0, 15)}...` : expensename;
-        return <span className="text-left">{truncatedDescription}</span>;
+        const isTruncated = expensename?.length > 15;
+        const truncatedDescription = isTruncated
+          ? `${expensename?.slice(0, 15)}...`
+          : expensename;
+
+        return isTruncated ? (
+          <Tooltip text={expensename} position="bottom">
+            <span className="cursor-pointer text-left">
+              {truncatedDescription}
+            </span>
+          </Tooltip>
+        ) : (
+          <span className="text-left">{expensename}</span>
+        );
       },
-      // cell: (info) => <span className="">{info.row.original.expensename}</span>,
       size: 100,
     },
     {
@@ -126,7 +154,10 @@ const Expenses: FC = () => {
       cell: (info) => (
         <>
           <span className="flex justify-center">
-            <EditExpense initialData={info?.row?.original} setAddExpenses={setAddExpenses} />
+            <EditExpense
+              initialData={info?.row?.original}
+              setAddExpenses={setAddExpenses}
+            />
           </span>
         </>
       ),
@@ -139,23 +170,28 @@ const Expenses: FC = () => {
         <>
           <span className="flex justify-center ">
             {" "}
-            <DeletePopup message={"Expenses"} jsonData={{ mode: "deleteExpense", id: Number(info?.row?.original?.id) }} setUpdatedData={setAddExpenses} />
+            <DeletePopup
+              message={"Expenses"}
+              jsonData={{
+                mode: "deleteExpense",
+                id: Number(info?.row?.original?.id),
+              }}
+              setUpdatedData={setAddExpenses}
+            />
           </span>
         </>
       ),
       size: 40,
     },
-
   ];
 
   const table = useReactTable({
-
     data: data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-   
+
     initialState: {
       pagination: {
         pageSize: 10,
@@ -176,15 +212,14 @@ const Expenses: FC = () => {
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
         storeid: selectedOption?.id || 69,
-      startdate: startDate && format(startDate, 'yyyy-MM-dd'),
-      enddate: endDate && format(endDate, 'yyyy-MM-dd'),
-      search:globalFilter
+        startdate: startDate && format(startDate, "yyyy-MM-dd"),
+        enddate: endDate && format(endDate, "yyyy-MM-dd"),
+        search: globalFilter,
       });
 
       if (response?.status === 200) {
         setData(response?.data?.expenses);
-        response?.data?.total >= 0 &&
-          setTotalItems(response?.data?.total || 0);
+        response?.data?.total >= 0 && setTotalItems(response?.data?.total || 0);
       } else {
         setCustomToast({
           ...customToast,
@@ -196,7 +231,7 @@ const Expenses: FC = () => {
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
-      setAddExpenses(false)
+      setAddExpenses(false);
     }
   };
 
@@ -215,7 +250,7 @@ const Expenses: FC = () => {
       const response = await sendApiRequest({ mode: "getUserStore" });
       if (response?.status === 200) {
         setStore(response?.data?.stores || []);
-        if (response?.data?.stores){
+        if (response?.data?.stores) {
           setSelectedOption({
             name: response?.data?.stores[0]?.name,
             id: response?.data?.stores[0]?.id,
@@ -230,21 +265,22 @@ const Expenses: FC = () => {
   };
 
   const verifyToken = async (token: string) => {
-    const res: any = await sendApiRequest({
-      token: token
-    }, `auth/verifyToken`);
-    res?.status === 200 
-      ? setIsVerifiedUser(true) 
-      : router.replace('/login');
+    const res: any = await sendApiRequest(
+      {
+        token: token,
+      },
+      `auth/verifyToken`
+    );
+    res?.status === 200 ? setIsVerifiedUser(true) : router.replace("/login");
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      router.replace('/login');
+      router.replace("/login");
     } else {
       verifyToken(token);
-    }    
+    }
   }, []);
 
   useEffect(() => {
@@ -265,7 +301,7 @@ const Expenses: FC = () => {
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
-  }
+  };
 
   const handleError = (message: string) => {
     setCustomToast({
@@ -323,16 +359,16 @@ const Expenses: FC = () => {
   }, [table]);
 
   useEffect(() => {
-    if (typeof window !== undefined){
-      const params = new URLSearchParams(window.location.search)
+    if (typeof window !== undefined) {
+      const params = new URLSearchParams(window.location.search);
       const fromHome = params.get("fromHome") === "true";
       const fromLabourAnalysis = params.has("fromLabourAnalysis");
       if (fromHome || fromLabourAnalysis) {
         setShowBackIcon(true);
-      const currentUrl = window.location.pathname;
-      window.history.replaceState({},"",currentUrl)
+        const currentUrl = window.location.pathname;
+        window.history.replaceState({}, "", currentUrl);
+      }
     }
-  }
   }, []);
 
   const clearSearch = async () => {
@@ -344,15 +380,14 @@ const Expenses: FC = () => {
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
         storeid: selectedOption?.id || 69,
-      startdate: startDate && format(startDate, 'yyyy-MM-dd'),
-      enddate: endDate && format(endDate, 'yyyy-MM-dd'),
-      search:""
+        startdate: startDate && format(startDate, "yyyy-MM-dd"),
+        enddate: endDate && format(endDate, "yyyy-MM-dd"),
+        search: "",
       });
 
       if (response?.status === 200) {
         setData(response?.data?.expenses);
-        response?.data?.total >= 0 &&
-          setTotalItems(response?.data?.total || 0);
+        response?.data?.total >= 0 && setTotalItems(response?.data?.total || 0);
       } else {
         setCustomToast({
           ...customToast,
@@ -364,33 +399,29 @@ const Expenses: FC = () => {
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
-      setAddExpenses(false)
+      setAddExpenses(false);
     }
   };
 
-
-
   return (
-
     <main
-    className={`relative px-6 below-md:px-3 overflow-auto border-none ${
-      data?.length > 10 ? "max-h-[calc(100vh-50px)]" : "h-[500px]"
-    }`}
-    style={{ scrollbarWidth: "thin" }}
-  >
-   
+      className={`relative px-6 below-md:px-3 overflow-auto border-none ${
+        data?.length > 10 ? "max-h-[calc(100vh-50px)]" : "h-[500px]"
+      }`}
+      style={{ scrollbarWidth: "thin" }}
+    >
       <>
         <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
           <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
-          {showBackIcon && (
-          <img
-            onClick={() => router.back()}
-            alt="Back Arrow"
-            className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
-            src="/images/webbackicon.svg"
-          ></img>
-        )}
-          <Dropdown
+            {showBackIcon && (
+              <img
+                onClick={() => router.back()}
+                alt="Back Arrow"
+                className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
+                src="/images/webbackicon.svg"
+              ></img>
+            )}
+            <Dropdown
               options={store}
               selectedOption={selectedOption?.name || "Store"}
               onSelect={(selectedOption: any) => {
@@ -405,13 +436,13 @@ const Expenses: FC = () => {
               widthchange="w-[60%]"
             />
             <div className="w-full tablet:w-full below-md:w-full h-[35px]">
-            <DateRangePicker 
-                startDate = {startDate}
-                endDate = {endDate}
-                setStartDate = {setStartDate}
-                setEndDate = {setEndDate}
-                fetchData = {fetchData}
-                />
+              <DateRangePicker
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+                fetchData={fetchData}
+              />
             </div>
 
             <div className="flex relative border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
@@ -425,10 +456,14 @@ const Expenses: FC = () => {
                 className="w-full h-[35px] bg-transparent  px-3 placeholder:text-[#636363] focus:outline-none"
               />
               {globalFilter && (
-                    <div className="  absolute right-8 cursor-pointer">
-                 <img className="  " src="/images/cancelicon.svg"  onClick={clearSearch}  />
-                 </div>
-                )}
+                <div className="  absolute right-8 cursor-pointer">
+                  <img
+                    className="  "
+                    src="/images/cancelicon.svg"
+                    onClick={clearSearch}
+                  />
+                </div>
+              )}
               <img
                 className="pr-2 cursor-pointer items-center"
                 src="/images/searchicon.svg"
@@ -437,7 +472,10 @@ const Expenses: FC = () => {
             </div>
           </div>
           <div className="block pl-24 below-md:hidden">
-            <AddExpenses setAddExpenses={setAddExpenses}  SelectedStore = {selectedOption}/>
+            <AddExpenses
+              setAddExpenses={setAddExpenses}
+              SelectedStore={selectedOption}
+            />
           </div>
         </div>
 
@@ -450,18 +488,27 @@ const Expenses: FC = () => {
             >
               <div className="flex justify-between items-start">
                 <div className="flex gap-4 px-3 py-4">
-                  <p className="text-[14px] font-bold">{new Date(card.expensedate).toLocaleDateString("en-US", {
-        month: "2-digit",
-        day: "2-digit",
-        year: "2-digit",
-      })}</p>
+                  <p className="text-[14px] font-bold">
+                    {new Date(card.expensedate).toLocaleDateString("en-US", {
+                      month: "2-digit",
+                      day: "2-digit",
+                      year: "2-digit",
+                    })}
+                  </p>
                   <p className="text-[14px] font-bold">{card.expensename}</p>
                 </div>
 
                 <div className="flex gap-5 mb-1 px-4 py-4">
                   <>
-                    <EditExpense initialData={card} setAddExpenses={setAddExpenses} />
-                    <DeletePopup message={"Expense"} jsonData={{ mode: "deleteExpense", id: Number(card.id) }} setUpdatedData={setAddExpenses} />
+                    <EditExpense
+                      initialData={card}
+                      setAddExpenses={setAddExpenses}
+                    />
+                    <DeletePopup
+                      message={"Expense"}
+                      jsonData={{ mode: "deleteExpense", id: Number(card.id) }}
+                      setUpdatedData={setAddExpenses}
+                    />
                   </>
                 </div>
               </div>
@@ -489,7 +536,7 @@ const Expenses: FC = () => {
             <AddExpenses setAddExpenses={setAddExpenses} />
           </div>
           <div className="hidden below-md:block ">
-          <Pagination table={table} totalItems={totalItems} />
+            <Pagination table={table} totalItems={totalItems} />
           </div>
         </div>
 
@@ -513,9 +560,9 @@ const Expenses: FC = () => {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </th>
                     ))}
                   </tr>
@@ -528,48 +575,59 @@ const Expenses: FC = () => {
               style={{ maxHeight: "calc(100vh - 270px)" }}
             >
               <table className="w-full border-collapse text-[12px] text-white table-fixed">
-              <tbody>
-  {loading ? (
-    /* Show skeleton loaders while loading */
-    Array.from({ length: 10 }).map((_, index) => (
-      <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
-        {columns.map((column, colIndex) => (
-          <td
-            key={colIndex}
-            className="px-4 py-1.5"
-            style={{ width: `${column.size}px` }}
-          >
-            <Skeleton height={30} />
-          </td>
-        ))}
-      </tr>
-    ))
-  ) : data && data.length > 0 ? (
-    /* Render actual data */
-    table.getRowModel().rows.map((row) => (
-      <tr key={row.id} className={row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
-        {row.getVisibleCells().map((cell) => (
-          <td
-            key={cell.id}
-            className="px-4 py-1.5 text-[#636363] text-[14px]"
-            style={{ width: `${cell.column.getSize()}px` }}
-          >
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </td>
-        ))}
-      </tr>
-    ))
-  ) : (
-    /* Show No Data Found only when data is fully loaded and empty */
-    <tr>
-      <td colSpan={columns.length} className="py-6 text-center">
-     <NoDataFound />
-      </td>
-    </tr>
-  )}
-</tbody>
-
-
+                <tbody>
+                  {loading ? (
+                    /* Show skeleton loaders while loading */
+                    Array.from({ length: 10 }).map((_, index) => (
+                      <tr
+                        key={index}
+                        className={
+                          index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
+                      >
+                        {columns.map((column, colIndex) => (
+                          <td
+                            key={colIndex}
+                            className="px-4 py-1.5"
+                            style={{ width: `${column.size}px` }}
+                          >
+                            <Skeleton height={30} />
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) : data && data.length > 0 ? (
+                    /* Render actual data */
+                    table.getRowModel().rows.map((row) => (
+                      <tr
+                        key={row.id}
+                        className={
+                          row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <td
+                            key={cell.id}
+                            className="px-4 py-1.5 text-[#636363] text-[14px]"
+                            style={{ width: `${cell.column.getSize()}px` }}
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) : (
+                    /* Show No Data Found only when data is fully loaded and empty */
+                    <tr>
+                      <td colSpan={columns.length} className="py-6 text-center">
+                        <NoDataFound />
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
               </table>
             </div>
           </div>
