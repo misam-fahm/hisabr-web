@@ -51,10 +51,15 @@ const SalesKPI: FC = () => {
 
   const labourCost = Number(data?.labour_cost) || 0;
   const taxAmount = Number(data?.tax_amt) || 0;
+
+  const sales:any = data?.net_sales ? Math.round(data?.net_sales) : 0;
+  const profit:any = data?.net_sales ? Math.round(data?.net_sales - data?.producttotal - data?.labour_cost - operatExpAmt - royaltyAmt)  : 0;
   // const royalty = data?.net_sales ? Number((data.net_sales * 0.09 /).toFixed(2)) : 0;
   // const operatingExpenses = data?.labour_cost ? 109817 : 0;
 
-  const total = labourCost + taxAmount + royaltyAmt + operatExpAmt;
+  const validProfit = profit < 0 ? 0 : profit;
+
+  const total:any = labourCost + taxAmount + royaltyAmt + operatExpAmt + sales + validProfit ;
 
   // Prevent division by zero
   const percentages = total > 0 ? {
@@ -62,25 +67,45 @@ const SalesKPI: FC = () => {
     taxAmount: ((taxAmount / total) * 100).toFixed(2),
     royalty: ((royaltyAmt / total) * 100).toFixed(2),
     operatingExpenses: ((operatExpAmt / total) * 100).toFixed(2),
+    profit:((validProfit / total) * 100).toFixed(2),
+    sales:((sales / total) * 100).toFixed(2),
   } : {
     labourCost: 0,
     taxAmount: 0,
     royalty: 0,
     operatingExpenses: 0,
+    sales:0,
+    profit:0,
+
   };
 
-
+ 
 
   const tableData = [
     // { label: "Profit", amount: "10,000", per: "65%", color: "#53755599" },
-    { label: "Labour Cost", amount: (Math.round(data?.labour_cost ) || 0).toLocaleString(), per:  Number(percentages.labourCost), color: "#53755599" },
+    {
+      label: "Profit",
+      amount:   data?.net_sales ?
+      `${Math.round(data?.net_sales - data?.producttotal - data?.labour_cost - operatExpAmt - royaltyAmt)?.toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
+        : 0,
+        per:  percentages.profit ?  Number(percentages.profit) : 0,
+        color: "#3CB371",
+      
+    },
+    {
+      label: "Sales",
+      amount:  data?.net_sales ? Math.round(data?.net_sales)?.toLocaleString() : 0,
+      per: percentages.sales ?  Number(percentages.sales) : 0,
+      color: "#",
+    },
+    { label: "Labour Cost", amount: (Math.round(data?.labour_cost ) || 0).toLocaleString(), per:  Number(percentages.labourCost), color: "#4B4B4B" },
     { label: "Sales Tax", amount:(Math.round(data?.tax_amt) || 0).toLocaleString(), per: Number(percentages.taxAmount), color: "#DAB777" },
     { label: "Royalty", amount: (Math.round(royaltyAmt) || 0).toLocaleString(), per: Number(percentages.royalty), color: "#653C597A" },
     {
       label: "Operating Expenses",
       amount: data ?  (Math.round( operatExpAmt)).toLocaleString() : 0,
       per:   percentages.operatingExpenses ?  Number(percentages.operatingExpenses) : 0,
-      color: "#79AFC7",
+      color: "#FF5555",
     },
     // { label: "COGS", amount: (Math.round(data.producttotal) || 0).toLocaleString(), per: "9.8%", color: "#AC8892" },
   ];
@@ -541,7 +566,7 @@ const enhancedItems = items?.map((item:any) => ({
                   </tr>
                 </thead>
                 <tbody>
-                  {tableData.map((row, index) => (
+                  {tableData.map((row:any, index) => (
                     <tr key={index}>
                       <td className="border-t-0 px-6 below-md:px-2 text-left border-l-0 border-r-0 text-xs whitespace-nowrap p-2 flex items-center text-[#404040] text-[13px]">
                         <div
@@ -565,7 +590,7 @@ const enhancedItems = items?.map((item:any) => ({
         </div>
         <div className="flex flex-col px-6 py-6">
           <div className="flex justify-between ">
-        <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[49%] items-stretch">
+        <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[100%] items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6 pb-3">
               <div className="flex flex-row gap-2">
                 <img src="/images/persentage.svg" alt="Tender" />
@@ -654,7 +679,7 @@ const enhancedItems = items?.map((item:any) => ({
             </div>
           </div>
 
-          <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[49%] items-stretch">
+          {/* <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[49%] items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6 pb-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/items.svg" />
@@ -727,17 +752,17 @@ const enhancedItems = items?.map((item:any) => ({
     )}
               </table>
             </div>
-          </div>
+          </div> */}
       </div>
-      <div className="w-full px-3 below-md:w-[100%] mt-8 bg-white below-md:ml-0 tablet:ml-0 tablet:mt-6 tablet:w-full below-md:mt-3 shadow-md rounded-md">
-              <div className="flex flex-col">
+          {/* <div className="w-full px-3 below-md:w-[100%] mt-8 bg-white below-md:ml-0 tablet:ml-0 tablet:mt-6 tablet:w-full below-md:mt-3 shadow-md rounded-md">
+              <div className="flex flex-col"> */}
                 {/* Header Section */}
-                <div className="flex flex-row justify-between px-6 pt-6 items-start">
+                {/* <div className="flex flex-row justify-between px-6 pt-6 items-start"> */}
                   {/* Sales Information */}
-                  <div className="w-[50%] flex justify-center items-center">
+                  {/* <div className="w-[50%] flex justify-center items-center">
                     <p className="text-[#393E47]  font-bold text-[16px]">
                     Sales by Items
-                    </p>
+                    </p> */}
                     {/* <p className="text-[#0A0A0A] font-bold text-[24px] mt-1">
                       $ {totalExtPrice.toLocaleString()}
                     </p> */}
@@ -751,10 +776,10 @@ const enhancedItems = items?.map((item:any) => ({
                         11.2%
                       </p>
                     </div> */}
-                  </div>
+                  {/* </div> */}
 
                   {/* Dropdown */}
-                  <div className="mb-6 relative z-[40] below-md:w-[100%] below-md:max-w-[35%]">
+                  {/* <div className="mb-6 relative z-[40] below-md:w-[100%] below-md:max-w-[35%]"> */}
                     {/* <Dropdown
                       className="relative below-md:w-full rounded"
                       shadowclassName="shadow-none border border-gray-200"
@@ -765,11 +790,11 @@ const enhancedItems = items?.map((item:any) => ({
                       toggleOpen={() => toggleYearDropdown(4)}
                       widthchange="below-lg:w-[130px] tablet:w-[130px]"
                     /> */}
-                  </div>
-                </div>
+                  {/* </div>
+                </div> */}
 
                 {/* Pie Chart Section */}
-                <div className=" flex w-full justify-between flex-row gap-4">
+                {/* <div className=" flex w-full justify-between flex-row gap-4">
                   <YearlySalesGraph enhancedItems={enhancedItems} totalQty={totalQty}  totalExtPrice={totalExtPrice}/>
             
                 <div className="w-full">
@@ -780,7 +805,7 @@ const enhancedItems = items?.map((item:any) => ({
                           key={index}
                           className="flex px-[15%] items-center justify-between py-2"
                         >
-                          {/* Color Circle */}
+                         
                           <div className="flex items-center">
                             <span
                               className="inline-block w-3 h-3 rounded-full mr-3"
@@ -790,7 +815,7 @@ const enhancedItems = items?.map((item:any) => ({
                               {item.itemname}
                             </span>
                           </div>
-                          {/* Value */}
+                          
                           <span className="font-semibold text-[#0A0A0A] text-[14px]">
                             ${(item.totalextprice).toFixed(2)}
                           </span>
@@ -799,9 +824,9 @@ const enhancedItems = items?.map((item:any) => ({
                     </ul>
                   </div>
                 </div>
-                </div>
-              </div>
-            </div>
+                </div> */}
+              {/* </div> */}
+            {/* </div> */}
         </div>
       </div>
       <div className="below-lg:hidden flex justify-end fixed bottom-5 right-5">
