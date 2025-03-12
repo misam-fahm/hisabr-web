@@ -644,15 +644,16 @@ const enhancedItems = items?.map((item:any) => ({
 
                       </td>
                       <td className="px-4 py-1.5 text-[14px] border-b text-right border-gray-200 text-[#334155] font-medium">
-                        { row.payments ? "$" +( row.payments)?.toFixed(2) : 0}
+                      {row.payments ? "$" + row.payments.toLocaleString() : "$0"}
+
                       </td>
                       <td className="px-4 py-1.5 border-b border-gray-200 text-gray-600 text-[14px] font-medium text-right">
                         {row.commission ? (row.commission)?.toFixed(2) + "%" : 0.00 }
                       </td>
                       <td className="px-4 py-1.5 border-b text-right border-gray-200 text-[#3F526D] text-[14px] font-medium">
-                              {row.payments && row.commission !== undefined
-                                   ? `$${((row.payments * row.commission) / 100).toFixed(2)}`
-                                   : "--"}
+                      {row.payments && row.commission !== undefined
+    ? `$${((row.payments * row.commission) / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    : "--"}
                       </td>
                     </tr>
                   )))}
@@ -664,13 +665,13 @@ const enhancedItems = items?.map((item:any) => ({
                       Total
                     </td>
                     <td className="px-4 py-1.5 border-t text-right border-gray-200">
-                        {totalPayments ?  "$" + (totalPayments).toFixed(2)  : "--"}
+                    {totalPayments ? "$" + totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "--"}
                     </td>
                     <td className="px-4 py-1.5 border-t text-right border-gray-200"> 
                        {/* {totalCommission ? "$" + (totalCommission).toFixed(2) :"--"} */}
                        </td>
                     <td className="px-4 py-1.5 border-t text-right border-gray-200">
-                    {totalFinalAmount ? "$" + (totalFinalAmount).toFixed(2)  :"--"}
+                    {totalFinalAmount ? "$" + totalFinalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "--"}
                     </td>
                   </tr>
                 </tfoot> }
@@ -729,7 +730,7 @@ const enhancedItems = items?.map((item:any) => ({
                         {row.totalqty}
                       </td>
                       <td className="px-4 py-1.5 border-b text-right border-gray-200 text-[14px] font-medium text-[#334155]">
-                        ${(row.totalextprice).toFixed(2)}
+                        {row.totalextprice ? `$${row.totalextprice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "--"}
                       </td>
                     </tr>
                   )))}
@@ -744,7 +745,7 @@ const enhancedItems = items?.map((item:any) => ({
             {totalQty}
           </td>
           <td className="px-4 py-1.5 border-t text-right border-gray-200 text-[14px] font-medium">
-            ${totalExtPrice.toFixed(2)}
+          {totalExtPrice ? `$${totalExtPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "--"}
           </td>
         </tr>
       </tfoot>
@@ -795,8 +796,7 @@ const enhancedItems = items?.map((item:any) => ({
                 {/* Pie Chart Section */}
                 {/* <div className=" flex w-full justify-between flex-row gap-4">
                   <YearlySalesGraph enhancedItems={enhancedItems} totalQty={totalQty}  totalExtPrice={totalExtPrice}/>
-              
-
+            
                 <div className="w-full">
                   <div className="w-full px-6 py-6 below-md:pb-12 tablet:pb-12">
                     <ul>

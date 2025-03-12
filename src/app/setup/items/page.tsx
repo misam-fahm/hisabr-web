@@ -18,7 +18,9 @@ import AddCategories from "@/Components/Setup/CategoriesPopup/AddCategories";
 import Pagination from "@/Components/UI/Pagination/Pagination";
 import DeleteItems from "@/Components/Setup/ItemsPopup/DeleteItems";
 import EditItem from "@/Components/Setup/ItemsPopup/EditItem";
-import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, {
+  ToastNotificationProps,
+} from "@/Components/UI/ToastNotification/ToastNotification";
 import DeletePopup from "@/Components/UI/Delete/DeletePopup";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 
@@ -30,6 +32,9 @@ interface TableRow {
   weight: string;
   itemid?: number;
   categoryid?: number;
+  itemcode: string;      // Add this
+  dqcategoryname: string; // Add this
+  cogscategoryname: string; // Add this
 }
 
 const Page: FC = () => {
@@ -44,25 +49,48 @@ const Page: FC = () => {
     message: "",
     type: "",
   });
-  
+
   const columns: ColumnDef<TableRow>[] = [
+    {
+      accessorKey: "itemcode",
+      header: () => <div className="text-left">Code</div>,
+      cell: (info) => <span>{info.getValue() as string}</span>,
+      size: 80,
+    },
+
     {
       accessorKey: "itemname",
       header: () => <div className="text-left">Name</div>,
       cell: (info) => {
         const value = info.getValue() as string;
-        const truncatedValue = value.length > 22 ? value.slice(0, 22) + "..." : value;
+        const truncatedValue =
+          value.length > 22 ? value.slice(0, 22) + "..." : value;
         return <span title={value}>{truncatedValue}</span>;
       },
-      size: 160,
+      size: 200,
     },
-    
+
     {
       accessorKey: "categoryname",
       header: () => <div className="text-left">Category</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
       size: 120,
     },
+
+    {
+      accessorKey: "dqcategoryname",
+      header: () => <div className="text-left">DQ-CTG</div>,
+      cell: (info) => <span>{info.getValue() as string}</span>,
+      size: 100,
+    },
+
+    {
+      accessorKey: "cogscategoryname",
+      header: () => <div className="text-left">COGS-CTG</div>,
+      cell: (info) => <span>{info.getValue() as string}</span>,
+      size: 140,
+    },
+
     {
       accessorKey: "packsize",
       header: () => <div className="text-right">Pack Size</div>,
@@ -102,14 +130,19 @@ const Page: FC = () => {
       header: () => <div className="text-center"></div>,
       cell: (info) => (
         <span className="flex justify-center">
-         <DeletePopup message={"Item"} jsonData={ {mode: "deleteItem",itemid:Number(info.row.original.itemid)}} setUpdatedData={setAddItems} />
+          <DeletePopup
+            message={"Item"}
+            jsonData={{
+              mode: "deleteItem",
+              itemid: Number(info.row.original.itemid),
+            }}
+            setUpdatedData={setAddItems}
+          />
         </span>
       ),
       size: 50,
     },
   ];
-
- 
 
   const table = useReactTable({
     data,
@@ -117,7 +150,7 @@ const Page: FC = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-   
+
     initialState: {
       pagination: {
         pageSize: 10,
@@ -147,7 +180,7 @@ const Page: FC = () => {
         mode: "getItems",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
-         search: globalFilter
+        search: globalFilter,
       });
 
       if (response?.status === 200) {
@@ -166,58 +199,52 @@ const Page: FC = () => {
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
-      setAddItems(false)
+      setAddItems(false);
     }
   };
 
   useEffect(() => {
-   
-      fetchData();
-    
+    fetchData();
   }, [pageIndex, pageSize, isOpenAddItems]);
-
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       fetchData();
     }
   };
-    const clearSearch = async () => {
-      setLoading(true);
-      setGlobalFilter("");
-      try {
-        const response: any = await sendApiRequest({
-          mode: "getItems",
-          page: table.getState().pagination.pageIndex + 1,
-          limit: table.getState().pagination.pageSize,
-           search: ""
-        });
-  
-        if (response?.status === 200) {
-          setData(response?.data?.items || []);
-          response?.data?.total > 0 &&
-            setTotalItems(response?.data?.total || 0);
-        } else {
-          setCustomToast({
-            ...customToast,
-            message: response?.message,
-            type: "error",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-        setAddItems(false)
-      }
-    };
+  const clearSearch = async () => {
+    setLoading(true);
+    setGlobalFilter("");
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getItems",
+        page: table.getState().pagination.pageIndex + 1,
+        limit: table.getState().pagination.pageSize,
+        search: "",
+      });
 
-  
+      if (response?.status === 200) {
+        setData(response?.data?.items || []);
+        response?.data?.total > 0 && setTotalItems(response?.data?.total || 0);
+      } else {
+        setCustomToast({
+          ...customToast,
+          message: response?.message,
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+      setAddItems(false);
+    }
+  };
+
   const handleClick = () => {
     if (searchInputRef.current) {
       searchInputRef.current.focus();
-    };
-    
+    }
   };
   return (
     <main
@@ -229,27 +256,31 @@ const Page: FC = () => {
         type={customToast.type}
       />
       <div className="flex flex-row justify-between w-full items-center  my-6">
-      <div className="flex  border border-gray-300 below-md:w-full relative text-[12px] bg-[#ffff] items-center rounded w-[40%] h-[35px]">
-              <input
-                type="text"
-                value={globalFilter ?? ""}
-                onChange={(e) => setGlobalFilter(e.target.value)}
-                onKeyDown={handleKeyDown}
-                ref={searchInputRef}
-                placeholder="Search"
-                className="w-full h-[35px] bg-transparent  px-3 placeholder:text-[#636363] focus:outline-none"
-                 />
-                  {globalFilter && (
-                    <div className="  absolute right-8 cursor-pointer">
-                 <img className="  " src="/images/cancelicon.svg" onClick={clearSearch} />
-                 </div>
-                )}
+        <div className="flex  border border-gray-300 below-md:w-full relative text-[12px] bg-[#ffff] items-center rounded w-[40%] h-[35px]">
+          <input
+            type="text"
+            value={globalFilter ?? ""}
+            onChange={(e) => setGlobalFilter(e.target.value)}
+            onKeyDown={handleKeyDown}
+            ref={searchInputRef}
+            placeholder="Search"
+            className="w-full h-[35px] bg-transparent  px-3 placeholder:text-[#636363] focus:outline-none"
+          />
+          {globalFilter && (
+            <div className="  absolute right-8 cursor-pointer">
               <img
-                className="pr-2 cursor-pointer items-center"
-                src="/images/searchicon.svg"
-                onClick={fetchData}
+                className="  "
+                src="/images/cancelicon.svg"
+                onClick={clearSearch}
               />
             </div>
+          )}
+          <img
+            className="pr-2 cursor-pointer items-center"
+            src="/images/searchicon.svg"
+            onClick={fetchData}
+          />
+        </div>
         <AddNewItems setAddItems={setAddItems} />
         {/* <AddCategories /> */}
       </div>
@@ -266,60 +297,88 @@ const Page: FC = () => {
         >
           {data && data?.length > 0 ? (
             data?.map((row) => (
-            <div
-              key={row?.itemid}
-              className={`border border-gray-200 p-5 bg-white rounded-lg mb-3`}
-            >
-              <div className="flex justify-between items-center">
-                {/* Name */}
-                <span className="font-bold text-[14px] text-[#334155]">
-                  {row?.itemname}
-                </span>
-                <div className="flex items-center gap-4">
-                  <>
-                    <EditItem rowData={row} setAddItems={setAddItems} />
-                  </>
-                  {/* Delete */}
-                  <>
-                  <DeletePopup message={"Item"} jsonData={ {mode: "deleteItem",itemid:Number(row.itemid)}} setUpdatedData={setAddItems} />
-                  </>
+              <div
+                key={row?.itemid}
+                className={`border border-gray-200 p-5 bg-white rounded-lg mb-3`}
+              >
+                <div className="flex justify-between items-center">
+                  {/* Name */}
+                  <span className="font-bold text-[14px] text-[#334155]">
+                    {row?.itemname}
+                  </span>
+                  <div className="flex items-center gap-4">
+                    <>
+                      <EditItem rowData={row} setAddItems={setAddItems} />
+                    </>
+                    {/* Delete */}
+                    <>
+                      <DeletePopup
+                        message={"Item"}
+                        jsonData={{
+                          mode: "deleteItem",
+                          itemid: Number(row.itemid),
+                        }}
+                        setUpdatedData={setAddItems}
+                      />
+                    </>
+                  </div>
+                </div>
+                {/* Border */}
+                <div className=" border-b bg-gray-200 my-3"></div>
+                {/* Code */}
+        <div className="flex justify-between">
+          <span className=" text-[#636363] text-[13px] mb-2">Code</span>
+          <span className="text-[14px]">{row?.itemcode}</span>
+        </div>
+                {/* Category */}
+                <div className="flex justify-between">
+                  <span className=" text-[#636363] text-[13px] mb-2">
+                    Category
+                  </span>{" "}
+                  <span className="text-[14px]">{row?.categoryname}</span>
+                </div>
+                {/* DQ-CTG */}
+        <div className="flex justify-between mt-1">
+          <span className=" text-[#636363] text-[13px] mb-2">DQ-CTG</span>
+          <span className="text-[14px]">{row?.dqcategoryname}</span>
+        </div>
+        {/* COGS-CTG */}
+        <div className="flex justify-between mt-1">
+          <span className=" text-[#636363] text-[13px] mb-2">COGS-CTG</span>
+          <span className="text-[14px]">{row?.cogscategoryname}</span>
+        </div>
+                {/* packsize */}
+                <div className="mt-1 flex justify-between">
+                  <span className=" text-[#636363] text-[13px] mb-2">
+                  packsize
+                  </span>{" "}
+                  <span className="text-[14px]">{row?.packsize}</span>
+                </div>
+                {/* Quantity */}
+                <div className=" mt-1 flex justify-between">
+                  <span className=" text-[#636363] text-[13px] mb-2">
+                    Quantity
+                  </span>{" "}
+                  <span className="text-[14px]">{row?.units}</span>
+                </div>
+                {/* Weight */}
+                <div className=" mt-1 flex justify-between">
+                  <span className=" text-[#636363] text-[13px] mb-2">
+                    Weight
+                  </span>{" "}
+                  <span className="text-[14px]">{row?.weight}</span>
                 </div>
               </div>
-              {/* Border */}
-              <div className=" border-b bg-gray-200 my-3"></div>
-              {/* Category */}
-              <div className="flex justify-between">
-                <span className=" text-[#636363] text-[13px] mb-2">
-                  Category
-                </span>{" "}
-                <span className="text-[14px]">{row?.categoryname}</span>
-              </div>
-              {/* Price */}
-              <div className="mt-1 flex justify-between">
-                <span className=" text-[#636363] text-[13px] mb-2">Price</span>{" "}
-                <span className="text-[14px]">{row?.packsize}</span>
-              </div>
-              {/* Quantity */}
-              <div className=" mt-1 flex justify-between">
-                <span className=" text-[#636363] text-[13px] mb-2">
-                  Quantity
-                </span>{" "}
-                <span className="text-[14px]">{row?.units}</span>
-              </div>
-              {/* Weight */}
-              <div className=" mt-1 flex justify-between">
-                <span className=" text-[#636363] text-[13px] mb-2">Weight</span>{" "}
-                <span className="text-[14px]">{row?.weight}</span>
-              </div>
-            </div>
-          ))) : (
-            <div>No data available</div>)}
+            ))
+          ) : (
+            <div>No data available</div>
+          )}
           {/* Add NewItems bottom */}
           <div className=" block pl-24">
             <AddNewItems setAddItems={setAddItems} />
           </div>
           <div className="hidden below-md:block ">
-          <Pagination table={table} totalItems={totalItems} />
+            <Pagination table={table} totalItems={totalItems} />
           </div>
         </div>
         {/* Desktop View */}
@@ -353,59 +412,59 @@ const Page: FC = () => {
             >
               <table className="w-full table-fixed">
                 <tbody>
-                  {loading
-                    ? Array.from({ length: 10 }).map((_, index) => (
-                        <tr
-                          key={index}
-                          className={
-                            index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                          }
-                        >
-                          {columns.map((column, colIndex) => (
-                            <td
-                              key={colIndex}
-                              className="px-4 py-1.5"
-                              style={{ width: `${column.size}px` }}
-                            >
-                              <Skeleton height={30} />
-                            </td>
-                          ))}
-                        </tr>
-                      )) : table.getRowModel().rows.length === 0 ? (
-                        /* Show No Data Found Message If No Data Available */
-                        <tr>
-                          <td colSpan={columns.length} className="py-6 text-center">
-                            <NoDataFound />
+                  {loading ? (
+                    Array.from({ length: 10 }).map((_, index) => (
+                      <tr
+                        key={index}
+                        className={
+                          index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
+                      >
+                        {columns.map((column, colIndex) => (
+                          <td
+                            key={colIndex}
+                            className="px-4 py-1.5"
+                            style={{ width: `${column.size}px` }}
+                          >
+                            <Skeleton height={30} />
                           </td>
-                        </tr>
-                      )
-                    : data && data.length > 0 ? (
-                      table.getRowModel().rows.map((row) => (
-                        <tr
-                          key={row?.id}
-                          className={
-                            row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                          }
-                        >
-                          {row.getVisibleCells().map((cell) => (
-                            <td
-                              key={cell?.id}
-                              className="px-4 py-1.5 text-[#636363] text-[14px]"
-                              style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
-                            >
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                              )}
-                            </td>
-                          ))}
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td>No data available</td>
+                        ))}
                       </tr>
-                    )}
+                    ))
+                  ) : table.getRowModel().rows.length === 0 ? (
+                    /* Show No Data Found Message If No Data Available */
+                    <tr>
+                      <td colSpan={columns.length} className="py-6 text-center">
+                        <NoDataFound />
+                      </td>
+                    </tr>
+                  ) : data && data.length > 0 ? (
+                    table.getRowModel().rows.map((row) => (
+                      <tr
+                        key={row?.id}
+                        className={
+                          row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <td
+                            key={cell?.id}
+                            className="px-4 py-1.5 text-[#636363] text-[14px]"
+                            style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td>No data available</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

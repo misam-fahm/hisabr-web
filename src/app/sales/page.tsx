@@ -283,119 +283,128 @@ const Sales: FC = () => {
           const responseData = await response.json();
           if (response.ok) {
             let getStore: any = [];
-            if (responseData?.store_name !== "Not Found") {
-              getStore = await sendApiRequest({
-                mode: "getStoreByName",
+            if (selectedOption.name == responseData?.store_name) {
+              if (responseData?.store_name !== "Not Found") {
+                getStore = await sendApiRequest({
+                  mode: "getStoreByName",
+                  storename: responseData?.store_name
+                });
+              }
+              const convertDate = new Date(responseData?.sales_date);
+              const formattedDate = convertDate?.getFullYear() + '-' +
+                (convertDate?.getMonth() + 1)?.toString()?.padStart(2, '0') + '-' +
+                convertDate?.getDate()?.toString()?.padStart(2, '0');
+              const checkSalesUpload: any = await sendApiRequest({
+                mode: "checkSalesExist",
+                salesdate: formattedDate,
                 storename: responseData?.store_name
               });
-            }
-            const convertDate = new Date(responseData?.sales_date);
-            const formattedDate = convertDate?.getFullYear() + '-' +
-              (convertDate?.getMonth() + 1)?.toString()?.padStart(2, '0') + '-' +
-              convertDate?.getDate()?.toString()?.padStart(2, '0');
-            const checkSalesUpload: any = await sendApiRequest({
-              mode: "checkSalesExist",
-              salesdate: formattedDate,
-              storename: responseData?.store_name
-            });
-            if (checkSalesUpload?.status === 200) {
-              const jsonData: any = {
-                mode: "insertSales",
-                sales_date: formattedDate,
-                store_name: responseData?.store_name,
-                gross_sales_amt: responseData?.gross_sales,
-                net_sales_amt: responseData?.net_sales,
-                total_sales_count: responseData?.total_no_sales_count,
-                total_item_sales_amt: responseData?.total_item_sales,
-                taxable_item_sales_amt: responseData?.taxable_item_sales,
-                non_taxable_item_sales_amt: responseData?.non_taxable_item_sales,
-                orders_count: responseData?.order_count,
-                order_average_amt: responseData?.order_average,
-                guests_count: responseData?.guest_count,
-                tax_amt: responseData?.tax_amt,
-                surcharges_amt: responseData?.surcharges,
-                deposits_accepted_amt: responseData?.deposits_accepted_amount,
-                deposits_redeemed_amt: responseData?.deposits_redeemed_amount,
-                cash_deposits_accepted_amt: responseData?.cash_deposits_accepted,
-                non_cash_payments_amt: responseData?.non_cash_payments,
-                cash_tips_received_amt: responseData?.cash_tips_received,
-                total_cash_amt: responseData?.total_cash_amount,
-                cash_back_amt: responseData?.cash_back_amount,
-                paid_in_amt: responseData?.paid_in,
-                paid_out_amt: responseData?.paid_out,
-                discounts_amt: responseData?.discounts,
-                promotions_amt: responseData?.promotions,
-                refunds_amt: responseData?.refunds,
-                labor_cost_amt: responseData?.labor_cost,
-                labor_hours: responseData?.labor_hours,
-                labor_percent: responseData?.labor_percent,
-                sales_per_labor_hour_amt: responseData?.sales_per_labor_hour,
-                gift_card_issue_count: responseData?.gift_card_issue_count,
-                gift_card_issue_amt: responseData?.gift_card_issue_amount,
-                gift_card_reload_count: responseData?.gift_card_reload_count,
-                gift_card_reload_amt: responseData?.gift_card_reload_amount,
-                gift_card_promotions_amt: responseData?.gift_card_promotions,
-                gift_card_cash_out_count: responseData?.gift_card_cash_out_count,
-                gift_card_cash_out_amt: responseData?.gift_card_cash_out_amount,
-                voids_amt: responseData?.voids,
-                non_revenue_items_amt: responseData?.non_revenue_items,
-                donation_count: responseData?.donation_count,
-                donation_total_amt: responseData?.donation_total_amount,
-                storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null
-              };
-              
-              const result: any = await sendApiRequest(jsonData);
-              if (result?.status === 200) {
-                const newTenderTxns: any = [];
-                const tenderTxns = responseData?.tenders;
-                const uniqueTenders = responseData?.tenders?.reduce((acc: any, item: any) => {
-                  if (!acc.includes(item?.name)) {
-                    acc.push(item?.name);
-                  }
-                  return acc;
-                }, []);
-
-                // if (uniqueTenders) {
-                  // const tendersString = uniqueTenders?.map((item: any) => `"${item}"`).join(", ");
-                  const responseTenders: any = await sendApiRequest({
-                    mode: "getTendersByNames",
-                    tenders: uniqueTenders
-                  });
-
-                  for (let item of tenderTxns) {
-                    const match = responseTenders?.data?.tenders?.find((i: any) => i?.tendername === item?.name);
+              if (checkSalesUpload?.status === 200) {
+                const jsonData: any = {
+                  mode: "insertSales",
+                  sales_date: formattedDate,
+                  store_name: responseData?.store_name,
+                  gross_sales_amt: responseData?.gross_sales,
+                  net_sales_amt: responseData?.net_sales,
+                  total_sales_count: responseData?.total_no_sales_count,
+                  total_item_sales_amt: responseData?.total_item_sales,
+                  taxable_item_sales_amt: responseData?.taxable_item_sales,
+                  non_taxable_item_sales_amt: responseData?.non_taxable_item_sales,
+                  orders_count: responseData?.order_count,
+                  order_average_amt: responseData?.order_average,
+                  guests_count: responseData?.guest_count,
+                  tax_amt: responseData?.tax_amt,
+                  surcharges_amt: responseData?.surcharges,
+                  deposits_accepted_amt: responseData?.deposits_accepted_amount,
+                  deposits_redeemed_amt: responseData?.deposits_redeemed_amount,
+                  cash_deposits_accepted_amt: responseData?.cash_deposits_accepted,
+                  non_cash_payments_amt: responseData?.non_cash_payments,
+                  cash_tips_received_amt: responseData?.cash_tips_received,
+                  total_cash_amt: responseData?.total_cash_amount,
+                  cash_back_amt: responseData?.cash_back_amount,
+                  paid_in_amt: responseData?.paid_in,
+                  paid_out_amt: responseData?.paid_out,
+                  discounts_amt: responseData?.discounts,
+                  promotions_amt: responseData?.promotions,
+                  refunds_amt: responseData?.refunds,
+                  labor_cost_amt: responseData?.labor_cost,
+                  labor_hours: responseData?.labor_hours,
+                  labor_percent: responseData?.labor_percent,
+                  sales_per_labor_hour_amt: responseData?.sales_per_labor_hour,
+                  gift_card_issue_count: responseData?.gift_card_issue_count,
+                  gift_card_issue_amt: responseData?.gift_card_issue_amount,
+                  gift_card_reload_count: responseData?.gift_card_reload_count,
+                  gift_card_reload_amt: responseData?.gift_card_reload_amount,
+                  gift_card_promotions_amt: responseData?.gift_card_promotions,
+                  gift_card_cash_out_count: responseData?.gift_card_cash_out_count,
+                  gift_card_cash_out_amt: responseData?.gift_card_cash_out_amount,
+                  voids_amt: responseData?.voids,
+                  non_revenue_items_amt: responseData?.non_revenue_items,
+                  donation_count: responseData?.donation_count,
+                  donation_total_amt: responseData?.donation_total_amount,
+                  storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null
+                };
                 
-                    if (match) {
-                      newTenderTxns.push({ ...item, 
-                        tenderid: match.tenderid, 
-                        salesid: result?.data?.salesid,
-                        storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null,
-                        tender_date: formattedDate 
-                      });
-                    } else {
-                      const insertTender: any = await sendApiRequest({
-                        mode: "insertTender",
-                        tendername: item.name
-                      });
-                      newTenderTxns.push({ ...item, 
-                        tenderid: insertTender?.data?.tenderid, 
-                        salesid: result?.data?.salesid,
-                        storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null,
-                        tender_date: formattedDate 
-                      });                    
+                const result: any = await sendApiRequest(jsonData);
+                if (result?.status === 200) {
+                  const newTenderTxns: any = [];
+                  const tenderTxns = responseData?.tenders;
+                  const uniqueTenders = responseData?.tenders?.reduce((acc: any, item: any) => {
+                    if (!acc.includes(item?.name)) {
+                      acc.push(item?.name);
                     }
-                  }
-                // };
-                await sendApiRequest(newTenderTxns, `insertBulkTenders`);
-                // const val: any = {
-                //   invoiceDetails: responseData?.invoice_items || [],
-                // };
-                // const res: any = await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
-                fetchData();
+                    return acc;
+                  }, []);
+
+                  // if (uniqueTenders) {
+                    // const tendersString = uniqueTenders?.map((item: any) => `"${item}"`).join(", ");
+                    const responseTenders: any = await sendApiRequest({
+                      mode: "getTendersByNames",
+                      tenders: uniqueTenders
+                    });
+
+                    for (let item of tenderTxns) {
+                      const match = responseTenders?.data?.tenders?.find((i: any) => i?.tendername === item?.name);
+                  
+                      if (match) {
+                        newTenderTxns.push({ ...item, 
+                          tenderid: match.tenderid, 
+                          salesid: result?.data?.salesid,
+                          storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null,
+                          tender_date: formattedDate 
+                        });
+                      } else {
+                        const insertTender: any = await sendApiRequest({
+                          mode: "insertTender",
+                          tendername: item.name
+                        });
+                        newTenderTxns.push({ ...item, 
+                          tenderid: insertTender?.data?.tenderid, 
+                          salesid: result?.data?.salesid,
+                          storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null,
+                          tender_date: formattedDate 
+                        });                    
+                      }
+                    }
+                  // };
+                  await sendApiRequest(newTenderTxns, `insertBulkTenders`);
+                  // const val: any = {
+                  //   invoiceDetails: responseData?.invoice_items || [],
+                  // };
+                  // const res: any = await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
+                  fetchData();
+                } else {
+                  setTimeout(() => {
+                    setCustomToast({
+                      message: "Failed to insert sales details",
+                      type: "error",
+                    });
+                  }, 0);
+                }
               } else {
                 setTimeout(() => {
                   setCustomToast({
-                    message: "Failed to insert sales details",
+                    message: "Sales already uploaded",
                     type: "error",
                   });
                 }, 0);
@@ -403,7 +412,7 @@ const Sales: FC = () => {
             } else {
               setTimeout(() => {
                 setCustomToast({
-                  message: "Sales already uploaded",
+                  message: "Unauthorized",
                   type: "error",
                 });
               }, 0);
