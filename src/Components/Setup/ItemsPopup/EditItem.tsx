@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
@@ -26,7 +25,6 @@ interface JsonData {
 
 const EditItems = ({ rowData, setAddItems }: any) => {
   const methods = useForm<any>();
-
   const {
     register,
     setValue,
@@ -57,15 +55,10 @@ const EditItems = ({ rowData, setAddItems }: any) => {
   const [packsize, setPacksize] = useState(rowData?.packsize || "");
   const [units, setUnits] = useState(rowData?.units || "");
   const [defaultOption, setDefaultOption] = React.useState("DQ Category");
-<<<<<<< HEAD
   const [defaultOptionForCoges, setDefaultOptionForCoges] = React.useState(
     "COGS Tracking Category"
   );
-
-=======
-  const [defaultOptionForCoges, setDefaultOptionForCoges] = React.useState("COGS Tracking Category");
   const [selectedCategoryName, setSelectedCategoryName] = useState(rowData?.categoryname || "Category");
->>>>>>> production
   const selectedCategory = watch("category");
   const selectedDqCategory = watch("dqcategory");
   const selectedCOGSTracking = watch("cogstrackingcategory");
@@ -106,21 +99,10 @@ const EditItems = ({ rowData, setAddItems }: any) => {
       itemcode: data?.code,
       packsize: data?.packsize,
       units: data?.units,
-<<<<<<< HEAD
-      weight: data?.weight,
-      cogstrackcategoryid: data?.cogstrackingcategoryId
-        ? data?.cogstrackingcategoryId
-        : rowData?.cogstrackcategoryid || null,
-      dqcategoryid: data?.dqcategoryId
-        ? data?.dqcategoryId
-        : rowData?.dqcategoryid || null,
-      itemid: Number(rowData?.itemid),
-=======
       weight:data?.weight,
       cogstrackcategoryid: data?.cogstrackingcategoryId === null ? null : (data?.cogstrackingcategoryId ? data?.cogstrackingcategoryId : rowData?.cogstrackcategoryid || null),
       dqcategoryid: data?.dqcategoryId === null ? null : (data?.dqcategoryId ? data?.dqcategoryId : rowData?.dqcategoryid || null),
      itemid: Number(rowData?.itemid)
->>>>>>> production
     };
 
     try {
@@ -162,41 +144,12 @@ const EditItems = ({ rowData, setAddItems }: any) => {
   const toggleDropdownCOGSTracking = () => {
     setIsCOGSTrackingDropdownOpen((prev) => !prev);
   };
-<<<<<<< HEAD
-
-=======
  
->>>>>>> production
   const fetchDataCategoriesDropdown = async () => {
     try {
       const response: any = await sendApiRequest({
         mode: "getAllCategories",
       });
-<<<<<<< HEAD
-
-      if (response?.status === 200) {
-        setCategories(response?.data?.categories || []);
-      } else {
-        setCustomToast({
-          ...customToast,
-          message: response?.message,
-          type: "error",
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const fetchDataDQcategoryDropdown = async () => {
-    try {
-      const response: any = await sendApiRequest({
-        mode: "getAllDQCategory",
-      });
-
-      if (response?.status === 200) {
-        setDqCategory(response?.data?.dqcategory || []);
-=======
   
       if (response?.status === 200) {
         setCategories(response?.data?.categories || []);
@@ -209,7 +162,6 @@ const EditItems = ({ rowData, setAddItems }: any) => {
           setValue("category", category?.name || rowData?.categoryname);
           setValue("categoryId", category?.id || rowData?.categoryid);
         }
->>>>>>> production
       } else {
         setCustomToast({
           ...customToast,
@@ -221,18 +173,7 @@ const EditItems = ({ rowData, setAddItems }: any) => {
       console.error("Error fetching data:", error);
     }
   };
-<<<<<<< HEAD
 
-  const fetchDataCogstrackcategoryDropdown = async () => {
-    try {
-      const response: any = await sendApiRequest({
-        mode: "getAllCogsTrackCategory",
-      });
-
-      if (response?.status === 200) {
-        setCogstracking(response?.data?.cogstrackcategory || []);
-=======
-  
   const fetchDataDQcategoryDropdown = async () => {
     try {
       const response: any = await sendApiRequest({
@@ -242,7 +183,6 @@ const EditItems = ({ rowData, setAddItems }: any) => {
       if (response?.status === 200) {
         const dqData = response?.data?.dqcategory || [];
         setDqCategory([{ id: null, name: "None" }, ...dqData]);
->>>>>>> production
       } else {
         setCustomToast({
           ...customToast,
@@ -255,29 +195,6 @@ const EditItems = ({ rowData, setAddItems }: any) => {
     }
   };
 
-<<<<<<< HEAD
-  const openModal = () => {
-    setIsOpen(true);
-    fetchDataCategoriesDropdown();
-    fetchDataDQcategoryDropdown();
-    fetchDataCogstrackcategoryDropdown();
-  };
-
-  useEffect(() => {
-    if (dqCategory && rowData?.dqcategoryid) {
-      const option = dqCategory.find(
-        (option) => option.id === rowData?.dqcategoryid
-      );
-      setDefaultOption(option?.name || "DQ Category");
-    }
-    if (cogstracking && rowData?.cogstrackcategoryid) {
-      const option = cogstracking.find(
-        (option) => option.id === rowData?.cogstrackcategoryid
-      );
-      setDefaultOptionForCoges(option?.name || "COGS Tracking Category");
-    }
-  }, [dqCategory, cogstracking]);
-=======
   const fetchDataCogstrackcategoryDropdown = async () => {
     try {
       const response: any = await sendApiRequest({
@@ -298,7 +215,8 @@ const EditItems = ({ rowData, setAddItems }: any) => {
       console.error("Error fetching data:", error);
     }
   };
-   const openModal = () => {
+
+  const openModal = () => {
     setIsOpen(true);
     fetchDataCategoriesDropdown();
     fetchDataDQcategoryDropdown();
@@ -318,7 +236,6 @@ const EditItems = ({ rowData, setAddItems }: any) => {
         setDefaultOptionForCoges("None");
       }
     }, [dqCategory, cogstracking]);
->>>>>>> production
 
   return (
     <>
@@ -363,126 +280,46 @@ const EditItems = ({ rowData, setAddItems }: any) => {
             </div>
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>
-<<<<<<< HEAD
                 <div className="flex flex-col mt-2 gap-3">
-                  <div className="w-full flex ">
-                    <Dropdown
-                      options={categories}
-                      selectedOption={
-                        selectedCategory
-                          ? selectedCategory || "Category"
-                          : rowData?.categoryname
-                      }
-                      onSelect={(selectedValue) => {
-                        setValue(
-                          "category",
-                          selectedValue?.name
-                            ? selectedValue?.name
-                            : rowData?.categoryname
-                        );
-                        setValue(
-                          "categoryId",
-                          selectedValue?.id
-                            ? selectedValue?.id
-                            : rowData?.categoryid
-                        );
-                        setIsStoreDropdownOpen(false);
-                        clearErrors("category");
-                      }}
-                      isOpen={isStoreDropdownOpen}
-                      toggleOpen={toggleDropdownStore}
-                      widthchange="w-full flex justify-end"
-                      // {...register("category", {
-                      //   required: "Category is required",
-                      // })}
-                      // errors={errors.category}
-                    />
-=======
-                <div className="flex flex-col mt-4 gap-6">
-                  <div className="w-full flex mt-4 ">
+                  <div className="w-full flex">
                   <Dropdown
-    options={categories}
-    selectedOption={selectedCategoryName}
-    onSelect={(selectedValue) => {
-      setSelectedCategoryName(selectedValue?.name);
-      setValue("category", selectedValue?.name);
-      setValue("categoryId", selectedValue?.id);
-      setIsStoreDropdownOpen(false);
-      clearErrors("category");
-    }}
-    isOpen={isStoreDropdownOpen}
-    toggleOpen={toggleDropdownStore}
-    widthchange="w-full flex justify-end"
-  />
->>>>>>> production
+                    options={categories}
+                    selectedOption={selectedCategoryName}
+                    onSelect={(selectedValue) => {
+                      setSelectedCategoryName(selectedValue?.name);
+                      setValue("category", selectedValue?.name);
+                      setValue("categoryId", selectedValue?.id);
+                      setIsStoreDropdownOpen(false);
+                      clearErrors("category");
+                    }}
+                    isOpen={isStoreDropdownOpen}
+                    toggleOpen={toggleDropdownStore}
+                    widthchange="w-full flex justify-end"
+                  />
                   </div>
-                  <div className="w-full flex ">
+                  <div className="w-full flex">
                   <Dropdown
                       options={dqCategory}
                       selectedOption={
-                        selectedDqCategory ? selectedDqCategory : defaultOption
+                        selectedDqCategory
+                          ? selectedDqCategory
+                          : defaultOption
                       }
-<<<<<<< HEAD
-                      onSelect={(selectedOption: any) => {
-                        setValue(
-                          "dqcategory",
-                          selectedOption?.name
-                            ? selectedOption?.name
-                            : rowData?.dqCategoryname
-                        );
-                        setValue(
-                          "dqcategoryId",
-                          selectedOption?.id
-                            ? selectedOption?.id
-                            : rowData?.dqcategoryid
-                        );
-                        setIsDQCategoryDropdownOpen(false);
-                        clearErrors("dqcategory");
-=======
                       onSelect={(selectedOption : any) => {
                         setValue("dqcategory", selectedOption?.name ? selectedOption?.name : rowData?.dqCategoryname); 
                         setValue("dqcategoryId", selectedOption?.id !== undefined ? selectedOption?.id : rowData?.dqcategoryid ); 
                         setIsDQCategoryDropdownOpen(false); 
                         clearErrors("dqcategory"); 
->>>>>>> production
                       }}
                       isOpen={isdqCategoryDropdownOpen}
                       toggleOpen={toggleDropdownDQCategory}
-                      widthchange="w-full "
+                      widthchange="w-full"
                       {...methods.register("dqcategory", {
-<<<<<<< HEAD
-                        //  required: "DQ Category should not be empty",
-=======
->>>>>>> production
                       })}
                       errors={errors.dqcategory}
                     />
                   </div>
-                  <div className="w-full">
-<<<<<<< HEAD
-                    <Dropdown
-                      options={cogstracking}
-                      selectedOption={
-                        selectedCOGSTracking
-                          ? selectedCOGSTracking || "COGS Tracking Category"
-                          : defaultOptionForCoges
-                      }
-                      onSelect={(selected: any) => {
-                        setValue(
-                          "cogstrackingcategory",
-                          selected?.name
-                            ? selected?.name
-                            : rowData?.cogstrackingcategoryname
-                        );
-                        setValue(
-                          "cogstrackingcategoryId",
-                          selected?.id
-                            ? selected?.id
-                            : rowData?.cogstrackcategoryid
-                        );
-                        setIsCOGSTrackingDropdownOpen(false);
-                        clearErrors("cogstrackingcategory");
-=======
+                  <div className="w-full flex">
                   <Dropdown
                       options={cogstracking} 
                       selectedOption={ selectedCOGSTracking ? selectedCOGSTracking ||  "COGS Tracking Category"  : defaultOptionForCoges  } 
@@ -491,11 +328,10 @@ const EditItems = ({ rowData, setAddItems }: any) => {
                         setValue("cogstrackingcategoryId", selected?.id !== undefined ? selected?.id : rowData?.cogstrackcategoryid); 
                         setIsCOGSTrackingDropdownOpen(false); 
                         clearErrors("cogstrackingcategory"); 
->>>>>>> production
                       }}
                       isOpen={iscogstrackingDropdownOpen}
                       toggleOpen={toggleDropdownCOGSTracking}
-                      widthchange="w-full "
+                      widthchange="w-full"
                       {...methods.register("cogstrackingcategory", {
                       })}
                       errors={errors.cogstrackingcategory}
@@ -520,32 +356,31 @@ const EditItems = ({ rowData, setAddItems }: any) => {
                   </div>
 
                   <div className="w-full flex">
-                    <InputField
-                      type="text"
-                      label="Item Code"
-                      borderClassName=" border border-gray-300"
-                      labelBackgroundColor="bg-white"
-                      value={itemcode || ""}
-                      textColor="text-[#636363]"
-                      {...register("code", {
-                        required: "Item code is required",
-                      })}
-                      errors={errors.code}
-                      placeholder="Item code"
-                      variant="outline"
-                      onChange={(e: any) =>
-                        handleChangeItemcode(e.target.value)
-                      }
-                    />
-                  </div>
+                      <InputField
+                        type="text"
+                        label="Item Code"
+                        borderClassName=" border border-gray-300"
+                        labelBackgroundColor="bg-white"
+                        value={itemcode || ""}
+                        
+                        textColor="text-[#636363]"
+                        {...register("code", {
+                          required: "Item code is required",
+                        })}
+                        errors={errors.code}
+                        placeholder="Item code"
+                        variant="outline"
+                        onChange={(e:any) => handleChangeItemcode(e.target.value)}
+                      />
+                    </div>
 
-                  <div className="w-full flex ">
+                  <div className="w-full flex">
                     <InputField
                       type="text"
                       label="Packsize"
                       borderClassName=" border border-gray-200"
                       labelBackgroundColor="bg-white"
-                      value={packsize || ""}
+                      value={packsize || "" }
                       textColor="text-[#4B4B4B]"
                       {...register("packsize", {
                         //required: "Pack Size is required",
@@ -553,12 +388,10 @@ const EditItems = ({ rowData, setAddItems }: any) => {
                       errors={errors.packsize}
                       placeholder="Packsize"
                       variant="outline"
-                      onChange={(e: any) =>
-                        handleChangepacksize(e.target.value)
-                      }
+                      onChange={(e: any) => handleChangepacksize(e.target.value)}
                     />
                   </div>
-                  <div className="w-full flex ">
+                  <div className="w-full flex">
                     <InputField
                       type="text"
                       label="Units"
@@ -567,7 +400,7 @@ const EditItems = ({ rowData, setAddItems }: any) => {
                       value={units || ""}
                       textColor="text-[#4B4B4B]"
                       {...methods?.register("units", {
-                        // required: "Units is required",
+                       // required: "Units is required",
                       })}
                       errors={errors.units}
                       placeholder="Units"
@@ -582,10 +415,10 @@ const EditItems = ({ rowData, setAddItems }: any) => {
                       label="Weight"
                       borderClassName=" border border-gray-200"
                       labelBackgroundColor="bg-white"
-                      value={weight}
+                      value={weight }
                       textColor="text-[#4B4B4B]"
                       {...methods?.register("weight", {
-                        // required: "Weight is required",
+                       // required: "Weight is required",
                       })}
                       errors={errors.weight}
                       placeholder="Weight"
@@ -594,7 +427,7 @@ const EditItems = ({ rowData, setAddItems }: any) => {
                     />
                   </div>
 
-                  <div className="flex flex-col items-center ">
+                  <div className="flex flex-col items-center">
                     <div className="flex justify-between gap-3 items-center w-full">
                       <button
                         type="button"
@@ -605,7 +438,7 @@ const EditItems = ({ rowData, setAddItems }: any) => {
                       </button>
                       <button
                         type="submit"
-                        className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
+                        className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md"
                       >
                         Save
                       </button>
