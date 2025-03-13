@@ -120,10 +120,10 @@ const EditCategories = ({ rowData, setAddCategories }: any) => {
 
 
             {/* Form Section */}
-            <div className="mt-4">
+            <div className="mt-2">
               <FormProvider {...methods}>
                 <form onSubmit={methods.handleSubmit(onSubmit)}>
-                  <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-3">
                     {/* Category Name Input */}
                     <InputField
                       type="text"
@@ -160,7 +160,7 @@ const EditCategories = ({ rowData, setAddCategories }: any) => {
                   </div>
 
                   {/* Buttons */}
-                  <div className="flex mt-7 justify-between">
+                  <div className="flex mt-3 justify-between">
                     <button
                       type="button"
                       onClick={closeModal}

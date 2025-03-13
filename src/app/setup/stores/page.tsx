@@ -17,6 +17,7 @@ import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastN
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
+import Tooltip from "@/Components/UI/Toolstips/Tooltip";
 
 interface TableRow {
   storename: string;
@@ -78,9 +79,15 @@ const Page: FC = () => {
         const location = info.row.original.location as string;
         return (
           <div>
-            {location?.length > 23
-              ? location.substring(0, 20) + "..."
-              : location}
+            {location?.length > 23 ? (
+              <Tooltip text={location} position="bottom">
+                <span className="cursor-pointer">
+                  {location.substring(0, 20)}...
+                </span>
+              </Tooltip>
+            ) : (
+              <span>{location}</span>
+            )}
           </div>
         );
       },
@@ -195,7 +202,7 @@ const Page: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
-       {userType === "A" && ( <AddStore setAddStore={setopenAddStore} />)}
+        {userType === "A" && <AddStore setAddStore={setopenAddStore} />}
       </div>
       {/* Mobile View */}
       <div
@@ -272,7 +279,7 @@ const Page: FC = () => {
         {/* Add Store bottom */}
         <div className="block pl-24 ">
           {" "}
-          {userType === "A" && (  <AddStore setAddStore={setopenAddStore} />)}
+          {userType === "A" && <AddStore setAddStore={setopenAddStore} />}
         </div>
         <div className="hidden below-md:block ">
           <Pagination table={table} totalItems={totalItems} />
@@ -282,7 +289,7 @@ const Page: FC = () => {
       <div className="overflow-x-auto shadow-sm border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block">
         <div className="overflow-hidden max-w-full">
           <table className="w-full border-collapse border-gray-200 table-fixed">
-            <thead className="bg-[#334155] sticky top-0 z-10">
+            <thead className="bg-[#0F1044] sticky top-0 z-10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
@@ -309,53 +316,53 @@ const Page: FC = () => {
           >
             <table className="w-full border-collapse border-gray-200 table-fixed">
               <tbody>
-                {loading
-                  ? Array.from({ length: 10 })?.map((_, index) => (
-                      <tr
-                        key={index}
-                        className={
-                          index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                        }
-                      >
-                        {columns.map((column, colIndex) => (
-                          <td
-                            key={colIndex}
-                            className="px-4 py-1.5"
-                            style={{ width: `${column.size}px` }}
-                          >
-                            <Skeleton height={30} />
-                          </td>
-                        ))}
-                      </tr>
-                    )) : table.getRowModel().rows.length === 0 ? (
-                      /* Show No Data Found Message If No Data Available */
-                      <tr>
-                        <td colSpan={columns.length} className="py-6 text-center">
-                          <NoDataFound />
+                {loading ? (
+                  Array.from({ length: 10 })?.map((_, index) => (
+                    <tr
+                      key={index}
+                      className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
+                    >
+                      {columns.map((column, colIndex) => (
+                        <td
+                          key={colIndex}
+                          className="px-4 py-1.5"
+                          style={{ width: `${column.size}px` }}
+                        >
+                          <Skeleton height={30} />
                         </td>
-                      </tr>
-                    )
-                  : table.getRowModel().rows.map((row) => (
-                      <tr
-                        key={row.id}
-                        className={
-                          row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                        }
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <td
-                            key={cell.id}
-                            className="px-4 py-1.5 text-[#636363] text-[14px]"
-                            style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
-                          >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
+                      ))}
+                    </tr>
+                  ))
+                ) : table.getRowModel().rows.length === 0 ? (
+                  /* Show No Data Found Message If No Data Available */
+                  <tr>
+                    <td colSpan={columns.length} className="py-6 text-center">
+                      <NoDataFound />
+                    </td>
+                  </tr>
+                ) : (
+                  table.getRowModel().rows.map((row) => (
+                    <tr
+                      key={row.id}
+                      className={
+                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                      }
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          key={cell.id}
+                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
