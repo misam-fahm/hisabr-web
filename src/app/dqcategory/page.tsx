@@ -21,6 +21,7 @@ import ToastNotification, { ToastNotificationProps } from "@/Components/UI/Toast
 import moment from "moment";
 import Loading from "@/Components/UI/Themes/Loading";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
+import Tooltip from "@/Components/UI/Toolstips/Tooltip";
 
 interface TableRow {
   name: string;
@@ -32,7 +33,9 @@ interface TableRow {
 const Sales: FC = () => {
   const router = useRouter();
   const [items, setItems] = useState<any>([]);
-  const [totalItems, setTotalItems] = useState<number>(0);
+  const [Sitems, setSItems] = useState<any>([]);
+  const [totalOrders, setTotalOrders] = useState<number>();
+  const [productTotal, setProductTotal] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
   const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<any>();
@@ -81,7 +84,9 @@ const Sales: FC = () => {
 
   useEffect(() => {
     if (startDate && endDate && selectedOption ) {
+      fetchData2();
       fetchData();
+
     }
   }, [selectedOption , globalFilter]);
 
@@ -101,24 +106,24 @@ const Sales: FC = () => {
       },
     },
     manualPagination: true, // Enable manual pagination
-    pageCount: Math.ceil(totalItems / 10),
+    // pageCount: Math.ceil(totalItems / 10),
   });
 
   const { pageIndex, pageSize } = table.getState().pagination;
-  
-  const fetchData = async () => {
+
+  const fetchData2 = async () => {
     setLoading(true);
     try {
       const response: any = await sendApiRequest({
-        mode: "getDqCategoryData",
-        sp: "GetDQCategoryData",
+        mode: "getDqRevCenterData",
         storeid: selectedOption?.id || 69,
         startdate: startDate && format(startDate, 'yyyy-MM-dd'),
         enddate: endDate && format(endDate, 'yyyy-MM-dd'),
       });
   
       if (response?.status === 200) {
-        setItems(response?.data?.dqcategories);
+         setSItems(response?.data?.result?.dqcategories);
+        setTotalOrders(response?.data?.result?.totalorders)
        
       } else {
         setCustomToast({
@@ -132,8 +137,38 @@ const Sales: FC = () => {
       setLoading(false);
     }
   };
-   
+  
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getDqRevCenterData",
+        sp: "GetDQCategoryData",
+        storeid: selectedOption?.id || 69,
+        startdate: startDate && format(startDate, 'yyyy-MM-dd'),
+        enddate: endDate && format(endDate, 'yyyy-MM-dd'),
+      });
+  
+      if (response?.status === 200) {
+        setItems(response?.data?.result.dqcategories);
+         setProductTotal(response?.data?.result?.producttotal?.producttotal)
+       
+      } else {
+        setCustomToast({
+          message: response?.message || "Failed to fetch sales.",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   useEffect(() => {
+    fetchData2();
     fetchData();
   }, []);
 
@@ -216,10 +251,11 @@ const totalExtPrice = items?.reduce((acc:any, row:any) => acc + Number(row.total
 
 // Ensure there's no error when `items` is empty
 const hasItems = items && items.length > 0;
+
   return (
     <main
     className={`relative px-6 below-md:px-3  overflow-auto ${
-      items?.length > 8 ? "max-h-[calc(100vh-60px)]" : "h-[500px]"
+      items?.length > 6  || Sitems?.length > 6  ? "max-h-[calc(100vh-60px)]" : "h-[620px]"
     }`}
     style={{ scrollbarWidth: "thin" }}
   >
@@ -254,6 +290,7 @@ const hasItems = items && items.length > 0;
                 setStartDate = {setStartDate}
                 setEndDate = {setEndDate}
                 fetchData = {fetchData}
+                fetchDataForTender={fetchData2}
                 />
             </div>         
           </div>       
@@ -354,18 +391,45 @@ const hasItems = items && items.length > 0;
         </tr>
       </tfoot>
     )}
-              </table>
+              </table>  
             </div>
           </div>
         </div> */}
-        <div className="grid grid-cols-5 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3  pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
-           {items?.map((Items:any , index:any) => 
+        <div className="flex gap-10">
+
+<div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[17%] ml-6 p-4 justify-between items-stretch">
+            <div>
+              <p className="text-[14px] text-[#575F6DCC] font-medium">Total Products</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{productTotal}</p>
+              
+            </div>
+            {/* <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+            <p className="text-[14px]  font-medium">{}</p>
+            </div> */}
+          </div>
+
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[17%] ml-6 p-4 justify-between items-stretch">
+            <div>
+              <p className="text-[14px] text-[#575F6DCC] font-medium">Total No. Of Orders</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{totalOrders}</p>
+              
+            </div>
+            {/* <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+            <p className="text-[14px]  font-medium">{}</p>
+            </div> */}
+          </div>
+          </div>
+
+           <div className="grid grid-cols-5  below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3  pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
+           {Sitems?.map((Items:any , index:any) => 
           
             // 
            
-        <div key={index} className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4  p-4 justify-between items-stretch">
+        <div key={index} className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4  p-4 justify-between items-stretch">
             <div>
-              <p className="text-[14px] text-[#575F6DCC] font-medium">{Items.name}</p>
+            <Tooltip position="left" text= {Items?.name?.length > 15 ? Items.name : ""}>
+            <p className="text-[14px] text-[#575F6DCC] font-medium">        {Items?.name?.length > 15 ? Items.name.substring(0, 15) + "..." : Items.name || "--"}</p>
+                      </Tooltip>
               <p className="text-[16px] text-[#2D3748] font-bold">{Items?.totalextprice ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}` : '$00,000'}</p>
               {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 20%{" "}
@@ -378,6 +442,37 @@ const hasItems = items && items.length > 0;
             <p className="text-[14px]  font-medium">{Items.totalqty}</p>
             </div>
           </div>
+
+          
+          
+           )}
+           </div>
+
+           <div className="grid grid-cols-5 mt-8 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3  pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
+           {items?.map((Items:any , index:any) => 
+          
+            // 
+           
+        <div key={index} className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4  p-4 justify-between items-stretch">
+            <div>
+            <Tooltip position="left" text= {Items?.name?.length > 15 ? Items.name : ""}>
+            <p className="text-[14px] text-[#575F6DCC] font-medium">        {Items?.name?.length > 15 ? Items.name.substring(0, 15) + "..." : Items.name || "--"}</p>
+                      </Tooltip>
+         
+              <p className="text-[16px] text-[#2D3748] font-bold">{Items?.totalextprice ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}` : '$00,000'}</p>
+              {/* <p className="text-[11px] text-[#388E3C] font-semibold">
+                20%{" "}
+                <span className="text-[#575F6D] font-normal">
+                  increase in sales
+                </span>
+              </p> */}
+            </div>
+            <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+            <p className="text-[14px]  font-medium">{Items.totalqty}</p>
+            </div>
+          </div>
+
+          
           
            )}
            </div>
