@@ -62,7 +62,6 @@ const EditItems = ({ rowData, setAddItems }: any) => {
   const selectedCategory = watch("category");
   const selectedDqCategory = watch("dqcategory");
   const selectedCOGSTracking = watch("cogstrackingcategory");
-
   const closeModal = () => setIsOpen(false);
 
   const handleChangeName = (data: any) => {
@@ -91,7 +90,6 @@ const EditItems = ({ rowData, setAddItems }: any) => {
   };
 
   const onSubmit = async (data: any) => {
-    console.log("data", data);
     const jsonData: JsonData = {
       mode: "updateItem",
       categoryid: data?.categoryId ? data?.categoryId : rowData?.categoryid,

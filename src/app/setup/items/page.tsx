@@ -3,7 +3,6 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import { sendApiRequest } from "@/utils/apiUtils";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
 import {
   useReactTable,
   getCoreRowModel,
@@ -12,7 +11,6 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-
 import AddNewItems from "@/Components/Setup/ItemsPopup/AddNewItems";
 import AddCategories from "@/Components/Setup/CategoriesPopup/AddCategories";
 import Pagination from "@/Components/UI/Pagination/Pagination";
@@ -82,14 +80,14 @@ const Page: FC = () => {
     },
 
     {
-      accessorKey: "dqCategory",
+      accessorKey: "dqcategoryname",
       header: () => <div className="text-left">DQ-ctg</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
       size: 100,
     },
 
     {
-      accessorKey: "cogsCategory",
+      accessorKey: "cogscategoryname",
       header: () => <div className="text-left">COGS-ctg</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
       size: 100,
