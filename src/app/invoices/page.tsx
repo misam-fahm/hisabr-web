@@ -278,6 +278,10 @@ const Invoices = () => {
   };
   
   const handleFileChange = async (event: any) => {
+    setCustomToast({
+      message: "",
+      type: "",
+    });
     const file = event.target.files[0];
   
     if (!file) {
@@ -298,7 +302,7 @@ const Invoices = () => {
       formData.append("file", file);
   
       const response = await fetch(
-        "https://hisabr-pdf-extractor.vercel.app/convert-pdf",
+        "https://hisabr-pdf-extractor.vercel.app/process-invoice",
         {
           method: "POST",
           body: formData,
@@ -367,7 +371,8 @@ const Invoices = () => {
     } catch (error) {
       console.error("Error uploading file:", error);
       setCustomToast({
-        message: "An error occurred while uploading the file.",
+        // message: "An error occurred while uploading the file.",
+        message: "Invalid PDF format.",
         type: "error",
       });
     } finally {
