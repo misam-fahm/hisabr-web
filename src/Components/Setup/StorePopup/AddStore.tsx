@@ -166,7 +166,7 @@ const AddStore = ({ setAddStore }: any) => {
 
             <FormProvider {...methods}>
               <form onSubmit={methods.handleSubmit(onSubmit)}>
-                <div className="flex flex-col mt-4 gap-4">
+                <div className="flex flex-col mt-2 gap-3">
                   <div className="w-full flex">
                     {/* Description Input Field */}
                     <InputField
@@ -187,7 +187,7 @@ const AddStore = ({ setAddStore }: any) => {
                       }
                     />
                   </div>
-                  <div className="w-full flex mt-4">
+                  <div className="w-full flex">
                     {/* Description Input Field */}
                     <InputField
                       type="text"
@@ -207,7 +207,7 @@ const AddStore = ({ setAddStore }: any) => {
                       }
                     />
                   </div>
-                  <div className="w-full flex mt-4">
+                  <div className="w-full flex">
                     {/* Description Input Field */}
                     <InputField
                       type="text"
@@ -225,7 +225,7 @@ const AddStore = ({ setAddStore }: any) => {
                       onChange={(e: any) => handleChangeUser(e.target.value)}
                     />
                   </div>
-                  <div className="w-full flex mt-4">
+                  <div className="w-full flex">
                     {/* Description Input Field */}
                     <InputField
                       type="text"
@@ -261,7 +261,7 @@ const AddStore = ({ setAddStore }: any) => {
                     />
                   </div> */}
 
-                  <div className="flex flex-col items-center py-4">
+                  <div className="flex flex-col items-center">
                     <div className="flex justify-between gap-3 items-center w-full">
                       <button
                         type="button"

@@ -45,13 +45,13 @@ const Page: FC = () => {
       accessorKey: "categoryname",
       header: () => <div className="text-left">Name</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
-      size: 200,
+      size: 400,
     },
     {
       accessorKey: "description",
       header: () => <div className="text-left">Description</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
-      size: 250,
+      size: 400,
     },
     // {
     //   accessorKey: "itemcount",
@@ -216,7 +216,7 @@ const Page: FC = () => {
         <div className="overflow-x-auto shadow-sm border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block">
           <div className="overflow-hidden  max-w-full">
             <table className="w-full   table-fixed">
-              <thead className="bg-[#334155] sticky top-0 z-10">
+              <thead className="bg-[#0F1044] sticky top-0 z-10">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (

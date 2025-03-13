@@ -30,7 +30,7 @@ const Tooltip: React.FC<TooltipProps> = ({ children, text, position = "top" }) =
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.2 }}
-          className={`absolute whitespace-nowrap ${text ? "bg-gray-500" : ""}  text-white text-[10px] py-1 px-2 rounded shadow-lg ${positionClasses[position]}`}
+          className={`absolute whitespace-nowrap z-30 ${text ? "bg-gray-500" : ""}  text-white text-[10px] py-1 px-2 rounded shadow-lg ${positionClasses[position]}`}
         >
           {text}
         </motion.div>

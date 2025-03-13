@@ -11,8 +11,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             { status: 400 }
         );
     }
-    console.log(reqBody);
-    console.log('reqBody');
     // Prepare the query and values
     const pool = getPool();
     const query = 'INSERT INTO hisabr.tender_txns (tender_id, sales_id, tender_date, quantity, payments, tips, total, percent, store_id) VALUES ?';

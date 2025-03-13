@@ -388,6 +388,7 @@ const Sales: FC = () => {
                     }
                   // };
                   await sendApiRequest(newTenderTxns, `insertBulkTenders`);
+                  await sendApiRequest(responseData?.revenue_centers, `insertBulkDQRevenueCenters?salesid=${result?.data?.salesid}`);
                   // const val: any = {
                   //   invoiceDetails: responseData?.invoice_items || [],
                   // };
@@ -429,6 +430,11 @@ const Sales: FC = () => {
         } catch (error) {
           // console.error("Error uploading file:", error);
           // alert("An error occurred.");
+          setCustomToast({
+            // message: "An error occurred while uploading the file.",
+            message: "Invalid PDF format.",
+            type: "error",
+          });
         } finally {
           setUploadPdfLoading(false); // Hide loader after upload
         }
@@ -595,7 +601,7 @@ const Sales: FC = () => {
         <div className="tablet:hidden overflow-x-auto border-collapse border border-[#E4E4EF] rounded-lg flex-grow hidden flex-col md:block shadow-sm">
           <div className="overflow-hidden max-w-full">
             <table className="w-full border-collapse border-gray-200 table-fixed shadow-lg">
-              <thead className="bg-[#334155]  top-0 z-10">
+              <thead className="bg-[#0F1044] top-0 z-10">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
