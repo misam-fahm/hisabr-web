@@ -135,9 +135,9 @@ const Invoices = () => {
 
   useEffect(() => {
     if (startDate && endDate && selectedOption ) {
-      fetchData();
+      fetchData(globalFilter);
     }
-  }, [selectedOption , globalFilter]);
+  }, [selectedOption ]);
   
   const table = useReactTable({
     data: data,
@@ -145,9 +145,6 @@ const Invoices = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      globalFilter,
-    },
     initialState: {
       pagination: {
         pageSize: 10,
@@ -161,7 +158,7 @@ const Invoices = () => {
   const { pageIndex, pageSize } = table.getState().pagination; 
 
    // Function to fetch data and update state
-   const fetchData = async () => {
+   const fetchData = async (search: string = "") => {
     setLoading(true);
     try {
       const response: any = await sendApiRequest({
@@ -171,13 +168,13 @@ const Invoices = () => {
         storeid: selectedOption?.id || 69,
         startdate: startDate && format(startDate, 'yyyy-MM-dd'),
         enddate: endDate && format(endDate, 'yyyy-MM-dd'),
-        search:globalFilter
+        search:search
       });
   
       if (response?.status === 200) {
         setData(response?.data?.invoices);
         if (response?.data?.total >= 0) {
-          setTotalItems(response?.data?.total || 0);
+          table.getState().pagination.pageIndex == 0 && setTotalItems(response?.data?.total || 0);
         }
       } else {
         setCustomToast({
@@ -193,7 +190,7 @@ const Invoices = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(globalFilter);
   }, [pageIndex, pageSize]);
 
   const getUserStore = async () => {
@@ -406,10 +403,28 @@ const Invoices = () => {
     setShowTooltip(false);
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      table.getState().pagination.pageIndex == 0 ? fetchData(globalFilter) : table.setPageIndex(0);
+    }
+  };
+  const clearSearch = async () => {
+    try {
+      setLoading(true);
+      setGlobalFilter("");
+      table.getState().pagination.pageIndex == 0 ? fetchData() : table.setPageIndex(0);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+      
+    }
+  };
+
   return (
     <main
     className={`relative px-6 below-md:px-3 overflow-auto ${
-      data?.length > 10 ? "max-h-[calc(100vh-80px)]" : "h-[500px]"
+      totalItems > 10 ? "max-h-[calc(100vh-80px)]" : "h-[500px]"
     }`}
     style={{ scrollbarWidth: "thin" }}
   >
@@ -452,19 +467,29 @@ const Invoices = () => {
                 />
           </div>
           <div className="flex border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
-            <input
-              type="search"
-              value={globalFilter ?? ""}
-              onChange={(e) => setGlobalFilter(e.target.value)}
-              ref={searchInputRef}
-              placeholder="Search"
-              className="w-full h-[35px] bg-transparent rounded-lg px-3 placeholder:text-[#636363] focus:outline-none"
-            ></input>
-            <img
-              className="pr-2 cursor-pointer items-center"
-              src="/images/searchicon.svg"
-              onClick={handleClick}
-            />
+          <input
+            type="text"
+            value={globalFilter ?? ""}
+            onChange={(e) => setGlobalFilter(e.target.value)}
+            onKeyDown={handleKeyDown}
+            ref={searchInputRef}
+            placeholder="Search"
+            className="w-full h-[35px] bg-transparent  px-3 placeholder:text-[#636363] focus:outline-none"
+          />
+          {globalFilter && (
+            <div className="  absolute right-8 cursor-pointer">
+              <img
+                className="  "
+                src="/images/cancelicon.svg"
+                onClick={clearSearch}
+              />
+            </div>
+          )}
+          <img
+            className="pr-2 cursor-pointer items-center"
+            src="/images/searchicon.svg"
+            onClick={() => table.getState().pagination.pageIndex == 0 ? fetchData(globalFilter) : table.setPageIndex(0)}
+          />
           </div>
         </div>
         <div className="pl-24 below-md:hidden">
