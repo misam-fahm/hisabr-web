@@ -151,7 +151,7 @@ const Sales: FC = () => {
   
       if (response?.status === 200) {
         setItems(response?.data?.result.dqcategories);
-         setProductTotal(response?.data?.result?.producttotal?.producttotal)
+         setProductTotal(response?.data?.result?.producttotal)
        
       } else {
         setCustomToast({
@@ -399,7 +399,7 @@ const hasItems = items && items.length > 0;
 
 <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[17%] ml-6 p-4 justify-between items-stretch">
             <div>
-              <p className="text-[14px] text-[#575F6DCC] font-medium">Total Products</p>
+              <p className="text-[14px] text-[#575F6DCC] font-medium">COGS</p>
               <p className="text-[16px] text-[#2D3748] font-bold">{productTotal}</p>
               
             </div>
