@@ -252,7 +252,7 @@ const AddNewItems = ({setAddItems}:any) => {
               </div>
               <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                  <div className="flex flex-col mt-4 gap-5">
+                  <div className="flex flex-col mt-2 gap-3">
                     <div className="w-full flex ">
                       <Dropdown
                         options={categories}

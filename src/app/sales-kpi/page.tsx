@@ -96,7 +96,7 @@ const SalesKPI: FC = () => {
       label: "Sales",
       amount:  data?.net_sales ? Math.round(data?.net_sales)?.toLocaleString() : 0,
       per: percentages.sales ?  Number(percentages.sales) : 0,
-      color: "#",
+      color: "#00BFFF",
     },
     { label: "Labour Cost", amount: (Math.round(data?.labour_cost ) || 0).toLocaleString(), per:  Number(percentages.labourCost), color: "#4B4B4B" },
     { label: "Sales Tax", amount:(Math.round(data?.tax_amt) || 0).toLocaleString(), per: Number(percentages.taxAmount), color: "#DAB777" },

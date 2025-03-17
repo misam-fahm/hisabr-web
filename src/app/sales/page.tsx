@@ -490,6 +490,11 @@ const Sales: FC = () => {
         } catch (error) {
           // console.error("Error uploading file:", error);
           // alert("An error occurred.");
+          setCustomToast({
+            // message: "An error occurred while uploading the file.",
+            message: "Invalid PDF format.",
+            type: "error",
+          });
         } finally {
           setUploadPdfLoading(false); // Hide loader after upload
         }
