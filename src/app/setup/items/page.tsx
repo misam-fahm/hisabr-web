@@ -72,21 +72,21 @@ const Page: FC = () => {
 
     {
       accessorKey: "categoryname",
-      header: () => <div className="text-left">Category</div>,
+      header: () => <div className="text-left">Ctg</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
       size: 120,
     },
 
     {
       accessorKey: "dqcategoryname",
-      header: () => <div className="text-left">DQ-CTG</div>,
+      header: () => <div className="text-left">DQ-Ctg</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
       size: 100,
     },
 
     {
       accessorKey: "cogscategoryname",
-      header: () => <div className="text-left">COGS-CTG</div>,
+      header: () => <div className="text-left">COGS-Ctg</div>,
       cell: (info) => <span>{info.getValue() as string}</span>,
       size: 140,
     },
