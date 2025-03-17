@@ -59,7 +59,7 @@ const Header: React.FC = () => {
             newTitle = "Summary";
             break;
             case "dqcategory":
-              newTitle = "DQ Category";
+              newTitle = "DQ Export";
               break;
           case "sales":
             newTitle = "Sales";
@@ -93,6 +93,9 @@ const Header: React.FC = () => {
             break;  
           case "setup/categories":
             newTitle = "Categories";
+            break;
+            case "setup/dqcategories":
+              newTitle = "DQ Categories";
             break;
           case "setup/items":
             newTitle = "Items";
