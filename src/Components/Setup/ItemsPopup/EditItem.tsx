@@ -105,10 +105,10 @@ const EditItems = ({ rowData, setAddItems }: any) => {
 
     try {
       const result: any = await sendApiRequest(jsonData);
-      const { status } = result;
+      const { status, error } = result;
       setCustomToast({
         message:
-          status === 200 ? "Item updated successfully!" : "Failed to add item.",
+          status === 200 ? "Item updated successfully!" : error,
         type: status === 200 ? "success" : "error",
       });
 
@@ -117,7 +117,7 @@ const EditItems = ({ rowData, setAddItems }: any) => {
           message:
             status === 200
               ? "Item updated successfully!"
-              : "Failed to add item.",
+              : error,
           type: status === 200 ? "success" : "error",
         });
         setTimeout(() => {
@@ -126,7 +126,7 @@ const EditItems = ({ rowData, setAddItems }: any) => {
         }, 300);
       }
     } catch (error) {
-      setCustomToast({ message: "Error adding item", type: "error" });
+      setCustomToast({ message: "Something went wrong", type: "error" });
       console.error("Error submitting form:", error);
     }
   };
