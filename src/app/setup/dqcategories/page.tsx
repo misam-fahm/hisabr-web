@@ -55,24 +55,24 @@ const Page: FC = () => {
     },
     {
       id: "actions",
-      header: () => <div className="text-right">Actions</div>,
+      header: () => <div className="text-center">Actions</div>,
       cell: (info) => (
-        <div className="flex justify-end gap-2">
-          <EditDQCategories
-            rowData={info.row.original}
-            setDataRefresh={refreshData}
-            showToast={showToast} // Pass showToast to EditDQCategories
-          />
+        <div className="flex justify-end gap-11 pr-7"> {/* Added gap and padding */}
+          {/* Show Delete button first */}
           {info.row.original.types !== "S" && (
             <DeleteDQCategories
               rowData={info.row.original}
               setDataRefresh={refreshData}
-              showToast={showToast} // Pass showToast to DeleteDQCategories
-            />
+              />
           )}
+          {/* Show Edit button */}
+          <EditDQCategories
+            rowData={info.row.original}
+            setDataRefresh={refreshData}
+          />
         </div>
       ),
-      size: 100,
+      size: 200, // Increased size to accommodate spacing
     },
   ];
 
@@ -116,10 +116,14 @@ const Page: FC = () => {
       className="max-h-[calc(100vh-60px)] px-6 below-md:px-3 below-md:py-4 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      <ToastNotification
-        message={customToast.message}
-        type={customToast.type}
-      />
+      {/* Render ToastNotification only if customToast has a message */}
+      {customToast.message && (
+        <ToastNotification
+          message={customToast.message}
+          type={customToast.type}
+        />
+      )}
+
       <div className="flex justify-end gap-2 below-md:hidden my-6">
         <AddDQCategories
           setAddDQCategories={setAddDQCategories}
@@ -140,21 +144,19 @@ const Page: FC = () => {
                   <span className="font-bold text-[14px] text-[#334155]">
                     {row?.name}
                   </span>
-                  <div className="flex items-center gap-2">
-                    {/* Pass refreshData and showToast to EditDQCategories */}
-                    <EditDQCategories
-                      rowData={row}
-                      setDataRefresh={refreshData}
-                      showToast={showToast}
-                    />
-                    {/* Pass refreshData and showToast to DeleteDQCategories if types !== 'S' */}
+                  <div className="flex items-center gap-8"> {/* Added gap */}
+                    {/* Show Delete button first */}
                     {row.types !== "S" && (
                       <DeleteDQCategories
                         rowData={row}
                         setDataRefresh={refreshData}
-                        showToast={showToast}
                       />
                     )}
+                    {/* Show Edit button */}
+                    <EditDQCategories
+                      rowData={row}
+                      setDataRefresh={refreshData}
+                    />
                   </div>
                 </div>
               </div>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import { sendApiRequest } from "@/utils/apiUtils";
 import { toast } from "react-toastify";
@@ -14,7 +14,25 @@ const EditDQCategories: React.FC<EditDQCategoriesProps> = ({ rowData, setDataRef
   const [isOpen, setIsOpen] = useState(false);
   const [dqCategoryName, setDQCategoryName] = useState(rowData.name);
 
+  // Reset the input field to the original value when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setDQCategoryName(rowData.name);
+    }
+  }, [isOpen, rowData.name]);
+
   const handleSubmit = async () => {
+    if (!dqCategoryName.trim()) {
+      toast.error("DQ Category name cannot be empty!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeButton: true,
+        draggable: true,
+      });
+      return;
+    }
+
     try {
       const response = await sendApiRequest({
         mode: "updateDQCategory",
@@ -30,17 +48,10 @@ const EditDQCategories: React.FC<EditDQCategoriesProps> = ({ rowData, setDataRef
           closeButton: true,
           draggable: true,
         });
-        setDataRefresh(true); // This will trigger the data refresh in the parent component
-      } else if (response?.error_message) {
-        toast.error(response.error_message, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeButton: true,
-          draggable: true,
-        });
+        setDataRefresh(true);
+        setIsOpen(false);
       } else {
-        toast.error("Update failed. Please try again.", {
+        toast.error(response?.error_message || "Update failed. Please try again.", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -57,8 +68,6 @@ const EditDQCategories: React.FC<EditDQCategoriesProps> = ({ rowData, setDataRef
         closeButton: true,
         draggable: true,
       });
-    } finally {
-      setIsOpen(false);
     }
   };
 
