@@ -391,7 +391,9 @@ const enhancedItems = items?.map((item:any) => ({
 
         {/* grid 1 */}
         <div className="grid grid-cols-4 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3  pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
+          <div className="flex flex-row bg-[#FFFFFF] cursor-pointer rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
+           onClick={() => router.push("/sales")}
+          >
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">Sales</p>
               <p className="text-[16px] text-[#2D3748] font-bold">{data?.net_sales ? `$${Math.round(data?.net_sales)?.toLocaleString()}` : '$00,000'}</p>
@@ -504,7 +506,9 @@ const enhancedItems = items?.map((item:any) => ({
             </div>
           </div>
 
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
+          onClick={() => router.push("/expenses")}
+          >
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">
                 Operating Expenses
@@ -525,7 +529,9 @@ const enhancedItems = items?.map((item:any) => ({
             </div>
           </div>
 
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] cursor-pointer border-b-4 w-full p-4 justify-between items-stretch"
+           onClick={() => router.push("/invoices")}
+          >
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">COGS</p>
               <p className="text-[16px] text-[#2D3748] font-bold">{data?.producttotal ? `$${Math.round(data?.producttotal)?.toLocaleString()}` : '$00,000'}</p>

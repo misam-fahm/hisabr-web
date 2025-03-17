@@ -1,6 +1,11 @@
 "use client";
 
-import React from "react";
+import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { sendApiRequest } from "@/utils/apiUtils";
+import React, { useEffect, useState } from "react";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const paymentData = [
   {
@@ -41,7 +46,49 @@ const paymentData = [
   },
 ];
 
-const PaymentTable: React.FC = () => {
+const PaymentTable: React.FC<any> = ( {SalesId}:any) => {
+
+  const [data, setDataApi] = useState<any>([]);
+  const [totalItems, setTotalItems] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+
+
+        const response: any = await sendApiRequest({
+          mode: "getRevenueCenterBySalesid",
+          salesid: Number(SalesId)
+        });
+
+        if (response?.status === 200) {
+          setDataApi(response?.data?.revenuecenter || []);
+          // response?.data?.total > 0 &&
+          //   setTotalItems(response?.data?.total || 0);
+        } else {
+          setCustomToast({
+            ...customToast,
+            message: response?.message,
+            type: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+
   return (
     <main>
       <div className="overflow-x-auto below-md:hidden rounded-lg  shadow-sm border border-[#E4E4EF]">
@@ -55,7 +102,34 @@ const PaymentTable: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {paymentData.map((row, index) => (
+          {loading ? (
+    Array.from({ length: 8 }).map((_, index) => (
+      <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+        {/* Ensure skeleton cells match the number of columns */}
+        {data?.length > 0 ? (
+          data?.map((_, colIndex) => (
+            <td key={colIndex} className="px-4 py-1.5">
+              <Skeleton height={30} />
+            </td>
+          ))
+        ) : (
+          /* If SaleTender is empty, assume default columns */
+          Array.from({ length: 6 }).map((_, colIndex) => (
+            <td key={colIndex} className="px-4 py-1.5">
+              <Skeleton height={30} />
+            </td>
+          ))
+        )}
+      </tr>
+    ))
+  ) : data?.length === 0 ? (
+    <tr>
+      <td colSpan={6} className="py-6 text-center">
+        <NoDataFound />
+      </td>
+    </tr>
+  ) : (
+            data?.map((row:any, index:any) => (
               <tr
                 key={index}
                 className={`${index % 2 === 0 ? "bg-[#F8F9FB]" : "bg-white"}`}
@@ -76,7 +150,8 @@ const PaymentTable: React.FC = () => {
                   {row.percent}
                 </td>
               </tr>
-            ))}
+            )))
+            }
           </tbody>
         </table>
       </div>
