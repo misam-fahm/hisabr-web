@@ -3,7 +3,7 @@ import React, { FC, useEffect, useState, useRef } from "react";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Images from "@/Components/UI/Themes/Image";
 import { useRouter } from "next/navigation";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import Pagination from "@/Components/UI/Pagination/Pagination";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import Skeleton from "react-loading-skeleton";
@@ -17,7 +17,9 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import { sendApiRequest } from "@/utils/apiUtils";
-import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, {
+  ToastNotificationProps,
+} from "@/Components/UI/ToastNotification/ToastNotification";
 import moment from "moment";
 import Loading from "@/Components/UI/Themes/Loading";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
@@ -29,8 +31,8 @@ interface TableRow {
   total_sales_count: number;
   total_item_sales_amt: any;
   net_sales_amt: string;
-  uploaddate:string;
-  salesid:number;
+  uploaddate: string;
+  salesid: number;
   order_average_amt: any;
 }
 
@@ -54,7 +56,10 @@ const Sales: FC = () => {
   const fileInputRef: any = useRef(null);
   const navigateToSalesView = (salesId: any) => {
     const encodedId = btoa(salesId);
-    const urlSafeEncodedId = encodedId?.replace(/\+/g, '-')?.replace(/\//g, '_')?.replace(/=+$/, '');
+    const urlSafeEncodedId = encodedId
+      ?.replace(/\+/g, "-")
+      ?.replace(/\//g, "_")
+      ?.replace(/=+$/, "");
     router.push(`/sales/${urlSafeEncodedId}`);
   };
 
@@ -75,9 +80,9 @@ const Sales: FC = () => {
       accessorKey: "orders_count",
       header: () => <div className="text-right mr-10">Orders</div>,
       cell: (info) => (
-        <div className="text-right mr-10">{info.getValue() as number}</div>
+        <div className="text-right">{info.getValue() as number}</div>
       ),
-      size: 120,
+      size: 80,
     },
     {
       accessorKey: "total_sales_count",
@@ -91,17 +96,21 @@ const Sales: FC = () => {
       accessorKey: "total_item_sales_amt",
       header: () => <div className="text-right mr-12">Amount</div>,
       cell: (info) => (
-        <div className="text-right mr-12">{(info.getValue() as number).toFixed(2)}</div>
+        <div className="text-right mr-12">
+          {(info.getValue() as number).toFixed(2)}
+        </div>
       ),
       size: 133,
     },
     {
       accessorKey: "net_sales_amt",
-      header: () => <div className="text-right mr-10">Net</div>,
+      header: () => <div className="text-right ">Net</div>,
       cell: (info) => (
-        <div className="text-right mr-10">{(info.getValue() as number).toFixed(2)}</div>
+        <div className="text-right mr-10">
+          {(info.getValue() as number).toFixed(2)}
+        </div>
       ),
-      size: 120,
+      size: 80,
     },
     {
       accessorKey: "order_average_amt",
@@ -110,7 +119,7 @@ const Sales: FC = () => {
         const { total_item_sales_amt, total_sales_count } = info.row.original;
         const average =
           total_sales_count > 0 ? total_item_sales_amt / total_sales_count : 0;
-          
+
         return <div className="text-right mr-8">{average.toFixed(2)}</div>;
       },
       size: 120,
@@ -119,7 +128,9 @@ const Sales: FC = () => {
       accessorKey: "uploaddate",
       header: () => <div className="text-left "> Uploaded On</div>,
       cell: (info) => (
-        <span className="text-left ">{ format(info.getValue() as any ,'MM-dd-yyyy' )}</span>
+        <span className="text-left ">
+          {format(info.getValue() as any, "MM-dd-yyyy")}
+        </span>
       ),
       size: 120,
     },
@@ -128,7 +139,9 @@ const Sales: FC = () => {
       header: () => <div className="text-center"></div>,
       cell: (info) => (
         <span className="flex justify-center">
-          <button   onClick={() =>   navigateToSalesView(info.row.original.salesid)}>
+          <button
+            onClick={() => navigateToSalesView(info.row.original.salesid)}
+          >
             <Images
               src="/images/vieweyeicon.svg"
               alt="Eye Icon"
@@ -139,13 +152,31 @@ const Sales: FC = () => {
       ),
       size: 60,
     },
+    {
+      id: "delete",
+      header: () => <div className="text-center"></div>,
+      cell: (info) => (
+        <span className="flex justify-center">
+          <button
+            onClick={() => navigateToSalesView(info.row.original.salesid)}
+          >
+            <Images
+              src="/images/deletebinicon.svg"
+              alt="deletebinicon"
+              className="w-4 h-4"
+            />
+          </button>
+        </span>
+      ),
+      size: 60,
+    },
   ];
 
   useEffect(() => {
-    if (startDate && endDate && selectedOption ) {
+    if (startDate && endDate && selectedOption) {
       fetchData();
     }
-  }, [selectedOption , globalFilter]);
+  }, [selectedOption, globalFilter]);
 
   const table = useReactTable({
     data: data,
@@ -167,7 +198,7 @@ const Sales: FC = () => {
   });
 
   const { pageIndex, pageSize } = table.getState().pagination;
-  
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -176,11 +207,11 @@ const Sales: FC = () => {
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
         storeid: selectedOption?.id || 69,
-        startdate: startDate && format(startDate, 'yyyy-MM-dd'),
-        enddate: endDate && format(endDate, 'yyyy-MM-dd'),
-        search:globalFilter
+        startdate: startDate && format(startDate, "yyyy-MM-dd"),
+        enddate: endDate && format(endDate, "yyyy-MM-dd"),
+        search: globalFilter,
       });
-  
+
       if (response?.status === 200) {
         setData(response?.data?.sales);
         if (response?.data?.total > 0) {
@@ -198,7 +229,7 @@ const Sales: FC = () => {
       setLoading(false);
     }
   };
-   
+
   useEffect(() => {
     fetchData();
   }, [pageIndex, pageSize]);
@@ -208,7 +239,7 @@ const Sales: FC = () => {
       const response = await sendApiRequest({ mode: "getUserStore" });
       if (response?.status === 200) {
         setStore(response?.data?.stores || []);
-        if (response?.data?.stores){
+        if (response?.data?.stores) {
           setSelectedOption({
             name: response?.data?.stores[0]?.name,
             id: response?.data?.stores[0]?.id,
@@ -223,21 +254,22 @@ const Sales: FC = () => {
   };
 
   const verifyToken = async (token: string) => {
-    const res: any = await sendApiRequest({
-      token: token
-    }, `auth/verifyToken`);
-    res?.status === 200 
-      ? setIsVerifiedUser(true) 
-      : router.replace('/login');
+    const res: any = await sendApiRequest(
+      {
+        token: token,
+      },
+      `auth/verifyToken`
+    );
+    res?.status === 200 ? setIsVerifiedUser(true) : router.replace("/login");
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      router.replace('/login');
+      router.replace("/login");
     } else {
       verifyToken(token);
-    }    
+    }
   }, []);
 
   useEffect(() => {
@@ -263,7 +295,9 @@ const Sales: FC = () => {
   //   }
   // };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setCustomToast({
       message: "",
       type: "",
@@ -275,10 +309,13 @@ const Sales: FC = () => {
         const formData = new FormData();
         formData.append("file", file);
         try {
-          const response = await fetch("https://hisabr-pdf-extractor.vercel.app/process-sales", {
-            method: "POST",
-            body: formData,
-          });
+          const response = await fetch(
+            "https://hisabr-pdf-extractor.vercel.app/process-sales",
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
 
           const responseData = await response.json();
           if (response.ok) {
@@ -287,17 +324,20 @@ const Sales: FC = () => {
               if (responseData?.store_name !== "Not Found") {
                 getStore = await sendApiRequest({
                   mode: "getStoreByName",
-                  storename: responseData?.store_name
+                  storename: responseData?.store_name,
                 });
               }
               const convertDate = new Date(responseData?.sales_date);
-              const formattedDate = convertDate?.getFullYear() + '-' +
-                (convertDate?.getMonth() + 1)?.toString()?.padStart(2, '0') + '-' +
-                convertDate?.getDate()?.toString()?.padStart(2, '0');
+              const formattedDate =
+                convertDate?.getFullYear() +
+                "-" +
+                (convertDate?.getMonth() + 1)?.toString()?.padStart(2, "0") +
+                "-" +
+                convertDate?.getDate()?.toString()?.padStart(2, "0");
               const checkSalesUpload: any = await sendApiRequest({
                 mode: "checkSalesExist",
                 salesdate: formattedDate,
-                storename: responseData?.store_name
+                storename: responseData?.store_name,
               });
               if (checkSalesUpload?.status === 200) {
                 const jsonData: any = {
@@ -309,7 +349,8 @@ const Sales: FC = () => {
                   total_sales_count: responseData?.total_no_sales_count,
                   total_item_sales_amt: responseData?.total_item_sales,
                   taxable_item_sales_amt: responseData?.taxable_item_sales,
-                  non_taxable_item_sales_amt: responseData?.non_taxable_item_sales,
+                  non_taxable_item_sales_amt:
+                    responseData?.non_taxable_item_sales,
                   orders_count: responseData?.order_count,
                   order_average_amt: responseData?.order_average,
                   guests_count: responseData?.guest_count,
@@ -317,7 +358,8 @@ const Sales: FC = () => {
                   surcharges_amt: responseData?.surcharges,
                   deposits_accepted_amt: responseData?.deposits_accepted_amount,
                   deposits_redeemed_amt: responseData?.deposits_redeemed_amount,
-                  cash_deposits_accepted_amt: responseData?.cash_deposits_accepted,
+                  cash_deposits_accepted_amt:
+                    responseData?.cash_deposits_accepted,
                   non_cash_payments_amt: responseData?.non_cash_payments,
                   cash_tips_received_amt: responseData?.cash_tips_received,
                   total_cash_amt: responseData?.total_cash_amount,
@@ -336,59 +378,77 @@ const Sales: FC = () => {
                   gift_card_reload_count: responseData?.gift_card_reload_count,
                   gift_card_reload_amt: responseData?.gift_card_reload_amount,
                   gift_card_promotions_amt: responseData?.gift_card_promotions,
-                  gift_card_cash_out_count: responseData?.gift_card_cash_out_count,
-                  gift_card_cash_out_amt: responseData?.gift_card_cash_out_amount,
+                  gift_card_cash_out_count:
+                    responseData?.gift_card_cash_out_count,
+                  gift_card_cash_out_amt:
+                    responseData?.gift_card_cash_out_amount,
                   voids_amt: responseData?.voids,
                   non_revenue_items_amt: responseData?.non_revenue_items,
                   donation_count: responseData?.donation_count,
                   donation_total_amt: responseData?.donation_total_amount,
-                  storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null
+                  storeid: getStore?.data?.store[0]?.storeid
+                    ? getStore?.data?.store[0]?.storeid
+                    : null,
                 };
-                
+
                 const result: any = await sendApiRequest(jsonData);
                 if (result?.status === 200) {
                   const newTenderTxns: any = [];
                   const tenderTxns = responseData?.tenders;
-                  const uniqueTenders = responseData?.tenders?.reduce((acc: any, item: any) => {
-                    if (!acc.includes(item?.name)) {
-                      acc.push(item?.name);
-                    }
-                    return acc;
-                  }, []);
+                  const uniqueTenders = responseData?.tenders?.reduce(
+                    (acc: any, item: any) => {
+                      if (!acc.includes(item?.name)) {
+                        acc.push(item?.name);
+                      }
+                      return acc;
+                    },
+                    []
+                  );
 
                   // if (uniqueTenders) {
-                    // const tendersString = uniqueTenders?.map((item: any) => `"${item}"`).join(", ");
-                    const responseTenders: any = await sendApiRequest({
-                      mode: "getTendersByNames",
-                      tenders: uniqueTenders
-                    });
+                  // const tendersString = uniqueTenders?.map((item: any) => `"${item}"`).join(", ");
+                  const responseTenders: any = await sendApiRequest({
+                    mode: "getTendersByNames",
+                    tenders: uniqueTenders,
+                  });
 
-                    for (let item of tenderTxns) {
-                      const match = responseTenders?.data?.tenders?.find((i: any) => i?.tendername === item?.name);
-                  
-                      if (match) {
-                        newTenderTxns.push({ ...item, 
-                          tenderid: match.tenderid, 
-                          salesid: result?.data?.salesid,
-                          storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null,
-                          tender_date: formattedDate 
-                        });
-                      } else {
-                        const insertTender: any = await sendApiRequest({
-                          mode: "insertTender",
-                          tendername: item.name
-                        });
-                        newTenderTxns.push({ ...item, 
-                          tenderid: insertTender?.data?.tenderid, 
-                          salesid: result?.data?.salesid,
-                          storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null,
-                          tender_date: formattedDate 
-                        });                    
-                      }
+                  for (let item of tenderTxns) {
+                    const match = responseTenders?.data?.tenders?.find(
+                      (i: any) => i?.tendername === item?.name
+                    );
+
+                    if (match) {
+                      newTenderTxns.push({
+                        ...item,
+                        tenderid: match.tenderid,
+                        salesid: result?.data?.salesid,
+                        storeid: getStore?.data?.store[0]?.storeid
+                          ? getStore?.data?.store[0]?.storeid
+                          : null,
+                        tender_date: formattedDate,
+                      });
+                    } else {
+                      const insertTender: any = await sendApiRequest({
+                        mode: "insertTender",
+                        tendername: item.name,
+                      });
+                      newTenderTxns.push({
+                        ...item,
+                        tenderid: insertTender?.data?.tenderid,
+                        salesid: result?.data?.salesid,
+                        storeid: getStore?.data?.store[0]?.storeid
+                          ? getStore?.data?.store[0]?.storeid
+                          : null,
+                        tender_date: formattedDate,
+                      });
                     }
+                  }
                   // };
                   await sendApiRequest(newTenderTxns, `insertBulkTenders`);
-                  await sendApiRequest(responseData?.revenue_centers, `insertBulkDQRevenueCenters?salesid=${result?.data?.salesid}`);
+                  await sendApiRequest(
+                    responseData?.revenue_centers,
+                    `insertBulkDQRevenueCenters?salesid=${result?.data?.salesid}`
+                  );
                   // const val: any = {
                   //   invoiceDetails: responseData?.invoice_items || [],
                   // };
@@ -458,11 +518,11 @@ const Sales: FC = () => {
       return;
     }
   };
-  
+
   const handleImageClick = () => {
-    router.push("/sales/sales_view"); 
+    router.push("/sales/sales_view");
   };
-  
+
   const handleUploadClick = () => {
     // document.getElementById("fileInput")?.click(); // Programmatically click the hidden input
     fileInputRef.current.value = "";
@@ -497,17 +557,16 @@ const Sales: FC = () => {
 
   return (
     <main
-    className={`relative px-6 below-md:px-3  overflow-auto ${
-      data?.length > 8 ? "max-h-[calc(100vh-60px)]" : "h-[500px]"
-    }`}
-    style={{ scrollbarWidth: "thin" }}
-  >
-    
+      className={`relative px-6 below-md:px-3  overflow-auto ${
+        data?.length > 8 ? "max-h-[calc(100vh-60px)]" : "h-[500px]"
+      }`}
+      style={{ scrollbarWidth: "thin" }}
+    >
       <ToastNotification
         message={customToast?.message}
         type={customToast?.type}
       />
-      {uploadPdfloading && ( <Loading /> )}
+      {uploadPdfloading && <Loading />}
       <div className="px-6 mt-6 below-md:px-3 below-md:mt-0 tablet:mt-4">
         <div className="flex flex-row below-md:flex-col pb-6 sticky z-20  below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
           <div className="flex flex-row below-md:flex-col w-full  gap-3">
@@ -527,13 +586,13 @@ const Sales: FC = () => {
               widthchange="w-[60%]"
             />
             <div className="w-full tablet:w-full below-md:w-full">
-            <DateRangePicker 
-                startDate = {startDate}
-                endDate = {endDate}
-                setStartDate = {setStartDate}
-                setEndDate = {setEndDate}
-                fetchData = {fetchData}
-                />
+              <DateRangePicker
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+                fetchData={fetchData}
+              />
             </div>
             <div className="flex flex-row gap-3 w-full ">
               <div className=" w-full rounded border border-gray-300 below-md:w-full bg-[#ffff] relative below-md:hidden tablet:w-full">
@@ -629,50 +688,55 @@ const Sales: FC = () => {
             >
               <table className="w-full border-collapse border-gray-200 table-fixed">
                 <tbody>
-                {loading ? (
-                  Array.from({ length: 8 })?.map((_, index) => (
-                    <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
-                      {columns.map((column, colIndex) => (
-                        <td
-                          key={colIndex}
-                          className="px-4 py-1.5"
-                          style={{ width: `${column.size}px` }}
-                        >
-                          <Skeleton height={30} />
-                        </td>
-                      ))}
+                  {loading ? (
+                    Array.from({ length: 8 })?.map((_, index) => (
+                      <tr
+                        key={index}
+                        className={
+                          index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
+                      >
+                        {columns.map((column, colIndex) => (
+                          <td
+                            key={colIndex}
+                            className="px-4 py-1.5"
+                            style={{ width: `${column.size}px` }}
+                          >
+                            <Skeleton height={30} />
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) : data === null ? (
+                    /* Show No Data Found Message If No Data Available */
+                    <tr>
+                      <td colSpan={columns.length} className="py-6 text-center">
+                        <NoDataFound />
+                      </td>
                     </tr>
-                  ))
-                ) : data === null ? (
-                  /* Show No Data Found Message If No Data Available */
-                  <tr>
-                    <td colSpan={columns.length} className="py-6 text-center">
-                      <NoDataFound />
-                    </td>
-                  </tr>
-                )
-                :
-                  table.getRowModel().rows.map((row) => (
-                    <tr
-                      key={row.id}
-                      className={
-                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                      }
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <td
-                          key={cell.id}
-                          className="px-4 py-1.5 text-[#636363] text-[14px]"
-                          style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
+                  ) : (
+                    table.getRowModel().rows.map((row) => (
+                      <tr
+                        key={row.id}
+                        className={
+                          row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                        }
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <td
+                            key={cell.id}
+                            className="px-4 py-1.5 text-[#636363] text-[14px]"
+                            style={{ width: `${cell.column.getSize()}px` }} // Apply width to cells
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -686,54 +750,77 @@ const Sales: FC = () => {
 
         <div className="below-lg:hidden mb-8">
           <div className="flex flex-col">
-            {data?.map((items,index)=> 
-            <div key={index} className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3">
-              <div className=" items-center mb-4 mt-2 px-2">
-                <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
-                
-                  <div className="flex text-[#1A1A1A] text-[14px] font-bold">
-                    <span>{items.sales_date}</span>
+            {data?.map((items, index) => (
+              <div
+                key={index}
+                className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3"
+              >
+                <div className=" items-center mb-4 mt-2 px-2">
+                  <div className="flex justify-between pb-2 w-[100%] border-b border-[#E4E4EF]">
+                    <div className="flex text-[#1A1A1A] text-[14px] font-bold">
+                      <span>{items.sales_date}</span>
+                    </div>
+                    <div className="flex gap-2">
+                    <div>
+                      <img
+                        onClick={() => navigateToSalesView(items.salesid)}
+                        src="/images/vieweyeicon.svg"
+                        className="w-5 h-5"
+                      />
+                    </div>
+                    <div>
+                      {" "}
+                      <img
+                        src="/images/deletebinicon.svg"
+                        className="w-5 h-4"
+                      />
+                    </div>
+                    </div>
                   </div>
-                  <div>
-                    <img
-                      onClick={() => navigateToSalesView(items.salesid)}
-                      src="/images/vieweyeicon.svg"
-                      className="w-5 h-5"
-                    />
+                </div>
+
+                <div className="space-y-3 mb-2 px-2">
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[13px]">Store</p>
+                    <p className="text-[#1A1A1A] text-[14px]">
+                      {items.store_name}
+                    </p>
                   </div>
-                </div>               
-              </div>            
-              <div className="space-y-3 mb-2 px-2">
-                <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[13px]">Store</p>
-                  <p className="text-[#1A1A1A] text-[14px]">{items.store_name}</p>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[13px]">Orders</p>
-                  <p className="text-[#1A1A1A] text-[14px]">{items.orders_count}</p>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[13px]">Quantity</p>
-                  <p className="text-[#1A1A1A] text-[14px]">{items.total_sales_count}</p>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[13px]">Amount</p>
-                  <p className="text-[#1A1A1A] text-[14px]">${items.total_item_sales_amt}</p>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[13px]">Net</p>
-                  <p className="text-[#1A1A1A] text-[14px]">${items.net_sales_amt}</p>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <p className="text-[#808080] text-[13px]">Average</p>
-                  <p className="text-[#1A1A1A] text-[14px]">${items.order_average_amt}</p>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[13px]">Orders</p>
+                    <p className="text-[#1A1A1A] text-[14px]">
+                      {items.orders_count}
+                    </p>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[13px]">Quantity</p>
+                    <p className="text-[#1A1A1A] text-[14px]">
+                      {items.total_sales_count}
+                    </p>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[13px]">Amount</p>
+                    <p className="text-[#1A1A1A] text-[14px]">
+                      ${items.total_item_sales_amt}
+                    </p>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[13px]">Net</p>
+                    <p className="text-[#1A1A1A] text-[14px]">
+                      ${items.net_sales_amt}
+                    </p>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p className="text-[#808080] text-[13px]">Average</p>
+                    <p className="text-[#1A1A1A] text-[14px]">
+                      ${items.order_average_amt}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-       )}
+            ))}
           </div>
         </div>
-       
       </div>
 
       <div className="below-lg:hidden flex justify-end fixed bottom-16 right-3">
@@ -758,8 +845,8 @@ const Sales: FC = () => {
         </button>
       </div>
       <div className="hidden below-md:block">
-          <Pagination table={table} totalItems={totalItems} />
-        </div>
+        <Pagination table={table} totalItems={totalItems} />
+      </div>
     </main>
   );
 };
