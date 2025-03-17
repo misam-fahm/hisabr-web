@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
@@ -7,31 +6,39 @@ import { FormProvider, useForm, Controller } from "react-hook-form";
 import { InputField } from "@/Components/UI/Themes/InputField";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { sendApiRequest } from "@/utils/apiUtils";
-import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, {
+  ToastNotificationProps,
+} from "@/Components/UI/ToastNotification/ToastNotification";
 
 interface JsonData {
   mode: string;
   categoryid: number | null;
   itemname: string;
-  itemcode:any;
-  packsize: string ;
-  units:string ;
+  itemcode: any;
+  packsize: string;
+  units: string;
   weight: string | null;
-  cogstrackcategoryid:number | null
-  dqcategoryid:number | null
-  itemid:number | null
+  cogstrackcategoryid: number | null;
+  dqcategoryid: number | null;
+  itemid: number | null;
 }
 
-
-const EditItems = ({rowData , setAddItems}:any) => {
+const EditItems = ({ rowData, setAddItems }: any) => {
   const methods = useForm<any>();
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    watch,
+    clearErrors,
+    trigger,
+    formState: { errors },
+  } = methods;
 
-  const { register, setValue, handleSubmit, watch, clearErrors, trigger, formState: { errors } } = methods;
- 
   const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
   const [dqCategory, setDqCategory] = useState<any[]>([]);
-  const [cogstracking, setCogstracking] = useState<any[]>([]); 
+  const [cogstracking, setCogstracking] = useState<any[]>([]);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [isdqCategoryDropdownOpen, setIsDQCategoryDropdownOpen] =
     useState(false);
@@ -43,18 +50,18 @@ const EditItems = ({rowData , setAddItems}:any) => {
   });
 
   const [name, setName] = useState(rowData?.itemname || "");
-  const [itemcode, setItemcode] = useState(rowData?.itemcode  || "");
-  const [weight, setWeight] = useState(rowData?.weight  || ""); 
-  const [packsize, setPacksize] = useState(rowData?.packsize  || "");
-  const [units, setUnits] = useState(rowData?.units  || "");
+  const [itemcode, setItemcode] = useState(rowData?.itemcode || "");
+  const [weight, setWeight] = useState(rowData?.weight || "");
+  const [packsize, setPacksize] = useState(rowData?.packsize || "");
+  const [units, setUnits] = useState(rowData?.units || "");
   const [defaultOption, setDefaultOption] = React.useState("DQ Category");
-  const [defaultOptionForCoges, setDefaultOptionForCoges] = React.useState("COGS Tracking Category");
+  const [defaultOptionForCoges, setDefaultOptionForCoges] = React.useState(
+    "COGS Tracking Category"
+  );
   const [selectedCategoryName, setSelectedCategoryName] = useState(rowData?.categoryname || "Category");
   const selectedCategory = watch("category");
   const selectedDqCategory = watch("dqcategory");
   const selectedCOGSTracking = watch("cogstrackingcategory");
-
-
   const closeModal = () => setIsOpen(false);
 
   const handleChangeName = (data: any) => {
@@ -83,12 +90,11 @@ const EditItems = ({rowData , setAddItems}:any) => {
   };
 
   const onSubmit = async (data: any) => {
-   console.log("data",data)
     const jsonData: JsonData = {
       mode: "updateItem",
-      categoryid: data?.categoryId  ? data?.categoryId :  rowData?.categoryid,
+      categoryid: data?.categoryId ? data?.categoryId : rowData?.categoryid,
       itemname: data?.name?.trim(),
-      itemcode:data?.code,
+      itemcode: data?.code,
       packsize: data?.packsize,
       units: data?.units,
       weight:data?.weight,
@@ -99,26 +105,28 @@ const EditItems = ({rowData , setAddItems}:any) => {
 
     try {
       const result: any = await sendApiRequest(jsonData);
-      const { status } = result;
+      const { status, error } = result;
       setCustomToast({
         message:
-          status === 200 ? "Item updated successfully!" : "Failed to add item.",
+          status === 200 ? "Item updated successfully!" : error,
         type: status === 200 ? "success" : "error",
       });
 
       if (status === 200) {
         setCustomToast({
-          message: status === 200 ? "Item updated successfully!" : "Failed to add item.",
+          message:
+            status === 200
+              ? "Item updated successfully!"
+              : error,
           type: status === 200 ? "success" : "error",
         });
         setTimeout(() => {
-          setAddItems(true)
+          setAddItems(true);
           closeModal();
         }, 300);
-      };
-      
+      }
     } catch (error) {
-      setCustomToast({ message: "Error adding item", type: "error" });
+      setCustomToast({ message: "Something went wrong", type: "error" });
       console.error("Error submitting form:", error);
     }
   };
@@ -134,9 +142,6 @@ const EditItems = ({rowData , setAddItems}:any) => {
   const toggleDropdownCOGSTracking = () => {
     setIsCOGSTrackingDropdownOpen((prev) => !prev);
   };
-
-
-
  
   const fetchDataCategoriesDropdown = async () => {
     try {
@@ -166,7 +171,7 @@ const EditItems = ({rowData , setAddItems}:any) => {
       console.error("Error fetching data:", error);
     }
   };
-  
+
   const fetchDataDQcategoryDropdown = async () => {
     try {
       const response: any = await sendApiRequest({
@@ -208,7 +213,8 @@ const EditItems = ({rowData , setAddItems}:any) => {
       console.error("Error fetching data:", error);
     }
   };
-   const openModal = () => {
+
+  const openModal = () => {
     setIsOpen(true);
     fetchDataCategoriesDropdown();
     fetchDataDQcategoryDropdown();
@@ -229,13 +235,9 @@ const EditItems = ({rowData , setAddItems}:any) => {
       }
     }, [dqCategory, cogstracking]);
 
-
-
-
-
   return (
     <>
-     <ToastNotification
+      <ToastNotification
         message={customToast.message}
         type={customToast.type}
       />
@@ -259,44 +261,41 @@ const EditItems = ({rowData , setAddItems}:any) => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] h-auto below-md:w-[94%] below-md:h-auto px-6 below-md:px-3 py-6 bg-white rounded-lg shadow-lg flex flex-col">
             <div className="relative">
-                         <div className="flex justify-center">
-                           <DialogTitle
-                             as="h3"
-                             className="text-[16px]  font-bold leading-custom text-[#3D3D3D]"
-                           >
-                             Edit Item
-                           </DialogTitle>
-                         </div>
-                         <img
-                           onClick={closeModal}
-                           src="/images/cancelicon.svg"
-                           alt="Cancel"
-                           className="absolute top-1.5 right-0 cursor-pointer"
-                         />
-           
-                       </div>
-           
-
+              <div className="flex justify-center">
+                <DialogTitle
+                  as="h3"
+                  className="text-[16px]  font-bold leading-custom text-[#3D3D3D]"
+                >
+                  Edit Item
+                </DialogTitle>
+              </div>
+              <img
+                onClick={closeModal}
+                src="/images/cancelicon.svg"
+                alt="Cancel"
+                className="absolute top-1.5 right-0 cursor-pointer"
+              />
+            </div>
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex flex-col mt-4 gap-6">
-                  <div className="w-full flex mt-4 ">
+                <div className="flex flex-col mt-2 gap-3">
+                  <div className="w-full flex">
                   <Dropdown
-    options={categories}
-    selectedOption={selectedCategoryName}
-    onSelect={(selectedValue) => {
-      setSelectedCategoryName(selectedValue?.name);
-      setValue("category", selectedValue?.name);
-      setValue("categoryId", selectedValue?.id);
-      setIsStoreDropdownOpen(false);
-      clearErrors("category");
-    }}
-    isOpen={isStoreDropdownOpen}
-    toggleOpen={toggleDropdownStore}
-    widthchange="w-full flex justify-end"
-  />
+                    options={categories}
+                    selectedOption={selectedCategoryName}
+                    onSelect={(selectedValue) => {
+                      setSelectedCategoryName(selectedValue?.name);
+                      setValue("category", selectedValue?.name);
+                      setValue("categoryId", selectedValue?.id);
+                      setIsStoreDropdownOpen(false);
+                      clearErrors("category");
+                    }}
+                    isOpen={isStoreDropdownOpen}
+                    toggleOpen={toggleDropdownStore}
+                    widthchange="w-full flex justify-end"
+                  />
                   </div>
-                  <div className="w-full flex ">
+                  <div className="w-full flex">
                   <Dropdown
                       options={dqCategory}
                       selectedOption={
@@ -312,13 +311,13 @@ const EditItems = ({rowData , setAddItems}:any) => {
                       }}
                       isOpen={isdqCategoryDropdownOpen}
                       toggleOpen={toggleDropdownDQCategory}
-                      widthchange="w-full "
+                      widthchange="w-full"
                       {...methods.register("dqcategory", {
                       })}
                       errors={errors.dqcategory}
                     />
                   </div>
-                  <div className="w-full">
+                  <div className="w-full flex">
                   <Dropdown
                       options={cogstracking} 
                       selectedOption={ selectedCOGSTracking ? selectedCOGSTracking ||  "COGS Tracking Category"  : defaultOptionForCoges  } 
@@ -330,7 +329,7 @@ const EditItems = ({rowData , setAddItems}:any) => {
                       }}
                       isOpen={iscogstrackingDropdownOpen}
                       toggleOpen={toggleDropdownCOGSTracking}
-                      widthchange="w-full "
+                      widthchange="w-full"
                       {...methods.register("cogstrackingcategory", {
                       })}
                       errors={errors.cogstrackingcategory}
@@ -373,7 +372,7 @@ const EditItems = ({rowData , setAddItems}:any) => {
                       />
                     </div>
 
-                  <div className="w-full flex ">
+                  <div className="w-full flex">
                     <InputField
                       type="text"
                       label="Packsize"
@@ -390,7 +389,7 @@ const EditItems = ({rowData , setAddItems}:any) => {
                       onChange={(e: any) => handleChangepacksize(e.target.value)}
                     />
                   </div>
-                  <div className="w-full flex ">
+                  <div className="w-full flex">
                     <InputField
                       type="text"
                       label="Units"
@@ -426,7 +425,7 @@ const EditItems = ({rowData , setAddItems}:any) => {
                     />
                   </div>
 
-                  <div className="flex flex-col items-center ">
+                  <div className="flex flex-col items-center">
                     <div className="flex justify-between gap-3 items-center w-full">
                       <button
                         type="button"
@@ -437,7 +436,7 @@ const EditItems = ({rowData , setAddItems}:any) => {
                       </button>
                       <button
                         type="submit"
-                        className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md "
+                        className="px-4 py-2 text-white md:text[13px] text-[14px] md:h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md"
                       >
                         Save
                       </button>

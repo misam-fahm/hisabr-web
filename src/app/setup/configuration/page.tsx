@@ -41,6 +41,7 @@ const Page = () => {
   const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
+  const [toastKey, setToastKey] = useState(0);
   const [payrolltax, setPayrollTax] = useState(data?.payroll_tax || "");
   const [labouroperatsalary, setLabourOperatSalary] = useState(data?.labor_operat_salary_exp || "");
   const [rentMortgage, setRentMortgage] = useState(data?.rent_mortgage_exp || "");
@@ -56,7 +57,7 @@ const Page = () => {
   const [repair, setRepair] = useState(data?.repair_exp || "");
   const [loading, setLoading] = useState(true);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
-  const [customToast, setCustomToast] = useState<CustomToast>({
+  const [customToast, setCustomToast] = useState<any>({
     toastMessage: "",
     toastType: "",
   });
@@ -157,8 +158,7 @@ const Page = () => {
       console.error("Error fetching stores:", error);
     }
   };
-
-  const verifyToken = async (token: string) => {
+const verifyToken = async (token: string) => {
     const res: any = await sendApiRequest({
       token: token
     }, `auth/verifyToken`);
@@ -181,8 +181,7 @@ const Page = () => {
       getUserStore();
     }
   }, [isVerifiedUser]);
-
-
+  
   const fetchData = async (storeId) => {
     if (!storeId) return; // Don't fetch data if storeId is not set
     setLoading(true);
@@ -194,6 +193,7 @@ const Page = () => {
       });
       if (response?.status === 200) {
         const storeData = response?.data?.store[0] || {};
+        console.log("au",storeData.id)
         setData(storeData);
         setPropertyTax((storeData.property_tax_exp ?? 0).toString());
         setLabourOperatSalary((storeData.labor_operat_salary_exp ?? 0).toString());
@@ -208,7 +208,7 @@ const Page = () => {
         setPAR((storeData.par ?? 0).toString());
         setRoyalty(parseFloat(storeData.royalty ?? 0).toFixed(2));
         setRepair((storeData.repair_exp ?? 0).toString());
-        setValue("storeId", storeData.id || 69);
+         setValue("store", storeId ? storeId : 69);
       } else {
         setCustomToast({
           ...customToast,
@@ -223,19 +223,15 @@ const Page = () => {
     }
   };
   useEffect(() => {
-    methods.setValue("store",selectedOption?.id || 69)
-    fetchData(selectedOption?.id || 69); // Fetch data when storeId changes
+    methods.setValue("store",selectedOption?.id ? selectedOption?.id : 69)
+    fetchData(selectedOption?.id ? selectedOption?.id : 69); // Fetch data when storeId changes
   }, [selectedOption]);
 
   
-  const onSubmit = async (data: any) => {
-    console.log("Submitting Data:", data);
-    try {
-      // setCustomToast({
-      //   toastMessage: "Updating Configuration...",
-      //   toastType: "info",
-      // });
+  
 
+  const onSubmit = async (data: any) => {
+    try {
       const jsonData: JsonData = {
         mode: "updateStoreConfig",
         insurance: Number(insurance),
@@ -251,20 +247,23 @@ const Page = () => {
         waterbill: Number(waterbill),
         gasbill: Number(gasbill),
         repair: Number(repair),
-        storeid: Number(data.storeId),
+        storeid: Number(data.store),
       };
-
-
+  
       const result: any = await sendApiRequest(jsonData);
-
-      if (result?.status === 200) {
-        console.log("Updated Data:", result?.data);
-
-
-        setCustomToast({
-          toastMessage: "Configuration added successfully!",
-          toastType: "success",
-        });
+      const { status } = result;
+  
+      // Force re-render using unique key (timestamp)
+      setToastKey(Date.now());
+  
+      setCustomToast({
+        key: toastKey, // Unique key to force re-render
+        toastMessage: status === 200 ? "Configuration Updated successfully!" : "Failed to Update Configuration",
+        toastType: status === 200 ? "success" : "error",
+      });
+  
+      if (status === 200) {
+        fetchData(data.store);
         setData(result?.data || {});
         setInsurance(result?.data?.insurance || "");
         setPropertyTax(result?.data?.propertytax || "");
@@ -279,10 +278,10 @@ const Page = () => {
         setWaterBill(result?.data?.waterbill || "");
         setGasBill(result?.data?.gasbill || "");
         setRepair(result?.data?.repair || "");
-        fetchData(data.storeId);
-      }else {
+      } else {
         console.error("API Error:", result);
         setCustomToast({
+          key: toastKey, 
           toastMessage: result?.message || "Failed to update configuration.",
           toastType: "error",
         });
@@ -290,17 +289,20 @@ const Page = () => {
     } catch (error: any) {
       console.error("Catch Error:", error);
       setCustomToast({
+        key: toastKey,
         toastMessage: error?.message || "Something went wrong.",
         toastType: "error",
       });
     }
   };
+  
 
   console.log(methods?.formState?.errors && JSON.stringify(
     Object.fromEntries(
       Object.entries(methods?.formState?.errors).map(([key, val]:any) => [key, val.message])
     )
   ));
+
 
   return (
     isVerifiedUser && <main

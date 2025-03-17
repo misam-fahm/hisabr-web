@@ -20,7 +20,7 @@ const DetailsPage: React.FC = () => {
   const tabContent: Record<any, JSX.Element> = {
     "Sales Details": <SalesDetails SalesId={decodedSalesId} />,
     Tenders: <Tenders SalesId={decodedSalesId} />,
-    // "Revenue Center": <Revenue />,
+     "Revenue Center": <Revenue />,
     // Taxes: <Taxes />,
     // Discounts: <Discounts />,
     // Destinations: <Destinations />,

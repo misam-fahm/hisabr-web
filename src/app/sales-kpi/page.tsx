@@ -96,7 +96,7 @@ const SalesKPI: FC = () => {
       label: "Sales",
       amount:  data?.net_sales ? Math.round(data?.net_sales)?.toLocaleString() : 0,
       per: percentages.sales ?  Number(percentages.sales) : 0,
-      color: "#",
+      color: "#00BFFF",
     },
     { label: "Labour Cost", amount: (Math.round(data?.labour_cost ) || 0).toLocaleString(), per:  Number(percentages.labourCost), color: "#4B4B4B" },
     { label: "Sales Tax", amount:(Math.round(data?.tax_amt) || 0).toLocaleString(), per: Number(percentages.taxAmount), color: "#DAB777" },
@@ -377,7 +377,7 @@ const enhancedItems = items?.map((item:any) => ({
                 />
             </div>
           </div>
-          <div className="below-md:hidden tablet:hidden">
+          {/* <div className="below-md:hidden tablet:hidden">
             <button className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[170px] h-[35px] rounded-md text-white text-[13px] font-medium">
               <img
                 src="/images/saleskpireport.svg"
@@ -386,7 +386,7 @@ const enhancedItems = items?.map((item:any) => ({
               />
               PI Report
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* grid 1 */}

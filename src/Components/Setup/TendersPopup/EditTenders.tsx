@@ -150,16 +150,12 @@ const EditTender = ({ initialData, setAddTender }: any) => {
                 src="/images/cancelicon.svg"
                 alt="Cancel"
                 className="absolute top-1.5 right-0 cursor-pointer"
-              />
-
-            </div>
-
-
+              /> </div>
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex flex-col mt-4 gap-4">
+                <div className="flex flex-col mt-2 gap-3">
 
-                  <div className="w-full flex mt-4">
+                  <div className="w-full flex">
                     {/* Description Input Field */}
                     <InputField
                       type="text"
@@ -177,7 +173,7 @@ const EditTender = ({ initialData, setAddTender }: any) => {
                       onChange={(e: any) => handleChangeName(e.target.value)}
                     />
                   </div>
-                  <div className="w-full flex mt-4">
+                  <div className="w-full flex">
                     <Dropdown
                       options={tenderType}
                       selectedOption={selectedTenderType ? selectedTenderType : initialData?.tendertypename ? initialData?.tendertypename : "Tender Type"}
@@ -197,7 +193,7 @@ const EditTender = ({ initialData, setAddTender }: any) => {
                     // errors={methods.formState.errors.tendertype} 
                     />
                   </div>
-                  <div className="w-full flex mt-4">
+                  <div className="w-full flex">
                     <InputField
                       type="text"
                       label="Commission"
@@ -215,7 +211,7 @@ const EditTender = ({ initialData, setAddTender }: any) => {
                     />
                   </div>
 
-                  <div className="flex flex-col items-center py-4">
+                  <div className="flex flex-col items-center">
                     <div className="flex justify-between gap-3 items-center w-full">
                       <button
                         type="button"
