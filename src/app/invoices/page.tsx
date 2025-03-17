@@ -21,8 +21,10 @@ import {
 } from "@tanstack/react-table";
 import Pagination from "@/Components/UI/Pagination/Pagination";
 import { sendApiRequest } from "@/utils/apiUtils";
-import { format } from 'date-fns';
-import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { format } from "date-fns";
+import ToastNotification, {
+  ToastNotificationProps,
+} from "@/Components/UI/ToastNotification/ToastNotification";
 import UploadInvoicepopup from "@/Components/Invoice/UploadInvoicePopup";
 import Loading from "@/Components/UI/Themes/Loading";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
@@ -33,7 +35,7 @@ interface TableRow {
   invoiceid: number;
   quantity: number;
   duedate: string;
-  uploaddate:string,
+  uploaddate: string;
   total: any;
   invoicenumber: string;
 }
@@ -75,21 +77,26 @@ const Invoices = () => {
     {
       accessorKey: "invoicenumber",
       header: () => <div className="text-left">Invoice#</div>,
-      cell: (info) => <span className="text-left pl-1">{info.getValue() as string}</span>,
-      size:30
+      cell: (info) => (
+        <span className="text-left pl-1">{info.getValue() as string}</span>
+      ),
+      size: 30,
     },
     {
       accessorKey: "quantity",
       header: () => <div className="text-right">Quantity</div>,
-      cell: (info) =>
-        <span className="flex justify-end"> {info.getValue() as number}</span>,
-      size: 90,
+      cell: (info) => (
+        <span className="flex justify-end"> {info.getValue() as number}</span>
+      ),
+      size: 70,
     },
     {
       accessorKey: "total",
       header: () => <div className="text-right pr-9">Total</div>,
       cell: (info) => (
-        <span className="flex justify-end pr-8">{( info.row.original.total)?.toFixed(2)}</span>
+        <span className="flex justify-end pr-8">
+          {info.row.original.total?.toFixed(2)}
+        </span>
       ),
       size: 70,
     },
@@ -105,7 +112,9 @@ const Invoices = () => {
       accessorKey: "uploaddate",
       header: () => <div className="text-left "> Uploaded On</div>,
       cell: (info) => (
-        <span className="text-left ">{ format(info.getValue() as any ,'MM-dd-yyyy' )}</span>
+        <span className="text-left ml-5">
+          {format(info.getValue() as any, "MM-dd-yyyy")}
+        </span>
       ),
       size: 80,
     },
@@ -113,32 +122,53 @@ const Invoices = () => {
       id: "view",
       header: () => <div className="text-left"></div>,
       cell: (info) => (
-        
         <button
-        onClick={() =>   navigateToInvoice(info.row.original.invoiceid)}
+          onClick={() => navigateToInvoice(info.row.original.invoiceid)}
           className="text-green-500 hover:text-green-700 text-center ml-2"
         >
-          <img src="/images/vieweyeicon.svg" alt="View Icon"
-            className=" w-4 h-4 below-md:h-5 below-md:w-5 " />
+          <img
+            src="/images/vieweyeicon.svg"
+            alt="View Icon"
+            className=" w-4 h-4 below-md:h-5 below-md:w-5 "
+          />
         </button>
       ),
       size: 30,
     },
-    
+    {
+      id: "delete",
+      header: () => <div className="text-left"></div>,
+      cell: (info) => (
+        <button
+          onClick={() => navigateToInvoice(info.row.original.invoiceid)}
+          className="text-green-500 hover:text-green-700 text-center ml-2"
+        >
+          <img
+            src="/images/deletebinicon.svg"
+            alt="deletebinicon"
+            className=" w-4 h-4 below-md:h-5 below-md:w-5 "
+          />
+        </button>
+      ),
+      size: 30,
+    },
   ];
 
   const navigateToInvoice = (invoiceId: any) => {
     const encodedId = btoa(invoiceId);
-    const urlSafeEncodedId = encodedId?.replace(/\+/g, '-')?.replace(/\//g, '_')?.replace(/=+$/, '');
+    const urlSafeEncodedId = encodedId
+      ?.replace(/\+/g, "-")
+      ?.replace(/\//g, "_")
+      ?.replace(/=+$/, "");
     router.push(`/invoices/${urlSafeEncodedId}`);
   };
 
   useEffect(() => {
-    if (startDate && endDate && selectedOption ) {
+    if (startDate && endDate && selectedOption) {
       fetchData();
     }
-  }, [selectedOption , globalFilter]);
-  
+  }, [selectedOption, globalFilter]);
+
   const table = useReactTable({
     data: data,
     columns,
@@ -158,10 +188,10 @@ const Invoices = () => {
     pageCount: Math.ceil(totalItems / 10),
   });
 
-  const { pageIndex, pageSize } = table.getState().pagination; 
+  const { pageIndex, pageSize } = table.getState().pagination;
 
-   // Function to fetch data and update state
-   const fetchData = async () => {
+  // Function to fetch data and update state
+  const fetchData = async () => {
     setLoading(true);
     try {
       const response: any = await sendApiRequest({
@@ -169,11 +199,11 @@ const Invoices = () => {
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
         storeid: selectedOption?.id || 69,
-        startdate: startDate && format(startDate, 'yyyy-MM-dd'),
-        enddate: endDate && format(endDate, 'yyyy-MM-dd'),
-        search:globalFilter
+        startdate: startDate && format(startDate, "yyyy-MM-dd"),
+        enddate: endDate && format(endDate, "yyyy-MM-dd"),
+        search: globalFilter,
       });
-  
+
       if (response?.status === 200) {
         setData(response?.data?.invoices);
         if (response?.data?.total >= 0) {
@@ -201,7 +231,7 @@ const Invoices = () => {
       const response = await sendApiRequest({ mode: "getUserStore" });
       if (response?.status === 200) {
         setStore(response?.data?.stores || []);
-        if (response?.data?.stores){
+        if (response?.data?.stores) {
           setSelectedOption({
             name: response?.data?.stores[0]?.name,
             id: response?.data?.stores[0]?.id,
@@ -216,21 +246,22 @@ const Invoices = () => {
   };
 
   const verifyToken = async (token: string) => {
-    const res: any = await sendApiRequest({
-      token: token
-    }, `auth/verifyToken`);
-    res?.status === 200 
-      ? setIsVerifiedUser(true) 
-      : router.replace('/login');
+    const res: any = await sendApiRequest(
+      {
+        token: token,
+      },
+      `auth/verifyToken`
+    );
+    res?.status === 200 ? setIsVerifiedUser(true) : router.replace("/login");
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      router.replace('/login');
+      router.replace("/login");
     } else {
       verifyToken(token);
-    }    
+    }
   }, []);
 
   useEffect(() => {
@@ -242,7 +273,6 @@ const Invoices = () => {
       // fetchDropdownData();
     }
   }, [isVerifiedUser]);
-
 
   // const fetchDropdownData = async () => {
   //   try {
@@ -256,47 +286,47 @@ const Invoices = () => {
   //     console.error("Error fetching stores:", error);
   //   }
   // };
-  
+
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search)
+      const params = new URLSearchParams(window.location.search);
       const fromHome = params.get("fromHome") === "true";
       const fromItemsAnalysis = params.has("fromItemsAnalysis");
-      const fromSaleItems = params.has("fromSaleItems")
+      const fromSaleItems = params.has("fromSaleItems");
 
       if (fromHome || fromItemsAnalysis || fromSaleItems) {
         setShowBackIcon(true);
         const currentUrl = window.location.pathname;
-        window.history.replaceState({},"",currentUrl) // Update the URL without the query parameter
+        window.history.replaceState({}, "", currentUrl); // Update the URL without the query parameter
       }
     }
   }, []);
 
   const handleButtonClick = () => {
-    fileInputRef.current.value = '';
+    fileInputRef.current.value = "";
     fileInputRef.current.click();
   };
-  
+
   const handleFileChange = async (event: any) => {
     const file = event.target.files[0];
-  
+
     if (!file) {
       alert("Please select a file.");
       return;
     }
-  
+
     if (file.type !== "application/pdf") {
       alert("Please upload a PDF file.");
       return;
     }
-  
+
     setUploadPdfLoading(true); // Show loader during upload
-  
+
     try {
       // console.log("Selected file:", file.name);
       const formData = new FormData();
       formData.append("file", file);
-  
+
       const response = await fetch(
         "https://hisabr-pdf-extractor.vercel.app/convert-pdf",
         {
@@ -304,52 +334,69 @@ const Invoices = () => {
           body: formData,
         }
       );
-  
+
       const responseData = await response.json();
       // console.log("Response:", responseData);
-  
+
       if (!response.ok) {
         throw new Error("Failed to upload file.");
       }
-  
+
       let getStore: any = [];
       if (responseData?.invoice_details?.store_name !== "Not Found") {
         getStore = await sendApiRequest({
           mode: "getStoreByName",
-          storename: responseData?.invoice_details?.store_name
+          storename: responseData?.invoice_details?.store_name,
         });
       }
 
       const checkInvoiceUpload: any = await sendApiRequest({
         mode: "checkInvoiceExist",
         invoiceno: responseData?.invoice_details?.invoice_number,
-        storename: responseData?.invoice_details?.store_name
+        storename: responseData?.invoice_details?.store_name,
       });
 
       if (checkInvoiceUpload?.status === 200) {
         const jsonData: any = {
           mode: "insertInvoice",
           invoicenumber: responseData?.invoice_details?.invoice_number,
-          invoicedate: moment(moment(responseData?.invoice_details?.invoice_date, "MM/DD/YYYY").toDate()).format("YYYY-MM-DD"),
+          invoicedate: moment(
+            moment(
+              responseData?.invoice_details?.invoice_date,
+              "MM/DD/YYYY"
+            ).toDate()
+          ).format("YYYY-MM-DD"),
           storename: responseData?.invoice_details?.store_name,
-          duedate: moment(moment(responseData?.invoice_details?.due_date, "MM/DD/YYYY").toDate()).format("YYYY-MM-DD"),
+          duedate: moment(
+            moment(
+              responseData?.invoice_details?.due_date,
+              "MM/DD/YYYY"
+            ).toDate()
+          ).format("YYYY-MM-DD"),
           total: responseData?.invoice_details?.invoice_total,
           sellername: responseData?.invoice_details?.seller_name,
           quantity: responseData?.invoice_details?.qty_ship_total,
-          producttotal: responseData?.invoice_details?.product_total ?? responseData?.invoice_details?.sub_total,
+          producttotal:
+            responseData?.invoice_details?.product_total ??
+            responseData?.invoice_details?.sub_total,
           subtotal: responseData?.invoice_details?.sub_total,
           misc: responseData?.invoice_details?.misc,
           tax: responseData?.invoice_details?.tax,
-          storeid: getStore?.data?.store[0]?.storeid ? getStore?.data?.store[0]?.storeid : null
+          storeid: getStore?.data?.store[0]?.storeid
+            ? getStore?.data?.store[0]?.storeid
+            : null,
         };
-    
-        const result: any = await sendApiRequest(jsonData);    
+
+        const result: any = await sendApiRequest(jsonData);
         if (result?.status === 200) {
           const val: any = {
             invoiceDetails: responseData?.invoice_items || [],
           };
-          await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
-          fetchData(); 
+          await sendApiRequest(
+            val,
+            `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`
+          );
+          fetchData();
         } else {
           setCustomToast({
             message: "Failed to insert invoice details",
@@ -374,10 +421,10 @@ const Invoices = () => {
       setUploadPdfLoading(false); // Hide loader after upload
     }
   };
-  
+
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
-  }
+  };
 
   const handleError = (message: string) => {
     setCustomToast({
@@ -408,48 +455,48 @@ const Invoices = () => {
 
   return (
     <main
-    className={`relative px-6 below-md:px-3 overflow-auto ${
-      data?.length > 10 ? "max-h-[calc(100vh-80px)]" : "h-[500px]"
-    }`}
-    style={{ scrollbarWidth: "thin" }}
-  >
+      className={`relative px-6 below-md:px-3 overflow-auto ${
+        data?.length > 10 ? "max-h-[calc(100vh-80px)]" : "h-[500px]"
+      }`}
+      style={{ scrollbarWidth: "thin" }}
+    >
       <ToastNotification
         message={customToast?.message}
         type={customToast?.type}
       />
-      {uploadPdfloading && ( <Loading /> )}
+      {uploadPdfloading && <Loading />}
       <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
         <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
-        {showBackIcon && (
-          <img
-            onClick={() => router.back()}
-            alt="Back Arrow"
-            className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
-            src="/images/webbackicon.svg"
-          ></img>
-        )}
-        <Dropdown
-              options={store}
-              selectedOption={selectedOption?.name || "Store"}
-              onSelect={(selectedOption: any) => {
-                setSelectedOption({
-                  name: selectedOption.name,
-                  id: selectedOption.id,
-                });
-                setIsStoreDropdownOpen(false);
-              }}
-              isOpen={isStoreDropdownOpen}
-              toggleOpen={toggleStoreDropdown}
-              widthchange="w-[60%]"
-            />
+          {showBackIcon && (
+            <img
+              onClick={() => router.back()}
+              alt="Back Arrow"
+              className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
+              src="/images/webbackicon.svg"
+            ></img>
+          )}
+          <Dropdown
+            options={store}
+            selectedOption={selectedOption?.name || "Store"}
+            onSelect={(selectedOption: any) => {
+              setSelectedOption({
+                name: selectedOption.name,
+                id: selectedOption.id,
+              });
+              setIsStoreDropdownOpen(false);
+            }}
+            isOpen={isStoreDropdownOpen}
+            toggleOpen={toggleStoreDropdown}
+            widthchange="w-[60%]"
+          />
           <div className="below-lg:w-full  tablet:w-full below-md:w-full">
-          <DateRangePicker 
-                startDate = {startDate}
-                endDate = {endDate}
-                setStartDate = {setStartDate}
-                setEndDate = {setEndDate}
-                fetchData = {fetchData}
-                />
+            <DateRangePicker
+              startDate={startDate}
+              endDate={endDate}
+              setStartDate={setStartDate}
+              setEndDate={setEndDate}
+              fetchData={fetchData}
+            />
           </div>
           <div className="flex border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
             <input
@@ -494,20 +541,32 @@ const Invoices = () => {
             <div className="flex justify-between items-start">
               <div className="flex gap-4 px-4 py-4 text-[#334155]">
                 <p className="text-[14px] font-bold">{card.invoicedate}</p>
-                <p className="text-[14px] font-bold">{card.sellername}</p>
+                <p className="text-[14px] font-bold">
+                  {card.sellername.length > 13
+                    ? card.sellername.slice(0, 13) + "..."
+                    : card.sellername}
+                </p>
               </div>
 
-              <div className="flex px-4 py-4">
+              <div className="flex py-4">
                 <button
-                  onClick={() =>   navigateToInvoice(card.invoiceid)}
+                  onClick={() => navigateToInvoice(card?.invoiceid)}
                   className="text-green-500 hover:text-green-700"
                 >
-                  <img
-                    className=" w-4 h-4 below-md:h-5 below-md:w-5"
-                    src="/images/vieweyeicon.svg"
-                  />
+                  <div className="flex gap-2">
+                    <img
+                      className=" w-4 h-4 below-md:h-5 below-md:w-5"
+                      src="/images/vieweyeicon.svg"
+                    />
+                   
+                  </div>
+                 
                 </button>
+                <div className="px-2">
+                  <img src="/images/deletebinicon.svg" className="w-5 h-4" />
+                  </div>
               </div>
+              
             </div>
             {/* Divider */}
             <div className="flex items-center px-4 -mt-2">
@@ -532,7 +591,7 @@ const Invoices = () => {
           </div>
         ))}
         <div className="fixed bottom-[70px] right-3">
-        <button
+          <button
             className="focus:outline-none flex items-center bg-[#168A6F]  justify-center  w-[56px] h-[56px] rounded-xl relative"
             onTouchStart={handlePressStart} // For mobile devices
             onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
@@ -579,9 +638,9 @@ const Invoices = () => {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </th>
                   ))}
                 </tr>
@@ -596,7 +655,10 @@ const Invoices = () => {
               <tbody>
                 {loading ? (
                   Array.from({ length: 10 })?.map((_, index) => (
-                    <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+                    <tr
+                      key={index}
+                      className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
+                    >
                       {columns.map((column, colIndex) => (
                         <td
                           key={colIndex}
@@ -615,8 +677,7 @@ const Invoices = () => {
                       <NoDataFound />
                     </td>
                   </tr>
-                )
-                :
+                ) : (
                   table.getRowModel().rows.map((row) => (
                     <tr
                       key={row.id}
@@ -637,7 +698,8 @@ const Invoices = () => {
                         </td>
                       ))}
                     </tr>
-                  ))}
+                  ))
+                )}
               </tbody>
             </table>
           </div>
