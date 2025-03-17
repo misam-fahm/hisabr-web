@@ -32,14 +32,13 @@ interface CustomToast {
   toastType: string;
 }
 
-const AddNewItems = ({setAddItems}:any) => {
-  const methods = useForm();
+const AddNewItems =  ({rowData , setAddItems}:any) => {
+  const methods = useForm<any>();
   const { register, setValue, handleSubmit, watch, clearErrors, trigger, formState: { errors } } = methods;
-  // const options = [{name: "Dairy", id: 1}, {name: "Bakery", id: 2}, {name: "Beverages", id:3}, {name: "Frozen Foods", id: 4}];  
   const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [dqCategory, setDqCategory] = useState<any[]>([]);
-  const [cogstracking, setCogstracking] = useState<any[]>([]); 
+  const [dqCategory, setDqCategory] = useState<Category[]>([]);
+  const [cogstracking, setCogstracking] = useState<Category[]>([]);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [isdqCategoryDropdownOpen, setIsDQCategoryDropdownOpen] = useState(false);
   const [iscogstrackingDropdownOpen, setIsCOGSTrackingDropdownOpen] = useState(false);
@@ -47,6 +46,11 @@ const AddNewItems = ({setAddItems}:any) => {
      toastMessage: "",
      toastType: "",
    });
+
+     const [categorySearchTerm, setCategorySearchTerm] = useState("");
+     const [dqCategorySearchTerm, setDqCategorySearchTerm] = useState("");
+     const [cogsTrackingSearchTerm, setCogsTrackingSearchTerm] = useState("");
+   
   const name = watch("name");
   const itemcode = watch("code");
   const units = watch("units");
@@ -55,6 +59,18 @@ const AddNewItems = ({setAddItems}:any) => {
   const selectedCategory = watch("category");
   const selectedDqCategory = watch("dqcategory");
   const selectedCOGSTracking = watch("cogstrackingcategory");
+
+    // Filtered options for each dropdown
+    const filteredCategories = categories.filter((option) =>
+      option.name.toLowerCase().includes(categorySearchTerm.toLowerCase())
+    );
+    const filteredDqCategories = dqCategory.filter((option) =>
+      option.name.toLowerCase().includes(dqCategorySearchTerm.toLowerCase())
+    );
+    const filteredCogsTracking = cogstracking.filter((option) =>
+      option.name.toLowerCase().includes(cogsTrackingSearchTerm.toLowerCase())
+    );
+  
   const openModal = () => setIsOpen(true);
   const closeModal = async () => {
     setIsOpen(false);
@@ -70,7 +86,11 @@ const AddNewItems = ({setAddItems}:any) => {
       units: "",
       weight: "",
       itemcode: ""
-    });    
+    });
+    setCategorySearchTerm("");
+    setDqCategorySearchTerm("");
+    setCogsTrackingSearchTerm("");
+    
   };
 
   const onSubmit = async (data: any) => {
@@ -123,67 +143,104 @@ const AddNewItems = ({setAddItems}:any) => {
     setIsCOGSTrackingDropdownOpen((prev) => !prev);
   };
 
-  useEffect(() => {
-    const fetchDataCategoriesDropdown = async () => {
-      try {
-        const response: any = await sendApiRequest({
-          mode: "getAllCategories",
-        });
-
-        if (response?.status === 200) {
-          setCategories(response?.data?.categories || []);
-        } else {
-          setCustomToast({
-            ...customToast,
-            toastMessage: response?.message,
-            toastType: "error",
-          });
+    // Handle keyboard input for filtering
+    useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (isStoreDropdownOpen) {
+          if (e.key === "Escape") {
+            setIsStoreDropdownOpen(false);
+            setCategorySearchTerm("");
+          } else if (e.key.length === 1) {
+            setCategorySearchTerm((prev) => prev + e.key);
+          } else if (e.key === "Backspace") {
+            setCategorySearchTerm((prev) => prev.slice(0, -1));
+          }
+        } else if (isdqCategoryDropdownOpen) {
+          if (e.key === "Escape") {
+            setIsDQCategoryDropdownOpen(false);
+            setDqCategorySearchTerm("");
+          } else if (e.key.length === 1) {
+            setDqCategorySearchTerm((prev) => prev + e.key);
+          } else if (e.key === "Backspace") {
+            setDqCategorySearchTerm((prev) => prev.slice(0, -1));
+          }
+        } else if (iscogstrackingDropdownOpen) {
+          if (e.key === "Escape") {
+            setIsCOGSTrackingDropdownOpen(false);
+            setCogsTrackingSearchTerm("");
+          } else if (e.key.length === 1) {
+            setCogsTrackingSearchTerm((prev) => prev + e.key);
+          } else if (e.key === "Backspace") {
+            setCogsTrackingSearchTerm((prev) => prev.slice(0, -1));
+          }
         }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    const fetchDataDQcategoryDropdown = async () => {
-      try {
-        const response: any = await sendApiRequest({
-          mode: "getAllDQCategory",
-        });
-
-        if (response?.status === 200) {
-          setDqCategory(response?.data?.dqcategory || []);
-        } else {
-          setCustomToast({
-            ...customToast,
-            toastMessage: response?.message,
-            toastType: "error",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    const fetchDataCogstrackcategoryDropdown = async () => {
-      try {
-        const response: any = await sendApiRequest({
-          mode: "getAllCogsTrackCategory",
-        });
-
-        if (response?.status === 200) {
-          setCogstracking(response?.data?.cogstrackcategory || []);
-        } else {
-          setCustomToast({
-            ...customToast,
-            toastMessage: response?.message,
-            toastType: "error",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
+      };
+  
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }, [isStoreDropdownOpen, isdqCategoryDropdownOpen, iscogstrackingDropdownOpen]);
+  
+    // Reset search terms when dropdowns close
+    useEffect(() => {
+      if (!isStoreDropdownOpen) setCategorySearchTerm("");
+      if (!isdqCategoryDropdownOpen) setDqCategorySearchTerm("");
+      if (!iscogstrackingDropdownOpen) setCogsTrackingSearchTerm("");
+    }, [isStoreDropdownOpen, isdqCategoryDropdownOpen, iscogstrackingDropdownOpen]);
+  
+   useEffect(() => {
+     const fetchDataCategoriesDropdown = async () => {
+       try {
+         const response: any = await sendApiRequest({ mode: "getAllCategories" });
+         if (response?.status === 200) {
+           setCategories(response?.data?.categories || []);
+         } else {
+           setCustomToast({
+             ...customToast,
+             toastMessage: response?.message,
+             toastType: "error",
+           });
+         }
+       } catch (error) {
+         console.error("Error fetching data:", error);
+       }
+     };
+ 
+     const fetchDataDQcategoryDropdown = async () => {
+       try {
+         const response: any = await sendApiRequest({ mode: "getAllDQCategory" });
+         if (response?.status === 200) {
+           setDqCategory([{ id: null, name: "None" }, ...(response?.data?.dqcategory || [])]);
+         } else {
+           setCustomToast({
+             ...customToast,
+             toastMessage: response?.message,
+             toastType: "error",
+           });
+         }
+       } catch (error) {
+         console.error("Error fetching data:", error);
+       }
+     };
+ 
+     const fetchDataCogstrackcategoryDropdown = async () => {
+       try {
+         const response: any = await sendApiRequest({ mode: "getAllCogsTrackCategory" });
+         if (response?.status === 200) {
+           setCogstracking([{ id: null, name: "None" }, ...(response?.data?.cogstrackcategory || [])]);
+         } else {
+           setCustomToast({
+             ...customToast,
+             toastMessage: response?.message,
+             toastType: "error",
+           });
+         }
+       } catch (error) {
+         console.error("Error fetching data:", error);
+       }
+     };
+ 
     if(isStoreDropdownOpen ) {
       fetchDataCategoriesDropdown();
     }
@@ -254,61 +311,58 @@ const AddNewItems = ({setAddItems}:any) => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="flex flex-col mt-4 gap-5">
                     <div className="w-full flex ">
-                      <Dropdown
-                        options={categories}
-                        selectedOption={selectedCategory || "Category"}
-                        onSelect={(selectedValue) => {
-                          setValue("category", selectedValue?.name);
-                          setValue("categoryId", selectedValue?.id);
-                          setIsStoreDropdownOpen(false);
-                          clearErrors("category");
-                        }}
-                        isOpen={isStoreDropdownOpen}
-                        toggleOpen={toggleDropdownStore}
-                        widthchange="w-full"
-                        {...register("category", {
-                          required: "Category is required",
-                        })}
-                        errors={errors.category}
-                      />
+                    <Dropdown
+                      options={filteredCategories}
+                      label={selectedCategory ? "Category" : ""}
+                      selectedOption={selectedCategory || "Category"}
+                      onSelect={(selectedValue) => {
+                        setValue("category", selectedValue?.name || "");
+                        setValue("categoryId", selectedValue?.id);
+                        setIsStoreDropdownOpen(false);
+                        clearErrors("category");
+                      }}
+                      isOpen={isStoreDropdownOpen}
+                      toggleOpen={toggleDropdownStore}
+                      widthchange="w-full"
+                      {...register("category", { required: "Category is required" })}
+                      errors={errors.category}
+                    />
                     </div>
                     <div className="w-full flex ">
-                      <Dropdown
-                        options={dqCategory}
-                        selectedOption={selectedDqCategory || "DQ Category"} 
-                        onSelect={(selectedOption : any) => {
-                          setValue("dqcategory", selectedOption?.name); 
-                          setValue("dqcategoryId", selectedOption?.id); 
-                          setIsDQCategoryDropdownOpen(false); 
-                          clearErrors("dqcategory"); 
-                        }}
-                        isOpen={isdqCategoryDropdownOpen}
-                        toggleOpen={toggleDropdownDQCategory}
-                        widthchange="w-full "
-                        {...methods.register("dqcategory", {
-                        //  required: "DQ Category should not be empty",
-                        })}
-                        errors={errors.dqcategory}
-                      />
+                    <Dropdown
+                      options={filteredDqCategories}
+                      label={selectedDqCategory ? "DQ Category" : ""}
+                      selectedOption={selectedDqCategory || "DQ Category"}
+                      onSelect={(selectedOption: any) => {
+                        setValue("dqcategory", selectedOption?.name || "");
+                        setValue("dqcategoryId", selectedOption?.id);
+                        setIsDQCategoryDropdownOpen(false);
+                        clearErrors("dqcategory");
+                      }}
+                      isOpen={isdqCategoryDropdownOpen}
+                      toggleOpen={toggleDropdownDQCategory}
+                      widthchange="w-full"
+                      {...methods.register("dqcategory")}
+                      errors={errors.dqcategory}
+                    />
                     </div>
                     <div className="w-full">
-                      <Dropdown
-                        options={cogstracking}
-                        selectedOption={ selectedCOGSTracking || "COGS Tracking Category"} 
-                        onSelect={(selected : any) => {
-                          setValue("cogstrackingcategory", selected?.name); 
-                          setValue("cogstrackingcategoryId", selected?.id); 
-                          setIsCOGSTrackingDropdownOpen(false); 
-                          clearErrors("cogstrackingcategory"); 
-                        }}
-                        isOpen={iscogstrackingDropdownOpen}
-                        toggleOpen={toggleDropdownCOGSTracking}
-                        widthchange="w-full "
-                        {...methods.register("cogstrackingcategory", {
-                          //required: "COGS Tracking Category should not be empty",
-                        })}
-                        errors={errors.cogstrackingcategory}
-                      />
+                    <Dropdown
+                      options={filteredCogsTracking}
+                      label={selectedCOGSTracking ? "COGS Category" : ""}
+                      selectedOption={selectedCOGSTracking || "COGS Category"}
+                      onSelect={(selected: any) => {
+                        setValue("cogstrackingcategory", selected?.name || "");
+                        setValue("cogstrackingcategoryId", selected?.id);
+                        setIsCOGSTrackingDropdownOpen(false);
+                        clearErrors("cogstrackingcategory");
+                      }}
+                      isOpen={iscogstrackingDropdownOpen}
+                      toggleOpen={toggleDropdownCOGSTracking}
+                      widthchange="w-full"
+                      {...methods.register("cogstrackingcategory")}
+                      errors={errors.cogstrackingcategory}
+                    />
                     </div>
                     <div className="w-full flex">
                       <InputField
