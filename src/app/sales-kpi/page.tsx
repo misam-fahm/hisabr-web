@@ -205,14 +205,14 @@ const fetchDataForItems = async () => {
   try {
     if (startDate && endDate) {
       const response: any = await sendApiRequest({
-        mode: "getLatestItems",
+        mode: "getDqRevCenterSmmary",
         storeid: selectedOption?.id || 69,
         startdate: startDate && format(startDate, 'yyyy-MM-dd'),
         enddate: endDate && format(endDate, 'yyyy-MM-dd'),
       });
 
       if (response?.status === 200) {
-        setItems(response?.data?.items || []);
+        setItems(response?.data?.dqcategories || []);
         // response?.data?.total > 0 &&
         //   setTotalItems(response?.data?.saleskpi[0] || 0);
       } else {
@@ -315,8 +315,8 @@ const fetchDataForItems = async () => {
   const totalFinalAmount = tender?.reduce((sum: number, row: any) => sum + (row.payments * row.commission) / 100, 0) ?? 0;
 
 
-  const totalQty = items?.reduce((acc:any, row:any) => acc + Number(row.totalqty), 0);
-const totalExtPrice = items?.reduce((acc:any, row:any) => acc + Number(row.totalextprice), 0);
+  const totalQty = items?.reduce((acc:any, row:any) => acc + Number(row.quantity), 0);
+const totalExtPrice = items?.reduce((acc:any, row:any) => acc + Number(row.total), 0);
 
 // Ensure there's no error when `items` is empty
 const hasItems = items && items.length > 0;
@@ -595,7 +595,7 @@ const enhancedItems = items?.map((item:any) => ({
           </div>
         </div>
         <div className="flex flex-col px-6 py-6">
-          <div className="flex justify-between ">
+          <div className="flex flex-col gap-3 ">
         <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[100%] items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6 pb-3">
               <div className="flex flex-row gap-2">
@@ -685,7 +685,7 @@ const enhancedItems = items?.map((item:any) => ({
             </div>
           </div>
 
-          {/* <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[49%] items-stretch">
+         <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[100%] items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6 pb-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/items.svg" />
@@ -730,13 +730,13 @@ const enhancedItems = items?.map((item:any) => ({
                       }`}
                     >
                       <td className="px-4 py-1.5  text-left border-b border-gray-200 text-gray-600 font-medium text-[14px]">
-                        {row.itemname}
+                        {row.categoryname}
                       </td>
                       <td className="px-4 py-1.5  border-b text-right font-medium border-gray-200 text-[#334155] text-[14px] ">
-                        {row.totalqty}
+                        {row.quantity}
                       </td>
                       <td className="px-4 py-1.5 border-b text-right border-gray-200 text-[14px] font-medium text-[#334155]">
-                        {row.totalextprice ? `$${row.totalextprice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "--"}
+                        {row.total ? `$${row.total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "--"}
                       </td>
                     </tr>
                   )))}
@@ -758,7 +758,7 @@ const enhancedItems = items?.map((item:any) => ({
     )}
               </table>
             </div>
-          </div> */}
+          </div>
       </div>
           {/* <div className="w-full px-3 below-md:w-[100%] mt-8 bg-white below-md:ml-0 tablet:ml-0 tablet:mt-6 tablet:w-full below-md:mt-3 shadow-md rounded-md">
               <div className="flex flex-col"> */}
