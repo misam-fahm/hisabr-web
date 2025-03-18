@@ -5,6 +5,7 @@ import Images from "../UI/Themes/Image";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useParams } from 'next/navigation';
+import { sendApiRequest } from "@/utils/apiUtils";
 
 const Header: React.FC = () => {
   const router = useRouter();
@@ -12,10 +13,15 @@ const Header: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const currentPath = usePathname();
   const [isClient, setIsClient] = useState(false);
+  const [data, setData] = useState<any>();
   const [title, setTitle] = useState("");
   const [isRotated, setIsRotated] = useState(false);
   const {invoiceid}:any = useParams(); 
-  const { salesid }: any = useParams();   
+  const { salesid }: any = useParams(); 
+  const [customToast, setCustomToast] = useState<any>({
+    message: "",
+    type: "",
+  });  
   const safeDecodeBase64 = (str: string | undefined): string => {
   if (!str) return ""; 
     try {
@@ -28,7 +34,30 @@ const Header: React.FC = () => {
   const decodedSaleId=safeDecodeBase64(salesid);
   const decodedId = safeDecodeBase64(invoiceid);
 
+
+  const fetchData = async () => {
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getUserById",
+        
+      });
+  
+      if (response?.status === 200) {
+        setData(response.data.user[0]);
+        
+      } else {
+        setCustomToast({
+          message: response?.message || "Failed to fetch sales.",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } 
+  };
+
   useEffect(() => {
+    fetchData();
     setIsClient(true); 
   }, []);
 
@@ -127,6 +156,7 @@ const Header: React.FC = () => {
     }
   }, [isClient, currentPath, decodedId]);
 
+ 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
     setIsRotated((prev) => !prev);
@@ -172,8 +202,8 @@ const Header: React.FC = () => {
             alt="Admin"
           />
           <div className="flex flex-col below-md:hidden">
-            <p className="text-[14px] font-semibold text-right">Saheel</p>
-            <p className="text-[12px] font-medium">Admin</p>
+            <p className="text-[14px] font-semibold text-right">{data?.firstname}</p>
+            <p className="text-[12px] font-medium">{data?.lastname}</p>
           </div>
 
           <div

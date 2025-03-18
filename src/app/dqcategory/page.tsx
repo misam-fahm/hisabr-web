@@ -525,12 +525,14 @@ const exportToExcel = () => {
             </div>
           </div>
         </div> */}
-        <div className="flex gap-10">
+        <div className="flex gap-6">
 
-<div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[17%] ml-6 p-4 justify-between items-stretch">
-            <div>
-              <p className="text-[14px] text-[#575F6DCC] font-medium">COGS</p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{productTotal ? "$" + productTotal.toFixed(2) : 0}</p>
+<div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%]  p-4 justify-between items-stretch">
+            <div className="flex flex-col gap-6">
+              <p className="text-[14px] text-[#575F6DCC] font-bold">COGS</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">
+  {productTotal ? `$${productTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "$0.00"}
+</p>
               
             </div>
             {/* <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
@@ -538,19 +540,21 @@ const exportToExcel = () => {
             </div> */}
           </div>
 
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[17%] ml-6 p-4 justify-between items-stretch">
-            <div>
-              <p className="text-[14px] text-[#575F6DCC] font-medium">Order Counts</p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{totalOrders}</p>
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%]  p-4 justify-between items-stretch">
+            <div className="flex flex-col gap-6">
+              <p className="text-[14px] text-[#575F6DCC] font-bold">Order Counts</p>
+               <p className="text-[16px] text-[#2D3748] font-bold">{totalOrders}</p> 
               
             </div>
+
+            
             {/* <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
             <p className="text-[14px]  font-medium">{}</p>
             </div> */}
           </div>
           </div>
 
-           <div className="grid grid-cols-5  below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3  pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
+           <div className="grid grid-cols-5  below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3   pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
            {Sitems?.map((Items:any , index:any) => 
           
             // 
@@ -558,7 +562,7 @@ const exportToExcel = () => {
         <div key={index} className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4  p-3 justify-between items-stretch">
             <div className="flex flex-col gap-6" >
             <Tooltip position="left" text= {Items?.name?.length > 15 ? Items.name : ""}>
-            <p className="text-[14px] text-[#575F6DCC] font-medium h-7">        {Items?.name?.length > 15 ? Items.name.substring(0, 15) + "..." : Items.name || "--"}</p>
+            <p className="text-[14px] text-[#575F6DCC] font-bold h-7">        {Items?.name?.length > 15 ? Items.name.substring(0, 15) + "..." : Items.name || "--"}</p>
                       </Tooltip>
               <p className="text-[16px] text-[#2D3748] font-bold">{Items?.totalextprice ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}` : '$00,000'}</p>
               {/* <p className="text-[11px] text-[#388E3C] font-semibold">
@@ -578,7 +582,7 @@ const exportToExcel = () => {
            )}
            </div>
 
-           <div className="grid grid-cols-5 mt-8 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3  pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
+           <div className="grid grid-cols-5 mt-8 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3   pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
            {items?.map((Items:any , index:any) => 
           
             // 
@@ -586,7 +590,7 @@ const exportToExcel = () => {
         <div key={index} className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4  p-3 justify-between items-stretch">
             <div className="flex flex-col gap-6">
             <Tooltip position="left" text= {Items?.name?.length > 15 ? Items.name : ""}>
-            <p className="text-[14px] text-[#575F6DCC] font-medium h-7">        {Items?.name?.length > 15 ? Items.name.substring(0, 15) + "..." : Items.name || "--"}</p>
+            <p className="text-[14px] text-[#575F6DCC] font-bold h-7">        {Items?.name?.length > 15 ? Items.name.substring(0, 15) + "..." : Items.name || "--"}</p>
                       </Tooltip>
          
               <p className="text-[16px] text-[#2D3748] font-bold">{Items?.totalextprice ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}` : '$00,000'}</p>
