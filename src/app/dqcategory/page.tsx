@@ -1,9 +1,10 @@
 "use client";
 import React, { FC, useEffect, useState } from "react";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
-import Images from "@/Components/UI/Themes/Image";
 import { useRouter } from "next/navigation";
 import { format } from 'date-fns';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import Pagination from "@/Components/UI/Pagination/Pagination";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import Skeleton from "react-loading-skeleton";
@@ -30,10 +31,23 @@ interface TableRow {
   
 }
 
+const Exceldata = [
+  [
+    'Store Number', 'Store Address', 'Dairy Queen', 'DQ Food', 'Beverages', 'Breakfast', 'Cakes', 'OJ Beverages', 'Mix Gall\Litre', 'Meat Lbs\Kg', '8 Round', '10 Round', 'Sheet', 'Dilly', 'Starkiss', 'NF/NSA Bars', 'NSA/Non Dairy Dilly', 'Buster Bar', 'Transaction Count', 'Inventory Purchases', 'Ending Inventory'
+  ],
+  [
+    '13246', '2342 Hog Mounta Watkinsville GA', '65542.00', '99285.00', '0.00', '0.00', '0.00', '0.00', '1200.00', '1000.00', '0.00', '2.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00'
+  ],
+  [
+    '', '', 'softserve', 'Food', 'Beverages', 'BF', 'Cakes', 'static 0', '', '', '', '', '', '', '', '', '', '', 'ORDER COUNT', 'COGS AMOUNT' , 'LAST SYSCO & GORDON INVOICE', 'AMOUNT'
+  ]
+];
+
 const Sales: FC = () => {
   const router = useRouter();
   const [items, setItems] = useState<any>([]);
   const [Sitems, setSItems] = useState<any>([]);
+  const [address, setAddress] = useState<any>();
   const [totalOrders, setTotalOrders] = useState<number>();
   const [productTotal, setProductTotal] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -56,60 +70,53 @@ const Sales: FC = () => {
   //   router.push(`/sales/${urlSafeEncodedId}`);
   // };
 
-  const columns: ColumnDef<TableRow>[] = [
-    {
-      accessorKey: "name",
-      header: () => <div className="text-left">Name</div>,
-      cell: (info) => <span>{info.getValue() as string}</span>,
-      size: 100,
-    },
+  // const columns: ColumnDef<TableRow>[] = [
+  //   {
+  //     accessorKey: "name",
+  //     header: () => <div className="text-left">Name</div>,
+  //     cell: (info) => <span>{info.getValue() as string}</span>,
+  //     size: 100,
+  //   },
     
-    {
-      accessorKey: "totalqty",
-      header: () => <div className="text-right mr-10">Quantity</div>,
-      cell: (info) => (
-        <div className="text-right mr-10">{info.getValue() as number}</div>
-      ),
-      size: 120,
-    },
-    {
-      accessorKey: "totalextprice",
-      header: () => <div className="text-right mr-10">Amount</div>,
-      cell: (info) => (
-        <div className="text-right mr-10">{info.getValue() as number}</div>
-      ),
-      size: 120,
-    },   
-  ];
+  //   {
+  //     accessorKey: "totalqty",
+  //     header: () => <div className="text-right mr-10">Quantity</div>,
+  //     cell: (info) => (
+  //       <div className="text-right mr-10">{info.getValue() as number}</div>
+  //     ),
+  //     size: 120,
+  //   },
+  //   {
+  //     accessorKey: "totalextprice",
+  //     header: () => <div className="text-right mr-10">Amount</div>,
+  //     cell: (info) => (
+  //       <div className="text-right mr-10">{info.getValue() as number}</div>
+  //     ),
+  //     size: 120,
+  //   },   
+  // ];
 
-  useEffect(() => {
-    if (startDate && endDate && selectedOption ) {
-      fetchData2();
-      fetchData();
 
-    }
-  }, [selectedOption , globalFilter]);
+  // const table = useReactTable({
+  //   data: items,
+  //   columns,
+  //   getCoreRowModel: getCoreRowModel(),
+  //   getPaginationRowModel: getPaginationRowModel(),
+  //   getFilteredRowModel: getFilteredRowModel(),
+  //   state: {
+  //     globalFilter,
+  //   },
+  //   initialState: {
+  //     pagination: {
+  //       pageSize: 10,
+  //       pageIndex: 0,
+  //     },
+  //   },
+  //   manualPagination: true, // Enable manual pagination
+  //   // pageCount: Math.ceil(totalItems / 10),
+  // });
 
-  const table = useReactTable({
-    data: items,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      globalFilter,
-    },
-    initialState: {
-      pagination: {
-        pageSize: 10,
-        pageIndex: 0,
-      },
-    },
-    manualPagination: true, // Enable manual pagination
-    // pageCount: Math.ceil(totalItems / 10),
-  });
-
-  const { pageIndex, pageSize } = table.getState().pagination;
+  // const { pageIndex, pageSize } = table.getState().pagination;
 
   const fetchData2 = async () => {
     setLoading(true);
@@ -166,11 +173,41 @@ const Sales: FC = () => {
     }
   };
 
+  const fetchDataForAddress = async () => {
+    setLoading(true);
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getStoreByName",
+        storename: selectedOption?.name || "13246",
+        
+      });
+  
+      if (response?.status === 200) {
+         setAddress(response?.data?.store[0]);
+      
+       
+      } else {
+        setCustomToast({
+          message: response?.message || "Failed to fetch sales.",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   useEffect(() => {
-    fetchData2();
-    fetchData();
-  }, []);
+    if (startDate && endDate && selectedOption ) {
+      fetchData2();
+      fetchData();
+      fetchDataForAddress();
+
+    }1
+  }, [selectedOption]);
 
   const getUserStore = async () => {
     try {
@@ -220,21 +257,6 @@ const Sales: FC = () => {
   }, [isVerifiedUser]);
 
 
-  // const fetchDropdownData = async () => {
-  //   try {
-  //     const response = await sendApiRequest({ mode: "getAllStores" });
-  //     if (response?.status === 200) {
-  //       setStore(response?.data?.stores || []);
-  //     } else {
-  //       handleError(response?.message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching stores:", error);
-  //   }
-  // };
-
-
-
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
   };
@@ -246,11 +268,110 @@ const Sales: FC = () => {
     });
   };
 
-  const totalQty = items?.reduce((acc:any, row:any) => acc + Number(row.totalqty), 0);
-const totalExtPrice = items?.reduce((acc:any, row:any) => acc + Number(row.totalextprice), 0);
+//   const totalQty = items?.reduce((acc:any, row:any) => acc + Number(row.totalqty), 0);
+// const totalExtPrice = items?.reduce((acc:any, row:any) => acc + Number(row.totalextprice), 0);
 
 // Ensure there's no error when `items` is empty
-const hasItems = items && items.length > 0;
+// const hasItems = items && items.length > 0;
+
+const categoryMap = {
+  '8 Round': '8" Round Cake',
+  '10 Round': '10" Round Cake',
+  'Sheet Cake': 'Sheet',
+  'Dilly Bar': 'Dilly',
+  'NF/NSA Bars (No sugar added)': 'NF/NSA Bars',
+  'Buster Bar': 'Buster Bar',
+  'Beverage': 'Beverages',
+  'Cakes': 'Cakes',
+  'Food': 'DQ Food',
+  'Starkiss': 'Starkiss',
+  'Soft Serve': 'Dairy Queen',
+  'Mix Ice Cream': 'Mix Gall\Litre'
+};
+
+const getTotalByCategory = (name) => {
+  const allData = [...(items || []), ...(Sitems || [])]; 
+
+  const category = allData.find(item => item.name === name);
+
+  return category && category.totalextprice !== undefined && category.totalextprice !== null
+    ? `$${Math.round(category.totalextprice).toLocaleString()}`
+    : `$0`;
+};
+
+const mapData = () => {
+  const header = ['Store Number', 'Store Address'];
+  const allData = [...(items || []), ...(Sitems || [])];
+
+  // Create a mapping of original names to mapped names for display
+  const nameMapping = allData.reduce((acc, item) => {
+    const mappedName = categoryMap[item.name] || item.name;
+    acc[mappedName] = item.name; // Mapped name as key, original name as value
+    return acc;
+  }, {});
+
+  // Display the mapped names in the header and filter unwanted items
+  const itemNames = Object.keys(nameMapping)
+    .filter(name => name !== 'Novelties-Boxed' && name !== 'Chx Strip' &&   name !== 'French Fries');
+
+  const footer = ['Transaction Count', 'Inventory Purchases', 'Ending Inventory'];
+
+  const data = header.concat(itemNames, footer);
+
+  const values = data.map(category => {
+    if (category === 'Store Number') return address?.storename || "";
+    if (category === 'Store Address') return address?.location || "";
+    if (footer.includes(category)) return  "$"+ 0;
+
+    // Use the original name to fetch the value
+    const originalName = nameMapping[category] || category;
+
+    return getTotalByCategory(originalName);
+  });
+
+  console.log("Final Data:", data);
+  console.log("Final Values:", values);
+
+  return [data, values];
+};
+
+const exportToExcel = () => {
+  const [headers, values] = mapData();
+  const worksheet = XLSX.utils.aoa_to_sheet([headers, values]);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+  // Set column widths
+  const wscols = [
+    { wch: 20 }, // Store Number
+    { wch: 35 }, // Store Address
+    { wch: 15 }, // Dairy Queen
+    { wch: 15 }, // DQ Food
+    { wch: 15 }, // Beverages
+    // { wch: 15 }, // Breakfast
+    { wch: 15 }, // Cakes
+    // { wch: 15 }, // OJ Beverages
+    { wch: 15 }, // Mix Gall\Litre
+    // { wch: 15 }, // Meat Lbs\Kg
+    { wch: 15 }, // 8 Round
+    { wch: 10 }, // 10 Round
+    { wch: 10 }, // Sheet
+    { wch: 10 }, // Dilly
+    { wch: 10 }, // Starkiss
+    { wch: 10 }, // NF/NSA Bars
+    // { wch: 20 }, // NSA/Non Dairy Dilly
+    { wch: 15 }, // Buster Bar
+    { wch: 30 }, // Transaction Count
+    { wch: 30 }, // Inventory Purchases
+    { wch: 30 }  // Ending Inventory
+  ];
+  worksheet['!cols'] = wscols;
+
+  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+  saveAs(blob, 'data.xlsx');
+};
+
 
   return (
     <main
@@ -266,8 +387,8 @@ const hasItems = items && items.length > 0;
       />
       {uploadPdfloading && ( <Loading /> )}
       <div className="px-6 mt-6 below-md:px-3 below-md:mt-0 tablet:mt-4">
-        <div className="flex flex-row below-md:flex-col pb-6 sticky z-20  w-[50%] below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
-          <div className="flex flex-row below-md:flex-col w-full  gap-3">
+        <div className="flex flex-row justify-between below-md:flex-col pb-6 sticky z-20  w-full below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
+          <div className="flex flex-row below-md:flex-col w-[50%]  gap-3">
             {/* Dropdown Button */}
             <Dropdown
               options={store}
@@ -293,7 +414,16 @@ const hasItems = items && items.length > 0;
                 fetchDataForTender={fetchData2}
                 />
             </div>         
-          </div>       
+          </div>    
+
+          <button
+            className="w-[159px] h-[35px] bg-[#168A6F] hover:bg-[#11735C] text-white  gap-[0.25rem] font-medium  rounded-md text-[13px] flex items-center justify-center "
+            onClick={exportToExcel}
+          >
+            <img className=" rotate-180" src="/images/webuploadicon.svg" alt="" />
+            Export File
+          </button>
+         
         </div>
 
         {/** Table */}
@@ -400,7 +530,7 @@ const hasItems = items && items.length > 0;
 <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[17%] ml-6 p-4 justify-between items-stretch">
             <div>
               <p className="text-[14px] text-[#575F6DCC] font-medium">COGS</p>
-              <p className="text-[16px] text-[#2D3748] font-bold">{productTotal}</p>
+              <p className="text-[16px] text-[#2D3748] font-bold">{productTotal ? "$" + productTotal.toFixed(2) : 0}</p>
               
             </div>
             {/* <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
@@ -410,7 +540,7 @@ const hasItems = items && items.length > 0;
 
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[17%] ml-6 p-4 justify-between items-stretch">
             <div>
-              <p className="text-[14px] text-[#575F6DCC] font-medium">Total No. Of Orders</p>
+              <p className="text-[14px] text-[#575F6DCC] font-medium">Order Counts</p>
               <p className="text-[16px] text-[#2D3748] font-bold">{totalOrders}</p>
               
             </div>
@@ -425,10 +555,10 @@ const hasItems = items && items.length > 0;
           
             // 
            
-        <div key={index} className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4  p-4 justify-between items-stretch">
-            <div>
+        <div key={index} className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4  p-3 justify-between items-stretch">
+            <div className="flex flex-col gap-6" >
             <Tooltip position="left" text= {Items?.name?.length > 15 ? Items.name : ""}>
-            <p className="text-[14px] text-[#575F6DCC] font-medium">        {Items?.name?.length > 15 ? Items.name.substring(0, 15) + "..." : Items.name || "--"}</p>
+            <p className="text-[14px] text-[#575F6DCC] font-medium h-7">        {Items?.name?.length > 15 ? Items.name.substring(0, 15) + "..." : Items.name || "--"}</p>
                       </Tooltip>
               <p className="text-[16px] text-[#2D3748] font-bold">{Items?.totalextprice ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}` : '$00,000'}</p>
               {/* <p className="text-[11px] text-[#388E3C] font-semibold">
@@ -453,10 +583,10 @@ const hasItems = items && items.length > 0;
           
             // 
            
-        <div key={index} className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4  p-4 justify-between items-stretch">
-            <div>
+        <div key={index} className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4  p-3 justify-between items-stretch">
+            <div className="flex flex-col gap-6">
             <Tooltip position="left" text= {Items?.name?.length > 15 ? Items.name : ""}>
-            <p className="text-[14px] text-[#575F6DCC] font-medium">        {Items?.name?.length > 15 ? Items.name.substring(0, 15) + "..." : Items.name || "--"}</p>
+            <p className="text-[14px] text-[#575F6DCC] font-medium h-7">        {Items?.name?.length > 15 ? Items.name.substring(0, 15) + "..." : Items.name || "--"}</p>
                       </Tooltip>
          
               <p className="text-[16px] text-[#2D3748] font-bold">{Items?.totalextprice ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}` : '$00,000'}</p>

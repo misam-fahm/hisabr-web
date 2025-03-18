@@ -1,6 +1,7 @@
 "use client";
 import React, { FC, useEffect, useState, useRef } from "react";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
+import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import Images from "@/Components/UI/Themes/Image";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
@@ -44,6 +45,8 @@ const Sales: FC = () => {
   const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<any>();
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [selectedSaleId, setSelectedSaleId] = useState<number | null>(null);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
@@ -62,7 +65,40 @@ const Sales: FC = () => {
       ?.replace(/=+$/, "");
     router.push(`/sales/${urlSafeEncodedId}`);
   };
-
+  const handleDeleteSale = async () => {
+    if (!selectedSaleId) return;
+  
+    try {
+      const response: any = await sendApiRequest({
+        mode: "deleteSales",
+        salesid: selectedSaleId
+      });
+  
+      if (response?.status === 200) {
+        setCustomToast({
+          message: "Sale deleted successfully",
+          type: "success",
+        });
+        fetchData();
+      } else {
+        setCustomToast({
+          message: response?.message || "Failed to delete sale",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting sale:", error);
+      setCustomToast({
+        message: "An error occurred while deleting the sale",
+        type: "error",
+      });
+    } finally {
+      setIsDeleteOpen(false);
+      setSelectedSaleId(null);
+    }
+  };
+  
+  
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "sales_date",
@@ -158,11 +194,14 @@ const Sales: FC = () => {
       cell: (info) => (
         <span className="flex justify-center">
           <button
-            onClick={() => navigateToSalesView(info.row.original.salesid)}
+            onClick={() => {
+              setSelectedSaleId(info.row.original.salesid);
+              setIsDeleteOpen(true);
+            }}
           >
             <Images
               src="/images/deletebinicon.svg"
-              alt="deletebinicon"
+              alt="Delete"
               className="w-4 h-4"
             />
           </button>
@@ -769,13 +808,16 @@ const Sales: FC = () => {
                       />
                     </div>
                     <div>
-                      {" "}
-                      <img
-                        src="/images/deletebinicon.svg"
-                        className="w-5 h-4"
-                      />
-                    </div>
-                    </div>
+    <img
+      onClick={() => {
+        setSelectedSaleId(items.salesid);
+        setIsDeleteOpen(true);
+      }}
+      src="/images/deletebinicon.svg"
+      className="w-5 h-4 cursor-pointer"
+    />
+  </div>
+</div>
                   </div>
                 </div>
 
@@ -847,6 +889,54 @@ const Sales: FC = () => {
       <div className="hidden below-md:block">
         <Pagination table={table} totalItems={totalItems} />
       </div>
+      <Dialog
+  open={isDeleteOpen}
+  as="div"
+  className="relative z-50"
+  onClose={() => setIsDeleteOpen(false)}
+>
+  <div className="fixed inset-0 bg-black bg-opacity-50" />
+  <div className="fixed inset-0 flex items-center justify-center p-4">
+    <DialogPanel className="w-[420px] below-md:w-[335px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
+      <div>
+        <DialogTitle
+          as="h3"
+          className="flex justify-center text-[#5E6366] font-semibold text-[16px]"
+        >
+          Delete Sale
+        </DialogTitle>
+        <div className="flex flex-col mt-4 justify-center items-center text-[#5E6366] font-medium text-[15px]">
+          <p className="below-md:text-[12px] below-md:placeholder:font-normal">
+            Are you sure you want to delete this sale?
+          </p>
+          <p className="below-md:text-[12px] below-md:font-normal">
+            This action cannot be undone.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <div className="flex mt-7 justify-between">
+          <button
+            type="button"
+            onClick={() => setIsDeleteOpen(false)}
+            className="mr-4 px-4 py-2 h-[35px] w-[165px] bg-[#E4E4E4] hover:bg-[#C9C9C9] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleDeleteSale}
+            className="font-semibold text-[14px] bg-[#CD6D6D] w-[165px] px-6 h-[35px] text-[#FFFFFF] rounded-md"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </DialogPanel>
+  </div>
+</Dialog>
+
     </main>
   );
 };
