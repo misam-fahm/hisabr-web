@@ -7,6 +7,7 @@ import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import { useRouter } from "next/navigation";
 //import { useSearchParams } from "next/navigation";
 import Dropdown from "@/Components/UI/Themes/DropDown";
+import { Dialog, DialogPanel, DialogTitle, Button } from "@headlessui/react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import moment from "moment";
@@ -45,6 +46,10 @@ const Invoices = () => {
   const [showBackIcon, setShowBackIcon] = useState(false);
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState<number | null>(
+    null
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = React.useState("");
@@ -60,7 +65,38 @@ const Invoices = () => {
     type: "",
   });
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
+  const handleDeleteInvoice = async () => {
+    if (!selectedInvoiceId) return;
 
+    try {
+      const response: any = await sendApiRequest({
+        mode: "deleteInvoice",
+        invoiceid: selectedInvoiceId,
+      });
+
+      if (response?.status === 200) {
+        setCustomToast({
+          message: "Invoice deleted successfully",
+          type: "success",
+        });
+        fetchData(globalFilter);
+      } else {
+        setCustomToast({
+          message: response?.message || "Failed to delete invoice",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting invoice:", error);
+      setCustomToast({
+        message: "An error occurred while deleting the invoice",
+        type: "error",
+      });
+    } finally {
+      setIsDeleteOpen(false);
+      setSelectedInvoiceId(null);
+    }
+  };
   const columns: ColumnDef<TableRow>[] = [
     {
       accessorKey: "invoicedate",
@@ -135,18 +171,22 @@ const Invoices = () => {
       ),
       size: 30,
     },
+    // In the columns array, update the delete cell:
     {
       id: "delete",
       header: () => <div className="text-left"></div>,
       cell: (info) => (
         <button
-          onClick={() => navigateToInvoice(info.row.original.invoiceid)}
-          className="text-green-500 hover:text-green-700 text-center ml-2"
+          onClick={() => {
+            setSelectedInvoiceId(info.row.original.invoiceid);
+            setIsDeleteOpen(true);
+          }}
+          className="text-red-500 hover:text-red-700 text-center ml-2"
         >
           <img
             src="/images/deletebinicon.svg"
-            alt="deletebinicon"
-            className=" w-4 h-4 below-md:h-5 below-md:w-5 "
+            alt="Delete"
+            className="w-4 h-4 below-md:h-5 below-md:w-5"
           />
         </button>
       ),
@@ -164,11 +204,11 @@ const Invoices = () => {
   };
 
   useEffect(() => {
-    if (startDate && endDate && selectedOption ) {
+    if (startDate && endDate && selectedOption) {
       fetchData(globalFilter);
     }
-  }, [selectedOption ]);
-  
+  }, [selectedOption]);
+
   const table = useReactTable({
     data: data,
     columns,
@@ -187,8 +227,8 @@ const Invoices = () => {
 
   const { pageIndex, pageSize } = table.getState().pagination;
 
-   // Function to fetch data and update state
-   const fetchData = async (search: string = "") => {
+  // Function to fetch data and update state
+  const fetchData = async (search: string = "") => {
     setLoading(true);
     try {
       const response: any = await sendApiRequest({
@@ -196,15 +236,16 @@ const Invoices = () => {
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
         storeid: selectedOption?.id || 69,
-        startdate: startDate && format(startDate, 'yyyy-MM-dd'),
-        enddate: endDate && format(endDate, 'yyyy-MM-dd'),
-        search:search
+        startdate: startDate && format(startDate, "yyyy-MM-dd"),
+        enddate: endDate && format(endDate, "yyyy-MM-dd"),
+        search: search,
       });
 
       if (response?.status === 200) {
         setData(response?.data?.invoices);
         if (response?.data?.total >= 0) {
-          table.getState().pagination.pageIndex == 0 && setTotalItems(response?.data?.total || 0);
+          table.getState().pagination.pageIndex == 0 &&
+            setTotalItems(response?.data?.total || 0);
         }
       } else {
         setCustomToast({
@@ -457,29 +498,32 @@ const Invoices = () => {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      table.getState().pagination.pageIndex == 0 ? fetchData(globalFilter) : table.setPageIndex(0);
+      table.getState().pagination.pageIndex == 0
+        ? fetchData(globalFilter)
+        : table.setPageIndex(0);
     }
   };
   const clearSearch = async () => {
     try {
       setLoading(true);
       setGlobalFilter("");
-      table.getState().pagination.pageIndex == 0 ? fetchData() : table.setPageIndex(0);
+      table.getState().pagination.pageIndex == 0
+        ? fetchData()
+        : table.setPageIndex(0);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
-      
     }
   };
 
   return (
     <main
-    className={`relative px-6 below-md:px-3 overflow-auto ${
-      totalItems > 10 ? "max-h-[calc(100vh-80px)]" : "h-[500px]"
-    }`}
-    style={{ scrollbarWidth: "thin" }}
-  >
+      className={`relative px-6 below-md:px-3 overflow-auto ${
+        totalItems > 10 ? "max-h-[calc(100vh-80px)]" : "h-[500px]"
+      }`}
+      style={{ scrollbarWidth: "thin" }}
+    >
       <ToastNotification
         message={customToast?.message}
         type={customToast?.type}
@@ -519,29 +563,33 @@ const Invoices = () => {
             />
           </div>
           <div className="flex border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
-          <input
-            type="text"
-            value={globalFilter ?? ""}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-            onKeyDown={handleKeyDown}
-            ref={searchInputRef}
-            placeholder="Search"
-            className="w-full h-[35px] bg-transparent  px-3 placeholder:text-[#636363] focus:outline-none"
-          />
-          {globalFilter && (
-            <div className="  absolute right-8 cursor-pointer">
-              <img
-                className="  "
-                src="/images/cancelicon.svg"
-                onClick={clearSearch}
-              />
-            </div>
-          )}
-          <img
-            className="pr-2 cursor-pointer items-center"
-            src="/images/searchicon.svg"
-            onClick={() => table.getState().pagination.pageIndex == 0 ? fetchData(globalFilter) : table.setPageIndex(0)}
-          />
+            <input
+              type="text"
+              value={globalFilter ?? ""}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+              onKeyDown={handleKeyDown}
+              ref={searchInputRef}
+              placeholder="Search"
+              className="w-full h-[35px] bg-transparent  px-3 placeholder:text-[#636363] focus:outline-none"
+            />
+            {globalFilter && (
+              <div className="  absolute right-8 cursor-pointer">
+                <img
+                  className="  "
+                  src="/images/cancelicon.svg"
+                  onClick={clearSearch}
+                />
+              </div>
+            )}
+            <img
+              className="pr-2 cursor-pointer items-center"
+              src="/images/searchicon.svg"
+              onClick={() =>
+                table.getState().pagination.pageIndex == 0
+                  ? fetchData(globalFilter)
+                  : table.setPageIndex(0)
+              }
+            />
           </div>
         </div>
         <div className="pl-24 below-md:hidden">
@@ -561,6 +609,7 @@ const Invoices = () => {
           {/* <UploadInvoicepopup /> */}
         </div>
       </div>
+
       {/* Mobile View : Card section */}
       <div className="block md:hidden relative">
         {data?.map((card, index) => (
@@ -588,15 +637,12 @@ const Invoices = () => {
                       className=" w-4 h-4 below-md:h-5 below-md:w-5"
                       src="/images/vieweyeicon.svg"
                     />
-                   
                   </div>
-                 
                 </button>
                 <div className="px-2">
                   <img src="/images/deletebinicon.svg" className="w-5 h-4" />
-                  </div>
+                </div>
               </div>
-              
             </div>
             {/* Divider */}
             <div className="flex items-center px-4 -mt-2">
@@ -739,6 +785,53 @@ const Invoices = () => {
       <div className="mt-4  below-md:hidden">
         <Pagination table={table} totalItems={totalItems} />
       </div>
+      <Dialog
+        open={isDeleteOpen}
+        as="div"
+        className="relative z-50"
+        onClose={() => setIsDeleteOpen(false)}
+      >
+        <div className="fixed inset-0 bg-black bg-opacity-50" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <DialogPanel className="w-[420px] below-md:w-[335px] h-auto px-6 py-6 bg-white rounded-lg shadow-lg">
+            <div>
+              <DialogTitle
+                as="h3"
+                className="flex justify-center text-[#5E6366] font-semibold text-[16px]"
+              >
+                Delete Invoice
+              </DialogTitle>
+              <div className="flex flex-col mt-4 justify-center items-center text-[#5E6366] font-medium text-[15px]">
+                <p className="below-md:text-[12px] below-md:placeholder:font-normal">
+                  Are you sure you want to delete this invoice?
+                </p>
+                <p className="below-md:text-[12px] below-md:font-normal">
+                  This action cannot be undone.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <div className="flex mt-7 justify-between">
+                <button
+                  type="button"
+                  onClick={() => setIsDeleteOpen(false)}
+                  className="mr-4 px-4 py-2 h-[35px] w-[165px] bg-[#E4E4E4] hover:bg-[#C9C9C9] font-semibold text-[14px] rounded-md text-[#6F6F6F]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeleteInvoice}
+                  className="font-semibold text-[14px] bg-[#CD6D6D] w-[165px] px-6 h-[35px] text-[#FFFFFF] rounded-md"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </DialogPanel>
+        </div>
+      </Dialog>
     </main>
   );
 };
