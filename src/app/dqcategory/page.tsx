@@ -2,9 +2,9 @@
 import React, { FC, useEffect, useState } from "react";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import { useRouter } from "next/navigation";
-import { format } from 'date-fns';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
+import { format } from "date-fns";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 import Pagination from "@/Components/UI/Pagination/Pagination";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import Skeleton from "react-loading-skeleton";
@@ -18,7 +18,9 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import { sendApiRequest } from "@/utils/apiUtils";
-import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, {
+  ToastNotificationProps,
+} from "@/Components/UI/ToastNotification/ToastNotification";
 import moment from "moment";
 import Loading from "@/Components/UI/Themes/Loading";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
@@ -28,19 +30,80 @@ interface TableRow {
   name: string;
   totalqty: any;
   totalextprice: any;
-  
+  subtotal: number;
 }
 
 const Exceldata = [
   [
-    'Store Number', 'Store Address', 'Dairy Queen', 'DQ Food', 'Beverages', 'Breakfast', 'Cakes', 'OJ Beverages', 'Mix Gall\Litre', 'Meat Lbs\Kg', '8 Round', '10 Round', 'Sheet', 'Dilly', 'Starkiss', 'NF/NSA Bars', 'NSA/Non Dairy Dilly', 'Buster Bar', 'Transaction Count', 'Inventory Purchases', 'Ending Inventory'
+    "Store Number",
+    "Store Address",
+    "Dairy Queen",
+    "DQ Food",
+    "Beverages",
+    "Breakfast",
+    "Cakes",
+    "OJ Beverages",
+    "Mix GallLitre",
+    "Meat LbsKg",
+    "8 Round",
+    "10 Round",
+    "Sheet",
+    "Dilly",
+    "Starkiss",
+    "NF/NSA Bars",
+    "NSA/Non Dairy Dilly",
+    "Buster Bar",
+    "Transaction Count",
+    "Inventory Purchases",
+    "Ending Inventory",
   ],
   [
-    '13246', '2342 Hog Mounta Watkinsville GA', '65542.00', '99285.00', '0.00', '0.00', '0.00', '0.00', '1200.00', '1000.00', '0.00', '2.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00'
+    "13246",
+    "2342 Hog Mounta Watkinsville GA",
+    "65542.00",
+    "99285.00",
+    "0.00",
+    "0.00",
+    "0.00",
+    "0.00",
+    "1200.00",
+    "1000.00",
+    "0.00",
+    "2.00",
+    "0.00",
+    "0.00",
+    "0.00",
+    "0.00",
+    "0.00",
+    "0.00",
+    "0.00",
+    "0.00",
+    "0.00",
   ],
   [
-    '', '', 'softserve', 'Food', 'Beverages', 'BF', 'Cakes', 'static 0', '', '', '', '', '', '', '', '', '', '', 'ORDER COUNT', 'COGS AMOUNT' , 'LAST SYSCO & GORDON INVOICE', 'AMOUNT'
-  ]
+    "",
+    "",
+    "softserve",
+    "Food",
+    "Beverages",
+    "BF",
+    "Cakes",
+    "static 0",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "ORDER COUNT",
+    "COGS AMOUNT",
+    "LAST SYSCO & GORDON INVOICE",
+    "AMOUNT",
+  ],
 ];
 
 const Sales: FC = () => {
@@ -48,6 +111,8 @@ const Sales: FC = () => {
   const [items, setItems] = useState<any>([]);
   const [Sitems, setSItems] = useState<any>([]);
   const [address, setAddress] = useState<any>();
+
+  const [subtotal, setSubtotal] = useState<number | null>(null);
   const [totalOrders, setTotalOrders] = useState<number>();
   const [productTotal, setProductTotal] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -77,7 +142,7 @@ const Sales: FC = () => {
   //     cell: (info) => <span>{info.getValue() as string}</span>,
   //     size: 100,
   //   },
-    
+
   //   {
   //     accessorKey: "totalqty",
   //     header: () => <div className="text-right mr-10">Quantity</div>,
@@ -93,9 +158,8 @@ const Sales: FC = () => {
   //       <div className="text-right mr-10">{info.getValue() as number}</div>
   //     ),
   //     size: 120,
-  //   },   
+  //   },
   // ];
-
 
   // const table = useReactTable({
   //   data: items,
@@ -124,14 +188,13 @@ const Sales: FC = () => {
       const response: any = await sendApiRequest({
         mode: "getDqRevCenterData",
         storeid: selectedOption?.id || 69,
-        startdate: startDate && format(startDate, 'yyyy-MM-dd'),
-        enddate: endDate && format(endDate, 'yyyy-MM-dd'),
+        startdate: startDate && format(startDate, "yyyy-MM-dd"),
+        enddate: endDate && format(endDate, "yyyy-MM-dd"),
       });
-  
+
       if (response?.status === 200) {
-         setSItems(response?.data?.result?.dqcategories);
-        setTotalOrders(response?.data?.result?.totalorders)
-       
+        setSItems(response?.data?.result?.dqcategories);
+        setTotalOrders(response?.data?.result?.totalorders);
       } else {
         setCustomToast({
           message: response?.message || "Failed to fetch sales.",
@@ -144,7 +207,7 @@ const Sales: FC = () => {
       setLoading(false);
     }
   };
-  
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -152,14 +215,14 @@ const Sales: FC = () => {
         mode: "getDqRevCenterData",
         sp: "GetDQCategoryData",
         storeid: selectedOption?.id || 69,
-        startdate: startDate && format(startDate, 'yyyy-MM-dd'),
-        enddate: endDate && format(endDate, 'yyyy-MM-dd'),
+        startdate: startDate && format(startDate, "yyyy-MM-dd"),
+        enddate: endDate && format(endDate, "yyyy-MM-dd"),
       });
-  
+
       if (response?.status === 200) {
         setItems(response?.data?.result.dqcategories);
-         setProductTotal(response?.data?.result?.producttotal)
-       
+        setProductTotal(response?.data?.result?.producttotal);
+        setSubtotal(response?.data?.result?.subtotal || 0);
       } else {
         setCustomToast({
           message: response?.message || "Failed to fetch sales.",
@@ -179,13 +242,10 @@ const Sales: FC = () => {
       const response: any = await sendApiRequest({
         mode: "getStoreByName",
         storename: selectedOption?.name || "13246",
-        
       });
-  
+
       if (response?.status === 200) {
-         setAddress(response?.data?.store[0]);
-      
-       
+        setAddress(response?.data?.store[0]);
       } else {
         setCustomToast({
           message: response?.message || "Failed to fetch sales.",
@@ -199,14 +259,13 @@ const Sales: FC = () => {
     }
   };
 
-
   useEffect(() => {
-    if (startDate && endDate && selectedOption ) {
+    if (startDate && endDate && selectedOption) {
       fetchData2();
       fetchData();
       fetchDataForAddress();
-
-    }1
+    }
+    1;
   }, [selectedOption]);
 
   const getUserStore = async () => {
@@ -214,7 +273,7 @@ const Sales: FC = () => {
       const response = await sendApiRequest({ mode: "getUserStore" });
       if (response?.status === 200) {
         setStore(response?.data?.stores || []);
-        if (response?.data?.stores){
+        if (response?.data?.stores) {
           setSelectedOption({
             name: response?.data?.stores[0]?.name,
             id: response?.data?.stores[0]?.id,
@@ -229,21 +288,22 @@ const Sales: FC = () => {
   };
 
   const verifyToken = async (token: string) => {
-    const res: any = await sendApiRequest({
-      token: token
-    }, `auth/verifyToken`);
-    res?.status === 200 
-      ? setIsVerifiedUser(true) 
-      : router.replace('/login');
+    const res: any = await sendApiRequest(
+      {
+        token: token,
+      },
+      `auth/verifyToken`
+    );
+    res?.status === 200 ? setIsVerifiedUser(true) : router.replace("/login");
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      router.replace('/login');
+      router.replace("/login");
     } else {
       verifyToken(token);
-    }    
+    }
   }, []);
 
   useEffect(() => {
@@ -256,7 +316,6 @@ const Sales: FC = () => {
     }
   }, [isVerifiedUser]);
 
-
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
   };
@@ -268,124 +327,137 @@ const Sales: FC = () => {
     });
   };
 
-//   const totalQty = items?.reduce((acc:any, row:any) => acc + Number(row.totalqty), 0);
-// const totalExtPrice = items?.reduce((acc:any, row:any) => acc + Number(row.totalextprice), 0);
+  //   const totalQty = items?.reduce((acc:any, row:any) => acc + Number(row.totalqty), 0);
+  // const totalExtPrice = items?.reduce((acc:any, row:any) => acc + Number(row.totalextprice), 0);
 
-// Ensure there's no error when `items` is empty
-// const hasItems = items && items.length > 0;
+  // Ensure there's no error when `items` is empty
+  // const hasItems = items && items.length > 0;
 
-const categoryMap = {
-  '8 Round': '8" Round Cake',
-  '10 Round': '10" Round Cake',
-  'Sheet Cake': 'Sheet',
-  'Dilly Bar': 'Dilly',
-  'NF/NSA Bars (No sugar added)': 'NF/NSA Bars',
-  'Buster Bar': 'Buster Bar',
-  'Beverage': 'Beverages',
-  'Cakes': 'Cakes',
-  'Food': 'DQ Food',
-  'Starkiss': 'Starkiss',
-  'Soft Serve': 'Dairy Queen',
-  'Mix Ice Cream': 'Mix Gall\Litre'
-};
+  const categoryMap = {
+    "8 Round": '8" Round Cake',
+    "10 Round": '10" Round Cake',
+    "Sheet Cake": "Sheet",
+    "Dilly Bar": "Dilly",
+    "NF/NSA Bars (No sugar added)": "NF/NSA Bars",
+    "Buster Bar": "Buster Bar",
+    Beverage: "Beverages",
+    Cakes: "Cakes",
+    Food: "DQ Food",
+    Starkiss: "Starkiss",
+    "Soft Serve": "Dairy Queen",
+    "Mix Ice Cream": "Mix GallLitre",
+  };
 
-const getTotalByCategory = (name) => {
-  const allData = [...(items || []), ...(Sitems || [])]; 
+  const getTotalByCategory = (name) => {
+    const allData = [...(items || []), ...(Sitems || [])];
 
-  const category = allData.find(item => item.name === name);
+    const category = allData.find((item) => item.name === name);
 
-  return category && category.totalextprice !== undefined && category.totalextprice !== null
-    ? `$${Math.round(category.totalextprice).toLocaleString()}`
-    : `$0`;
-};
+    return category &&
+      category.totalextprice !== undefined &&
+      category.totalextprice !== null
+      ? `$${Math.round(category.totalextprice).toLocaleString()}`
+      : `$0`;
+  };
 
-const mapData = () => {
-  const header = ['Store Number', 'Store Address'];
-  const allData = [...(items || []), ...(Sitems || [])];
+  const mapData = () => {
+    const header = ["Store Number", "Store Address"];
+    const allData = [...(items || []), ...(Sitems || [])];
 
-  // Create a mapping of original names to mapped names for display
-  const nameMapping = allData.reduce((acc, item) => {
-    const mappedName = categoryMap[item.name] || item.name;
-    acc[mappedName] = item.name; // Mapped name as key, original name as value
-    return acc;
-  }, {});
+    // Create a mapping of original names to mapped names for display
+    const nameMapping = allData.reduce((acc, item) => {
+      const mappedName = categoryMap[item.name] || item.name;
+      acc[mappedName] = item.name; // Mapped name as key, original name as value
+      return acc;
+    }, {});
 
-  // Display the mapped names in the header and filter unwanted items
-  const itemNames = Object.keys(nameMapping)
-    .filter(name => name !== 'Novelties-Boxed' && name !== 'Chx Strip' &&   name !== 'French Fries');
+    // Display the mapped names in the header and filter unwanted items
+    const itemNames = Object.keys(nameMapping).filter(
+      (name) =>
+        name !== "Novelties-Boxed" &&
+        name !== "Chx Strip" &&
+        name !== "French Fries"
+    );
 
-  const footer = ['Transaction Count', 'Inventory Purchases', 'Ending Inventory'];
+    const footer = [
+      "Transaction Count",
+      "Inventory Purchases",
+      "Ending Inventory",
+    ];
 
-  const data = header.concat(itemNames, footer);
+    const data = header.concat(itemNames, footer);
 
-  const values = data.map(category => {
-    if (category === 'Store Number') return address?.storename || "";
-    if (category === 'Store Address') return address?.location || "";
-    if (footer.includes(category)) return  "$"+ 0;
+    const values = data.map((category) => {
+      if (category === "Store Number") return address?.storename || "";
+      if (category === "Store Address") return address?.location || "";
+      if (footer.includes(category)) return "$" + 0;
 
-    // Use the original name to fetch the value
-    const originalName = nameMapping[category] || category;
+      // Use the original name to fetch the value
+      const originalName = nameMapping[category] || category;
 
-    return getTotalByCategory(originalName);
-  });
+      return getTotalByCategory(originalName);
+    });
 
-  console.log("Final Data:", data);
-  console.log("Final Values:", values);
+    console.log("Final Data:", data);
+    console.log("Final Values:", values);
 
-  return [data, values];
-};
+    return [data, values];
+  };
 
-const exportToExcel = () => {
-  const [headers, values] = mapData();
-  const worksheet = XLSX.utils.aoa_to_sheet([headers, values]);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+  const exportToExcel = () => {
+    const [headers, values] = mapData();
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, values]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
 
-  // Set column widths
-  const wscols = [
-    { wch: 20 }, // Store Number
-    { wch: 35 }, // Store Address
-    { wch: 15 }, // Dairy Queen
-    { wch: 15 }, // DQ Food
-    { wch: 15 }, // Beverages
-    // { wch: 15 }, // Breakfast
-    { wch: 15 }, // Cakes
-    // { wch: 15 }, // OJ Beverages
-    { wch: 15 }, // Mix Gall\Litre
-    // { wch: 15 }, // Meat Lbs\Kg
-    { wch: 15 }, // 8 Round
-    { wch: 10 }, // 10 Round
-    { wch: 10 }, // Sheet
-    { wch: 10 }, // Dilly
-    { wch: 10 }, // Starkiss
-    { wch: 10 }, // NF/NSA Bars
-    // { wch: 20 }, // NSA/Non Dairy Dilly
-    { wch: 15 }, // Buster Bar
-    { wch: 30 }, // Transaction Count
-    { wch: 30 }, // Inventory Purchases
-    { wch: 30 }  // Ending Inventory
-  ];
-  worksheet['!cols'] = wscols;
+    // Set column widths
+    const wscols = [
+      { wch: 20 }, // Store Number
+      { wch: 35 }, // Store Address
+      { wch: 15 }, // Dairy Queen
+      { wch: 15 }, // DQ Food
+      { wch: 15 }, // Beverages
+      // { wch: 15 }, // Breakfast
+      { wch: 15 }, // Cakes
+      // { wch: 15 }, // OJ Beverages
+      { wch: 15 }, // Mix Gall\Litre
+      // { wch: 15 }, // Meat Lbs\Kg
+      { wch: 15 }, // 8 Round
+      { wch: 10 }, // 10 Round
+      { wch: 10 }, // Sheet
+      { wch: 10 }, // Dilly
+      { wch: 10 }, // Starkiss
+      { wch: 10 }, // NF/NSA Bars
+      // { wch: 20 }, // NSA/Non Dairy Dilly
+      { wch: 15 }, // Buster Bar
+      { wch: 30 }, // Transaction Count
+      { wch: 30 }, // Inventory Purchases
+      { wch: 30 }, // Ending Inventory
+    ];
+    worksheet["!cols"] = wscols;
 
-  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-  saveAs(blob, 'data.xlsx');
-};
-
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, "data.xlsx");
+  };
 
   return (
     <main
-    className={`relative px-6 below-md:px-3  overflow-auto ${
-      items?.length > 6  || Sitems?.length > 6  ? "max-h-[calc(100vh-60px)]" : "h-[620px]"
-    }`}
-    style={{ scrollbarWidth: "thin" }}
-  >
-    
+      className={`relative px-6 below-md:px-3  overflow-auto ${
+        items?.length > 6 || Sitems?.length > 6
+          ? "max-h-[calc(100vh-60px)]"
+          : "h-[620px]"
+      }`}
+      style={{ scrollbarWidth: "thin" }}
+    >
       <ToastNotification
         message={customToast?.message}
         type={customToast?.type}
       />
-      {uploadPdfloading && ( <Loading /> )}
+      {uploadPdfloading && <Loading />}
       <div className="px-6 mt-6 below-md:px-3 below-md:mt-0 tablet:mt-4">
         <div className="flex flex-row justify-between below-md:flex-col pb-6 sticky z-20  w-full below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
           <div className="flex flex-row below-md:flex-col w-[50%]  gap-3">
@@ -405,25 +477,28 @@ const exportToExcel = () => {
               widthchange="w-[60%]"
             />
             <div className="w-full tablet:w-full below-md:w-full">
-            <DateRangePicker 
-                startDate = {startDate}
-                endDate = {endDate}
-                setStartDate = {setStartDate}
-                setEndDate = {setEndDate}
-                fetchData = {fetchData}
+              <DateRangePicker
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+                fetchData={fetchData}
                 fetchDataForTender={fetchData2}
-                />
-            </div>         
-          </div>    
+              />
+            </div>
+          </div>
 
           <button
             className="w-[159px] h-[35px] bg-[#168A6F] hover:bg-[#11735C] text-white  gap-[0.25rem] font-medium  rounded-md text-[13px] flex items-center justify-center "
             onClick={exportToExcel}
           >
-            <img className=" rotate-180" src="/images/webuploadicon.svg" alt="" />
+            <img
+              className=" rotate-180"
+              src="/images/webuploadicon.svg"
+              alt=""
+            />
             Export File
           </button>
-         
         </div>
 
         {/** Table */}
@@ -526,14 +601,14 @@ const exportToExcel = () => {
           </div>
         </div> */}
         <div className="flex gap-6">
-
-<div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%]  p-4 justify-between items-stretch">
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%]  p-4 justify-between items-stretch">
             <div className="flex flex-col gap-6">
               <p className="text-[14px] text-[#575F6DCC] font-bold">COGS</p>
               <p className="text-[16px] text-[#2D3748] font-bold">
-  {productTotal ? `$${productTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "$0.00"}
-</p>
-              
+                {productTotal
+                  ? `$${productTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                  : "$0.00"}
+              </p>
             </div>
             {/* <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
             <p className="text-[14px]  font-medium">{}</p>
@@ -542,74 +617,97 @@ const exportToExcel = () => {
 
           <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%]  p-4 justify-between items-stretch">
             <div className="flex flex-col gap-6">
-              <p className="text-[14px] text-[#575F6DCC] font-bold">Order Counts</p>
-               <p className="text-[16px] text-[#2D3748] font-bold">{totalOrders}</p> 
-              
+              <p className="text-[14px] text-[#575F6DCC] font-bold">
+                Order Counts
+              </p>
+              <p className="text-[16px] text-[#2D3748] font-bold">
+                {totalOrders}
+              </p>
             </div>
 
-            
             {/* <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
             <p className="text-[14px]  font-medium">{}</p>
             </div> */}
           </div>
-          </div>
+        </div>
 
-           <div className="grid grid-cols-5  below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3   pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
-           {Sitems?.map((Items:any , index:any) => 
-          
-            // 
-           
-        <div key={index} className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4  p-3 justify-between items-stretch">
-            <div className="flex flex-col gap-6" >
-            <Tooltip position="left" text= {Items?.name?.length > 15 ? Items.name : ""}>
-            <p className="text-[14px] text-[#575F6DCC] font-bold h-7">        {Items?.name?.length > 15 ? Items.name.substring(0, 15) + "..." : Items.name || "--"}</p>
-                      </Tooltip>
-              <p className="text-[16px] text-[#2D3748] font-bold">{Items?.totalextprice ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}` : '$00,000'}</p>
-              {/* <p className="text-[11px] text-[#388E3C] font-semibold">
+        <div className="grid grid-cols-5  below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3   pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
+          {Sitems?.map((Items: any, index: any) => (
+            <div
+              key={index}
+              className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4  p-3 justify-between items-stretch"
+            >
+              <div className="flex flex-col gap-6">
+                <Tooltip
+                  position="left"
+                  text={Items?.name?.length > 15 ? Items.name : ""}
+                >
+                  <p className="text-[14px] text-[#575F6DCC] font-bold h-7">
+                    {" "}
+                    {Items?.name?.length > 15
+                      ? Items.name.substring(0, 15) + "..."
+                      : Items.name || "--"}
+                  </p>
+                </Tooltip>
+                <p className="text-[16px] text-[#2D3748] font-bold">
+                  {Items?.totalextprice
+                    ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}`
+                    : "$00,000"}
+                </p>
+                {/* <p className="text-[11px] text-[#388E3C] font-semibold">
                 20%{" "}
                 <span className="text-[#575F6D] font-normal">
                   increase in sales
                 </span>
               </p> */}
+              </div>
+              <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+                <p className="text-[14px]  font-medium">{Items.totalqty}</p>
+              </div>
             </div>
-            <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-            <p className="text-[14px]  font-medium">{Items.totalqty}</p>
-            </div>
-          </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-5 mt-8 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
+          {items?.map((Items: any, index: any) => (
+            <div
+              key={index}
+              className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4 p-3 justify-between items-stretch"
+            >
+              <div className="flex flex-col gap-6">
+                <Tooltip
+                  position="left"
+                  text={Items?.name?.length > 15 ? Items.name : ""}
+                >
+                  <p className="text-[14px] text-[#575F6DCC] font-bold h-7">
+                    {Items?.name?.length > 15
+                      ? Items.name.substring(0, 15) + "..."
+                      : Items.name || "--"}
+                  </p>
+                </Tooltip>
 
-          
-          
-           )}
-           </div>
-
-           <div className="grid grid-cols-5 mt-8 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3   pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
-           {items?.map((Items:any , index:any) => 
-          
-            // 
-           
-        <div key={index} className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4  p-3 justify-between items-stretch">
-            <div className="flex flex-col gap-6">
-            <Tooltip position="left" text= {Items?.name?.length > 15 ? Items.name : ""}>
-            <p className="text-[14px] text-[#575F6DCC] font-bold h-7">        {Items?.name?.length > 15 ? Items.name.substring(0, 15) + "..." : Items.name || "--"}</p>
-                      </Tooltip>
-         
-              <p className="text-[16px] text-[#2D3748] font-bold">{Items?.totalextprice ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}` : '$00,000'}</p>
-              {/* <p className="text-[11px] text-[#388E3C] font-semibold">
-                20%{" "}
-                <span className="text-[#575F6D] font-normal">
-                  increase in sales
-                </span>
-              </p> */}
+                <p className="text-[16px] text-[#2D3748] font-bold">
+                  {Items?.totalextprice
+                    ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}`
+                    : "$00,000"}
+                </p>
+              </div>
+              <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+                <p className="text-[14px] font-medium">{Items.totalqty}</p>
+              </div>
             </div>
-            <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-            <p className="text-[14px]  font-medium">{Items.totalqty}</p>
+          ))}
+          {subtotal && subtotal !== 0 && (
+            <div className="flex flex-col bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4 p-3 justify-between items-stretch">
+              <p className="text-[14px] text-[#575F6DCC] font-bold h-7">
+                Ending Inventory
+              </p>
+              <p className="text-[16px] text-[#2D3748] font-bold">
+                ${subtotal.toLocaleString()}
+              </p>
             </div>
-          </div>
+          )}
+        </div>
 
-          
-          
-           )}
-           </div>
         {/* <div className="below-lg:hidden mb-8">
           <div className="flex flex-col">
             {data?.map((items,index)=> 
@@ -659,7 +757,6 @@ const exportToExcel = () => {
        )}
           </div>
         </div> */}
-       
       </div>
     </main>
   );
