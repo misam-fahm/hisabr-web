@@ -3,11 +3,13 @@ import { InputField } from "@/Components/UI/Themes/InputField";
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-const ResetPassword = () => {
+const ChangePassword = () => {
   const methods = useForm();
   const { handleSubmit } = methods;
+  const [currentpassword,setCurrentPassword]=useState("");
   const [newpassword, setNewPassword] = useState("");
   const [confirmpassword, setConfirmPassword] = useState("");
+  const [showCurrentPassword,setshowCurrentPassword]=useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -19,14 +21,45 @@ const ResetPassword = () => {
     <FormProvider {...methods}>
       <div className="bg-[#0F1044] flex items-center justify-center min-h-screen px-4">
         <div className="w-full max-w-md bg-transparent p-8 rounded-lg shadow-lg">
-          <h2 className="text-[24px] text-white font-semibold text-center mb-2">
-            Reset Your Password
+          <h2 className="text-[24px] text-white font-semibold text-center mb-6">
+            Change Your Password
           </h2>
-          <p className="text-[14px] text-white text-center mb-6">
+          {/* <p className="text-[14px] text-white text-center mb-6">
             Enter a new password for your account.
-          </p>
+          </p> */}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 flex flex-col items-center">
+          <div className="w-[320px]">
+              <InputField
+                type={showCurrentPassword ? "text" : "password"}
+                value={currentpassword}
+                label="Current Password"
+                className="bg-gray-100 focus:bg-gray-100"
+                style={{
+                  backgroundColor: "#f3f4f6",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "white",
+                }}
+                {...methods.register("currentpassword", {
+                  required: "current Password is required",
+                  validate: (value) =>
+                    value !== newpassword ||
+                    "Current password and New password cannot be the same",
+                  onChange: (e) => setCurrentPassword(e.target.value),
+                })}
+                rightIcon={
+                  <img
+                    src="/images/fieldeyeicon.svg"
+                    onClick={() => setshowCurrentPassword((prev) => !prev)}
+                    className="cursor-pointer"
+                    alt="Toggle visibility"
+                  />
+                }
+                errors={methods.formState.errors.currentpassword}
+                placeholder="New Password"
+                variant="outline"
+              />
+            </div>
             <div className="w-[320px]">
               <InputField
                 type={showNewPassword ? "text" : "password"}
@@ -131,4 +164,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ChangePassword;

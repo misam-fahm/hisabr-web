@@ -20,7 +20,7 @@ export default function RootLayout({
   const pathname: any = usePathname();
 
   // Define routes where Navbar and Drawer should not be displayed
-  const hideSidebarRoutes = ["/login", "/register", "/forgotpassword"];
+  const hideSidebarRoutes = ["/login", "/register", "/forgotpassword","/resetpassword","/changepassword"];
 
   const shouldHideSidebar = hideSidebarRoutes.includes(pathname);
 
