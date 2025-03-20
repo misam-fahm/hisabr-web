@@ -221,7 +221,7 @@ const ResetPasswordBase = () => {
     );
 };
 // export default ResetPassword;
-export function ResetPassword() {
+export default function ResetPassword() {
     return (
       // You could have a loading skeleton as the `fallback` too
       <Suspense>
