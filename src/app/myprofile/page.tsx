@@ -6,7 +6,7 @@ import { InputField } from '@/Components/UI/Themes/InputField';
 import { sendApiRequest } from '@/utils/apiUtils';
 import ToastNotification, { ToastNotificationProps } from '@/Components/UI/ToastNotification/ToastNotification';
 import { Text } from '@/Components/UI/Themes/Text';
-
+import Link from 'next/link';
 
 const ProfileShow = () => {
     const router = useRouter();
@@ -230,6 +230,11 @@ const ProfileShow = () => {
                             )}
                         </form>
                     </FormProvider>
+                </div>
+                <div className="mt-6 flex space-x-3 text-[13px]">
+                    <Link href="/changepassword" legacyBehavior>
+                        <a style={{ color: 'blue', textDecoration: 'underline' }}>Change Password</a>
+                    </Link>
                 </div>
             </div>
         </main>
