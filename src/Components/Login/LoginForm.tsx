@@ -18,6 +18,22 @@ const LoginForm = () => {
     toastType: "",
   });
 
+  const verifyToken = async (token: string) => {
+    const res: any = await sendApiRequest({
+      token: token
+    }, `auth/verifyToken`);
+    res?.status === 200 && router.replace("/sales-kpi");
+  };
+  
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.replace('/login');
+    } else {
+      verifyToken(token);
+    }    
+  }, []);
+  
   const onSubmit = async (data: any) => {
     try {
       setCustomToast({
@@ -114,6 +130,7 @@ const LoginForm = () => {
                   type="email"
                   label="Email"
                   value={email ? email: ""}
+                  maxLength={60}
                   className="bg-gray-100 focus:bg-gray-100 autofill:bg-gray-100" // Custom class for autofill
                   style={{
                     backgroundColor: "#f3f4f6",
@@ -141,6 +158,7 @@ const LoginForm = () => {
                   type={showPassword ? "text" : "password"} // Changed from "password" to "text"
                   label="Password"
                   value={password}
+                  maxLength={20}
                   className="bg-gray-100 focus:bg-gray-100 autofill:bg-gray-100" // Custom class for autofill
                   style={{
                     backgroundColor: "#f3f4f6",
