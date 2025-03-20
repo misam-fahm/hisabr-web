@@ -40,7 +40,7 @@ const ForgotPassword = () => {
 
               We received a request to reset the password for your account on ${Date()}. If you made this request, you can reset your password using the link below:
 
-              ${process.env.WEB_BASE_URL + "/reset-password?uuid=" + genUUID?.data?.uuid}
+              ${process.env.WEB_BASE_URL + "/resetpassword?uuid=" + genUUID?.data?.uuid}
 
               If you didn't request this change, please ignore this email or let us know immediately by contacting our support team at support@hisabr.com.
 

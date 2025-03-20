@@ -48,17 +48,13 @@ const SalesKPI: FC = () => {
   const [operatExpAmt, setOperatExpAmt] = useState(0);
   const [royaltyAmt, setRoyaltyAmt] = useState(0);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
-
   const labourCost = Number(data?.labour_cost) || 0;
   const taxAmount = Number(data?.tax_amt) || 0;
-
   const sales:any = data?.net_sales ? Math.round(data?.net_sales) : 0;
   const profit:any = data?.net_sales ? Math.round(data?.net_sales - data?.producttotal - data?.labour_cost - operatExpAmt - royaltyAmt)  : 0;
   // const royalty = data?.net_sales ? Number((data.net_sales * 0.09 /).toFixed(2)) : 0;
   // const operatingExpenses = data?.labour_cost ? 109817 : 0;
-
   const validProfit = profit < 0 ? 0 : profit;
-
   const total:any = labourCost + taxAmount + royaltyAmt + operatExpAmt + sales + validProfit ;
 
   // Prevent division by zero
@@ -76,10 +72,7 @@ const SalesKPI: FC = () => {
     operatingExpenses: 0,
     sales:0,
     profit:0,
-
   };
-
- 
 
   const tableData = [
     // { label: "Profit", amount: "10,000", per: "65%", color: "#53755599" },
@@ -89,8 +82,7 @@ const SalesKPI: FC = () => {
       `${Math.round(data?.net_sales - data?.producttotal - data?.labour_cost - operatExpAmt - royaltyAmt)?.toLocaleString()}`  // Calculate 9% and format it to 2 decimal places
         : 0,
         per:  percentages.profit ?  Number(percentages.profit) : 0,
-        color: "#3CB371",
-      
+        color: "#3CB371",      
     },
     {
       label: "Sales",
@@ -109,7 +101,6 @@ const SalesKPI: FC = () => {
     },
     // { label: "COGS", amount: (Math.round(data.producttotal) || 0).toLocaleString(), per: "9.8%", color: "#AC8892" },
   ];
-
 
   useEffect(() => {
     if (startDate && endDate && selectedOption) {
@@ -154,7 +145,6 @@ const SalesKPI: FC = () => {
         if (response?.status === 200) {
           setData(response?.data?.saleskpi[0] || []);
           const months = getMonthsDifference() || 12;
-          console.log("diff months ",months);
           const payrollTaxAmt = response?.data?.saleskpi[0]?.labour_cost * (response?.data?.saleskpi[0]?.payrolltax / 100);
           const yearExpAmt = (response?.data?.saleskpi[0]?.Yearly_expense / 12) * months;
           setOperatExpAmt((response?.data?.saleskpi[0]?.additional_expense + payrollTaxAmt + yearExpAmt) + (response?.data?.saleskpi[0]?.monthly_expense * months) || 0);
