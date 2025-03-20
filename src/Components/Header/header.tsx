@@ -9,6 +9,7 @@ import { sendApiRequest } from "@/utils/apiUtils";
 
 const Header: React.FC = () => {
   const router = useRouter();
+  const [imageError, setImageError] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const currentPath = usePathname();
@@ -185,6 +186,9 @@ const Header: React.FC = () => {
     localStorage.removeItem('UserType');
     router.replace('/login'); // Redirect to login page
   };
+  const initials = data?.firstname && data?.lastname
+  ? `${data.firstname[0]}${data.lastname[0]}`
+  : "";
 
   return (
     <main className="w-full sticky z-30 bg-[#ffff] h-[50px] flex justify-center items-center shadow ">
@@ -196,11 +200,19 @@ const Header: React.FC = () => {
           </text>
         </div>
         <div className="flex justify-end  items-center  below-md:absolute  below-md:right-0 ">
-          <Images
-            className="w-10 h-10 mr-4 rounded-full"
-            src="/images/admin.png"
-            alt="Admin"
-          />
+           {/* Profile Image or Initials */}
+           {!imageError && data?.profileImage ? (
+            <img
+              className="w-10 h-10 mr-4 rounded-full"
+              src={data.profileImage}
+              alt="Admin"
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <div className="w-10 h-10 mr-4 flex items-center justify-center rounded-full bg-[#29235bb1] text-defaultwhite font-semibold text-lg">
+              {initials}
+            </div>
+          )}
           <div className="flex flex-col below-md:hidden">
             <p className="text-[14px] font-semibold text-right">{data?.firstname}</p>
             <p className="text-[12px] font-medium">{data?.lastname}</p>
