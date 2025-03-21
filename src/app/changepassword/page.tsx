@@ -20,6 +20,8 @@ const ChangePassword = () => {
         type: "",
   });
 
+  
+
   const onSubmit = async (data: any) => {
     try {
         setCustomToast({
@@ -87,7 +89,7 @@ const ChangePassword = () => {
   return (
     <FormProvider {...methods}>
       <div className="bg-[#0F1044] flex items-center justify-center min-h-screen px-4">
-        <div className="w-full max-w-md bg-transparent p-8 rounded-lg shadow-lg">
+        <div className="w-full max-w-md bg-transparent p-8">
           <h2 className="text-[24px] text-white font-semibold text-center mb-6">
             Change Your Password
           </h2>
@@ -95,8 +97,8 @@ const ChangePassword = () => {
             Enter a new password for your account.
           </p> */}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 flex flex-col items-center">
-          <div className="w-[320px]">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-7 flex flex-col items-center">
+          <div className="w-[370px]">
               <InputField
                 type={showCurrentPassword ? "text" : "password"}
                 value={currentpassword}
@@ -142,7 +144,7 @@ const ChangePassword = () => {
                 variant="outline"
               />
             </div>
-            <div className="w-[320px]">
+            <div className="w-[370px]">
               <InputField
                 type={showNewPassword ? "text" : "password"}
                 value={newpassword}
@@ -186,7 +188,7 @@ const ChangePassword = () => {
               />
             </div>
 
-            <div className="w-[320px]">
+            <div className="w-[370px]">
               <InputField
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirmpassword}
@@ -236,7 +238,7 @@ const ChangePassword = () => {
             <div className="text-center">
               <button
                 type="submit"
-                className="bg-[#1AA47D] w-[320px] font-bold text-sm text-white py-2 rounded-md hover:bg-[#17956f] transition-all"
+                className="bg-[#1AA47D] w-[370px] font-bold text-sm text-white py-2 rounded-md"
               >
                 Reset Password
               </button>

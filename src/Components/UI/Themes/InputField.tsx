@@ -79,7 +79,7 @@ export function InputField(props: any): JSX.Element {
         {variant === "outline" ? (
           <div
             className={`
-					${errors && errors?.message ? `border-danger border focus-within: ${ value ? "border-black" : borderClassName}` : borderClassName ? borderClassName : "border border-white"}
+					${errors && errors?.message ? `border-danger border focus-within: ${ value ? "border-white" : borderClassName}` : borderClassName ? borderClassName : "border border-white"}
 					${divClassName || ""} flex w-full items-center justify-between rounded `}
           >
             {leftIcon}

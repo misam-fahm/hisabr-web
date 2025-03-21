@@ -10,7 +10,7 @@ import ToastNotification from "@/Components/UI/ToastNotification/ToastNotificati
 const ResetPasswordBase = () => {
     const methods = useForm();
     const router = useRouter();
-    const searchParams = useSearchParams(); 
+    const searchParams = useSearchParams();
     const uuid = searchParams.get('uuid');
     const [isValidUser, setIsValidUser] = useState(false);
     const { handleSubmit, register, formState: { errors } } = methods;
@@ -25,12 +25,12 @@ const ResetPasswordBase = () => {
 
     const verifyUser = async () => {
         const response: any = await sendApiRequest({
-          mode: "verifyUser",
-          uuid: uuid,
+            mode: "verifyUser",
+            uuid: uuid,
         });
-    
+
         if (response?.status === 200 && response?.data?.result?.userid) {
-          setIsValidUser(true);
+            setIsValidUser(true);
         } else {
             setTimeout(() => {
                 setCustomToast({
@@ -41,14 +41,14 @@ const ResetPasswordBase = () => {
             router.replace("/login");
         }
     };
-    
+
     const verifyToken = async (token: string) => {
         const res: any = await sendApiRequest({
-        token: token
+            token: token
         }, `auth/verifyToken`);
         res?.status === 200 && router.replace('/login');
     };
-    
+
     useEffect(() => {
         window.history.replaceState({ ...window.history.state, as: '/resetpassword', url: '/resetpassword' }, '', '/resetpassword');
         const token = localStorage.getItem('token');
@@ -68,7 +68,7 @@ const ResetPasswordBase = () => {
             }
         }
     }, []);
-
+   
     const onSubmit = async (data: any) => {
         setCustomToast({
             ...customToast,
@@ -106,116 +106,117 @@ const ResetPasswordBase = () => {
                 type={customToast.toastType}
             />
             {isValidUser && <div className="bg-[#0F1044] flex items-center justify-center min-h-screen px-4">
-            <div className="w-full max-w-md bg-transparent p-8 rounded-lg shadow-lg">
-                <h2 className="text-[24px] text-white font-semibold text-center mb-2">
-                    Reset Your Password
-                </h2>
-                <p className="text-[14px] text-white text-center mb-6">
-                    Enter a new password for your account.
-                </p>
+                <div className="w-full max-w-md bg-transparent p-8">
+                    <h2 className="text-[24px] text-white font-semibold text-center mb-2">
+                        Reset Your Password
+                    </h2>
+                    <p className="text-[14px] text-white text-center mb-6">
+                        Enter a new password for your account.
+                    </p>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 flex flex-col items-center">
-                    <div className="w-[320px]">
-                    <InputField
-                        type={showNewPassword ? "text" : "password"}
-                        value={newpassword}
-                        label="New Password"
-                        maxLength={20}
-                        className="bg-gray-100 focus:bg-gray-100"
-                        style={{
-                        backgroundColor: "#f3f4f6",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "white",
-                        }}
-                        {...methods.register("newpassword", {
-                        required: "New Password is required",
-                        minLength: {
-                            value: 8,
-                            message: "Password must be at least 8 characters long",
-                        },
-                        maxLength: {
-                            value: 20,
-                            message: "Password cannot exceed 20 characters",
-                        },
-                        pattern: {
-                            value:
-                            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                            message:
-                            "Password must contain uppercase, lowercase, number, and special character",
-                        },
-                        onChange: (e) => setNewPassword(e.target.value),
-                        })}
-                        rightIcon={
-                        <img
-                            src="/images/fieldeyeicon.svg"
-                            onClick={() => setShowNewPassword((prev) => !prev)}
-                            className="cursor-pointer"
-                            alt="Toggle visibility"
-                        />
-                        }
-                        errors={methods.formState.errors.newpassword}
-                        placeholder="New Password"
-                        variant="outline"
-                    />
-                    </div>
+                    <form onSubmit={handleSubmit(onSubmit)}
+                        className="space-y-7 flex flex-col items-center">
+                        <div className="w-[370px]">
+                            <InputField
+                                type={showNewPassword ? "text" : "password"}
+                                value={newpassword}
+                                label="New Password"
+                                maxLength={20}
+                                className="bg-gray-100 focus:bg-gray-100"
+                                style={{
+                                    backgroundColor: "#f3f4f6",
+                                    WebkitBackgroundClip: "text",
+                                    WebkitTextFillColor: "white",
+                                }}
+                                {...methods.register("newpassword", {
+                                    required: "New Password is required",
+                                    minLength: {
+                                        value: 8,
+                                        message: "Password must be at least 8 characters long",
+                                    },
+                                    maxLength: {
+                                        value: 20,
+                                        message: "Password cannot exceed 20 characters",
+                                    },
+                                    pattern: {
+                                        value:
+                                            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                                        message:
+                                            "Password must contain uppercase, lowercase, number, and special character",
+                                    },
+                                    onChange: (e) => setNewPassword(e.target.value),
+                                })}
+                                rightIcon={
+                                    <img
+                                        src="/images/fieldeyeicon.svg"
+                                        onClick={() => setShowNewPassword((prev) => !prev)}
+                                        className="cursor-pointer"
+                                        alt="Toggle visibility"
+                                    />
+                                }
+                                errors={methods.formState.errors.newpassword}
+                                placeholder="New Password"
+                                variant="outline"
+                            />
+                        </div>
 
-                    <div className="w-[320px]">
-                    <InputField
-                        type={showConfirmPassword ? "text" : "password"}
-                        value={confirmpassword}
-                        label="Confirm Password"
-                        maxLength={20}
-                        className="bg-gray-100 focus:bg-gray-100"
-                        style={{
-                        backgroundColor: "#f3f4f6",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "white",
-                        }}
-                        {...methods.register("confirmpassword", {
-                        required: "Confirm Password is required",
-                        minLength: {
-                            value: 8,
-                            message: "Password must be at least 8 characters long",
-                        },
-                        maxLength: {
-                            value: 20,
-                            message: "Password cannot exceed 20 characters",
-                        },
-                        pattern: {
-                            value:
-                            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                            message:
-                            "Password must contain uppercase, lowercase, number, and special character",
-                        },
-                        validate: (value) =>
-                            value === newpassword ||
-                            "Confirm password must match new password",
-                        onChange: (e) => setConfirmPassword(e.target.value),
-                        })}
-                        rightIcon={
-                        <img
-                            src="/images/fieldeyeicon.svg"
-                            onClick={() => setShowConfirmPassword((prev) => !prev)}
-                            className="cursor-pointer"
-                            alt="Toggle visibility"
-                        />
-                        }
-                        errors={methods.formState.errors.confirmpassword}
-                        placeholder="Confirm Password"
-                        variant="outline"
-                    />
-                    </div>
+                        <div className="w-[370px]">
+                            <InputField
+                                type={showConfirmPassword ? "text" : "password"}
+                                value={confirmpassword}
+                                label="Confirm Password"
+                                maxLength={20}
+                                className="bg-gray-100 focus:bg-gray-100"
+                                style={{
+                                    backgroundColor: "#f3f4f6",
+                                    WebkitBackgroundClip: "text",
+                                    WebkitTextFillColor: "white",
+                                }}
+                                {...methods.register("confirmpassword", {
+                                    required: "Confirm Password is required",
+                                    minLength: {
+                                        value: 8,
+                                        message: "Password must be at least 8 characters long",
+                                    },
+                                    maxLength: {
+                                        value: 20,
+                                        message: "Password cannot exceed 20 characters",
+                                    },
+                                    pattern: {
+                                        value:
+                                            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                                        message:
+                                            "Password must contain uppercase, lowercase, number, and special character",
+                                    },
+                                    validate: (value) =>
+                                        value === newpassword ||
+                                        "Confirm password must match new password",
+                                    onChange: (e) => setConfirmPassword(e.target.value),
+                                })}
+                                rightIcon={
+                                    <img
+                                        src="/images/fieldeyeicon.svg"
+                                        onClick={() => setShowConfirmPassword((prev) => !prev)}
+                                        className="cursor-pointer"
+                                        alt="Toggle visibility"
+                                    />
+                                }
+                                errors={methods.formState.errors.confirmpassword}
+                                placeholder="Confirm Password"
+                                variant="outline"
+                            />
+                        </div>
 
-                    <div className="text-center">
-                    <button
-                        type="submit"
-                        className="bg-[#1AA47D] w-[320px] font-bold text-sm text-white py-2 rounded-md hover:bg-[#17956f] transition-all"
-                    >
-                        Reset Password
-                    </button>
-                    </div>
-                </form>
-            </div>
+                        <div className="text-center">
+                            <button
+                                type="submit"
+                                className="bg-[#1AA47D] w-[370px] font-bold text-sm text-white py-2 rounded-md hover:bg-[#17956f] transition-all"
+                            >
+                                Reset Password
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>}
         </FormProvider>
     );
@@ -223,8 +224,8 @@ const ResetPasswordBase = () => {
 // export default ResetPassword;
 export default function ResetPassword() {
     return (
-      <Suspense>
-        <ResetPasswordBase />
-      </Suspense>
+        <Suspense>
+            <ResetPasswordBase />
+        </Suspense>
     )
-  }
+}
