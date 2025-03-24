@@ -459,47 +459,51 @@ const Sales: FC = () => {
       />
       {uploadPdfloading && <Loading />}
       <div className="px-6 mt-6 below-md:px-3 below-md:mt-0 tablet:mt-4">
-        <div className="flex flex-row justify-between below-md:flex-col pb-6 sticky z-20  w-full below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
-          <div className="flex flex-row below-md:flex-col w-[50%]  gap-3">
-            {/* Dropdown Button */}
-            <Dropdown
-              options={store}
-              selectedOption={selectedOption?.name || "Store"}
-              onSelect={(selectedOption: any) => {
-                setSelectedOption({
-                  name: selectedOption.name,
-                  id: selectedOption.id,
-                });
-                setIsStoreDropdownOpen(false);
-              }}
-              isOpen={isStoreDropdownOpen}
-              toggleOpen={toggleStoreDropdown}
-              widthchange="w-[60%]"
-            />
-            <div className="w-full tablet:w-full below-md:w-full">
-              <DateRangePicker
-                startDate={startDate}
-                endDate={endDate}
-                setStartDate={setStartDate}
-                setEndDate={setEndDate}
-                fetchData={fetchData}
-                fetchDataForTender={fetchData2}
-              />
-            </div>
-          </div>
+  <div className="flex flex-row justify-between below-md:flex-col pb-6 sticky z-20 w-full below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4 gap-3">
+    {/* Store & Date Picker */}
+    <div className="flex flex-row below-md:flex-col w-[50%] tablet:w-[50%] below-md:w-full gap-3 below-md:gap-4">
+      <Dropdown
+        options={store}
+        selectedOption={selectedOption?.name || "Store"}
+        onSelect={(selectedOption: any) => {
+          setSelectedOption({
+            name: selectedOption.name,
+            id: selectedOption.id,
+          });
+          setIsStoreDropdownOpen(false);
+        }}
+        isOpen={isStoreDropdownOpen}
+        toggleOpen={toggleStoreDropdown}
+        widthchange="w-[60%] below-md:w-full tablet:w-[50%]"
+        className="h-[35px] p-2 below-md:px-4"
+      />
+      <div className="w-full below-md:w-full tablet:w-[50%] h-[35px] p-2 below-md:px-4">
+        <DateRangePicker
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          fetchData={fetchData}
+          fetchDataForTender={fetchData2}
+        />
+      </div>
+    </div>
 
-          <button
-            className="w-[159px] h-[35px] bg-[#168A6F] hover:bg-[#11735C] text-white  gap-[0.25rem] font-medium  rounded-md text-[13px] flex items-center justify-center "
-            onClick={exportToExcel}
-          >
-            <img
-              className=" rotate-180"
-              src="/images/webuploadicon.svg"
-              alt=""
-            />
-            Export File
-          </button>
-        </div>
+    {/* Export Button with padding */}
+    <div className="flex below-md:w-full below-md:pt-4 gap-4 items-center below-md:justify-center">
+  <button
+    className="w-[159px] below-md:w-[90%] h-[35px] bg-[#168A6F] hover:bg-[#11735C] text-white font-medium rounded-md text-[13px] flex items-center justify-center px-4 py-2 gap-[0.25rem]"
+    onClick={exportToExcel}
+  >
+    <img
+      className="rotate-180"
+      src="/images/webuploadicon.svg"
+      alt=""
+    />
+    Export File
+  </button>
+</div>
+  </div>
 
         {/** Table */}
 
@@ -600,39 +604,42 @@ const Sales: FC = () => {
             </div>
           </div>
         </div> */}
-        <div className="flex gap-6">
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%]  p-4 justify-between items-stretch">
-            <div className="flex flex-col gap-6">
-              <p className="text-[14px] text-[#575F6DCC] font-bold">COGS</p>
-              <p className="text-[16px] text-[#2D3748] font-bold">
-                {productTotal
-                  ? `$${productTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                  : "$0.00"}
-              </p>
-            </div>
-            {/* <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-            <p className="text-[14px]  font-medium">{}</p>
-            </div> */}
-          </div>
+   
+   
+   <div className="flex gap-6 below-md:grid below-md:grid-cols-1 below-md:gap-3 below-md:pl-3 below-md:pr-3">
+  <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
+    <div className="flex flex-col gap-6">
+      <p className="text-[14px] text-[#575F6DCC] font-bold">COGS</p>
+      <p className="text-[18px] text-[#2D3748] font-bold">
+        {productTotal
+          ? `$${productTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+          : "$0.00"}
+      </p>
+    </div>
+    {/* Uncomment and update if you want to add the circular count
+    <div className="flex items-center justify-center bg-[#EFF6EFA1] rounded-full w-[60px] h-[60px]">
+      <p className="text-[18px] font-medium">{}</p>
+    </div>
+    */}
+  </div>
 
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%]  p-4 justify-between items-stretch">
-            <div className="flex flex-col gap-6">
-              <p className="text-[14px] text-[#575F6DCC] font-bold">
-                Order Counts
-              </p>
-              <p className="text-[16px] text-[#2D3748] font-bold">
-                {totalOrders}
-              </p>
-            </div>
+  <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
+    <div className="flex flex-col gap-6">
+      <p className="text-[14px] text-[#575F6DCC] font-bold">Order Counts</p>
+      <p className="text-[18px] text-[#2D3748] font-bold">
+          {totalOrders ? totalOrders.toLocaleString("en-US") : "0"}
 
-            {/* <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-            <p className="text-[14px]  font-medium">{}</p>
-            </div> */}
-          </div>
-        </div>
+      </p>
+    </div>
+    {/* Uncomment and update if you want to add the circular count
+    <div className="flex items-center justify-center bg-[#EFF6EFA1] rounded-full w-[60px] h-[60px]">
+      <p className="text-[18px] font-medium">{}</p>
+    </div>
+    */}
+  </div>
+</div>
 
-        <div className="grid grid-cols-5  below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3   pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
-          {Sitems?.map((Items: any, index: any) => (
+<div className="grid grid-cols-5 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 items-stretch tablet:flex-wrap tablet:gap-3">          {Sitems?.map((Items: any, index: any) => (
             <div
               key={index}
               className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4  p-3 justify-between items-stretch"
@@ -642,7 +649,7 @@ const Sales: FC = () => {
                   position="left"
                   text={Items?.name?.length > 15 ? Items.name : ""}
                 >
-                  <p className="text-[14px] text-[#575F6DCC] font-bold h-7">
+                  <p className="text-[16px] text-[#575F6DCC] font-bold h-7">
                     {" "}
                     {Items?.name?.length > 15
                       ? Items.name.substring(0, 15) + "..."
@@ -661,14 +668,15 @@ const Sales: FC = () => {
                 </span>
               </p> */}
               </div>
-              <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-                <p className="text-[14px]  font-medium">{Items.totalqty}</p>
-              </div>
+              <div className="flex items-center">
+    <div className="flex items-center justify-center bg-[#EFF6EFA1] rounded-full w-[60px] h-[60px]">
+      <p className="text-[20px] font-medium">{Items.totalqty}</p>
+    </div>
+  </div>
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-5 mt-8 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
-          {items?.map((Items: any, index: any) => (
+        <div className="grid grid-cols-5 mt-8 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 items-stretch tablet:flex-wrap tablet:gap-3">          {items?.map((Items: any, index: any) => (
             <div
               key={index}
               className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4 p-3 justify-between items-stretch"
@@ -678,7 +686,7 @@ const Sales: FC = () => {
                   position="left"
                   text={Items?.name?.length > 15 ? Items.name : ""}
                 >
-                  <p className="text-[14px] text-[#575F6DCC] font-bold h-7">
+                  <p className="text-[16px] text-[#575F6DCC] font-bold h-7">
                     {Items?.name?.length > 15
                       ? Items.name.substring(0, 15) + "..."
                       : Items.name || "--"}
@@ -691,9 +699,12 @@ const Sales: FC = () => {
                     : "$00,000"}
                 </p>
               </div>
-              <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-                <p className="text-[14px] font-medium">{Items.totalqty}</p>
-              </div>
+               <div className="flex items-center">
+    <div className="flex items-center justify-center bg-[#EFF6EFA1] rounded-full w-[60px] h-[60px]">
+      <p className="text-[20px] font-medium">{Items.totalqty}</p>
+    </div>
+  </div>
+
             </div>
           ))}
           {subtotal && subtotal !== 0 && (
