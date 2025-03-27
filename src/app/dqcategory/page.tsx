@@ -696,10 +696,10 @@ const Sales: FC = () => {
                 </p>
               </div>
                <div className="flex items-center">
-    <div className="flex items-center justify-center bg-[#1F4372] rounded-full w-[60px] h-[60px]">
-      <p className="text-[20px] text-[#1f8524] font-bold">{Items.totalqty}</p>
-    </div>
-  </div>
+                <div className="flex items-center justify-center bg-[#1F4372] rounded-full w-[60px] h-[60px]">
+                  <p className="text-[21px] text-[#7eef84] font-bold">{Items.totalqty}</p>
+                </div>
+                </div>
 
             </div>
           ))}
