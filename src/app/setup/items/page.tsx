@@ -62,7 +62,7 @@ const Page: FC = () => {
       cell: (info) => {
         const value = info.getValue() as string;
         const truncatedValue =
-          value.length > 22 ? value.slice(0, 22) + "..." : value;
+          value.length > 40 ? value.slice(0, 40) + "..." : value;
         return (
           <Tooltip text={value} position="bottom">
             <span className="cursor-pointer">{truncatedValue}</span>
