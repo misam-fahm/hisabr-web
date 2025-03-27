@@ -118,7 +118,12 @@ const Page: FC = () => {
       accessorKey: "royalty",
       header: () => <div className="text-right">Royalty</div>,
       cell: (info) => (
-        <div className=" text-right ">{info.row.original.royalty}</div>
+        <div className="text-right">
+          {info.row.original.royalty !== null &&
+          info.row.original.royalty !== undefined
+            ? `${info.row.original.royalty}%`
+            : ""}
+        </div>
       ),
       size: 80,
     },
@@ -222,7 +227,7 @@ const Page: FC = () => {
             <div className="flex justify-between items-center">
               {/* Name */}
               <span className="font-bold text-[14px] text-[#334155]">
-                {row.original.storename.length > 35
+                {row.original?.storename?.length > 35
                   ? row.original.storename.slice(0, 35) + "..."
                   : row.original.storename}
               </span>
@@ -253,7 +258,7 @@ const Page: FC = () => {
             <div className=" mt-1 flex justify-between">
               <span className="text-[#636363] text-[13px] mb-2">Location</span>{" "}
               <span className="text-[14px]">
-                {row.original.location.length > 26
+                {row.original?.location?.length > 26
                   ? row.original.location.slice(0, 26) + "..."
                   : row.original.location}
               </span>
@@ -261,7 +266,7 @@ const Page: FC = () => {
             <div className="mt-1 flex justify-between">
               <span className="text-[#636363] text-[13px] mb-2">Owner</span>{" "}
               <span className="text-[14px]">
-                {row.original.owner.length > 25
+                {row.original?.owner?.length > 25
                   ? row.original.owner.slice(0, 25) + "..."
                   : row.original.owner}
               </span>
@@ -272,7 +277,12 @@ const Page: FC = () => {
             </div>
             <div className="mt-1 flex justify-between">
               <span className="text-[#636363] text-[13px] mb-2">Royalty</span>{" "}
-              <span className="text-[14px]">{row.original.royalty}</span>
+              <span className="text-[14px]">
+                {row.original.royalty !== null &&
+                row.original.royalty !== undefined
+                  ? `${row.original.royalty}%`
+                  : ""}
+              </span>
             </div>
           </div>
         ))}

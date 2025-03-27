@@ -656,7 +656,7 @@ const Sales: FC = () => {
                       : Items.name || "--"}
                   </p>
                 </Tooltip>
-                <p className="text-[16px] text-[#2D3748] font-bold">
+                <p className="text-[20px] text-[#2D3748] font-bold">
                   {Items?.totalextprice
                     ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}`
                     : "$00,000"}
@@ -668,11 +668,7 @@ const Sales: FC = () => {
                 </span>
               </p> */}
               </div>
-              <div className="flex items-center">
-    <div className="flex items-center justify-center bg-[#EFF6EFA1] rounded-full w-[60px] h-[60px]">
-      <p className="text-[20px] font-medium">{Items.totalqty}</p>
-    </div>
-  </div>
+            
             </div>
           ))}
         </div>
@@ -700,8 +696,8 @@ const Sales: FC = () => {
                 </p>
               </div>
                <div className="flex items-center">
-    <div className="flex items-center justify-center bg-[#EFF6EFA1] rounded-full w-[60px] h-[60px]">
-      <p className="text-[20px] font-medium">{Items.totalqty}</p>
+    <div className="flex items-center justify-center bg-[#1F4372] rounded-full w-[60px] h-[60px]">
+      <p className="text-[20px] text-[#1f8524] font-bold">{Items.totalqty}</p>
     </div>
   </div>
 
