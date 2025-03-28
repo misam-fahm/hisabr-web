@@ -700,7 +700,6 @@ const Sales: FC = () => {
                   <p className="text-[21px] text-[#7eef84] font-bold">{Items.totalqty}</p>
                 </div>
                 </div>
-
             </div>
           ))}
           {subtotal && subtotal !== 0 && (
