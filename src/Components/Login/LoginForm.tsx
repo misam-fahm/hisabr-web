@@ -47,22 +47,30 @@ const LoginForm = () => {
           email: email,
         });
         if (getUser?.status === 200) {
-          localStorage.setItem("UserType",  getUser?.data?.user[0]?.usertype);
-          const val: any = {
-            email: data?.email,
-            password: data?.password,
-            userid: getUser?.data?.user[0]?.userid,
-            dbPassword: getUser?.data?.user[0]?.password,
-            usertype: getUser?.data?.user[0]?.usertype,
-            storeid: getUser?.data?.user[0]?.storeid,
-          };
-          const result: any = await sendApiRequest(val, `auth/login`);
-          if (result?.status === 200 && result?.data?.token) {
-            localStorage.setItem("token", result?.data?.token);
-           
-            router.replace("/sales-kpi");
+          if (getUser?.data?.user[0]?.isactive) {
+            localStorage.setItem("UserType",  getUser?.data?.user[0]?.usertype);
+            const val: any = {
+              email: data?.email,
+              password: data?.password,
+              userid: getUser?.data?.user[0]?.userid,
+              dbPassword: getUser?.data?.user[0]?.password,
+              usertype: getUser?.data?.user[0]?.usertype,
+              storeid: getUser?.data?.user[0]?.storeid,
+            };
+            const result: any = await sendApiRequest(val, `auth/login`);
+            if (result?.status === 200 && result?.data?.token) {
+              localStorage.setItem("token", result?.data?.token);
+            
+              router.replace("/sales-kpi");
+            } else {
+              // router.push("/login");
+            }
           } else {
-            // router.push("/login");
+            setCustomToast({
+              ...customToast,
+              toastMessage: "User deactivate",
+              toastType: "error",
+            });
           }
         } else {
           setCustomToast({
