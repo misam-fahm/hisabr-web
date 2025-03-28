@@ -130,6 +130,9 @@ const Header: React.FC = () => {
           case "setup/items":
             newTitle = "Items";
             break;
+            case "setup/userdetails":
+              newTitle = "User Management";
+              break;
           case "setup/tenders":
             newTitle ="Tenders";
             break;
@@ -187,8 +190,8 @@ const Header: React.FC = () => {
     router.replace('/login'); // Redirect to login page
   };
   const initials = data?.firstname && data?.lastname
-  ? `${data.firstname[0]}${data.lastname[0]}`
-  : "";
+  ? `${data.firstname.charAt(0).toUpperCase()}${data.lastname.charAt(0).toUpperCase()}`
+  : "NA";
 
   return (
     <main className="w-full sticky z-30 bg-[#ffff] h-[50px] flex justify-center items-center shadow ">
