@@ -519,9 +519,10 @@ const Invoices = () => {
 
   return (
     <main
-      className={`relative px-6 below-md:px-3 overflow-auto ${
-        totalItems > 10 ? "max-h-[calc(100vh-80px)]" : "h-[500px]"
-      }`}
+    className={`relative px-6 below-md:px-3 overflow-auto border-none ${
+      data?.length > 10 ? "max-h-[calc(100vh-180px)]" : "h-[500px]"
+    }`}
+    
       style={{ scrollbarWidth: "thin" }}
     >
       <ToastNotification
@@ -725,8 +726,8 @@ const Invoices = () => {
           </table>
           <div
             className="w-full relative overflow-y-auto scrollbar-thin flex-grow"
-            style={{ maxHeight: "calc(100vh - 270px)" }}
-          >
+            style={{ maxHeight: "calc(100vh - 320px)" }}
+            >
             <table className="w-full border-collapse text-[12px] text-white table-fixed">
               <tbody>
                 {loading ? (
