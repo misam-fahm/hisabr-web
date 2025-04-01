@@ -675,11 +675,11 @@ const Sales: FC = () => {
           ))}
         </div>
         <div className="grid grid-cols-5 mt-8 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 mt-6items-stretch tablet:flex-wrap tablet:gap-3">
- 
+
         {items?.map((Items: any, index: any) => (
             <div
               key={index}
-              className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4 p-3 justify-between items-stretch w-full"
+              className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4 p-3 justify-between items-stretch w-full gap-6"
             > 
             
               <div className="flex flex-col gap-6">
@@ -708,7 +708,7 @@ const Sales: FC = () => {
             </div>
           ))}
           {subtotal && subtotal !== 0 && (
-            <div className="flex flex-col bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4 p-3 justify-between items-stretch">
+            <div className="flex flex-col bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4 p-3 justify-between items-stretch gap-6">
               
               <p className="text-[14px] text-[#575F6DCC] font-bold h-7">
                 Ending Inventory
