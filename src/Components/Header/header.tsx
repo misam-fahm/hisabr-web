@@ -120,7 +120,19 @@ const Header: React.FC = () => {
                 newTitle = "Expenses"; 
               }
             }
-            break;  
+            break; 
+            case "cashreconc":
+              if (typeof window !== "undefined") { 
+                const params = new URLSearchParams(window.location.search);
+                if (params.get("fromLabourAnalysis") === "true") {
+                  newTitle = "Labour"; 
+                } else if (params.get("fromHome") === "true") {
+                  newTitle = "Operating cashreconc";
+                } else {
+                  newTitle = "Cash Reconciliation"; 
+                }
+              }
+              break; 
           case "setup/categories":
             newTitle = "Categories";
             break;
@@ -130,14 +142,14 @@ const Header: React.FC = () => {
           case "setup/items":
             newTitle = "Items";
             break;
-            case "setup/userdetails":
-              newTitle = "User Management";
-              break;
           case "setup/tenders":
             newTitle ="Tenders";
             break;
           case "setup/stores":
             newTitle = "Stores";
+            break;
+          case "setup/UserManagement":
+            newTitle = "UserManagement";
             break;
           case "setup/configuration":
             newTitle = "Configuration";
