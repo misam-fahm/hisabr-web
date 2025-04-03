@@ -4,6 +4,7 @@ import ToastNotification from "@/Components/UI/ToastNotification/ToastNotificati
 import { sendApiRequest } from "@/utils/apiUtils";
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import Loading from "@/Components/UI/Themes/Loading";
 
 const ForgotPassword = () => {
   const methods = useForm(); 
@@ -12,9 +13,11 @@ const ForgotPassword = () => {
     toastMessage: "",
     toastType: "",
   });
+    const [isLoading, setIsLoading] = useState(false); // Added loading state
   
   const onSubmit = async (data: any) => {
     try {
+      setIsLoading(true);
       setCustomToast({
         ...customToast,
         toastMessage: "",
@@ -101,11 +104,14 @@ const ForgotPassword = () => {
           toastType: "error",
         });
       }, 0);
+    } finally {
+      setIsLoading(false); // Hide loader
     }
   };
 
   return (
     <FormProvider {...methods}>
+     {isLoading && <Loading />} {/* Show loader when isLoading is true */}
       <ToastNotification
         message={customToast.toastMessage}
         type={customToast.toastType}
@@ -167,8 +173,9 @@ const ForgotPassword = () => {
               <button
                 type="submit"
                 className="bg-[#1AA47D] w-[400px] below-md:w-full text-white py-2 px-4 rounded"
+                disabled={isLoading} // Disable button while loading
               >
-                    SEND RESET LINK
+                {isLoading ? "SENDING..." : "SEND RESET LINK"}
               </button>
             </form>
           </div>
