@@ -7,7 +7,7 @@ export interface ToastNotificationProps {
   type?: string;
 }
 
-const ToastNotification: React.FC<ToastNotificationProps> = ({ message, type = 'success' }) => {
+const ToastNotification: React.FC<ToastNotificationProps> = ({ message, type = 'success'}) => {
   const showToast = () => {
     const toastOptions: ToastOptions = {
       position: 'top-right',

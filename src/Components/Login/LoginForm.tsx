@@ -6,7 +6,7 @@ import { Text } from "../UI/Themes/Text";
 import { sendApiRequest } from "@/utils/apiUtils";
 import ToastNotification from "../UI/ToastNotification/ToastNotification";
 import { useRouter } from "next/navigation";
-
+import Loading from "../UI/Themes/Loading";
 const LoginForm = () => {
   const router = useRouter();
   const methods = useForm();
@@ -17,7 +17,7 @@ const LoginForm = () => {
     toastMessage: "",
     toastType: "",
   });
-
+  const [isLoading, setIsLoading] = useState(false);
   const verifyToken = async (token: string) => {
     const res: any = await sendApiRequest({
       token: token
@@ -36,6 +36,7 @@ const LoginForm = () => {
   
   const onSubmit = async (data: any) => {
     try {
+      setIsLoading(true);
       setCustomToast({
         ...customToast,
         toastMessage: "",
@@ -60,7 +61,10 @@ const LoginForm = () => {
             const result: any = await sendApiRequest(val, `auth/login`);
             if (result?.status === 200 && result?.data?.token) {
               localStorage.setItem("token", result?.data?.token);
-            
+              setCustomToast({
+                toastMessage: "Welcome Back",
+                toastType: "success",
+              });
               router.replace("/sales-kpi");
             } else {
               // router.push("/login");
@@ -96,6 +100,8 @@ const LoginForm = () => {
           toastType: "error",
         });
       }, 0);
+    } finally {
+      setIsLoading(false); // Hide loading spinner
     }
   };
 
@@ -105,6 +111,7 @@ const LoginForm = () => {
         message={customToast.toastMessage}
         type={customToast.toastType}
       />
+      {isLoading && <Loading />} {/* Render Loading component when isLoading is true */}
       <div className="bg-[#0F1044] w-full h-[100vh] flex justify-center below-md:flex-col">
         <div className="w-[50%] below-md:w-full flex justify-center items-center h-full below-md:h-auto">
           <img
@@ -193,10 +200,10 @@ const LoginForm = () => {
                   })}
                   rightIcon={
                     <img
-                      src="/images/fieldeyeicon.svg"
-                      onClick={() => setShowPassword((prev: any) => !prev)}
-                      className="cursor-pointer"
-                    />
+                    src={showPassword ? "/images/closeeye.svg" : "/images/fieldeyeicon.svg"}
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="cursor-pointer h-5 w-5" // Added size as per previous suggestion
+                  />
                   }
                   errors={methods.formState.errors.password} // Fixed casing
                   placeholder="Enter Password"
@@ -216,8 +223,9 @@ const LoginForm = () => {
               <button
                 type="submit"
                 className="bg-[#1AA47D] w-[400px] below-md:w-full font-bold text-[14px] text-white py-2 px-4 rounded "
+                disabled={isLoading} // Disable button while loading
               >
-                GET STARTED
+               {isLoading ? "LOADING..." : "GET STARTED"}
               </button>
             </form>
           </div>
