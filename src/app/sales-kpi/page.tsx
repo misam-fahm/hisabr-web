@@ -12,6 +12,9 @@ import { format } from 'date-fns';
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 import Tooltip from "@/Components/UI/Toolstips/Tooltip";
 import YearlySalesGraph from "@/Components/Charts-Graph/YearlySalesGraph";
+import TenderRevenueChart from "@/Components/Charts-Graph/TenderRevenueChart";
+import TenderCommAmtChart from "@/Components/Charts-Graph/TenderCommAmtChart";
+
 
 const SalesKPI: FC = () => {
   const router = useRouter();
@@ -107,7 +110,7 @@ const SalesKPI: FC = () => {
       fetchData();
       // setIsFirstCall(false);
       fetchDataForTender();
-      fetchDataForItems();
+      // fetchDataForItems();
     }
   }, [selectedOption]);
 
@@ -164,59 +167,71 @@ const SalesKPI: FC = () => {
     }
   };
 
-const fetchDataForTender = async () => {
-  try {
-    if (startDate && endDate) {
-      const response: any = await sendApiRequest({
-        mode: "getLatestTenders",
-        storeid: selectedOption?.id || 69,
-        startdate: startDate && format(startDate, 'yyyy-MM-dd'),
-        enddate: endDate && format(endDate, 'yyyy-MM-dd'),
-      });
-
-      if (response?.status === 200) {
-        setTender(response?.data?.tenders || []);
-        // response?.data?.total > 0 &&
-        //   setTotalItems(response?.data?.saleskpi[0] || 0);
-      } else {
-        setCustomToast({
-          ...customToast,
-          message: response?.message,
-          type: "error",
+  const fetchDataForTender = async () => {
+    try {
+      setLoading(true); // Set loading to true before fetching
+      if (startDate && endDate) {
+        const response: any = await sendApiRequest({
+          mode: "getLatestTenders",
+          storeid: selectedOption?.id || 69,
+          startdate: startDate && format(startDate, 'yyyy-MM-dd'),
+          enddate: endDate && format(endDate, 'yyyy-MM-dd'),
         });
+  
+        if (response?.status === 200) {
+          setTender(response?.data?.tenders || []);
+        } else {
+          setCustomToast({
+            ...customToast,
+            message: response?.message,
+            type: "error",
+          });
+        }
       }
-    }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-}
-};
-
-const fetchDataForItems = async () => {
-  try {
-    if (startDate && endDate) {
-      const response: any = await sendApiRequest({
-        mode: "getDqRevCenterSmmary",
-        storeid: selectedOption?.id || 69,
-        startdate: startDate && format(startDate, 'yyyy-MM-dd'),
-        enddate: endDate && format(endDate, 'yyyy-MM-dd'),
+    } catch (error) {
+      console.error("Error fetching tender data:", error);
+      setCustomToast({
+        ...customToast,
+        message: "Error fetching tender data",
+        type: "error",
       });
-
-      if (response?.status === 200) {
-        setItems(response?.data?.dqcategories || []);
-        // response?.data?.total > 0 &&
-        //   setTotalItems(response?.data?.saleskpi[0] || 0);
-      } else {
-        setCustomToast({
-          ...customToast,
-          message: response?.message,
-          type: "error",
-        });
-      }
+    } finally {
+      setLoading(false); // Set loading to false after fetching (success or failure)
     }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-}
-};
+  };
+
+  useEffect(() => {
+    if (startDate && endDate && selectedOption) {
+      fetchData();
+      fetchDataForTender();
+    }
+  }, [startDate, endDate, selectedOption]);
+// const fetchDataForItems = async () => {
+//   try {
+//     if (startDate && endDate) {
+//       const response: any = await sendApiRequest({
+//         mode: "getDqRevCenterSmmary",
+//         storeid: selectedOption?.id || 69,
+//         startdate: startDate && format(startDate, 'yyyy-MM-dd'),
+//         enddate: endDate && format(endDate, 'yyyy-MM-dd'),
+//       });
+
+//       if (response?.status === 200) {
+//         setItems(response?.data?.dqcategories || []);
+//         // response?.data?.total > 0 &&
+//         //   setTotalItems(response?.data?.saleskpi[0] || 0);
+//       } else {
+//         setCustomToast({
+//           ...customToast,
+//           message: response?.message,
+//           type: "error",
+//         });
+//       }
+//     }
+//   } catch (error) {
+//     console.error("Error fetching data:", error);
+// }
+// };
 
 
   // const fetchDropdownData = async () => {
@@ -363,7 +378,7 @@ const enhancedItems = items?.map((item:any) => ({
                 setEndDate = {setEndDate}
                 fetchData = {fetchData}
                 fetchDataForTender={fetchDataForTender}
-                fetchDataForItems={fetchDataForItems}
+                // fetchDataForItems={fetchDataForItems}
                 />
             </div>
           </div>
@@ -584,7 +599,152 @@ const enhancedItems = items?.map((item:any) => ({
             </div>
           </div>
         </div>
-        <div className="flex flex-col px-6 py-6">
+
+   <div className="flex flex-col px-6 py-6">
+  <div className="flex flex-col gap-3">
+    
+
+    {/* Tender Revenue Distribution */}
+    <div className="bg-white border-t-4 border-[#BCC7D5] rounded-md shadow-md below-md:shadow-none w-[100%] items-stretch">
+      <div className="w-full text-left font-bold mx-4 mt-6 text-[16px] text-[#334155]">
+        Tender Revenue Distribution
+      </div>
+      {/* Show only the value without decimals, 12px font, centered */}
+      <div className="w-full text-center mx-4 mt-2 text-[12px] text-[#334155]">
+        {totalPayments
+          ? "$" + Math.round(totalPayments).toLocaleString()
+          : "--"}
+      </div>
+      <div className="flex flex-row items-center justify-between below-md:flex-col tablet:flex-col mx-3">
+        {loading ? (
+          <div className="w-[50%] h-[300px] flex justify-center items-center">
+            <Skeleton circle={true} height={200} width={200} />
+          </div>
+        ) : tender?.length === 0 ? (
+          <div className="w-[50%] h-[300px] flex justify-center items-center">
+            <NoDataFound />
+          </div>
+        ) : (
+          <div className="w-[50%] h-[300px] flex justify-center items-center">
+            <TenderRevenueChart tenderData={tender} />
+          </div>
+        )}
+        <div className="overflow-x-auto w-[50%] custom-scrollbar">
+          <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
+            <thead>
+              <tr>
+                <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-left border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
+                  Tender
+                </th>
+                <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-right border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
+                  Revenue
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan={2} className="text-center py-4">
+                    <Skeleton count={3} height={30} />
+                  </td>
+                </tr>
+              ) : tender?.length === 0 ? (
+                <tr>
+                  <td colSpan={2} className="text-center py-4">
+                    <NoDataFound />
+                  </td>
+                </tr>
+              ) : (
+                tender.map((row: any, index: number) => (
+                  <tr key={index}>
+                    <td className="border-t-0 px-6 below-md:px-2 text-left border-l-0 border-r-0 text-xs whitespace-nowrap p-2 flex items-center text-[#404040] text-[13px]">
+                      {row.tendername}
+                    </td>
+                    <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-right border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+                      ${row.payments.toLocaleString()}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    {/* Tender Commission Amount Distribution */}
+    <div className="bg-white border-t-4 border-[#BCC7D5] rounded-md shadow-md below-md:shadow-none w-[100%] items-stretch">
+      <div className="w-full text-left font-bold mx-4 mt-6 text-[16px] text-[#334155]">
+        Tender Commission Amount Distribution
+      </div>
+      {/* Show only the value without decimals, 12px font, centered */}
+      <div className="w-full text-center mx-4 mt-2 text-[12px] text-[#334155]">
+        {totalCommission
+          ? "$" + Math.round(totalCommission).toLocaleString()
+          : "--"}
+      </div>
+      <div className="flex flex-row items-center justify-between below-md:flex-col tablet:flex-col mx-3">
+        {loading ? (
+          <div className="w-[50%] h-[300px] flex justify-center items-center">
+            <Skeleton circle={true} height={200} width={200} />
+          </div>
+        ) : tender?.length === 0 ? (
+          <div className="w-[50%] h-[300px] flex justify-center items-center">
+            <NoDataFound />
+          </div>
+        ) : (
+          <div className="w-[50%] h-[300px] flex justify-center items-center">
+            <TenderCommAmtChart tenderData={tender} />
+          </div>
+        )}
+        <div className="overflow-x-auto w-[50%] custom-scrollbar">
+          <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
+            <thead>
+              <tr>
+                <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-left border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
+                  Tender
+                </th>
+                <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-right border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
+                  Comm. Amount
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan={2} className="text-center py-4">
+                    <Skeleton count={3} height={30} />
+                  </td>
+                </tr>
+              ) : tender?.length === 0 ? (
+                <tr>
+                  <td colSpan={2} className="text-center py-4">
+                    <NoDataFound />
+                  </td>
+                </tr>
+              ) : (
+                tender.map((row: any, index: number) => (
+                  <tr key={index}>
+                    <td className="border-t-0 px-6 below-md:px-2 text-left border-l-0 border-r-0 text-xs whitespace-nowrap p-2 flex items-center text-[#404040] text-[13px]">
+                      {row.tendername}
+                    </td>
+                    <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-right border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+                      ${((row.payments * row.commission) / 100 || 0).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        {/* <div className="flex flex-col px-6 py-6">
           <div className="flex flex-col gap-3 ">
         <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[100%] items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6 pb-3">
@@ -657,14 +817,12 @@ const enhancedItems = items?.map((item:any) => ({
                 { tender?.length === 0 ? "" : 
                 <tfoot className="bg-white">
                   <tr className="font-medium text-black text-[14px]">
-                    <td className="px-4 py-1.5 border-t border-gray-200">
-                      Total
-                    </td>
+                   
                     <td className="px-4 py-1.5 border-t text-right border-gray-200">
                     {totalPayments ? "$" + totalPayments.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "--"}
                     </td>
                     <td className="px-4 py-1.5 border-t text-right border-gray-200"> 
-                       {/* {totalCommission ? "$" + (totalCommission).toFixed(2) :"--"} */}
+                       {totalCommission ? "$" + (totalCommission).toFixed(2) :"--"}
                        </td>
                     <td className="px-4 py-1.5 border-t text-right border-gray-200">
                     {totalFinalAmount ? "$" + totalFinalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "--"}
@@ -673,9 +831,9 @@ const enhancedItems = items?.map((item:any) => ({
                 </tfoot> }
               </table>
             </div>
-          </div>
+          </div> */}
 
-         <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[100%] items-stretch">
+         {/* <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[100%] items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6 pb-3">
               <div className="flex flex-row gap-2 ">
                 <img src="/images/items.svg" />
@@ -748,7 +906,7 @@ const enhancedItems = items?.map((item:any) => ({
     )}
               </table>
             </div>
-          </div>
+          </div> */}
       </div>
           {/* <div className="w-full px-3 below-md:w-[100%] mt-8 bg-white below-md:ml-0 tablet:ml-0 tablet:mt-6 tablet:w-full below-md:mt-3 shadow-md rounded-md">
               <div className="flex flex-col"> */}
@@ -823,8 +981,8 @@ const enhancedItems = items?.map((item:any) => ({
                 </div> */}
               {/* </div> */}
             {/* </div> */}
-        </div>
-      </div>
+        {/* </div>
+      </div> */}
       <div className="below-lg:hidden flex justify-end fixed bottom-5 right-5">
         <button
           className="focus:outline-none flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] w-[56px] h-[56px] rounded-xl relative"
