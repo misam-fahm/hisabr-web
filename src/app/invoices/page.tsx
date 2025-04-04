@@ -131,7 +131,7 @@ const Invoices = () => {
       header: () => <div className="text-right pr-9">Total</div>,
       cell: (info) => (
         <span className="flex justify-end pr-8">
-          {info.row.original.total?.toFixed(2)}
+          ${info.row.original.total?.toFixed(2)}
         </span>
       ),
       size: 70,
@@ -662,7 +662,7 @@ const Invoices = () => {
                 <p className="text-[#1A1A1A]">{card.storename}</p>
                 <p className="text-[#1A1A1A]">{card.invoicenumber}</p>
                 <p className="text-[#000000]">{card.quantity}</p>
-                <p className="text-[#1A1A1A]">{card.total}</p>
+                <p className="text-[#1A1A1A]">${card.total}</p>
               </div>
             </div>
           </div>

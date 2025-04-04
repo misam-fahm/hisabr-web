@@ -133,7 +133,7 @@ const Sales: FC = () => {
       header: () => <div className="text-right mr-12">Amount</div>,
       cell: (info) => (
         <div className="text-right mr-12">
-          {(info.getValue() as number).toFixed(2)}
+          ${(info.getValue() as number).toFixed(2)}
         </div>
       ),
       size: 133,
@@ -143,7 +143,7 @@ const Sales: FC = () => {
       header: () => <div className="text-right ">Net</div>,
       cell: (info) => (
         <div className="text-right mr-10">
-          {(info.getValue() as number).toFixed(2)}
+          ${(info.getValue() as number).toFixed(2)}
         </div>
       ),
       size: 80,
@@ -156,7 +156,7 @@ const Sales: FC = () => {
         const average =
           total_sales_count > 0 ? total_item_sales_amt / total_sales_count : 0;
 
-        return <div className="text-right mr-8">{average.toFixed(2)}</div>;
+        return <div className="text-right mr-8">${average.toFixed(2)}</div>;
       },
       size: 120,
     },
@@ -789,7 +789,15 @@ const Sales: FC = () => {
 
         <div className="below-lg:hidden mb-8">
           <div className="flex flex-col">
-            {data?.map((items, index) => (
+            {data?.map((items, index) =>
+            {
+              // Calculate average for mobile view
+              const average =
+                items.total_sales_count > 0
+                  ? items.total_item_sales_amt / items.total_sales_count
+                  : 0;
+        
+              return (
               <div
                 key={index}
                 className="border border-[#E4E4EF] w-full bg-white rounded-md p-3 mb-3"
@@ -854,13 +862,11 @@ const Sales: FC = () => {
                   </div>
                   <div className="flex justify-between text-sm">
                     <p className="text-[#808080] text-[13px]">Average</p>
-                    <p className="text-[#1A1A1A] text-[14px]">
-                      ${items.order_average_amt}
-                    </p>
-                  </div>
+                    <p className="text-[#1A1A1A] text-[14px]">${average.toFixed(2)}</p>                  </div>
                 </div>
               </div>
-            ))}
+            );
+          })}
           </div>
         </div>
       </div>
