@@ -158,13 +158,18 @@ const Page = () => {
       console.error("Error fetching stores:", error);
     }
   };
-const verifyToken = async (token: string) => {
-    const res: any = await sendApiRequest({
-      token: token
-    }, `auth/verifyToken`);
-    res?.status === 200
-      ? setIsVerifiedUser(true)
-      : router.replace('/login');
+
+  const verifyToken = async (token: string) => {
+    try {
+      const res: any = await sendApiRequest({
+        token: token
+      }, `auth/verifyToken`);
+      res?.status === 200
+        ? setIsVerifiedUser(true)
+        : router.replace('/login');
+    } catch (error) {
+      router.replace('/login');
+    }
   };
 
   useEffect(() => {

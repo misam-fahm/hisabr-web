@@ -19,10 +19,13 @@ const LoginForm = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const verifyToken = async (token: string) => {
-    const res: any = await sendApiRequest({
-      token: token
-    }, `auth/verifyToken`);
-    res?.status === 200 && router.replace("/sales-kpi");
+    try {
+      const res: any = await sendApiRequest({
+        token: token
+      }, `auth/verifyToken`);
+      res?.status === 200 && router.replace("/sales-kpi");
+    } catch (error) {
+    }
   };
   
   useEffect(() => {
