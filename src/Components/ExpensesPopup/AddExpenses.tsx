@@ -94,12 +94,16 @@ const AddExpenses = ({ setAddExpenses , SelectedStore }: any) => {
   };
 
   const verifyToken = async (token: string) => {
-    const res: any = await sendApiRequest({
-      token: token
-    }, `auth/verifyToken`);
-    res?.status === 200
-      ? setIsVerifiedUser(true)
-      : router.replace('/login');
+    try {
+      const res: any = await sendApiRequest({
+        token: token
+      }, `auth/verifyToken`);
+      res?.status === 200
+        ? setIsVerifiedUser(true)
+        : router.replace('/login');
+    } catch (error) {
+      router.replace('/login');
+    }
   };
 
   useEffect(() => {

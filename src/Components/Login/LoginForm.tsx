@@ -19,10 +19,13 @@ const LoginForm = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const verifyToken = async (token: string) => {
-    const res: any = await sendApiRequest({
-      token: token
-    }, `auth/verifyToken`);
-    res?.status === 200 && router.replace("/sales-kpi");
+    try {
+      const res: any = await sendApiRequest({
+        token: token
+      }, `auth/verifyToken`);
+      res?.status === 200 && router.replace("/sales-kpi");
+    } catch (error) {
+    }
   };
   
   useEffect(() => {
@@ -190,12 +193,12 @@ const LoginForm = () => {
                       value: 20,
                       message: "Password cannot exceed 20 characters",
                     },
-                    pattern: {
-                      value:
-                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                      message:
-                        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
-                    },
+                    // pattern: {
+                    //   value:
+                    //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                    //   message:
+                    //     "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+                    // },
                     onChange: (e) => setPassword(e.target.value),
                   })}
                   rightIcon={

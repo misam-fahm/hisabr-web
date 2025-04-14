@@ -62,15 +62,19 @@ const Home: FC = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const verifyToken = async () => {
-      const res: any = await sendApiRequest({
-        token: token
-      }, `auth/verifyToken`);
-      // res?.status !== 200 && router.replace('/login');
-      if (res?.status === 200) {
-        setIsVerifiedUser(true);
-        // const decoded = decodeToken(token + "");
-        // decoded && setUserData(decoded);
-      } else {
+      try {
+        const res: any = await sendApiRequest({
+          token: token
+        }, `auth/verifyToken`);
+        // res?.status !== 200 && router.replace('/login');
+        if (res?.status === 200) {
+          setIsVerifiedUser(true);
+          // const decoded = decodeToken(token + "");
+          // decoded && setUserData(decoded);
+        } else {
+          router.replace('/login');
+        }
+      } catch (error) {
         router.replace('/login');
       }
     };
