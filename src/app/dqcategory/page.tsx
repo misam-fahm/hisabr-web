@@ -781,12 +781,17 @@ const Sales: FC = () => {
               ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}`
               : "$0"}
           </p>
-          <p className="text-[11px] text-[#000000] font-semibold">
-            {Items?.qty_times_pieces?.toLocaleString() || "0.00"}pc
-          </p>
-          <p className="text-[11px] text-[#000000] font-semibold">
-            ${Items?.per_piece_price?.toFixed(2) || "0.00"}/pc
-          </p>
+          {Items?.qty_times_pieces > 0 && (
+    <p className="text-[11px] text-[#000000] font-semibold">
+      {Items.qty_times_pieces.toLocaleString()}pc
+    </p>
+  )}
+
+  {Items?.per_piece_price > 0 && (
+    <p className="text-[11px] text-[#000000] font-semibold">
+      ${Items.per_piece_price.toFixed(2)}/pc
+    </p>
+  )}
         </div>
       </div>
       {/* Adjusted circle positioning */}

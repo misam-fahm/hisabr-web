@@ -1,195 +1,221 @@
-import React, { useState, useEffect } from "react";
-import { Doughnut } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  ChartOptions,
-  Plugin,
-} from "chart.js";
+import React, { useState, useEffect } from 'react';
+import { Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-const TenderRevenueChart = ({ tenderData }: any) => {
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+interface PluginOptionsByType<TType extends ChartType> {
+  datalabels?: ChartDataLabelsOptions;
+}
 
-  // Calculate total revenue and percentages
-  const totalRevenue = tenderData?.reduce((sum: number, row: any) => sum + (row.payments || 0), 0) || 0;
-  const hasData = totalRevenue > 0;
+type ChartType = 'line' | 'bar' | 'radar' | 'doughnut' | 'pie' | 'polarArea' | 'bubble' | 'scatter';
 
-  const percentages = tenderData?.map((row: any) => {
-    const revenue = row.payments || 0;
-    return totalRevenue > 0 ? ((revenue / totalRevenue) * 100).toFixed(2) : 0;
-  }) || [];
+interface ChartDataLabelsOptions {
+  align?: 'start' | 'end' | 'center' | 'bottom' | 'left' | 'right' | 'top';
+  anchor?: 'start' | 'end' | 'center' | 'bottom' | 'left' | 'right' | 'top';
+  offset?: number;
+  clamp?: boolean;
+  clip?: boolean;
+  color?: string | ((context: any) => string);
+  font?: {
+    size?: number;
+  };
+  formatter?: (value: any, context: any) => string;
+  display?: boolean;
+}
+
+
+
+const TenderRevenueChart = ({ tenderData }) => {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    setIsMobile(mediaQuery.matches);
 
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
+    const handleResize = (e) => setIsMobile(e.matches);
+    mediaQuery.addEventListener('change', handleResize);
 
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-    };
+    return () => mediaQuery.removeEventListener('change', handleResize);
   }, []);
 
-  // Chart data
+  const totalRevenue = tenderData?.reduce((sum, row) => sum + (row.payments || 0), 0) || 0;
+  const hasData = totalRevenue > 0;
+
+  const adjustedData = hasData
+    ? tenderData.map((row) => ({
+        ...row,
+        payments: Math.max(row.payments || 0, totalRevenue * 0.01),
+      }))
+    : tenderData;
+
+  const topIndices = tenderData
+    .map((row, index) => ({ index, payments: row.payments }))
+    .sort((a, b) => b.payments - a.payments)
+    .slice(0, 6)
+    .map((item) => item.index);
+
+  const backgroundColors = [
+    '#00BFFF',
+    '#3CB371',
+    '#FFA500',
+    '#4B4B4B',
+    '#DAB777',
+    '#653C59',
+    '#1F77B4',
+    '#FF7F0E',
+    '#A05195',
+    '#D62728',
+    '#9467BD',
+    '#8C564B',
+    '#E377C2',
+    '#7F7F7F',
+    '#BCBD22',
+    '#17BECF',
+    '#005082',
+    '#A05195',
+    '#F28E2B',
+    '#76B7B2',
+  ];
+
   const data = hasData
     ? {
-        labels: tenderData.map((row: any) => row.tendername || "Unknown"),
+        labels: adjustedData.map((row) => row.tendername || 'Unknown'),
         datasets: [
           {
-            data: percentages.map((percentage: string) => Number(percentage) || 0),
-            backgroundColor: [
-              "#00BFFF", // Sales-like color
-              "#3CB371", // Profit-like color
-              "#4B4B4B", // Labour Cost-like color
-              "#DAB777", // Sales Tax-like color
-              "#653C597A", // Royalty-like color
-              "#FF5555", // Expenses-like color
-            ].slice(0, tenderData.length), // Match colors to the number of tenders
-            borderWidth: 2,
+            data: adjustedData.map((row) => row.payments),
+            backgroundColor: backgroundColors.slice(0, adjustedData.length),
+            borderWidth: 2.42,
+            borderColor: '#FFFFFF',
+            hoverOffset: 20,
+            hoverBorderWidth: 3,
+            hoverBorderColor: 'rgba(0, 0, 0, 0.5)',
+            radius: '70%',
           },
         ],
       }
     : {
-        labels: ["No Data Available"],
+        labels: ['No Data Available'],
         datasets: [
           {
             data: [100],
-            backgroundColor: ["#E0E0E0"],
-            borderWidth: 2,
+            backgroundColor: ['#E0E0E0'],
+            borderWidth: 2.42,
+            borderColor: '#FFFFFF',
+            hoverOffset: 0,
+            hoverBorderWidth: 0,
+            radius: '48%',
           },
         ],
       };
 
-  const options: ChartOptions<"doughnut"> = {
+  const options = {
     responsive: true,
+    maintainAspectRatio: false,
+    cutout: '68%',
     plugins: {
-      legend: {
-        display: false, // Disable default legend
-      },
-      tooltip: {
-        enabled: true,
+      legend: { display: false },
+      tooltip: { enabled: false },
+      datalabels: {
+        display: hasData && !isMobile,
+        color: (context) => backgroundColors[context.dataIndex % backgroundColors.length],
+        font: {
+          size: 14,
+        },
+        formatter: (value, context) => {
+          const index = context.dataIndex;
+          if (topIndices.includes(index)) {
+            const originalPayments = tenderData[index].payments;
+            const percentage = ((originalPayments / totalRevenue) * 100).toFixed(1);
+            const label = context.chart.data.labels[index];
+            return `${label.length > 10 ? label.slice(0, 10) + '...' : label}: ${percentage}%`;
+          }
+          return null;
+        },
+        align: 'end',
+        anchor: 'end',
+        offset: 8,
+        clamp: true,
+        clip: false,
       },
     },
-    cutout: "70%", // Donut hole size
-    layout: {
-      padding: {
-        left: 120,
-        right: 120,
-      },
+    onHover: (event, chartElement) => {
+      if (chartElement.length > 0) {
+        setHoveredIndex(chartElement[0].index);
+      } else {
+        setHoveredIndex(null);
+      }
     },
-  };
+    animation: { duration: 300 },
+  } as const;
 
- const centerTextPlugin: Plugin<"doughnut"> = {
-    id: "centerTextPlugin",
-    beforeDraw(chart) {
-      const { ctx, width, height } = chart;
-      ctx.save();
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      const centerX = width / 2;
-      const centerY = height / 2;
+  const renderCenterText = () => {
+    if (!hasData) {
+      return <p className="m-0 font-bold">No Data Available</p>;
+    }
 
-      // Display total amount without decimals
-      ctx.font = "bold 18px Arial";
-      ctx.fillStyle = "#000";
-      ctx.fillText(
-        `$${totalRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
-        centerX,
-        centerY
+    if (hoveredIndex === null) {
+      return (
+        <p className="m-0 font-bold" style={{ fontSize: '28px' }}>
+          ${Math.round(totalRevenue).toLocaleString()}
+        </p>
       );
-      ctx.restore();
-    },
-  };
+    }
 
-  // Custom plugin to display labels with lines
-  const customArrowsPlugin: Plugin<"doughnut"> = {
-    id: "customArrowsPlugin",
-    afterDatasetDraw(chart) {
-      if (isMobile) return;
+    const originalItem = tenderData[hoveredIndex];
+    const percentage = ((originalItem.payments / totalRevenue) * 100).toFixed(2);
+    const amount = Math.round(originalItem.payments).toLocaleString();
+    const label = originalItem.tendername || 'Unknown';
+    const maxLength = 'Delivery-GrubHub Integ'.length;
 
-      const { ctx, chartArea, data: chartData } = chart;
-      const meta = chart.getDatasetMeta(0);
+    if (label.length > maxLength) {
+      const words = label.split(' ');
+      let firstLine = '';
+      let secondLine = '';
+      let currentLine = '';
 
-      if (!ctx || !meta || !chartData) return;
+      for (const word of words) {
+        if ((currentLine + word).length <= maxLength) {
+          currentLine += (currentLine ? ' ' : '') + word;
+        } else {
+          if (!firstLine) {
+            firstLine = currentLine;
+            currentLine = word;
+          } else {
+            secondLine += (secondLine ? ' ' : '') + word;
+          }
+        }
+      }
+      if (!secondLine) secondLine = currentLine;
 
-      const centerX = (chartArea.left + chartArea.right) / 2;
-      const centerY = (chartArea.top + chartArea.bottom) / 2;
-      const outerRadius = Math.min(chartArea.width, chartArea.height) / 2;
+      return (
+        <div className="flex flex-col items-center space-y-1">
+          <p className="m-0 font-bold text-sm">{firstLine}</p>
+          <p className="m-0 font-bold text-sm">{secondLine}</p>
+          <p className="m-0 text-sm">{percentage}%</p>
+          <p className="m-0 text-sm">${amount}</p>
+        </div>
+      );
+    }
 
-      meta.data.forEach((arc, index) => {
-        const label = chartData.labels![index] as string;
-        const value = chartData.datasets[0].data[index] as number;
-
-        if (value === 0) return; // Skip if value is 0
-
-        const arcElement = arc as ArcElement;
-        const angle = (arcElement.startAngle + arcElement.endAngle) / 2;
-        const startX = centerX + Math.cos(angle) * (outerRadius * 0.9);
-        const startY = centerY + Math.sin(angle) * (outerRadius * 0.9);
-        const midX = centerX + Math.cos(angle) * outerRadius;
-        const midY = centerY + Math.sin(angle) * outerRadius;
-
-        let labelX = midX + (angle > Math.PI ? -50 : 50);
-        let labelY = midY;
-
-        ctx.beginPath();
-        ctx.moveTo(startX, startY);
-        ctx.lineTo(midX, midY);
-        ctx.strokeStyle = "#675660B8";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(midX, midY);
-        ctx.lineTo(labelX, labelY);
-        ctx.strokeStyle = "#675660B8";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.arc(startX, startY, 3, 0, 2 * Math.PI);
-        ctx.fillStyle = "#675660B8";
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(labelX, labelY, 3, 0, 2 * Math.PI);
-        ctx.fillStyle = "#675660B8";
-        ctx.fill();
-
-        ctx.save();
-        ctx.font = "500 12px Arial";
-        ctx.fillStyle = "#4A4A4A";
-        ctx.textAlign = angle > Math.PI ? "right" : "left";
-        ctx.fillText(label, labelX + (angle > Math.PI ? -5 : 5), labelY - 5);
-        ctx.restore();
-
-        ctx.save();
-        ctx.font = "700 12px Arial";
-        ctx.fillStyle = "#0A0A0A";
-        ctx.textAlign = angle > Math.PI ? "right" : "left";
-        ctx.fillText(`${value}%`, labelX + (angle > Math.PI ? -5 : 5), labelY + 15);
-        ctx.restore();
-      });
-    },
+    return (
+      <div className="flex flex-col items-center space-y-1">
+        <p className="m-0 font-bold text-sm">{label}</p>
+        <p className="m-0 text-sm">{percentage}%</p>
+        <p className="m-0 text-sm">${amount}</p>
+      </div>
+    );
   };
 
   return (
-    <main>
-      <div className="below-md:hidden w-[470px] h-[470px] tablet:w-[500px] tablet:h-[500px]">
-        <Doughnut
-          data={data}
-          options={options}
-          plugins={[centerTextPlugin, customArrowsPlugin]}
-        />
+    <div className="relative w-full h-[360px] md:h-[432px] mx-auto rounded-lg pt-8 pb-8 below-md:w-[430px] below-md:h-[430px]">
+      <Doughnut data={data} options={options} plugins={[ChartDataLabels]} />
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-base text-gray-800 max-w-[80%]">
+        {renderCenterText()}
       </div>
-   
-    </main>
+    </div>
   );
 };
 
