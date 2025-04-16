@@ -114,6 +114,7 @@ const Sales: FC = () => {
 
   const [subtotal, setSubtotal] = useState<number | null>(null);
   const [totalOrders, setTotalOrders] = useState<number>();
+  const [totalsalecount, setTotalSaleCount] = useState<number>(0);
   const [productTotal, setProductTotal] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
   const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
@@ -226,6 +227,7 @@ const Sales: FC = () => {
         const mergedCategories = mergeCategories(dqcategories);
         setSItems(mergedCategories);
         setTotalOrders(response?.data?.result?.totalorders);
+        setTotalSaleCount(response?.data?.result?.totalsalecount || 0);
       } else {
         setCustomToast({
           message: response?.message || "Failed to fetch sales.",
@@ -395,8 +397,8 @@ const Sales: FC = () => {
     return category &&
       category.totalextprice !== undefined &&
       category.totalextprice !== null
-      ? `$${Math.round(category.totalextprice).toLocaleString()}`
-      : `$0`;
+      ? Math.round(category.totalextprice)
+      : 0;
   };
 
   const mapData = () => {
@@ -429,6 +431,8 @@ const Sales: FC = () => {
     const values = data.map((category) => {
       if (category === "Store Number") return address?.storename || "";
       if (category === "Store Address") return address?.location || "";
+      if (category === "Transaction Count") return totalsalecount || 0;
+      if (category === "Ending Inventory") return Math.round(subtotal || 0);
       if (footer.includes(category)) return "$" + 0;
 
       // Use the original name to fetch the value
@@ -649,10 +653,10 @@ const Sales: FC = () => {
             <div className="flex flex-col gap-2">
               <p className="text-[14px] text-[#575F6DCC] font-bold">COGS</p>
               <p className="text-[18px] text-[#2D3748] font-bold">
-  {productTotal
-    ? `$${productTotal.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
-    : "$0"}
-</p>
+                {productTotal
+                  ? `$${productTotal.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+                  : "$0"}
+              </p>
             </div>
             {/* Uncomment and update if you want to add the circular count
     <div className="flex items-center justify-center bg-[#EFF6EFA1] rounded-full w-[60px] h-[60px]">
@@ -684,127 +688,109 @@ const Sales: FC = () => {
                   Ending Inventory
                 </p>
                 <p className="text-[18px] text-[#2D3748] font-bold">
-  ${subtotal.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-</p>
+                  $
+                  {subtotal.toLocaleString("en-US", {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  })}
+                </p>
               </div>
             </div>
           )}
         </div>
 
         <div className="grid grid-cols-5 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 items-stretch tablet:flex-wrap tablet:gap-3">
-          {Sitems?.map((Items: any, index: any) => (
+          {["DQ (Ice Cream)", "Food", "Cakes", "Beverage", "Donations"]
+            .filter((categoryName) => categoryName !== "Donations") // Filter out Donations
+            .map((categoryName, index) => {
+              // Find the item in Sitems that matches the categoryName
+              const item = Sitems?.find((i: any) => i.name === categoryName);
+
+              return (
+                <div
+                  key={index}
+                  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4 p-2 justify-between items-stretch"
+                >
+                  <div className="flex flex-col gap-2">
+                    <Tooltip
+                      position="left"
+                      text={categoryName?.length > 15 ? categoryName : ""}
+                    >
+                      <p className="text-[16px] text-[#575F6DCC] font-bold h-7">
+                        {categoryName?.length > 15
+                          ? categoryName.substring(0, 15) + "..."
+                          : categoryName || "--"}
+                      </p>
+                    </Tooltip>
+                    <p className="text-[20px] text-[#2D3748] font-bold">
+                      {item?.totalextprice
+                        ? `$${Math.round(item.totalextprice).toLocaleString()}`
+                        : "$0"}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+        <div className="grid grid-cols-5 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 mt-6 items-stretch tablet:flex-wrap tablet:gap-3">
+          {items?.map((Items: any, index: any) => (
             <div
               key={index}
-              className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4  p-2 justify-between items-stretch"
+              className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4 p-3 justify-between items-center w-full gap-6 relative"
             >
               <div className="flex flex-col gap-2">
+                {" "}
+                {/* Changed from gap-3 to gap-2 */}
                 <Tooltip
                   position="left"
-                  text={Items?.name?.length > 15 ? Items.name : ""}
+                  text={Items?.name?.length > 9 ? Items.name : ""} // Tooltip shows full name if longer than 9 characters
                 >
-                  <p className="text-[16px] text-[#575F6DCC] font-bold h-7">
-                    {" "}
-                    {Items?.name?.length > 15
-                      ? Items.name.substring(0, 15) + "..."
-                      : Items.name || "--"}
+                  <p className="text-[16px] text-[#575F6DCC] font-bold h-7 whitespace-nowrap">
+                    {Items?.name
+                      ? Items.name === "NF/NSA Bars (No sugar added)"
+                        ? "NF/NSA"
+                        : Items.name.length > 10
+                          ? `${Items.name.slice(0, 10)}..`
+                          : Items.name
+                      : "--"}
                   </p>
                 </Tooltip>
-                <p className="text-[20px] text-[#2D3748] font-bold">
-                  {Items?.totalextprice
-                    ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}`
-                    : "$00,000"}
-                </p>
-                {/* <p className="text-[11px] text-[#388E3C] font-semibold">
-                20%{" "}
-                <span className="text-[#575F6D] font-normal">
-                  increase in sales
-                </span>
-              </p> */}
+                <div className="w-[60px]">
+                  <p className="text-[16px] text-[#2D3748] font-bold text-left">
+                    {Items?.totalextprice
+                      ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}`
+                      : "$0"}
+                  </p>
+                </div>
+                {/* Align all 3 values in one line */}
+                <div className="flex flex-row gap-2 items-baseline">
+                  {Items?.qty_times_pieces > 0 && (
+                    <p className="text-[11px] text-[#000000] font-semibold">
+                      {Items.qty_times_pieces.toLocaleString()}pc
+                    </p>
+                  )}
+                  {Items?.per_piece_price > 0 && (
+                    <p className="text-[11px] text-[#000000] font-semibold">
+                      ${Items.per_piece_price.toFixed(2)}/
+                      {Items?.unit?.toLowerCase() === "piece" ||
+                      Items?.unit?.toLowerCase() === "pieces"
+                        ? "pcs"
+                        : Items?.unit || "unit"}
+                    </p>
+                  )}
+                </div>
               </div>
-            
+              {/* Horizontal right, vertical center */}
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <div className="flex items-center justify-center bg-[#0F1044] rounded-full w-[60px] h-[60px]">
+                  <p className="text-[21px] text-[#f0f1f0] font-bold">
+                    {Items.totalqty}
+                  </p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-5 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 mt-6 items-stretch tablet:flex-wrap tablet:gap-3">
-  {items?.map((Items: any, index: any) => (
-    <div
-      key={index}
-      className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4 p-3 justify-between items-center w-full gap-6 relative"
-    >
-      <div className="flex flex-col gap-6">
-        <Tooltip
-          position="left"
-          text={Items?.name?.length > 9 ? Items.name : ""} // Tooltip shows full name if longer than 9 characters
-        >
-          <p className="text-[16px] text-[#575F6DCC] font-bold h-7 whitespace-pre-wrap below-md:whitespace-nowrap">
-            {Items?.name
-              ? (() => {
-                  const words = Items.name.split(" ");
-                  if (words.length <= 1) {
-                    return Items.name;
-                  } else {
-                    let firstLine = "";
-                    let secondLine = "";
-                    let currentLength = 0;
-
-                    for (let i = 0; i < words.length; i++) {
-                      if (currentLength + words[i].length <= 10) {
-                        firstLine += words[i] + " ";
-                        currentLength += words[i].length + 1;
-                      } else {
-                        secondLine += words[i] + " ";
-                      }
-                    }
-
-                    // Trim extra spaces
-                    firstLine = firstLine.trim();
-                    secondLine = secondLine.trim();
-
-                    // Ensure the last word is on the second line if it doesn't fit
-                    if (secondLine === "" && firstLine.length > 10) {
-                      const lastSpaceIndex = firstLine.lastIndexOf(" ");
-                      firstLine = firstLine.substring(0, lastSpaceIndex);
-                      secondLine = firstLine.substring(lastSpaceIndex + 1);
-                    }
-
-                    return `${firstLine}\n${secondLine}`;
-                  }
-                })()
-              : "--"}
-          </p>
-        </Tooltip>
-
-        {/* Align all 3 values in one line */}
-        <div className="flex flex-row gap-4 items-baseline">
-          <p className="text-[16px] text-[#2D3748] font-bold">
-            {Items?.totalextprice
-              ? `$${Math.round(Items?.totalextprice)?.toLocaleString()}`
-              : "$0"}
-          </p>
-          {Items?.qty_times_pieces > 0 && (
-    <p className="text-[11px] text-[#000000] font-semibold">
-      {Items.qty_times_pieces.toLocaleString()}pc
-    </p>
-  )}
-
-  {Items?.per_piece_price > 0 && (
-    <p className="text-[11px] text-[#000000] font-semibold">
-      ${Items.per_piece_price.toFixed(2)}/pc
-    </p>
-  )}
-        </div>
-      </div>
-      {/* Adjusted circle positioning */}
-      <div className="absolute top-5 right-0 -translate-y-1/4 translate-x-[-10%]">
-        <div className="flex items-center justify-center bg-[#0F1044] rounded-full w-[60px] h-[60px]">
-          <p className="text-[21px] text-[#f0f1f0] font-bold">
-            {Items.totalqty}
-          </p>
-        </div>
-      </div>
-    </div>
-  ))}
-</div>
         {/* <div className="below-lg:hidden mb-8">
           <div className="flex flex-col">
             {data?.map((items,index)=> 
