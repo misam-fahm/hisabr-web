@@ -116,18 +116,11 @@ const Sales: FC = () => {
       accessorKey: "orders_count",
       header: () => <div className="text-right mr-10">Orders</div>,
       cell: (info) => (
-        <div className="text-right">{info.getValue() as number}</div>
+        <div className="text-center">{info.getValue() as number}</div>
       ),
       size: 80,
     },
-    {
-      accessorKey: "total_sales_count",
-      header: () => <div className="text-right mr-10">Quantity</div>,
-      cell: (info) => (
-        <div className="text-right mr-10">{info.getValue() as number}</div>
-      ),
-      size: 120,
-    },
+   
     {
       accessorKey: "total_item_sales_amt",
       header: () => <div className="text-right mr-12">Amount</div>,
@@ -140,7 +133,7 @@ const Sales: FC = () => {
     },
     {
       accessorKey: "net_sales_amt",
-      header: () => <div className="text-right ">Net</div>,
+      header: () => <div className="ext-right mr-12">Net</div>,
       cell: (info) => (
         <div className="text-right mr-10">
           ${(info.getValue() as number).toFixed(2)}
@@ -148,18 +141,18 @@ const Sales: FC = () => {
       ),
       size: 80,
     },
-    {
-      accessorKey: "order_average_amt",
-      header: () => <div className="text-right mr-8">Average</div>,
-      cell: (info) => {
-        const { total_item_sales_amt, total_sales_count } = info.row.original;
-        const average =
-          total_sales_count > 0 ? total_item_sales_amt / total_sales_count : 0;
+      {
+        accessorKey: "order_average_amt",
+        header: () => <div className="text-right mr-8">Average</div>,
+        cell: (info) => {
+          const { total_item_sales_amt, orders_count } = info.row.original;
+          const average =
+          orders_count > 0 ? total_item_sales_amt / orders_count : 0;
 
-        return <div className="text-right mr-8">${average.toFixed(2)}</div>;
+          return <div className="text-right mr-8">${average.toFixed(2)}</div>;
+        },
+        size: 120,
       },
-      size: 120,
-    },
     {
       accessorKey: "uploaddate",
       header: () => <div className="text-left "> Uploaded On</div>,
@@ -842,12 +835,7 @@ const Sales: FC = () => {
                       {items.orders_count}
                     </p>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <p className="text-[#808080] text-[13px]">Quantity</p>
-                    <p className="text-[#1A1A1A] text-[14px]">
-                      {items.total_sales_count}
-                    </p>
-                  </div>
+                  
                   <div className="flex justify-between text-sm">
                     <p className="text-[#808080] text-[13px]">Amount</p>
                     <p className="text-[#1A1A1A] text-[14px]">

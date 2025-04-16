@@ -46,7 +46,9 @@ const SalesKPI: FC = () => {
     message: "",
     type: "",
   });
-  const [showTooltip, setShowTooltip] = useState(false);
+  const [prevYearData, setPrevYearData] = useState<any>(null);
+const [prevPeriodData, setPrevPeriodData] = useState<any>(null);
+const [periodType, setPeriodType] = useState<"month" | "quarter" | "year" | "multi">("year");  const [showTooltip, setShowTooltip] = useState(false);
   const [operatExpAmt, setOperatExpAmt] = useState(0);
   const [royaltyAmt, setRoyaltyAmt] = useState(0);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
@@ -64,78 +66,87 @@ const SalesKPI: FC = () => {
     : 0;
   // const royalty = data?.net_sales ? Number((data.net_sales * 0.09 /).toFixed(2)) : 0;
   // const operatingExpenses = data?.labour_cost ? 109817 : 0;
-  const validProfit = profit < 0 ? 0 : profit;
-  const total: any =
-    labourCost + taxAmount + royaltyAmt + operatExpAmt + sales + validProfit;
+  const validProfit = data?.net_sales
+  ? Math.max(
+      Math.round(
+        data.net_sales -
+          data.producttotal -
+          data.labour_cost -
+          operatExpAmt -
+          royaltyAmt
+      ),
+      0
+    )
+  : 0;
 
-  // Prevent division by zero
-  const percentages =
-    total > 0
-      ? {
-          labourCost: ((labourCost / total) * 100).toFixed(2),
-          taxAmount: ((taxAmount / total) * 100).toFixed(2),
-          royalty: ((royaltyAmt / total) * 100).toFixed(2),
-          operatingExpenses: ((operatExpAmt / total) * 100).toFixed(2),
-          profit: ((validProfit / total) * 100).toFixed(2),
-          sales: ((sales / total) * 100).toFixed(2),
-        }
-      : {
-          labourCost: 0,
-          taxAmount: 0,
-          royalty: 0,
-          operatingExpenses: 0,
-          sales: 0,
-          profit: 0,
-        };
+// Calculate total excluding Sales
+const total = labourCost + taxAmount + royaltyAmt + operatExpAmt + validProfit;
 
-  const tableData = [
-    // { label: "Profit", amount: "10,000", per: "65%", color: "#53755599" },
-    {
-      label: "Profit",
-      amount: data?.net_sales
-        ? `${Math.round(data?.net_sales - data?.producttotal - data?.labour_cost - operatExpAmt - royaltyAmt)?.toLocaleString()}` // Calculate 9% and format it to 2 decimal places
-        : 0,
-      per: percentages.profit ? Number(percentages.profit) : 0,
-      color: "#3CB371",
-    },
-    {
-      label: "Sales",
-      amount: data?.net_sales
-        ? Math.round(data?.net_sales)?.toLocaleString()
-        : 0,
-      per: percentages.sales ? Number(percentages.sales) : 0,
-      color: "#00BFFF",
-    },
-    {
-      label: "Labour Cost",
-      amount: (Math.round(data?.labour_cost) || 0).toLocaleString(),
-      per: Number(percentages.labourCost),
-      color: "#4B4B4B",
-    },
-    {
-      label: "Sales Tax",
-      amount: (Math.round(data?.tax_amt) || 0).toLocaleString(),
-      per: Number(percentages.taxAmount),
-      color: "#DAB777",
-    },
-    {
-      label: "Royalty",
-      amount: (Math.round(royaltyAmt) || 0).toLocaleString(),
-      per: Number(percentages.royalty),
-      color: "#653C597A",
-    },
-    {
-      label: "Operating Expenses",
-      amount: data ? Math.round(operatExpAmt).toLocaleString() : 0,
-      per: percentages.operatingExpenses
-        ? Number(percentages.operatingExpenses)
-        : 0,
-      color: "#FF5555",
-    },
-    // { label: "COGS", amount: (Math.round(data.producttotal) || 0).toLocaleString(), per: "9.8%", color: "#AC8892" },
-  ];
+// Calculate raw percentages
+const percentages = total > 0
+  ? {
+      labourCost: (labourCost / total) * 100,
+      taxAmount: (taxAmount / total) * 100,
+      royalty: (royaltyAmt / total) * 100,
+      operatingExpenses: (operatExpAmt / total) * 100,
+      profit: (validProfit / total) * 100,
+    }
+  : {
+      labourCost: 0,
+      taxAmount: 0,
+      royalty: 0,
+      operatingExpenses: 0,
+      profit: 0,
+    };
 
-  useEffect(() => {
+// Normalize percentages to sum to 100%
+const percentageValues = [
+  percentages.labourCost,
+  percentages.taxAmount,
+  percentages.royalty,
+  percentages.operatingExpenses,
+  percentages.profit,
+];
+const percentageSum = percentageValues.reduce((sum, val) => sum + val, 0);
+const normalizedPercentages =
+  percentageSum > 0
+    ? percentageValues.map((val) => ((val / percentageSum) * 100).toFixed(2))
+    : percentageValues.map(() => "0.00");
+
+const tableData = [
+  {
+    label: "Profit",
+    amount: validProfit.toLocaleString(),
+    per: normalizedPercentages[4],
+    color: "#3CB371",
+  },
+  {
+    label: "Labour Cost",
+    amount: (Math.round(labourCost) || 0).toLocaleString(),
+    per: normalizedPercentages[0],
+    color: "#4B4B4B",
+  },
+  {
+    label: "Sales Tax",
+    amount: (Math.round(taxAmount) || 0).toLocaleString(),
+    per: normalizedPercentages[1],
+    color: "#DAB777",
+  },
+  {
+    label: "Royalty",
+    amount: (Math.round(royaltyAmt) || 0).toLocaleString(),
+    per: normalizedPercentages[2],
+    color: "#653C59",
+  },
+  {
+    label: "Operating Expenses",
+    amount: (Math.round(operatExpAmt) || 0).toLocaleString(),
+    per: normalizedPercentages[3],
+    color: "#FF5555",
+  },
+];
+
+useEffect(() => {
     if (startDate && endDate && selectedOption) {
       fetchData();
       // setIsFirstCall(false);
@@ -401,6 +412,191 @@ const SalesKPI: FC = () => {
     ...item,
     color: colorMapping[item.itemname] || "#CCCCCC", // Default color if not found
   }));
+// Helper function to determine the period type (year, quarter, month, or multi)
+const determinePeriodType = (start: Date, end: Date): "month" | "quarter" | "year" | "multi" => {
+  const startYear = start.getFullYear();
+  const endYear = end.getFullYear();
+  const startMonth = start.getMonth();
+  const endMonth = end.getMonth();
+  const startDay = start.getDate();
+  const endDay = end.getDate();
+
+  // Check if the range spans a full year (Jan 1 to Dec 31)
+  if (
+    startYear === endYear &&
+    startMonth === 0 &&
+    endMonth === 11 &&
+    startDay === 1 &&
+    endDay === 31
+  ) {
+    return "year";
+  }
+
+  // Calculate the number of months in the range
+  const monthDiff = (endYear - startYear) * 12 + (endMonth - startMonth) + 1;
+
+  // Check if the range is exactly one month
+  if (
+    monthDiff === 1 &&
+    startDay === 1 &&
+    new Date(endYear, endMonth + 1, 0).getDate() === endDay // Last day of the month
+  ) {
+    return "month";
+  }
+
+  // Check if the range is exactly one quarter (3 months)
+  if (monthDiff === 3) {
+    const quarterStartMonths = [0, 3, 6, 9]; // Jan, Apr, Jul, Oct
+    if (
+      quarterStartMonths.includes(startMonth) &&
+      startDay === 1 &&
+      new Date(endYear, endMonth + 1, 0).getDate() === endDay
+    ) {
+      return "quarter";
+    }
+  }
+
+  // If the range spans multiple months or quarters, return "multi"
+  return "multi";
+};
+
+// Helper function to calculate previous year and period dates
+const getPreviousDates = () => {
+  if (!startDate || !endDate) return { prevYearStart: null, prevYearEnd: null, prevPeriodStart: null, prevPeriodEnd: null, period: "multi" as const };
+
+  const period = determinePeriodType(startDate, endDate);
+  setPeriodType(period);
+
+  let prevYearStart: Date | null = null;
+  let prevYearEnd: Date | null = null;
+  let prevPeriodStart: Date | null = null;
+  let prevPeriodEnd: Date | null = null;
+
+  // Previous year is always the year before the startDate
+  prevYearStart = new Date(startDate.getFullYear() - 1, 0, 1); // Jan 1 of previous year
+  prevYearEnd = new Date(startDate.getFullYear() - 1, 11, 31); // Dec 31 of previous year
+
+  if (period === "month") {
+    // For a month, use the same month of the previous year
+    prevPeriodStart = new Date(startDate.getFullYear() - 1, startDate.getMonth(), 1);
+    prevPeriodEnd = new Date(startDate.getFullYear() - 1, startDate.getMonth() + 1, 0); // Last day of the same month last year
+  } else if (period === "quarter") {
+    // For a quarter, use the same quarter of the previous year
+    prevPeriodStart = new Date(startDate.getFullYear() - 1, startDate.getMonth(), 1);
+    prevPeriodEnd = new Date(endDate.getFullYear() - 1, endDate.getMonth() + 1, 0); // Last day of the same quarter last year
+  }
+  // For "year" or "multi", prevPeriodStart and prevPeriodEnd remain null to hide the previous period data
+
+  return { prevYearStart, prevYearEnd, prevPeriodStart, prevPeriodEnd, period };
+};
+
+// Fetch previous year and period data
+const fetchPreviousData = async () => {
+  if (!startDate || !endDate || !selectedOption) return;
+
+  const { prevYearStart, prevYearEnd, prevPeriodStart, prevPeriodEnd, period } = getPreviousDates();
+  if (!prevYearStart || !prevYearEnd) return;
+
+  try {
+    // Fetch previous year data
+    const prevYearResponse: any = await sendApiRequest({
+      mode: "getSalesKpi",
+      storeid: selectedOption?.id || 69,
+      startdate: format(prevYearStart, "yyyy-MM-dd"),
+      enddate: format(prevYearEnd, "yyyy-MM-dd"),
+    });
+
+    if (prevYearResponse?.status === 200) {
+      const prevYearSalesKpi = prevYearResponse?.data?.saleskpi[0] || {};
+      setPrevYearData(prevYearSalesKpi);
+
+      // Calculate operatExpAmt and royaltyAmt for previous year
+      const months = 12; // Full year
+      const payrollTaxAmt = prevYearSalesKpi.labour_cost * (prevYearSalesKpi.payrolltax / 100);
+      const yearExpAmt = prevYearSalesKpi.Yearly_expense;
+      const prevYearOperatExpAmt =
+        prevYearSalesKpi.additional_expense +
+        payrollTaxAmt +
+        yearExpAmt +
+        prevYearSalesKpi.monthly_expense * months || 0;
+      const prevYearRoyaltyAmt =
+        prevYearSalesKpi.net_sales * (prevYearSalesKpi.royalty / 100 || 0.09) || 0;
+
+      // Store these values in prevYearData or a separate state if needed
+      setPrevYearData((prev: any) => ({
+        ...prev,
+        operatExpAmt: prevYearOperatExpAmt,
+        royaltyAmt: prevYearRoyaltyAmt,
+      }));
+    }
+
+    // Fetch previous period data (month or quarter) only if period is "month" or "quarter"
+    if (prevPeriodStart && prevPeriodEnd && (period === "month" || period === "quarter")) {
+      const prevPeriodResponse: any = await sendApiRequest({
+        mode: "getSalesKpi",
+        storeid: selectedOption?.id || 69,
+        startdate: format(prevPeriodStart, "yyyy-MM-dd"),
+        enddate: format(prevPeriodEnd, "yyyy-MM-dd"),
+      });
+
+      if (prevPeriodResponse?.status === 200) {
+        const prevPeriodSalesKpi = prevPeriodResponse?.data?.saleskpi[0] || {};
+        setPrevPeriodData(prevPeriodSalesKpi);
+
+        // Calculate operatExpAmt and royaltyAmt for previous period
+        const months = period === "month" ? 1 : 3; // 1 for month, 3 for quarter
+        const payrollTaxAmt = prevPeriodSalesKpi.labour_cost * (prevPeriodSalesKpi.payrolltax / 100);
+        const yearExpAmt = (prevPeriodSalesKpi.Yearly_expense / 12) * months;
+        const prevPeriodOperatExpAmt =
+          prevPeriodSalesKpi.additional_expense +
+          payrollTaxAmt +
+          yearExpAmt +
+          prevPeriodSalesKpi.monthly_expense * months || 0;
+        const prevPeriodRoyaltyAmt =
+          prevPeriodSalesKpi.net_sales * (prevPeriodSalesKpi.royalty / 100 || 0.09) || 0;
+
+        // Store these values in prevPeriodData or a separate state if needed
+        setPrevPeriodData((prev: any) => ({
+          ...prev,
+          operatExpAmt: prevPeriodOperatExpAmt,
+          royaltyAmt: prevPeriodRoyaltyAmt,
+        }));
+      } else {
+        setPrevPeriodData({}); // Clear previous period data if fetch fails
+      }
+    } else {
+      setPrevPeriodData({}); // Clear previous period data for "year" or "multi" selections
+    }
+  } catch (error) {
+    console.error("Error fetching previous data:", error);
+    setCustomToast({
+      message: "Error fetching previous period data",
+      type: "error",
+    });
+    setPrevPeriodData({}); // Clear previous period data on error
+  }
+};
+
+const calculateProfit = (data: any): number => {
+  if (!data?.net_sales) return 0;
+  const profit = Math.round(
+    data.net_sales -
+      (data.producttotal || 0) -
+      (data.labour_cost || 0) -
+      (data.operatExpAmt || 0) -
+      (data.royaltyAmt || 0)
+  );
+  return profit < 0 ? 0 : profit;
+};
+
+// Update useEffect to fetch previous data when startDate, endDate, or selectedOption changes
+useEffect(() => {
+  if (startDate && endDate && selectedOption) {
+    fetchData();
+    fetchDataForTender();
+    fetchPreviousData();
+  }
+}, [startDate, endDate, selectedOption]);
 
   return (
     isVerifiedUser && (
@@ -450,98 +646,113 @@ const SalesKPI: FC = () => {
           </div>
 
           {/* grid 1 */}
-          <div className="grid grid-cols-4 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3  pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
-            <div
-              className="flex flex-row bg-[#FFFFFF] cursor-pointer rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
-              onClick={() => router.push("/sales")}
-            >
-              <div>
-                <p className="text-[14px] text-[#575F6DCC] font-medium">
-                  Sales
-                </p>
-                <p className="text-[16px] text-[#2D3748] font-bold">
-                  {data?.net_sales
-                    ? `$${Math.round(data?.net_sales)?.toLocaleString()}`
-                    : "$00,000"}
-                </p>
-                {/* <p className="text-[11px] text-[#388E3C] font-semibold">
-                20%{" "}
-                <span className="text-[#575F6D] font-normal">
-                  increase in sales
-                </span>
-              </p> */}
-              </div>
-              <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-                <img src="./images/saleskpisales.svg" />
-              </div>
-            </div>
+<div className="grid grid-cols-4 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
+<div
+    className="flex flex-row bg-[#FFFFFF] cursor-pointer rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
+    onClick={() => router.push("/sales")}
+  >
+    <div>
+      <p className="text-[14px] text-[#575F6DCC] font-medium">Net Sales</p>
+      <p className="text-[16px] text-[#2D3748] font-bold">
+        {data?.net_sales
+          ? `$${Math.round(data?.net_sales)?.toLocaleString()}`
+          : "$00,000"}
+      </p>
+      <p className="text-[11px] text-[#575F6D] font-normal">
+        Prev. Yr. {prevYearData?.net_sales
+          ? `$${Math.round(prevYearData.net_sales).toLocaleString()}`
+          : "$0"}
+        {periodType !== "year" && periodType !== "multi" && prevPeriodData?.net_sales && (
+          <>
+            {" "}
+            {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+            {`$${Math.round(prevPeriodData.net_sales).toLocaleString()}`}
+          </>
+        )}
+      </p>
+    </div>
+    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpisales.svg" />
+    </div>
+  </div>
 
-            <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
-              <div className="w-[75%]">
-                <p className="text-[14px] text-[#575F6DCC] font-medium">
-                  Profit
-                </p>
-                <p className="text-[16px] text-[#2D3748] font-bold">
-                  {data?.net_sales
-                    ? `$${Math.round(data?.net_sales - data?.producttotal - data?.labour_cost - operatExpAmt - royaltyAmt)?.toLocaleString()}` // Calculate 9% and format it to 2 decimal places
-                    : "$00,000"}
-                </p>
-                {/* <p className="text-[11px] text-[#388E3C] font-semibold ">
-                65%{" "}
-                <span className="text-[#575F6D] font-normal">
-                  of total revenue
-                </span>
-              </p> */}
-              </div>
-              <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-                <img src="./images/saleskpiprofit.svg" />
-              </div>
-            </div>
+  <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
+  <div className="w-[75%]">
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {data?.net_sales
+        ? `$${validProfit.toLocaleString()}`
+        : "$00,000"}
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
+      Pr.Yr. {prevYearData?.net_sales
+        ? `$${calculateProfit(prevYearData).toLocaleString()}`
+        : "$0"}
+      {periodType !== "year" && periodType !== "multi" && prevPeriodData?.net_sales && (
+        <>
+          {" "}
+          {periodType === "quarter" ? "Pr.Qr." : "Pr.Mo."}{" "}
+          {`$${calculateProfit(prevPeriodData).toLocaleString()}`}
+        </>
+      )}
+    </p>
+  </div>
+  <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+    <img src="./images/saleskpiprofit.svg" />
+  </div>
+</div>
 
-            <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
-              <div className="w-[75%]">
-                <p className="text-[14px] text-[#575F6DCC] font-medium">
-                  Customer Count
-                </p>
-                <p className="text-[16px] text-[#2D3748] font-bold">
-                  {data?.customer_count
-                    ? `${Math.round(data?.customer_count)?.toLocaleString()}`
-                    : "00,000"}
-                </p>
-                {/* <p className="text-[11px] text-[#388E3C] font-semibold">
-                40%{" "}
-                <span className="text-[#575F6D] font-normal">
-                  growth in Customers
-                </span>
-              </p> */}
-              </div>
-              <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-                <img src="./images/saleskpicustomercount.svg" />
-              </div>
-            </div>
+  <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
+    <div className="w-[75%]">
+      <p className="text-[14px] text-[#575F6DCC] font-medium">Customer Count</p>
+      <p className="text-[16px] text-[#2D3748] font-bold">
+        {data?.customer_count
+          ? `${Math.round(data.customer_count)?.toLocaleString()}`
+          : "00,000"}
+      </p>
+      <p className="text-[11px] text-[#575F6D] font-normal">
+        Prev. Yr. {prevYearData?.customer_count
+          ? `${Math.round(prevYearData.customer_count).toLocaleString()}`
+          : "0"}
+        {periodType !== "year" && periodType !== "multi" && prevPeriodData?.customer_count && (
+          <>
+            {" "}
+            {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+            {`$${Math.round(prevPeriodData.customer_count).toLocaleString()}`}
+          </>
+        )}
+      </p>
+    </div>
+    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpicustomercount.svg" />
+    </div>
+  </div>
 
-            <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
-              <div>
-                <p className="text-[14px] text-[#575F6DCC] font-medium">
-                  Labour Cost
-                </p>
-                <p className="text-[16px] text-[#2D3748] font-bold">
-                  {data?.labour_cost
-                    ? `$${Math.round(data?.labour_cost)?.toLocaleString()}`
-                    : "$00,000"}
-                </p>
-                {/* <p className="text-[11px] text-[#388E3C] font-semibold">
-                16%{" "}
-                <span className="text-[#575F6D] font-normal">
-                  of total expenses
-                </span>
-              </p> */}
-              </div>
-              <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-                <img src="./images/labour.svg" />
-              </div>
-            </div>
-
+  <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
+    <div>
+      <p className="text-[14px] text-[#575F6DCC] font-medium">Labour Cost</p>
+      <p className="text-[16px] text-[#2D3748] font-bold">
+        {data?.labour_cost
+          ? `$${Math.round(data.labour_cost)?.toLocaleString()}`
+          : "$00,000"}
+      </p>
+      <p className="text-[11px] text-[#575F6D] font-normal">
+        Prev. Yr. {prevYearData?.labour_cost
+          ? `$${Math.round(prevYearData.labour_cost).toLocaleString()}`
+          : "$0"}
+        {periodType !== "year" && periodType !== "multi" && prevPeriodData?.labour_cost && (
+          <>
+            {" "}
+            {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+            {`$${Math.round(prevPeriodData.labour_cost).toLocaleString()}`}
+          </>
+        )}
+      </p>
+    </div>
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/labour.svg" />
+    </div>
+  </div>
             {/* grid 2 */}
             <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
               <div>
@@ -643,8 +854,8 @@ const SalesKPI: FC = () => {
                 Total Revenue
                 </p>
                 <p className="text-[16px] text-[#2D3748] font-bold">
-                  {0
-                    ? `$${Math.round(0)?.toLocaleString()}`
+                  {data?.revenue
+                    ? `$${Math.round(data?.revenue)?.toLocaleString()}`
                     : "$00,000"}
                 </p>
                 {/* <p className="text-[11px] text-[#388E3C] font-semibold">
@@ -727,40 +938,50 @@ const SalesKPI: FC = () => {
                 <DonutChart values={data} operatExpAmt={operatExpAmt} />
               </div>
               <div className="overflow-x-auto w-[50%] custom-scrollbar">
-                <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
-                  <thead>
-                    <tr>
-                      <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-left border border-solid border-blueGray-300 py-1 text-sm  border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium ">
-                        Label
-                      </th>
-                      <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-right border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium ">
-                        Amount
-                      </th>
-                      <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-right border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
-                        %
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tableData.map((row: any, index) => (
-                      <tr key={index}>
-                        <td className="border-t-0 px-6 below-md:px-2 text-left border-l-0 border-r-0 text-xs whitespace-nowrap p-2 flex items-center text-[#404040] text-[13px]">
-                          <div
-                            className="w-3 h-3 rounded-full mr-2"
-                            style={{ backgroundColor: row.color }}
-                          ></div>
-                          {row.label}
-                        </td>
-                        <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-right border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-                          $ {row.amount}
-                        </td>
-                        <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-right border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-                          {row.per.toFixed(2)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+          <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
+  <thead>
+    <tr>
+      <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-left border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
+        Label
+      </th>
+      <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-right border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
+        Amount
+      </th>
+      <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-right border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
+        %
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+  {tableData && tableData.length > 0 ? (
+    tableData
+      .filter((row: any) => row.label !== "Sales")
+      .map((row: any, index: number) => (
+        <tr key={index}>
+          <td className="border-t-0 px-6 below-md:px-2 text-left border-l-0 border-r-0 text-xs whitespace-nowrap p-2 flex items-center text-[#404040] text-[13px]">
+            <div
+              className="w-3 h-3 rounded-full mr-2"
+              style={{ backgroundColor: row.color || "#CCCCCC" }}
+            ></div>
+            {row.label || "N/A"}
+          </td>
+          <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-right border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+            ${row.amount || "0"}
+          </td>
+          <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-right border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+            {row.per ? `${Number(row.per).toFixed(2)}%` : "0.00%"}
+          </td>
+        </tr>
+      ))
+  ) : (
+    <tr>
+      <td colSpan={3} className="text-center py-4 text-[#404040] text-[14px]">
+        No data available
+      </td>
+    </tr>
+  )}
+</tbody>
+</table>
               </div>
             </div>
           </div>
