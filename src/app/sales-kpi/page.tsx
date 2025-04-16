@@ -928,7 +928,15 @@ useEffect(() => {
               </div>
             </div>
           </div>
-
+          <div>
+          <p className="text-[14px] text-[#000000cc] font-bold pb-0 pl-8 pt-4">
+  Average Order: {data?.avg_order
+    ? `$${Math.round(data?.avg_order)?.toLocaleString()}`
+    : "$00,000"}
+</p>
+                
+             
+              </div>
           <div className="flex flex-col below-md:flex-col tablet:flex-col justify-between rounded-lg below-md:mb-6 bg-white mt-6 below-md:mt-3 below-md:mx-3 shadow-md ml-6 mr-6">
             <div className="w-full text-left font-bold mx-4 mt-6 text-[16px] text-[#334155]">
               Expense Distribution
