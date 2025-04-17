@@ -23,9 +23,10 @@ type CashReconciliationFormInputs = {
 interface JsonData {
   mode: string;
   storeid: number | null;
-  recdate: string;
-  systembalance: number | null;
-  actualbalance: number | null;
+  recdate?: string;
+  salesdate?: string;
+  systembalance?: number | null;
+  actualbalance?: number | null;
 }
 
 const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => {
@@ -38,7 +39,7 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
       actualBalance: null,
     },
   });
-  
+
   const { setValue, watch, handleSubmit, register, formState: { errors } } = methods;
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -52,6 +53,7 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
   });
 
   const currentDate = watch("date");
+  const storeId = watch("storeId");
   const systemBalance = watch("systemBalance");
   const actualBalance = watch("actualBalance");
 
@@ -95,34 +97,60 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
     }
   }, []);
 
-const getUserStore = async () => {
-  try {
-    const response = await sendApiRequest({ mode: "getUserStore" });
-    if (response?.status === 200) {
-      const storeList = response?.data?.stores || [];
-      setStores(storeList);
+  const getUserStore = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getUserStore" });
+      if (response?.status === 200) {
+        const storeList = response?.data?.stores || [];
+        setStores(storeList);
 
-      // Automatically select the first store if none is preselected
-      const defaultStore = SelectedStore || storeList[0];
-      if (defaultStore) {
-        setSelectedStore(defaultStore);
-        setValue("store", defaultStore.name);
-        setValue("storeId", defaultStore.id);
+        const defaultStore = SelectedStore || storeList[0];
+        if (defaultStore) {
+          setSelectedStore(defaultStore);
+          setValue("store", defaultStore.name);
+          setValue("storeId", defaultStore.id);
+        }
+      } else {
+        handleError(response?.message);
       }
-    } else {
-      handleError(response?.message);
+    } catch (error) {
+      console.error("Error fetching stores:", error);
     }
-  } catch (error) {
-    console.error("Error fetching stores:", error);
-  }
-};
-
+  };
 
   useEffect(() => {
     if (isVerifiedUser) {
       getUserStore();
     }
   }, [isVerifiedUser]);
+
+  // Fetch system balance when storeId or date changes
+  const fetchSystemBalance = async () => {
+    if (!storeId || !currentDate) return;
+
+    const jsonData: JsonData = {
+      mode: "getCashTendersByStore",
+      storeid: storeId,
+      salesdate: format(currentDate, "yyyy-MM-dd"),
+    };
+
+    try {
+      const response: any = await sendApiRequest(jsonData);
+      if (response?.status === 200 && response?.data?.Cashamt?.length > 0) {
+        const cashAmount = response.data.Cashamt[0]?.total || 0;
+        setValue("systemBalance", Number(cashAmount), { shouldValidate: true });
+      } else {
+        setValue("systemBalance", 0, { shouldValidate: true });
+      }
+    } catch (error) {
+      console.error("Error fetching system balance:", error);
+      setValue("systemBalance", 0, { shouldValidate: true });
+    }
+  };
+
+  useEffect(() => {
+    fetchSystemBalance();
+  }, [storeId, currentDate]);
 
   const openModal = () => {
     setIsOpen(true);
@@ -149,26 +177,27 @@ const getUserStore = async () => {
       mode: "insertCashReconciliation",
       storeid: Number(data.storeId),
       recdate: format(data.date || new Date(), "yyyy-MM-dd"),
-      systembalance: Number(data.systemBalance),
-      actualbalance: Number(data.actualBalance),
+      systembalance: Number(data.systemBalance) || 0,
+      actualbalance: Number(data.actualBalance) || 0,
     };
 
     try {
       const result: any = await sendApiRequest(jsonData);
       const { status } = result;
-      
+
       setToast({
-        message: status === 200 
-          ? "Cash Reconciliation added successfully!" 
+        message: status === 200
+          ? "Cash Reconciliation added successfully!"
           : result.message || "Failed to add reconciliation.",
         type: status === 200 ? "success" : "error",
       });
 
       if (status === 200) {
+        setAddReconciliation(true); // Notify parent to refresh data
         closeModal();
-        setAddReconciliation(true); // Notify parent component to refresh data
       }
     } catch (error: any) {
+      console.error("Error adding reconciliation:", error);
       setToast({
         message: error?.message || "An error occurred while adding reconciliation.",
         type: "error",
@@ -178,10 +207,7 @@ const getUserStore = async () => {
 
   return (
     <>
-      <ToastNotification
-        message={toast.message}
-        type={toast.type}
-      />
+      <ToastNotification message={toast.message} type={toast.type} />
       <div className="hidden below-md:block sticky">
         <button
           onClick={openModal}
@@ -211,12 +237,7 @@ const getUserStore = async () => {
           Add Reconciliation
         </button>
       </div>
-      <Dialog
-        open={isOpen}
-        as="div"
-        className="relative z-50"
-        onClose={closeModal}
-      >
+      <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>
         <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="w-[335px] h-auto below-md:w-[94%] below-md:h-[450px] px-6 below-md:px-4 py-6 bg-white rounded-lg shadow-lg flex flex-col">
@@ -269,7 +290,7 @@ const getUserStore = async () => {
                     errors={errors.date?.message}
                   />
 
-                  {/* System Balance Field */}
+                  {/* System Balance Field (Read-Only) */}
                   <InputField
                     type="number"
                     label="System Balance"
@@ -277,13 +298,13 @@ const getUserStore = async () => {
                     labelBackgroundColor="bg-white"
                     textColor="text-[#636363]"
                     value={systemBalance ?? ""}
+                    readOnly // Make the field read-only
                     {...register("systemBalance", {
                       required: "System Balance is required",
                       min: { value: 0, message: "System Balance must be positive" },
                     })}
-                    onChange={(e) => setValue("systemBalance", e.target.value ? Number(e.target.value) : null)}
                     errors={errors.systemBalance}
-                    placeholder="Enter System Balance"
+                    placeholder="System Balance"
                     variant="outline"
                   />
 
@@ -299,7 +320,9 @@ const getUserStore = async () => {
                       required: "Actual Balance is required",
                       min: { value: 0, message: "Actual Balance must be positive" },
                     })}
-                    onChange={(e) => setValue("actualBalance", e.target.value ? Number(e.target.value) : null)}
+                    onChange={(e) =>
+                      setValue("actualBalance", e.target.value ? Number(e.target.value) : null)
+                    }
                     errors={errors.actualBalance}
                     placeholder="Enter Actual Balance"
                     variant="outline"

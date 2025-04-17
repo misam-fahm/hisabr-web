@@ -649,8 +649,9 @@ useEffect(() => {
           </div>
 
           {/* grid 1 */}
-<div className="grid grid-cols-4 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
-<div
+          <div className="grid grid-cols-4 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
+  {/* Net Sales Card */}
+  <div
     className="flex flex-row bg-[#FFFFFF] cursor-pointer rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
     onClick={() => router.push("/sales")}
   >
@@ -662,49 +663,61 @@ useEffect(() => {
           : "$00,000"}
       </p>
       <p className="text-[11px] text-[#575F6D] font-normal">
-        Prev. Yr. {prevYearData?.net_sales
-          ? `$${Math.round(prevYearData.net_sales).toLocaleString()}`
-          : "$0"}
-        {periodType !== "year" && periodType !== "multi" && prevPeriodData?.net_sales && (
-          <>
-            {" "}
-            {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-            {`$${Math.round(prevPeriodData.net_sales).toLocaleString()}`}
-          </>
-        )}
+        <span>
+          Prev. Yr.{" "}
+          {prevYearData?.net_sales
+            ? `$${Math.round(prevYearData.net_sales).toLocaleString()}`
+            : "$0"}
+        </span>
+        <br />
+        {periodType !== "year" &&
+          periodType !== "multi" &&
+          prevPeriodData?.net_sales && (
+            <span>
+              {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+              {`$${Math.round(prevPeriodData.net_sales).toLocaleString()}`}
+            </span>
+          )}
       </p>
     </div>
-    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
       <img src="./images/saleskpisales.svg" />
     </div>
   </div>
 
+  {/* Profit Card */}
   <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
-  <div className="w-[75%]">
-    <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
-    <p className="text-[16px] text-[#2D3748] font-bold">
-      {data?.net_sales
-        ? `$${validProfit.toLocaleString()}`
-        : "$00,000"}
-    </p>
-    <p className="text-[11px] text-[#575F6D] font-normal">
-      Pr.Yr. {prevYearData?.net_sales
-        ? `$${calculateProfit(prevYearData).toLocaleString()}`
-        : "$0"}
-      {periodType !== "year" && periodType !== "multi" && prevPeriodData?.net_sales && (
-        <>
-          {" "}
-          {periodType === "quarter" ? "Pr.Qr." : "Pr.Mo."}{" "}
-          {`$${calculateProfit(prevPeriodData).toLocaleString()}`}
-        </>
-      )}
-    </p>
+    <div className="w-[75%]">
+      <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
+      <p className="text-[16px] text-[#2D3748] font-bold">
+        {data?.net_sales
+          ? `$${validProfit.toLocaleString()}`
+          : "$00,000"}
+      </p>
+      <p className="text-[11px] text-[#575F6D] font-normal">
+        <span>
+        Prev. Yr.{" "}
+          {prevYearData?.net_sales
+            ? `$${calculateProfit(prevYearData).toLocaleString()}`
+            : "$0"}
+        </span>
+        <br />
+        {periodType !== "year" &&
+          periodType !== "multi" &&
+          prevPeriodData?.net_sales && (
+            <span>
+              {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+              {`$${calculateProfit(prevPeriodData).toLocaleString()}`}
+            </span>
+          )}
+      </p>
+    </div>
+    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+      <img src="./images/saleskpiprofit.svg" />
+    </div>
   </div>
-  <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-    <img src="./images/saleskpiprofit.svg" />
-  </div>
-</div>
 
+  {/* Customer Count Card */}
   <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
     <div className="w-[75%]">
       <p className="text-[14px] text-[#575F6DCC] font-medium">Customer Count</p>
@@ -714,23 +727,29 @@ useEffect(() => {
           : "00,000"}
       </p>
       <p className="text-[11px] text-[#575F6D] font-normal">
-        Prev. Yr. {prevYearData?.customer_count
-          ? `${Math.round(prevYearData.customer_count).toLocaleString()}`
-          : "0"}
-        {periodType !== "year" && periodType !== "multi" && prevPeriodData?.customer_count && (
-          <>
-            {" "}
-            {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-            {`$${Math.round(prevPeriodData.customer_count).toLocaleString()}`}
-          </>
-        )}
+        <span>
+          Prev. Yr.{" "}
+          {prevYearData?.customer_count
+            ? `${Math.round(prevYearData.customer_count).toLocaleString()}`
+            : "0"}
+        </span>
+        <br />
+        {periodType !== "year" &&
+          periodType !== "multi" &&
+          prevPeriodData?.customer_count && (
+            <span>
+              {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+              {`${Math.round(prevPeriodData.customer_count).toLocaleString()}`}
+            </span>
+          )}
       </p>
     </div>
-    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
       <img src="./images/saleskpicustomercount.svg" />
     </div>
   </div>
 
+  {/* Labour Cost Card */}
   <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
     <div>
       <p className="text-[14px] text-[#575F6DCC] font-medium">Labour Cost</p>
@@ -740,196 +759,292 @@ useEffect(() => {
           : "$00,000"}
       </p>
       <p className="text-[11px] text-[#575F6D] font-normal">
-        Prev. Yr. {prevYearData?.labour_cost
-          ? `$${Math.round(prevYearData.labour_cost).toLocaleString()}`
-          : "$0"}
-        {periodType !== "year" && periodType !== "multi" && prevPeriodData?.labour_cost && (
-          <>
-            {" "}
-            {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-            {`$${Math.round(prevPeriodData.labour_cost).toLocaleString()}`}
-          </>
-        )}
+        <span>
+          Prev. Yr.{" "}
+          {prevYearData?.labour_cost
+            ? `$${Math.round(prevYearData.labour_cost).toLocaleString()}`
+            : "$0"}
+        </span>
+        <br />
+        {periodType !== "year" &&
+          periodType !== "multi" &&
+          prevPeriodData?.labour_cost && (
+            <span>
+              {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+              {`$${Math.round(prevPeriodData.labour_cost).toLocaleString()}`}
+            </span>
+          )}
       </p>
     </div>
-    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
       <img src="./images/labour.svg" />
     </div>
   </div>
+
             {/* grid 2 */}
-            <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
-              <div>
-                <p className="text-[14px] text-[#575F6DCC] font-medium">
-                  Sales Tax
-                </p>
-                <p className="text-[16px] text-[#2D3748] font-bold">
-                  {data?.tax_amt
-                    ? `$${Math.round(data?.tax_amt)?.toLocaleString()}`
-                    : "$00,000"}
-                </p>
-                {/* <p className="text-[11px] text-[#388E3C] font-semibold">
-                8.6%{" "}
-                <span className="text-[#575F6D] font-normal">
-                  of total expenses
-                </span>
-              </p> */}
-              </div>
-              <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-                <img src="./images/saleskpisalestax.svg" />
-              </div>
-            </div>
+{/* Sales Tax */}
+<div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Sales Tax</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {data?.tax_amt
+        ? `$${Math.round(data?.tax_amt)?.toLocaleString()}`
+        : "$00,000"}
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
+      <span>
+        Prev. Yr.{" "}
+        {prevYearData?.tax_amt
+          ? `$${Math.round(prevYearData.tax_amt).toLocaleString()}`
+          : "$0"}
+      </span>
+      <br />
+      {periodType !== "year" &&
+        periodType !== "multi" &&
+        prevPeriodData?.tax_amt && (
+          <span>
+            {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+            {`$${Math.round(prevPeriodData.tax_amt).toLocaleString()}`}
+          </span>
+        )}
+    </p>
+  </div>
+  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/saleskpisalestax.svg" />
+  </div>
+</div>
 
-            <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
-              <div>
-                <p className="text-[14px] text-[#575F6DCC] font-medium">
-                  Royalty
-                </p>
-                <p className="text-[16px] text-[#2D3748] font-bold">
-                  {royaltyAmt
-                    ? `$${Math.round(royaltyAmt)?.toLocaleString()}` // Calculate 9% and format it to 2 decimal places
-                    : "$00,000"}
-                </p>
-                {/* <p className="text-[11px] text-[#388E3C] font-semibold">
-                9.0%{" "}
-                <span className="text-[#575F6D] font-normal">
-                  of total expenses
-                </span>
-              </p> */}
-              </div>
-              <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-                <img src="./images/saleskpiroyalty.svg" />
-              </div>
-            </div>
+{/* Royalty */}
+<div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Royalty</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {royaltyAmt
+        ? `$${Math.round(royaltyAmt)?.toLocaleString()}`
+        : "$00,000"}
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
+      <span>
+        Prev. Yr.{" "}
+        {prevYearData?.royaltyAmt
+          ? `$${Math.round(prevYearData.royaltyAmt).toLocaleString()}`
+          : "$0"}
+      </span>
+      <br />
+      {periodType !== "year" &&
+        periodType !== "multi" &&
+        prevPeriodData?.royaltyAmt && (
+          <span>
+            {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+            {`$${Math.round(prevPeriodData.royaltyAmt).toLocaleString()}`}
+          </span>
+        )}
+    </p>
+  </div>
+  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/saleskpiroyalty.svg" />
+  </div>
+</div>
 
-            <div
-              className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
-              onClick={() => router.push("/expenses")}
-            >
-              <div>
-                <p className="text-[14px] text-[#575F6DCC] font-medium">
-                  Operating Expenses
-                </p>
-                <p className="text-[16px] text-[#2D3748] font-bold">
-                  {operatExpAmt
-                    ? `$${Math.round(operatExpAmt)?.toLocaleString()} ` // Calculate 9% and format it to 2 decimal places
-                    : "$000,000"}
-                </p>
-                {/* <p className="text-[11px] text-[#388E3C] font-semibold">
-                0%{" "}
-                <span className="text-[#575F6D] font-normal">
-                  of total expenses
-                </span>
-              </p> */}
-              </div>
+{/* Operating Expenses */}
+<div
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={() => router.push("/expenses")}
+>
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">
+      Operating Expenses
+    </p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {operatExpAmt
+        ? `$${Math.round(operatExpAmt)?.toLocaleString()}`
+        : "$000,000"}
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
+      <span>
+        Prev. Yr.{" "}
+        {prevYearData?.operatExpAmt
+          ? `$${Math.round(prevYearData.operatExpAmt).toLocaleString()}`
+          : "$0"}
+      </span>
+      <br />
+      {periodType !== "year" &&
+        periodType !== "multi" &&
+        prevPeriodData?.operatExpAmt && (
+          <span>
+            {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+            {`$${Math.round(prevPeriodData.operatExpAmt).toLocaleString()}`}
+          </span>
+        )}
+    </p>
+  </div>
+  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/saleskpioperatingexpenses.svg" />
+  </div>
+</div>
 
-              <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-                <img src="./images/saleskpioperatingexpenses.svg" />
-              </div>
-            </div>
+{/* COGS */}
+<div
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] cursor-pointer border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={() => router.push("/invoices")}
+>
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">COGS</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {data?.producttotal
+        ? `$${Math.round(data?.producttotal)?.toLocaleString()}`
+        : "$00,000"}
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
+      <span>
+        Prev. Yr.{" "}
+        {prevYearData?.producttotal
+          ? `$${Math.round(prevYearData.producttotal).toLocaleString()}`
+          : "$0"}
+      </span>
+      <br />
+      {periodType !== "year" &&
+        periodType !== "multi" &&
+        prevPeriodData?.producttotal && (
+          <span>
+            {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+            {`$${Math.round(prevPeriodData.producttotal).toLocaleString()}`}
+          </span>
+        )}
+    </p>
+  </div>
+  <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/saleskpicogs.svg" />
+  </div>
+</div>
 
-            <div
-              className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] cursor-pointer border-b-4 w-full p-4 justify-between items-stretch"
-              onClick={() => router.push("/invoices")}
-            >
-              <div>
-                <p className="text-[14px] text-[#575F6DCC] font-medium">COGS</p>
-                <p className="text-[16px] text-[#2D3748] font-bold">
-                  {data?.producttotal
-                    ? `$${Math.round(data?.producttotal)?.toLocaleString()}`
-                    : "$00,000"}
-                </p>
-                {/* <p className="text-[11px] text-[#388E3C] font-semibold">
-                9.8%{" "}
-                <span className="text-[#575F6D] font-normal">
-                  of total expenses
-                </span>
-              </p> */}
-              </div>
-              <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-                <img src="./images/saleskpicogs.svg" />
-              </div>
-            </div>
+{/* Total Revenue */}
+<div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Total Revenue</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {data?.revenue
+        ? `$${Math.round(data?.revenue)?.toLocaleString()}`
+        : "$00,000"}
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
+      <span>
+        Prev. Yr.{" "}
+        {prevYearData?.revenue
+          ? `$${Math.round(prevYearData.revenue).toLocaleString()}`
+          : "$0"}
+      </span>
+      <br />
+      {periodType !== "year" &&
+        periodType !== "multi" &&
+        prevPeriodData?.revenue && (
+          <span>
+            {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+            {`$${Math.round(prevPeriodData.revenue).toLocaleString()}`}
+          </span>
+        )}
+    </p>
+  </div>
+  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/saleskpiprofit.svg" />
+  </div>
+</div>
 
-            {/* Total Revenue */}
-            <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
-              <div>
-                <p className="text-[14px] text-[#575F6DCC] font-medium">
-                Total Revenue
-                </p>
-                <p className="text-[16px] text-[#2D3748] font-bold">
-                  {data?.revenue
-                    ? `$${Math.round(data?.revenue)?.toLocaleString()}`
-                    : "$00,000"}
-                </p>
-                {/* <p className="text-[11px] text-[#388E3C] font-semibold">
-                      % of gross sales
-                    </p> */}
-              </div>
-              <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-              <img src="./images/saleskpiprofit.svg" />
-              </div>
-            </div>
+{/* Discount */}
+<div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Discount</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {data?.discount
+        ? `$${Math.round(data?.discount)?.toLocaleString()}`
+        : "$00,000"}
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
+      <span>
+        Prev. Yr.{" "}
+        {prevYearData?.discount
+          ? `$${Math.round(prevYearData.discount).toLocaleString()}`
+          : "$0"}
+      </span>
+      <br />
+      {periodType !== "year" &&
+        periodType !== "multi" &&
+        prevPeriodData?.discount && (
+          <span>
+            {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+            {`$${Math.round(prevPeriodData.discount).toLocaleString()}`}
+          </span>
+        )}
+    </p>
+  </div>
+  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/saleskpioperatingexpenses.svg" />
+  </div>
+</div>
 
-            {/* Discount */}
-            <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
-              <div>
-                <p className="text-[14px] text-[#575F6DCC] font-medium">
-                  Discount
-                </p>
-                <p className="text-[16px] text-[#2D3748] font-bold">
-                  {data?.discount
-                    ? `$${Math.round(data?.discount)?.toLocaleString()}`
-                    : "$00,000"}
-                </p>
-                {/* <p className="text-[11px] text-[#388E3C] font-semibold">
-      % of gross sales
-    </p> */}
-              </div>
-              <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-              <img src="./images/saleskpioperatingexpenses.svg" />
+{/* Promotions */}
+<div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Promotions</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {data?.promotions
+        ? `$${Math.round(data?.promotions)?.toLocaleString()}`
+        : "$00,000"}
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
+      <span>
+        Prev. Yr.{" "}
+        {prevYearData?.promotions
+          ? `$${Math.round(prevYearData.promotions).toLocaleString()}`
+          : "$0"}
+      </span>
+      <br />
+      {periodType !== "year" &&
+        periodType !== "multi" &&
+        prevPeriodData?.promotions && (
+          <span>
+            {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+            {`$${Math.round(prevPeriodData.promotions).toLocaleString()}`}
+          </span>
+        )}
+    </p>
+  </div>
+  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/saleskpicustomercount.svg" />
+  </div>
+</div>
 
-              </div>
-            </div>
-
-            {/* promotions */}
-            <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
-              <div>
-                <p className="text-[14px] text-[#575F6DCC] font-medium">
-                  promotions
-                </p>
-                <p className="text-[16px] text-[#2D3748] font-bold">
-                  {data?.promotions
-                    ? `$${Math.round(data?.promotions)?.toLocaleString()}`
-                    : "$00,000"}
-                </p>
-                {/* <p className="text-[11px] text-[#388E3C] font-semibold">
-                      % of total orders
-                    </p> */}
-              </div>
-              <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-              <img src="./images/saleskpicustomercount.svg" />
-              </div>
-            </div>
-
-            {/* Voids */}
-            <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
-              <div>
-                <p className="text-[14px] text-[#575F6DCC] font-medium">
-                  Voids
-                </p>
-                <p className="text-[16px] text-[#2D3748] font-bold">
-                  {data?.voids
-                    ? `$${Math.round(data?.voids)?.toLocaleString()}`
-                    : "$00,000"}
-                </p>
-                {/* <p className="text-[11px] text-[#388E3C] font-semibold">
-      % of total orders
-    </p> */}
-              </div>
-              <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
-              <img src="./images/saleskpicogs.svg" />
-              </div>
-            </div>
+{/* Voids */}
+<div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Voids</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {data?.voids
+        ? `$${Math.round(data?.voids)?.toLocaleString()}`
+        : "$00,000"}
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
+      <span>
+        Prev. Yr.{" "}
+        {prevYearData?.voids
+          ? `$${Math.round(prevYearData.voids).toLocaleString()}`
+          : "$0"}
+      </span>
+      <br />
+      {periodType !== "year" &&
+        periodType !== "multi" &&
+        prevPeriodData?.voids && (
+          <span>
+            {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
+            {`$${Math.round(prevPeriodData.voids).toLocaleString()}`}
+          </span>
+        )}
+    </p>
+  </div>
+  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/saleskpicogs.svg" />
+  </div>
+</div>
           </div>
           <div>
           <p className="text-[14px] text-[#000000cc] font-bold pb-0 pl-8 pt-4">
