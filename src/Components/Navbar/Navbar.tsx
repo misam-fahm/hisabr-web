@@ -98,7 +98,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
       ? [
           {
             title: "DQ Categories",
-            src: "Categories",
+            src: "category-svgrepo-com",
             path: "/setup/dqcategories",
           },
         ]
