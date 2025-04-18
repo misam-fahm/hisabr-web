@@ -41,7 +41,7 @@ const Deletecashreconc = ({ initialData, setAddReconciliation, selectedStoreId }
           type: "success",
         });
         setTimeout(() => {
-          setAddReconciliation(true);
+          setAddReconciliation(true); // Signal parent to refresh data list
           closeModal();
         }, 300);
       } else {

@@ -51,6 +51,7 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
     message: "",
     type: "",
   });
+  const [showBalanceWarning, setShowBalanceWarning] = useState(false);
 
   const currentDate = watch("date");
   const storeId = watch("storeId");
@@ -62,10 +63,13 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
   };
 
   const handleError = (message: string) => {
-    setToast({
-      message,
-      type: "error",
-    });
+    setToast({ message: "", type: "" });
+    setTimeout(() => {
+      setToast({
+        message,
+        type: "error",
+      });
+    }, 0);
   };
 
   const handlePressStart = () => {
@@ -152,6 +156,17 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
     fetchSystemBalance();
   }, [storeId, currentDate]);
 
+  // Check balance difference
+  useEffect(() => {
+    if (systemBalance !== null && actualBalance !== null) {
+      const difference = Math.abs(Number(systemBalance) - Number(actualBalance));
+      // Show warning if difference exceeds 50 (but not for system balance 0)
+      setShowBalanceWarning(difference > 50 && systemBalance !== 0);
+    } else {
+      setShowBalanceWarning(false);
+    }
+  }, [systemBalance, actualBalance]);
+
   const openModal = () => {
     setIsOpen(true);
     methods.reset({
@@ -165,18 +180,49 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
 
   const closeModal = () => {
     setIsOpen(false);
+    setShowBalanceWarning(false);
   };
 
-  const onSubmit = async (data: CashReconciliationFormInputs) => {
-    if (!data.storeId) {
-      handleError("Please select a store");
+  const checkDuplicateReconciliation = async (storeId: number, recDate: string) => {
+    try {
+      const response = await sendApiRequest({
+        mode: "getCashReconciliations",
+        storeid: storeId,
+        recdate: recDate,
+      });
+      return response?.data?.reconciliations?.length > 0;
+    } catch (error) {
+      console.error("Error checking duplicate:", error);
+      return false;
+    }
+  };
+
+  const submitReconciliation = async (data: CashReconciliationFormInputs) => {
+    const recDate = format(data.date || new Date(), "yyyy-MM-dd");
+
+    // Check for duplicate reconciliation
+    const isDuplicate = await checkDuplicateReconciliation(Number(data.storeId), recDate);
+    if (isDuplicate) {
+      handleError("A reconciliation for this store and date already exists.");
       return;
+    }
+
+    // Check balance difference
+    const difference = Math.abs(Number(data.systemBalance) - Number(data.actualBalance));
+    if (difference > 50) {
+      setToast({ message: "", type: "" });
+      setTimeout(() => {
+        setToast({
+          message: "Warning: Difference between System Balance and Actual Balance exceeds $50.",
+          type: "warning",
+        });
+      }, 0);
     }
 
     const jsonData: JsonData = {
       mode: "insertCashReconciliation",
       storeid: Number(data.storeId),
-      recdate: format(data.date || new Date(), "yyyy-MM-dd"),
+      recdate: recDate,
       systembalance: Number(data.systemBalance) || 0,
       actualbalance: Number(data.actualBalance) || 0,
     };
@@ -184,25 +230,40 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
     try {
       const result: any = await sendApiRequest(jsonData);
       const { status } = result;
-
-      setToast({
-        message: status === 200
-          ? "Cash Reconciliation added successfully!"
-          : result.message || "Failed to add reconciliation.",
-        type: status === 200 ? "success" : "error",
-      });
-
+      setToast({ message: "", type: "" });
+      setTimeout(() => {
+        setToast({
+          message: status === 200
+            ? "Cash Reconciliation added successfully!"
+            : result.message || "Failed to add reconciliation.",
+          type: status === 200 ? "success" : "error",
+        });
+      }, 0);
       if (status === 200) {
         setAddReconciliation(true); // Notify parent to refresh data
-        closeModal();
       }
     } catch (error: any) {
       console.error("Error adding reconciliation:", error);
-      setToast({
-        message: error?.message || "An error occurred while adding reconciliation.",
-        type: "error",
-      });
+      handleError(error?.message || "An error occurred while adding reconciliation.");
     }
+  };
+
+  const onSubmit = (data: CashReconciliationFormInputs) => {
+    if (!data.storeId) {
+      handleError("Please select a store");
+      return;
+    }
+
+    if (data.systemBalance === 0 || data.systemBalance === null) {
+      handleError("Sales bill is not uploaded or might be 0.");
+      return;
+    }
+
+    // Close modal immediately if systemBalance is not 0
+    closeModal();
+
+    // Proceed with submission in the background
+    submitReconciliation(data);
   };
 
   return (
@@ -327,6 +388,13 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
                     placeholder="Enter Actual Balance"
                     variant="outline"
                   />
+
+                  {/* Balance Difference Warning */}
+                  {showBalanceWarning && (
+                    <div className="text-yellow-600 text-[12px]">
+                      Warning: Difference between System Balance and Actual Balance exceeds $50.
+                    </div>
+                  )}
 
                   {/* Buttons */}
                   <div className="flex justify-between gap-3 items-center w-full">
