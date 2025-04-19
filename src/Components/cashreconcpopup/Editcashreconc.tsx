@@ -2,11 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import "react-datepicker/dist/react-datepicker.css";
 import { FormProvider, useForm, Controller } from "react-hook-form";
-import Dropdown from "../UI/Themes/DropDown";
-import { format } from "date-fns";
-import CustomDatePicker from "../UI/Themes/CustomDatePicker";
 import { InputField } from "@/Components/UI/Themes/InputField";
 import { sendApiRequest } from "@/utils/apiUtils";
 import ToastNotification, { ToastNotificationProps } from "../UI/ToastNotification/ToastNotification";
@@ -23,62 +19,53 @@ interface JsonData {
 const EditCashReconciliation = ({ initialData, setAddReconciliation }: any) => {
   const methods = useForm<any>({
     defaultValues: {
-      store: "",
-      storeId: null,
-      date: null,
-      systembalance: null,
       actualbalance: null,
     },
   });
-  const { setValue, watch, control, register, formState, handleSubmit } = methods;
+  const { setValue, control, formState, handleSubmit } = methods;
   const { errors } = formState;
   const [isOpen, setIsOpen] = useState(false);
-  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [store, setStore] = useState<any[]>([]);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
   });
 
-  const selectedStore = watch("store");
-  const selectedDate = watch("date");
-
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
-  const toggleStoreDropdown = () => {
-    setIsStoreDropdownOpen((prev) => !prev);
-  };
-
-  const fetchDropdownData = async () => {
+  // Format date from "YYYY-MM-DD HH:mm:ss.SSSSSS" to "MM-DD-YYYY"
+  const formatDate = (dateString: string | undefined): string => {
+    if (!dateString) return "N/A";
     try {
-      const response = await sendApiRequest({ mode: "getAllStores" });
-      if (response?.status === 200) {
-        setStore(response?.data?.stores || []);
-      } else {
-        handleError(response?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
+      const datePart = dateString.split(" ")[0]; // Get "YYYY-MM-DD"
+      const [year, month, day] = datePart.split("-");
+      return `${month}-${day}-${year}`; // Format as "MM-DD-YYYY"
+    } catch {
+      return "N/A";
     }
-  };
-
-  const handleError = (message: string) => {
-    setCustomToast({
-      message,
-      type: "error",
-    });
   };
 
   useEffect(() => {
-    if (isOpen) {
-      fetchDropdownData();
+    if (initialData) {
+      setValue("actualbalance", initialData.actualbalance ?? null);
     }
-  }, [isOpen]);
+  }, [initialData, setValue]);
 
   const onSubmit = async (data: any) => {
-    const formattedDate = data?.date ? format(data?.date, "yyyy-MM-dd") : null;
-    if (!formattedDate || isNaN(Date.parse(formattedDate))) {
+    const actualBalance = Number(data?.actualbalance);
+    const storeId = Number(initialData?.storeid);
+    const systemBalance = Number(initialData?.systembalance);
+    const id = Number(initialData?.id);
+
+    if (isNaN(actualBalance) || isNaN(storeId) || isNaN(systemBalance) || isNaN(id)) {
+      setCustomToast({
+        message: "Invalid data in fields",
+        type: "error",
+      });
+      return;
+    }
+
+    if (!initialData?.recdate || isNaN(Date.parse(initialData.recdate))) {
       setCustomToast({
         message: "Invalid date",
         type: "error",
@@ -86,31 +73,14 @@ const EditCashReconciliation = ({ initialData, setAddReconciliation }: any) => {
       return;
     }
 
-    // Validate all required fields
-    const storeId = Number(data?.storeId);
-    const systemBalance = Number(data?.systembalance);
-    const actualBalance = Number(data?.actualbalance);
-    const id = Number(initialData?.id);
-
-    if (isNaN(storeId) || isNaN(systemBalance) || isNaN(actualBalance) || isNaN(id)) {
-      setCustomToast({
-        message: "All fields (Store, System Balance, Actual Balance, ID) must be valid numbers",
-        type: "error",
-      });
-      console.error("Invalid data:", { storeId, systemBalance, actualBalance, id });
-      return;
-    }
-
     const jsonData: JsonData = {
       mode: "updateCashReconciliation",
       storeid: storeId,
-      recdate: formattedDate,
+      recdate: initialData.recdate,
       systembalance: systemBalance,
       actualbalance: actualBalance,
       id: id,
     };
-
-    console.log("Sending jsonData:", jsonData); // Debug log
 
     try {
       const result: any = await sendApiRequest(jsonData);
@@ -131,18 +101,7 @@ const EditCashReconciliation = ({ initialData, setAddReconciliation }: any) => {
       setCustomToast({ message: error?.message || "Error updating reconciliation", type: "error" });
       console.error("Error submitting form:", error);
     }
-    closeModal();
   };
-
-  useEffect(() => {
-    if (initialData) {
-      setValue("store", initialData.storename || "");
-      setValue("storeId", initialData.storeid || null);
-      setValue("date", initialData.recdate ? new Date(initialData.recdate) : null);
-      setValue("systembalance", initialData.systembalance ?? null);
-      setValue("actualbalance", initialData.actualbalance ?? null);
-    }
-  }, [initialData, setValue, isOpen]);
 
   return (
     <>
@@ -177,57 +136,29 @@ const EditCashReconciliation = ({ initialData, setAddReconciliation }: any) => {
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col mt-4 gap-6">
-                  {/* Store Dropdown */}
-                  <Dropdown
-                    options={store}
-                    selectedOption={selectedStore || initialData?.storename || "Store"}
-                    onSelect={(selectedOption) => {
-                      setValue("store", selectedOption.name);
-                      setValue("storeId", selectedOption.id);
-                      setIsStoreDropdownOpen(false);
-                    }}
-                    isOpen={isStoreDropdownOpen}
-                    toggleOpen={toggleStoreDropdown}
-                    widthchange="w-full"
-                    {...register("store", {
-                      required: "Store selection is required",
-                    })}
-                    errors={errors.store}
-                  />
+                  {/* Store Display */}
+                  <div>
+                    <label className="block text-[#636363] bg-white px-1 text-sm absolute -mt-2 ml-2">Store</label>
+                    <div className="border border-gray-300 rounded-md px-3 py-2 text-[#636363] cursor-not-allowed">
+                      {initialData?.storename || "N/A"}
+                    </div>
+                  </div>
 
-                  {/* Date Input Field */}
-                  <CustomDatePicker
-                    value={selectedDate || (initialData?.recdate ? new Date(initialData.recdate) : null)}
-                    onChange={(date) => setValue("date", date, { shouldValidate: true })}
-                    placeholder="Date"
-                    errors={errors.date?.message}
-                  />
+                  {/* Date Display */}
+                  <div>
+                    <label className="block text-[#636363] bg-white px-1 text-sm absolute -mt-2 ml-2">Date</label>
+                    <div className="border border-gray-300 rounded-md px-3 py-2 text-[#636363] cursor-not-allowed">
+                      {formatDate(initialData?.recdate)}
+                    </div>
+                  </div>
 
-                  {/* System Balance Field */}
-                  <Controller
-                    control={control}
-                    name="systembalance"
-                    rules={{
-                      required: "System Balance is required",
-                      min: { value: 0, message: "System Balance must be positive" },
-                    }}
-                    render={({ field: { ref, ...field } }) => (
-                      <InputField
-                        type="number"
-                        label="System Balance"
-                        borderClassName="border border-gray-300"
-                        labelBackgroundColor="bg-white"
-                        textColor="text-[#636363]"
-                        {...field}
-                        value={field.value ?? ""}
-                        onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : null)}
-                        ref={ref}
-                        errors={errors.systembalance}
-                        placeholder="Enter System Balance"
-                        variant="outline"
-                      />
-                    )}
-                  />
+                  {/* System Balance Display */}
+                  <div>
+                    <label className="block text-[#636363] bg-white px-1 text-sm absolute -mt-2 ml-2">System Balance</label>
+                    <div className="border border-gray-300 rounded-md px-3 py-2 text-[#636363] cursor-not-allowed">
+                      {initialData?.systembalance ?? "N/A"}
+                    </div>
+                  </div>
 
                   {/* Actual Balance Field */}
                   <Controller
