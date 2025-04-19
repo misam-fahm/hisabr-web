@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from "@/Components/UI/Themes/DropDown";
@@ -40,65 +40,52 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
     },
   });
 
-  const { setValue, watch, handleSubmit, register, formState: { errors } } = methods;
+  const { setValue, watch, handleSubmit, register, reset, formState: { errors } } = methods;
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [selectedStore, setSelectedStore] = useState<any>(null);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [stores, setStores] = useState<any[]>([]);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
-  const [toast, setToast] = useState<ToastNotificationProps>({
-    message: "",
-    type: "",
-  });
+  const [toast, setToast] = useState<ToastNotificationProps>({ message: "", type: "" });
   const [showBalanceWarning, setShowBalanceWarning] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorDisplayed, setErrorDisplayed] = useState(false); // Prevent multiple error toasts
 
   const currentDate = watch("date");
   const storeId = watch("storeId");
   const systemBalance = watch("systemBalance");
   const actualBalance = watch("actualBalance");
 
-  const toggleStoreDropdown = () => {
-    setIsStoreDropdownOpen((prev) => !prev);
-  };
+  const toggleStoreDropdown = () => setIsStoreDropdownOpen((prev) => !prev);
 
-  const handleError = (message: string) => {
-    setToast({ message: "", type: "" });
-    setTimeout(() => {
-      setToast({
-        message,
-        type: "error",
-      });
-    }, 0);
-  };
+  const handleError = useCallback((message: string) => {
+    if (!errorDisplayed) {
+      setToast({ message, type: "error" });
+      setErrorDisplayed(true);
+    }
+  }, [errorDisplayed]);
 
   const handlePressStart = () => {
     setShowTooltip(true);
-    setTimeout(() => {
-      setShowTooltip(false);
-    }, 2000);
+    setTimeout(() => setShowTooltip(false), 2000);
   };
 
-  const handlePressEnd = () => {
-    setShowTooltip(false);
-  };
+  const handlePressEnd = () => setShowTooltip(false);
 
   const verifyToken = async (token: string) => {
     try {
-      const res: any = await sendApiRequest({ token: token }, `auth/verifyToken`);
+      const res: any = await sendApiRequest({ token }, `auth/verifyToken`);
       res?.status === 200 ? setIsVerifiedUser(true) : router.replace("/login");
     } catch (error) {
-      router.replace('/login');
+      router.replace("/login");
     }
   };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      router.replace("/login");
-    } else {
-      verifyToken(token);
-    }
+    if (!token) router.replace("/login");
+    else verifyToken(token);
   }, []);
 
   const getUserStore = async () => {
@@ -107,7 +94,6 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
       if (response?.status === 200) {
         const storeList = response?.data?.stores || [];
         setStores(storeList);
-
         const defaultStore = SelectedStore || storeList[0];
         if (defaultStore) {
           setSelectedStore(defaultStore);
@@ -115,29 +101,25 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
           setValue("storeId", defaultStore.id);
         }
       } else {
-        handleError(response?.message);
+        handleError(response?.message || "Failed to fetch stores.");
       }
     } catch (error) {
       console.error("Error fetching stores:", error);
+      handleError("An error occurred while fetching stores.");
     }
   };
 
   useEffect(() => {
-    if (isVerifiedUser) {
-      getUserStore();
-    }
+    if (isVerifiedUser) getUserStore();
   }, [isVerifiedUser]);
 
-  // Fetch system balance when storeId or date changes
   const fetchSystemBalance = async () => {
     if (!storeId || !currentDate) return;
-
     const jsonData: JsonData = {
       mode: "getCashTendersByStore",
       storeid: storeId,
       salesdate: format(currentDate, "yyyy-MM-dd"),
     };
-
     try {
       const response: any = await sendApiRequest(jsonData);
       if (response?.status === 200 && response?.data?.Cashamt?.length > 0) {
@@ -149,38 +131,57 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
     } catch (error) {
       console.error("Error fetching system balance:", error);
       setValue("systemBalance", 0, { shouldValidate: true });
+      handleError("An error occurred while fetching system balance.");
     }
   };
 
   useEffect(() => {
-    fetchSystemBalance();
-  }, [storeId, currentDate]);
+    if (isOpen && storeId && currentDate) fetchSystemBalance();
+  }, [isOpen, storeId, currentDate]);
 
-  // Check balance difference
   useEffect(() => {
     if (systemBalance !== null && actualBalance !== null) {
       const difference = Math.abs(Number(systemBalance) - Number(actualBalance));
-      // Show warning if difference exceeds 50 (but not for system balance 0)
       setShowBalanceWarning(difference > 50 && systemBalance !== 0);
     } else {
       setShowBalanceWarning(false);
     }
   }, [systemBalance, actualBalance]);
 
+  // Auto-clear toast after 5 seconds
+  useEffect(() => {
+    if (toast.message) {
+      const timer = setTimeout(() => {
+        setToast({ message: "", type: "" });
+        setErrorDisplayed(false); // Allow new errors after clearing
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
   const openModal = () => {
     setIsOpen(true);
-    methods.reset({
+    reset({
       store: SelectedStore?.name || "",
       storeId: SelectedStore?.id || null,
       date: new Date(),
       systemBalance: null,
       actualBalance: null,
     });
+    const defaultStore = SelectedStore || stores[0];
+    if (defaultStore) {
+      setSelectedStore(defaultStore);
+      setValue("store", defaultStore.name);
+      setValue("storeId", defaultStore.id);
+    }
+    setErrorDisplayed(false); // Reset error state
   };
 
   const closeModal = () => {
     setIsOpen(false);
     setShowBalanceWarning(false);
+    setToast({ message: "", type: "" });
+    setErrorDisplayed(false); // Reset error state
   };
 
   const checkDuplicateReconciliation = async (storeId: number, recDate: string) => {
@@ -188,7 +189,8 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
       const response = await sendApiRequest({
         mode: "getCashReconciliations",
         storeid: storeId,
-        recdate: recDate,
+        startdate: recDate,
+        enddate: recDate,
       });
       return response?.data?.reconciliations?.length > 0;
     } catch (error) {
@@ -198,26 +200,23 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
   };
 
   const submitReconciliation = async (data: CashReconciliationFormInputs) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    setErrorDisplayed(false); // Reset for this submission
+
     const recDate = format(data.date || new Date(), "yyyy-MM-dd");
 
     // Check for duplicate reconciliation
     const isDuplicate = await checkDuplicateReconciliation(Number(data.storeId), recDate);
     if (isDuplicate) {
-      handleError("A reconciliation for this store and date already exists.");
+      handleError("Duplicate entry not allowed: A reconciliation for this store and date already exists.");
+      setIsSubmitting(false);
       return;
     }
 
-    // Check balance difference
+    // Check balance difference (warning, not error)
     const difference = Math.abs(Number(data.systemBalance) - Number(data.actualBalance));
-    if (difference > 50) {
-      setToast({ message: "", type: "" });
-      setTimeout(() => {
-        setToast({
-          message: "Warning: Difference between System Balance and Actual Balance exceeds $50.",
-          type: "warning",
-        });
-      }, 0);
-    }
+    const hasWarning = difference > 50 && systemBalance !== 0;
 
     const jsonData: JsonData = {
       mode: "insertCashReconciliation",
@@ -230,39 +229,47 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
     try {
       const result: any = await sendApiRequest(jsonData);
       const { status } = result;
-      setToast({ message: "", type: "" });
-      setTimeout(() => {
-        setToast({
-          message: status === 200
-            ? "Cash Reconciliation added successfully!"
-            : result.message || "Failed to add reconciliation.",
-          type: status === 200 ? "success" : "error",
-        });
-      }, 0);
+      // Show success message, even if there’s a warning
+      setToast({
+        message: status === 200
+          ? "Cash Reconciliation added successfully!"
+          : result.message || "Failed to add reconciliation.",
+        type: status === 200 ? "success" : "error",
+      });
+
+      // Show warning if applicable (after success message)
+      if (status === 200 && hasWarning) {
+        setTimeout(() => {
+          setToast({
+            message: "Warning: Difference between System Balance and Actual Balance exceeds $50.",
+            type: "warning",
+          });
+        }, 2000); // Delay warning to show after success
+      }
+
       if (status === 200) {
-        setAddReconciliation(true); // Notify parent to refresh data
+        setAddReconciliation(true);
+        // Delay modal closure to show success toast
+        setTimeout(closeModal, 2000);
       }
     } catch (error: any) {
       console.error("Error adding reconciliation:", error);
       handleError(error?.message || "An error occurred while adding reconciliation.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const onSubmit = (data: CashReconciliationFormInputs) => {
+    if (isSubmitting) return;
     if (!data.storeId) {
       handleError("Please select a store");
       return;
     }
-
     if (data.systemBalance === 0 || data.systemBalance === null) {
       handleError("Sales bill is not uploaded or might be 0.");
       return;
     }
-
-    // Close modal immediately if systemBalance is not 0
-    closeModal();
-
-    // Proceed with submission in the background
     submitReconciliation(data);
   };
 
@@ -322,7 +329,6 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col mt-4 gap-6">
-                  {/* Store Dropdown */}
                   <Dropdown
                     options={stores}
                     selectedOption={selectedStore?.name || "Store"}
@@ -340,8 +346,6 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
                     })}
                     errors={errors.store}
                   />
-
-                  {/* Date Picker */}
                   <CustomDatePicker
                     value={currentDate || new Date()}
                     onChange={(date: Date | null) =>
@@ -350,26 +354,54 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
                     placeholder="Date"
                     errors={errors.date?.message}
                   />
-
-                  {/* System Balance Field (Read-Only) */}
-                  <InputField
-                    type="number"
-                    label="System Balance"
-                    borderClassName="border border-gray-300"
-                    labelBackgroundColor="bg-white"
-                    textColor="text-[#636363]"
-                    value={systemBalance ?? ""}
-                    readOnly // Make the field read-only
-                    {...register("systemBalance", {
-                      required: "System Balance is required",
-                      min: { value: 0, message: "System Balance must be positive" },
-                    })}
-                    errors={errors.systemBalance}
-                    placeholder="System Balance"
-                    variant="outline"
-                  />
-
-                  {/* Actual Balance Field */}
+                  {/* System Balance with inline CSS for red circle arrow on hover */}
+                  <div style={{ position: "relative", width: "100%" }}>
+                    <InputField
+                      type="number"
+                      label="System Balance"
+                      borderClassName="border border-gray-300"
+                      labelBackgroundColor="bg-white"
+                      textColor="text-[#636363]"
+                      value={systemBalance ?? ""}
+                      readOnly
+                      style={{ cursor: "not-allowed" }} // Inline cursor style
+                      {...register("systemBalance", {
+                        required: "System Balance is required",
+                        min: { value: 0, message: "System Balance must be positive" },
+                      })}
+                      errors={errors.systemBalance}
+                      placeholder="System Balance"
+                      variant="outline"
+                    />
+                    <div
+                      style={{
+                        display: "none", // Hidden by default
+                        position: "absolute",
+                        top: "50%",
+                        right: "10px",
+                        transform: "translateY(-50%)",
+                        width: "16px",
+                        height: "16px",
+                        borderRadius: "50%",
+                        border: "2px solid red",
+                        background: "transparent",
+                        pointerEvents: "none", // Prevent interaction
+                      }}
+                      className="not-editable-indicator"
+                    >
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%) rotate(45deg)",
+                          width: "8px",
+                          height: "2px",
+                          background: "red",
+                        }}
+                      />
+                    </div>
+                  </div>
                   <InputField
                     type="number"
                     label="Actual Balance"
@@ -388,15 +420,11 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
                     placeholder="Enter Actual Balance"
                     variant="outline"
                   />
-
-                  {/* Balance Difference Warning */}
                   {showBalanceWarning && (
                     <div className="text-yellow-600 text-[12px]">
                       Warning: Difference between System Balance and Actual Balance exceeds $50.
                     </div>
                   )}
-
-                  {/* Buttons */}
                   <div className="flex justify-between gap-3 items-center w-full">
                     <button
                       type="button"
@@ -408,8 +436,9 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
                     <button
                       type="submit"
                       className="px-4 text-white md:text[13px] text-[14px] h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md"
+                      disabled={isSubmitting || systemBalance === 0 || systemBalance === null}
                     >
-                      Save
+                      {isSubmitting ? "Saving..." : "Save"}
                     </button>
                   </div>
                 </div>
