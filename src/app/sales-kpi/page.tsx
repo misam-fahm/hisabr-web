@@ -302,11 +302,19 @@ useEffect(() => {
     try {
       const response = await sendApiRequest({ mode: "getUserStore" });
       if (response?.status === 200) {
-        setStore(response?.data?.stores || []);
-        if (response?.data?.stores) {
+        const stores = response?.data?.stores || [];
+        // Map stores to the format expected by the Dropdown component
+        const formattedStores = stores.map((store) => ({
+          name: `${store.name} - ${store.location || "Unknown Location"}`, // Ensure location is handled
+          id: store.id,
+        }));
+        
+        setStore(formattedStores); // Update store state with formatted data
+        
+        if (stores.length > 0) {
           setSelectedOption({
-            name: response?.data?.stores[0]?.name,
-            id: response?.data?.stores[0]?.id,
+            name: `${stores[0].name} - ${stores[0].location || "Unknown Location"}`,
+            id: stores[0].id,
           });
         }
       } else {

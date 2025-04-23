@@ -14,12 +14,14 @@ import { format } from "date-fns";
 import Pagination from "@/Components/UI/Pagination/Pagination";
 import { sendApiRequest } from "@/utils/apiUtils";
 import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import AddStoreUser from "@/Components/Setup/StorePopup/Addstoreuser";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 import Tooltip from "@/Components/UI/Toolstips/Tooltip";
 
 interface TableRow {
+  storeid: number;
   storename: string;
   createdate: string;
   location: string;
@@ -27,6 +29,8 @@ interface TableRow {
   county: string;
   royalty: string;
 }
+
+
 
 const Page: FC = () => {
   const [globalFilter, setGlobalFilter] = React.useState("");
@@ -141,6 +145,20 @@ const Page: FC = () => {
       ),
       size: 50,
     },
+    {
+      id: "addUser",
+      header: () => <div className="text-center"></div>,
+      cell: (info) => (
+        <span className="flex justify-center">
+          <AddStoreUser
+            initialData={info.row.original}
+            isOpenAddStore={isOpenAddStore}
+            setAddStore={setopenAddStore}
+          />
+        </span>
+      ),
+      size: 50,
+    },
   ];
 
   const table = useReactTable({
@@ -239,6 +257,12 @@ const Page: FC = () => {
                   isOpenAddStore={isOpenAddStore}
                   setAddStore={setopenAddStore}
                 />
+                {/* Add Store User */}
+          <AddStoreUser
+            initialData={row.original}
+            isOpenAddStore={isOpenAddStore}
+            setAddStore={setopenAddStore}
+          />
               </div>
             </div>
             {/* Border */}
