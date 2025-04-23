@@ -273,34 +273,34 @@ const Sales: FC = () => {
     }
   };
 
-  const fetchDataForAddress = async () => {
-    setLoading(true);
-    try {
-      const response: any = await sendApiRequest({
-        mode: "getStoreByName",
-        storename: selectedOption?.name || "13246",
-      });
+  // const fetchDataForAddress = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response: any = await sendApiRequest({
+  //       mode: "getStoreByName",
+  //       storename: selectedOption?.name || "13246",
+  //     });
 
-      if (response?.status === 200) {
-        setAddress(response?.data?.store[0]);
-      } else {
-        setCustomToast({
-          message: response?.message || "Failed to fetch sales.",
-          type: "error",
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     if (response?.status === 200) {
+  //       setAddress(response?.data?.store[0]);
+  //     } else {
+  //       setCustomToast({
+  //         message: response?.message || "Failed to fetch sales.",
+  //         type: "error",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
     if (startDate && endDate && selectedOption) {
       fetchData2();
       fetchData();
-      fetchDataForAddress();
+      // fetchDataForAddress();
     }
     1;
   }, [selectedOption]);
@@ -309,11 +309,19 @@ const Sales: FC = () => {
     try {
       const response = await sendApiRequest({ mode: "getUserStore" });
       if (response?.status === 200) {
-        setStore(response?.data?.stores || []);
-        if (response?.data?.stores) {
+        const stores = response?.data?.stores || [];
+        // Map stores to the format expected by the Dropdown component
+        const formattedStores = stores.map((store) => ({
+          name: `${store.name} - ${store.location || "Unknown Location"}`, // Ensure location is handled
+          id: store.id,
+        }));
+        
+        setStore(formattedStores); // Update store state with formatted data
+        
+        if (stores.length > 0) {
           setSelectedOption({
-            name: response?.data?.stores[0]?.name,
-            id: response?.data?.stores[0]?.id,
+            name: `${stores[0].name} - ${stores[0].location || "Unknown Location"}`,
+            id: stores[0].id,
           });
         }
       } else {
@@ -323,6 +331,7 @@ const Sales: FC = () => {
       console.error("Error fetching stores:", error);
     }
   };
+  
 
   const verifyToken = async (token: string) => {
     try {
