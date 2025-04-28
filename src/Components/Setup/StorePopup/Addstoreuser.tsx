@@ -266,29 +266,33 @@ const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setA
                             />
                           </td>
                           <td className="py-2 px-2 w-1/2">
-                            {fullName && fullName.length > 15 ? (
-                              <div className="group relative inline-block">
-                                {truncatedName}
-                                <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 -top-8 left-0 z-10">
-                                  {fullName}
-                                </div>
-                              </div>
-                            ) : (
-                              truncatedName
-                            )}
-                          </td>
-                          <td className="py-2 px-2 w-1/2">
-                            {user.email && user.email.length > 20 ? (
-                              <div className="group relative inline-block">
-                                {truncatedEmail}
-                                <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 -top-8 left-0 z-10">
-                                  {user.email}
-                                </div>
-                              </div>
-                            ) : (
-                              truncatedEmail
-                            )}
-                          </td>
+  {!fullName ? (
+    <span className="block text-lg">---</span>
+  ) : fullName.length > 15 ? (
+    <div className="group relative inline-block">
+      {truncatedName}
+      <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 -top-8 left-0 z-10">
+        {fullName}
+      </div>
+    </div>
+  ) : (
+    truncatedName
+  )}
+</td>
+<td className="py-2 px-2 w-1/2">
+  {!user.email ? (
+    <span className="block text-lg">---</span>
+  ) : user.email.length > 20 ? (
+    <div className="group relative inline-block">
+      {truncatedEmail}
+      <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 -top-8 left-0 z-10">
+        {user.email}
+      </div>
+    </div>
+  ) : (
+    truncatedEmail
+  )}
+</td>
                         </tr>
                       );
                     })}

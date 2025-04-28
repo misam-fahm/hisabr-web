@@ -171,10 +171,13 @@ const DonutChart = ({ values, operatExpAmt }: any) => {
     if (hoveredIndex === null) {
       return (
         <p className="m-0 font-bold" style={{ fontSize: "28px" }}>
-          ${Math.round(total).toLocaleString()}
+          {values?.net_sales
+            ? `$${Math.round(values?.net_sales).toLocaleString()}`
+            : "$00,000"}
         </p>
       );
     }
+    
 
     const labels = ["Labour Cost", "Sales Tax", "Royalty", "Expenses", "Profit"];
     const amounts = [labourCost, taxAmount, royalty, operatingExpenses, validProfit];

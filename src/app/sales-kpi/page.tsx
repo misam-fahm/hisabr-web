@@ -48,6 +48,7 @@ const SalesKPI: FC = () => {
   });
   const [prevYearData, setPrevYearData] = useState<any>(null);
 const [prevPeriodData, setPrevPeriodData] = useState<any>(null);
+const [currYearData, setCurrYearData] = useState<any>(null);
 const [periodType, setPeriodType] = useState<"month" | "quarter" | "year" | "multi">("year");  const [showTooltip, setShowTooltip] = useState(false);
   const [operatExpAmt, setOperatExpAmt] = useState(0);
   const [royaltyAmt, setRoyaltyAmt] = useState(0);
@@ -145,6 +146,56 @@ const tableData = [
     color: "#FF5555",
   },
 ];
+useEffect(() => {
+  if (isVerifiedUser) {
+    const currentYear = new Date().getFullYear();
+    setStartDate(new Date(`${currentYear}-01-01`));
+    setEndDate(new Date(`${currentYear}-12-31`));
+    getUserStore();
+    // Fetch current year data
+    fetchCurrentYearData(currentYear);
+  }
+}, [isVerifiedUser]);
+
+const fetchCurrentYearData = async (currentYear: number) => {
+  try {
+    const response: any = await sendApiRequest({
+      mode: "getSalesKpi",
+      storeid: selectedOption?.id || 69,
+      startdate: `${currentYear}-01-01`,
+      enddate: `${currentYear}-12-31`,
+    });
+
+    if (response?.status === 200) {
+      const salesKpi = response?.data?.saleskpi[0] || {};
+      setCurrYearData(salesKpi);
+
+      // Calculate operatExpAmt and royaltyAmt for current year
+      const months = 12; // Full year
+      const payrollTaxAmt = salesKpi.labour_cost * (salesKpi.payrolltax / 100);
+      const yearExpAmt = salesKpi.Yearly_expense;
+      const currYearOperatExpAmt =
+        salesKpi.additional_expense +
+        payrollTaxAmt +
+        yearExpAmt +
+        salesKpi.monthly_expense * months || 0;
+      const currYearRoyaltyAmt =
+        salesKpi.net_sales * (salesKpi.royalty / 100 || 0.09) || 0;
+
+      setCurrYearData((prev: any) => ({
+        ...prev,
+        operatExpAmt: currYearOperatExpAmt,
+        royaltyAmt: currYearRoyaltyAmt,
+      }));
+    }
+  } catch (error) {
+    console.error("Error fetching current year data:", error);
+    setCustomToast({
+      message: "Error fetching current year data",
+      type: "error",
+    });
+  }
+};
 
 useEffect(() => {
     if (startDate && endDate && selectedOption) {
@@ -297,6 +348,12 @@ useEffect(() => {
   //     console.error("Error fetching stores:", error);
   //   }
   // };
+
+  const [openSection, setOpenSection] = useState<null | string>(null);
+
+  const toggleSection = (section: string) => {
+    setOpenSection((prev) => (prev === section ? null : section));
+  };
 
   const getUserStore = async () => {
     try {
@@ -678,6 +735,13 @@ useEffect(() => {
             : "$0"}
         </span>
         <br />
+  <span>
+    Curr. Yr.{" "}
+    {currYearData?.net_sales
+      ? `$${Math.round(currYearData.net_sales).toLocaleString()}`
+      : "$0"}
+  </span>
+        <br />
         {periodType !== "year" &&
           periodType !== "multi" &&
           prevPeriodData?.net_sales && (
@@ -710,6 +774,13 @@ useEffect(() => {
             : "$0"}
         </span>
         <br />
+        <span>
+    Curr. Yr.{" "}
+    {currYearData?.net_sales
+      ? `$${calculateProfit(currYearData).toLocaleString()}`
+      : "$0"}
+  </span>
+  <br />
         {periodType !== "year" &&
           periodType !== "multi" &&
           prevPeriodData?.net_sales && (
@@ -741,6 +812,14 @@ useEffect(() => {
             ? `${Math.round(prevYearData.customer_count).toLocaleString()}`
             : "0"}
         </span>
+        <br />
+
+        <span>
+    Curr. Yr.{" "}
+    {currYearData?.customer_count
+      ? `${Math.round(currYearData.customer_count).toLocaleString()}`
+      : "0"}
+  </span>
         <br />
         {periodType !== "year" &&
           periodType !== "multi" &&
@@ -774,7 +853,13 @@ useEffect(() => {
             : "$0"}
         </span>
         <br />
-        {periodType !== "year" &&
+  <span>
+    Curr. Yr.{" "}
+    {currYearData?.labour_cost
+      ? `$${Math.round(currYearData.labour_cost).toLocaleString()}`
+      : "$0"}
+  </span>
+  <br />        {periodType !== "year" &&
           periodType !== "multi" &&
           prevPeriodData?.labour_cost && (
             <span>
@@ -807,7 +892,14 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+  <span>
+    Curr. Yr.{" "}
+    {currYearData?.tax_amt
+      ? `$${Math.round(currYearData.tax_amt).toLocaleString()}`
+      : "$0"}
+  </span>
+  <br />
+        {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.tax_amt && (
           <span>
@@ -839,7 +931,14 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+  <span>
+    Curr. Yr.{" "}
+    {currYearData?.royaltyAmt
+      ? `$${Math.round(currYearData.royaltyAmt).toLocaleString()}`
+      : "$0"}
+  </span>
+  <br />
+        {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.royaltyAmt && (
           <span>
@@ -876,7 +975,14 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+  <span>
+    Curr. Yr.{" "}
+    {currYearData?.operatExpAmt
+      ? `$${Math.round(currYearData.operatExpAmt).toLocaleString()}`
+      : "$0"}
+  </span>
+  <br />
+        {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.operatExpAmt && (
           <span>
@@ -911,7 +1017,14 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+  <span>
+    Curr. Yr.{" "}
+    {currYearData?.producttotal
+      ? `$${Math.round(currYearData.producttotal).toLocaleString()}`
+      : "$0"}
+  </span>
+  <br />
+  {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.producttotal && (
           <span>
@@ -943,7 +1056,14 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+  <span>
+    Curr. Yr.{" "}
+    {currYearData?.revenue
+      ? `$${Math.round(currYearData.revenue).toLocaleString()}`
+      : "$0"}
+  </span>
+  <br />
+   {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.revenue && (
           <span>
@@ -975,7 +1095,13 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+  <span>
+    Curr. Yr.{" "}
+    {currYearData?.discount
+      ? `$${Math.round(currYearData.discount).toLocaleString()}`
+      : "$0"}
+  </span>
+  <br />      {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.discount && (
           <span>
@@ -1007,7 +1133,13 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+  <span>
+    Curr. Yr.{" "}
+    {currYearData?.promotions
+      ? `$${Math.round(currYearData.promotions).toLocaleString()}`
+      : "$0"}
+  </span>
+  <br />      {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.promotions && (
           <span>
@@ -1039,7 +1171,13 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+  <span>
+    Curr. Yr.{" "}
+    {currYearData?.voids
+      ? `$${Math.round(currYearData.voids).toLocaleString()}`
+      : "$0"}
+  </span>
+  <br />      {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.voids && (
           <span>
@@ -1063,197 +1201,225 @@ useEffect(() => {
                 
              
               </div>
-          <div className="flex flex-col below-md:flex-col tablet:flex-col justify-between rounded-lg below-md:mb-6 bg-white mt-6 below-md:mt-3 below-md:mx-3 shadow-md ml-6 mr-6">
-            <div className="w-full text-left font-bold mx-4 mt-6 text-[16px] text-[#334155]">
-              Expense Distribution
-            </div>
-            <div className="flex flex-row items-center justify-between below-md:flex-col tablet:flex-col mx-3">
+       <div className="px-6">
+      {/* Expense Distribution */}
+      <div className="flex flex-col rounded-lg bg-white mt-6 shadow-md">
+        <button
+          className="text-left font-bold text-[16px] text-[#334155] mx-4 my-4 flex justify-between items-center"
+          onClick={() => toggleSection("expense")}
+        >
+          Expense Distribution
+          <span>{openSection === "expense" ? "▲" : "▼"}</span>
+        </button>
+        {openSection === "expense" && (
+          <div className="flex flex-col tablet:flex-col mx-3">
+            <div className="flex flex-row items-center justify-between below-md:flex-col tablet:flex-col">
               <div className="-my-12">
+                {/* Your DonutChart component */}
                 <DonutChart values={data} operatExpAmt={operatExpAmt} />
               </div>
               <div className="overflow-x-auto w-[50%] custom-scrollbar">
-          <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
-  <thead>
-    <tr>
-      <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-left border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
-        Label
-      </th>
-      <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-right border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
-        Amount
-      </th>
-      <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-right border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
-        %
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-  {tableData && tableData.length > 0 ? (
-    tableData
-      .filter((row: any) => row.label !== "Sales")
-      .map((row: any, index: number) => (
-        <tr key={index}>
-          <td className="border-t-0 px-6 below-md:px-2 text-left border-l-0 border-r-0 text-xs whitespace-nowrap p-2 flex items-center text-[#404040] text-[13px]">
-            <div
-              className="w-3 h-3 rounded-full mr-2"
-              style={{ backgroundColor: row.color || "#CCCCCC" }}
-            ></div>
-            {row.label || "N/A"}
-          </td>
-          <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-right border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-            ${row.amount || "0"}
-          </td>
-          <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-right border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-            {row.per ? `${Number(row.per).toFixed(2)}%` : "0.00%"}
-          </td>
-        </tr>
-      ))
-  ) : (
-    <tr>
-      <td colSpan={3} className="text-center py-4 text-[#404040] text-[14px]">
-        No data available
-      </td>
-    </tr>
-  )}
-</tbody>
-</table>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col below-md:flex-col tablet:flex-col justify-between rounded-lg below-md:mb-6 bg-white mt-6 below-md:mt-3 below-md:mx-3 shadow-md ml-6 mr-6">
-            {/* Tender Revenue Distribution */}
-
-            <div className="bg-white border-t-4 border-[#BCC7D5] rounded-md shadow-md below-md:shadow-none w-[100%] items-stretch">
-              <div className="w-full text-left font-bold mx-4 mt-6 text-[16px] text-[#334155]">
-                Tender Revenue Distribution
-              </div>
-              <div className="flex flex-row items-center justify-between below-md:flex-col tablet:flex-col mx-3">
-                {loading ? (
-                  <div className="w-[50%] h-[300px] flex justify-center items-center">
-                    <Skeleton circle={true} height={200} width={200} />
-                  </div>
-                ) : tender?.length === 0 ? (
-                  <div className="w-[50%] h-[300px] flex justify-center items-center">
-                    <NoDataFound />
-                  </div>
-                ) : (
-                  <div className="w-[50%] h-[300px] flex justify-center items-center">
-                    <TenderRevenueChart tenderData={tender} />
-                  </div>
-                )}
-                <div className="overflow-x-auto w-[50%] custom-scrollbar">
-                  <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
-                    <thead>
-                      <tr>
-                        <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-left border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
-                          Tender
-                        </th>
-                        <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-right border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
-                          Revenue
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {loading ? (
-                        <tr>
-                          <td colSpan={2} className="text-center py-4">
-                            <Skeleton count={3} height={30} />
-                          </td>
-                        </tr>
-                      ) : tender?.length === 0 ? (
-                        <tr>
-                          <td colSpan={2} className="text-center py-4">
-                            <NoDataFound />
-                          </td>
-                        </tr>
-                      ) : (
-                        tender.map((row: any, index: number) => (
+                {/* Your Table for Expense Distribution */}
+                <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
+                  {/* Table head */}
+                  <thead>
+                    <tr>
+                      <th className="px-6 bg-blueGray-50 text-[#737373] text-left border py-1 text-sm font-medium">
+                        Label
+                      </th>
+                      <th className="px-6 bg-blueGray-50 text-[#737373] text-right border py-1 text-sm font-medium">
+                        Amount
+                      </th>
+                      <th className="px-6 bg-blueGray-50 text-[#737373] text-right border py-1 text-sm font-medium">
+                        %
+                      </th>
+                    </tr>
+                  </thead>
+                  {/* Table body */}
+                  <tbody>
+                    {tableData?.length > 0 ? (
+                      tableData
+                        .filter((row: any) => row.label !== "Sales")
+                        .map((row: any, index: number) => (
                           <tr key={index}>
-                            <td className="border-t-0 px-6 below-md:px-2 text-left border-l-0 border-r-0 text-xs whitespace-nowrap p-2 flex items-center text-[#404040] text-[13px]">
-                              {row.tendername}
+                            <td className="border-t-0 px-6 text-left text-xs p-2 flex items-center text-[#404040] text-[13px]">
+                              <div
+                                className="w-3 h-3 rounded-full mr-2"
+                                style={{ backgroundColor: row.color || "#CCCCCC" }}
+                              ></div>
+                              {row.label || "N/A"}
                             </td>
-                            <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-right border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-                              ${row.payments.toLocaleString()}
+                            <td className="text-[14px] font-medium text-right border-t-0 px-6 text-xs p-2">
+                              ${row.amount || "0"}
+                            </td>
+                            <td className="text-[14px] font-medium text-right border-t-0 px-6 text-xs p-2">
+                              {row.per ? `${Number(row.per).toFixed(2)}%` : "0.00%"}
                             </td>
                           </tr>
                         ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col below-md:flex-col tablet:flex-col justify-between rounded-lg below-md:mb-6 bg-white mt-6 below-md:mt-3 below-md:mx-3 shadow-md ml-6 mr-6">
-            {/* Tender Commission Amount Distribution */}
-            <div className="bg-white border-t-4 border-[#BCC7D5] rounded-md shadow-md below-md:shadow-none w-[100%] items-stretch">
-              <div className="w-full text-left font-bold mx-4 mt-6 text-[16px] text-[#334155]">
-                Tender Commission Amount Distribution
-              </div>
-              <div className="flex flex-row items-center justify-between below-md:flex-col tablet:flex-col mx-3">
-                {loading ? (
-                  <div className="w-[50%] h-[300px] flex justify-center items-center">
-                    <Skeleton circle={true} height={200} width={200} />
-                  </div>
-                ) : tender?.length === 0 ? (
-                  <div className="w-[50%] h-[300px] flex justify-center items-center">
-                    <NoDataFound />
-                  </div>
-                ) : (
-                  <div className="w-[50%] h-[300px] flex justify-center items-center">
-                    <TenderCommAmtChart tenderData={tender} />
-                  </div>
-                )}
-                <div className="overflow-x-auto w-[50%] custom-scrollbar">
-                  <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
-                    <thead>
+                    ) : (
                       <tr>
-                        <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-left border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
-                          Tender
-                        </th>
-                        <th className="px-6 below-md:px-2 bg-blueGray-50 text-[#737373] text-right border border-solid border-blueGray-300 py-1 text-sm border-l-0 border-r-0 border-t-0 whitespace-nowrap font-medium">
-                          Comm. Amount
-                        </th>
+                        <td colSpan={3} className="text-center py-4 text-[#404040] text-[14px]">
+                          No data available
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {loading ? (
-                        <tr>
-                          <td colSpan={2} className="text-center py-4">
-                            <Skeleton count={3} height={30} />
-                          </td>
-                        </tr>
-                      ) : tender?.length === 0 ? (
-                        <tr>
-                          <td colSpan={2} className="text-center py-4">
-                            <NoDataFound />
-                          </td>
-                        </tr>
-                      ) : (
-                        tender.map((row: any, index: number) => (
-                          <tr key={index}>
-                            <td className="border-t-0 px-6 below-md:px-2 text-left border-l-0 border-r-0 text-xs whitespace-nowrap p-2 flex items-center text-[#404040] text-[13px]">
-                              {row.tendername}
-                            </td>
-                            <td className="text-[14px] font-medium border-t-0 px-6 below-md:px-2 text-right border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-                              $
-                              {(
-                                (row.payments * row.commission) / 100 || 0
-                              ).toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              })}
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
+        )}
+      </div>
+
+      {/* Tender Revenue Distribution */}
+      <div className="flex flex-col rounded-lg bg-white mt-6 shadow-md">
+        <button
+          className="text-left font-bold text-[16px] text-[#334155] mx-4 my-4 flex justify-between items-center"
+          onClick={() => toggleSection("revenue")}
+        >
+          Tender Revenue Distribution
+          <span>{openSection === "revenue" ? "▲" : "▼"}</span>
+        </button>
+        {openSection === "revenue" && (
+          <div className="flex flex-col tablet:flex-col mx-3">
+            <div className="flex flex-row items-center justify-between below-md:flex-col tablet:flex-col">
+              {loading ? (
+                <div className="w-[50%] h-[300px] flex justify-center items-center">
+                  <Skeleton circle height={200} width={200} />
+                </div>
+              ) : tender?.length === 0 ? (
+                <div className="w-[50%] h-[300px] flex justify-center items-center">
+                  <NoDataFound />
+                </div>
+              ) : (
+                <div className="w-[50%] h-[300px] flex justify-center items-center">
+                  <TenderRevenueChart tenderData={tender} />
+                </div>
+              )}
+
+              <div className="overflow-x-auto w-[50%] custom-scrollbar">
+                <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
+                  <thead>
+                    <tr>
+                      <th className="px-6 bg-blueGray-50 text-[#737373] text-left border py-1 text-sm font-medium">
+                        Tender
+                      </th>
+                      <th className="px-6 bg-blueGray-50 text-[#737373] text-right border py-1 text-sm font-medium">
+                        Revenue
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loading ? (
+                      <tr>
+                        <td colSpan={2} className="text-center py-4">
+                          <Skeleton count={3} height={30} />
+                        </td>
+                      </tr>
+                    ) : tender?.length === 0 ? (
+                      <tr>
+                        <td colSpan={2} className="text-center py-4">
+                          <NoDataFound />
+                        </td>
+                      </tr>
+                    ) : (
+                      tender.map((row: any, index: number) => (
+                        <tr key={index}>
+                          <td className="border-t-0 px-6 text-left text-xs p-2 flex items-center text-[#404040] text-[13px]">
+                            {row.tendername}
+                          </td>
+                          <td className="text-[14px] font-medium text-right border-t-0 px-6 text-xs p-2">
+                            ${row.payments.toLocaleString()}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Tender Commission Amount Distribution */}
+      <div className="flex flex-col rounded-lg bg-white mt-6 shadow-md">
+        <button
+          className="text-left font-bold text-[16px] text-[#334155] mx-4 my-4 flex justify-between items-center"
+          onClick={() => toggleSection("commission")}
+        >
+          Tender Commission Amount Distribution
+          <span>{openSection === "commission" ? "▲" : "▼"}</span>
+        </button>
+        {openSection === "commission" && (
+          <div className="flex flex-col tablet:flex-col mx-3">
+            <div className="flex flex-row items-center justify-between below-md:flex-col tablet:flex-col">
+              {loading ? (
+                <div className="w-[50%] h-[300px] flex justify-center items-center">
+                  <Skeleton circle height={200} width={200} />
+                </div>
+              ) : tender?.length === 0 ? (
+                <div className="w-[50%] h-[300px] flex justify-center items-center">
+                  <NoDataFound />
+                </div>
+              ) : (
+                <div className="w-[50%] h-[300px] flex justify-center items-center">
+                  <TenderCommAmtChart tenderData={tender} />
+                </div>
+              )}
+
+              <div className="overflow-x-auto w-[50%] custom-scrollbar">
+                <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
+                  <thead>
+                    <tr>
+                      <th className="px-6 bg-blueGray-50 text-[#737373] text-left border py-1 text-sm font-medium">
+                        Tender
+                      </th>
+                      <th className="px-6 bg-blueGray-50 text-[#737373] text-right border py-1 text-sm font-medium">
+                        Comm. Amount
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loading ? (
+                      <tr>
+                        <td colSpan={2} className="text-center py-4">
+                          <Skeleton count={3} height={30} />
+                        </td>
+                      </tr>
+                    ) : tender?.length === 0 ? (
+                      <tr>
+                        <td colSpan={2} className="text-center py-4">
+                          <NoDataFound />
+                        </td>
+                      </tr>
+                    ) : (
+                      tender.map((row: any, index: number) => (
+                        <tr key={index}>
+                          <td className="border-t-0 px-6 text-left text-xs p-2 flex items-center text-[#404040] text-[13px]">
+                            {row.tendername}
+                          </td>
+                          <td className="text-[14px] font-medium text-right border-t-0 px-6 text-xs p-2">
+                            $
+                            {(
+                              (row.payments * row.commission) / 100 || 0
+                            ).toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
           {/* <div className="flex flex-col px-6 py-6">
           <div className="flex flex-col gap-3 ">
         <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[100%] items-stretch">

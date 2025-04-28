@@ -213,8 +213,8 @@ const CashReconciliations: FC = () => {
         const stores = response?.data?.stores || [];
         // Map stores to the format expected by the Dropdown component
         const formattedStores = stores.map((store) => ({
-          name: `${store.name} - ${store.location || "Unknown Location"}`, // Ensure location is handled
-          id: store.id,
+          name: `${store?.name} - ${store?.location || "Unknown Location"}`, // Ensure location is handled
+          id: store?.id,
         }));
         
         setStore(formattedStores); // Update store state with formatted data
