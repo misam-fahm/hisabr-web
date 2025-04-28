@@ -382,7 +382,6 @@ const Invoices = () => {
       // console.log("Selected file:", file.name);
       const formData = new FormData();
       formData.append("file", file);
-
       const response = await fetch(
         "https://hisabr-pdf-extractor.vercel.app/process-invoice",
         {
@@ -448,10 +447,21 @@ const Invoices = () => {
           const val: any = {
             invoiceDetails: responseData?.invoice_items || [],
           };
-          await sendApiRequest(
+          const res: any = await sendApiRequest(
             val,
             `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`
           );
+          if (res?.status === 200) {
+            setCustomToast({
+              message: "Invoice uploaded successfully",
+              type: "success",
+            });
+          } else {
+            setCustomToast({
+              message: "Failed to upload invoice",
+              type: "error",
+            });
+          }
           fetchData();
         } else {
           setCustomToast({
@@ -485,7 +495,7 @@ const Invoices = () => {
 
   const handleError = (message: string) => {
     setCustomToast({
-      message,
+      message: message,
       type: "error",
     });
   };
