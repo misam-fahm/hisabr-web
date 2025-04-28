@@ -543,8 +543,8 @@ const Sales: FC = () => {
               }}
               isOpen={isStoreDropdownOpen}
               toggleOpen={toggleStoreDropdown}
-               widthchange="w-[60%]"
-              // className="h-[35px] p-2 below-md:px-4"
+              widthchange="w-[60%] below-md:w-full tablet:w-[50%]"
+              //  className="h-[35px] below-md:px-4"
             />
             <div className="w-full below-md:w-full tablet:w-[60%] h-[40px] below-md:px-4">
               <DateRangePicker
