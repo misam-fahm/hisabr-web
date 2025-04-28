@@ -272,17 +272,19 @@ const Sales: FC = () => {
       if (response?.status === 200) {
         const stores = response?.data?.stores || [];
         // Map stores to the format expected by the Dropdown component
-        const formattedStores = stores.map((store) => ({
-          name: `${store.name} - ${store.location || "Unknown Location"}`, // Ensure location is handled
-          id: store.id,
+        const formattedStores = stores?.map((store: any) => ({
+          storeno: store?.name,
+          name: `${store?.name} - ${store?.location || "Unknown Location"}`, // Ensure location is handled
+          id: store?.id,
         }));
         
         setStore(formattedStores); // Update store state with formatted data
         
-        if (stores.length > 0) {
+        if (stores?.length > 0) {
           setSelectedOption({
-            name: `${stores[0].name} - ${stores[0].location || "Unknown Location"}`,
-            id: stores[0].id,
+            storeno: stores[0]?.name,
+            name: `${stores[0]?.name} - ${stores[0]?.location || "Unknown Location"}`,
+            id: stores[0]?.id,
           });
         }
       } else {
@@ -364,7 +366,7 @@ const Sales: FC = () => {
           const responseData = await response.json();
           if (response.ok) {
             let getStore: any = [];
-            if (selectedOption.name == responseData?.store_name) {
+            if (selectedOption?.storeno == responseData?.store_name) {
               if (responseData?.store_name !== "Not Found") {
                 getStore = await sendApiRequest({
                   mode: "getStoreByName",
@@ -620,8 +622,9 @@ const Sales: FC = () => {
               selectedOption={selectedOption?.name || "Store"}
               onSelect={(selectedOption: any) => {
                 setSelectedOption({
-                  name: selectedOption.name,
-                  id: selectedOption.id,
+                  storeno: selectedOption?.storeno,
+                  name: selectedOption?.name,
+                  id: selectedOption?.id,
                 });
                 setIsStoreDropdownOpen(false);
               }}
