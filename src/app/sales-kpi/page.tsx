@@ -48,6 +48,7 @@ const SalesKPI: FC = () => {
   });
   const [prevYearData, setPrevYearData] = useState<any>(null);
 const [prevPeriodData, setPrevPeriodData] = useState<any>(null);
+const [currYearData, setCurrYearData] = useState<any>(null);
 const [periodType, setPeriodType] = useState<"month" | "quarter" | "year" | "multi">("year");  const [showTooltip, setShowTooltip] = useState(false);
   const [operatExpAmt, setOperatExpAmt] = useState(0);
   const [royaltyAmt, setRoyaltyAmt] = useState(0);
@@ -146,6 +147,56 @@ const tableData = [
   },
 ];
 
+useEffect(() => {
+  if (isVerifiedUser) {
+    const currentYear = new Date().getFullYear();
+    setStartDate(new Date(`${currentYear}-01-01`));
+    setEndDate(new Date(`${currentYear}-12-31`));
+    getUserStore();
+    // Fetch current year data
+    fetchCurrentYearData(currentYear);
+  }
+}, [isVerifiedUser]);
+
+const fetchCurrentYearData = async (currentYear: number) => {
+  try {
+    const response: any = await sendApiRequest({
+      mode: "getSalesKpi",
+      storeid: selectedOption?.id || 69,
+      startdate: `${currentYear}-01-01`,
+      enddate: `${currentYear}-12-31`,
+    });
+
+    if (response?.status === 200) {
+      const salesKpi = response?.data?.saleskpi[0] || {};
+      setCurrYearData(salesKpi);
+
+      // Calculate operatExpAmt and royaltyAmt for current year
+      const months = 12; // Full year
+      const payrollTaxAmt = salesKpi.labour_cost * (salesKpi.payrolltax / 100);
+      const yearExpAmt = salesKpi.Yearly_expense;
+      const currYearOperatExpAmt =
+        salesKpi.additional_expense +
+        payrollTaxAmt +
+        yearExpAmt +
+        salesKpi.monthly_expense * months || 0;
+      const currYearRoyaltyAmt =
+        salesKpi.net_sales * (salesKpi.royalty / 100 || 0.09) || 0;
+
+      setCurrYearData((prev: any) => ({
+        ...prev,
+        operatExpAmt: currYearOperatExpAmt,
+        royaltyAmt: currYearRoyaltyAmt,
+      }));
+    }
+  } catch (error) {
+    console.error("Error fetching current year data:", error);
+    setCustomToast({
+      message: "Error fetching current year data",
+      type: "error",
+    });
+  }
+};
 useEffect(() => {
     if (startDate && endDate && selectedOption) {
       fetchData();
@@ -297,6 +348,13 @@ useEffect(() => {
   //     console.error("Error fetching stores:", error);
   //   }
   // };
+
+  const [openSection, setOpenSection] = useState<null | string>(null);
+
+  const toggleSection = (section: string) => {
+    setOpenSection((prev) => (prev === section ? null : section));
+  };
+
 
   const getUserStore = async () => {
     try {
@@ -680,7 +738,13 @@ useEffect(() => {
             : "$0"}
         </span>
         <br />
-        {periodType !== "year" &&
+  <span>
+    Curr. Yr.{" "}
+    {currYearData?.net_sales
+      ? `$${Math.round(currYearData.net_sales).toLocaleString()}`
+      : "$0"}
+  </span>
+  <br />        {periodType !== "year" &&
           periodType !== "multi" &&
           prevPeriodData?.net_sales && (
             <span>
@@ -712,7 +776,13 @@ useEffect(() => {
             : "$0"}
         </span>
         <br />
-        {periodType !== "year" &&
+            <span>
+              Curr. Yr.{" "}
+              {currYearData?.net_sales
+                ? `$${calculateProfit(currYearData).toLocaleString()}`
+                : "$0"}
+            </span>
+        <br />        {periodType !== "year" &&
           periodType !== "multi" &&
           prevPeriodData?.net_sales && (
             <span>
@@ -744,7 +814,14 @@ useEffect(() => {
             : "0"}
         </span>
         <br />
-        {periodType !== "year" &&
+          <span>
+            Curr. Yr.{" "}
+            {currYearData?.customer_count
+              ? `${Math.round(currYearData.customer_count).toLocaleString()}`
+              : "0"}
+          </span>
+        <br />        
+  {periodType !== "year" &&
           periodType !== "multi" &&
           prevPeriodData?.customer_count && (
             <span>
@@ -776,7 +853,13 @@ useEffect(() => {
             : "$0"}
         </span>
         <br />
-        {periodType !== "year" &&
+  <span>
+    Curr. Yr.{" "}
+    {currYearData?.labour_cost
+      ? `$${Math.round(currYearData.labour_cost).toLocaleString()}`
+      : "$0"}
+  </span>
+  <br />        {periodType !== "year" &&
           periodType !== "multi" &&
           prevPeriodData?.labour_cost && (
             <span>
@@ -808,6 +891,13 @@ useEffect(() => {
           ? `$${Math.round(prevYearData.tax_amt).toLocaleString()}`
           : "$0"}
       </span>
+      <br />
+        <span>
+          Curr. Yr.{" "}
+          {currYearData?.tax_amt
+            ? `$${Math.round(currYearData.tax_amt).toLocaleString()}`
+            : "$0"}
+        </span>
       <br />
       {periodType !== "year" &&
         periodType !== "multi" &&
@@ -841,7 +931,14 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+        <span>
+          Curr. Yr.{" "}
+          {currYearData?.royaltyAmt
+            ? `$${Math.round(currYearData.royaltyAmt).toLocaleString()}`
+            : "$0"}
+        </span>
+       <br />
+        {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.royaltyAmt && (
           <span>
@@ -878,7 +975,14 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+        <span>
+          Curr. Yr.{" "}
+          {currYearData?.operatExpAmt
+            ? `$${Math.round(currYearData.operatExpAmt).toLocaleString()}`
+            : "$0"}
+        </span>
+       <br />
+        {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.operatExpAmt && (
           <span>
@@ -913,7 +1017,14 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+        <span>
+          Curr. Yr.{" "}
+          {currYearData?.producttotal
+            ? `$${Math.round(currYearData.producttotal).toLocaleString()}`
+            : "$0"}
+        </span>
+        <br />   
+           {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.producttotal && (
           <span>
@@ -945,7 +1056,14 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+        <span>
+          Curr. Yr.{" "}
+          {currYearData?.revenue
+            ? `$${Math.round(currYearData.revenue).toLocaleString()}`
+            : "$0"}
+        </span>
+       <br />    
+         {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.revenue && (
           <span>
@@ -977,7 +1095,14 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+        <span>
+          Curr. Yr.{" "}
+          {currYearData?.discount
+            ? `$${Math.round(currYearData.discount).toLocaleString()}`
+            : "$0"}
+        </span>
+      <br />
+        {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.discount && (
           <span>
@@ -1009,7 +1134,14 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+      <span>
+        Curr. Yr.{" "}
+        {currYearData?.promotions
+          ? `$${Math.round(currYearData.promotions).toLocaleString()}`
+          : "$0"}
+      </span>
+      <br />
+          {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.promotions && (
           <span>
@@ -1041,7 +1173,14 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-      {periodType !== "year" &&
+        <span>
+          Curr. Yr.{" "}
+          {currYearData?.voids
+            ? `$${Math.round(currYearData.voids).toLocaleString()}`
+            : "$0"}
+        </span>
+      <br />    
+    {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.voids && (
           <span>

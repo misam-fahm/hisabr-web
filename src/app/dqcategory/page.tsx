@@ -273,28 +273,28 @@ const Sales: FC = () => {
     }
   };
 
-  // const fetchDataForAddress = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response: any = await sendApiRequest({
-  //       mode: "getStoreByName",
-  //       storename: selectedOption?.name || "13246",
-  //     });
+  const fetchDataForAddress = async () => {
+    setLoading(true);
+    try {
+      const response: any = await sendApiRequest({
+        mode: "getStoreByName",
+        storename: selectedOption?.name || "13246",
+      });
 
-  //     if (response?.status === 200) {
-  //       setAddress(response?.data?.store[0]);
-  //     } else {
-  //       setCustomToast({
-  //         message: response?.message || "Failed to fetch sales.",
-  //         type: "error",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      if (response?.status === 200) {
+        response?.data?.store ? setAddress(response?.data?.store[0]) : [];
+      } else {
+        setCustomToast({
+          message: response?.message || "Failed to fetch sales.",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (startDate && endDate && selectedOption) {
@@ -311,17 +311,17 @@ const Sales: FC = () => {
       if (response?.status === 200) {
         const stores = response?.data?.stores || [];
         // Map stores to the format expected by the Dropdown component
-        const formattedStores = stores.map((store) => ({
-          name: `${store.name} - ${store.location || "Unknown Location"}`, // Ensure location is handled
-          id: store.id,
+        const formattedStores = stores?.map((store) => ({
+          name: `${store?.name} - ${store?.location || "Unknown Location"}`, // Ensure location is handled
+          id: store?.id,
         }));
         
         setStore(formattedStores); // Update store state with formatted data
         
         if (stores.length > 0) {
           setSelectedOption({
-            name: `${stores[0].name} - ${stores[0].location || "Unknown Location"}`,
-            id: stores[0].id,
+            name: `${stores[0]?.name} - ${stores[0]?.location || "Unknown Location"}`,
+            id: stores[0]?.id,
           });
         }
       } else {
@@ -439,16 +439,31 @@ const Sales: FC = () => {
 
     const data = header.concat(itemNames, footer);
 
+     // Parse store number and location from selectedOption.name
+     let storeNumber = "";
+     let storeAddress = "";
+     if (selectedOption?.name) {
+       const [number, ...locationParts] = selectedOption.name.split(" - ");
+       storeNumber = number || "";
+       storeAddress = locationParts.join(" - ") || "";
+     }
+
     const values = data.map((category) => {
-      if (category === "Store Number") return address?.storename || "";
-      if (category === "Store Address") return address?.location || "";
-      if (category === "Transaction Count") return totalsalecount || 0;
+         if (category === "Store Number") return storeNumber;
+      if (category === "Store Address") return storeAddress;
+      if (category === "Transaction Count") return totalOrders || 0;
+      if (category === "Inventory Purchases") return productTotal ? Math.round(productTotal) : 0;
       if (category === "Ending Inventory") return Math.round(subtotal || 0);
       if (footer.includes(category)) return "$" + 0;
 
       // Use the original name to fetch the value
       const originalName = nameMapping[category] || category;
-
+      if (originalName === "Meat") {
+        const meatItem = allData.find((item) => item.name === originalName);
+        return meatItem?.totalqty
+          ? (meatItem.totalqty * 20).toLocaleString() 
+          : "0/Lbs";
+      }
       return getTotalByCategory(originalName);
     });
 
@@ -513,10 +528,10 @@ const Sales: FC = () => {
       />
       {uploadPdfloading && <Loading />}
       <div className="px-6 mt-3 below-md:px-3 below-md:mt-0 tablet:mt-4">
-        <div className="flex flex-row justify-between below-md:flex-col pb-6 sticky z-20 w-full below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4 gap-6 tablet:grid tablet:grid-cols-2">
+        <div className="flex flex-row justify-between below-md:flex-col pb-2 sticky z-20 w-full below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4 gap-6 tablet:grid tablet:grid-cols-2">
           {/* Store & Date Picker */}
           <div className="flex flex-row below-md:flex-col w-[50%] tablet:w-[100%] below-md:w-full gap-6 below-md:gap-4 tablet:col-span-2">
-            <Dropdown
+          <Dropdown
               options={store}
               selectedOption={selectedOption?.name || "Store"}
               onSelect={(selectedOption: any) => {
@@ -529,9 +544,9 @@ const Sales: FC = () => {
               isOpen={isStoreDropdownOpen}
               toggleOpen={toggleStoreDropdown}
               widthchange="w-[60%] below-md:w-full tablet:w-[50%]"
-              className="h-[35px] p-2 below-md:px-4"
+              //  className="h-[35px] below-md:px-4"
             />
-            <div className="w-full below-md:w-full tablet:w-[60%] h-[40px] p-2 below-md:px-4">
+            <div className="w-full below-md:w-full tablet:w-[60%] h-[40px] below-md:px-4">
               <DateRangePicker
                 startDate={startDate}
                 endDate={endDate}
@@ -760,8 +775,8 @@ const Sales: FC = () => {
                     {Items?.name
                       ? Items.name === "NF/NSA Bars (No sugar added)"
                         ? "NF/NSA"
-                        : Items.name.length > 10
-                          ? `${Items.name.slice(0, 10)}..`
+                         : Items.name.length > 14
+                          ? `${Items.name.slice(0, 14)}..`
                           : Items.name
                       : "--"}
                   </p>
@@ -776,10 +791,24 @@ const Sales: FC = () => {
                 {/* Align all 3 values in one line */}
                 <div className="flex flex-row gap-2 items-baseline">
                   {Items?.qty_times_pieces > 0 && (
-                    <p className="text-[11px] text-[#000000] font-semibold">
-                      {Items.qty_times_pieces.toLocaleString()}pc
-                    </p>
-                  )}
+    <p className="text-[11px] text-[#000000] font-semibold">
+      {Items.name?.toLowerCase() === "meat" ? (
+        <>{(Items.totalqty * 20).toLocaleString()}/Lbs</>
+      ) : (
+        <>
+          {Items.qty_times_pieces.toLocaleString()}/
+          {(() => {
+            const unit = Items?.unit?.toLowerCase();
+            if (unit === "piece" || unit === "pieces") return "pcs";
+            if (unit === "burger") return "bgr";
+            if (unit === "cakes") return "cks";
+            if (unit === "gallons") return "gal";
+            return unit || "unit";
+          })()}
+        </>
+      )}
+    </p>
+  )}
                   {Items?.per_piece_price > 0 && (
                     <p className="text-[11px] text-[#000000] font-semibold">
                       ${Items.per_piece_price.toFixed(2)}/
