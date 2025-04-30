@@ -22,10 +22,9 @@ const CogsPage = () => {
   const [chartColors, setChartColors] = useState<string[]>([]);
 
   // Color palette
-  const colorPalette =["#006400", "#90ee90", "#1abc9c", "#16a085", "#3498db", "#2980b9"];
+  const colorPalette = ["#00CED1","#4682B4"];
 
   useEffect(() => {
-    // Retrieve data from localStorage
     const storedData = localStorage.getItem("cogsPageData");
     if (storedData) {
       try {
@@ -46,7 +45,6 @@ const CogsPage = () => {
     }
   }, []);
 
-  // Handle back button click
   const handleBackClick = () => {
     if (pageData) {
       router.push("/sales-kpi");
@@ -69,12 +67,10 @@ const CogsPage = () => {
         });
         if (response?.status === 200) {
           const data = response.data.cogs || [];
-          // Sort data by producttotal in descending order
           const sortedData = data.sort((a: any, b: any) => b.producttotal - a.producttotal);
-          // Generate colors: distinct green for highest value, others from palette
           const maxValueIndex = sortedData.length > 0 ? 0 : -1;
           const colors = sortedData.map((_: any, index: number) =>
-            index === maxValueIndex ? "#006400" : colorPalette[index % colorPalette.length]
+            index === maxValueIndex ? "#1E90FF" : colorPalette[index % colorPalette.length]
           );
           setCogsData(sortedData);
           setChartColors(colors);
@@ -91,7 +87,6 @@ const CogsPage = () => {
     fetchCogsData();
   }, [pageData]);
 
-  // Skeleton for table rows
   const renderTableSkeleton = (isMobile: boolean) => {
     const rowCount = 5;
     return (
@@ -198,8 +193,8 @@ const CogsPage = () => {
         </button>
       </div>
 
-      {/* Mobile View (below md) */}
-      <div className="flex flex-col gap-4 md:hidden">
+      {/* Mobile and Tablet View (below 2xl) */}
+      <div className="flex flex-col gap-4 2xl:hidden">
         <div className="w-full flex justify-center">
           {loading ? (
             <div className="w-full max-w-[300px] h-[300px]">
@@ -218,7 +213,7 @@ const CogsPage = () => {
           )}
         </div>
         <div className="w-full flex justify-center items-center">
-          <div className="w-full max-w-[99%]">
+          <div className="w-full max-w-[99%] md:max-w-[31rem]">
             {loading ? (
               renderTableSkeleton(true)
             ) : cogsData.length > 0 ? (
@@ -271,9 +266,9 @@ const CogsPage = () => {
         </div>
       </div>
 
-      {/* Web View (md and above) */}
-      <div className="hidden md:flex md:flex-row md:gap-6 flex-1">
-        <div className="w-full md:w-2/3 flex justify-center items-center">
+      {/* Desktop View (2xl and above) */}
+      <div className="hidden 2xl:flex 2xl:flex-row 2xl:gap-6 flex-1">
+        <div className="w-full 2xl:w-2/3 flex justify-center items-center">
           {loading ? (
             <div className="w-full max-w-[450px] h-[450px]">
               <Skeleton circle height="100%" width="100%" />
@@ -290,7 +285,7 @@ const CogsPage = () => {
             <NoDataFound />
           )}
         </div>
-        <div className="w-full md:w-1/3 flex justify-center items-center">
+        <div className="w-full 2xl:w-1/3 flex justify-center items-center">
           <div className="w-full max-w-[31rem]">
             {loading ? (
               renderTableSkeleton(false)
