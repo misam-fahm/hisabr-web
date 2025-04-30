@@ -214,7 +214,6 @@ useEffect(() => {
       type: "error",
     });
   };
-  const [showCogsChart, setShowCogsChart] = useState<boolean>(false);
   const getMonthsDifference = () => {
     // const start = new Date(startDate);
     // const end = new Date(endDate);
