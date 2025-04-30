@@ -14,7 +14,6 @@ import Tooltip from "@/Components/UI/Toolstips/Tooltip";
 import YearlySalesGraph from "@/Components/Charts-Graph/YearlySalesGraph";
 import TenderRevenueChart from "@/Components/Charts-Graph/TenderRevenueChart";
 import TenderCommAmtChart from "@/Components/Charts-Graph/TenderCommAmtChart";
-
 const SalesKPI: FC = () => {
   const router = useRouter();
   const tableDataForTender: any[] = [
@@ -113,7 +112,6 @@ const normalizedPercentages =
   percentageSum > 0
     ? percentageValues.map((val) => ((val / percentageSum) * 100).toFixed(2))
     : percentageValues.map(() => "0.00");
-
 const tableData = [
   {
     label: "Profit",
@@ -216,7 +214,6 @@ useEffect(() => {
       type: "error",
     });
   };
-
   const getMonthsDifference = () => {
     // const start = new Date(startDate);
     // const end = new Date(endDate);
@@ -461,6 +458,30 @@ useEffect(() => {
     0
   );
 
+  
+
+  const handleExpensesCardClick = () => {
+    if (startDate && endDate && selectedOption?.id) {
+      const startdate = format(startDate, "yyyy-MM-dd");
+      const enddate = format(endDate, "yyyy-MM-dd");
+      const storeid = selectedOption.id;
+      const months = getMonthsDifference();
+
+      // Store data in localStorage
+      localStorage.setItem(
+        "expensesPageData",
+        JSON.stringify({ storeid, startdate, enddate, months })
+      );
+
+      // Navigate to expenses page
+      router.push("/sales-kpi/expenses");
+    } else {
+      setCustomToast({
+        message: "Please select a store and date range",
+        type: "error",
+      });
+    }
+  };
   // Ensure there's no error when `items` is empty
   const hasItems = items && items.length > 0;
 
@@ -529,6 +550,29 @@ const determinePeriodType = (start: Date, end: Date): "month" | "quarter" | "yea
 
   // If the range spans multiple months or quarters, return "multi"
   return "multi";
+};
+
+const handleCogsCardClick = () => {
+  if (startDate && endDate && selectedOption?.id) {
+    // Format dates to strings
+    const startdate = format(startDate, "yyyy-MM-dd");
+    const enddate = format(endDate, "yyyy-MM-dd");
+    const storeid = selectedOption.id;
+
+    // Store data in localStorage
+    localStorage.setItem(
+      "cogsPageData",
+      JSON.stringify({ storeid, startdate, enddate })
+    );
+
+    // Navigate to the CogsPage without query parameters
+    router.push("/sales-kpi/cogs");
+  } else {
+    setCustomToast({
+      message: "Please select a store and date range",
+      type: "error",
+    });
+  }
 };
 
 // Helper function to calculate previous year and period dates
@@ -956,7 +1000,7 @@ useEffect(() => {
 {/* Operating Expenses */}
 <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
-  onClick={() => router.push("/expenses")}
+  onClick={handleExpensesCardClick}
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">
@@ -975,14 +1019,14 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-        <span>
-          Curr. Yr.{" "}
-          {currYearData?.operatExpAmt
-            ? `$${Math.round(currYearData.operatExpAmt).toLocaleString()}`
-            : "$0"}
-        </span>
-       <br />
-        {periodType !== "year" &&
+      <span>
+        Curr. Yr.{" "}
+        {currYearData?.operatExpAmt
+          ? `$${Math.round(currYearData.operatExpAmt).toLocaleString()}`
+          : "$0"}
+      </span>
+      <br />
+      {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.operatExpAmt && (
           <span>
@@ -1000,7 +1044,7 @@ useEffect(() => {
 {/* COGS */}
 <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] cursor-pointer border-b-4 w-full p-4 justify-between items-stretch"
-  onClick={() => router.push("/invoices")}
+  onClick={handleCogsCardClick}
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">COGS</p>
@@ -1017,14 +1061,14 @@ useEffect(() => {
           : "$0"}
       </span>
       <br />
-        <span>
-          Curr. Yr.{" "}
-          {currYearData?.producttotal
-            ? `$${Math.round(currYearData.producttotal).toLocaleString()}`
-            : "$0"}
-        </span>
-        <br />   
-           {periodType !== "year" &&
+      <span>
+        Curr. Yr.{" "}
+        {currYearData?.producttotal
+          ? `$${Math.round(currYearData.producttotal).toLocaleString()}`
+          : "$0"}
+      </span>
+      <br />
+      {periodType !== "year" &&
         periodType !== "multi" &&
         prevPeriodData?.producttotal && (
           <span>
@@ -1039,6 +1083,7 @@ useEffect(() => {
   </div>
 </div>
 
+      
 {/* Total Revenue */}
 <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
   <div>
@@ -1198,8 +1243,8 @@ useEffect(() => {
           <div>
           <p className="text-[14px] text-[#000000cc] font-bold pb-0 pl-8 pt-4">
   Average Order: {data?.avg_order
-    ? `$${Math.round(data?.avg_order)?.toLocaleString()}`
-    : "$00,000"}
+    ? `$${Number(data?.avg_order).toFixed(2).toLocaleString()}`
+    : "$0.00"}
 </p>
                 
              
