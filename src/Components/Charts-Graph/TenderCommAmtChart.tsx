@@ -65,16 +65,19 @@ const TenderCommAmtChart = ({ tenderData }) => {
 
   const hasData = validData.length > 0 && totalCommission > 0;
 
-  // Adjust data to ensure minimum value for visualization
-  const adjustedData = hasData
-    ? validData.map((row) => ({
-        ...row,
-        commissionAmt: Math.max(row.commissionAmt, totalCommission * 0.01),
-      }))
+  // Sort validData in descending order based on commissionAmt
+  const sortedData = hasData
+    ? [...validData].sort((a, b) => b.commissionAmt - a.commissionAmt)
     : [];
 
-  // Determine top 6 indices based on commission amount
-  const topIndices = adjustedData
+  // Adjust data to ensure minimum value for visualization
+  const adjustedData = sortedData.map((row) => ({
+    ...row,
+    commissionAmt: Math.max(row.commissionAmt, totalCommission * 0.01),
+  }));
+
+  // Determine top 6 indices based on commission amount (descending order)
+  const topIndices = validData
     .map((row, index) => ({ index, commissionAmt: row.commissionAmt }))
     .sort((a, b) => b.commissionAmt - a.commissionAmt)
     .slice(0, 6)
@@ -174,65 +177,65 @@ const TenderCommAmtChart = ({ tenderData }) => {
     animation: { duration: 300 },
   } as const;
 
- const renderCenterText = () => {
-  if (!hasData) {
-    return <p className="m-0 font-bold">No Data Available</p>;
-  }
+  const renderCenterText = () => {
+    if (!hasData) {
+      return <p className="m-0 font-bold">No Data Available</p>;
+    }
 
-  if (hoveredIndex === null) {
-    return (
-      <p className="m-0 font-bold" style={{ fontSize: '28px' }}>
-        ${Math.round(totalCommission).toLocaleString()}
-      </p>
-    );
-  }
+    if (hoveredIndex === null) {
+      return (
+        <p className="m-0 font-bold" style={{ fontSize: '28px' }}>
+          ${Math.round(totalCommission).toLocaleString()}
+        </p>
+      );
+    }
 
-  // Use validData (unadjusted) instead of adjustedData for real values
-  const originalItem = validData[hoveredIndex];
-  const realCommissionAmt = (originalItem.payments * originalItem.commission) / 100 || 0;
-  const percentage = ((realCommissionAmt / totalCommission) * 100).toFixed(2);
-  const amount = Math.round(realCommissionAmt).toLocaleString();
-  const label = originalItem.tendername || 'Unknown';
-  const maxLength = 'Delivery-GrubHub Integ'.length;
+    // Use validData (unadjusted) instead of adjustedData for real values
+    const originalItem = validData[hoveredIndex];
+    const realCommissionAmt = (originalItem.payments * originalItem.commission) / 100 || 0;
+    const percentage = ((realCommissionAmt / totalCommission) * 100).toFixed(2);
+    const amount = Math.round(realCommissionAmt).toLocaleString();
+    const label = originalItem.tendername || 'Unknown';
+    const maxLength = 'Delivery-GrubHub Integ'.length;
 
-  if (label.length > maxLength) {
-    const words = label.split(' ');
-    let firstLine = '';
-    let secondLine = '';
-    let currentLine = '';
+    if (label.length > maxLength) {
+      const words = label.split(' ');
+      let firstLine = '';
+      let secondLine = '';
+      let currentLine = '';
 
-    for (const word of words) {
-      if ((currentLine + word).length <= maxLength) {
-        currentLine += (currentLine ? ' ' : '') + word;
-      } else {
-        if (!firstLine) {
-          firstLine = currentLine;
-          currentLine = word;
+      for (const word of words) {
+        if ((currentLine + word).length <= maxLength) {
+          currentLine += (currentLine ? ' ' : '') + word;
         } else {
-          secondLine += (secondLine ? ' ' : '') + word;
+          if (!firstLine) {
+            firstLine = currentLine;
+            currentLine = word;
+          } else {
+            secondLine += (secondLine ? ' ' : '') + word;
+          }
         }
       }
+      if (!secondLine) secondLine = currentLine;
+
+      return (
+        <div className="flex flex-col items-center space-y-1">
+          <p className="m-0 font-bold text-sm">{firstLine}</p>
+          <p className="m-0 font-bold text-sm">{secondLine}</p>
+          <p className="m-0 text-sm">{percentage}%</p>
+          <p className="m-0 text-sm">${amount}</p>
+        </div>
+      );
     }
-    if (!secondLine) secondLine = currentLine;
 
     return (
       <div className="flex flex-col items-center space-y-1">
-        <p className="m-0 font-bold text-sm">{firstLine}</p>
-        <p className="m-0 font-bold text-sm">{secondLine}</p>
+        <p className="m-0 font-bold text-sm">{label}</p>
         <p className="m-0 text-sm">{percentage}%</p>
         <p className="m-0 text-sm">${amount}</p>
       </div>
     );
-  }
-
-  return (
-    <div className="flex flex-col items-center space-y-1">
-      <p className="m-0 font-bold text-sm">{label}</p>
-      <p className="m-0 text-sm">{percentage}%</p>
-      <p className="m-0 text-sm">${amount}</p>
-    </div>
-  );
-};
+  };
 
   return (
     <div className="relative w-full h-[360px] md:h-[432px] mx-auto rounded-lg pt-8 pb-8 below-md:w-[430px] below-md:h-[430px]">
