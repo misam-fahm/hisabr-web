@@ -112,38 +112,6 @@ const normalizedPercentages =
   percentageSum > 0
     ? percentageValues.map((val) => ((val / percentageSum) * 100).toFixed(2))
     : percentageValues.map(() => "0.00");
-const tableData = [
-  {
-    label: "Profit",
-    amount: validProfit.toLocaleString(),
-    per: normalizedPercentages[4],
-    color: "#3CB371",
-  },
-  {
-    label: "Labour Cost",
-    amount: (Math.round(labourCost) || 0).toLocaleString(),
-    per: normalizedPercentages[0],
-    color: "#4B4B4B",
-  },
-  {
-    label: "Sales Tax",
-    amount: (Math.round(taxAmount) || 0).toLocaleString(),
-    per: normalizedPercentages[1],
-    color: "#DAB777",
-  },
-  {
-    label: "Royalty",
-    amount: (Math.round(royaltyAmt) || 0).toLocaleString(),
-    per: normalizedPercentages[2],
-    color: "#653C59",
-  },
-  {
-    label: "Operating Expenses",
-    amount: (Math.round(operatExpAmt) || 0).toLocaleString(),
-    per: normalizedPercentages[3],
-    color: "#FF5555",
-  },
-];
 
 useEffect(() => {
   if (isVerifiedUser) {
@@ -199,7 +167,6 @@ useEffect(() => {
     if (startDate && endDate && selectedOption) {
       fetchData();
       // setIsFirstCall(false);
-      fetchDataForTender();
       // fetchDataForItems();
     }
   }, [selectedOption]);
@@ -267,43 +234,11 @@ useEffect(() => {
     }
   };
 
-  const fetchDataForTender = async () => {
-    try {
-      setLoading(true); // Set loading to true before fetching
-      if (startDate && endDate) {
-        const response: any = await sendApiRequest({
-          mode: "getLatestTenders",
-          storeid: selectedOption?.id || 69,
-          startdate: startDate && format(startDate, "yyyy-MM-dd"),
-          enddate: endDate && format(endDate, "yyyy-MM-dd"),
-        });
 
-        if (response?.status === 200) {
-          setTender(response?.data?.tenders || []);
-        } else {
-          setCustomToast({
-            ...customToast,
-            message: response?.message,
-            type: "error",
-          });
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching tender data:", error);
-      setCustomToast({
-        ...customToast,
-        message: "Error fetching tender data",
-        type: "error",
-      });
-    } finally {
-      setLoading(false); // Set loading to false after fetching (success or failure)
-    }
-  };
 
   useEffect(() => {
     if (startDate && endDate && selectedOption) {
       fetchData();
-      fetchDataForTender();
     }
   }, [startDate, endDate, selectedOption]);
   // const fetchDataForItems = async () => {
@@ -708,7 +643,6 @@ const calculateProfit = (data: any): number => {
 useEffect(() => {
   if (startDate && endDate && selectedOption) {
     fetchData();
-    fetchDataForTender();
     fetchPreviousData();
   }
 }, [startDate, endDate, selectedOption]);
@@ -743,7 +677,6 @@ useEffect(() => {
                   setStartDate={setStartDate}
                   setEndDate={setEndDate}
                   fetchData={fetchData}
-                  fetchDataForTender={fetchDataForTender}
                   // fetchDataForItems={fetchDataForItems}
                 />
               </div>
@@ -1252,221 +1185,61 @@ useEffect(() => {
               <div className="px-6">
       {/* Expense Distribution */}
       <div className="flex flex-col rounded-lg bg-white mt-6 shadow-md">
-        <button
-          className="text-left font-bold text-[16px] text-[#334155] mx-4 my-4 flex justify-between items-center"
-          onClick={() => toggleSection("expense")}
-        >
-          Expense Distribution
-          <span>{openSection === "expense" ? "▲" : "▼"}</span>
-        </button>
-        {openSection === "expense" && (
-          <div className="flex flex-col tablet:flex-col mx-3">
-            <div className="flex flex-row items-center justify-between below-md:flex-col tablet:flex-col">
-              <div className="-my-12">
-                {/* Your DonutChart component */}
-                <DonutChart values={data} operatExpAmt={operatExpAmt} />
-              </div>
-              <div className="overflow-x-auto w-[50%] custom-scrollbar">
-                {/* Your Table for Expense Distribution */}
-                <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
-                  {/* Table head */}
-                  <thead>
-                    <tr>
-                      <th className="px-6 bg-blueGray-50 text-[#737373] text-left border py-1 text-sm font-medium">
-                        Label
-                      </th>
-                      <th className="px-6 bg-blueGray-50 text-[#737373] text-right border py-1 text-sm font-medium">
-                        Amount
-                      </th>
-                      <th className="px-6 bg-blueGray-50 text-[#737373] text-right border py-1 text-sm font-medium">
-                        %
-                      </th>
-                    </tr>
-                  </thead>
-                  {/* Table body */}
-                  <tbody>
-                    {tableData?.length > 0 ? (
-                      tableData
-                        .filter((row: any) => row.label !== "Sales")
-                        .map((row: any, index: number) => (
-                          <tr key={index}>
-                            <td className="border-t-0 px-6 text-left text-xs p-2 flex items-center text-[#404040] text-[13px]">
-                              <div
-                                className="w-3 h-3 rounded-full mr-2"
-                                style={{ backgroundColor: row.color || "#CCCCCC" }}
-                              ></div>
-                              {row.label || "N/A"}
-                            </td>
-                            <td className="text-[14px] font-medium text-right border-t-0 px-6 text-xs p-2">
-                              ${row.amount || "0"}
-                            </td>
-                            <td className="text-[14px] font-medium text-right border-t-0 px-6 text-xs p-2">
-                              {row.per ? `${Number(row.per).toFixed(2)}%` : "0.00%"}
-                            </td>
-                          </tr>
-                        ))
-                    ) : (
-                      <tr>
-                        <td colSpan={3} className="text-center py-4 text-[#404040] text-[14px]">
-                          No data available
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      <button
+        className="text-left font-bold text-[16px] text-[#334155] mx-4 my-4 flex justify-between items-center"
+        onClick={() => toggleSection("expense")}
+      >
+        Expense Distribution
+        <span>{openSection === "expense" ? "▲" : "▼"}</span>
+      </button>
+      {openSection === "expense" && (
+        <div className="flex flex-col mx-3 mb-6">
+          <DonutChart values={data} operatExpAmt={operatExpAmt} />
+        </div>
+      )}
+    </div>
 
-      {/* Tender Revenue Distribution */}
-      <div className="flex flex-col rounded-lg bg-white mt-6 shadow-md">
-        <button
-          className="text-left font-bold text-[16px] text-[#334155] mx-4 my-4 flex justify-between items-center"
-          onClick={() => toggleSection("revenue")}
-        >
-          Tender Revenue Distribution
-          <span>{openSection === "revenue" ? "▲" : "▼"}</span>
-        </button>
-        {openSection === "revenue" && (
-          <div className="flex flex-col tablet:flex-col mx-3">
-            <div className="flex flex-row items-center justify-between below-md:flex-col tablet:flex-col">
-              {loading ? (
-                <div className="w-[50%] h-[300px] flex justify-center items-center">
-                  <Skeleton circle height={200} width={200} />
-                </div>
-              ) : tender?.length === 0 ? (
-                <div className="w-[50%] h-[300px] flex justify-center items-center">
-                  <NoDataFound />
-                </div>
-              ) : (
-                <div className="w-[50%] h-[300px] flex justify-center items-center">
-                  <TenderRevenueChart tenderData={tender} />
-                </div>
-              )}
-
-              <div className="overflow-x-auto w-[50%] custom-scrollbar">
-                <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
-                  <thead>
-                    <tr>
-                      <th className="px-6 bg-blueGray-50 text-[#737373] text-left border py-1 text-sm font-medium">
-                        Tender
-                      </th>
-                      <th className="px-6 bg-blueGray-50 text-[#737373] text-right border py-1 text-sm font-medium">
-                        Revenue
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {loading ? (
-                      <tr>
-                        <td colSpan={2} className="text-center py-4">
-                          <Skeleton count={3} height={30} />
-                        </td>
-                      </tr>
-                    ) : tender?.length === 0 ? (
-                      <tr>
-                        <td colSpan={2} className="text-center py-4">
-                          <NoDataFound />
-                        </td>
-                      </tr>
-                    ) : (
-                      tender.map((row: any, index: number) => (
-                        <tr key={index}>
-                          <td className="border-t-0 px-6 text-left text-xs p-2 flex items-center text-[#404040] text-[13px]">
-                            {row.tendername}
-                          </td>
-                          <td className="text-[14px] font-medium text-right border-t-0 px-6 text-xs p-2">
-                            ${row.payments.toLocaleString()}
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+     {/* Tender Revenue Distribution */}
+<div className="flex flex-col rounded-lg bg-white mt-6 shadow-md">
+  <button
+    className="text-left font-bold text-[16px] text-[#334155] mx-4 my-4 flex justify-between items-center"
+    onClick={() => toggleSection("revenue")}
+  >
+    Tender Revenue Distribution
+    <span>{openSection === "revenue" ? "▲" : "▼"}</span>
+  </button>
+  {openSection === "revenue" && (
+    <div className="flex flex-col tablet:flex-col mx-3">
+      <TenderRevenueChart
+        startDate={startDate}
+        endDate={endDate}
+        storeid={selectedOption?.id || 69}
+        setCustomToast={setCustomToast}
+      />
+    </div>
+  )}
+</div>
 
       {/* Tender Commission Amount Distribution */}
-      <div className="flex flex-col rounded-lg bg-white mt-6 shadow-md">
-        <button
-          className="text-left font-bold text-[16px] text-[#334155] mx-4 my-4 flex justify-between items-center"
-          onClick={() => toggleSection("commission")}
-        >
-          Tender Commission Amount Distribution
-          <span>{openSection === "commission" ? "▲" : "▼"}</span>
-        </button>
-        {openSection === "commission" && (
-          <div className="flex flex-col tablet:flex-col mx-3">
-            <div className="flex flex-row items-center justify-between below-md:flex-col tablet:flex-col">
-              {loading ? (
-                <div className="w-[50%] h-[300px] flex justify-center items-center">
-                  <Skeleton circle height={200} width={200} />
-                </div>
-              ) : tender?.length === 0 ? (
-                <div className="w-[50%] h-[300px] flex justify-center items-center">
-                  <NoDataFound />
-                </div>
-              ) : (
-                <div className="w-[50%] h-[300px] flex justify-center items-center">
-                  <TenderCommAmtChart tenderData={tender} />
-                </div>
-              )}
-
-              <div className="overflow-x-auto w-[50%] custom-scrollbar">
-                <table className="items-center bg-transparent w-full below-md:mb-12 tablet:mb-12">
-                  <thead>
-                    <tr>
-                      <th className="px-6 bg-blueGray-50 text-[#737373] text-left border py-1 text-sm font-medium">
-                        Tender
-                      </th>
-                      <th className="px-6 bg-blueGray-50 text-[#737373] text-right border py-1 text-sm font-medium">
-                        Comm. Amount
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {loading ? (
-                      <tr>
-                        <td colSpan={2} className="text-center py-4">
-                          <Skeleton count={3} height={30} />
-                        </td>
-                      </tr>
-                    ) : tender?.length === 0 ? (
-                      <tr>
-                        <td colSpan={2} className="text-center py-4">
-                          <NoDataFound />
-                        </td>
-                      </tr>
-                    ) : (
-                      tender.map((row: any, index: number) => (
-                        <tr key={index}>
-                          <td className="border-t-0 px-6 text-left text-xs p-2 flex items-center text-[#404040] text-[13px]">
-                            {row.tendername}
-                          </td>
-                          <td className="text-[14px] font-medium text-right border-t-0 px-6 text-xs p-2">
-                            $
-                            {(
-                              (row.payments * row.commission) / 100 || 0
-                            ).toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            })}
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+<div className="flex flex-col rounded-lg bg-white mt-6 shadow-md">
+  <button
+    className="text-left font-bold text-[16px] text-[#334155] mx-4 my-4 flex justify-between items-center"
+    onClick={() => toggleSection("commission")}
+  >
+    Tender Commission Amount Distribution
+    <span>{openSection === "commission" ? "▲" : "▼"}</span>
+  </button>
+  {openSection === "commission" && (
+    <div className="flex flex-col tablet:flex-col mx-3">
+      <TenderCommAmtChart
+        startDate={startDate}
+        endDate={endDate}
+        storeid={selectedOption?.id || 69}
+        setCustomToast={setCustomToast}
+      />
+    </div>
+  )}
+</div>
     </div>
           {/* <div className="flex flex-col px-6 py-6">
           <div className="flex flex-col gap-3 ">

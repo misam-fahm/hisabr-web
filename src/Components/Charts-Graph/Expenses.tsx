@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -33,10 +33,21 @@ const ExpensesChart: React.FC<ExpensesChartProps> = ({
   colors,
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  // Detect mobile view
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Adjust breakpoint as needed
+    };
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   if (!storeid || !startdate || !enddate || months === undefined) {
     return (
-      <div className="w-full max-w-[300px] h-[300px] mx-auto md:max-w-[400px] md:h-[400px] lg:max-w-[450px] lg:h-[450px]">
+      <div className="w-full max-w-[345px] h-[345px] mx-auto md:max-w-[460px] md:h-[460px] 2xl:max-w-[518px] 2xl:h-[518px]">
         <Skeleton circle height="100%" width="100%" />
       </div>
     );
@@ -44,7 +55,7 @@ const ExpensesChart: React.FC<ExpensesChartProps> = ({
 
   if (!categories.length) {
     return (
-      <div className="w-full max-w-[300px] h-[300px] mx-auto md:max-w-[400px] md:h-[400px] lg:max-w-[450px] lg:h-[450px]">
+      <div className="w-full max-w-[345px] h-[345px] mx-auto md:max-w-[460px] md:h-[460px] 2xl:max-w-[518px] 2xl:h-[518px]">
         <NoDataFound />
       </div>
     );
@@ -133,7 +144,8 @@ const ExpensesChart: React.FC<ExpensesChartProps> = ({
     const label = labels[hoveredIndex];
     const value = values[hoveredIndex];
     const percentage = ((value / total) * 100).toFixed(2);
-    const maxLength = 18;
+    const maxLength = isMobile ? 14 : 18; // 14 for mobile, 18 for desktop
+
     if (label.length > maxLength) {
       const words = label.split(" ");
       let firstLine = "";
@@ -154,24 +166,24 @@ const ExpensesChart: React.FC<ExpensesChartProps> = ({
       if (!secondLine) secondLine = currentLine;
       return (
         <div className="flex flex-col items-center space-y-1">
-          <p className="m-0 font-bold text-sm">{firstLine}</p>
-          <p className="m-0 font-bold text-sm">{secondLine}</p>
-          <p className="m-0 text-sm">{percentage}%</p>
-          <p className="m-0 text-sm">${Math.round(value).toLocaleString()}</p>
+          <p className="m-0 font-bold text-[16px]">{firstLine}</p>
+          <p className="m-0 font-bold text-[16px]">{secondLine}</p>
+          <p className="m-0 text-[20px]">{percentage}%</p>
+          <p className="m-0 text-[20px]">${Math.round(value).toLocaleString()}</p>
         </div>
       );
     }
     return (
       <div className="flex flex-col items-center space-y-1">
-        <p className="m-0 font-bold text-sm">{label}</p>
-        <p className="m-0 text-sm">{percentage}%</p>
-        <p className="m-0 text-sm">${Math.round(value).toLocaleString()}</p>
+        <p className="m-0 font-bold text-[16px]">{label}</p>
+        <p className="m-0 text-[20px]">{percentage}%</p>
+        <p className="m-0 text-[20px]">${Math.round(value).toLocaleString()}</p>
       </div>
     );
   };
 
   return (
-    <div className="relative w-full max-w-[300px] h-[300px] mx-auto md:max-w-[400px] md:h-[400px] lg:max-w-[450px] lg:h-[450px]">
+    <div className="relative w-full max-w-[345px] h-[345px] mx-auto md:max-w-[460px] md:h-[460px] 2xl:max-w-[518px] 2xl:h-[518px]">
       <Doughnut
         data={chartData}
         options={options}

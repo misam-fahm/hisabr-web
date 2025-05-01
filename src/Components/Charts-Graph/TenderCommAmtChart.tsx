@@ -1,118 +1,218 @@
 import React, { useState, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-} from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { format } from 'date-fns';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import NoDataFound from '@/Components/UI/NoDataFound/NoDataFound';
+import { sendApiRequest } from '@/utils/apiUtils';
 
-ChartJS.register(
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  ChartDataLabels
-);
+ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-declare module 'chart.js' {
-  interface ChartDataLabelsOptions {
-    align?: 'start' | 'end' | 'center' | 'bottom' | 'left' | 'right' | 'top';
-    anchor?: 'start' | 'end' | 'center' | 'bottom' | 'left' | 'right' | 'top';
-    offset?: number;
-    clamp?: boolean;
-    clip?: boolean;
-    color?: string | ((context: any) => string);
-    font?: {
-      size?: number;
-    };
-    formatter?: (value: any, context: any) => string;
-    display?: boolean;
-  }
+interface PluginOptionsByType<TType extends ChartType> {
+  datalabels?: ChartDataLabelsOptions;
 }
 
-const TenderCommAmtChart = ({ tenderData }) => {
-  const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
+type ChartType = 'line' | 'bar' | 'radar' | 'doughnut' | 'pie' | 'polarArea' | 'bubble' | 'scatter';
+
+interface ChartDataLabelsOptions {
+  align?: 'start' | 'end' | 'center' | 'bottom' | 'left' | 'right' | 'top';
+  anchor?: 'start' | 'end' | 'center' | 'bottom' | 'left' | 'right' | 'top';
+  offset?: number;
+  clamp?: boolean;
+  clip?: boolean;
+  color?: string | ((context: any) => string);
+  font?: {
+    size?: number;
+  };
+  formatter?: (value: any, context: any) => string;
+  display?: boolean;
+}
+
+interface TenderCommAmtChartProps {
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  storeid: number;
+  setCustomToast: (toast: { message: string; type: string }) => void;
+}
+
+const predefinedColors = [
+  '#00BFFF',
+  '#3CB371',
+  '#FFA500',
+  '#4B4B4B',
+  '#DAB777',
+  '#653C59',
+  '#1F77B4',
+  '#FF7F0E',
+  '#A05195',
+  '#D62728',
+  '#9467BD',
+  '#8C564B',
+  '#E377C2',
+  '#7F7F7F',
+  '#BCBD22',
+  '#17BECF',
+  '#005082',
+  '#A05195',
+  '#F28E2B',
+  '#76B7B2',
+];
+
+const tenderColorMap = new Map<string, string>();
+
+const generateRandomColor = () => {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
+
+const generateColors = (count: number) => {
+  const colors = [...predefinedColors];
+  if (count > predefinedColors.length) {
+    const additionalColors = new Set<string>();
+    while (additionalColors.size < count - predefinedColors.length) {
+      additionalColors.add(generateRandomColor());
+    }
+    colors.push(...Array.from(additionalColors));
+  }
+  return colors.slice(0, count);
+};
+
+const assignColors = (tenders: any[]) => {
+  const colors = generateColors(tenders.length);
+  return tenders.map((tender, index) => {
+    if (!tenderColorMap.has(tender.tendername)) {
+      tenderColorMap.set(tender.tendername, colors[index]);
+    }
+    return {
+      ...tender,
+      color: tenderColorMap.get(tender.tendername),
+    };
+  });
+};
+
+const TenderCommAmtChart: React.FC<TenderCommAmtChartProps> = ({
+  startDate,
+  endDate,
+  storeid,
+  setCustomToast,
+}) => {
+  const [tenderData, setTenderData] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isTablet, setIsTablet] = useState<boolean>(false);
+  const [isSpecificMdScreen, setIsSpecificMdScreen] = useState<boolean>(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 767px)');
-    setIsMobile(mediaQuery.matches);
+    const mobileQuery = window.matchMedia('(max-width: 767px)');
+    const tabletQuery = window.matchMedia('(max-width: 1024px)');
+    const specificMdScreenQuery = window.matchMedia('(width: 1180px) and (height: 820px)');
 
-    const handleResize = (e) => setIsMobile(e.matches);
-    mediaQuery.addEventListener('change', handleResize);
+    setIsMobile(mobileQuery.matches);
+    setIsTablet(tabletQuery.matches);
+    setIsSpecificMdScreen(specificMdScreenQuery.matches);
 
-    return () => mediaQuery.removeEventListener('change', handleResize);
+    const handleMobileResize = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    const handleTabletResize = (e: MediaQueryListEvent) => setIsTablet(e.matches);
+    const handleSpecificMdScreenResize = (e: MediaQueryListEvent) => setIsSpecificMdScreen(e.matches);
+
+    mobileQuery.addEventListener('change', handleMobileResize);
+    tabletQuery.addEventListener('change', handleTabletResize);
+    specificMdScreenQuery.addEventListener('change', handleSpecificMdScreenResize);
+
+    return () => {
+      mobileQuery.removeEventListener('change', handleMobileResize);
+      tabletQuery.removeEventListener('change', handleTabletResize);
+      specificMdScreenQuery.removeEventListener('change', handleSpecificMdScreenResize);
+    };
   }, []);
+
+  useEffect(() => {
+    const fetchTenderData = async () => {
+      try {
+        setLoading(true);
+        if (startDate && endDate) {
+          const response: any = await sendApiRequest({
+            mode: 'getLatestTenders',
+            storeid,
+            startdate: format(startDate, 'yyyy-MM-dd'),
+            enddate: format(endDate, 'yyyy-MM-dd'),
+          });
+
+          if (response?.status === 200) {
+            const tenders = response?.data?.tenders || [];
+            const enhancedTenderData = assignColors(tenders);
+            console.log('Fetched tenderData:', enhancedTenderData); // Debug log
+            setTenderData(enhancedTenderData);
+          } else {
+            setCustomToast({
+              message: response?.message || 'Failed to fetch tender data',
+              type: 'error',
+            });
+            setTenderData([]);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching tender data:', error);
+        setCustomToast({
+          message: 'Error fetching tender data',
+          type: 'error',
+        });
+        setTenderData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTenderData();
+  }, [startDate, endDate, storeid, setCustomToast]);
 
   const totalCommission =
     tenderData?.reduce(
       (sum, row) => sum + ((row.payments * row.commission) / 100 || 0),
       0
     ) || 0;
+  const hasData = totalCommission > 0;
 
-  // Filter out tenders with zero or no commission amount
   const validData = tenderData
-    ?.map((row) => ({
-      ...row,
-      commissionAmt: (row.payments * row.commission) / 100 || 0,
-    }))
-    .filter((row) => row.commissionAmt > 0) || [];
+    ?.map((row) => {
+      const commissionAmt =
+        typeof row.payments === 'number' && typeof row.commission === 'number'
+          ? (row.payments * row.commission) / 100
+          : 0;
+      return {
+        ...row,
+        commissionAmt,
+      };
+    })
+    .filter((row) => row.commissionAmt > 0 && row.tendername) || [];
 
-  const hasData = validData.length > 0 && totalCommission > 0;
+  console.log('validData:', validData); // Debug log
 
-  // Sort validData in descending order based on commissionAmt
   const sortedData = hasData
     ? [...validData].sort((a, b) => b.commissionAmt - a.commissionAmt)
     : [];
 
-  // Adjust data to ensure minimum value for visualization
-  const adjustedData = sortedData.map((row) => ({
+  // Adjust chart data to ensure small segments are visible
+  const chartData = sortedData.map((row) => ({
     ...row,
-    commissionAmt: Math.max(row.commissionAmt, totalCommission * 0.01),
+    chartCommissionAmt: Math.max(row.commissionAmt, totalCommission * 0.005), // Minimum 0.5% for visibility
   }));
-
-  // Determine top 6 indices based on commission amount (descending order)
-  const topIndices = validData
-    .map((row, index) => ({ index, commissionAmt: row.commissionAmt }))
-    .sort((a, b) => b.commissionAmt - a.commissionAmt)
-    .slice(0, 6)
-    .map((item) => item.index);
-
-  const backgroundColors = [
-    '#00BFFF',
-    '#3CB371',
-    '#FFA500',
-    '#4B4B4B',
-    '#DAB777',
-    '#653C59',
-    '#1F77B4',
-    '#FF7F0E',
-    '#2CA02C',
-    '#D62728',
-    '#9467BD',
-    '#8C564B',
-    '#E377C2',
-    '#7F7F7F',
-    '#BCBD22',
-    '#17BECF',
-    '#005082',
-    '#A05195',
-    '#F28E2B',
-    '#76B7B2',
-  ];
 
   const data = hasData
     ? {
-        labels: adjustedData.map((row) => row.tendername || 'Unknown'),
+        labels: sortedData.map((row) => row.tendername || 'Unknown'),
         datasets: [
           {
-            data: adjustedData.map((row) => row.commissionAmt),
-            backgroundColor: backgroundColors.slice(0, adjustedData.length),
+            data: chartData.map((row) => row.chartCommissionAmt),
+            _data: sortedData.map((row) => row.commissionAmt), // Original data for labels
+            backgroundColor: sortedData.map((row) => row.color || '#CCCCCC'),
             borderWidth: 2.42,
             borderColor: '#FFFFFF',
             hoverOffset: 20,
@@ -146,17 +246,17 @@ const TenderCommAmtChart = ({ tenderData }) => {
       tooltip: { enabled: false },
       datalabels: {
         display: hasData && !isMobile,
-        color: (context) => backgroundColors[context.dataIndex % backgroundColors.length],
+        color: (context) => sortedData[context.dataIndex]?.color || '#000000',
         font: {
-          size: 14,
+          size: 12,
         },
         formatter: (value, context) => {
           const index = context.dataIndex;
-          if (topIndices.includes(index)) {
-            const originalCommissionAmt = adjustedData[index].commissionAmt;
-            const percentage = ((originalCommissionAmt / totalCommission) * 100).toFixed(1);
+          const commissionAmt = sortedData[index]?.commissionAmt || 0;
+          const percentage = (commissionAmt / totalCommission) * 100;
+          if (percentage > 4) {
             const label = context.chart.data.labels[index];
-            return `${label.length > 10 ? label.slice(0, 10) + '...' : label}: ${percentage}%`;
+            return `${label.length > 10 ? label.slice(0, 10) + '...' : label}: ${percentage.toFixed(1)}%`;
           }
           return null;
         },
@@ -179,23 +279,22 @@ const TenderCommAmtChart = ({ tenderData }) => {
 
   const renderCenterText = () => {
     if (!hasData) {
-      return <p className="m-0 font-bold">No Data Available</p>;
+      return <p className="m-0 font-bold text-[12px]">No Data Available</p>;
     }
 
     if (hoveredIndex === null) {
       return (
-        <p className="m-0 font-bold" style={{ fontSize: '28px' }}>
+        <p className="m-0 font-bold" style={{ fontSize: '26px' }}>
           ${Math.round(totalCommission).toLocaleString()}
         </p>
       );
     }
 
-    // Use validData (unadjusted) instead of adjustedData for real values
-    const originalItem = validData[hoveredIndex];
-    const realCommissionAmt = (originalItem.payments * originalItem.commission) / 100 || 0;
-    const percentage = ((realCommissionAmt / totalCommission) * 100).toFixed(2);
-    const amount = Math.round(realCommissionAmt).toLocaleString();
-    const label = originalItem.tendername || 'Unknown';
+    const item = sortedData[hoveredIndex];
+    const commissionAmt = item.commissionAmt || 0;
+    const percentage = ((commissionAmt / totalCommission) * 100).toFixed(2);
+    const amount = Math.round(commissionAmt).toLocaleString();
+    const label = item.tendername || 'Unknown';
     const maxLength = 'Delivery-GrubHub Integ'.length;
 
     if (label.length > maxLength) {
@@ -220,28 +319,158 @@ const TenderCommAmtChart = ({ tenderData }) => {
 
       return (
         <div className="flex flex-col items-center space-y-1">
-          <p className="m-0 font-bold text-sm">{firstLine}</p>
-          <p className="m-0 font-bold text-sm">{secondLine}</p>
-          <p className="m-0 text-sm">{percentage}%</p>
-          <p className="m-0 text-sm">${amount}</p>
+          <p className="m-0 font-bold text-[12px]">{firstLine}</p>
+          <p className="m-0 font-bold text-[12px]">{secondLine}</p>
+          <p className="m-0 text-[12px]">{percentage}%</p>
+          <p className="m-0 text-[12px]">${amount}</p>
         </div>
       );
     }
 
     return (
       <div className="flex flex-col items-center space-y-1">
-        <p className="m-0 font-bold text-sm">{label}</p>
-        <p className="m-0 text-sm">{percentage}%</p>
-        <p className="m-0 text-sm">${amount}</p>
+        <p className="m-0 font-bold text-[12px]">{label}</p>
+        <p className="m-0 text-[12px]">{percentage}%</p>
+        <p className="m-0 text-[12px]">${amount}</p>
       </div>
     );
   };
 
+  const truncateTenderName = (name: string, maxLength: number = 16) => {
+    // Apply truncation for mobile, below md, or specific md screen (1180x820)
+    if ((isMobile || isTablet || isSpecificMdScreen) && name.length > maxLength) {
+      return name.slice(0, maxLength) + '...';
+    }
+    return name;
+  };
+
   return (
-    <div className="relative w-full h-[360px] md:h-[432px] mx-auto rounded-lg pt-8 pb-8 below-md:w-[430px] below-md:h-[430px]">
-      <Doughnut data={data} options={options} plugins={[ChartDataLabels]} />
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-base text-gray-800 max-w-[80%]">
-        {renderCenterText()}
+    <div className="flex flex-row items-center justify-between below-md:flex-col tablet:flex-col 2xl:flex-row 2xl:gap-6">
+      {/* Chart Section */}
+      <div className="w-full flex justify-center items-center lg:mr-5 xl:mr-10 2xl:mr-20 2xl:translate-x-[10%]">
+        {loading ? (
+          <div className="relative w-[451.5px] h-[451.5px] sm:w-[493.5px] sm:h-[493.5px] tablet:w-[525px] tablet:h-[525px] rounded-lg pt-8 pb-8 flex justify-center items-center">
+            <Skeleton circle height={200} width={200} />
+          </div>
+        ) : tenderData?.length === 0 ? (
+          <div className="relative w-[451.5px] h-[451.5px] sm:w-[493.5px] sm:h-[493.5px] tablet:w-[525px] tablet:h-[525px] rounded-lg pt-8 pb-8 flex justify-center items-center">
+            <NoDataFound />
+          </div>
+        ) : (
+          <div className="relative w-[451.5px] h-[451.5px] sm:w-[493.5px] sm:h-[493.5px] tablet:w-[525px] tablet:h-[525px] rounded-lg pt-8 pb-8 flex justify-center items-center">
+            <Doughnut data={data} options={options} plugins={[ChartDataLabels]} />
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-[12px] text-gray-800 max-w-[80%]">
+              {renderCenterText()}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Table Section */}
+      <div className="w-full below-md:w-full tablet:w-full lg:w-[125%] xl:w-[125%] 2xl:w-[86.56875%] flex justify-center items-center">
+        <div className="w-full max-w-[99%] md:max-w-full lg:max-w-[125%] xl:max-w-[125%] 2xl:max-w-[86.56875%]">
+          {loading ? (
+            <table className="w-full border-collapse text-white table-fixed rounded-[10px] border border-[#E4E4EF]">
+              <thead className="bg-[#0F1044] top-0 z-10 sticky">
+                <tr>
+                  <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[14px] border-r border-[#E4E4EF] w-[@j
+50%]">
+                    Tender
+                  </th>
+                  <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[14px] border-r border-[#E4E4EF] w-[27.5%]">
+                    Comm. Amount
+                  </th>
+                  <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[14px] w-[22.5%]">
+                    %
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...Array(5)].map((_, index) => (
+                  <tr
+                    key={index}
+                    className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
+                  >
+                    <td className="px-2 py-1 text-[13px] border-r border-[#E4E4EF] text-left truncate flex items-center gap-1.5">
+                      <Skeleton circle width={8} height={8} />
+                      <Skeleton width="80%" />
+                    </td>
+                    <td className="px-2 py-1 text-[13px] text-right border-r border-[#E4E4EF]">
+                      <Skeleton width="60%" />
+                    </td>
+                    <td className="px-2 py-1 text-[13px] text-right">
+                      <Skeleton width="60%" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : tenderData?.length === 0 ? (
+            <table className="w-full border-collapse text-white table-fixed rounded-[10px] border border-[#E4E4EF]">
+              <thead className="bg-[#0F1044] top-0 z-10 sticky">
+                <tr>
+                  <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[14px] border-r border-[#E4E4EF] w-[50%]">
+                    Tender
+                  </th>
+                  <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[14px] border-r border-[#E4E4EF] w-[27.5%]">
+                    Comm. Amount
+                  </th>
+                  <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[14px] w-[22.5%]">
+                    %
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td
+                    colSpan={3}
+                    className="px-2 py-1 text-[13px] text-center bg-white"
+                  >
+                    <NoDataFound />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          ) : (
+            <table className="w-full border-collapse text-white table-fixed rounded-[10px] border border-[#E4E4EF]">
+              <thead className="bg-[#0F1044] top-0 z-10 sticky">
+                <tr>
+                  <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[14px] border-r border-[#E4E4EF] w-[50%]">
+                    Tender
+                  </th>
+                  <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[14px] border-r border-[#E4E4EF] w-[27.5%]">
+                    Comm. Amount
+                  </th>
+                  <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[14px] w-[22.5%]">
+                    %
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedData.map((row, index) => (
+                  <tr
+                    key={index}
+                    className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
+                  >
+                    <td className="px-2 py-1 text-[#636363] text-[13px] border-r border-[#E4E4EF] text-left truncate flex items-center gap-1.5">
+                      <span
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: row.color || "#E0E0E0" }}
+                      ></span>
+                      {truncateTenderName(row.tendername || "N/A")}
+                    </td>
+                    <td className="px-2 py-1 text-[#636363] text-[13px] text-right border-r border-[#E4E4EF]">
+                      ${Math.round(row.commissionAmt).toLocaleString()}
+                    </td>
+                    <td className="px-2 py-1 text-[#636363] text-[13px] text-right">
+                      {((row.commissionAmt / totalCommission) * 100).toFixed(2)}%
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
     </div>
   );
