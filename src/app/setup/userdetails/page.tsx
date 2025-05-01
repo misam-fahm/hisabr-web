@@ -12,6 +12,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 import ToastNotification from "@/Components/UI/ToastNotification/ToastNotification";
 import { sendApiRequest } from "@/utils/apiUtils";
+import AddUser from "@/Components/Setup/StorePopup/AddUser"; // Import AddUser component
 
 interface TableRow {
   Usersid: number;
@@ -43,6 +44,7 @@ const Page: FC = () => {
     phonenumber: "",
     isactive: 1,
   });
+  const [isOpenAddStore, setOpenAddStore] = useState(false); // State for AddUser modal
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -252,7 +254,6 @@ const Page: FC = () => {
           .map((user) => user.storename)
           .filter((name): name is string => name !== null);
 
-        console.log("Triggering success toast");
         setCustomToast({
           message: "User updated successfully",
           type: "success",
@@ -261,23 +262,19 @@ const Page: FC = () => {
 
         if (selectedUser.storeCount && selectedUser.storeCount > 1) {
           setTimeout(() => {
-            console.log("Triggering warning toast");
             setCustomToast({
               message: `Warning: User is associated with multiple stores: ${userStores.join(", ")}`,
               type: "warning",
               toastId: Date.now(),
             });
-          }, 3000); // Show warning after success toast has time to display
+          }, 3000);
         }
 
         if (selectedUser.Usersid.toString() === loggedInUserId) {
-          console.log("Logged-in user updated, refreshing page.");
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
         }
-
-        // Refresh the page after a short delay to allow toast to be seen
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500); // Delay to ensure success toast is visible before refresh
 
         setIsEditModalOpen(false);
       } else {
@@ -297,12 +294,23 @@ const Page: FC = () => {
     }
   };
 
+  // Callback to handle user addition
+  const handleUserAdded = () => {
+    setOpenAddStore(false);
+    fetchData(); // Refresh data instead of reloading the page
+  };
+
   return (
     <main
       className="max-h-[calc(100vh-60px)] px-6 below-md:px-3 below-md:py-4 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
       <ToastNotification message={customToast.message} type={customToast.type} />
+
+      {/* Add User Button for Desktop */}
+      <div className="flex flex-row justify-end gap-2 below-md:hidden my-6">
+        {userType === "A" && <AddUser setAddStore={setOpenAddStore} onUserAdded={handleUserAdded} />}
+      </div>
 
       {/* Mobile View */}
       <div className="block md:hidden" style={{ maxHeight: "calc(100vh - 80px)", overflowY: "auto" }}>
@@ -345,6 +353,10 @@ const Page: FC = () => {
             </div>
           </div>
         ))}
+        {/* Add User Button for Mobile */}
+        <div className="block pl-24 md:hidden">
+          {userType === "A" && <AddUser setAddStore={setOpenAddStore} onUserAdded={handleUserAdded} />}
+        </div>
       </div>
 
       {/* Desktop View */}

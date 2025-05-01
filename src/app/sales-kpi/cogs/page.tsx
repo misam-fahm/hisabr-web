@@ -22,7 +22,7 @@ const CogsPage = () => {
   const [chartColors, setChartColors] = useState<string[]>([]);
 
   // Color palette
-  const colorPalette = ["#00CED1","#4682B4"];
+  const colorPalette = ["#00CED1", "#4682B4"];
 
   useEffect(() => {
     const storedData = localStorage.getItem("cogsPageData");
@@ -95,21 +95,21 @@ const CogsPage = () => {
           <tr>
             <th
               className={`text-center ${
-                isMobile ? "px-2 py-1.5 text-[12px]" : "px-4 py-2 text-[15px]"
+                isMobile ? "px-2 py-1.5 text-[12px] md:text-[18px]" : "px-4 py-2 text-[15px]"
               } text-[#FFFFFF] font-normal border-r border-[#E4E4EF] w-[55%]`}
             >
               Label
             </th>
             <th
               className={`text-center ${
-                isMobile ? "px-2 py-1.5 text-[12px]" : "px-4 py-2 text-[15px]"
+                isMobile ? "px-2 py-1.5 text-[12px] md:text-[18px]" : "px-4 py-2 text-[15px]"
               } text-[#FFFFFF] font-normal border-r border-[#E4E4EF] w-[22.5%]`}
             >
               Amount
             </th>
             <th
               className={`text-center ${
-                isMobile ? "px-2 py-1.5 text-[12px]" : "px-4 py-2 text-[15px]"
+                isMobile ? "px-2 py-1.5 text-[12px] md:text-[18px]" : "px-4 py-2 text-[15px]"
               } text-[#FFFFFF] font-normal w-[22.5%]`}
             >
               %
@@ -125,7 +125,7 @@ const CogsPage = () => {
               <td
                 className={`${
                   isMobile
-                    ? "px-2 py-1 text-[11px]"
+                    ? "px-2 py-1 text-[11px] md:text-[17px]"
                     : "px-4 py-1.5 text-[14px]"
                 } border-r border-[#E4E4EF] text-left truncate flex items-center gap-2`}
               >
@@ -135,7 +135,7 @@ const CogsPage = () => {
               <td
                 className={`${
                   isMobile
-                    ? "px-2 py-1 text-[11px]"
+                    ? "px-2 py-1 text-[11px] md:text-[17px]"
                     : "px-4 py-1.5 text-[14px]"
                 } text-right border-r border-[#E4E4EF]`}
               >
@@ -144,7 +144,7 @@ const CogsPage = () => {
               <td
                 className={`${
                   isMobile
-                    ? "px-2 py-1 text-[11px]"
+                    ? "px-2 py-1 text-[11px] md:text-[17px]"
                     : "px-4 py-1.5 text-[14px]"
                 } text-right`}
               >
@@ -189,7 +189,7 @@ const CogsPage = () => {
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          COGS Chart
+          COGS
         </button>
       </div>
 
@@ -213,7 +213,7 @@ const CogsPage = () => {
           )}
         </div>
         <div className="w-full flex justify-center items-center">
-          <div className="w-full max-w-[99%] md:max-w-[31rem]">
+          <div className="w-full max-w-[99%] md:max-w-full"> {/* Full-screen width for tablets */}
             {loading ? (
               renderTableSkeleton(true)
             ) : cogsData.length > 0 ? (
@@ -223,13 +223,13 @@ const CogsPage = () => {
                   <table className="w-full border-collapse text-white table-fixed rounded-[10px] border border-[#E4E4EF]">
                     <thead className="bg-[#0F1044] top-0 z-10">
                       <tr>
-                        <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[12px] border-r border-[#E4E4EF] w-[55%]">
+                        <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[12px] md:text-[18px] border-r border-[#E4E4EF] w-[55%]">
                           Label
                         </th>
-                        <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[12px] border-r border-[#E4E4EF] w-[22.5%]">
+                        <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[12px] md:text-[18px] border-r border-[#E4E4EF] w-[22.5%]">
                           Amount
                         </th>
-                        <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[12px] w-[22.5%]">
+                        <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[12px] md:text-[18px] w-[22.5%]">
                           %
                         </th>
                       </tr>
@@ -240,17 +240,17 @@ const CogsPage = () => {
                           key={index}
                           className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
                         >
-                          <td className="px-2 py-1 text-[#636363] text-[11px] border-r border-[#E4E4EF] text-left truncate flex items-center gap-1.5">
+                          <td className="px-2 py-1 text-[#636363] text-[11px] md:text-[17px] border-r border-[#kiwE4EF] text-left truncate flex items-center gap-1.5">
                             <span
                               className="w-2 h-2 rounded-full"
                               style={{ backgroundColor: chartColors[index] || "#E0E0E0" }}
                             ></span>
                             {item.sellername === "Gordon Food Service Inc" ? item.sellername : item.sellername || "N/A"}
                           </td>
-                          <td className="px-2 py-1 text-[#636363] text-[11px] text-right border-r border-[#E4E4EF]">
+                          <td className="px-2 py-1 text-[#636363] text-[11px] md:text-[17px] text-right border-r border-[#E4E4EF]">
                             ${Math.round(item.producttotal).toLocaleString()}
                           </td>
-                          <td className="px-2 py-1 text-[#636363] text-[11px] text-right">
+                          <td className="px-2 py-1 text-[#636363] text-[11px] md:text-[17px] text-right">
                             {((item.producttotal / total) * 100).toFixed(2)}%
                           </td>
                         </tr>

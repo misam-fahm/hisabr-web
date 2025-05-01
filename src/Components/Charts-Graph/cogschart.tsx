@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -31,6 +31,17 @@ const CogsChart: React.FC<CogsChartProps> = ({
   colors,
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  // Detect mobile view
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Adjust breakpoint as needed
+    };
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   if (!storeid || !startdate || !enddate) {
     return (
@@ -48,7 +59,11 @@ const CogsChart: React.FC<CogsChartProps> = ({
     );
   }
 
-  const labels = cogsData.map((item) => item.sellername === "Gordon Food Service Inc" ? item.sellername : item.sellername || "N/A");
+  const labels = cogsData.map((item) =>
+    item.sellername === "Gordon Food Service Inc"
+      ? item.sellername
+      : item.sellername || "N/A"
+  );
   const values = cogsData.map((item) => item.producttotal);
   const total = values.reduce((sum, val) => sum + val, 0);
   const hasData = total > 0;
@@ -130,7 +145,8 @@ const CogsChart: React.FC<CogsChartProps> = ({
     const label = labels[hoveredIndex];
     const value = values[hoveredIndex];
     const percentage = ((value / total) * 100).toFixed(2);
-    const maxLength = 18;
+    const maxLength = isMobile ? 14 : 18; // 14 for mobile, 18 for desktop
+
     if (label.length > maxLength) {
       const words = label.split(" ");
       let firstLine = "";
