@@ -493,10 +493,21 @@ const Sales: FC = () => {
                   }
                   // };
                   await sendApiRequest(newTenderTxns, `insertBulkTenders`);
-                  await sendApiRequest(
+                  const res: any = await sendApiRequest(
                     responseData?.revenue_centers,
                     `insertBulkDQRevenueCenters?salesid=${result?.data?.salesid}`
                   );
+                  if (res?.status === 200) {
+                    setCustomToast({
+                      message: "Sales uploaded successfully",
+                      type: "success",
+                    });
+                  } else {
+                    setCustomToast({
+                      message: "Failed to upload sales",
+                      type: "error",
+                    });
+                  }
                   // const val: any = {
                   //   invoiceDetails: responseData?.invoice_items || [],
                   // };

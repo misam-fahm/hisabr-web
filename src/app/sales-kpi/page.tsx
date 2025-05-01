@@ -12,7 +12,6 @@ import { format } from "date-fns";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 import Tooltip from "@/Components/UI/Toolstips/Tooltip";
 import YearlySalesGraph from "@/Components/Charts-Graph/YearlySalesGraph";
-import CogsChart from "@/Components/Charts-Graph/cogschart";
 import TenderRevenueChart from "@/Components/Charts-Graph/TenderRevenueChart";
 import TenderCommAmtChart from "@/Components/Charts-Graph/TenderCommAmtChart";
 const SalesKPI: FC = () => {
@@ -113,7 +112,6 @@ const normalizedPercentages =
   percentageSum > 0
     ? percentageValues.map((val) => ((val / percentageSum) * 100).toFixed(2))
     : percentageValues.map(() => "0.00");
-let expMonths = 0;
 
 useEffect(() => {
   if (isVerifiedUser) {
@@ -183,7 +181,6 @@ useEffect(() => {
       type: "error",
     });
   };
-  const [showCogsChart, setShowCogsChart] = useState<boolean>(false);
   const getMonthsDifference = () => {
     // const start = new Date(startDate);
     // const end = new Date(endDate);

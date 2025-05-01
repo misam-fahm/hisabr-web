@@ -83,7 +83,7 @@ const DateRangePicker = ({
   endDate={endDate}
   selectsRange
   inline
-  maxDate={new Date()}
+  // maxDate={new Date()}
   locale={enGB}
   formatWeekDay={(day) => day.slice(0, 3)}
   dayClassName={(date) => {
