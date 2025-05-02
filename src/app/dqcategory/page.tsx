@@ -386,8 +386,8 @@ const Sales: FC = () => {
   // const hasItems = items && items.length > 0;
 
   const categoryMap = {
-    "8 Round": '8" Round Cake',
-    "10 Round": '10" Round Cake',
+    "8 Round": "8\" Round Cake",
+    "10 Round": "10\" Round Cake",
     "Sheet Cake": "Sheet",
     "Dilly Bar": "Dilly",
     "NF/NSA Bars (No sugar added)": "NF/NSA Bars",
@@ -398,9 +398,12 @@ const Sales: FC = () => {
     Starkiss: "Starkiss",
     "Soft Serve": "Dairy Queen",
     "Mix Ice Cream": "Mix GallLitre",
-  };
+    Meat: "Meat",
+    "8\" Round Cake": "8 Round",
+    "10\" Round Cake": "10 Round",
+};
 
-  const getTotalByCategory = (name) => {
+const getTotalByCategory = (name) => {
     const allData = [...(items || []), ...(Sitems || [])];
 
     const category = allData.find((item) => item.name === name);
@@ -410,108 +413,137 @@ const Sales: FC = () => {
       category.totalextprice !== null
       ? Math.round(category.totalextprice)
       : 0;
-  };
+};
 
-  const mapData = () => {
-    const header = ["Store Number", "Store Address"];
-    const allData = [...(items || []), ...(Sitems || [])];
-
-    // Create a mapping of original names to mapped names for display
-    const nameMapping = allData.reduce((acc, item) => {
-      const mappedName = categoryMap[item.name] || item.name;
-      acc[mappedName] = item.name; // Mapped name as key, original name as value
-      return acc;
-    }, {});
-
-    // Display the mapped names in the header and filter unwanted items
-    const itemNames = Object.keys(nameMapping).filter(
-      (name) =>
-        name !== "Novelties-Boxed" &&
-        name !== "Chx Strip" &&
-        name !== "French Fries"
-    );
-
-    const footer = [
-      "Transaction Count",
-      "Inventory Purchases",
-      "Ending Inventory",
+const mapData = () => {
+    // Define headers exactly as in the uploaded Excel file
+    const header = [
+        "Store Number",
+        "Store Address",
+        "Dairy Queen",
+        "DQ Food",
+        "Beverages",
+        "Breakfast",
+        "Cakes",
+        "OJ Beverages",
+        "Mix Gall\\Litre",
+        "Meat Lbs\\Kg",
+        "8 Round",
+        "10 Round",
+        "Sheet",
+        "Dilly",
+        "Starkiss",
+        "NF/NSA Bars",
+        "NSA/Non Dairy Dilly",
+        "Buster Bar",
+        "Transaction Count",
+        "Inventory Purchases",
+        "Ending Inventory"
     ];
 
-    const data = header.concat(itemNames, footer);
+    // Combine items and Sitems
+    const allData = [...(items || []), ...(Sitems || [])];
 
-     // Parse store number and location from selectedOption.name
-     let storeNumber = "";
-     let storeAddress = "";
-     if (selectedOption?.name) {
-       const [number, ...locationParts] = selectedOption.name.split(" - ");
-       storeNumber = number || "";
-       storeAddress = locationParts.join(" - ") || "";
-     }
+    // Create name mapping for categories
+    const nameMapping = allData.reduce((acc, item) => {
+        const mappedName = categoryMap[item.name] || item.name;
+        acc[mappedName] = item.name;
+        return acc;
+    }, {});
 
+    // Use headers directly
+    const data = header;
+
+    // Parse store information
+    let storeNumber = "";
+    let storeAddress = "";
+    if (selectedOption?.name) {
+        const [number, ...locationParts] = selectedOption.name.split(" - ");
+        storeNumber = number || "";
+        storeAddress = locationParts.join(" - ") || "";
+    }
+
+    // Map values to categories
     const values = data.map((category) => {
-         if (category === "Store Number") return storeNumber;
-      if (category === "Store Address") return storeAddress;
-      if (category === "Transaction Count") return totalOrders || 0;
-      if (category === "Inventory Purchases") return productTotal ? Math.round(productTotal) : 0;
-      if (category === "Ending Inventory") return Math.round(subtotal || 0);
-      if (footer.includes(category)) return "$" + 0;
+        // Handle header fields
+        if (category === "Store Number") return storeNumber;
+        if (category === "Store Address") return storeAddress;
 
-      // Use the original name to fetch the value
-      const originalName = nameMapping[category] || category;
-      if (originalName === "Meat") {
-        const meatItem = allData.find((item) => item.name === originalName);
-        return meatItem?.totalqty
-          ? (meatItem.totalqty * 20).toLocaleString() 
-          : "0/Lbs";
-      }
-      return getTotalByCategory(originalName);
+        // Handle footer fields
+        if (category === "Transaction Count") return totalOrders || 0;
+        if (category === "Inventory Purchases") return productTotal ? Math.round(productTotal) : 0;
+        if (category === "Ending Inventory") return Math.round(subtotal || 0);
+
+        // Handle regular categories
+        const originalName = nameMapping[category] || category;
+
+        // Special handling for Cakes
+        if (category === "Cakes") {
+            const cakesItem = allData.find((item) => item.name === "Cakes");
+            const eightRoundItem = allData.find((item) => item.name === "8\" Round Cake");
+            const tenRoundItem = allData.find((item) => item.name === "10\" Round Cake");
+            let totalCakes = (cakesItem?.totalextprice || 0);
+            return Math.round(totalCakes);
+        }
+
+        // Special handling for Meat Lbs\Kg
+        if (category === "Meat Lbs\\Kg") {
+            const meatItem = allData.find((item) => item.name === "Meat");
+            return meatItem?.totalqty
+                ? Math.round(meatItem.totalqty * 20)
+                : 0;
+        }
+
+        // Handle all other categories
+        return getTotalByCategory(originalName);
     });
 
     console.log("Final Data:", data);
     console.log("Final Values:", values);
 
     return [data, values];
-  };
+};
 
-  const exportToExcel = () => {
+const exportToExcel = () => {
     const [headers, values] = mapData();
+
     const worksheet = XLSX.utils.aoa_to_sheet([headers, values]);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
 
-    // Set column widths
+    // Define column widths to match the uploaded Excel file
     const wscols = [
-      { wch: 20 }, // Store Number
-      { wch: 35 }, // Store Address
-      { wch: 15 }, // Dairy Queen
-      { wch: 15 }, // DQ Food
-      { wch: 15 }, // Beverages
-      // { wch: 15 }, // Breakfast
-      { wch: 15 }, // Cakes
-      // { wch: 15 }, // OJ Beverages
-      { wch: 15 }, // Mix Gall\Litre
-      // { wch: 15 }, // Meat Lbs\Kg
-      { wch: 15 }, // 8 Round
-      { wch: 10 }, // 10 Round
-      { wch: 10 }, // Sheet
-      { wch: 10 }, // Dilly
-      { wch: 10 }, // Starkiss
-      { wch: 10 }, // NF/NSA Bars
-      // { wch: 20 }, // NSA/Non Dairy Dilly
-      { wch: 15 }, // Buster Bar
-      { wch: 30 }, // Transaction Count
-      { wch: 30 }, // Inventory Purchases
-      { wch: 30 }, // Ending Inventory
+        { wch: 20 }, // Store Number
+        { wch: 35 }, // Store Address
+        { wch: 15 }, // Dairy Queen
+        { wch: 15 }, // DQ Food
+        { wch: 15 }, // Beverages
+        { wch: 15 }, // Breakfast
+        { wch: 15 }, // Cakes
+        { wch: 15 }, // OJ Beverages
+        { wch: 15 }, // Mix Gall\Litre
+        { wch: 15 }, // Meat Lbs\Kg
+        { wch: 15 }, // 8 Round
+        { wch: 10 }, // 10 Round
+        { wch: 10 }, // Sheet
+        { wch: 10 }, // Dilly
+        { wch: 10 }, // Starkiss
+        { wch: 10 }, // NF/NSA Bars
+        { wch: 15 }, // NSA/Non Dairy Dilly
+        { wch: 15 }, // Buster Bar
+        { wch: 30 }, // Transaction Count
+        { wch: 30 }, // Inventory Purchases
+        { wch: 30 }  // Ending Inventory
     ];
     worksheet["!cols"] = wscols;
 
     const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
+        bookType: "xlsx",
+        type: "array",
     });
     const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(blob, "data.xlsx");
-  };
+};
 
   return (
     <main

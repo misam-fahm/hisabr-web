@@ -47,6 +47,8 @@ const CogsPage = () => {
 
   const handleBackClick = () => {
     if (pageData) {
+      // Store pageData in localStorage for SalesKPI to use
+      localStorage.setItem("salesKpiReturnData", JSON.stringify(pageData));
       router.push("/sales-kpi");
     }
   };

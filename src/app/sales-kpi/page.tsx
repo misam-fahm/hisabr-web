@@ -339,13 +339,62 @@ useEffect(() => {
 
   useEffect(() => {
     if (isVerifiedUser) {
+      // Check for return data from CogsPage
+      const storedData = localStorage.getItem("salesKpiReturnData");
+      let initialStoreId: string | null = null;
+      let initialStartDate: Date | undefined = undefined;
+      let initialEndDate: Date | undefined = undefined;
+  
+      if (storedData) {
+        try {
+          const parsedData = JSON.parse(storedData);
+          initialStoreId = parsedData.storeid;
+          initialStartDate = new Date(parsedData.startdate);
+          initialEndDate = new Date(parsedData.enddate);
+          // Clear the stored data to avoid reusing it
+          localStorage.removeItem("salesKpiReturnData");
+        } catch (error) {
+          console.error("Error parsing stored return data:", error);
+        }
+      }
+  
+      // Set default dates if no return data
       const currentYear = new Date().getFullYear();
-      // setStartDate(new Date(`${currentYear}-01-01`));
-      // setEndDate(new Date(`${currentYear}-12-31`));
-      setStartDate(new Date(currentYear, 0, 1));
-      setEndDate(new Date(currentYear, 11, 31));
-      getUserStore();
-      // fetchDropdownData();
+      setStartDate(initialStartDate || new Date(currentYear, 0, 1));
+      setEndDate(initialEndDate || new Date(currentYear, 11, 31));
+  
+      // Fetch stores and set selectedOption
+      const initializeStore = async () => {
+        try {
+          const response = await sendApiRequest({ mode: "getUserStore" });
+          if (response?.status === 200) {
+            const stores = response?.data?.stores || [];
+            const formattedStores = stores.map((store: any) => ({
+              name: `${store.name} - ${store.location || "Unknown Location"}`,
+              id: store.id,
+            }));
+            setStore(formattedStores);
+  
+            // Set selectedOption based on storeid from return data or default to first store
+            const selectedStore = initialStoreId
+              ? formattedStores.find((store: any) => store.id === initialStoreId)
+              : formattedStores[0];
+            if (selectedStore) {
+              setSelectedOption({
+                name: selectedStore.name,
+                id: selectedStore.id,
+              });
+            }
+          } else {
+            handleError(response?.message);
+          }
+        } catch (error) {
+          console.error("Error fetching stores:", error);
+        }
+      };
+  
+      initializeStore();
+      fetchCurrentYearData(currentYear);
     }
   }, [isVerifiedUser]);
 
@@ -654,7 +703,7 @@ useEffect(() => {
         style={{ scrollbarWidth: "thin" }}
       >
         <div>
-          <div className="flex flex-row below-md:flex-col below-md:items-end sticky  justify-between pt-6 below-md:pt-4 below-md:px-3  pl-6 pr-6 pb-6 below-md:pb-4 bg-[#f7f8f9] ">
+          <div className="flex flex-row below-md:flex-col below-md:items-end sticky  justify-between pt-6 below-md:pt-4 below-md:px-3  pl-6 pr-6 pb-1.5 below-md:pb-4 bg-[#f7f8f9] ">
             <div className="flex flex-row below-md:flex-col w-full gap-3">
               <Dropdown
                 options={store}
@@ -692,7 +741,15 @@ useEffect(() => {
             </button>
           </div> */}
           </div>
-
+          <div>
+          <p className="text-[16px] text-[#000000cc] font-bold pb-1.5  pl-8">
+  Average Order: {data?.avg_order
+    ? `$${Number(data?.avg_order).toFixed(2).toLocaleString()}`
+    : "$0.00"}
+</p>
+                
+             
+              </div>
           {/* grid 1 */}
           <div className="grid grid-cols-4 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
   {/* Net Sales Card */}
@@ -1168,21 +1225,13 @@ useEffect(() => {
         )}
     </p>
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+  <div className="bg-[#F5EBEBA1] rounded-full w-[40px]  h-[40px] flex items-center justify-center self-center">
     <img src="./images/saleskpicogs.svg" />
   </div>
 </div>
           </div>
-          <div>
-          <p className="text-[14px] text-[#000000cc] font-bold pb-0 pl-8 pt-4">
-  Average Order: {data?.avg_order
-    ? `$${Number(data?.avg_order).toFixed(2).toLocaleString()}`
-    : "$0.00"}
-</p>
-                
-             
-              </div>
-              <div className="px-6">
+       
+              <div className="px-6 pb-3">
       {/* Expense Distribution */}
       <div className="flex flex-col rounded-lg bg-white mt-6 shadow-md">
       <button
@@ -1221,7 +1270,7 @@ useEffect(() => {
 </div>
 
       {/* Tender Commission Amount Distribution */}
-<div className="flex flex-col rounded-lg bg-white mt-6 shadow-md">
+<div className="flex flex-col rounded-lg bg-white  mt-6 shadow-md">
   <button
     className="text-left font-bold text-[16px] text-[#334155] mx-4 my-4 flex justify-between items-center"
     onClick={() => toggleSection("commission")}
