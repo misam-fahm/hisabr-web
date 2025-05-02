@@ -106,30 +106,42 @@ const TenderCommAmtChart: React.FC<TenderCommAmtChartProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isLargeMobile, setIsLargeMobile] = useState<boolean>(false);
   const [isTablet, setIsTablet] = useState<boolean>(false);
-  const [isSpecificMdScreen, setIsSpecificMdScreen] = useState<boolean>(false);
+  const [isSpecificMobilePortrait, setIsSpecificMobilePortrait] = useState<boolean>(false);
+  const [isSpecificTabletLandscape, setIsSpecificTabletLandscape] = useState<boolean>(false);
 
   useEffect(() => {
     const mobileQuery = window.matchMedia('(max-width: 767px)');
-    const tabletQuery = window.matchMedia('(max-width: 1024px)');
-    const specificMdScreenQuery = window.matchMedia('(width: 1180px) and (height: 820px)');
+    const largeMobileQuery = window.matchMedia('(min-width: 430px) and (max-width: 767px) and (min-height: 932px)');
+    const tabletQuery = window.matchMedia('(min-width: 768px) and (max-width: 1024px)');
+    const specificMobilePortraitQuery = window.matchMedia('(min-width: 414px) and (max-width: 414px) and (min-height: 896px) and (max-height: 896px)');
+    const specificTabletLandscapeQuery = window.matchMedia('(min-width: 1180px) and (max-width: 1180px) and (min-height: 820px) and (max-height: 820px)');
 
     setIsMobile(mobileQuery.matches);
+    setIsLargeMobile(largeMobileQuery.matches);
     setIsTablet(tabletQuery.matches);
-    setIsSpecificMdScreen(specificMdScreenQuery.matches);
+    setIsSpecificMobilePortrait(specificMobilePortraitQuery.matches);
+    setIsSpecificTabletLandscape(specificTabletLandscapeQuery.matches);
 
     const handleMobileResize = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    const handleLargeMobileResize = (e: MediaQueryListEvent) => setIsLargeMobile(e.matches);
     const handleTabletResize = (e: MediaQueryListEvent) => setIsTablet(e.matches);
-    const handleSpecificMdScreenResize = (e: MediaQueryListEvent) => setIsSpecificMdScreen(e.matches);
+    const handleSpecificMobilePortraitResize = (e: MediaQueryListEvent) => setIsSpecificMobilePortrait(e.matches);
+    const handleSpecificTabletLandscapeResize = (e: MediaQueryListEvent) => setIsSpecificTabletLandscape(e.matches);
 
     mobileQuery.addEventListener('change', handleMobileResize);
+    largeMobileQuery.addEventListener('change', handleLargeMobileResize);
     tabletQuery.addEventListener('change', handleTabletResize);
-    specificMdScreenQuery.addEventListener('change', handleSpecificMdScreenResize);
+    specificMobilePortraitQuery.addEventListener('change', handleSpecificMobilePortraitResize);
+    specificTabletLandscapeQuery.addEventListener('change', handleSpecificTabletLandscapeResize);
 
     return () => {
       mobileQuery.removeEventListener('change', handleMobileResize);
+      largeMobileQuery.removeEventListener('change', handleLargeMobileResize);
       tabletQuery.removeEventListener('change', handleTabletResize);
-      specificMdScreenQuery.removeEventListener('change', handleSpecificMdScreenResize);
+      specificMobilePortraitQuery.removeEventListener('change', handleSpecificMobilePortraitResize);
+      specificTabletLandscapeQuery.removeEventListener('change', handleSpecificTabletLandscapeResize);
     };
   }, []);
 
@@ -148,7 +160,6 @@ const TenderCommAmtChart: React.FC<TenderCommAmtChartProps> = ({
           if (response?.status === 200) {
             const tenders = response?.data?.tenders || [];
             const enhancedTenderData = assignColors(tenders);
-            console.log('Fetched tenderData:', enhancedTenderData); // Debug log
             setTenderData(enhancedTenderData);
           } else {
             setCustomToast({
@@ -193,16 +204,13 @@ const TenderCommAmtChart: React.FC<TenderCommAmtChartProps> = ({
     })
     .filter((row) => row.commissionAmt > 0 && row.tendername) || [];
 
-  console.log('validData:', validData); // Debug log
-
   const sortedData = hasData
     ? [...validData].sort((a, b) => b.commissionAmt - a.commissionAmt)
     : [];
 
-  // Adjust chart data to ensure small segments are visible
   const chartData = sortedData.map((row) => ({
     ...row,
-    chartCommissionAmt: Math.max(row.commissionAmt, totalCommission * 0.005), // Minimum 0.5% for visibility
+    chartCommissionAmt: Math.max(row.commissionAmt, totalCommission * 0.005),
   }));
 
   const data = hasData
@@ -211,7 +219,7 @@ const TenderCommAmtChart: React.FC<TenderCommAmtChartProps> = ({
         datasets: [
           {
             data: chartData.map((row) => row.chartCommissionAmt),
-            _data: sortedData.map((row) => row.commissionAmt), // Original data for labels
+            _data: sortedData.map((row) => row.commissionAmt),
             backgroundColor: sortedData.map((row) => row.color || '#CCCCCC'),
             borderWidth: 2.42,
             borderColor: '#FFFFFF',
@@ -256,7 +264,12 @@ const TenderCommAmtChart: React.FC<TenderCommAmtChartProps> = ({
           const percentage = (commissionAmt / totalCommission) * 100;
           if (percentage > 4) {
             const label = context.chart.data.labels[index];
-            return `${label.length > 10 ? label.slice(0, 10) + '...' : label}: ${percentage.toFixed(1)}%`;
+            const isSpecificMobilePortrait = window.matchMedia('(min-width: 414px) and (max-width: 414px) and (min-height: 896px) and (max-height: 896px)').matches;
+            const isSpecificTabletLandscape = window.matchMedia('(min-width: 1180px) and (max-width: 1180px) and (min-height: 820px) and (max-height: 820px)').matches;
+            const maxLabelLength = isSpecificMobilePortrait ? 15 : isSpecificTabletLandscape ? 16 : 20;
+            return `${
+              label.length > maxLabelLength ? label.slice(0, maxLabelLength) + '...' : label
+            }: ${percentage.toFixed(1)}%`;
           }
           return null;
         },
@@ -336,12 +349,34 @@ const TenderCommAmtChart: React.FC<TenderCommAmtChartProps> = ({
     );
   };
 
-  const truncateTenderName = (name: string, maxLength: number = 16) => {
-    // Apply truncation for mobile, below md, or specific md screen (1180x820)
-    if ((isMobile || isTablet || isSpecificMdScreen) && name.length > maxLength) {
-      return name.slice(0, maxLength) + '...';
+  const truncateTenderName = (name: string) => {
+    const isSpecificMobilePortrait = window.matchMedia('(min-width: 414px) and (max-width: 414px) and (min-height: 896px) and (max-height: 896px)').matches;
+    const isSpecificTabletLandscape = window.matchMedia('(min-width: 1180px) and (max-width: 1180px) and (min-height: 820px) and (max-height: 820px)').matches;
+    const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+    const isLargeMobile = window.matchMedia('(min-width: 430px) and (max-width: 767px) and (min-height: 932px)').matches;
+    const isTabletPortrait = window.matchMedia('(min-width: 760px) and (max-width: 1024px) and (min-height: 820px)').matches;
+
+    // Show full name for specified resolutions and mobile landscape
+    if (
+      isLandscape ||
+      isLargeMobile ||
+      isTabletPortrait ||
+      window.matchMedia('(min-width: 820px) and (max-width: 820px) and (min-height: 1180px) and (max-height: 1180px)').matches
+    ) {
+      return name;
     }
-    return name;
+
+    // Apply character limits for specific cases
+    if (isSpecificMobilePortrait) {
+      return name.length > 15 ? name.slice(0, 15) + '..' : name;
+    }
+    if (isSpecificTabletLandscape) {
+      return name.length > 16 ? name.slice(0, 16) + '..' : name;
+    }
+
+    // Default truncation for other mobile and tablet cases
+    const maxLength = isTablet ? 25 : 15;
+    return (isMobile || isTablet) && name.length > maxLength ? name.slice(0, maxLength) + '..' : name;
   };
 
   return (
@@ -373,8 +408,7 @@ const TenderCommAmtChart: React.FC<TenderCommAmtChartProps> = ({
             <table className="w-full border-collapse text-white table-fixed rounded-[10px] border border-[#E4E4EF]">
               <thead className="bg-[#0F1044] top-0 z-10 sticky">
                 <tr>
-                  <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[14px] border-r border-[#E4E4EF] w-[@j
-50%]">
+                  <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[14px] border-r border-[#E4E4EF] w-[50%]">
                     Tender
                   </th>
                   <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[14px] border-r border-[#E4E4EF] w-[27.5%]">
@@ -387,10 +421,7 @@ const TenderCommAmtChart: React.FC<TenderCommAmtChartProps> = ({
               </thead>
               <tbody>
                 {[...Array(5)].map((_, index) => (
-                  <tr
-                    key={index}
-                    className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
-                  >
+                  <tr key={index} className={index % 2 === 1 ? 'bg-[#F3F3F6]' : 'bg-white'}>
                     <td className="px-2 py-1 text-[13px] border-r border-[#E4E4EF] text-left truncate flex items-center gap-1.5">
                       <Skeleton circle width={8} height={8} />
                       <Skeleton width="80%" />
@@ -422,10 +453,7 @@ const TenderCommAmtChart: React.FC<TenderCommAmtChartProps> = ({
               </thead>
               <tbody>
                 <tr>
-                  <td
-                    colSpan={3}
-                    className="px-2 py-1 text-[13px] text-center bg-white"
-                  >
+                  <td colSpan={3} className="px-2 py-1 text-[13px] text-center bg-white">
                     <NoDataFound />
                   </td>
                 </tr>
@@ -448,16 +476,13 @@ const TenderCommAmtChart: React.FC<TenderCommAmtChartProps> = ({
               </thead>
               <tbody>
                 {sortedData.map((row, index) => (
-                  <tr
-                    key={index}
-                    className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
-                  >
+                  <tr key={index} className={index % 2 === 1 ? 'bg-[#F3F3F6]' : 'bg-white'}>
                     <td className="px-2 py-1 text-[#636363] text-[13px] border-r border-[#E4E4EF] text-left truncate flex items-center gap-1.5">
                       <span
                         className="w-2 h-2 rounded-full"
-                        style={{ backgroundColor: row.color || "#E0E0E0" }}
+                        style={{ backgroundColor: row.color || '#E0E0E0' }}
                       ></span>
-                      {truncateTenderName(row.tendername || "N/A")}
+                      {truncateTenderName(row.tendername || 'N/A')}
                     </td>
                     <td className="px-2 py-1 text-[#636363] text-[13px] text-right border-r border-[#E4E4EF]">
                       ${Math.round(row.commissionAmt).toLocaleString()}
