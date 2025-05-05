@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions } from "chart.js";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  ChartOptions,
+} from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -15,7 +21,7 @@ interface DonutChartProps {
 
 const backgroundColors = [
   "#4B4B4B", // Labour Cost
-  "#DAB777", // Sales Tax
+  "#DAB777", // COGS
   "#653C59", // Royalty
   "#FF5555", // Operating Expenses
   "#3CB371", // Profit
@@ -44,45 +50,61 @@ const DonutChart: React.FC<DonutChartProps> = ({ values, operatExpAmt }) => {
   const taxAmount = Number(values?.tax_amt) || 0;
   const operatingExpenses = Number(operatExpAmt) || 0;
   const validProfit = profit < 0 ? 0 : profit;
+  const cogs = Number(values?.producttotal) || 0;
 
-  const total = labourCost + taxAmount + royalty + operatingExpenses + validProfit;
+  const total = labourCost + cogs + royalty + operatingExpenses + validProfit;
   const hasData = total > 0;
 
   const dataItems = [
     { label: "Labour Cost", amount: labourCost, color: backgroundColors[0] },
-    { label: "Sales Tax", amount: taxAmount, color: backgroundColors[1] },
+    { label: "COGS", amount: cogs, color: backgroundColors[1] },
     { label: "Royalty", amount: royalty, color: backgroundColors[2] },
-    { label: "Expenses", amount: operatingExpenses, color: backgroundColors[3] },
+    {
+      label: "Expenses",
+      amount: operatingExpenses,
+      color: backgroundColors[3],
+    },
     { label: "Profit", amount: validProfit, color: backgroundColors[4] },
   ].filter((item) => item.amount > 0);
 
   // Sort by percentage (descending), matching TenderRevenueChart
   const sortedData = hasData
-    ? [...dataItems].sort((a, b) => (b.amount / total) * 100 - (a.amount / total) * 100)
+    ? [...dataItems].sort(
+        (a, b) => (b.amount / total) * 100 - (a.amount / total) * 100
+      )
     : [];
 
-  const percentages = total > 0
-    ? dataItems.map((item) => ((item.amount / total) * 100).toFixed(2))
-    : dataItems.map(() => "0");
+  const percentages =
+    total > 0
+      ? dataItems.map((item) => ((item.amount / total) * 100).toFixed(2))
+      : dataItems.map(() => "0");
 
   const normalizedPercentages = percentages.map(Number);
 
   useEffect(() => {
     const mobileQuery = window.matchMedia("(max-width: 767px)");
     const tabletQuery = window.matchMedia("(max-width: 1024px)");
-    const specificMdScreenQuery = window.matchMedia("(width: 1180px) and (height: 820px)");
+    const specificMdScreenQuery = window.matchMedia(
+      "(width: 1180px) and (height: 820px)"
+    );
 
     setIsMobile(mobileQuery.matches);
     setIsTablet(tabletQuery.matches);
     setIsSpecificMdScreen(specificMdScreenQuery.matches);
 
-    const handleMobileResize = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    const handleTabletResize = (e: MediaQueryListEvent) => setIsTablet(e.matches);
-    const handleSpecificMdScreenResize = (e: MediaQueryListEvent) => setIsSpecificMdScreen(e.matches);
+    const handleMobileResize = (e: MediaQueryListEvent) =>
+      setIsMobile(e.matches);
+    const handleTabletResize = (e: MediaQueryListEvent) =>
+      setIsTablet(e.matches);
+    const handleSpecificMdScreenResize = (e: MediaQueryListEvent) =>
+      setIsSpecificMdScreen(e.matches);
 
     mobileQuery.addEventListener("change", handleMobileResize);
     tabletQuery.addEventListener("change", handleTabletResize);
-    specificMdScreenQuery.addEventListener("change", handleSpecificMdScreenResize);
+    specificMdScreenQuery.addEventListener(
+      "change",
+      handleSpecificMdScreenResize
+    );
 
     // Simulate loading
     setTimeout(() => setLoading(false), 1000);
@@ -90,7 +112,10 @@ const DonutChart: React.FC<DonutChartProps> = ({ values, operatExpAmt }) => {
     return () => {
       mobileQuery.removeEventListener("change", handleMobileResize);
       tabletQuery.removeEventListener("change", handleTabletResize);
-      specificMdScreenQuery.removeEventListener("change", handleSpecificMdScreenResize);
+      specificMdScreenQuery.removeEventListener(
+        "change",
+        handleSpecificMdScreenResize
+      );
     };
   }, []);
 
@@ -219,7 +244,10 @@ const DonutChart: React.FC<DonutChartProps> = ({ values, operatExpAmt }) => {
   };
 
   const truncateLabel = (name: string, maxLength: number = 18) => {
-    if ((isMobile || isTablet || isSpecificMdScreen) && name.length > maxLength) {
+    if (
+      (isMobile || isTablet || isSpecificMdScreen) &&
+      name.length > maxLength
+    ) {
       return name.slice(0, maxLength) + "...";
     }
     return name;
@@ -239,7 +267,11 @@ const DonutChart: React.FC<DonutChartProps> = ({ values, operatExpAmt }) => {
           </div>
         ) : (
           <div className="relative w-[451.5px] h-[451.5px] sm:w-[493.5px] sm:h-[493.5px] tablet:w-[525px] tablet:h-[525px] rounded-lg pt-8 pb-8 flex justify-center items-center">
-            <Doughnut data={data} options={options} plugins={[ChartDataLabels]} />
+            <Doughnut
+              data={data}
+              options={options}
+              plugins={[ChartDataLabels]}
+            />
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-[14px] text-gray-800 max-w-[80%]">
               {renderCenterText()}
             </div>
