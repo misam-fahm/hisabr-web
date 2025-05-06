@@ -323,11 +323,11 @@ const Invoices = () => {
 
   useEffect(() => {
     if (isVerifiedUser) {
-      const currentYear = new Date().getFullYear();
-      setStartDate(new Date(currentYear, 0, 1));
-      setEndDate(new Date(currentYear, 11, 31));
-      // setStartDate(new Date(`${currentYear}-01-01`));
-      // setEndDate(new Date(`${currentYear}-12-31`));
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth();
+      setStartDate(new Date(currentYear, currentMonth, 1));
+      setEndDate(new Date(currentYear, currentMonth + 1, 0)); // Last day of current month
       getUserStore();
       // fetchDropdownData();
     }

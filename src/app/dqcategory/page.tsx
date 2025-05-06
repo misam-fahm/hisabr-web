@@ -33,6 +33,12 @@ interface TableRow {
   subtotal: number;
 }
 
+interface DateRangeOption {
+  name: string;
+  value?: string;
+  id: number;
+}
+
 const Exceldata = [
   [
     "Store Number",
@@ -115,6 +121,8 @@ const Sales: FC = () => {
   const [subtotal, setSubtotal] = useState<number | null>(null);
   const [totalOrders, setTotalOrders] = useState<number>();
   const [totalsalecount, setTotalSaleCount] = useState<number>(0);
+  const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
+const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (MTD)");
   const [productTotal, setProductTotal] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
   const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
@@ -212,6 +220,50 @@ const Sales: FC = () => {
     return filteredCategories;
   };
 
+  const dateRangeOptions: DateRangeOption[] = [
+    { name: "This Month (MTD)", value: "this_month", id: 1 },
+    { name: "This Year (YTD)", value: "this_year", id: 2 },
+    { name: "Last Month", value: "last_month", id: 3 },
+    { name: "Last Year", value: "last_year", id: 4 },
+  ];
+  
+  // Add handler functions within the Sales component
+  const toggleDateRangeDropdown = () => {
+    setIsDateRangeOpen((prev) => !prev);
+  };
+  
+  const handleDateRangeSelect = (option: DateRangeOption) => {
+    setSelectedDateRange(option.name);
+    const now = new Date();
+    let newStartDate: Date;
+    let newEndDate: Date;
+  
+    switch (option.value) {
+      case "this_month":
+        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        newEndDate = now;
+        break;
+      case "this_year":
+        newStartDate = new Date(now.getFullYear(), 0, 1);
+        newEndDate = now;
+        break;
+      case "last_month":
+        newStartDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        newEndDate = new Date(now.getFullYear(), now.getMonth(), 0);
+        break;
+      case "last_year":
+        newStartDate = new Date(now.getFullYear() - 1, 0, 1);
+        newEndDate = new Date(now.getFullYear() - 1, 11, 31);
+        break;
+      default:
+        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        newEndDate = now;
+    }
+  
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
+    setIsDateRangeOpen(false);
+  };
   const fetchData2 = async () => {
     setLoading(true);
     try {
@@ -358,15 +410,21 @@ const Sales: FC = () => {
 
   useEffect(() => {
     if (isVerifiedUser) {
-      const currentYear = new Date().getFullYear();
-      setStartDate(new Date(currentYear, 0, 1));
-      setEndDate(new Date(currentYear, 11, 31));
-      // setStartDate(new Date(`${currentYear}-01-01`));
-      // setEndDate(new Date(`${currentYear}-12-31`));
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth();
+      setStartDate(new Date(currentYear, currentMonth, 1));
+      setEndDate(new Date(currentYear, currentMonth + 1, 0)); // Last day of current month
       getUserStore();
-      // fetchDropdownData();
     }
   }, [isVerifiedUser]);
+  
+  useEffect(() => {
+    if (startDate && endDate && selectedOption) {
+      fetchData2();
+      fetchData();
+    }
+  }, [selectedOption, startDate, endDate]);
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -560,35 +618,41 @@ const Sales: FC = () => {
       />
       {uploadPdfloading && <Loading />}
       <div className="px-6 mt-3 below-md:px-3 below-md:mt-0 tablet:mt-4">
-        <div className="flex flex-row justify-between below-md:flex-col pb-2 sticky z-20 w-full below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4 gap-6 tablet:grid tablet:grid-cols-2">
-          {/* Store & Date Picker */}
-          <div className="flex flex-row below-md:flex-col w-[50%] tablet:w-[100%] below-md:w-full gap-6 below-md:gap-4 tablet:col-span-2">
-            <Dropdown
-              options={store}
-              selectedOption={selectedOption?.name || "Store"}
-              onSelect={(selectedOption: any) => {
-                setSelectedOption({
-                  name: selectedOption.name,
-                  id: selectedOption.id,
-                });
-                setIsStoreDropdownOpen(false);
-              }}
-              isOpen={isStoreDropdownOpen}
-              toggleOpen={toggleStoreDropdown}
-              widthchange="w-[60%] below-md:w-full tablet:w-[50%]"
-              //  className="h-[35px] below-md:px-4"
-            />
-            <div className="w-full below-md:w-full tablet:w-[60%] h-[40px] below-md:px-4">
-              <DateRangePicker
-                startDate={startDate}
-                endDate={endDate}
-                setStartDate={setStartDate}
-                setEndDate={setEndDate}
-                fetchData={fetchData}
-                fetchDataForTender={fetchData2}
-              />
-            </div>
-          </div>
+      <div className="flex flex-row justify-between below-md:flex-col pb-2 sticky z-20 w-full below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4 gap-6 tablet:grid tablet:grid-cols-2">
+  <div className="flex flex-row below-md:flex-col w-[70%] tablet:w-[100%] below-md:w-full gap-3 below-md:gap-4 tablet:col-span-2">
+    <Dropdown
+      options={store}
+      selectedOption={selectedOption?.name || "Store"}
+      onSelect={(selectedOption: any) => {
+        setSelectedOption({
+          name: selectedOption.name,
+          id: selectedOption.id,
+        });
+        setIsStoreDropdownOpen(false);
+      }}
+      isOpen={isStoreDropdownOpen}
+      toggleOpen={toggleStoreDropdown}
+      widthchange="w-[40%] below-md:w-full tablet:w-[30%]"
+    />
+    <Dropdown
+      options={dateRangeOptions}
+      selectedOption={selectedDateRange}
+      onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
+      isOpen={isDateRangeOpen}
+      toggleOpen={toggleDateRangeDropdown}
+      widthchange="w-[30%] below-md:w-full tablet:w-[30%]"
+    />
+    <div className="w-[30%] below-md:w-full tablet:w-[40%] h-[40px] below-md:px-4">
+      <DateRangePicker
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={setStartDate}
+        setEndDate={setEndDate}
+        fetchData={fetchData}
+        fetchDataForTender={fetchData2}
+      />
+    </div>
+  </div>
 
           {/* Export Button with padding */}
           <div className="flex below-md:w-full below-md:pt-4 gap-6 items-center below-md:justify-center">
