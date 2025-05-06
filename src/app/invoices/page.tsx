@@ -205,9 +205,16 @@ const Invoices = () => {
 
   useEffect(() => {
     if (startDate && endDate && selectedOption) {
+      table.setPageIndex(0); // reset to first page
       fetchData(globalFilter);
     }
-  }, [selectedOption]);
+  }, [startDate, endDate, selectedOption, globalFilter]);
+
+  // useEffect(() => {
+  //   if (startDate && endDate && selectedOption) {
+  //     fetchData(globalFilter);
+  //   }
+  // }, [selectedOption]);
 
   const table = useReactTable({
     data: data,
