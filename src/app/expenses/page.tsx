@@ -47,6 +47,7 @@ const Expenses: FC = () => {
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedOption, setSelectedOption] = useState<any>();
+
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [store, setStore] = useState<any[]>([]);
   const [isOpenAddExpenses, setAddExpenses] = useState(false);
@@ -60,9 +61,16 @@ const Expenses: FC = () => {
 
   useEffect(() => {
     if (startDate && endDate && selectedOption) {
+      table.setPageIndex(0); // reset to first page
       fetchData();
     }
-  }, [selectedOption]);
+  }, [ selectedOption, globalFilter]);
+
+  // useEffect(() => {
+  //   if (startDate && endDate && selectedOption) {
+      
+  //   }
+  // }, [selectedOption]);
 
   const columns: ColumnDef<TableRow>[] = [
     {

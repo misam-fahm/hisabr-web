@@ -206,9 +206,10 @@ const Sales: FC = () => {
 
   useEffect(() => {
     if (startDate && endDate && selectedOption) {
+      table.setPageIndex(0); // reset to first page
       fetchData();
     }
-  }, [selectedOption, globalFilter]);
+  }, [startDate, endDate, selectedOption, globalFilter]);
 
   const table = useReactTable({
     data: data,
