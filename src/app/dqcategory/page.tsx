@@ -315,9 +315,9 @@ const Sales: FC = () => {
           name: `${store?.name} - ${store?.location || "Unknown Location"}`, // Ensure location is handled
           id: store?.id,
         }));
-        
+
         setStore(formattedStores); // Update store state with formatted data
-        
+
         if (stores.length > 0) {
           setSelectedOption({
             name: `${stores[0]?.name} - ${stores[0]?.location || "Unknown Location"}`,
@@ -331,7 +331,7 @@ const Sales: FC = () => {
       console.error("Error fetching stores:", error);
     }
   };
-  
+
 
   const verifyToken = async (token: string) => {
     try {
@@ -401,9 +401,9 @@ const Sales: FC = () => {
     Meat: "Meat",
     "8\" Round Cake": "8 Round",
     "10\" Round Cake": "10 Round",
-};
+  };
 
-const getTotalByCategory = (name) => {
+  const getTotalByCategory = (name) => {
     const allData = [...(items || []), ...(Sitems || [])];
 
     const category = allData.find((item) => item.name === name);
@@ -413,31 +413,31 @@ const getTotalByCategory = (name) => {
       category.totalextprice !== null
       ? Math.round(category.totalextprice)
       : 0;
-};
+  };
 
-const mapData = () => {
+  const mapData = () => {
     // Define headers exactly as in the uploaded Excel file
     const header = [
-        "Store Number",
-        "Store Address",
-        "Dairy Queen",
-        "DQ Food",
-        "Beverages",
-        "Breakfast",
-        "Cakes",
-        "OJ Beverages",
-        "Mix Gall\\Litre",
-        "Meat Lbs\\Kg",
-        "8 Round",
-        "10 Round",
-        "Sheet",
-        "Dilly",
-        "Starkiss",
-        "NF/NSA Bars",
-        "NSA/Non Dairy Dilly",
-        "Buster Bar",
-        "Transaction Count",
-        "Inventory Purchases",
+      "Store Number",
+      "Store Address",
+      "Dairy Queen",
+      "DQ Food",
+      "Beverages",
+      "Breakfast",
+      "Cakes",
+      "OJ Beverages",
+      "Mix Gall\\Litre",
+      "Meat Lbs\\Kg",
+      "8 Round",
+      "10 Round",
+      "Sheet",
+      "Dilly",
+      "Starkiss",
+      "NF/NSA Bars",
+      "NSA/Non Dairy Dilly",
+      "Buster Bar",
+      "Transaction Count",
+      "Inventory Purchases",
         "Ending Inventory"
     ];
 
@@ -446,9 +446,9 @@ const mapData = () => {
 
     // Create name mapping for categories
     const nameMapping = allData.reduce((acc, item) => {
-        const mappedName = categoryMap[item.name] || item.name;
-        acc[mappedName] = item.name;
-        return acc;
+      const mappedName = categoryMap[item.name] || item.name;
+      acc[mappedName] = item.name;
+      return acc;
     }, {});
 
     // Use headers directly
@@ -458,53 +458,53 @@ const mapData = () => {
     let storeNumber = "";
     let storeAddress = "";
     if (selectedOption?.name) {
-        const [number, ...locationParts] = selectedOption.name.split(" - ");
-        storeNumber = number || "";
-        storeAddress = locationParts.join(" - ") || "";
+      const [number, ...locationParts] = selectedOption.name.split(" - ");
+      storeNumber = number || "";
+      storeAddress = locationParts.join(" - ") || "";
     }
 
     // Map values to categories
     const values = data.map((category) => {
-        // Handle header fields
-        if (category === "Store Number") return storeNumber;
-        if (category === "Store Address") return storeAddress;
+      // Handle header fields
+      if (category === "Store Number") return storeNumber;
+      if (category === "Store Address") return storeAddress;
 
-        // Handle footer fields
-        if (category === "Transaction Count") return totalOrders || 0;
+      // Handle footer fields
+      if (category === "Transaction Count") return totalOrders || 0;
         if (category === "Inventory Purchases") return productTotal ? Math.round(productTotal) : 0;
-        if (category === "Ending Inventory") return Math.round(subtotal || 0);
+      if (category === "Ending Inventory") return Math.round(subtotal || 0);
 
-        // Handle regular categories
-        const originalName = nameMapping[category] || category;
+      // Handle regular categories
+      const originalName = nameMapping[category] || category;
 
-        // Special handling for Cakes
-        if (category === "Cakes") {
-            const cakesItem = allData.find((item) => item.name === "Cakes");
+      // Special handling for Cakes
+      if (category === "Cakes") {
+        const cakesItem = allData.find((item) => item.name === "Cakes");
             const eightRoundItem = allData.find((item) => item.name === "8\" Round Cake");
             const tenRoundItem = allData.find((item) => item.name === "10\" Round Cake");
             let totalCakes = (cakesItem?.totalextprice || 0);
-            return Math.round(totalCakes);
-        }
+        return Math.round(totalCakes);
+      }
 
-        // Special handling for Meat Lbs\Kg
-        if (category === "Meat Lbs\\Kg") {
-            const meatItem = allData.find((item) => item.name === "Meat");
+      // Special handling for Meat Lbs\Kg
+      if (category === "Meat Lbs\\Kg") {
+        const meatItem = allData.find((item) => item.name === "Meat");
             return meatItem?.totalqty
                 ? Math.round(meatItem.totalqty * 20)
                 : 0;
-        }
+      }
 
-        // Handle all other categories
-        return getTotalByCategory(originalName);
+      // Handle all other categories
+      return getTotalByCategory(originalName);
     });
 
     console.log("Final Data:", data);
     console.log("Final Values:", values);
 
     return [data, values];
-};
+  };
 
-const exportToExcel = () => {
+  const exportToExcel = () => {
     const [headers, values] = mapData();
 
     const worksheet = XLSX.utils.aoa_to_sheet([headers, values]);
@@ -513,37 +513,37 @@ const exportToExcel = () => {
 
     // Define column widths to match the uploaded Excel file
     const wscols = [
-        { wch: 20 }, // Store Number
-        { wch: 35 }, // Store Address
-        { wch: 15 }, // Dairy Queen
-        { wch: 15 }, // DQ Food
-        { wch: 15 }, // Beverages
-        { wch: 15 }, // Breakfast
-        { wch: 15 }, // Cakes
-        { wch: 15 }, // OJ Beverages
-        { wch: 15 }, // Mix Gall\Litre
-        { wch: 15 }, // Meat Lbs\Kg
-        { wch: 15 }, // 8 Round
-        { wch: 10 }, // 10 Round
-        { wch: 10 }, // Sheet
-        { wch: 10 }, // Dilly
-        { wch: 10 }, // Starkiss
-        { wch: 10 }, // NF/NSA Bars
-        { wch: 15 }, // NSA/Non Dairy Dilly
-        { wch: 15 }, // Buster Bar
-        { wch: 30 }, // Transaction Count
-        { wch: 30 }, // Inventory Purchases
+      { wch: 20 }, // Store Number
+      { wch: 35 }, // Store Address
+      { wch: 15 }, // Dairy Queen
+      { wch: 15 }, // DQ Food
+      { wch: 15 }, // Beverages
+      { wch: 15 }, // Breakfast
+      { wch: 15 }, // Cakes
+      { wch: 15 }, // OJ Beverages
+      { wch: 15 }, // Mix Gall\Litre
+      { wch: 15 }, // Meat Lbs\Kg
+      { wch: 15 }, // 8 Round
+      { wch: 10 }, // 10 Round
+      { wch: 10 }, // Sheet
+      { wch: 10 }, // Dilly
+      { wch: 10 }, // Starkiss
+      { wch: 10 }, // NF/NSA Bars
+      { wch: 15 }, // NSA/Non Dairy Dilly
+      { wch: 15 }, // Buster Bar
+      { wch: 30 }, // Transaction Count
+      { wch: 30 }, // Inventory Purchases
         { wch: 30 }  // Ending Inventory
     ];
     worksheet["!cols"] = wscols;
 
     const excelBuffer = XLSX.write(workbook, {
-        bookType: "xlsx",
-        type: "array",
+      bookType: "xlsx",
+      type: "array",
     });
     const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(blob, "data.xlsx");
-};
+  };
 
   return (
     <main
@@ -563,7 +563,7 @@ const exportToExcel = () => {
         <div className="flex flex-row justify-between below-md:flex-col pb-2 sticky z-20 w-full below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4 gap-6 tablet:grid tablet:grid-cols-2">
           {/* Store & Date Picker */}
           <div className="flex flex-row below-md:flex-col w-[50%] tablet:w-[100%] below-md:w-full gap-6 below-md:gap-4 tablet:col-span-2">
-          <Dropdown
+            <Dropdown
               options={store}
               selectedOption={selectedOption?.name || "Store"}
               onSelect={(selectedOption: any) => {
@@ -757,7 +757,8 @@ const exportToExcel = () => {
           )}
         </div>
 
-        <div className="grid grid-cols-5 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 items-stretch tablet:flex-wrap tablet:gap-3">
+        {/* Category Cards */}
+        <div className="grid grid-cols-5 ipad-pro:grid-cols-4 ipad-air:grid-cols-4 tablet:grid-cols-2 below-md:grid-cols-1 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 items-stretch tablet:flex-wrap tablet:gap-3">
           {["DQ (Ice Cream)", "Food", "Cakes", "Beverage", "Donations"]
             .filter((categoryName) => categoryName !== "Donations") // Filter out Donations
             .map((categoryName, index) => {
@@ -767,7 +768,7 @@ const exportToExcel = () => {
               return (
                 <div
                   key={index}
-                  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4 p-2 justify-between items-stretch"
+                  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4 p-2 justify-between items-stretch w-full ipad-air:w-[105%]"
                 >
                   <div className="flex flex-col gap-2">
                     <Tooltip
@@ -790,11 +791,13 @@ const exportToExcel = () => {
               );
             })}
         </div>
-        <div className="grid grid-cols-5 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 mt-6 items-stretch tablet:flex-wrap tablet:gap-3">
-          {items?.map((Items: any, index: any) => (
+
+        {/* Item Cards */}
+        <div className="grid grid-cols-5 ipad-pro:grid-cols-4 ipad-air:grid-cols-4 tablet:grid-cols-2 below-md:grid-cols-1 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 mt-6 items-stretch tablet:flex-wrap tablet:gap-3">
+          {items?.map((Items, index) => (
             <div
               key={index}
-              className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4 p-3 justify-between items-center w-full gap-6 relative"
+              className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#cf4040] border-b-4 p-3 justify-between items-center w-full ipad-air:w-[105%] gap-6 relative"
             >
               <div className="flex flex-col gap-2">
                 {" "}
@@ -807,7 +810,7 @@ const exportToExcel = () => {
                     {Items?.name
                       ? Items.name === "NF/NSA Bars (No sugar added)"
                         ? "NF/NSA"
-                         : Items.name.length > 14
+                        : Items.name.length > 14
                           ? `${Items.name.slice(0, 14)}..`
                           : Items.name
                       : "--"}
@@ -823,24 +826,24 @@ const exportToExcel = () => {
                 {/* Align all 3 values in one line */}
                 <div className="flex flex-row gap-2 items-baseline">
                   {Items?.qty_times_pieces > 0 && (
-    <p className="text-[11px] text-[#000000] font-semibold">
-      {Items.name?.toLowerCase() === "meat" ? (
-        <>{(Items.totalqty * 20).toLocaleString()}/Lbs</>
-      ) : (
-        <>
-          {Items.qty_times_pieces.toLocaleString()}/
-          {(() => {
-            const unit = Items?.unit?.toLowerCase();
+                    <p className="text-[11px] text-[#000000] font-semibold">
+                      {Items.name?.toLowerCase() === "meat" ? (
+                        <>{(Items.totalqty * 20).toLocaleString()}/Lbs</>
+                      ) : (
+                        <>
+                          {Items.qty_times_pieces.toLocaleString()}/
+                          {(() => {
+                            const unit = Items?.unit?.toLowerCase();
             if (unit === "piece" || unit === "pieces") return "pcs";
-            if (unit === "burger") return "bgr";
-            if (unit === "cakes") return "cks";
-            if (unit === "gallons") return "gal";
-            return unit || "unit";
-          })()}
-        </>
-      )}
-    </p>
-  )}
+                            if (unit === "burger") return "bgr";
+                            if (unit === "cakes") return "cks";
+                            if (unit === "gallons") return "gal";
+                            return unit || "unit";
+                          })()}
+                        </>
+                      )}
+                    </p>
+                  )}
                   {Items?.per_piece_price > 0 && (
                     <p className="text-[11px] text-[#000000] font-semibold">
                       ${Items.per_piece_price.toFixed(2)}/
