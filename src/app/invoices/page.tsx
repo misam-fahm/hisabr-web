@@ -40,13 +40,19 @@ interface TableRow {
   total: any;
   invoicenumber: string;
 }
-
+interface DateRangeOption {
+  name: string;
+  value?: string;
+  id: number;
+}
 const Invoices = () => {
   const router = useRouter();
   const [showBackIcon, setShowBackIcon] = useState(false);
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
+  const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (MTD)");
   const [selectedInvoiceId, setSelectedInvoiceId] = useState<number | null>(
     null
   );
@@ -215,6 +221,50 @@ const Invoices = () => {
   //     fetchData(globalFilter);
   //   }
   // }, [selectedOption]);
+  const dateRangeOptions: DateRangeOption[] = [
+    { name: "This Month (MTD)", value: "this_month", id: 1 },
+    { name: "This Year (YTD)", value: "this_year", id: 2 },
+    { name: "Last Month", value: "last_month", id: 3 },
+    { name: "Last Year", value: "last_year", id: 4 },
+  ];
+
+  const toggleDateRangeDropdown = () => {
+    setIsDateRangeOpen((prev) => !prev);
+  };
+
+  const handleDateRangeSelect = (option: DateRangeOption) => {
+    setSelectedDateRange(option.name);
+    const now = new Date();
+    let newStartDate: Date;
+    let newEndDate: Date;
+
+    switch (option.value) {
+      case "this_month":
+        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        newEndDate = now;
+        break;
+      case "this_year":
+        newStartDate = new Date(now.getFullYear(), 0, 1);
+        newEndDate = now;
+        break;
+      case "last_month":
+        newStartDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        newEndDate = new Date(now.getFullYear(), now.getMonth(), 0);
+        break;
+      case "last_year":
+        newStartDate = new Date(now.getFullYear() - 1, 0, 1);
+        newEndDate = new Date(now.getFullYear() - 1, 11, 31);
+        break;
+      default:
+        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        newEndDate = now;
+    }
+
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
+    setIsDateRangeOpen(false);
+  };
+
 
   const table = useReactTable({
     data: data,
@@ -562,85 +612,93 @@ const Invoices = () => {
       />
       {uploadPdfloading && <Loading />}
       <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
-        <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
-          {showBackIcon && (
-            <img
-              onClick={() => router.back()}
-              alt="Back Arrow"
-              className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
-              src="/images/webbackicon.svg"
-            ></img>
-          )}
-          <Dropdown
-            options={store}
-            selectedOption={selectedOption?.name || "Store"}
-            onSelect={(selectedOption: any) => {
-              setSelectedOption({
-                name: selectedOption.name,
-                id: selectedOption.id,
-              });
-              setIsStoreDropdownOpen(false);
-            }}
-            isOpen={isStoreDropdownOpen}
-            toggleOpen={toggleStoreDropdown}
-            widthchange="w-[60%]"
-          />
-          <div className="below-lg:w-full  tablet:w-full below-md:w-full">
-            <DateRangePicker
-              startDate={startDate}
-              endDate={endDate}
-              setStartDate={setStartDate}
-              setEndDate={setEndDate}
-              fetchData={fetchData}
-            />
-          </div>
-          <div className="flex border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
-            <input
-              type="text"
-              value={globalFilter ?? ""}
-              onChange={(e) => setGlobalFilter(e.target.value)}
-              onKeyDown={handleKeyDown}
-              ref={searchInputRef}
-              placeholder="Search"
+  <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
+    {showBackIcon && (
+      <img
+        onClick={() => router.back()}
+        alt="Back Arrow"
+        className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
+        src="/images/webbackicon.svg"
+      ></img>
+    )}
+    <Dropdown
+      options={store}
+      selectedOption={selectedOption?.name || "Store"}
+      onSelect={(selectedOption: any) => {
+        setSelectedOption({
+          name: selectedOption.name,
+          id: selectedOption.id,
+        });
+        setIsStoreDropdownOpen(false);
+      }}
+      isOpen={isStoreDropdownOpen}
+      toggleOpen={toggleStoreDropdown}
+      widthchange="w-[30%] below-md:w-full"
+    />
+    <Dropdown
+      options={dateRangeOptions}
+      selectedOption={selectedDateRange}
+      onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
+      isOpen={isDateRangeOpen}
+      toggleOpen={toggleDateRangeDropdown}
+      widthchange="w-[30%] below-md:w-full"
+    />
+    <div className="w-[30%] below-md:w-full h-[35px]">
+      <DateRangePicker
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={setStartDate}
+        setEndDate={setEndDate}
+        fetchData={fetchData}
+      />
+    </div>
+    <div className="flex border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-[30%] h-[35px]">
+      <input
+        type="text"
+        value={globalFilter ?? ""}
+        onChange={(e) => setGlobalFilter(e.target.value)}
+        onKeyDown={handleKeyDown}
+        ref={searchInputRef}
+        placeholder="Search"
               className="w-full h-[35px] bg-transparent relative  px-3 placeholder:text-[#636363] focus:outline-none"
-            />
-            {globalFilter && (
+      />
+      {globalFilter && (
               <div className=" relative right-3 cursor-pointer">
                 <img
                   className="  "
                   src="/images/cancelicon.svg"
                   onClick={clearSearch}
                 />
-              </div>
-            )}
-            <img
-              className="pr-2 cursor-pointer items-center"
-              src="/images/searchicon.svg"
-              onClick={() =>
-                table.getState().pagination.pageIndex == 0
-                  ? fetchData(globalFilter)
-                  : table.setPageIndex(0)
-              }
-            />
-          </div>
         </div>
-        <div className="pl-24 below-md:hidden">
-          <button
+      )}
+      <img
+        className="pr-2 cursor-pointer items-center"
+        src="/images/searchicon.svg"
+        onClick={() =>
+          table.getState().pagination.pageIndex == 0
+            ? fetchData(globalFilter)
+            : table.setPageIndex(0)
+        }
+      />
+    </div>
+  </div>
+  <div className="pl-24 below-md:hidden">
+    <button
             className="w-[159px] h-[35px] bg-[#168A6F] hover:bg-[#11735C] text-white  gap-[0.25rem] font-medium  rounded-md text-[13px] flex items-center justify-center "
-            onClick={handleButtonClick}
-          >
-            <img className="" src="/images/webuploadicon.svg" alt="" />
-            Upload Invoice
-          </button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            className="hidden"
-          />
+      onClick={handleButtonClick}
+    >
+      <img className="" src="/images/webuploadicon.svg" alt="" />
+      Upload Invoice
+    </button>
+    <input
+      type="file"
+      ref={fileInputRef}
+      onChange={handleFileChange}
+      className="hidden"
+    />
           {/* <UploadInvoicepopup /> */}
-        </div>
-      </div>
+  </div>
+</div>
 
       {/* Mobile View : Card section */}
       <div className="block md:hidden relative">
