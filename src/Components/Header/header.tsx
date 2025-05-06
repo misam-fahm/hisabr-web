@@ -100,7 +100,7 @@ const Header: React.FC = () => {
       customercount: "Customer Count",
       logout: "Logout",
     };
-    return routeTitles[normalizedRoute.toLowerCase()] || "Home";
+    return routeTitles[normalizedRoute.toLowerCase()] || "Dashboard";
   };
 
   const updateTitleWithQueryParams = () => {
