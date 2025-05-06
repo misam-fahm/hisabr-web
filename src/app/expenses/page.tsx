@@ -64,13 +64,11 @@ const Expenses: FC = () => {
     message: "",
     type: "",
   });
-
   useEffect(() => {
     if (startDate && endDate && selectedOption) {
-      table.setPageIndex(0); // reset to first page
       fetchData();
     }
-  }, [ selectedOption, globalFilter]);
+  }, [selectedOption,globalFilter, startDate, endDate]);
 
   // useEffect(() => {
   //   if (startDate && endDate && selectedOption) {
@@ -482,73 +480,80 @@ const Expenses: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <>
-        <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
-          <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
-            {showBackIcon && (
-              <img
-                onClick={() => router.back()}
-                alt="Back Arrow"
-                className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
-                src="/images/webbackicon.svg"
-              ></img>
-            )}
-            <Dropdown
-              options={store}
-              selectedOption={selectedOption?.name || "Store"}
-              onSelect={(selectedOption: any) => {
-                setSelectedOption({
-                  name: selectedOption.name,
-                  id: selectedOption.id,
-                });
-                setIsStoreDropdownOpen(false);
-              }}
-              isOpen={isStoreDropdownOpen}
-              toggleOpen={toggleStoreDropdown}
-              widthchange="w-[60%]"
-            />
-            <div className="w-full tablet:w-full below-md:w-full h-[35px]">
-              <DateRangePicker
-                startDate={startDate}
-                endDate={endDate}
-                setStartDate={setStartDate}
-                setEndDate={setEndDate}
-                fetchData={fetchData}
-              />
-            </div>
-
-            <div className="flex relative border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
-              <input
-                type="text"
-                value={globalFilter ?? ""}
-                onChange={(e) => setGlobalFilter(e.target.value)}
-                onKeyDown={handleKeyDown}
-                ref={searchInputRef}
-                placeholder="Search"
+      <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
+  <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
+    {showBackIcon && (
+      <img
+        onClick={() => router.back()}
+        alt="Back Arrow"
+        className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
+        src="/images/webbackicon.svg"
+      ></img>
+    )}
+    <Dropdown
+      options={store}
+      selectedOption={selectedOption?.name || "Store"}
+      onSelect={(selectedOption: any) => {
+        setSelectedOption({
+          name: selectedOption.name,
+          id: selectedOption.id,
+        });
+        setIsStoreDropdownOpen(false);
+      }}
+      isOpen={isStoreDropdownOpen}
+      toggleOpen={toggleStoreDropdown}
+      widthchange="w-[30%] below-md:w-full"
+    />
+    <Dropdown
+      options={dateRangeOptions}
+      selectedOption={selectedDateRange}
+      onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
+      isOpen={isDateRangeOpen}
+      toggleOpen={toggleDateRangeDropdown}
+      widthchange="w-[30%] below-md:w-full"
+    />
+    <div className="w-[30%] below-md:w-full h-[35px]">
+      <DateRangePicker
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={setStartDate}
+        setEndDate={setEndDate}
+        fetchData={fetchData}
+      />
+    </div>
+    <div className="flex relative border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-[30%] h-[35px]">
+      <input
+        type="text"
+        value={globalFilter ?? ""}
+        onChange={(e) => setGlobalFilter(e.target.value)}
+        onKeyDown={handleKeyDown}
+        ref={searchInputRef}
+        placeholder="Search"
                 className="w-full h-[35px] bg-transparent  px-3 placeholder:text-[#636363] focus:outline-none"
-              />
-              {globalFilter && (
+      />
+      {globalFilter && (
                 <div className="  absolute right-8 cursor-pointer">
                   <img
                     className="  "
                     src="/images/cancelicon.svg"
                     onClick={clearSearch}
                   />
-                </div>
-              )}
-              <img
-                className="pr-2 cursor-pointer items-center"
-                src="/images/searchicon.svg"
-                onClick={fetchData}
-              />
-            </div>
-          </div>
-          <div className="block pl-24 below-md:hidden">
-            <AddExpenses
-              setAddExpenses={setAddExpenses}
-              SelectedStore={selectedOption}
-            />
-          </div>
         </div>
+      )}
+      <img
+        className="pr-2 cursor-pointer items-center"
+        src="/images/searchicon.svg"
+        onClick={fetchData}
+      />
+    </div>
+  </div>
+  <div className="block pl-24 below-md:hidden">
+    <AddExpenses
+      setAddExpenses={setAddExpenses}
+      SelectedStore={selectedOption}
+    />
+  </div>
+</div>
 
         {/*Mobile View : Card section */}
         <div className="block md:hidden mb-5">
