@@ -34,13 +34,19 @@ interface TableRow {
   expensename: string;
   id: any;
 }
-
+interface DateRangeOption {
+  name: string;
+  value?: string;
+  id: number;
+}
 const Expenses: FC = () => {
   const router = useRouter();
   // const searchParams = useSearchParams() || new URLSearchParams();
   const [showBackIcon, setShowBackIcon] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef(null);
+  const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
+  const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (MTD)");
   const [isScrollbarVisible, setIsScrollbarVisible] = useState(false);
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [data, setData] = useState<any>();
@@ -204,6 +210,50 @@ const Expenses: FC = () => {
 
   const { pageIndex, pageSize } = table.getState().pagination;
 
+  const dateRangeOptions: DateRangeOption[] = [
+    { name: "This Month (MTD)", value: "this_month", id: 1 },
+    { name: "This Year (YTD)", value: "this_year", id: 2 },
+    { name: "Last Month", value: "last_month", id: 3 },
+    { name: "Last Year", value: "last_year", id: 4 },
+  ];
+
+  const toggleDateRangeDropdown = () => {
+    setIsDateRangeOpen((prev) => !prev);
+  };
+
+  const handleDateRangeSelect = (option: DateRangeOption) => {
+    setSelectedDateRange(option.name);
+    const now = new Date();
+    let newStartDate: Date;
+    let newEndDate: Date;
+
+    switch (option.value) {
+      case "this_month":
+        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        newEndDate = now;
+        break;
+      case "this_year":
+        newStartDate = new Date(now.getFullYear(), 0, 1);
+        newEndDate = now;
+        break;
+      case "last_month":
+        newStartDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        newEndDate = new Date(now.getFullYear(), now.getMonth(), 0);
+        break;
+      case "last_year":
+        newStartDate = new Date(now.getFullYear() - 1, 0, 1);
+        newEndDate = new Date(now.getFullYear() - 1, 11, 31);
+        break;
+      default:
+        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        newEndDate = now;
+    }
+
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
+    setIsDateRangeOpen(false);
+  };
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -296,11 +346,11 @@ const Expenses: FC = () => {
 
   useEffect(() => {
     if (isVerifiedUser) {
-      const currentYear = new Date().getFullYear();
-      setStartDate(new Date(currentYear, 0, 1));
-      setEndDate(new Date(currentYear, 11, 31));
-      // setStartDate(new Date(`${currentYear}-01-01`));
-      // setEndDate(new Date(`${currentYear}-12-31`));
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth();
+      setStartDate(new Date(currentYear, currentMonth, 1));
+      setEndDate(new Date(currentYear, currentMonth + 1, 0)); // Last day of current month
       getUserStore();
       // fetchDropdownData();
     }

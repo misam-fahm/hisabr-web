@@ -24,6 +24,12 @@ import Editcashreconc from "@/Components/cashreconcpopup/Editcashreconc";
 import ToastNotification from "@/Components/UI/ToastNotification/ToastNotification";
 import Deletecashreconc from "@/Components/cashreconcpopup/Deletecashreconc";
 
+interface DateRangeOption {
+  name: string;
+  value?: string;
+  id: number;
+}
+
 interface TableRow {
   recdate: string;
   storename: string;
@@ -53,6 +59,16 @@ const CashReconciliations: FC = () => {
     message: "",
     type: "",
   });
+  const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
+  const [selectedDateRange, setSelectedDateRange] =
+    useState<string>("This Month (MTD)");
+
+  const dateRangeOptions: DateRangeOption[] = [
+    { name: "This Month (MTD)", value: "this_month", id: 1 },
+    { name: "This Year (YTD)", value: "this_year", id: 2 },
+    { name: "Last Month", value: "last_month", id: 3 },
+    { name: "Last Year", value: "last_year", id: 4 },
+  ];
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -216,9 +232,9 @@ const CashReconciliations: FC = () => {
           name: `${store.name} - ${store.location || "Unknown Location"}`, // Ensure location is handled
           id: store.id,
         }));
-        
+
         setStore(formattedStores); // Update store state with formatted data
-        
+
         if (stores.length > 0) {
           setSelectedOption({
             name: `${stores[0].name} - ${stores[0].location || "Unknown Location"}`,
@@ -253,11 +269,11 @@ const CashReconciliations: FC = () => {
 
   useEffect(() => {
     if (isVerifiedUser) {
-      const currentYear = new Date().getFullYear();
-      setStartDate(new Date(currentYear, 0, 1));
-      setEndDate(new Date(currentYear, 11, 31));
-      // setStartDate(new Date(`${currentYear}-01-01`));
-      // setEndDate(new Date(`${currentYear}-12-31`));
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth();
+      setStartDate(new Date(currentYear, currentMonth, 1));
+      setEndDate(new Date(currentYear, currentMonth + 1, 0)); // Last day of current month
       getUserStore();
     }
   }, [isVerifiedUser]);
@@ -270,6 +286,43 @@ const CashReconciliations: FC = () => {
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
+  };
+
+  const toggleDateRangeDropdown = () => {
+    setIsDateRangeOpen((prev) => !prev);
+  };
+
+  const handleDateRangeSelect = (option: DateRangeOption) => {
+    setSelectedDateRange(option.name);
+    const now = new Date();
+    let newStartDate: Date;
+    let newEndDate: Date;
+
+    switch (option.value) {
+      case "this_month":
+        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        newEndDate = now;
+        break;
+      case "this_year":
+        newStartDate = new Date(now.getFullYear(), 0, 1);
+        newEndDate = now;
+        break;
+      case "last_month":
+        newStartDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        newEndDate = new Date(now.getFullYear(), now.getMonth(), 0);
+        break;
+      case "last_year":
+        newStartDate = new Date(now.getFullYear() - 1, 0, 1);
+        newEndDate = new Date(now.getFullYear() - 1, 11, 31);
+        break;
+      default:
+        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        newEndDate = now;
+    }
+
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
+    setIsDateRangeOpen(false);
   };
 
   const handleError = (message: string) => {
@@ -383,9 +436,19 @@ const CashReconciliations: FC = () => {
               }}
               isOpen={isStoreDropdownOpen}
               toggleOpen={toggleStoreDropdown}
-              widthchange="w-[60%]"
+              widthchange="w-[30%] below-md:w-full"
             />
-            <div className="w-full tablet:w-full below-md:w-full h-[35px]">
+            <Dropdown
+              options={dateRangeOptions}
+              selectedOption={selectedDateRange}
+              onSelect={(option: DateRangeOption) =>
+                handleDateRangeSelect(option)
+              }
+              isOpen={isDateRangeOpen}
+              toggleOpen={toggleDateRangeDropdown}
+              widthchange="w-[30%] below-md:w-full"
+            />
+            <div className="w-[30%] below-md:w-full h-[35px]">
               <DateRangePicker
                 startDate={startDate}
                 endDate={endDate}
@@ -394,7 +457,7 @@ const CashReconciliations: FC = () => {
                 fetchData={fetchData}
               />
             </div>
-            <div className="flex relative border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-full h-[35px]">
+            <div className="flex relative border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-[30%] h-[35px]">
               <input
                 type="text"
                 value={globalFilter ?? ""}
