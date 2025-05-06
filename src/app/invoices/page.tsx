@@ -544,7 +544,7 @@ const Invoices = () => {
   return (
     <main
     className={`relative px-6 below-md:px-3 overflow-auto border-none ${
-      data?.length > 10 ? "max-h-[calc(100vh-180px)]" : "h-[500px]"
+      data?.length > 10 ? "max-h-[calc(100vh-180px)]" : "h-[600px]"
     }`}
     
       style={{ scrollbarWidth: "thin" }}
@@ -595,10 +595,10 @@ const Invoices = () => {
               onKeyDown={handleKeyDown}
               ref={searchInputRef}
               placeholder="Search"
-              className="w-full h-[35px] bg-transparent  px-3 placeholder:text-[#636363] focus:outline-none"
+              className="w-full h-[35px] bg-transparent relative  px-3 placeholder:text-[#636363] focus:outline-none"
             />
             {globalFilter && (
-              <div className="  absolute right-8 cursor-pointer">
+              <div className=" relative right-3 cursor-pointer">
                 <img
                   className="  "
                   src="/images/cancelicon.svg"
