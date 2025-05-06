@@ -246,8 +246,9 @@ const Sales: FC = () => {
 
       if (response?.status === 200) {
         setData(response?.data?.sales);
-        if (response?.data?.total > 0) {
-          setTotalItems(response?.data?.total || 0);
+        if (response?.data?.total >= 0) {
+          table.getState().pagination.pageIndex == 0 &&
+            setTotalItems(response?.data?.total || 0);
         }
       } else {
         setCustomToast({
@@ -617,7 +618,7 @@ const Sales: FC = () => {
   return (
     <main
       className={`relative px-6 below-md:px-3  overflow-auto ${
-        data?.length > 8 ? "max-h-[calc(100vh-60px)]" : "h-[500px]"
+        data?.length > 8 ? "max-h-[calc(100vh-60px)]" : "h-[600px]"
       }`}
       style={{ scrollbarWidth: "thin" }}
     >
@@ -717,7 +718,7 @@ const Sales: FC = () => {
 
         {/* Table */}
         {/* Desktop View */}
-        <div className="tablet:hidden overflow-x-auto border-collapse border border-[#E4E4EF] rounded-lg flex-grow hidden flex-col md:block shadow-sm">
+        <div className="tablet:hidden overflow-x-auto border-collapse border border-[#E4E4EF] rounded-lg flex-grow hidden flex-col below-lg:block shadow-sm">
           <div className="overflow-hidden max-w-full">
             <table className="w-full border-collapse border-gray-200 table-fixed shadow-lg">
               <thead className="bg-[#0F1044] top-0 z-10">
@@ -804,9 +805,9 @@ const Sales: FC = () => {
         </div>
 
         {/* Pagination */}
-        <div className="block below-md:hidden">
+        {/* <div className="block below-md:hidden">
           <Pagination table={table} totalItems={totalItems} />
-        </div>
+        </div> */}
 
         <div className="below-lg:hidden mb-8">
           <div className="flex flex-col">
@@ -908,7 +909,7 @@ const Sales: FC = () => {
           )}
         </button>
       </div>
-      <div className="hidden below-md:block">
+      <div className="">
         <Pagination table={table} totalItems={totalItems} />
       </div>
       <Dialog

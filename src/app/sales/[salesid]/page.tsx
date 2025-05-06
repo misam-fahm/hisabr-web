@@ -63,9 +63,9 @@ const DetailsPage: React.FC = () => {
     setActiveTab(tab);
   };
 
-  const handleBack = () => {
-    router.push("/sales");
-  };
+    const handleBack = () => {
+      router.back();
+    };
 
   const scrollTabs = (direction: "left" | "right") => {
     const container = document.getElementById("tabContainer");

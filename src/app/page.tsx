@@ -59,32 +59,32 @@ const Home: FC = () => {
     { id: 4, name: "2021" },
   ];
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const verifyToken = async () => {
-      try {
-        const res: any = await sendApiRequest({
-          token: token
-        }, `auth/verifyToken`);
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   const verifyToken = async () => {
+  //     try {
+  //       const res: any = await sendApiRequest({
+  //         token: token
+  //       }, `auth/verifyToken`);
         // res?.status !== 200 && router.replace('/login');
-        if (res?.status === 200) {
-          setIsVerifiedUser(true);
-          // const decoded = decodeToken(token + "");
-          // decoded && setUserData(decoded);
-        } else {
-          router.replace('/login');
-        }
-      } catch (error) {
-        router.replace('/login');
-      }
-    };
+    //     if (res?.status === 200) {
+    //       setIsVerifiedUser(false);
+    //       // const decoded = decodeToken(token + "");
+    //       // decoded && setUserData(decoded);
+    //     } else {
+    //       router.replace('/login');
+    //     }
+    //   } catch (error) {
+    //     router.replace('/login');
+    //   }
+    // };
 
-    if (!token) {
-      router.replace('/login');
-    } else {
-      verifyToken();
-    }
-  }, []);
+  //   if (!token) {
+  //     router.replace('/login');
+  //   } else {
+  //     verifyToken();
+  //   }
+  // }, []);
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -167,7 +167,8 @@ const Home: FC = () => {
   };
 
   return (
-    isVerifiedUser && <main
+    isVerifiedUser && 
+    <main
       className="max-h-[calc(100vh-60px)] overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
