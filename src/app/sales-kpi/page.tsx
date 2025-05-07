@@ -186,35 +186,42 @@ const SalesKPI: FC = () => {
 
   const fetchCurrentYearData = async (currentYear: number) => {
     try {
+      const today = new Date();
+      const formattedToday = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  
       const response: any = await sendApiRequest({
         mode: "getSalesKpi",
         storeid: selectedOption?.id || 69,
         startdate: `${currentYear}-01-01`,
-        enddate: `${currentYear}-12-31`,
+        enddate: formattedToday, // Use current date instead of year-end
       });
-
+  
       if (response?.status === 200) {
         const salesKpi = response?.data?.saleskpi[0] || {};
         setCurrYearData(salesKpi);
-
+  
         // Calculate operatExpAmt and royaltyAmt for current year
-        const months = 12; // Full year
-        const payrollTaxAmt =
-          salesKpi.labour_cost * (salesKpi.payrolltax / 100);
-        const yearExpAmt = salesKpi.Yearly_expense;
+        const months = today.getMonth() + 1; // Number of months until today
+        const payrollTaxAmt = salesKpi.labour_cost * (salesKpi.payrolltax / 100) || 0;
+        const yearExpAmt = (salesKpi.Yearly_expense / 12) * months || 0; // Prorate yearly expenses
         const currYearOperatExpAmt =
-          salesKpi.additional_expense +
-            payrollTaxAmt +
-            yearExpAmt +
-            salesKpi.monthly_expense * months || 0;
+          (salesKpi.additional_expense || 0) +
+          payrollTaxAmt +
+          yearExpAmt +
+          (salesKpi.monthly_expense * months || 0);
         const currYearRoyaltyAmt =
           salesKpi.net_sales * (salesKpi.royalty / 100 || 0.09) || 0;
-
+  
+        // Update currYearData with calculated values
         setCurrYearData((prev: any) => ({
           ...prev,
           operatExpAmt: currYearOperatExpAmt,
           royaltyAmt: currYearRoyaltyAmt,
         }));
+  
+        // Update global operatExpAmt and royaltyAmt for consistency in profit calculation
+        setOperatExpAmt(currYearOperatExpAmt);
+        setRoyaltyAmt(currYearRoyaltyAmt);
       }
     } catch (error) {
       console.error("Error fetching current year data:", error);
@@ -461,6 +468,13 @@ const SalesKPI: FC = () => {
       fetchCurrentYearData(now.getFullYear());
     }
   }, [isVerifiedUser]);
+
+  useEffect(() => {
+    if (selectedOption && isVerifiedUser) {
+      const now = new Date();
+      fetchCurrentYearData(now.getFullYear());
+    }
+  }, [selectedOption, isVerifiedUser]);
 
   const handlePressStart = () => {
     setShowTooltip(true);
@@ -827,6 +841,8 @@ const SalesKPI: FC = () => {
                 }}
                 isOpen={isStoreDropdownOpen}
                 toggleOpen={toggleStoreDropdown}
+                widthchange="w-[15%] below-md:w-full"
+
               />
               <Dropdown
                 options={dateRangeOptions}
@@ -837,6 +853,8 @@ const SalesKPI: FC = () => {
                 }}
                 isOpen={isDateRangeOpen}
                 toggleOpen={toggleDateRangeDropdown}
+                widthchange="w-[15%] below-md:w-full"
+
               />
               <div className="w-[260px] tablet:w-full below-md:w-full">
                 <DateRangePicker

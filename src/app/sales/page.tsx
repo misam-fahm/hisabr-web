@@ -704,7 +704,7 @@ const Sales: FC = () => {
       toggleOpen={toggleDateRangeDropdown}
       widthchange="w-[30%] below-md:w-full"
     />
-    <div className="w-[30%] below-md:w-full h-[35px]">
+    <div className="w-[45%] below-md:w-full h-[35px]">
       <DateRangePicker
         startDate={startDate}
         endDate={endDate}
