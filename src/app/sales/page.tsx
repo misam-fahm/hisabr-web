@@ -696,7 +696,7 @@ const Sales: FC = () => {
         }}
         isOpen={isStoreDropdownOpen}
         toggleOpen={toggleStoreDropdown}
-        widthchange="flex-1 min-w-[180px] below-lg:min-w-[158.4px] w-full"
+        widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
       />
       <Dropdown
         options={dateRangeOptions}
@@ -704,13 +704,13 @@ const Sales: FC = () => {
         onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
         isOpen={isDateRangeOpen}
         toggleOpen={toggleDateRangeDropdown}
-        widthchange="flex-1 min-w-[180px] below-lg:min-w-[158.4px] w-full"
+        widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
       />
     </div>
 
     {/* Date Picker and Search */}
     <div className="flex flex-row gap-3 w-full below-md:flex-col below-laptop:w-3/5 small-laptop:w-1/2">
-      <div className="flex-1 min-w-[300px] below-lg:min-w-[264px] h-[35px] below-lg:h-[30.8px] w-full">
+      <div className="flex-1 min-w-[300px] below-lg:min-w-[256.08px] h-[35px] below-lg:h-[29.876px] w-full">
         <DateRangePicker
           startDate={startDate}
           endDate={endDate}
@@ -719,16 +719,16 @@ const Sales: FC = () => {
           fetchData={fetchData}
         />
       </div>
-      <div className="flex-1 min-w-[150px] below-lg:min-w-[132px] h-[35px] below-lg:h-[30.8px] w-full relative">
+      <div className="flex-1 min-w-[150px] below-lg:min-w-[128.04px] h-[35px] below-lg:h-[29.876px] w-full relative">
         <input
           type="search"
           value={globalFilter ?? ""}
           onChange={(e) => setGlobalFilter(e.target.value)}
           placeholder="Search"
-          className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
+          className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] below-lg:text-[10.2432px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
         />
         <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-          <img src="/images/searchicon.svg" alt="Search Icon" className="cursor-pointer below-lg:scale-88" />
+          <img src="/images/searchicon.svg" alt="Search Icon" className="cursor-pointer below-lg:scale-[0.8536]" />
         </div>
       </div>
     </div>
@@ -744,9 +744,9 @@ const Sales: FC = () => {
       />
       <button
         onClick={handleUploadClick}
-        className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[159px] below-lg:w-[139.92px] h-[35px] below-lg:h-[30.8px] rounded-md text-white text-[13px] below-lg:text-[11.44px] font-medium"
+        className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[159px] below-lg:w-[135.7224px] h-[35px] below-lg:h-[29.876px] rounded-md text-white text-[13px] below-lg:text-[11.0968px] font-medium"
       >
-        <img src="/images/uploadIcon.svg" alt="Upload Icon" className="mr-1 below-lg:scale-88" />
+        <img src="/images/uploadIcon.svg" alt="Upload Icon" className="mr-1 below-lg:scale-[0.8536]" />
         Upload Sale
       </button>
     </div>
