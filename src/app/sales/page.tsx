@@ -679,75 +679,61 @@ const Sales: FC = () => {
       />
       {uploadPdfloading && <Loading />}
       <div className="px-6 mt-6 below-md:px-3 below-md:mt-0 tablet:mt-4">
-      <div className="flex flex-row below-md:flex-col pb-6 sticky z-20 below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4">
-  <div className="flex flex-row below-md:flex-col w-full gap-3">
-    <Dropdown
-      options={store}
-      selectedOption={selectedOption?.name || "Store"}
-      onSelect={(selectedOption: any) => {
-        setSelectedOption({
-          storeno: selectedOption?.storeno,
-          name: selectedOption?.name,
-          id: selectedOption?.id,
-        });
-        setIsStoreDropdownOpen(false);
-      }}
-      isOpen={isStoreDropdownOpen}
-      toggleOpen={toggleStoreDropdown}
-      widthchange="w-[30%] below-md:w-full"
-    />
-    <Dropdown
-      options={dateRangeOptions}
-      selectedOption={selectedDateRange}
-      onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
-      isOpen={isDateRangeOpen}
-      toggleOpen={toggleDateRangeDropdown}
-      widthchange="w-[30%] below-md:w-full"
-    />
-    <div className="w-[45%] below-md:w-full h-[35px]">
-      <DateRangePicker
-        startDate={startDate}
-        endDate={endDate}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
-        fetchData={fetchData}
+      <div className="sticky z-20 bg-[#f7f8f9] pb-6 pt-4 below-md:pt-4 below-md:pb-4 tablet:pt-4">
+  <div className="flex flex-row flex-nowrap gap-3 w-full below-md:flex-col">
+    {/* Store and Date Range Dropdowns */}
+    <div className="flex flex-row gap-3 w-full below-md:flex-col below-laptop:w-2/5 small-laptop:w-1/2">
+      <Dropdown
+        options={store}
+        selectedOption={selectedOption?.name || "Store"}
+        onSelect={(selectedOption: any) => {
+          setSelectedOption({
+            storeno: selectedOption.storeno,
+            name: selectedOption.name,
+            id: selectedOption.id,
+          });
+          setIsStoreDropdownOpen(false);
+        }}
+        isOpen={isStoreDropdownOpen}
+        toggleOpen={toggleStoreDropdown}
+        widthchange="flex-1 min-w-[180px] below-lg:min-w-[158.4px] w-full"
+      />
+      <Dropdown
+        options={dateRangeOptions}
+        selectedOption={selectedDateRange}
+        onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
+        isOpen={isDateRangeOpen}
+        toggleOpen={toggleDateRangeDropdown}
+        widthchange="flex-1 min-w-[180px] below-lg:min-w-[158.4px] w-full"
       />
     </div>
-    <div className="flex flex-row gap-3 w-[30%] below-md:w-full">
-      <div className="w-full rounded border border-gray-300 below-md:w-full bg-[#ffff] relative below-md:hidden tablet:w-full">
+
+    {/* Date Picker and Search */}
+    <div className="flex flex-row gap-3 w-full below-md:flex-col below-laptop:w-3/5 small-laptop:w-1/2">
+      <div className="flex-1 min-w-[300px] below-lg:min-w-[264px] h-[35px] below-lg:h-[30.8px] w-full">
+        <DateRangePicker
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          fetchData={fetchData}
+        />
+      </div>
+      <div className="flex-1 min-w-[150px] below-lg:min-w-[132px] h-[35px] below-lg:h-[30.8px] w-full relative">
         <input
           type="search"
           value={globalFilter ?? ""}
           onChange={(e) => setGlobalFilter(e.target.value)}
           placeholder="Search"
-                  className="w-full rounded  py-[10px] pr-7 pl-3 h-[35px] text-[12px] placeholder:text-[#636363]  focus:outline-none "
+          className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
         />
         <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                  <img
-                    className="cursor-pointer items-center"
-                    src="/images/searchicon.svg"
-                  />
-        </div>
-      </div>
-
-      <div className="tablet:hidden rounded below-md:w-full relative below-lg:hidden border border-gray-300">
-        <input
-          type="search"
-          placeholder="Search"
-                  className=" py-[10px] rounded px-3 h-[35px] w-full pr-7 pl-3 text-[12px] placeholder:text-[#636363]  focus:outline-none focus:ring-1 focus:ring-[white]"
-        />
-        <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                  <img
-                    className="cursor-pointer items-center"
-                    src="/images/searchicon.svg"
-                  />
+          <img src="/images/searchicon.svg" alt="Search Icon" className="cursor-pointer below-lg:scale-88" />
         </div>
       </div>
     </div>
-  </div>
 
-          {/* button */}
-  <div className="below-lg:pl-24 below-md:w-full">
+    {/* Upload Button */}
     <div className="below-md:hidden tablet:hidden">
       <input
         type="file"
@@ -756,16 +742,11 @@ const Sales: FC = () => {
         style={{ display: "none" }}
         onChange={handleFileChange}
       />
-
       <button
         onClick={handleUploadClick}
-        className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg below-md:mt-3 w-[159px] h-[35px] rounded-md text-white text-[13px] font-medium"
+        className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[159px] below-lg:w-[139.92px] h-[35px] below-lg:h-[30.8px] rounded-md text-white text-[13px] below-lg:text-[11.44px] font-medium"
       >
-                <img
-                  src="/images/uploadIcon.svg"
-                  alt="Upload Icon"
-                  className="mr-1"
-                />
+        <img src="/images/uploadIcon.svg" alt="Upload Icon" className="mr-1 below-lg:scale-88" />
         Upload Sale
       </button>
     </div>
