@@ -826,9 +826,8 @@ const SalesKPI: FC = () => {
         className="max-h-[calc(100vh-60px)] min-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] overflow-auto"
         style={{ scrollbarWidth: "thin" }}
       >
-        <div>
-          <div className="flex flex-row below-md:flex-col below-md:items-end sticky  justify-between pt-6 below-md:pt-4 below-md:px-3  pl-6 pr-6 pb-1.5 below-md:pb-4 bg-[#f7f8f9] ">
-            <div className="flex flex-row below-md:flex-col w-full gap-3">
+           <div className="flex flex-row below-md:flex-col below-md:items-end sticky  justify-between pt-6 below-md:pt-4 below-md:px-3  pl-6 pr-6 pb-1.5 below-md:pb-4 bg-[#f7f8f9] ">
+            <div className="flex flex-row below-md:flex-col  gap-3">
               <Dropdown
                 options={store}
                 selectedOption={selectedOption?.name || "Store"}
@@ -841,7 +840,7 @@ const SalesKPI: FC = () => {
                 }}
                 isOpen={isStoreDropdownOpen}
                 toggleOpen={toggleStoreDropdown}
-                widthchange="w-[15%] below-md:w-full"
+                widthchange="w-[35%] below-md:w-full"
 
               />
               <Dropdown
@@ -853,10 +852,10 @@ const SalesKPI: FC = () => {
                 }}
                 isOpen={isDateRangeOpen}
                 toggleOpen={toggleDateRangeDropdown}
-                widthchange="w-[15%] below-md:w-full"
+                widthchange="w-[30%]"
 
               />
-              <div className="w-[260px] tablet:w-full below-md:w-full">
+              <div className="w-[300px] tablet:w-full below-md:w-full">
                 <DateRangePicker
                   startDate={startDate}
                   endDate={endDate}
@@ -878,6 +877,7 @@ const SalesKPI: FC = () => {
             </button>
           </div> */}
           </div>
+        <div>
           <div>
             <p className="text-[16px] text-[#000000cc] font-bold pb-1.5  pl-8">
   Average Order: {data?.avg_order

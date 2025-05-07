@@ -20,11 +20,13 @@ export default {
       screens: {
         "below-md": { max: "768px" },
         tablet: { min: "769px", max: "1024px" },
-         "ipad-air": { min: "1100px", max: "1200px" }, 
-        "ipad-pro": { min: "1100px", max: "1400px" }, 
+        "ipad-air": { min: "1100px", max: "1200px" },
+        "ipad-pro": { min: "1100px", max: "1400px" },
         "tablet-home": { min: "769px", max: "1350px" },
         "below-lg": { min: "1025px" },
-      },
+        "small-laptop": { min: "1280px", max: "1440px" },
+        
+       },
     },
   },
   plugins: [require("tailwind-scrollbar")],
