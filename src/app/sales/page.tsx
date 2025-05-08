@@ -678,11 +678,10 @@ const Sales: FC = () => {
         type={customToast?.type}
       />
       {uploadPdfloading && <Loading />}
-      <div className="px-6 mt-6 below-md:px-3 below-md:mt-0 tablet:mt-4">
       <div className="sticky z-20 bg-[#f7f8f9] pb-6 pt-4 below-md:pt-4 below-md:pb-4 tablet:pt-4">
-  <div className="flex flex-row flex-nowrap gap-3 w-full below-md:flex-col">
+  <div className="flex flex-row flex-nowrap gap-3 pb-6 w-full below-md:flex-col">
     {/* Store and Date Range Dropdowns */}
-    <div className="flex flex-row gap-3 w-full below-md:flex-col below-laptop:w-2/5 small-laptop:w-1/2">
+    <div className="flex flex-row flex-wrap gap-3 w-full below-md:flex-col">
       <Dropdown
         options={store}
         selectedOption={selectedOption?.name || "Store"}
@@ -749,7 +748,6 @@ const Sales: FC = () => {
         <img src="/images/uploadIcon.svg" alt="Upload Icon" className="mr-1 below-lg:scale-[0.8536]" />
         Upload Sale
       </button>
-    </div>
   </div>
 </div>
 

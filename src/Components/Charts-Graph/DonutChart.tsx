@@ -150,38 +150,39 @@ const DonutChart: React.FC<DonutChartProps> = ({ values, operatExpAmt }) => {
         ],
       };
 
-  const options: ChartOptions<"doughnut"> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: "68%",
-    circumference: 360, // Ensure full circle, clockwise
-    plugins: {
-      legend: { display: false },
-      tooltip: { enabled: false },
-      datalabels: {
-        display: hasData && !isMobile,
-        color: (context) => sortedData[context.dataIndex]?.color || "#000000",
-        font: { size: 12 },
-        formatter: (value, context) => {
-          const label = context.chart.data.labels![context.dataIndex] as string;
-          return `${label.length > 10 ? label.slice(0, 10) + "..." : label}: ${Number(value).toFixed(1)}%`;
+      const options: ChartOptions<"doughnut"> = {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "68%",
+        circumference: 360, // Ensure full circle, clockwise
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
+          datalabels: {
+            display: hasData && !isMobile,
+            color: (context) => sortedData[context.dataIndex]?.color || "#000000",
+            font: { size: 12 },
+            formatter: (value, context) => {
+              const label = context.chart.data.labels![context.dataIndex] as string;
+              const formattedValue = Number(value) > 0.50 ? Math.round(Number(value)) : Number(value).toFixed(1);
+              return `${label.length > 10 ? label.slice(0, 10) + "..." : label}: ${formattedValue}%`;
+            },
+            align: "end",
+            anchor: "end",
+            offset: 8,
+            clamp: true,
+            clip: false,
+          },
         },
-        align: "end",
-        anchor: "end",
-        offset: 8,
-        clamp: true,
-        clip: false,
-      },
-    },
-    onHover: (event, chartElement) => {
-      if (chartElement.length > 0) {
-        setHoveredIndex(chartElement[0].index);
-      } else {
-        setHoveredIndex(null);
-      }
-    },
-    animation: { duration: 300 },
-  };
+        onHover: (event, chartElement) => {
+          if (chartElement.length > 0) {
+            setHoveredIndex(chartElement[0].index);
+          } else {
+            setHoveredIndex(null);
+          }
+        },
+        animation: { duration: 300 },
+      };
 
   const renderCenterText = () => {
     if (!hasData) {
