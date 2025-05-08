@@ -155,7 +155,7 @@ const Page: FC = () => {
 
     initialState: {
       pagination: {
-        pageSize: 10,
+        pageSize: 25,
         pageIndex: 0,
       },
     },

@@ -55,7 +55,7 @@ const Page: FC = () => {
     },
     {
       id: "actions",
-      header: () => <div className="text-center">Actions</div>,
+      header: () => <div className="text-right pr-4">Actions</div>,
       cell: (info) => (
         <div className="flex justify-end gap-11 pr-7"> {/* Added gap and padding */}
           {/* Show Delete button first */}

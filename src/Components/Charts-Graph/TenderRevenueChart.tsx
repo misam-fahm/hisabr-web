@@ -223,51 +223,51 @@ const TenderRevenueChart: React.FC<TenderRevenueChartProps> = ({
         ],
       };
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '68%',
-    plugins: {
-      legend: { display: false },
-      tooltip: { enabled: false },
-      datalabels: {
-        display: hasData && !isMobile,
-        color: (context) => adjustedData[context.dataIndex]?.color || '#000000',
-        font: {
-          size: 12,
+      const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '68%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
+          datalabels: {
+            display: hasData && !isMobile,
+            color: (context) => adjustedData[context.dataIndex]?.color || '#000000',
+            font: {
+              size: 12,
+            },
+            formatter: (value, context) => {
+              const index = context.dataIndex;
+              if (topIndices.includes(index)) {
+                const originalPayments = tenderData[index]?.payments || 0;
+                const percentage = (originalPayments / totalRevenue) * 100;
+                const label = context.chart.data.labels[index];
+                const isSpecificMobilePortrait = window.matchMedia('(min-width: 414px) and (max-width: 414px) and (min-height: 896px) and (max-height: 896px)').matches;
+                const isSpecificTabletLandscape = window.matchMedia('(min-width: 1180px) and (max-width: 1180px) and (min-height: 820px) and (max-height: 820px)').matches;
+                const maxLabelLength = isSpecificMobilePortrait ? 15 : isSpecificTabletLandscape ? 16 : 20;
+                const formattedPercentage = percentage > 0.50 ? Math.round(percentage) : percentage.toFixed(1);
+                return `${
+                  label.length > maxLabelLength ? label.slice(0, maxLabelLength) + '...' : label
+                }: ${formattedPercentage}%`;
+              }
+              return null;
+            },
+            align: 'end',
+            anchor: 'end',
+            offset: 8,
+            clamp: true,
+            clip: false,
+          },
         },
-        formatter: (value, context) => {
-          const index = context.dataIndex;
-          if (topIndices.includes(index)) {
-            const originalPayments = tenderData[index]?.payments || 0;
-            const percentage = ((originalPayments / totalRevenue) * 100).toFixed(1);
-            const label = context.chart.data.labels[index];
-            const isSpecificMobilePortrait = window.matchMedia('(min-width: 414px) and (max-width: 414px) and (min-height: 896px) and (max-height: 896px)').matches;
-            const isSpecificTabletLandscape = window.matchMedia('(min-width: 1180px) and (max-width: 1180px) and (min-height: 820px) and (max-height: 820px)').matches;
-            const maxLabelLength = isSpecificMobilePortrait ? 15 : isSpecificTabletLandscape ? 16 : 20;
-            return `${
-              label.length > maxLabelLength ? label.slice(0, maxLabelLength) + '...' : label
-            }: ${percentage}%`;
+        onHover: (event, chartElement) => {
+          if (chartElement.length > 0) {
+            setHoveredIndex(chartElement[0].index);
+          } else {
+            setHoveredIndex(null);
           }
-          return null;
         },
-        align: 'end',
-        anchor: 'end',
-        offset: 8,
-        clamp: true,
-        clip: false,
-      },
-    },
-    onHover: (event, chartElement) => {
-      if (chartElement.length > 0) {
-        setHoveredIndex(chartElement[0].index);
-      } else {
-        setHoveredIndex(null);
-      }
-    },
-    animation: { duration: 300 },
-  } as const;
-
+        animation: { duration: 300 },
+      } as const;
   const renderCenterText = () => {
     if (!hasData) {
       return <p className="m-0 font-bold text-[14px]">No Data Available</p>;
