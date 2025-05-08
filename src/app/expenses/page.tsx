@@ -480,78 +480,95 @@ const Expenses: FC = () => {
       style={{ scrollbarWidth: "thin" }}
     >
       <>
-      <div className="flex flex-row below-md:flex-col w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
-  <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
-    {showBackIcon && (
-      <img
-        onClick={() => router.back()}
-        alt="Back Arrow"
-        className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
-        src="/images/webbackicon.svg"
-      ></img>
-    )}
-    <Dropdown
-      options={store}
-      selectedOption={selectedOption?.name || "Store"}
-      onSelect={(selectedOption: any) => {
-        setSelectedOption({
-          name: selectedOption.name,
-          id: selectedOption.id,
-        });
-        setIsStoreDropdownOpen(false);
-      }}
-      isOpen={isStoreDropdownOpen}
-      toggleOpen={toggleStoreDropdown}
-      widthchange="w-[30%] below-md:w-full"
-    />
-    <Dropdown
-      options={dateRangeOptions}
-      selectedOption={selectedDateRange}
-      onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
-      isOpen={isDateRangeOpen}
-      toggleOpen={toggleDateRangeDropdown}
-      widthchange="w-[30%] below-md:w-full"
-    />
-    <div className="w-[30%] below-md:w-full h-[35px]">
-      <DateRangePicker
-        startDate={startDate}
-        endDate={endDate}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
-        fetchData={fetchData}
+      <div className="sticky z-20 bg-[#f7f8f9] pb-6 pt-4 below-md:pt-4 below-md:pb-4 tablet:pt-4">
+  <div className="flex flex-row flex-nowrap gap-3 w-full below-md:flex-col">
+    
+    {/* Filter Controls: Back, Store, Date, Picker, Search */}
+    <div className="flex flex-row gap-3 w-full below-md:flex-col below-laptop:w-4/5 small-laptop:w-full">
+      <div className="flex items-center">
+        {showBackIcon && (
+          <img
+            onClick={() => router.back()}
+            alt="Back Arrow"
+            className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
+            src="/images/webbackicon.svg"
+          />
+        )}
+      </div>
+
+      <Dropdown
+        options={store}
+        selectedOption={selectedOption?.name || "Store"}
+        onSelect={(selectedOption: any) => {
+          setSelectedOption({
+            name: selectedOption.name,
+            id: selectedOption.id,
+          });
+          setIsStoreDropdownOpen(false);
+        }}
+        isOpen={isStoreDropdownOpen}
+        toggleOpen={toggleStoreDropdown}
+        widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
       />
-    </div>
-    <div className="flex relative border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-[30%] h-[35px]">
-      <input
-        type="text"
-        value={globalFilter ?? ""}
-        onChange={(e) => setGlobalFilter(e.target.value)}
-        onKeyDown={handleKeyDown}
-        ref={searchInputRef}
-        placeholder="Search"
-                className="w-full h-[35px] bg-transparent  px-3 placeholder:text-[#636363] focus:outline-none"
+
+      <Dropdown
+        options={dateRangeOptions}
+        selectedOption={selectedDateRange}
+        onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
+        isOpen={isDateRangeOpen}
+        toggleOpen={toggleDateRangeDropdown}
+        widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
       />
-      {globalFilter && (
-                <div className="  absolute right-8 cursor-pointer">
-                  <img
-                    className="  "
-                    src="/images/cancelicon.svg"
-                    onClick={clearSearch}
-                  />
+
+      <div className="flex-1 min-w-[300px] below-lg:min-w-[256.08px] h-[35px] below-lg:h-[29.876px] w-full">
+        <DateRangePicker
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          fetchData={fetchData}
+        />
+      </div>
+
+      <div className="flex-1 min-w-[150px] below-lg:min-w-[128.04px] h-[35px] below-lg:h-[29.876px] w-full relative">
+        <input
+          type="text"
+          value={globalFilter ?? ""}
+          onChange={(e) => setGlobalFilter(e.target.value)}
+          onKeyDown={handleKeyDown}
+          ref={searchInputRef}
+          placeholder="Search"
+          className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] below-lg:text-[10.2432px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
+        />
+        {globalFilter && (
+          <div className="absolute right-8 inset-y-0 flex items-center cursor-pointer">
+            <img
+              className="w-4 h-4"
+              src="/images/cancelicon.svg"
+              onClick={clearSearch}
+              alt="Clear Search"
+            />
+          </div>
+        )}
+        <div className="absolute inset-y-0 right-2 flex items-center cursor-pointer">
+          <img
+            src="/images/searchicon.svg"
+            alt="Search Icon"
+            className="below-lg:scale-[0.8536]"
+            onClick={() =>
+              table.getState().pagination.pageIndex === 0
+                ? fetchData()
+                : table.setPageIndex(0)
+            }
+          />
         </div>
-      )}
-      <img
-        className="pr-2 cursor-pointer items-center"
-        src="/images/searchicon.svg"
-        onClick={fetchData}
-      />
+      </div>
     </div>
-  </div>
-  <div className="block pl-24 below-md:hidden">
-    <AddExpenses
-      setAddExpenses={setAddExpenses}
-      SelectedStore={selectedOption}
-    />
+
+    {/* Add Expenses Button */}
+    <div className="below-md:hidden tablet:hidden pl-4 flex items-center">
+      <AddExpenses setAddExpenses={setAddExpenses} SelectedStore={selectedOption} />
+    </div>
   </div>
 </div>
 
