@@ -22,6 +22,8 @@ import ToastNotification, {
 import DeletePopup from "@/Components/UI/Delete/DeletePopup";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 import Tooltip from "@/Components/UI/Toolstips/Tooltip";
+import { useSearchParams } from "next/navigation"; // Import useSearchParams
+
 interface TableRow {
   itemname: string;
   categoryname: string;
@@ -30,23 +32,24 @@ interface TableRow {
   weight: string;
   itemid?: number;
   categoryid?: number;
-  itemcode: string;      // Add this
-  dqcategoryname: string; // Add this
-  cogscategoryname: string; // Add this
+  itemcode: string;
+  dqcategoryname: string;
+  cogscategoryname: string;
 }
 
 const Page: FC = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [data, setData] = useState<TableRow[]>([]); // Data state for table rows
-  const [totalItems, setTotalItems] = useState<number>(0); // Total number of items from the API
+  const [data, setData] = useState<TableRow[]>([]);
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [isOpenAddItems, setAddItems] = useState(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
   });
+  const searchParams = useSearchParams(); // Initialize searchParams
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -55,7 +58,6 @@ const Page: FC = () => {
       cell: (info) => <span>{info.getValue() as string}</span>,
       size: 80,
     },
-
     {
       accessorKey: "itemname",
       header: () => <div className="text-left">Name</div>,
@@ -203,9 +205,29 @@ const Page: FC = () => {
     }
   };
 
-  useEffect(() => {
+  // Read query parameter on page load
+ // ...existing code...
+useEffect(() => {
+  const searchQuery = searchParams?.get("search");
+  const decodedQuery = searchQuery ? decodeURIComponent(searchQuery) : "";
+  setGlobalFilter(decodedQuery);
+  // Immediately fetch data if query param exists
+  if (decodedQuery) {
+    // Always reset to first page for new search
+    table.setPageIndex(0);
+    fetchData(decodedQuery);
+  }
+}, [searchParams]);
+// ...existing code...
+
+// Remove globalFilter from fetchData dependency to avoid double fetch
+useEffect(() => {
+  // Only fetch when not coming from query param
+  if (!searchParams?.get("search")) {
     fetchData(globalFilter);
-  }, [pageIndex, pageSize, isOpenAddItems]);
+  }
+}, [pageIndex, pageSize, isOpenAddItems]);
+// ...existing code...
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -230,6 +252,7 @@ const Page: FC = () => {
       searchInputRef.current.focus();
     }
   };
+
   return (
     <main
       className="max-h-[calc(100vh-60px)] px-4 below-md:px-3 below-md:py-4 overflow-auto "

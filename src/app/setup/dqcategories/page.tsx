@@ -15,6 +15,7 @@ import DeleteDQCategories from "@/Components/Setup/DQCategoriesPopup/DeleteDQCat
 import { sendApiRequest } from "@/utils/apiUtils";
 import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
+import { useRouter } from "next/navigation"; // Import useRouter
 
 interface TableRow {
   id: number;
@@ -31,6 +32,7 @@ const Page: FC = () => {
     message: "",
     type: "",
   });
+  const router = useRouter(); // Initialize router
 
   const refreshData = () => {
     setAddDQCategories((prev) => !prev); // Toggle the state to trigger a refresh
@@ -50,29 +52,37 @@ const Page: FC = () => {
     {
       accessorKey: "name",
       header: () => <div className="text-left">Name</div>,
-      cell: (info) => <span>{info.getValue() as string}</span>,
+      cell: (info) => (
+        <span
+          className="cursor-pointer hover:underline"
+          onClick={() => {
+            // Navigate to items page with the name as a query parameter
+            router.push(`/setup/items?search=${encodeURIComponent(info.getValue() as string)}`);
+          }}
+        >
+          {info.getValue() as string}
+        </span>
+      ),
       size: 200,
     },
     {
       id: "actions",
       header: () => <div className="text-right pr-4">Actions</div>,
       cell: (info) => (
-        <div className="flex justify-end gap-11 pr-7"> {/* Added gap and padding */}
-          {/* Show Delete button first */}
+        <div className="flex justify-end gap-11 pr-7">
           {info.row.original.types !== "S" && (
             <DeleteDQCategories
               rowData={info.row.original}
               setDataRefresh={refreshData}
-              />
+            />
           )}
-          {/* Show Edit button */}
           <EditDQCategories
             rowData={info.row.original}
             setDataRefresh={refreshData}
           />
         </div>
       ),
-      size: 200, // Increased size to accommodate spacing
+      size: 200,
     },
   ];
 
@@ -91,7 +101,7 @@ const Page: FC = () => {
         const response: any = await sendApiRequest({
           mode: "getAllDQCategorys",
           page: 1,
-          limit: 10, // Adjust limit for pagination
+          limit: 10,
         });
 
         if (response?.status === 200) {
@@ -116,7 +126,6 @@ const Page: FC = () => {
       className="max-h-[calc(100vh-60px)] px-6 below-md:px-3 below-md:py-4 overflow-auto"
       style={{ scrollbarWidth: "thin" }}
     >
-      {/* Render ToastNotification only if customToast has a message */}
       {customToast.message && (
         <ToastNotification
           message={customToast.message}
@@ -127,7 +136,7 @@ const Page: FC = () => {
       <div className="flex justify-end gap-2 below-md:hidden my-6">
         <AddDQCategories
           setAddDQCategories={setAddDQCategories}
-          showToast={showToast} // Pass showToast to AddDQCategories
+          showToast={showToast}
         />
       </div>
 
@@ -141,18 +150,22 @@ const Page: FC = () => {
                 className={`border border-gray-200 p-5 bg-white rounded-lg mb-3`}
               >
                 <div className="flex justify-between items-center">
-                  <span className="font-bold text-[14px] text-[#334155]">
+                  <span
+                    className="font-bold text-[14px]  cursor-pointer hover:underline"
+                    onClick={() => {
+                      // Navigate to items page for mobile view
+                      router.push(`/setup/items?search=${encodeURIComponent(row.name)}`);
+                    }}
+                  >
                     {row?.name}
                   </span>
-                  <div className="flex items-center gap-8"> {/* Added gap */}
-                    {/* Show Delete button first */}
+                  <div className="flex items-center gap-8">
                     {row.types !== "S" && (
                       <DeleteDQCategories
                         rowData={row}
                         setDataRefresh={refreshData}
                       />
                     )}
-                    {/* Show Edit button */}
                     <EditDQCategories
                       rowData={row}
                       setDataRefresh={refreshData}
@@ -167,13 +180,13 @@ const Page: FC = () => {
           <div className="block pl-24">
             <AddDQCategories
               setAddDQCategories={setAddDQCategories}
-              showToast={showToast} // Pass showToast to AddDQCategories
+              showToast={showToast}
             />
           </div>
         </div>
 
         {/* Desktop View */}
-        <div className="overflow-x-auto shadow-sm border-collapse border border-gray-200 rounded-lg flex-grow hidden flex-col md:block">
+        <div className="overflow-x-auto shadow-sm border-collapse border border-gray-200 rounded-lg hidden flex-col md:block">
           <div className="overflow-hidden max-w-full">
             <table className="w-full table-fixed">
               <thead className="bg-[#334155] sticky top-0 z-10">

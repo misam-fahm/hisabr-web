@@ -118,7 +118,7 @@ const Invoices = () => {
     },
     {
       accessorKey: "invoicenumber",
-      header: () => <div className="text-left">Invoice#</div>,
+      header: () => <div className="text-left">Invoice</div>,
       cell: (info) => (
         <span className="text-left pl-1">{info.getValue() as string}</span>
       ),
@@ -753,7 +753,7 @@ const Invoices = () => {
             <div className="flex justify-between items-center px-4 py-3">
               <div className="flex flex-col text-[13px] space-y-3">
                 <p className="text-[#636363]">Store</p>
-                <p className="text-[#636363]">Invoice#</p>
+                <p className="text-[#636363]">Invoice</p>
                 <p className="text-[#636363]">quantity</p>
                 <p className="text-[#636363]">total</p>
               </div>
