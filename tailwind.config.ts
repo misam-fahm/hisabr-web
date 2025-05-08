@@ -19,7 +19,7 @@ export default {
       },
       screens: {
         "below-md": { max: "768px" },
-        tablet: { min: "769px", max: "1024px" },
+        "tablet": { min: "769px", max: "1024px" },
         "ipad-air": { min: "1100px", max: "1200px" },
         "ipad-pro": { min: "1100px", max: "1400px" },
         "tablet-home": { min: "769px", max: "1350px" },

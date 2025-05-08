@@ -408,16 +408,23 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
     }
   }, []);
 
-  useEffect(() => {
-    if (isVerifiedUser) {
-      const today = new Date();
-      const currentYear = today.getFullYear();
-      const currentMonth = today.getMonth();
-      setStartDate(new Date(currentYear, currentMonth, 1));
-      setEndDate(new Date(currentYear, currentMonth + 1, 0)); // Last day of current month
-      getUserStore();
-    }
-  }, [isVerifiedUser]);
+ // ...existing code...
+useEffect(() => {
+  if (isVerifiedUser) {
+    // Calculate last month's start and end dates
+    const today = new Date();
+    const lastMonth = today.getMonth() === 0 ? 11 : today.getMonth() - 1;
+    const lastMonthYear = today.getMonth() === 0 ? today.getFullYear() - 1 : today.getFullYear();
+    const lastMonthStart = new Date(lastMonthYear, lastMonth, 1);
+    const lastMonthEnd = new Date(lastMonthYear, lastMonth + 1, 0);
+
+    setStartDate(lastMonthStart);
+    setEndDate(lastMonthEnd);
+    setSelectedDateRange("Last Month"); // Set the dropdown to "Last Month"
+    getUserStore();
+  }
+}, [isVerifiedUser]);
+// ...existing code...
   
   useEffect(() => {
     if (startDate && endDate && selectedOption) {
@@ -632,18 +639,18 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
       }}
       isOpen={isStoreDropdownOpen}
       toggleOpen={toggleStoreDropdown}
-      widthchange="w-[40%] below-md:w-full tablet:w-[30%]"
-    />
+      widthchange="w-[35%] tablet:w-full below-md:w-full"
+      />
     <Dropdown
       options={dateRangeOptions}
       selectedOption={selectedDateRange}
       onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
       isOpen={isDateRangeOpen}
       toggleOpen={toggleDateRangeDropdown}
-      widthchange="w-[30%] below-md:w-full tablet:w-[30%]"
+      widthchange="w-[30%] tablet:w-full below-md:w-full"
     />
-    <div className="w-[30%] below-md:w-full tablet:w-[40%] h-[40px] below-md:px-4">
-      <DateRangePicker
+    <div className="w-[300px] tablet:w-full below-md:w-full">
+    <DateRangePicker
         startDate={startDate}
         endDate={endDate}
         setStartDate={setStartDate}
@@ -770,56 +777,45 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
           </div>
         </div> */}
 
-        <div className="flex gap-6 below-md:grid below-md:grid-cols-1 below-md:gap-3 below-md:pl-3 below-md:pr-3 tablet:grid tablet:grid-cols-2">
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%] tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
-            <div className="flex flex-col gap-2">
-              <p className="text-[14px] text-[#575F6DCC] font-bold">COGS</p>
-              <p className="text-[18px] text-[#2D3748] font-bold">
-                {productTotal
-                  ? `$${productTotal.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
-                  : "$0"}
-              </p>
-            </div>
-            {/* Uncomment and update if you want to add the circular count
-    <div className="flex items-center justify-center bg-[#EFF6EFA1] rounded-full w-[60px] h-[60px]">
-      <p className="text-[18px] font-medium">{}</p>
+<div className="flex gap-6 below-md:grid below-md:grid-cols-1 below-md:gap-3 below-md:pl-3 below-md:pr-3 tablet:grid tablet:grid-cols-2">
+  {/* COGS */}
+  <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%] tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
+    <div className="flex flex-col gap-2">
+      <p className="text-[14px] text-[#575F6DCC] font-bold">COGS</p>
+      <p className="text-[18px] text-[#2D3748] font-bold">
+        {productTotal
+          ? `$${productTotal.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+          : "$0"}
+      </p>
     </div>
-    */}
-          </div>
+  </div>
 
-          <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%]  tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
-            <div className="flex flex-col gap-2">
-              <p className="text-[14px] text-[#575F6DCC] font-bold">
-                Order Counts
-              </p>
-              <p className="text-[18px] text-[#2D3748] font-bold">
-                {totalOrders ? totalOrders.toLocaleString("en-US") : "0"}
-              </p>
-            </div>
-            {/* Uncomment and update if you want to add the circular count
-    <div className="flex items-center justify-center bg-[#EFF6EFA1] rounded-full w-[60px] h-[60px]">
-      <p className="text-[18px] font-medium">{}</p>
+  {/* Order Counts */}
+  <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%]  tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
+    <div className="flex flex-col gap-2">
+      <p className="text-[14px] text-[#575F6DCC] font-bold">Order Counts</p>
+      <p className="text-[18px] text-[#2D3748] font-bold">
+        {totalOrders ? totalOrders.toLocaleString("en-US") : "0"}
+      </p>
     </div>
-    */}
-          </div>
+  </div>
 
-          {subtotal && subtotal !== 0 && (
-            <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%] tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
-              <div className="flex flex-col gap-2">
-                <p className="text-[14px] text-[#575F6DCC] font-bold">
-                  Ending Inventory
-                </p>
-                <p className="text-[18px] text-[#2D3748] font-bold">
-                  $
-                  {subtotal.toLocaleString("en-US", {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                  })}
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
+  {/* Ending Inventory (always visible) */}
+  <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%] tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
+    <div className="flex flex-col gap-2">
+      <p className="text-[14px] text-[#575F6DCC] font-bold">Ending Inventory</p>
+      <p className="text-[18px] text-[#2D3748] font-bold">
+        ${subtotal
+          ? subtotal.toLocaleString("en-US", {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })
+          : "0"}
+      </p>
+    </div>
+  </div>
+</div>
+
 
         {/* Category Cards */}
         <div className="grid grid-cols-5 ipad-pro:grid-cols-4 ipad-air:grid-cols-4 tablet:grid-cols-2 below-md:grid-cols-1 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 items-stretch tablet:flex-wrap tablet:gap-3">

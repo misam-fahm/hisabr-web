@@ -611,94 +611,104 @@ const Invoices = () => {
         type={customToast?.type}
       />
       {uploadPdfloading && <Loading />}
-      <div className="flex flex-row below-md:flex-col justify-between w-full below-md:item-start below-md:mt-4 below-md:mb-4 mt-6 mb-6">
-  <div className="flex flex-row gap-3 below-md:gap-2 below-md:space-y-1 w-full below-md:flex-col">
-    {showBackIcon && (
-      <img
-        onClick={() => router.back()}
-        alt="Back Arrow"
-        className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
-        src="/images/webbackicon.svg"
-      ></img>
-    )}
-    <Dropdown
-      options={store}
-      selectedOption={selectedOption?.name || "Store"}
-      onSelect={(selectedOption: any) => {
-        setSelectedOption({
-          name: selectedOption.name,
-          id: selectedOption.id,
-        });
-        setIsStoreDropdownOpen(false);
-      }}
-      isOpen={isStoreDropdownOpen}
-      toggleOpen={toggleStoreDropdown}
-      widthchange="w-[30%] below-md:w-full"
-    />
-    <Dropdown
-      options={dateRangeOptions}
-      selectedOption={selectedDateRange}
-      onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
-      isOpen={isDateRangeOpen}
-      toggleOpen={toggleDateRangeDropdown}
-      widthchange="w-[30%] below-md:w-full"
-    />
-    <div className="w-[30%] below-md:w-full h-[35px]">
-      <DateRangePicker
-        startDate={startDate}
-        endDate={endDate}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
-        fetchData={fetchData}
-      />
-    </div>
-    <div className="flex border border-gray-300 below-md:w-full text-[12px] bg-[#ffff] items-center rounded w-[30%] h-[35px]">
-      <input
-        type="text"
-        value={globalFilter ?? ""}
-        onChange={(e) => setGlobalFilter(e.target.value)}
-        onKeyDown={handleKeyDown}
-        ref={searchInputRef}
-        placeholder="Search"
-              className="w-full h-[35px] bg-transparent relative  px-3 placeholder:text-[#636363] focus:outline-none"
-      />
-      {globalFilter && (
-              <div className=" relative right-3 cursor-pointer">
-                <img
-                  className="  "
-                  src="/images/cancelicon.svg"
-                  onClick={clearSearch}
-                />
-        </div>
+      <div className="sticky z-20 bg-[#f7f8f9] pb-6 pt-4 below-md:pt-4 below-md:pb-4 tablet:pt-4">
+  <div className="flex flex-row flex-nowrap gap-3 w-full below-md:flex-col">
+    
+    {/* Store, Date Range, Date Picker, and Search */}
+    <div className="flex flex-row flex-wrap gap-3 w-full below-md:flex-col">
+      {showBackIcon && (
+        <img
+          onClick={() => router.back()}
+          alt="Back Arrow"
+          className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
+          src="/images/webbackicon.svg"
+        />
       )}
-      <img
-        className="pr-2 cursor-pointer items-center"
-        src="/images/searchicon.svg"
-        onClick={() =>
-          table.getState().pagination.pageIndex == 0
-            ? fetchData(globalFilter)
-            : table.setPageIndex(0)
-        }
+      
+      <Dropdown
+        options={store}
+        selectedOption={selectedOption?.name || "Store"}
+        onSelect={(selectedOption: any) => {
+          setSelectedOption({
+            name: selectedOption.name,
+            id: selectedOption.id,
+          });
+          setIsStoreDropdownOpen(false);
+        }}
+        isOpen={isStoreDropdownOpen}
+        toggleOpen={toggleStoreDropdown}
+        widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
       />
+
+      <Dropdown
+        options={dateRangeOptions}
+        selectedOption={selectedDateRange}
+        onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
+        isOpen={isDateRangeOpen}
+        toggleOpen={toggleDateRangeDropdown}
+        widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
+      />
+
+      <div className="flex-1 min-w-[300px] below-lg:min-w-[256.08px] h-[35px] below-lg:h-[29.876px] w-full">
+        <DateRangePicker
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          fetchData={fetchData}
+        />
+      </div>
+
+      <div className="flex-1 min-w-[150px] below-lg:min-w-[128.04px] h-[35px] below-lg:h-[29.876px] w-full relative">
+        <input
+          type="text"
+          value={globalFilter ?? ""}
+          onChange={(e) => setGlobalFilter(e.target.value)}
+          onKeyDown={handleKeyDown}
+          ref={searchInputRef}
+          placeholder="Search"
+          className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] below-lg:text-[10.2432px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
+        />
+        {globalFilter && (
+          <div className="absolute inset-y-0 right-7 flex items-center cursor-pointer" onClick={clearSearch}>
+            <img src="/images/cancelicon.svg" alt="Clear" />
+          </div>
+        )}
+        <div className="absolute inset-y-0 right-2 flex items-center cursor-pointer">
+          <img
+            src="/images/searchicon.svg"
+            alt="Search Icon"
+            onClick={() =>
+              table.getState().pagination.pageIndex == 0
+                ? fetchData(globalFilter)
+                : table.setPageIndex(0)
+            }
+            className="below-lg:scale-[0.8536]"
+          />
+        </div>
+      </div>
     </div>
-  </div>
-  <div className="pl-24 below-md:hidden">
-    <button
-            className="w-[159px] h-[35px] bg-[#168A6F] hover:bg-[#11735C] text-white  gap-[0.25rem] font-medium  rounded-md text-[13px] flex items-center justify-center "
-      onClick={handleButtonClick}
-    >
-      <img className="" src="/images/webuploadicon.svg" alt="" />
-      Upload Invoice
-    </button>
-    <input
-      type="file"
-      ref={fileInputRef}
-      onChange={handleFileChange}
-      className="hidden"
-    />
-          {/* <UploadInvoicepopup /> */}
+
+    {/* Upload Button */}
+    <div className="below-md:hidden tablet:hidden">
+      <input
+        type="file"
+        ref={fileInputRef}
+        id="fileInput"
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
+      <button
+        onClick={handleButtonClick}
+        className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[159px] below-lg:w-[135.7224px] h-[35px] below-lg:h-[29.876px] rounded-md text-white text-[13px] below-lg:text-[11.0968px] font-medium"
+      >
+        <img src="/images/webuploadicon.svg" alt="Upload Icon" className="mr-1 below-lg:scale-[0.8536]" />
+        Upload Invoice
+      </button>
+    </div>
   </div>
 </div>
+
 
       {/* Mobile View : Card section */}
       <div className="block md:hidden relative">
