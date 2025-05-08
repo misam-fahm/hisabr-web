@@ -32,10 +32,10 @@ const Page: FC = () => {
     message: "",
     type: "",
   });
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
 
   const refreshData = () => {
-    setAddDQCategories((prev) => !prev); // Toggle the state to trigger a refresh
+    setAddDQCategories((prev) => !prev);
   };
 
   // Function to show toast notifications
@@ -56,8 +56,9 @@ const Page: FC = () => {
         <span
           className="cursor-pointer hover:underline"
           onClick={() => {
-            // Navigate to items page with the name as a query parameter
-            router.push(`/setup/items?search=${encodeURIComponent(info.getValue() as string)}`);
+            // Store search term in sessionStorage
+            sessionStorage.setItem("searchTerm", info.getValue() as string);
+            router.push("/setup/items");
           }}
         >
           {info.getValue() as string}
@@ -153,8 +154,9 @@ const Page: FC = () => {
                   <span
                     className="font-bold text-[14px]  cursor-pointer hover:underline"
                     onClick={() => {
-                      // Navigate to items page for mobile view
-                      router.push(`/setup/items?search=${encodeURIComponent(row.name)}`);
+                      // Store search term in sessionStorage
+                      sessionStorage.setItem("searchTerm", row.name);
+                      router.push("/setup/items");
                     }}
                   >
                     {row?.name}
