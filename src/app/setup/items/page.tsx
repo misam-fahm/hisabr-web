@@ -14,15 +14,13 @@ import {
 import AddNewItems from "@/Components/Setup/ItemsPopup/AddNewItems";
 import AddCategories from "@/Components/Setup/CategoriesPopup/AddCategories";
 import Pagination from "@/Components/UI/Pagination/Pagination";
-import DeleteItems from "@/Components/Setup/ItemsPopup/DeleteItems";
+import DeletePopup from "@/Components/UI/Delete/DeletePopup";
 import EditItem from "@/Components/Setup/ItemsPopup/EditItem";
 import ToastNotification, {
   ToastNotificationProps,
 } from "@/Components/UI/ToastNotification/ToastNotification";
-import DeletePopup from "@/Components/UI/Delete/DeletePopup";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 import Tooltip from "@/Components/UI/Toolstips/Tooltip";
-import { useSearchParams } from "next/navigation"; // Import useSearchParams
 
 interface TableRow {
   itemname: string;
@@ -39,8 +37,7 @@ interface TableRow {
 
 const Page: FC = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const [globalFilter, setGlobalFilter] = React.useState("");
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [globalFilter, setGlobalFilter] = useState("");
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
@@ -49,7 +46,6 @@ const Page: FC = () => {
     message: "",
     type: "",
   });
-  const searchParams = useSearchParams(); // Initialize searchParams
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -205,51 +201,50 @@ const Page: FC = () => {
     }
   };
 
-  // Read query parameter on page load
- // ...existing code...
-useEffect(() => {
-  const searchQuery = searchParams?.get("search");
-  const decodedQuery = searchQuery ? decodeURIComponent(searchQuery) : "";
-  setGlobalFilter(decodedQuery);
-  // Immediately fetch data if query param exists
-  if (decodedQuery) {
-    // Always reset to first page for new search
-    table.setPageIndex(0);
-    fetchData(decodedQuery);
-  }
-}, [searchParams]);
-// ...existing code...
+  // Handle initial load with search term from sessionStorage
+  useEffect(() => {
+    // Ensure sessionStorage access is client-side
+    if (typeof window !== "undefined") {
+      const searchTerm = sessionStorage.getItem("searchTerm") || "";
+      if (searchTerm) {
+        setGlobalFilter(searchTerm);
+        table.setPageIndex(0);
+        fetchData(searchTerm);
+        // Clear sessionStorage to prevent persistence
+        sessionStorage.removeItem("searchTerm");
+      } else {
+        fetchData("");
+      }
+    }
+  }, []);
 
-// Remove globalFilter from fetchData dependency to avoid double fetch
-useEffect(() => {
-  // Only fetch when not coming from query param
-  if (!searchParams?.get("search")) {
+  // Handle pagination and manual search
+  useEffect(() => {
     fetchData(globalFilter);
-  }
-}, [pageIndex, pageSize, isOpenAddItems]);
-// ...existing code...
+  }, [
+    table.getState().pagination.pageIndex,
+    table.getState().pagination.pageSize,
+    isOpenAddItems,
+    globalFilter,
+  ]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       table.getState().pagination.pageIndex == 0 ? fetchData(globalFilter) : table.setPageIndex(0);
     }
   };
-  const clearSearch = async () => {
-    try {
-      setLoading(true);
-      setGlobalFilter("");
-      table.getState().pagination.pageIndex == 0 ? fetchData() : table.setPageIndex(0);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-      setAddItems(false);
-    }
+
+  const clearSearch = () => {
+    setGlobalFilter("");
+    table.setPageIndex(0);
+    fetchData("");
   };
 
-  const handleClick = () => {
-    if (searchInputRef.current) {
-      searchInputRef.current.focus();
+  const handleSearchClick = () => {
+    if (table.getState().pagination.pageIndex === 0) {
+      fetchData(globalFilter);
+    } else {
+      table.setPageIndex(0);
     }
   };
 
