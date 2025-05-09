@@ -23,7 +23,7 @@ const LoginForm = () => {
       const res: any = await sendApiRequest({
         token: token
       }, `auth/verifyToken`);
-      res?.status === 200 && router.replace("/sales-kpi");
+      res?.status === 200 && router.replace("/");
     } catch (error) {
     }
   };
@@ -68,7 +68,7 @@ const LoginForm = () => {
                 toastMessage: "Welcome Back",
                 toastType: "success",
               });
-              router.replace("/sales-kpi");
+              router.replace("/");
             } else {
               // router.push("/login");
             }
