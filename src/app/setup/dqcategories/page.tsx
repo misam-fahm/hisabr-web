@@ -20,7 +20,8 @@ import { useRouter } from "next/navigation"; // Import useRouter
 interface TableRow {
   id: number;
   name: string;
-  types: string; // Updated to match API response
+  types: string; 
+  count: number;
 }
 
 const Page: FC = () => {
@@ -65,6 +66,12 @@ const Page: FC = () => {
         </span>
       ),
       size: 200,
+    },
+    {
+      accessorKey: "count",
+      header: () => <div className="text-right">Item Count</div>, // <-- right align header
+      cell: (info) => <span className="text-right block">{info.getValue() as number}</span>, // <-- right align cell
+      size: 800,
     },
     {
       id: "actions",
@@ -161,18 +168,19 @@ const Page: FC = () => {
                   >
                     {row?.name}
                   </span>
-                  <div className="flex items-center gap-8">
-                    {row.types !== "S" && (
-                      <DeleteDQCategories
-                        rowData={row}
-                        setDataRefresh={refreshData}
-                      />
-                    )}
-                    <EditDQCategories
-                      rowData={row}
-                      setDataRefresh={refreshData}
-                    />
-                  </div>
+                  <div className="flex items-right gap-8">
+                  <span className="text-gray-500 text-sm mr-4 text-right block">Item Count: {row.count}</span>
+                  {row.types !== "S" && (
+              <DeleteDQCategories
+                rowData={row}
+                setDataRefresh={refreshData}
+              />
+            )}
+            <EditDQCategories
+              rowData={row}
+              setDataRefresh={refreshData}
+            />
+          </div>
                 </div>
               </div>
             ))

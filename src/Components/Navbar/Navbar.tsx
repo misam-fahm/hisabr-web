@@ -21,8 +21,6 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
   const [title, setTitle] = useState("");
   const [userType, setUserType] = useState<any>();
 
- 
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       setUserType(localStorage.getItem("UserType"));
@@ -32,7 +30,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
 
   useEffect(() => {
     if (isClient) {
-      const currentRoute = currentPath.replace("/", "");
+      const currentRoute = currentPath ? currentPath.replace("/", "") : "";
       let newTitle = "";
       switch (currentRoute?.toLowerCase()) {
         case "myprofile":
@@ -50,7 +48,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
         case "expenses":
           newTitle = "Expenses";
           break;
-          case "dqcategory":
+        case "dqcategory":
           newTitle = "DQ Category";
           break;
         case "logout":
@@ -80,17 +78,21 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
   }, []);
 
   const Menus = [
-    { title: "Dashboard", src: "saleskpi", path: "/sales-kpi" },
+    { title: "Dashboard", src: "saleskpi", path: "/" },
     // { title: "Home", src: "home1", path: "/" },
     // { title: "Summary", src: "summary", path: "/summary" },
     { title: "Sales", src: "sales", path: "/sales" },
     { title: "Invoices", src: "invoices", path: "/invoices" },
     { title: "Expenses", src: "expences", path: "/expenses" },
-    { title: "Cash Reconciliation", src: "cash-register-solid", path: "/cashreconc" },
+    {
+      title: "Cash Reconciliation",
+      src: "cash-register-solid",
+      path: "/cashreconc",
+    },
     { title: "DQ Export", src: "dq", path: "/dqcategory" },
     // { title: "DQ Export", src: "Categories", path: "/dqcategory" },
     { type: "Setup", title: "SETUP" },
-    
+
     ...(userType === "A"
       ? [{ title: "Categories", src: "Categories", path: "/setup/categories" }]
       : []),
@@ -103,9 +105,11 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
           },
         ]
       : []),
-      
+
     { title: "Items", src: "Items2", path: "/setup/items" },
-    ...(userType === "A" ? [{ title: "Tenders", src: "Tenders", path: "/setup/tenders" }] : []),
+    ...(userType === "A"
+      ? [{ title: "Tenders", src: "Tenders", path: "/setup/tenders" }]
+      : []),
     { title: "Stores", src: "Stores", path: "/setup/stores" },
     {
       title: "Configuration",
@@ -139,20 +143,19 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
     "/details8",
   ];
   const shouldHideHamburger = pathsToHideHamburger.some((path) =>
-    currentPath.includes(path)
+    currentPath?.includes(path)
   );
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove the token
-    localStorage.removeItem('UserType');
-    router.replace('/login'); // Redirect to login page
-   
+    localStorage.removeItem("token"); // Remove the token
+    localStorage.removeItem("UserType");
+    router.replace("/login"); // Redirect to login page
   };
 
   return (
     <main
       className={`flex h-[100vh] ${
-        pathsToHideHamburger.some((path) => currentPath.includes(path))
+        pathsToHideHamburger.some((path) => currentPath?.includes(path))
           ? "tablet:hidden"
           : ""
       }`}
@@ -257,9 +260,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
 
         <div
           className={`flex mt-5 gap-4 below-md:ml-2 bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] px-4 py-[10px]  ${open ? "mr-8" : "mr-7 below-md:bg-transparent below-md:shadow-none"} ml-3 rounded-md cursor-pointer`}
-          onClick={() =>
-            handleLogout()
-          }
+          onClick={() => handleLogout()}
         >
           <img src="/images/logout.svg" />
           {open && <p className="text-[14px] text-[#FFFFFFCC]">Logout</p>}
