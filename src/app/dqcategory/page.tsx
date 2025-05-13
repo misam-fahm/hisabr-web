@@ -49,8 +49,8 @@ const Exceldata = [
     "Breakfast",
     "Cakes",
     "OJ Beverages",
-    "Mix GallLitre",
-    "Meat LbsKg",
+    "Mix Gall\\Litre",
+    "Meat Lbs\\Kg",
     "8 Round",
     "10 Round",
     "Sheet",
@@ -194,31 +194,35 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
   const mergeCategories = (categories: any[]) => {
     // Initialize the merged category
     let dqIceCream = {
-      name: "DQ (Ice Cream)",
-      totalqty: 0,
-      totalextprice: 0,
+        name: "DQ (Ice Cream)",
+        totalqty: 0,
+        totalextprice: 0,
     };
 
-    // Filter out the categories to merge and calculate totals
-    const filteredCategories = categories.filter((category) => {
-      if (
-        category.name === "Soft Serve" ||
-        category.name === "Novelties-Boxed"
-      ) {
-        dqIceCream.totalqty += Number(category.totalqty || 0); // Handle undefined/null
-        dqIceCream.totalextprice += Number(category.totalextprice || 0); // Handle undefined/null
-        return false; // Exclude these from the final array
-      }
-      return true; // Keep other categories
-    });
+    // Filter out categories to merge and calculate totals, then map for renaming
+    const filteredCategories = categories
+        .filter((category) => {
+            if (category.name === "Soft Serve" || category.name === "Novelties-Boxed") {
+                dqIceCream.totalqty += Number(category.totalqty || 0); // Handle undefined/null
+                dqIceCream.totalextprice += Number(category.totalextprice || 0); // Handle undefined/null
+                return false; // Exclude from final array
+            }
+            return true; // Keep other categories
+        })
+        .map((category) => {
+            if (category.name === "Mix Ice Cream") {
+                return { ...category, name: "Mix Gall\\Litre" };
+            }
+            return category;
+        });
 
     // Only add "DQ (Ice Cream)" if it has non-zero values
     if (dqIceCream.totalqty > 0 || dqIceCream.totalextprice > 0) {
-      filteredCategories.push(dqIceCream);
+        filteredCategories.push(dqIceCream);
     }
 
     return filteredCategories;
-  };
+};  
 
   const dateRangeOptions: DateRangeOption[] = [
     { name: "This Month (MTD)", value: "this_month", id: 1 },
@@ -231,13 +235,13 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
   const toggleDateRangeDropdown = () => {
     setIsDateRangeOpen((prev) => !prev);
   };
-  
+
   const handleDateRangeSelect = (option: DateRangeOption) => {
     setSelectedDateRange(option.name);
     const now = new Date();
     let newStartDate: Date;
     let newEndDate: Date;
-  
+
     switch (option.value) {
       case "this_month":
         newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -259,11 +263,12 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
         newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
         newEndDate = now;
     }
-  
+
     setStartDate(newStartDate);
     setEndDate(newEndDate);
     setIsDateRangeOpen(false);
   };
+
   const fetchData2 = async () => {
     setLoading(true);
     try {
@@ -364,11 +369,11 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
         const stores = response?.data?.stores || [];
         // Map stores to the format expected by the Dropdown component
         const formattedStores = stores?.map((store) => ({
-          name: `${store?.name} - ${store?.location || "Unknown Location"}`, // Ensure location is handled
+          name: `${store?.name} - ${store?.location || "Unknown Location"}`,
           id: store?.id,
         }));
 
-        setStore(formattedStores); // Update store state with formatted data
+        setStore(formattedStores);
 
         if (stores.length > 0) {
           setSelectedOption({
@@ -383,7 +388,6 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
       console.error("Error fetching stores:", error);
     }
   };
-
 
   const verifyToken = async (token: string) => {
     try {
@@ -462,26 +466,22 @@ useEffect(() => {
     Food: "DQ Food",
     Starkiss: "Starkiss",
     "Soft Serve": "Dairy Queen",
-    "Mix Ice Cream": "Mix GallLitre",
-    Meat: "Meat",
+    "Mix Ice Cream": "Mix Gall\\Litre",
+    "DQ (Ice Cream)": "Dairy Queen", // Map "Dairy Queen" to "DQ (Ice Cream)"
+    Meat: "Meat Lbs\\Kg",
     "8\" Round Cake": "8 Round",
     "10\" Round Cake": "10 Round",
   };
 
   const getTotalByCategory = (name) => {
     const allData = [...(items || []), ...(Sitems || [])];
-
     const category = allData.find((item) => item.name === name);
-
-    return category &&
-      category.totalextprice !== undefined &&
-      category.totalextprice !== null
+    return category && category.totalextprice !== undefined && category.totalextprice !== null
       ? Math.round(category.totalextprice)
       : 0;
   };
 
   const mapData = () => {
-    // Define headers exactly as in the uploaded Excel file
     const header = [
       "Store Number",
       "Store Address",
@@ -503,23 +503,16 @@ useEffect(() => {
       "Buster Bar",
       "Transaction Count",
       "Inventory Purchases",
-        "Ending Inventory"
+      "Ending Inventory",
     ];
 
-    // Combine items and Sitems
     const allData = [...(items || []), ...(Sitems || [])];
-
-    // Create name mapping for categories
     const nameMapping = allData.reduce((acc, item) => {
       const mappedName = categoryMap[item.name] || item.name;
       acc[mappedName] = item.name;
       return acc;
     }, {});
 
-    // Use headers directly
-    const data = header;
-
-    // Parse store information
     let storeNumber = "";
     let storeAddress = "";
     if (selectedOption?.name) {
@@ -528,77 +521,70 @@ useEffect(() => {
       storeAddress = locationParts.join(" - ") || "";
     }
 
-    // Map values to categories
-    const values = data.map((category) => {
-      // Handle header fields
+    const firstRow = header.map((category) => {
       if (category === "Store Number") return storeNumber;
       if (category === "Store Address") return storeAddress;
-
-      // Handle footer fields
       if (category === "Transaction Count") return totalOrders || 0;
-        if (category === "Inventory Purchases") return productTotal ? Math.round(productTotal) : 0;
+      if (category === "Inventory Purchases") return productTotal ? Math.round(productTotal) : 0;
       if (category === "Ending Inventory") return Math.round(subtotal || 0);
 
-      // Handle regular categories
       const originalName = nameMapping[category] || category;
-
-      // Special handling for Cakes
       if (category === "Cakes") {
         const cakesItem = allData.find((item) => item.name === "Cakes");
-            const eightRoundItem = allData.find((item) => item.name === "8\" Round Cake");
-            const tenRoundItem = allData.find((item) => item.name === "10\" Round Cake");
-            let totalCakes = (cakesItem?.totalextprice || 0);
+        let totalCakes = (cakesItem?.totalextprice || 0);
         return Math.round(totalCakes);
       }
-
-      // Special handling for Meat Lbs\Kg
       if (category === "Meat Lbs\\Kg") {
         const meatItem = allData.find((item) => item.name === "Meat");
-            return meatItem?.totalqty
-                ? Math.round(meatItem.totalqty * 20)
-                : 0;
+        return meatItem?.totalqty ? Math.round(meatItem.totalqty * 20) : 0;
       }
-
-      // Handle all other categories
       return getTotalByCategory(originalName);
     });
 
-    console.log("Final Data:", data);
-    console.log("Final Values:", values);
+    const secondRow = header.map((category) => {
+      const originalName = nameMapping[category] || category;
+      const item = allData.find((item) => item.name === originalName);
+      if (["8 Round", "10 Round", "Sheet"].includes(category)) {
+        return item?.qty_times_pieces ? Math.round(item.qty_times_pieces) : 0;
+      }
+      if (["Dilly", "Starkiss", "NF/NSA Bars", "Buster Bar"].includes(category)) {
+        return item?.totalqty ? Math.round(item.totalqty) : 0;
+      }
+      return "";
+    });
 
-    return [data, values];
+    return [header, firstRow, secondRow];
   };
 
   const exportToExcel = () => {
-    const [headers, values] = mapData();
-
-    const worksheet = XLSX.utils.aoa_to_sheet([headers, values]);
+    const [headers, firstRow, secondRow] = mapData();
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, firstRow, secondRow]);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
 
     // Define column widths to match the uploaded Excel file
     const wscols = [
-      { wch: 20 }, // Store Number
-      { wch: 35 }, // Store Address
-      { wch: 15 }, // Dairy Queen
-      { wch: 15 }, // DQ Food
-      { wch: 15 }, // Beverages
-      { wch: 15 }, // Breakfast
-      { wch: 15 }, // Cakes
-      { wch: 15 }, // OJ Beverages
-      { wch: 15 }, // Mix Gall\Litre
-      { wch: 15 }, // Meat Lbs\Kg
-      { wch: 15 }, // 8 Round
-      { wch: 10 }, // 10 Round
-      { wch: 10 }, // Sheet
-      { wch: 10 }, // Dilly
-      { wch: 10 }, // Starkiss
-      { wch: 10 }, // NF/NSA Bars
-      { wch: 15 }, // NSA/Non Dairy Dilly
-      { wch: 15 }, // Buster Bar
-      { wch: 30 }, // Transaction Count
-      { wch: 30 }, // Inventory Purchases
-        { wch: 30 }  // Ending Inventory
+      { wch: 20 },
+      { wch: 35 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 10 },
+      { wch: 10 },
+      { wch: 10 },
+      { wch: 10 },
+      { wch: 10 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 30 },
+      { wch: 30 },
+      { wch: 30 },
     ];
     worksheet["!cols"] = wscols;
 
@@ -816,41 +802,28 @@ useEffect(() => {
   </div>
 </div>
 
-
-        {/* Category Cards */}
-        <div className="grid grid-cols-5 ipad-pro:grid-cols-4 ipad-air:grid-cols-4 tablet:grid-cols-2 below-md:grid-cols-1 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 items-stretch tablet:flex-wrap tablet:gap-3">
-          {["DQ (Ice Cream)", "Food", "Cakes", "Beverage", "Donations"]
-            .filter((categoryName) => categoryName !== "Donations") // Filter out Donations
-            .map((categoryName, index) => {
-              // Find the item in Sitems that matches the categoryName
-              const item = Sitems?.find((i: any) => i.name === categoryName);
-
-              return (
-                <div
-                  key={index}
-                  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4 p-2 justify-between items-stretch w-full ipad-air:w-[105%]"
-                >
-                  <div className="flex flex-col gap-2">
-                    <Tooltip
-                      position="left"
-                      text={categoryName?.length > 15 ? categoryName : ""}
-                    >
-                      <p className="text-[16px] text-[#575F6DCC] font-bold h-7">
-                        {categoryName?.length > 15
-                          ? categoryName.substring(0, 15) + "..."
-                          : categoryName || "--"}
-                      </p>
-                    </Tooltip>
-                    <p className="text-[20px] text-[#2D3748] font-bold">
-                      {item?.totalextprice
-                        ? `$${Math.round(item.totalextprice).toLocaleString()}`
-                        : "$0"}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
+   <div className="grid grid-cols-5 ipad-pro:grid-cols-4 ipad-air:grid-cols-4 tablet:grid-cols-2 below-md:grid-cols-1 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 items-stretch tablet:flex-wrap tablet:gap-3">
+  {["DQ (Ice Cream)", "Food", "Cakes", "Beverage"].map((categoryName, index) => {
+    const item = Sitems?.find((i: any) => i.name === categoryName);
+    return (
+      <div
+        key={index}
+        className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4 p-2 justify-between items-stretch w-full ipad-air:w-[105%]"
+      >
+        <div className="flex flex-col gap-2">
+          <Tooltip position="left" text={categoryName?.length > 15 ? categoryName : ""}>
+            <p className="text-[16px] text-[#575F6DCC] font-bold h-7">
+              {categoryName?.length > 15 ? categoryName.substring(0, 15) + "..." : categoryName || "--"}
+            </p>
+          </Tooltip>
+          <p className="text-[20px] text-[#2D3748] font-bold">
+            {item?.totalextprice ? `$${Math.round(item.totalextprice).toLocaleString()}` : "$0"}
+          </p>
         </div>
+      </div>
+    );
+  })}
+</div>
 
         {/* Item Cards */}
         <div className="grid grid-cols-5 ipad-pro:grid-cols-4 ipad-air:grid-cols-4 tablet:grid-cols-2 below-md:grid-cols-1 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 mt-6 items-stretch tablet:flex-wrap tablet:gap-3">
@@ -892,14 +865,13 @@ useEffect(() => {
                       ) : (
                         <>
                           {`${Items.qty_times_pieces.toLocaleString()} ${(() => {
-  const unit = Items?.unit?.toLowerCase();
-  if (unit === "piece" || unit === "pieces") return "pcs";
-  if (unit === "burger") return "bgr";
-  if (unit === "cakes") return "cks";
-  if (unit === "gallons") return "gal";
-  return unit || "unit";
-})()}`}
-
+                            const unit = Items?.unit?.toLowerCase();
+                            if (unit === "piece" || unit === "pieces") return "pcs";
+                            if (unit === "burger") return "bgr";
+                            if (unit === "cakes") return "cks";
+                            if (unit === "gallons") return "gal";
+                            return unit || "unit";
+                          })()}`}
                         </>
                       )}
                     </p>

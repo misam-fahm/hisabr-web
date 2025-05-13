@@ -126,6 +126,53 @@ const SalesKPI: FC = () => {
     percentageSum > 0
       ? percentageValues.map((val) => ((val / percentageSum) * 100).toFixed(2))
       : percentageValues.map(() => "0.00");
+const cogs = Number(data?.producttotal) || 0;
+const royalty = Number(royaltyAmt) || 0;
+const opExp = Number(operatExpAmt) || 0;
+// Removed duplicate declaration of validProfit
+
+// Calculate total for DonutChart items (excluding Tax Amount)
+const donutTotal = labourCost + cogs + royalty + opExp + validProfit;
+
+// Calculate raw percentages for DonutChart items
+const donutPercentages =
+  donutTotal > 0
+    ? {
+        labourCost: (labourCost / donutTotal) * 100,
+        cogs: (cogs / donutTotal) * 100,
+        royalty: (royalty / donutTotal) * 100,
+        operatingExpenses: (opExp / donutTotal) * 100,
+        profit: (validProfit / donutTotal) * 100,
+      }
+    : {
+        labourCost: 0,
+        cogs: 0,
+        royalty: 0,
+        operatingExpenses: 0,
+        profit: 0,
+      };
+
+// Normalize percentages to sum to 100%
+const donutPercentageValues = [
+  donutPercentages.labourCost,
+  donutPercentages.cogs,
+  donutPercentages.royalty,
+  donutPercentages.operatingExpenses,
+  donutPercentages.profit,
+];
+const donutPercentageSum = donutPercentageValues.reduce((sum, val) => sum + val, 0);
+const normalizedDonutPercentages =
+  donutPercentageSum > 0
+    ? donutPercentageValues.map((val) => {
+        const num = (val / donutPercentageSum) * 100;
+        return Math.round(num) === num
+          ? num.toString()
+          : (num % 1 >= 0.5
+              ? Math.ceil(num)
+              : Math.floor(num)
+            ).toString();
+      })
+    : donutPercentageValues.map(() => "0");
 
   // Update dateRangeOptions to include value
   const dateRangeOptions: DateRangeOption[] = [
@@ -791,7 +838,6 @@ const SalesKPI: FC = () => {
 {/* Net Sales Card */}
 <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
-  onClick={() => router.push("/sales")}
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Net Sales</p>
@@ -855,10 +901,9 @@ const SalesKPI: FC = () => {
 {/* Profit Card */}
 <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
-  onClick={() => router.push("/profit")} // Optional: Add navigation like Net Sales Card
 >
   <div>
-    <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Profit ({normalizedDonutPercentages[4]}%)</p>
     <p className="text-[16px] text-[#2D3748] font-bold">
       {data?.net_sales && validProfit !== 0
         ? `$${Math.round(validProfit).toLocaleString()}`
@@ -920,7 +965,6 @@ const SalesKPI: FC = () => {
 {/* Customer Count Card */}
 <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
-  onClick={() => router.push("/customer-count")} // Optional: Added navigation
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Customer Count</p>
@@ -985,10 +1029,9 @@ const SalesKPI: FC = () => {
 {/* Labour Cost Card */}
 <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
-  onClick={() => router.push("/labour-cost")} // Optional: Added navigation
 >
   <div>
-    <p className="text-[14px] text-[#575F6DCC] font-medium">Labour Cost</p>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Labour Cost ({normalizedDonutPercentages[0]}%)</p>
     <p className="text-[16px] text-[#2D3748] font-bold">
       {data?.labour_cost && data.labour_cost !== 0
         ? `$${Math.round(data.labour_cost).toLocaleString()}`
@@ -1046,11 +1089,9 @@ const SalesKPI: FC = () => {
     <img src="./images/labour.svg" />
   </div>
 </div>
-
 {/* Sales Tax Card */}
 <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
-  onClick={() => router.push("/sales-tax")} // Optional: Added navigation
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Sales Tax</p>
@@ -1115,10 +1156,9 @@ const SalesKPI: FC = () => {
 {/* Royalty Card */}
 <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
-  onClick={() => router.push("/royalty")} // Optional: Added navigation
 >
   <div>
-    <p className="text-[14px] text-[#575F6DCC] font-medium">Royalty</p>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Royalty ({normalizedDonutPercentages[2]}%)</p>
     <p className="text-[16px] text-[#2D3748] font-bold">
       {royaltyAmt && royaltyAmt !== 0
         ? `$${Math.round(royaltyAmt).toLocaleString()}`
@@ -1183,7 +1223,7 @@ const SalesKPI: FC = () => {
   onClick={handleExpensesCardClick}
 >
   <div>
-    <p className="text-[14px] text-[#575F6DCC] font-medium">Operating Expenses</p>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Operating Expenses ({normalizedDonutPercentages[3]}%)</p>
     <p className="text-[16px] text-[#2D3748] font-bold">
       {operatExpAmt && operatExpAmt !== 0
         ? `$${Math.round(operatExpAmt).toLocaleString()}`
@@ -1247,7 +1287,7 @@ const SalesKPI: FC = () => {
   onClick={handleCogsCardClick}
 >
   <div>
-    <p className="text-[14px] text-[#575F6DCC] font-medium">COGS</p>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">COGS ({normalizedDonutPercentages[1]}%)</p>
     <p className="text-[16px] text-[#2D3748] font-bold">
       {data?.producttotal && data.producttotal !== 0
         ? `$${Math.round(data.producttotal).toLocaleString()}`
@@ -1310,7 +1350,6 @@ const SalesKPI: FC = () => {
   {/* Total Revenue Card */}
 <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
-  onClick={() => router.push("/total-revenue")} // Optional: Added navigation
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Total Revenue</p>
@@ -1375,7 +1414,6 @@ const SalesKPI: FC = () => {
           {/* Discount Card */}
 <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
-  onClick={() => router.push("/discount")} // Optional: Added navigation
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Discount</p>
@@ -1440,7 +1478,6 @@ const SalesKPI: FC = () => {
 {/* Promotions Card */}
 <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
-  onClick={() => router.push("/promotions")} // Optional: Added navigation
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Promotions</p>
@@ -1505,7 +1542,6 @@ const SalesKPI: FC = () => {
 {/* Voids Card */}
 <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
-  onClick={() => router.push("/voids")} // Optional: Added navigation
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Voids</p>
