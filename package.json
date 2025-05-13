@@ -22,6 +22,8 @@
     "file-saver": "^2.0.5",
     "framer-motion": "^12.4.2",
     "jsonwebtoken": "^9.0.2",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "mysql2": "^3.12.0",
     "next": "^15.0.4",
     "nodemailer": "^6.10.0",
