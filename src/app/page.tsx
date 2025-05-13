@@ -59,13 +59,11 @@ const SalesKPI: FC = () => {
   const [prevYearData, setPrevYearData] = useState<any>(null);
   const [prevPeriodData, setPrevPeriodData] = useState<any>(null);
   const [currYearData, setCurrYearData] = useState<any>(null);
-  const [periodType, setPeriodType] = useState<
-    "month" | "quarter" | "year" | "multi"
-  >("year");
-  const [showTooltip, setShowTooltip] = useState(false);
   const [operatExpAmt, setOperatExpAmt] = useState(0);
   const [royaltyAmt, setRoyaltyAmt] = useState(0);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
+
+  // Calculations
   const labourCost = Number(data?.labour_cost) || 0;
   const taxAmount = Number(data?.tax_amt) || 0;
   const sales: any = data?.net_sales ? Math.round(data?.net_sales) : 0;
@@ -257,11 +255,13 @@ const SalesKPI: FC = () => {
       const monthDiff = endDate.getMonth() - startDate.getMonth();
       return yearDiff * 12 + (monthDiff + 1);
     }
+    return 12;
   };
 
   const fetchData = async () => {
     try {
       if (startDate && endDate) {
+        setLoading(true);
         const response: any = await sendApiRequest({
           mode: "getSalesKpi",
           storeid: selectedOption?.id || 69,
@@ -640,78 +640,25 @@ const SalesKPI: FC = () => {
 
   // Helper function to calculate previous year and period dates
   const getPreviousDates = () => {
-    if (!startDate || !endDate)
-      return {
-        prevYearStart: null,
-        prevYearEnd: null,
-        prevPeriodStart: null,
-        prevPeriodEnd: null,
-        period: "multi" as const,
-      };
-
-    const period = determinePeriodType(startDate, endDate);
-    setPeriodType(period);
-
-    let prevYearStart: Date | null = null;
-    let prevYearEnd: Date | null = null;
-    let prevPeriodStart: Date | null = null;
-    let prevPeriodEnd: Date | null = null;
-
-    // Previous year is always the year before the startDate
-    prevYearStart = new Date(startDate.getFullYear() - 1, 0, 1); // Jan 1 of previous year
-    prevYearEnd = new Date(startDate.getFullYear() - 1, 11, 31); // Dec 31 of previous year
-
-    if (period === "month") {
-      // For a month, use the same month of the previous year
-      prevPeriodStart = new Date(
-        startDate.getFullYear() - 1,
-        startDate.getMonth(),
-        1
-      );
-      prevPeriodEnd = new Date(
-        startDate.getFullYear() - 1,
-        startDate.getMonth() + 1,
-        0
-      ); // Last day of the same month last year
-    } else if (period === "quarter") {
-      // For a quarter, use the same quarter of the previous year
-      prevPeriodStart = new Date(
-        startDate.getFullYear() - 1,
-        startDate.getMonth(),
-        1
-      );
-      prevPeriodEnd = new Date(
-        endDate.getFullYear() - 1,
-        endDate.getMonth() + 1,
-        0
-      ); // Last day of the same quarter last year
+    if (!startDate || !endDate) {
+      return { prevYearStart: null, prevYearEnd: null };
     }
-    // For "year" or "multi", prevPeriodStart and prevPeriodEnd remain null to hide the previous period data
 
-    return {
-      prevYearStart,
-      prevYearEnd,
-      prevPeriodStart,
-      prevPeriodEnd,
-      period,
-    };
+    // Calculate the same date range for the previous year
+    const prevYearStart = new Date(startDate.getFullYear() - 1, startDate.getMonth(), startDate.getDate());
+    const prevYearEnd = new Date(endDate.getFullYear() - 1, endDate.getMonth(), endDate.getDate());
+
+    return { prevYearStart, prevYearEnd };
   };
 
-  // Fetch previous year and period data
   const fetchPreviousData = async () => {
     if (!startDate || !endDate || !selectedOption) return;
 
-    const {
-      prevYearStart,
-      prevYearEnd,
-      prevPeriodStart,
-      prevPeriodEnd,
-      period,
-    } = getPreviousDates();
+    const { prevYearStart, prevYearEnd } = getPreviousDates();
     if (!prevYearStart || !prevYearEnd) return;
 
     try {
-      // Fetch previous year data
+      setLoading(true);
       const prevYearResponse: any = await sendApiRequest({
         mode: "getSalesKpi",
         storeid: selectedOption?.id || 69,
@@ -723,72 +670,23 @@ const SalesKPI: FC = () => {
         const prevYearSalesKpi = prevYearResponse?.data?.saleskpi[0] || {};
         setPrevYearData(prevYearSalesKpi);
 
-        // Calculate operatExpAmt and royaltyAmt for previous year
-        const months = 12; // Full year
-        const payrollTaxAmt =
-          prevYearSalesKpi.labour_cost * (prevYearSalesKpi.payrolltax / 100);
-        const yearExpAmt = prevYearSalesKpi.Yearly_expense;
+        const months = getMonthsDifference();
+        const payrollTaxAmt = prevYearSalesKpi.labour_cost * (prevYearSalesKpi.payrolltax / 100) || 0;
+        const yearExpAmt = (prevYearSalesKpi.Yearly_expense / 12) * months || 0;
         const prevYearOperatExpAmt =
-          prevYearSalesKpi.additional_expense +
-            payrollTaxAmt +
-            yearExpAmt +
-            prevYearSalesKpi.monthly_expense * months || 0;
-        const prevYearRoyaltyAmt =
-          prevYearSalesKpi.net_sales *
-            (prevYearSalesKpi.royalty / 100 || 0.09) || 0;
+          (prevYearSalesKpi.additional_expense || 0) +
+          payrollTaxAmt +
+          yearExpAmt +
+          (prevYearSalesKpi.monthly_expense * months || 0);
+        const prevYearRoyaltyAmt = prevYearSalesKpi.net_sales * (prevYearSalesKpi.royalty / 100 || 0.09) || 0;
 
-        // Store these values in prevYearData or a separate state if needed
         setPrevYearData((prev: any) => ({
           ...prev,
           operatExpAmt: prevYearOperatExpAmt,
           royaltyAmt: prevYearRoyaltyAmt,
         }));
-      }
-
-      // Fetch previous period data (month or quarter) only if period is "month" or "quarter"
-      if (
-        prevPeriodStart &&
-        prevPeriodEnd &&
-        (period === "month" || period === "quarter")
-      ) {
-        const prevPeriodResponse: any = await sendApiRequest({
-          mode: "getSalesKpi",
-          storeid: selectedOption?.id || 69,
-          startdate: format(prevPeriodStart, "yyyy-MM-dd"),
-          enddate: format(prevPeriodEnd, "yyyy-MM-dd"),
-        });
-
-        if (prevPeriodResponse?.status === 200) {
-          const prevPeriodSalesKpi =
-            prevPeriodResponse?.data?.saleskpi[0] || {};
-          setPrevPeriodData(prevPeriodSalesKpi);
-
-          // Calculate operatExpAmt and royaltyAmt for previous period
-          const months = period === "month" ? 1 : 3; // 1 for month, 3 for quarter
-          const payrollTaxAmt =
-            prevPeriodSalesKpi.labour_cost *
-            (prevPeriodSalesKpi.payrolltax / 100);
-          const yearExpAmt = (prevPeriodSalesKpi.Yearly_expense / 12) * months;
-          const prevPeriodOperatExpAmt =
-            prevPeriodSalesKpi.additional_expense +
-              payrollTaxAmt +
-              yearExpAmt +
-              prevPeriodSalesKpi.monthly_expense * months || 0;
-          const prevPeriodRoyaltyAmt =
-            prevPeriodSalesKpi.net_sales *
-              (prevPeriodSalesKpi.royalty / 100 || 0.09) || 0;
-
-          // Store these values in prevPeriodData or a separate state if needed
-          setPrevPeriodData((prev: any) => ({
-            ...prev,
-            operatExpAmt: prevPeriodOperatExpAmt,
-            royaltyAmt: prevPeriodRoyaltyAmt,
-          }));
-        } else {
-          setPrevPeriodData({}); // Clear previous period data if fetch fails
-        }
       } else {
-        setPrevPeriodData({}); // Clear previous period data for "year" or "multi" selections
+        setPrevYearData({});
       }
     } catch (error) {
       console.error("Error fetching previous data:", error);
@@ -819,6 +717,8 @@ const SalesKPI: FC = () => {
       fetchPreviousData();
     }
   }, [startDate, endDate, selectedOption]);
+
+  const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     isVerifiedUser && (
@@ -887,19 +787,21 @@ const SalesKPI: FC = () => {
           </div>
           {/* grid 1 */}
           <div className="grid grid-cols-4 below-md:grid-cols-1 tablet:grid-cols-2 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 pl-6 pr-6 items-stretch tablet:flex-wrap tablet:gap-3">
-            {/* Net Sales Card */}
-           <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
-onClick={() => router.push("/sales")}
+        
+{/* Net Sales Card */}
+<div
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={() => router.push("/sales")}
 >
-<div>
-  <p className="text-[14px] text-[#575F6DCC] font-medium">Net Sales</p>
-  <p className="text-[16px] text-[#2D3748] font-bold">
-    {data?.net_sales && data.net_sales !== 0
-      ? `$${Math.round(data.net_sales).toLocaleString()}`
-      : "$00,000"}
-  </p>
-  <p className="text-[11px] text-[#575F6D] font-normal">
-    <span>
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Net Sales</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {data?.net_sales && data.net_sales !== 0
+        ? `$${Math.round(data.net_sales).toLocaleString()}`
+        : "$00,000"}
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
+       <span>
       Prev. Yr.{" "}
       {prevYearData?.net_sales && prevYearData.net_sales !== 0
         ? `$${Math.round(prevYearData.net_sales).toLocaleString()}`
@@ -912,260 +814,435 @@ onClick={() => router.push("/sales")}
         ? `$${Math.round(currYearData.net_sales).toLocaleString()}`
         : "$00,000"}
     </span>
-    <br />
-    {periodType !== "year" && periodType !== "multi" && (
-      <span>
-        {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-        {prevPeriodData?.net_sales && prevPeriodData.net_sales !== 0
-          ? `$${Math.round(prevPeriodData.net_sales).toLocaleString()}`
-          : "$00,000"}
-      </span>
-    )}
-  </p>
-</div>
-<div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-  <img src="./images/saleskpisales.svg" />
-</div>
-</div>
+    </p>
+    {/* Percentage Change and Difference in One Line */}
+    {data?.net_sales !== undefined && prevYearData?.net_sales !== undefined ? (
+      (() => {
+        const prevSales = Math.round(prevYearData.net_sales);
+        const currSales = Math.round(data.net_sales);
+        const difference = currSales - prevSales;
+        const percentageChange =
+          prevSales !== 0
+            ? ((difference / Math.abs(prevSales)) * 100).toFixed(1)
+            : currSales > 0
+            ? "100.0"
+            : "0.0";
+        const isGrowth = difference >= 0;
 
+        return (
+          <div className="flex items-center mt-1">
+            <span
+              className={`text-[11px] font-medium ${
+                isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
+              }`}
+            >
+              {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | $
+              {Math.abs(difference).toLocaleString()}
+            </span>
+          </div>
+        );
+      })()
+    ) : (
+      <div className="text-[11px] text-[#575F6D] mt-1">
+        No comparison data available
+      </div>
+    )}
+  </div>
+  <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/saleskpisales.svg" />
+  </div>
+</div>
 {/* Profit Card */}
-<div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
-<div className="w-[75%]">
-  <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
-  <p className="text-[16px] text-[#2D3748] font-bold">
-    {data?.net_sales && validProfit !== 0
-      ? `$${validProfit.toLocaleString()}`
-      : "$00,000"}
-  </p>
-  <p className="text-[11px] text-[#575F6D] font-normal">
-    <span>
-      Prev. Yr.{" "}
-      {prevYearData?.net_sales && calculateProfit(prevYearData) !== 0
-        ? `$${calculateProfit(prevYearData).toLocaleString()}`
+<div
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={() => router.push("/profit")} // Optional: Add navigation like Net Sales Card
+>
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Profit</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {data?.net_sales && validProfit !== 0
+        ? `$${Math.round(validProfit).toLocaleString()}`
         : "$00,000"}
-    </span>
-    <br />
-    <span>
-      Curr. Yr.{" "}
-      {currYearData?.net_sales && calculateProfit(currYearData) !== 0
-        ? `$${calculateProfit(currYearData).toLocaleString()}`
-        : "$00,000"}
-    </span>
-    <br />
-    {periodType !== "year" && periodType !== "multi" && (
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
       <span>
-        {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-        {prevPeriodData?.net_sales && calculateProfit(prevPeriodData) !== 0
-          ? `$${calculateProfit(prevPeriodData).toLocaleString()}`
+        Prev. Yr.{" "}
+        {prevYearData?.net_sales && calculateProfit(prevYearData) !== 0
+          ? `$${Math.round(calculateProfit(prevYearData)).toLocaleString()}`
           : "$00,000"}
       </span>
+      <br />
+      <span>
+        Curr. Yr.{" "}
+        {currYearData?.net_sales && calculateProfit(currYearData) !== 0
+          ? `$${Math.round(calculateProfit(currYearData)).toLocaleString()}`
+          : "$00,000"}
+      </span>
+    </p>
+    {/* Percentage Change and Difference in One Line */}
+    {data?.net_sales !== undefined && prevYearData?.net_sales !== undefined ? (
+      (() => {
+        const prevProfit = Math.round(calculateProfit(prevYearData));
+        const currProfit = Math.round(validProfit);
+        const difference = currProfit - prevProfit;
+        const percentageChange =
+          prevProfit !== 0
+            ? ((difference / Math.abs(prevProfit)) * 100).toFixed(1)
+            : currProfit > 0
+            ? "100.0"
+            : "0.0";
+        const isGrowth = difference >= 0;
+
+        return (
+          <div className="flex items-center mt-1">
+            <span
+              className={`text-[11px] font-medium ${
+                isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
+              }`}
+            >
+              {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | $
+              {Math.abs(difference).toLocaleString()}
+            </span>
+          </div>
+        );
+      })()
+    ) : (
+      <div className="text-[11px] text-[#575F6D] mt-1">
+        No comparison data available
+      </div>
     )}
-  </p>
-</div>
-<div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-  <img src="./images/saleskpiprofit.svg" />
-</div>
+  </div>
+  <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/saleskpiprofit.svg" />
+  </div>
 </div>
 
 {/* Customer Count Card */}
-<div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch">
-<div className="w-[75%]">
-  <p className="text-[14px] text-[#575F6DCC] font-medium">Customer Count</p>
-  <p className="text-[16px] text-[#2D3748] font-bold">
-    {data?.customer_count && data.customer_count !== 0
-      ? `${Math.round(data.customer_count).toLocaleString()}`
-      : "00,000"}
-  </p>
-  <p className="text-[11px] text-[#575F6D] font-normal">
-    <span>
-      Prev. Yr.{" "}
-      {prevYearData?.customer_count && prevYearData.customer_count !== 0
-        ? `${Math.round(prevYearData.customer_count).toLocaleString()}`
+<div
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={() => router.push("/customer-count")} // Optional: Added navigation
+>
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Customer Count</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {data?.customer_count && data.customer_count !== 0
+        ? `${Math.round(data.customer_count).toLocaleString()}`
         : "00,000"}
-    </span>
-    <br />
-    <span>
-      Curr. Yr.{" "}
-      {currYearData?.customer_count && currYearData.customer_count !== 0
-        ? `${Math.round(currYearData.customer_count).toLocaleString()}`
-        : "00,000"}
-    </span>
-    <br />
-    {periodType !== "year" && periodType !== "multi" && (
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
       <span>
-        {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-        {prevPeriodData?.customer_count && prevPeriodData.customer_count !== 0
-          ? `${Math.round(prevPeriodData.customer_count).toLocaleString()}`
+        Prev. Yr.{" "}
+        {prevYearData?.customer_count && prevYearData.customer_count !== 0
+          ? `${Math.round(prevYearData.customer_count).toLocaleString()}`
           : "00,000"}
       </span>
+      <br />
+      <span>
+        Curr. Yr.{" "}
+        {currYearData?.customer_count && currYearData.customer_count !== 0
+          ? `${Math.round(currYearData.customer_count).toLocaleString()}`
+          : "00,000"}
+      </span>
+    </p>
+    {/* Percentage Change and Difference in One Line */}
+    {data?.customer_count !== undefined && prevYearData?.customer_count !== undefined ? (
+      (() => {
+        const prevCount = Math.round(prevYearData.customer_count);
+        const currCount = Math.round(data.customer_count);
+        const difference = currCount - prevCount;
+        const percentageChange =
+          prevCount !== 0
+            ? ((difference / Math.abs(prevCount)) * 100).toFixed(1)
+            : currCount > 0
+            ? "100.0"
+            : "0.0";
+        const isGrowth = difference >= 0;
+
+        return (
+          <div className="flex items-center mt-1">
+            <span
+              className={`text-[11px] font-medium ${
+                isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
+              }`}
+            >
+              {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% |{" "}
+              {Math.abs(difference).toLocaleString()}
+            </span>
+          </div>
+        );
+      })()
+    ) : (
+      <div className="text-[11px] text-[#575F6D] mt-1">
+        No comparison data available
+      </div>
     )}
-  </p>
-</div>
-<div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-  <img src="./images/saleskpicustomercount.svg" />
-</div>
+  </div>
+  <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/saleskpicustomercount.svg" />
+  </div>
 </div>
 
 {/* Labour Cost Card */}
-<div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
-<div>
-  <p className="text-[14px] text-[#575F6DCC] font-medium">Labour Cost</p>
-  <p className="text-[16px] text-[#2D3748] font-bold">
-    {data?.labour_cost && data.labour_cost !== 0
-      ? `$${Math.round(data.labour_cost).toLocaleString()}`
-      : "$00,000"}
-  </p>
-  <p className="text-[11px] text-[#575F6D] font-normal">
-    <span>
-      Prev. Yr.{" "}
-      {prevYearData?.labour_cost && prevYearData.labour_cost !== 0
-        ? `$${Math.round(prevYearData.labour_cost).toLocaleString()}`
-        : "$00,000"}
-    </span>
-    <br />
-    <span>
-      Curr. Yr.{" "}
-      {currYearData?.labour_cost && currYearData.labour_cost !== 0
-        ? `$${Math.round(currYearData.labour_cost).toLocaleString()}`
-        : "$00,000"}
-    </span>
-    <br />
-    {periodType !== "year" && periodType !== "multi" && (
-      <span>
-        {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-        {prevPeriodData?.labour_cost && prevPeriodData.labour_cost !== 0
-          ? `$${Math.round(prevPeriodData.labour_cost).toLocaleString()}`
-          : "$00,000"}
-      </span>
-    )}
-  </p>
-</div>
-<div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-  <img src="./images/labour.svg" />
-</div>
-</div>
-
-{/* Sales Tax */}
-<div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
-<div>
-  <p className="text-[14px] text-[#575F6DCC] font-medium">Sales Tax</p>
-  <p className="text-[16px] text-[#2D3748] font-bold">
-    {data?.tax_amt && data.tax_amt !== 0
-      ? `$${Math.round(data.tax_amt).toLocaleString()}`
-      : "$00,000"}
-  </p>
-  <p className="text-[11px] text-[#575F6D] font-normal">
-    <span>
-      Prev. Yr.{" "}
-      {prevYearData?.tax_amt && prevYearData.tax_amt !== 0
-        ? `$${Math.round(prevYearData.tax_amt).toLocaleString()}`
-        : "$00,000"}
-    </span>
-    <br />
-    <span>
-      Curr. Yr.{" "}
-      {currYearData?.tax_amt && currYearData.tax_amt !== 0
-        ? `$${Math.round(currYearData.tax_amt).toLocaleString()}`
-        : "$00,000"}
-    </span>
-    <br />
-    {periodType !== "year" && periodType !== "multi" && (
-      <span>
-        {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-        {prevPeriodData?.tax_amt && prevPeriodData.tax_amt !== 0
-          ? `$${Math.round(prevPeriodData.tax_amt).toLocaleString()}`
-          : "$00,000"}
-      </span>
-    )}
-  </p>
-</div>
-<div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-  <img src="./images/saleskpisalestax.svg" />
-</div>
-</div>
-
-{/* Royalty */}
-<div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
-<div>
-  <p className="text-[14px] text-[#575F6DCC] font-medium">Royalty</p>
-  <p className="text-[16px] text-[#2D3748] font-bold">
-    {royaltyAmt && royaltyAmt !== 0
-      ? `$${Math.round(royaltyAmt).toLocaleString()}`
-      : "$00,000"}
-  </p>
-  <p className="text-[11px] text-[#575F6D] font-normal">
-    <span>
-      Prev. Yr.{" "}
-      {prevYearData?.royaltyAmt && prevYearData.royaltyAmt !== 0
-        ? `$${Math.round(prevYearData.royaltyAmt).toLocaleString()}`
-        : "$00,000"}
-    </span>
-    <br />
-    <span>
-      Curr. Yr.{" "}
-      {currYearData?.royaltyAmt && currYearData.royaltyAmt !== 0
-        ? `$${Math.round(currYearData.royaltyAmt).toLocaleString()}`
-        : "$00,000"}
-    </span>
-    <br />
-    {periodType !== "year" && periodType !== "multi" && (
-      <span>
-        {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-        {prevPeriodData?.royaltyAmt && prevPeriodData.royaltyAmt !== 0
-          ? `$${Math.round(prevPeriodData.royaltyAmt).toLocaleString()}`
-          : "$00,000"}
-      </span>
-    )}
-  </p>
-</div>
-<div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-  <img src="./images/saleskpiroyalty.svg" />
-</div>
-</div>
-
-{/* Operating Expenses */}
 <div
-className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
-onClick={handleExpensesCardClick}
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={() => router.push("/labour-cost")} // Optional: Added navigation
 >
-<div>
-  <p className="text-[14px] text-[#575F6DCC] font-medium">Operating Expenses</p>
-  <p className="text-[16px] text-[#2D3748] font-bold">
-    {operatExpAmt && operatExpAmt !== 0
-      ? `$${Math.round(operatExpAmt).toLocaleString()}`
-      : "$00,000"}
-  </p>
-  <p className="text-[11px] text-[#575F6D] font-normal">
-    <span>
-      Prev. Yr.{" "}
-      {prevYearData?.operatExpAmt && prevYearData.operatExpAmt !== 0
-        ? `$${Math.round(prevYearData.operatExpAmt).toLocaleString()}`
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Labour Cost</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {data?.labour_cost && data.labour_cost !== 0
+        ? `$${Math.round(data.labour_cost).toLocaleString()}`
         : "$00,000"}
-    </span>
-    <br />
-    <span>
-      Curr. Yr.{" "}
-      {currYearData?.operatExpAmt && currYearData.operatExpAmt !== 0
-        ? `$${Math.round(currYearData.operatExpAmt).toLocaleString()}`
-        : "$00,000"}
-    </span>
-    <br />
-    {periodType !== "year" && periodType !== "multi" && (
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
       <span>
-        {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-        {prevPeriodData?.operatExpAmt && prevPeriodData.operatExpAmt !== 0
-          ? `$${Math.round(prevPeriodData.operatExpAmt).toLocaleString()}`
+        Prev. Yr.{" "}
+        {prevYearData?.labour_cost && prevYearData.labour_cost !== 0
+          ? `$${Math.round(prevYearData.labour_cost).toLocaleString()}`
           : "$00,000"}
       </span>
+      <br />
+      <span>
+        Curr. Yr.{" "}
+        {currYearData?.labour_cost && currYearData.labour_cost !== 0
+          ? `$${Math.round(currYearData.labour_cost).toLocaleString()}`
+          : "$00,000"}
+      </span>
+    </p>
+    {/* Percentage Change and Difference in One Line */}
+    {data?.labour_cost !== undefined && prevYearData?.labour_cost !== undefined ? (
+      (() => {
+        const prevCost = Math.round(prevYearData.labour_cost);
+        const currCost = Math.round(data.labour_cost);
+        const difference = currCost - prevCost;
+        const percentageChange =
+          prevCost !== 0
+            ? ((difference / Math.abs(prevCost)) * 100).toFixed(1)
+            : currCost > 0
+            ? "100.0"
+            : "0.0";
+        const isGrowth = difference >= 0;
+
+        return (
+          <div className="flex items-center mt-1">
+            <span
+              className={`text-[11px] font-medium ${
+                isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
+              }`}
+            >
+              {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | $
+              {Math.abs(difference).toLocaleString()}
+            </span>
+          </div>
+        );
+      })()
+    ) : (
+      <div className="text-[11px] text-[#575F6D] mt-1">
+        No comparison data available
+      </div>
     )}
-  </p>
+  </div>
+  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/labour.svg" />
+  </div>
 </div>
-<div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-  <img src="./images/saleskpioperatingexpenses.svg" />
+
+{/* Sales Tax Card */}
+<div
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={() => router.push("/sales-tax")} // Optional: Added navigation
+>
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Sales Tax</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {data?.tax_amt && data.tax_amt !== 0
+        ? `$${Math.round(data.tax_amt).toLocaleString()}`
+        : "$00,000"}
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
+      <span>
+        Prev. Yr.{" "}
+        {prevYearData?.tax_amt && prevYearData.tax_amt !== 0
+          ? `$${Math.round(prevYearData.tax_amt).toLocaleString()}`
+          : "$00,000"}
+      </span>
+      <br />
+      <span>
+        Curr. Yr.{" "}
+        {currYearData?.tax_amt && currYearData.tax_amt !== 0
+          ? `$${Math.round(currYearData.tax_amt).toLocaleString()}`
+          : "$00,000"}
+      </span>
+    </p>
+    {/* Percentage Change and Difference in One Line */}
+    {data?.tax_amt !== undefined && prevYearData?.tax_amt !== undefined ? (
+      (() => {
+        const prevTax = Math.round(prevYearData.tax_amt);
+        const currTax = Math.round(data.tax_amt);
+        const difference = currTax - prevTax;
+        const percentageChange =
+          prevTax !== 0
+            ? ((difference / Math.abs(prevTax)) * 100).toFixed(1)
+            : currTax > 0
+            ? "100.0"
+            : "0.0";
+        const isGrowth = difference >= 0;
+
+        return (
+          <div className="flex items-center mt-1">
+            <span
+              className={`text-[11px] font-medium ${
+                isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
+              }`}
+            >
+              {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | $
+              {Math.abs(difference).toLocaleString()}
+            </span>
+          </div>
+        );
+      })()
+    ) : (
+      <div className="text-[11px] text-[#575F6D] mt-1">
+        No comparison data available
+      </div>
+    )}
+  </div>
+  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/saleskpisalestax.svg" />
+  </div>
 </div>
+
+{/* Royalty Card */}
+<div
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={() => router.push("/royalty")} // Optional: Added navigation
+>
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Royalty</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {royaltyAmt && royaltyAmt !== 0
+        ? `$${Math.round(royaltyAmt).toLocaleString()}`
+        : "$00,000"}
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
+      <span>
+        Prev. Yr.{" "}
+        {prevYearData?.royaltyAmt && prevYearData.royaltyAmt !== 0
+          ? `$${Math.round(prevYearData.royaltyAmt).toLocaleString()}`
+          : "$00,000"}
+      </span>
+      <br />
+      <span>
+        Curr. Yr.{" "}
+        {currYearData?.royaltyAmt && currYearData.royaltyAmt !== 0
+          ? `$${Math.round(currYearData.royaltyAmt).toLocaleString()}`
+          : "$00,000"}
+      </span>
+    </p>
+    {/* Percentage Change and Difference in One Line */}
+    {royaltyAmt !== undefined && prevYearData?.royaltyAmt !== undefined ? (
+      (() => {
+        const prevRoyalty = Math.round(prevYearData.royaltyAmt);
+        const currRoyalty = Math.round(royaltyAmt);
+        const difference = currRoyalty - prevRoyalty;
+        const percentageChange =
+          prevRoyalty !== 0
+            ? ((difference / Math.abs(prevRoyalty)) * 100).toFixed(1)
+            : currRoyalty > 0
+            ? "100.0"
+            : "0.0";
+        const isGrowth = difference >= 0;
+
+        return (
+          <div className="flex items-center mt-1">
+            <span
+              className={`text-[11px] font-medium ${
+                isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
+              }`}
+            >
+              {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | $
+              {Math.abs(difference).toLocaleString()}
+            </span>
+          </div>
+        );
+      })()
+    ) : (
+      <div className="text-[11px] text-[#575F6D] mt-1">
+        No comparison data available
+      </div>
+    )}
+  </div>
+  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/saleskpiroyalty.svg" />
+  </div>
 </div>
-            {/* COGS */}
-            <div
+
+{/* Operating Expenses Card */}
+<div
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={handleExpensesCardClick}
+>
+  <div>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Operating Expenses</p>
+    <p className="text-[16px] text-[#2D3748] font-bold">
+      {operatExpAmt && operatExpAmt !== 0
+        ? `$${Math.round(operatExpAmt).toLocaleString()}`
+        : "$00,000"}
+    </p>
+    <p className="text-[11px] text-[#575F6D] font-normal">
+      <span>
+        Prev. Yr.{" "}
+        {prevYearData?.operatExpAmt && prevYearData.operatExpAmt !== 0
+          ? `$${Math.round(prevYearData.operatExpAmt).toLocaleString()}`
+          : "$00,000"}
+      </span>
+      <br />
+      <span>
+        Curr. Yr.{" "}
+        {currYearData?.operatExpAmt && currYearData.operatExpAmt !== 0
+          ? `$${Math.round(currYearData.operatExpAmt).toLocaleString()}`
+          : "$00,000"}
+      </span>
+    </p>
+    {/* Percentage Change and Difference in One Line */}
+    {operatExpAmt !== undefined && prevYearData?.operatExpAmt !== undefined ? (
+      (() => {
+        const prevExp = Math.round(prevYearData.operatExpAmt);
+        const currExp = Math.round(operatExpAmt);
+        const difference = currExp - prevExp;
+        const percentageChange =
+          prevExp !== 0
+            ? ((difference / Math.abs(prevExp)) * 100).toFixed(1)
+            : currExp > 0
+            ? "100.0"
+            : "0.0";
+        const isGrowth = difference >= 0;
+
+        return (
+          <div className="flex items-center mt-1">
+            <span
+              className={`text-[11px] font-medium ${
+                isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
+              }`}
+            >
+              {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | $
+              {Math.abs(difference).toLocaleString()}
+            </span>
+          </div>
+        );
+      })()
+    ) : (
+      <div className="text-[11px] text-[#575F6D] mt-1">
+        No comparison data available
+      </div>
+    )}
+  </div>
+  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
+    <img src="./images/saleskpioperatingexpenses.svg" />
+  </div>
+</div>
+   {/* COGS Card */}
+<div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] cursor-pointer border-b-4 w-full p-4 justify-between items-stretch"
   onClick={handleCogsCardClick}
 >
@@ -1190,16 +1267,39 @@ onClick={handleExpensesCardClick}
           ? `$${Math.round(currYearData.producttotal).toLocaleString()}`
           : "$00,000"}
       </span>
-      <br />
-      {periodType !== "year" && periodType !== "multi" && (
-        <span>
-          {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-          {prevPeriodData?.producttotal && prevPeriodData.producttotal !== 0
-            ? `$${Math.round(prevPeriodData.producttotal).toLocaleString()}`
-            : "$00,000"}
-        </span>
-      )}
     </p>
+    {/* Percentage Change and Difference in One Line */}
+    {data?.producttotal !== undefined && prevYearData?.producttotal !== undefined ? (
+      (() => {
+        const prevCogs = Math.round(prevYearData.producttotal);
+        const currCogs = Math.round(data.producttotal);
+        const difference = currCogs - prevCogs;
+        const percentageChange =
+          prevCogs !== 0
+            ? ((difference / Math.abs(prevCogs)) * 100).toFixed(1)
+            : currCogs > 0
+            ? "100.0"
+            : "0.0";
+        const isGrowth = difference >= 0;
+
+        return (
+          <div className="flex items-center mt-1">
+            <span
+              className={`text-[11px] font-medium ${
+                isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
+              }`}
+            >
+              {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | $
+              {Math.abs(difference).toLocaleString()}
+            </span>
+          </div>
+        );
+      })()
+    ) : (
+      <div className="text-[11px] text-[#575F6D] mt-1">
+        No comparison data available
+      </div>
+    )}
   </div>
   <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
     <img src="./images/saleskpicogs.svg" />
@@ -1207,8 +1307,11 @@ onClick={handleExpensesCardClick}
 </div>
 
 
-            {/* Total Revenue */}
-            <div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
+  {/* Total Revenue Card */}
+<div
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={() => router.push("/total-revenue")} // Optional: Added navigation
+>
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Total Revenue</p>
     <p className="text-[16px] text-[#2D3748] font-bold">
@@ -1230,24 +1333,50 @@ onClick={handleExpensesCardClick}
           ? `$${Math.round(currYearData.revenue).toLocaleString()}`
           : "$00,000"}
       </span>
-      <br />
-      {periodType !== "year" && periodType !== "multi" && (
-        <span>
-          {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-          {prevPeriodData?.revenue && prevPeriodData.revenue !== 0
-            ? `$${Math.round(prevPeriodData.revenue).toLocaleString()}`
-            : "$00,000"}
-        </span>
-      )}
     </p>
+    {/* Percentage Change and Difference in One Line */}
+    {data?.revenue !== undefined && prevYearData?.revenue !== undefined ? (
+      (() => {
+        const prevRevenue = Math.round(prevYearData.revenue);
+        const currRevenue = Math.round(data.revenue);
+        const difference = currRevenue - prevRevenue;
+        const percentageChange =
+          prevRevenue !== 0
+          ? ((difference / Math.abs(prevRevenue)) * 100).toFixed(1)
+          : currRevenue > 0
+          ? "100.0"
+          : "0.0";
+        const isGrowth = difference >= 0;
+
+        return (
+          <div className="flex items-center mt-1">
+            <span
+              className={`text-[11px] font-medium ${
+                isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
+              }`}
+            >
+              {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | $
+              {Math.abs(difference).toLocaleString()}
+            </span>
+          </div>
+        );
+      })()
+    ) : (
+      <div className="text-[11px] text-[#575F6D] mt-1">
+        No comparison data available
+      </div>
+    )}
   </div>
   <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
     <img src="./images/saleskpiprofit.svg" />
   </div>
 </div>
 
-           {/* Discount */}
-<div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
+          {/* Discount Card */}
+<div
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={() => router.push("/discount")} // Optional: Added navigation
+>
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Discount</p>
     <p className="text-[16px] text-[#2D3748] font-bold">
@@ -1269,24 +1398,50 @@ onClick={handleExpensesCardClick}
           ? `$${Math.round(currYearData.discount).toLocaleString()}`
           : "$00,000"}
       </span>
-      <br />
-      {periodType !== "year" && periodType !== "multi" && (
-        <span>
-          {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-          {prevPeriodData?.discount && prevPeriodData.discount !== 0
-            ? `$${Math.round(prevPeriodData.discount).toLocaleString()}`
-            : "$00,000"}
-        </span>
-      )}
     </p>
+    {/* Percentage Change and Difference in One Line */}
+    {data?.discount !== undefined && prevYearData?.discount !== undefined ? (
+      (() => {
+        const prevDiscount = Math.round(prevYearData.discount);
+        const currDiscount = Math.round(data.discount);
+        const difference = currDiscount - prevDiscount;
+        const percentageChange =
+          prevDiscount !== 0
+            ? ((difference / Math.abs(prevDiscount)) * 100).toFixed(1)
+            : currDiscount > 0
+            ? "100.0"
+            : "0.0";
+        const isGrowth = difference >= 0;
+
+        return (
+          <div className="flex items-center mt-1">
+            <span
+              className={`text-[11px] font-medium ${
+                isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
+              }`}
+            >
+              {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | $
+              {Math.abs(difference).toLocaleString()}
+            </span>
+          </div>
+        );
+      })()
+    ) : (
+      <div className="text-[11px] text-[#575F6D] mt-1">
+        No comparison data available
+      </div>
+    )}
   </div>
   <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
     <img src="./images/saleskpioperatingexpenses.svg" />
   </div>
 </div>
 
-{/* Promotions */}
-<div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
+{/* Promotions Card */}
+<div
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={() => router.push("/promotions")} // Optional: Added navigation
+>
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Promotions</p>
     <p className="text-[16px] text-[#2D3748] font-bold">
@@ -1308,24 +1463,50 @@ onClick={handleExpensesCardClick}
           ? `$${Math.round(currYearData.promotions).toLocaleString()}`
           : "$00,000"}
       </span>
-      <br />
-      {periodType !== "year" && periodType !== "multi" && (
-        <span>
-          {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-          {prevPeriodData?.promotions && prevPeriodData.promotions !== 0
-            ? `$${Math.round(prevPeriodData.promotions).toLocaleString()}`
-            : "$00,000"}
-        </span>
-      )}
     </p>
+    {/* Percentage Change and Difference in One Line */}
+    {data?.promotions !== undefined && prevYearData?.promotions !== undefined ? (
+      (() => {
+        const prevPromotions = Math.round(prevYearData.promotions);
+        const currPromotions = Math.round(data.promotions);
+        const difference = currPromotions - prevPromotions;
+        const percentageChange =
+          prevPromotions !== 0
+            ? ((difference / Math.abs(prevPromotions)) * 100).toFixed(1)
+            : currPromotions > 0
+            ? "100.0"
+            : "0.0";
+        const isGrowth = difference >= 0;
+
+        return (
+          <div className="flex items-center mt-1">
+            <span
+              className={`text-[11px] font-medium ${
+                isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
+              }`}
+            >
+              {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | $
+              {Math.abs(difference).toLocaleString()}
+            </span>
+          </div>
+        );
+      })()
+    ) : (
+      <div className="text-[11px] text-[#575F6D] mt-1">
+        No comparison data available
+      </div>
+    )}
   </div>
   <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
     <img src="./images/saleskpicustomercount.svg" />
   </div>
 </div>
 
-{/* Voids */}
-<div className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch">
+{/* Voids Card */}
+<div
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={() => router.push("/voids")} // Optional: Added navigation
+>
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Voids</p>
     <p className="text-[16px] text-[#2D3748] font-bold">
@@ -1347,16 +1528,39 @@ onClick={handleExpensesCardClick}
           ? `$${Math.round(currYearData.voids).toLocaleString()}`
           : "$00,000"}
       </span>
-      <br />
-      {periodType !== "year" && periodType !== "multi" && (
-        <span>
-          {periodType === "quarter" ? "Prev. Qr." : "Prev. Mo."}{" "}
-          {prevPeriodData?.voids && prevPeriodData.voids !== 0
-            ? `$${Math.round(prevPeriodData.voids).toLocaleString()}`
-            : "$00,000"}
-        </span>
-      )}
     </p>
+    {/* Percentage Change and Difference in One Line */}
+    {data?.voids !== undefined && prevYearData?.voids !== undefined ? (
+      (() => {
+        const prevVoids = Math.round(prevYearData.voids);
+        const currVoids = Math.round(data.voids);
+        const difference = currVoids - prevVoids;
+        const percentageChange =
+          prevVoids !== 0
+            ? ((difference / Math.abs(prevVoids)) * 100).toFixed(1)
+            : currVoids > 0
+            ? "100.0"
+            : "0.0";
+        const isGrowth = difference >= 0;
+
+        return (
+          <div className="flex items-center mt-1">
+            <span
+              className={`text-[11px] font-medium ${
+                isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
+              }`}
+            >
+              {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | $
+              {Math.abs(difference).toLocaleString()}
+            </span>
+          </div>
+        );
+      })()
+    ) : (
+      <div className="text-[11px] text-[#575F6D] mt-1">
+        No comparison data available
+      </div>
+    )}
   </div>
   <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
     <img src="./images/saleskpicogs.svg" />

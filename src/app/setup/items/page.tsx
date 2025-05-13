@@ -62,7 +62,7 @@ const Page: FC = () => {
         const truncatedValue =
           value.length > 40 ? value.slice(0, 40) + "..." : value;
         return (
-          <Tooltip text={value} position="bottom">
+          <Tooltip text={value} position="top">
             <span className="cursor-pointer">{truncatedValue}</span>
           </Tooltip>
         );

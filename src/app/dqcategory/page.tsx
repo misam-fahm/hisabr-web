@@ -888,18 +888,18 @@ useEffect(() => {
                   {Items?.qty_times_pieces > 0 && (
                     <p className="text-[11px] text-[#000000] font-semibold">
                       {Items.name?.toLowerCase() === "meat" ? (
-                        <>{(Items.totalqty * 20).toLocaleString()}/Lbs</>
+                        <>{(Items.totalqty * 20).toLocaleString()} Lbs</>
                       ) : (
                         <>
-                          {Items.qty_times_pieces.toLocaleString()}/
-                          {(() => {
-                            const unit = Items?.unit?.toLowerCase();
-            if (unit === "piece" || unit === "pieces") return "pcs";
-                            if (unit === "burger") return "bgr";
-                            if (unit === "cakes") return "cks";
-                            if (unit === "gallons") return "gal";
-                            return unit || "unit";
-                          })()}
+                          {`${Items.qty_times_pieces.toLocaleString()} ${(() => {
+  const unit = Items?.unit?.toLowerCase();
+  if (unit === "piece" || unit === "pieces") return "pcs";
+  if (unit === "burger") return "bgr";
+  if (unit === "cakes") return "cks";
+  if (unit === "gallons") return "gal";
+  return unit || "unit";
+})()}`}
+
                         </>
                       )}
                     </p>
