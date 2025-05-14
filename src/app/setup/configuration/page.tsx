@@ -140,24 +140,32 @@ const Page = () => {
     methods.setValue("repair", data); // Update form state in react-hook-form
   };
 
-  const getUserStore = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getUserStore" });
-      if (response?.status === 200) {
-        setStore(response?.data?.stores || []);
-        if (response?.data?.stores) {
-          setSelectedOption({
-            name: response?.data?.stores[0]?.name,
-            id: response?.data?.stores[0]?.id,
-          });
-        }
-      } else {
-        handleError(response?.message);
+ const getUserStore = async () => {
+  try {
+    const response = await sendApiRequest({ mode: "getUserStore" });
+    if (response?.status === 200) {
+      const stores = response?.data?.stores || [];
+
+      // Format store data as required
+      const formattedStores = stores.map((store: any) => ({
+        storeno: store?.name,
+        name: `${store?.name} - ${store?.location || "Unknown Location"}`,
+        id: store?.id,
+      }));
+
+      setStore(formattedStores);
+
+      if (formattedStores.length > 0) {
+        setSelectedOption(formattedStores[0]);
       }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
+    } else {
+      handleError(response?.message);
     }
-  };
+  } catch (error) {
+    console.error("Error fetching stores:", error);
+  }
+};
+
 
   const verifyToken = async (token: string) => {
     try {
