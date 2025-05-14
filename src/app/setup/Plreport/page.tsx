@@ -44,6 +44,7 @@ const PLReport: FC = () => {
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [totalCogsAmount, setTotalCogsAmount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedStore, setSelectedStore] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState<boolean>(false);
@@ -58,7 +59,12 @@ const PLReport: FC = () => {
   const [months, setMonths] = useState<number>(12);
 
   const formatAmount = (value: number) => {
-    return isNaN(value) ? "$0.00" : `$${Number(value).toFixed(2)}`;
+    return value
+      ? `$${value.toLocaleString("en-US", {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        })}`
+      : "$0";
   };
 
   const columns: ColumnDef<TableRow>[] = [
@@ -170,6 +176,7 @@ const PLReport: FC = () => {
         const saleskpi = response?.data?.expenses[0];
         const config = saleskpi?.config || {};
         const additionalExpenses = saleskpi?.additional_expense || [];
+        const cogs = saleskpi?.cogs || [];
 
         const payrollTaxAmt =
           saleskpi?.labour_cost && config?.payroll_tax
@@ -214,10 +221,16 @@ const PLReport: FC = () => {
           0
         );
 
+        const totalCogs = cogs.reduce(
+          (sum: number, item: any) => sum + (Number(item.producttotal) || 0),
+          0
+        );
+
         setData(sortedExpenses);
         setNetSales(saleskpi.net_sales || 0);
         setTotalItems(sortedExpenses.length);
         setTotalAmount(total);
+        setTotalCogsAmount(totalCogs);
       } else {
         setCustomToast({
           message: response?.message,
@@ -324,6 +337,11 @@ const PLReport: FC = () => {
     };
   }, [table]);
 
+  // Extract store location from selectedStore.name (e.g., "13246 - Watkinsville" -> "Watkinsville")
+  const storeLocation = selectedStore?.name
+    ? selectedStore.name.split(" - ")[1] || "Unknown Location"
+    : "Select a Store";
+
   return (
     <main
       className={`relative px-6 below-md:px-3 overflow-auto border-none h-full ${
@@ -353,158 +371,139 @@ const PLReport: FC = () => {
               toggleOpen={toggleYearDropdown}
               widthchange="max-w-[100px] w-full below-md:min-w-full tablet:min-w-[120px] tablet-home:min-w-[140px]"
             />
-            <div className="relative w-full max-w-[250px] below-md:max-w-full tablet:max-w-[200px] tablet-home:max-w-[250px] h-[35px]">
-              <input
-                type="text"
-                value={globalFilter}
-                onChange={(e) => setGlobalFilter(e.target.value)}
-                onKeyDown={handleKeyDown}
-                ref={searchInputRef}
-                placeholder="Search"
-                className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] below-md:text-[11px] tablet:text-[11px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
-              />
-              {globalFilter && (
-                <div className="absolute right-8 inset-y-0 flex items-center cursor-pointer">
-                  <img
-                    className="w-4 h-4"
-                    src="/images/cancelicon.svg"
-                    onClick={clearSearch}
-                    alt="Clear Search"
-                  />
-                </div>
-              )}
-              <div className="absolute inset-y-0 right-2 flex items-center cursor-pointer">
-                <img
-                  src="/images/searchicon.svg"
-                  alt="Search Icon"
-                  className="below-md:scale-[0.9] tablet:scale-[0.9]"
-                  onClick={() => fetchData()}
-                />
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
-      <div className="mb-4 bg-white p-4 rounded-md shadow-sm">
-        <div className="flex justify-between">
-          <div>
-            <p className="text-[14px] font-bold">Net Sales</p>
-            <p className="text-[16px] below-md:text-[14px] tablet:text-[15px]">
-              {formatAmount(netSales)}
+      {/* Header Section */}
+      <div className="mb-6 text-center">
+        <h1 className="text-2xl font-bold uppercase">Income Statement</h1>
+        <p className="text-lg font-semibold">{storeLocation}</p>
+        <p className="text-md">
+          For the year ended December 31, {selectedYear}
+        </p>
+      </div>
+
+      <div className="flex gap-6 below-md:grid below-md:grid-cols-1 below-md:gap-3 below-md:pl-3 below-md:pr-3 tablet:grid tablet:grid-cols-2">
+        <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%] tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
+          <div className="flex flex-col gap-2">
+            <p className="text-[14px] text-[#575F6DCC] font-bold">Net Sales</p>
+            <p className="text-[18px] text-[#2D3748] font-bold">
+              {loading ? <Skeleton width={100} /> : formatAmount(netSales)}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%] tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
+          <div className="flex flex-col gap-2">
+            <p className="text-[14px] text-[#575F6DCC] font-bold">Cost of Goods</p>
+            <p className="text-[18px] text-[#2D3748] font-bold">
+              {loading ? <Skeleton width={100} /> : formatAmount(totalCogsAmount)}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="overflow-x-auto shadow-sm border border-[#E4E4EF] rounded-md flex-grow flex flex-col">
+      <div className="shadow-sm border border-[#E4E4EF] rounded-md flex-grow flex flex-col">
         <div className="w-full rounded-md">
-          <div
-            ref={containerRef}
-            className="w-full overflow-y-auto scrollbar-thin"
-            style={{ maxHeight: "calc(100vh - 270px)" }}
-          >
-            <table className="w-full border-collapse text-[12px] below-md:text-[11px] tablet:text-[11px] table-auto rounded-md">
-              <thead className="bg-[#0F1044] sticky top-0 z-10">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <th
-                        key={header.id}
-                        className="text-left px-4 py-2 text-[#FFFFFF] font-normal text-[14px] below-md:text-[12px] tablet:text-[13px]"
-                        style={{
-                          minWidth: `${header.column.getSize()}px`,
-                          width: isScrollbarVisible
-                            ? `${header.column.getSize() + 8}px`
-                            : "auto",
-                        }}
+          <table className="w-full border-collapse text-[12px] below-md:text-[11px] tablet:text-[11px] table-auto rounded-md">
+            <thead className="bg-[#0F1044]">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      key={header.id}
+                      className="text-left px-4 py-2 text-[#FFFFFF] font-normal text-[14px] below-md:text-[12px] tablet:text-[13px]"
+                      style={{
+                        minWidth: `${header.column.getSize()}px`,
+                        width: `${header.column.getSize()}px`, // Removed isScrollbarVisible logic
+                      }}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {loading ? (
+                Array.from({ length: 10 }).map((_, index) => (
+                  <tr
+                    key={index}
+                    className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
+                  >
+                    {columns.map((column, colIndex) => (
+                      <td
+                        key={colIndex}
+                        className="px-4 py-1.5"
+                        style={{ minWidth: `${column.size}px` }}
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                      </th>
+                        <Skeleton height={30} />
+                      </td>
                     ))}
                   </tr>
-                ))}
-              </thead>
-              <tbody>
-                {loading ? (
-                  Array.from({ length: 10 }).map((_, index) => (
+                ))
+              ) : data.length > 0 ? (
+                <>
+                  {table.getRowModel().rows.map((row) => (
                     <tr
-                      key={index}
-                      className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
+                      key={row.id}
+                      className={
+                        row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                      }
                     >
-                      {columns.map((column, colIndex) => (
+                      {row.getVisibleCells().map((cell) => (
                         <td
-                          key={colIndex}
-                          className="px-4 py-1.5"
-                          style={{ minWidth: `${column.size}px` }}
+                          key={cell.id}
+                          className="px-4 py-1.5 text-[#636363] text-[13px] below-md:text-[11px] tablet:text-[12px]"
+                          style={{ minWidth: `${cell.column.getSize()}px` }}
                         >
-                          <Skeleton height={30} />
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
                         </td>
                       ))}
                     </tr>
-                  ))
-                ) : data.length > 0 ? (
-                  <>
-                    {table.getRowModel().rows.map((row) => (
-                      <tr
-                        key={row.id}
-                        className={
-                          row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                        }
+                  ))}
+                  {data.length > 0 && !loading && (
+                    <tr className="bg-[#0F1044] text-white border-t border-[#E4E4EF]">
+                      <td
+                        className="px-4 py-1.5 text-[13px] font-bold below-md:text-[11px] tablet:text-[12px]"
+                        style={{ minWidth: `${columns[0].size}px` }}
                       >
-                        {row.getVisibleCells().map((cell) => (
-                          <td
-                            key={cell.id}
-                            className="px-4 py-1.5 text-[#636363] text-[13px] below-md:text-[11px] tablet:text-[12px]"
-                            style={{ minWidth: `${cell.column.getSize()}px` }}
-                          >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                    {data.length > 0 && !loading && (
-                      <tr className="bg-[#0F1044] text-white border-t border-[#E4E4EF]">
-                        <td
-                          className="px-4 py-1.5 text-[13px] font-bold below-md:text-[11px] tablet:text-[12px]"
-                          style={{ minWidth: `${columns[0].size}px` }}
-                        >
-                          Total
-                        </td>
-                        <td
-                          className="px-4 py-1.5 text-[13px] text-right pr-3 below-md:text-[11px] tablet:text-[12px]"
-                          style={{ minWidth: `${columns[1].size}px` }}
-                        >
-                          {formatAmount(totalAmount)}
-                        </td>
-                        <td
-                          className="px-4 py-1.5 text-[13px] text-right pr-3 below-md:text-[11px] tablet:text-[12px]"
-                          style={{ minWidth: `${columns[2].size}px` }}
-                        >
-                          100.00%
-                        </td>
-                      </tr>
-                    )}
-                  </>
-                ) : (
-                  <tr>
-                    <td
-                      colSpan={columns.length}
-                      className="py-6 text-center text-[13px] below-md:text-[11px] tablet:text-[12px]"
-                    >
-                      <NoDataFound />
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                        Total
+                      </td>
+                      <td
+                        className="px-4 py-1.5 text-[13px] text-right pr-3 below-md:text-[11px] tablet:text-[12px]"
+                        style={{ minWidth: `${columns[1].size}px` }}
+                      >
+                        {formatAmount(totalAmount)}
+                      </td>
+                      <td
+                        className="px-4 py-1.5 text-[13px] text-right pr-3 below-md:text-[11px] tablet:text-[12px]"
+                        style={{ minWidth: `${columns[2].size}px` }}
+                      >
+                        100.00%
+                      </td>
+                    </tr>
+                  )}
+                </>
+              ) : (
+                <tr>
+                  <td
+                    colSpan={columns.length}
+                    className="py-6 text-center text-[13px] below-md:text-[11px] tablet:text-[12px]"
+                  >
+                    <NoDataFound />
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </main>
