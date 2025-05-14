@@ -14,6 +14,8 @@ import { sendApiRequest } from "@/utils/apiUtils";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface ExpensesPageData {
   storeid: string;
@@ -46,6 +48,7 @@ const PLReport: FC = () => {
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [totalCogsAmount, setTotalCogsAmount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+  const [netIncome, setNetIncome] = useState<number>(0);
   const [selectedStore, setSelectedStore] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState<boolean>(false);
   const [stores, setStores] = useState<any[]>([]);
@@ -65,6 +68,14 @@ const PLReport: FC = () => {
           maximumFractionDigits: 0,
         })}`
       : "$0";
+  };
+
+  const calculatePercentage = (value: number, relativeTo: number): string => {
+    if (!relativeTo || relativeTo === 0 || isNaN(value) || isNaN(relativeTo)) {
+      return "0%";
+    }
+    const percentage = (value / relativeTo) * 100;
+    return `${percentage.toFixed(1)}%`; // Show one decimal place for clarity
   };
 
   const columns: ColumnDef<TableRow>[] = [
@@ -89,7 +100,7 @@ const PLReport: FC = () => {
       header: () => <div className="text-right pr-3">%</div>,
       cell: (info) => (
         <span className="text-right block pr-3">
-          {Number((info.row.original.value / totalAmount) * 100).toFixed(2)}%
+          {calculatePercentage(info.row.original.value, totalAmount)}
         </span>
       ),
       size: 100,
@@ -178,6 +189,8 @@ const PLReport: FC = () => {
         const additionalExpenses = saleskpi?.additional_expense || [];
         const cogs = saleskpi?.cogs || [];
 
+        const months = 12; // Define months (or calculate if dynamic)
+
         const payrollTaxAmt =
           saleskpi?.labour_cost && config?.payroll_tax
             ? saleskpi.labour_cost * (config.payroll_tax / 100)
@@ -208,7 +221,7 @@ const PLReport: FC = () => {
             label: "Labor Salary",
             value: (config.labor_operat_salary_exp || 0) * months,
           },
-          ...(additionalExpenses || []).map((exp: any) => ({
+          ...additionalExpenses.map((exp: any) => ({
             label: exp.expname,
             value: Number(exp.amount) || 0,
           })),
@@ -226,11 +239,15 @@ const PLReport: FC = () => {
           0
         );
 
+        // Calculate Net Income
+        const calculatedNetIncome = (saleskpi.net_sales || 0) - totalCogs - total;
+
         setData(sortedExpenses);
         setNetSales(saleskpi.net_sales || 0);
         setTotalItems(sortedExpenses.length);
         setTotalAmount(total);
         setTotalCogsAmount(totalCogs);
+        setNetIncome(calculatedNetIncome);
       } else {
         setCustomToast({
           message: response?.message,
@@ -337,10 +354,215 @@ const PLReport: FC = () => {
     };
   }, [table]);
 
-  // Extract store location from selectedStore.name (e.g., "13246 - Watkinsville" -> "Watkinsville")
+  // Extract store location from selectedStore.name
   const storeLocation = selectedStore?.name
     ? selectedStore.name.split(" - ")[1] || "Unknown Location"
     : "Select a Store";
+
+const downloadPDF = () => {
+  const doc = new jsPDF();
+
+  // Set document properties
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(16);
+
+  // Header
+  doc.text("Income Statement", 105, 20, { align: "center" });
+  doc.setFontSize(12);
+  doc.text(storeLocation, 105, 30, { align: "center" });
+  doc.text(`For the year ended December 31, ${selectedYear}`, 105, 38, {
+    align: "center",
+  });
+
+  // Income Section
+  const incomeData = [
+    ["Sale of Goods", formatAmount(netSales), calculatePercentage(netSales, netSales)],
+  ];
+  const totalIncome = netSales;
+  autoTable(doc, {
+    startY: 50,
+    head: [["Income", "Amount", "%"]],
+    body: [...incomeData, ["Total Income", formatAmount(totalIncome), "100.0%"]],
+    theme: "plain",
+    headStyles: {
+      fillColor: [255, 255, 255],
+      textColor: [0, 0, 0],
+      fontStyle: "bold",
+      halign: "left",
+      fontSize: 10,
+    },
+    styles: {
+      fontSize: 10,
+      cellPadding: { top: 2, right: 4, bottom: 2, left: 4 },
+      halign: "left",
+    },
+    columnStyles: {
+      0: { cellWidth: 90, halign: "left" },
+      1: { cellWidth: 60, halign: "center" },
+      2: { cellWidth: 40, halign: "center" },
+    },
+    didDrawCell: (data) => {
+      if (data.section === "head" && data.row.index === 0) {
+        const textWidth = doc.getTextWidth("Income");
+        doc.line(
+          data.cell.x,
+          data.cell.y + data.cell.height,
+          data.cell.x + textWidth,
+          data.cell.y + data.cell.height
+        );
+      }
+      if (data.row.index === incomeData.length && data.section === "body") {
+        data.cell.styles.fontStyle = "bold";
+      }
+    },
+  });
+
+  // Cost of Goods Sold Section
+  const cogsData = [
+    ["Cost of Goods", formatAmount(totalCogsAmount), calculatePercentage(totalCogsAmount, totalIncome)],
+  ];
+  const totalCogs = totalCogsAmount;
+  autoTable(doc, {
+    startY: (doc as any).lastAutoTable.finalY + 10,
+    head: [["Cost of Goods Sold", "Amount", "%"]],
+    body: [...cogsData, ["Total Cost of Goods Sold", formatAmount(totalCogs), calculatePercentage(totalCogs, totalIncome)]],
+    theme: "plain",
+    headStyles: {
+      fillColor: [255, 255, 255],
+      textColor: [0, 0, 0],
+      fontStyle: "bold",
+      halign: "left",
+      fontSize: 10,
+    },
+    styles: {
+      fontSize: 10,
+      cellPadding: { top: 2, right: 4, bottom: 2, left: 4 },
+      halign: "left",
+    },
+    columnStyles: {
+      0: { cellWidth: 90, halign: "left" },
+      1: { cellWidth: 60, halign: "center" },
+      2: { cellWidth: 40, halign: "center" },
+    },
+    didDrawCell: (data) => {
+      if (data.section === "head" && data.row.index === 0) {
+        const textWidth = doc.getTextWidth("Cost of Goods Sold");
+        doc.line(
+          data.cell.x,
+          data.cell.y + data.cell.height,
+          data.cell.x + textWidth,
+          data.cell.y + data.cell.height
+        );
+      }
+      if (data.row.index === cogsData.length && data.section === "body") {
+        data.cell.styles.fontStyle = "bold";
+      }
+    },
+  });
+
+  // Gross Profit Section
+  const grossProfit = totalIncome - totalCogs;
+  autoTable(doc, {
+    startY: (doc as any).lastAutoTable.finalY + 10,
+    body: [["Gross Profit", formatAmount(grossProfit), calculatePercentage(grossProfit, totalIncome)]],
+    theme: "plain",
+    styles: {
+      fontSize: 10,
+      cellPadding: { top: 2, right: 4, bottom: 2, left: 4 },
+      fontStyle: "bold",
+      halign: "left",
+    },
+    columnStyles: {
+      0: { cellWidth: 90, halign: "left" },
+      1: { cellWidth: 60, halign: "center" },
+      2: { cellWidth: 40, halign: "center" },
+    },
+  });
+
+  // Operating Expenses Section
+  const expensesData = data.map((row) => [
+    row.label,
+    formatAmount(row.value),
+    calculatePercentage(row.value, totalIncome),
+  ]);
+  autoTable(doc, {
+    startY: (doc as any).lastAutoTable.finalY + 10,
+    head: [["Operating Expenses", "Amount", "%"]],
+    body: [...expensesData, ["Total Operating Expenses", formatAmount(totalAmount), calculatePercentage(totalAmount, totalIncome)]],
+    theme: "plain",
+    headStyles: {
+      fillColor: [255, 255, 255],
+      textColor: [0, 0, 0],
+      fontStyle: "bold",
+      halign: "left",
+      fontSize: 10,
+    },
+    styles: {
+      fontSize: 10,
+      cellPadding: { top: 2, right: 4, bottom: 2, left: 4 },
+      halign: "left",
+    },
+    columnStyles: {
+      0: { cellWidth: 90, halign: "left" },
+      1: { cellWidth: 60, halign: "center" },
+      2: { cellWidth: 40, halign: "center" },
+    },
+    didDrawCell: (data) => {
+      if (data.section === "head" && data.row.index === 0) {
+        const textWidth = doc.getTextWidth("Operating Expenses");
+        doc.line(
+          data.cell.x,
+          data.cell.y + data.cell.height,
+          data.cell.x + textWidth,
+          data.cell.y + data.cell.height
+        );
+      }
+      if (data.row.index === expensesData.length && data.section === "body") {
+        data.cell.styles.fontStyle = "bold";
+      }
+    },
+  });
+
+  // Net Income Section
+  autoTable(doc, {
+    startY: (doc as any).lastAutoTable.finalY + 10,
+    body: [["Net Income", formatAmount(netIncome), calculatePercentage(netIncome, totalIncome)]],
+    theme: "plain",
+    styles: {
+      fontSize: 10,
+      cellPadding: { top: 2, right: 4, bottom: 2, left: 4 },
+      fontStyle: "bold",
+      halign: "left",
+    },
+    columnStyles: {
+      0: { cellWidth: 90, halign: "left" },
+      1: { cellWidth: 60, halign: "center" },
+      2: { cellWidth: 40, halign: "center" },
+    },
+  });
+
+  // Footer
+  const pageCount = doc.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    const today = new Date().toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+    doc.setFontSize(8);
+    doc.text(`${storeLocation}`, 20, doc.internal.pageSize.height - 10);
+    doc.text(today, 105, doc.internal.pageSize.height - 10, {
+      align: "center",
+    });
+    doc.text(`Page ${i} of ${pageCount}`, 190, doc.internal.pageSize.height - 10, {
+      align: "right",
+    });
+  }
+
+  // Save the PDF
+  doc.save(`Income_Statement_${storeLocation}_${selectedYear}.pdf`);
+};
 
   return (
     <main
@@ -349,62 +571,83 @@ const PLReport: FC = () => {
       }`}
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className="sticky top-0 z-20 bg-[#f7f8f9] pb-6 pt-4 below-md:pt-3 below-md:pb-3 tablet:pt-3">
-        <div className="flex flex-col gap-3 w-full below-md:flex-col tablet:flex-col tablet-home:flex-row">
-          <div className="flex flex-row gap-2 w-full below-md:flex-col tablet:flex-row tablet-home:flex-row">
-            <Dropdown
-              options={stores}
-              selectedOption={selectedStore?.name || "Store"}
-              onSelect={(option: any) => {
-                setSelectedStore(option);
-                setIsStoreDropdownOpen(false);
-              }}
-              isOpen={isStoreDropdownOpen}
-              toggleOpen={toggleStoreDropdown}
-              widthchange="max-w-[200px] w-full below-md:min-w-full tablet:min-w-[140px] tablet-home:min-w-[161px]"
+      <div className="sticky top-0 z-20 bg-[#f7f8f9] pb-4 pt-4 below-md:pt-3 below-md:pb-3 tablet:pt-3">
+        <div className="flex flex-row items-center gap-3 w-full below-md:flex-col tablet:flex-row tablet-home:flex-row">
+          <Dropdown
+            options={stores}
+            selectedOption={selectedStore?.name || "Store"}
+            onSelect={(option: any) => {
+              setSelectedStore(option);
+              setIsStoreDropdownOpen(false);
+            }}
+            isOpen={isStoreDropdownOpen}
+            toggleOpen={toggleStoreDropdown}
+            widthchange="max-w-[200px] w-full below-md:min-w-full tablet:min-w-[140px] tablet-home:min-w-[161px]"
+          />
+
+          <Dropdown
+            options={yearOptions}
+            selectedOption={selectedYear}
+            onSelect={handleYearSelect}
+            isOpen={isYearOpen}
+            toggleOpen={toggleYearDropdown}
+            widthchange="max-w-[100px] w-full below-md:min-w-full tablet:min-w-[120px] tablet-home:min-w-[140px]"
+          />
+
+          <button
+            onClick={downloadPDF}
+            className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[159px] below-lg:w-[135.7224px] h-[35px] below-lg:h-[29.876px] rounded-md text-white text-[13px] below-lg:text-[11.0968px] font-medium ml-auto"
+            disabled={loading}
+          >
+            <img
+              src="/images/webuploadicon.svg"
+              alt="Download Icon"
+              className="mr-1 rotate-180 below-lg:scale-[0.8536]"
             />
-            <Dropdown
-              options={yearOptions}
-              selectedOption={selectedYear}
-              onSelect={handleYearSelect}
-              isOpen={isYearOpen}
-              toggleOpen={toggleYearDropdown}
-              widthchange="max-w-[100px] w-full below-md:min-w-full tablet:min-w-[120px] tablet-home:min-w-[140px]"
-            />
-          </div>
+            Download PDF
+          </button>
         </div>
       </div>
 
-      {/* Header Section */}
-      <div className="mb-6 text-center">
-        <h1 className="text-2xl font-bold uppercase">Income Statement</h1>
-        <p className="text-lg font-semibold">{storeLocation}</p>
-        <p className="text-md">
-          For the year ended December 31, {selectedYear}
-        </p>
-      </div>
-
-      <div className="flex gap-6 below-md:grid below-md:grid-cols-1 below-md:gap-3 below-md:pl-3 below-md:pr-3 tablet:grid tablet:grid-cols-2">
-        <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%] tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
+      <div className="flex flex-wrap gap-4 below-md:grid below-md:grid-cols-1 below-md:gap-4 tablet:grid tablet:grid-cols-2 tablet:gap-4">
+        <div className="flex-1 bg-[#FFFFFF] rounded-lg shadow-sm border-[#7b7b7b] border-b-4 p-4 below-md:w-full">
           <div className="flex flex-col gap-2">
-            <p className="text-[14px] text-[#575F6DCC] font-bold">Net Sales</p>
-            <p className="text-[18px] text-[#2D3748] font-bold">
+            <p className="text-[16px] text-[#575F6DCC] font-bold">Net Sales</p>
+            <p className="text-[20px] text-[#2D3748] font-bold">
               {loading ? <Skeleton width={100} /> : formatAmount(netSales)}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%] tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
+        <div className="flex-1 bg-[#FFFFFF] rounded-lg shadow-sm border-[#7b7b7b] border-b-4 p-4 below-md:w-full">
           <div className="flex flex-col gap-2">
-            <p className="text-[14px] text-[#575F6DCC] font-bold">Cost of Goods</p>
-            <p className="text-[18px] text-[#2D3748] font-bold">
+            <p className="text-[16px] text-[#575F6DCC] font-bold">Cost of Goods</p>
+            <p className="text-[20px] text-[#2D3748] font-bold">
               {loading ? <Skeleton width={100} /> : formatAmount(totalCogsAmount)}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex-1 bg-[#FFFFFF] rounded-lg shadow-sm border-[#7b7b7b] border-b-4 p-4 below-md:w-full">
+          <div className="flex flex-col gap-2">
+            <p className="text-[16px] text-[#575F6DCC] font-bold">Total Expenses</p>
+            <p className="text-[20px] text-[#2D3748] font-bold">
+              {loading ? <Skeleton width={100} /> : formatAmount(totalAmount)}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex-1 bg-[#FFFFFF] rounded-lg shadow-sm border-[#7b7b7b] border-b-4 p-4 below-md:w-full">
+          <div className="flex flex-col gap-2">
+            <p className="text-[16px] text-[#575F6DCC] font-bold">Net Income</p>
+            <p className="text-[20px] text-[#2D3748] font-bold">
+              {loading ? <Skeleton width={100} /> : formatAmount(netIncome)}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="shadow-sm border border-[#E4E4EF] rounded-md flex-grow flex flex-col">
+      <div className="shadow-sm border border-[#E4E4EF] rounded-md flex-grow flex flex-col mt-4">
         <div className="w-full rounded-md">
           <table className="w-full border-collapse text-[12px] below-md:text-[11px] tablet:text-[11px] table-auto rounded-md">
             <thead className="bg-[#0F1044]">
@@ -416,7 +659,7 @@ const PLReport: FC = () => {
                       className="text-left px-4 py-2 text-[#FFFFFF] font-normal text-[14px] below-md:text-[12px] tablet:text-[13px]"
                       style={{
                         minWidth: `${header.column.getSize()}px`,
-                        width: `${header.column.getSize()}px`, // Removed isScrollbarVisible logic
+                        width: `${header.column.getSize()}px`,
                       }}
                     >
                       {flexRender(
@@ -487,7 +730,7 @@ const PLReport: FC = () => {
                         className="px-4 py-1.5 text-[13px] text-right pr-3 below-md:text-[11px] tablet:text-[12px]"
                         style={{ minWidth: `${columns[2].size}px` }}
                       >
-                        100.00%
+                        100%
                       </td>
                     </tr>
                   )}
