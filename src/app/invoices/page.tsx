@@ -201,6 +201,21 @@ const Invoices = () => {
   ];
 
   const navigateToInvoice = (invoiceId: any) => {
+    const navigationId = Date.now().toString();
+    sessionStorage.setItem(
+      "invoicesState",
+      JSON.stringify({
+        selectedOption: selectedOption ? { name: selectedOption.name, id: selectedOption.id } : null,
+        selectedDateRange,
+        startDate: startDate ? startDate.toISOString() : null,
+        endDate: endDate ? endDate.toISOString() : null,
+        globalFilter,
+        pageIndex: table.getState().pagination.pageIndex,
+        navigationId,
+      })
+    );
+    sessionStorage.setItem("fromInvoiceDetails", navigationId);
+
     const encodedId = btoa(invoiceId);
     const urlSafeEncodedId = encodedId
       ?.replace(/\+/g, "-")
@@ -321,7 +336,7 @@ const Invoices = () => {
     fetchData(globalFilter);
   }, [pageIndex, pageSize]);
 
-  const getUserStore = async () => {
+  const getUserStore = async (restoredSelectedOption: { name: string; id: number } | null) => {
     try {
       const response = await sendApiRequest({ mode: "getUserStore" });
       if (response?.status === 200) {
@@ -331,20 +346,30 @@ const Invoices = () => {
           name: `${store.name} - ${store.location || "Unknown Location"}`, // Ensure location is handled
           id: store.id,
         }));
-        
-        setStore(formattedStores); // Update store state with formatted data
-        
-        if (stores.length > 0) {
+
+        setStore(formattedStores);
+
+        if (restoredSelectedOption && formattedStores.some((store: any) => store.id === restoredSelectedOption.id)) {
+          setSelectedOption({
+            name: restoredSelectedOption.name,
+            id: restoredSelectedOption.id,
+          });
+        } else if (formattedStores.length > 0) {
           setSelectedOption({
             name: `${stores[0].name} - ${stores[0].location || "Unknown Location"}`,
             id: stores[0].id,
           });
+        } else {
+          setSelectedOption(null);
         }
       } else {
         handleError(response?.message);
+        setSelectedOption(null);
       }
     } catch (error) {
       console.error("Error fetching stores:", error);
+      handleError("Failed to fetch stores");
+      setSelectedOption(null);
     }
   };
 
@@ -373,28 +398,67 @@ const Invoices = () => {
 
   useEffect(() => {
     if (isVerifiedUser) {
+      const fromInvoiceDetails = sessionStorage.getItem("fromInvoiceDetails");
+      const savedState = sessionStorage.getItem("invoicesState");
+
       const today = new Date();
       const currentYear = today.getFullYear();
       const currentMonth = today.getMonth();
-      setStartDate(new Date(currentYear, currentMonth, 1));
-      setEndDate(new Date(currentYear, currentMonth + 1, 0)); // Last day of current month
-      getUserStore();
-      // fetchDropdownData();
+      const defaultStartDate = new Date(currentYear, currentMonth, 1);
+      const defaultEndDate = new Date(currentYear, currentMonth + 1, 0);
+
+      let restoredSelectedOption: { name: string; id: number } | null = null;
+
+      if (fromInvoiceDetails && savedState) {
+        try {
+          const parsedState = JSON.parse(savedState);
+          if (parsedState.navigationId === fromInvoiceDetails) {
+            setSelectedDateRange(parsedState.selectedDateRange || "This Month (MTD)");
+            setGlobalFilter(parsedState.globalFilter || "");
+            setStartDate(
+              parsedState.startDate ? new Date(parsedState.startDate) : defaultStartDate
+            );
+            setEndDate(
+parsedState.endDate ? new Date(parsedState.endDate) : defaultEndDate
+            );
+            if (parsedState.selectedOption && parsedState.selectedOption.id && parsedState.selectedOption.name) {
+              restoredSelectedOption = {
+                name: parsedState.selectedOption.name,
+                id: parsedState.selectedOption.id,
+              };
+            }
+            if (parsedState.pageIndex) {
+              table.setPageIndex(parsedState.pageIndex);
+            }
+          } else {
+            setSelectedDateRange("This Month (MTD)");
+            setGlobalFilter("");
+            setStartDate(defaultStartDate);
+            setEndDate(defaultEndDate);
+            table.setPageIndex(0);
+          }
+        } catch (error) {
+          console.error("Error parsing saved state:", error);
+          setSelectedDateRange("This Month (MTD)");
+          setGlobalFilter("");
+          setStartDate(defaultStartDate);
+          setEndDate(defaultEndDate);
+          table.setPageIndex(0);
+        }
+      } else {
+        setSelectedDateRange("This Month (MTD)");
+        setGlobalFilter("");
+        setStartDate(defaultStartDate);
+        setEndDate(defaultEndDate);
+        table.setPageIndex(0);
+      }
+
+      sessionStorage.removeItem("invoicesState");
+      sessionStorage.removeItem("fromInvoiceDetails");
+
+      getUserStore(restoredSelectedOption);
     }
   }, [isVerifiedUser]);
-
-  // const fetchDropdownData = async () => {
-  //   try {
-  //     const response = await sendApiRequest({ mode: "getAllStores" });
-  //     if (response?.status === 200) {
-  //       setStore(response?.data?.stores || []);
-  //     } else {
-  //       handleError(response?.message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching stores:", error);
-  //   }
-  // };
 
   useEffect(() => {
     if (typeof window !== "undefined") {

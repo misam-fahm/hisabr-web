@@ -1,31 +1,45 @@
-'use client';
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation';
-import { sendApiRequest } from '@/utils/apiUtils';
-import { ToastNotificationProps } from '@/Components/UI/ToastNotification/ToastNotification';
+"use client";
+import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { sendApiRequest } from "@/utils/apiUtils";
+import ToastNotification, {
+  ToastNotificationProps,
+} from "@/Components/UI/ToastNotification/ToastNotification";
+import Loading from "@/Components/UI/Themes/Loading";
+import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 
-interface TableRow {
-  invoicedate: string;
-  itemCode: string;
+interface InvoiceDetail {
+  itemcode: string;
   description: string;
   brand: string;
   category: string;
   quantity: number;
-  units: string;
-  packSize: string;
-  invtValue: number;
-  unitPrice: number;
+  unit: string;
+  packsize: string;
+  invtvalue: number;
+  unitprice: number;
   tax: string;
-  total: string;
+  extendedprice: string;
 }
+
+interface InvoiceData {
+  invoicedate: string;
+  invoicenumber: string;
+  storename: string;
+  duedate: string;
+  producttotal: number;
+  misc: number;
+  subtotal: number;
+  tax: number;
+  total: number;
+  invoicedetail: InvoiceDetail[];
+}
+
 const InvoiceDetails = () => {
-
-
-
-  const { invoiceid }: any = useParams(); // Extract the encoded ID from the URL
-  const decodedInvoiceId = atob(invoiceid);
-  const [data, setData] = useState<any>([]);
-  const [totalItems, setTotalItems] = useState<number>(0);
+  const { invoiceid }: any = useParams();
+  const router = useRouter();
+  const decodedInvoiceId = atob(invoiceid.replace(/-/g, "+").replace(/_/g, "/"));
+  const [data, setData] = useState<InvoiceData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
@@ -36,42 +50,45 @@ const InvoiceDetails = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-
-
         const response: any = await sendApiRequest({
           mode: "getInvoiceDetails",
-          invoiceid: Number(decodedInvoiceId)
+          invoiceid: Number(decodedInvoiceId),
         });
 
         if (response?.status === 200) {
-          setData(response?.data?.invoice[0] || []);
-          // response?.data?.total > 0 &&
-          //   setTotalItems(response?.data?.total || 0);
+          setData(response?.data?.invoice[0] || null);
         } else {
           setCustomToast({
-            ...customToast,
-            message: response?.message,
+            message: response?.message || "Failed to fetch invoice details.",
             type: "error",
           });
         }
       } catch (error) {
         console.error("Error fetching data:", error);
+        setCustomToast({
+          message: "An error occurred while fetching invoice details.",
+          type: "error",
+        });
       } finally {
         setLoading(false);
       }
     };
     fetchData();
-  }, []);
-
+  }, [decodedInvoiceId]);
 
   return (
     <main
       className="max-h-[calc(100vh-80px)] overflow-auto px-6 below-md:px-3"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className='flex w-full items-start mt-6 mb-6 below-md:mt-4 below-md:mb-4'>
-        <div className='w-[14%] below-md:hidden items-start  cursor-pointer' onClick={() => window.history.back()}>
-          <img src='/images/webbackicon.svg' alt='Back Arrow' className='w-7 h-7' />
+      <ToastNotification message={customToast.message} type={customToast.type} />
+      {loading && <Loading />}
+      <div className="flex w-full items-start mt-6 mb-6 below-md:mt-4 below-md:mb-4">
+        <div
+          className="w-[14%] below-md:hidden items-start cursor-pointer"
+          onClick={() => router.back()}
+        >
+          <img src="/images/webbackicon.svg" alt="Back Arrow" className="w-7 h-7" />
         </div>
         <div className="flex justify-center gap-6  w-[70%] below-md:w-[100%] below-md:flex below-md:flex-col below-md:gap-4">
 
