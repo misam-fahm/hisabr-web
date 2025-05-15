@@ -360,168 +360,210 @@ const PLReport: FC = () => {
     : "Select a Store";
 
 const downloadPDF = () => {
-  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const doc = new jsPDF();
 
   // Set document properties
-  doc.setProperties({
-    title: `Income Statement ${storeLocation} ${selectedYear}`,
-    author: storeLocation,
-    creator: 'Financial Reporting System',
-  });
-
-  // Fonts
-  doc.setFont('helvetica', 'normal');
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(16);
 
   // Header
-  const addHeader = (page: number) => {
-    doc.setFontSize(16);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Income Statement', 105, 15, { align: 'center' });
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'normal');
-    doc.text(storeLocation, 105, 22, { align: 'center' });
-    doc.text(`For the Year Ended December 31, ${selectedYear}`, 105, 28, { align: 'center' });
-    doc.setDrawColor(0, 0, 0);
-    doc.setLineWidth(0.5);
-    doc.line(10, 32, 200, 32);
-  };
-
-  // Footer
-  const addFooter = (page: number) => {
-    const pageCount = (doc as any).getNumberOfPages();
-    doc.setPage(page);
-    doc.setFontSize(8);
-    const today = new Date().toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-    doc.text(`Prepared by: ${storeLocation}`, 10, 287);
-    doc.text(`Generated on: ${today}`, 105, 287, { align: 'center' });
-    doc.text(`Page ${page} of ${pageCount}`, 200, 287, { align: 'right' });
-  };
-
-  // Table Styling
-  const tableStyles = {
-    theme: 'grid' as const,
-    headStyles: {
-      fillColor: [255, 255, 255] as [number, number, number],
-      textColor: [0, 0, 0] as [number, number, number],
-      fontStyle: 'bold' as const,
-      halign: 'left' as const,
-      fontSize: 10,
-      cellPadding: 3,
-    },
-    bodyStyles: {
-      fontSize: 10,
-      textColor: [0, 0, 0] as [number, number, number],
-      cellPadding: 3,
-      halign: 'left' as const,
-      fillColor: [255, 255, 255] as [number, number, number],
-    },
-    columnStyles: {
-      0: { cellWidth: 90, halign: 'left' as const },
-      1: { cellWidth: 60, halign: 'right' as const },
-      2: { cellWidth: 40, halign: 'right' as const },
-    },
-    didDrawCell: (data: any) => {
-      if (data.section === 'body' && data.row.index === data.table.body.length - 1) {
-        data.cell.styles.fontStyle = 'bold';
-      }
-    },
-  };
-
-  // Add first page header
-  addHeader(1);
-  let currentY = 40;
+  doc.text("Income Statement", 105, 20, { align: "center" });
+  doc.setFontSize(12);
+  doc.text(storeLocation, 105, 30, { align: "center" });
+  doc.text(`For the year ended December 31, ${selectedYear}`, 105, 38, {
+    align: "center",
+  });
 
   // Income Section
-  const incomeData = [['Sale of Goods', formatAmount(netSales), '100.0%']];
+  const incomeData = [
+    ["Sale of Goods", formatAmount(netSales), calculatePercentage(netSales, netSales)],
+  ];
   const totalIncome = netSales;
   autoTable(doc, {
-    startY: currentY,
-    head: [['Income', '', '']],
-    body: [...incomeData, ['Total Income', formatAmount(totalIncome), '100.0%']],
-    ...tableStyles,
+    startY: 50,
+    head: [["Income", "Amount", "%"]],
+    body: [...incomeData, ["Total Income", formatAmount(totalIncome), "100.0%"]],
+    theme: "plain",
+    headStyles: {
+      fillColor: [255, 255, 255],
+      textColor: [0, 0, 0],
+      fontStyle: "bold",
+      halign: "left",
+      fontSize: 10,
+    },
+    styles: {
+      fontSize: 10,
+      cellPadding: { top: 2, right: 4, bottom: 2, left: 4 },
+      halign: "left",
+    },
+    columnStyles: {
+      0: { cellWidth: 90, halign: "left" },
+      1: { cellWidth: 60, halign: "center" },
+      2: { cellWidth: 40, halign: "center" },
+    },
+    didDrawCell: (data) => {
+      if (data.section === "head" && data.row.index === 0) {
+        const textWidth = doc.getTextWidth("Income");
+        doc.line(
+          data.cell.x,
+          data.cell.y + data.cell.height,
+          data.cell.x + textWidth,
+          data.cell.y + data.cell.height
+        );
+      }
+      if (data.row.index === incomeData.length && data.section === "body") {
+        data.cell.styles.fontStyle = "bold";
+      }
+    },
   });
-  currentY = (doc as any).lastAutoTable.finalY + 10;
 
   // Cost of Goods Sold Section
   const cogsData = [
-    ['Cost of Goods', formatAmount(totalCogsAmount), calculatePercentage(totalCogsAmount, totalIncome)],
+    ["Cost of Goods", formatAmount(totalCogsAmount), calculatePercentage(totalCogsAmount, totalIncome)],
   ];
   const totalCogs = totalCogsAmount;
   autoTable(doc, {
-    startY: currentY,
-    head: [['Cost of Goods Sold', '', '']],
-    body: [...cogsData, ['Total Cost of Goods Sold', formatAmount(totalCogs), calculatePercentage(totalCogs, totalIncome)]],
-    ...tableStyles,
+    startY: (doc as any).lastAutoTable.finalY + 10,
+    head: [["Cost of Goods Sold", "Amount", "%"]],
+    body: [...cogsData, ["Total Cost of Goods Sold", formatAmount(totalCogs), calculatePercentage(totalCogs, totalIncome)]],
+    theme: "plain",
+    headStyles: {
+      fillColor: [255, 255, 255],
+      textColor: [0, 0, 0],
+      fontStyle: "bold",
+      halign: "left",
+      fontSize: 10,
+    },
+    styles: {
+      fontSize: 10,
+      cellPadding: { top: 2, right: 4, bottom: 2, left: 4 },
+      halign: "left",
+    },
+    columnStyles: {
+      0: { cellWidth: 90, halign: "left" },
+      1: { cellWidth: 60, halign: "center" },
+      2: { cellWidth: 40, halign: "center" },
+    },
+    didDrawCell: (data) => {
+      if (data.section === "head" && data.row.index === 0) {
+        const textWidth = doc.getTextWidth("Cost of Goods Sold");
+        doc.line(
+          data.cell.x,
+          data.cell.y + data.cell.height,
+          data.cell.x + textWidth,
+          data.cell.y + data.cell.height
+        );
+      }
+      if (data.row.index === cogsData.length && data.section === "body") {
+        data.cell.styles.fontStyle = "bold";
+      }
+    },
   });
-  currentY = (doc as any).lastAutoTable.finalY + 10;
 
   // Gross Profit Section
   const grossProfit = totalIncome - totalCogs;
   autoTable(doc, {
-    startY: currentY,
-    body: [['Gross Profit', formatAmount(grossProfit), calculatePercentage(grossProfit, totalIncome)]],
-    theme: 'grid' as const,
+    startY: (doc as any).lastAutoTable.finalY + 10,
+    body: [["Gross Profit", formatAmount(grossProfit), calculatePercentage(grossProfit, totalIncome)]],
+    theme: "plain",
     styles: {
       fontSize: 10,
-      cellPadding: 3,
-      fontStyle: 'bold' as const,
-      textColor: [0, 0, 0],
-      fillColor: [255, 255, 255],
+      cellPadding: { top: 2, right: 4, bottom: 2, left: 4 },
+      fontStyle: "bold",
+      halign: "left",
     },
     columnStyles: {
-      0: { cellWidth: 90, halign: 'left' as const },
-      1: { cellWidth: 60, halign: 'right' as const },
-      2: { cellWidth: 40, halign: 'right' as const },
+      0: { cellWidth: 90, halign: "left" },
+      1: { cellWidth: 60, halign: "center" },
+      2: { cellWidth: 40, halign: "center" },
     },
   });
-  currentY = (doc as any).lastAutoTable.finalY + 10;
 
   // Operating Expenses Section
   const expensesData = data.map((row) => [
     row.label,
     formatAmount(row.value),
-    calculatePercentage(row.value, totalAmount), // Changed from netSales to totalAmount
+    calculatePercentage(row.value, totalIncome),
   ]);
   autoTable(doc, {
-    startY: currentY,
-    head: [['Operating Expenses', '', '']],
-    body: [...expensesData, ['Total Operating Expenses', formatAmount(totalAmount), '100.0%']], // Total is 100%
-    ...tableStyles,
+    startY: (doc as any).lastAutoTable.finalY + 10,
+    head: [["Operating Expenses", "Amount", "%"]],
+    body: [...expensesData, ["Total Operating Expenses", formatAmount(totalAmount), calculatePercentage(totalAmount, totalIncome)]],
+    theme: "plain",
+    headStyles: {
+      fillColor: [255, 255, 255],
+      textColor: [0, 0, 0],
+      fontStyle: "bold",
+      halign: "left",
+      fontSize: 10,
+    },
+    styles: {
+      fontSize: 10,
+      cellPadding: { top: 2, right: 4, bottom: 2, left: 4 },
+      halign: "left",
+    },
+    columnStyles: {
+      0: { cellWidth: 90, halign: "left" },
+      1: { cellWidth: 60, halign: "center" },
+      2: { cellWidth: 40, halign: "center" },
+    },
+    didDrawCell: (data) => {
+      if (data.section === "head" && data.row.index === 0) {
+        const textWidth = doc.getTextWidth("Operating Expenses");
+        doc.line(
+          data.cell.x,
+          data.cell.y + data.cell.height,
+          data.cell.x + textWidth,
+          data.cell.y + data.cell.height
+        );
+      }
+      if (data.row.index === expensesData.length && data.section === "body") {
+        data.cell.styles.fontStyle = "bold";
+      }
+    },
   });
-  currentY = (doc as any).lastAutoTable.finalY + 10;
 
   // Net Income Section
   autoTable(doc, {
-    startY: currentY,
-    body: [['Net Income', formatAmount(netIncome), calculatePercentage(netIncome, totalIncome)]],
-    theme: 'grid' as const,
+    startY: (doc as any).lastAutoTable.finalY + 10,
+    body: [["Net Income", formatAmount(netIncome), calculatePercentage(netIncome, totalIncome)]],
+    theme: "plain",
     styles: {
       fontSize: 10,
-      cellPadding: 3,
-      fontStyle: 'bold' as const,
-      textColor: [0, 0, 0],
-      fillColor: [255, 255, 255],
+      cellPadding: { top: 2, right: 4, bottom: 2, left: 4 },
+      fontStyle: "bold",
+      halign: "left",
     },
     columnStyles: {
-      0: { cellWidth: 90, halign: 'left' as const },
-      1: { cellWidth: 60, halign: 'right' as const },
-      2: { cellWidth: 40, halign: 'right' as const },
+      0: { cellWidth: 90, halign: "left" },
+      1: { cellWidth: 60, halign: "center" },
+      2: { cellWidth: 40, halign: "center" },
     },
   });
 
-  // Add footers to all pages
-  const pageCount = (doc as any).getNumberOfPages();
+  // Footer
+  const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
-    addFooter(i);
+    doc.setPage(i);
+    const today = new Date().toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+    doc.setFontSize(8);
+    doc.text(`${storeLocation}`, 20, doc.internal.pageSize.height - 10);
+    doc.text(today, 105, doc.internal.pageSize.height - 10, {
+      align: "center",
+    });
+    doc.text(`Page ${i} of ${pageCount}`, 190, doc.internal.pageSize.height - 10, {
+      align: "right",
+    });
   }
 
   // Save the PDF
   doc.save(`Income_Statement_${storeLocation}_${selectedYear}.pdf`);
 };
+
   return (
     <main
       className={`relative px-6 below-md:px-3 overflow-auto border-none h-full ${
