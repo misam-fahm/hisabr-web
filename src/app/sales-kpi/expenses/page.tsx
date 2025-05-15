@@ -246,58 +246,51 @@ const ExpensesPage = () => {
   const total = categories.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <main
-      className="relative px-6 below-md:px-3 max-h-[calc(100vh-60px)] overflow-hidden"
-      style={{ scrollbarWidth: "none" }}
-    >
-      <div className="sticky top-0 z-20 bg-[#f7f8f9] px-6 below-md:px-3 py-4">
-        <div className="flex items-center justify-between">
-          <button
-            onClick={handleBackClick}
-            className="flex items-center gap-2 text-[#0F1044] hover:text-[#36A2EB] font-bold text-xl md:text-2xl transition-colors"
+    <div className="w-full flex flex-col p-4 md:p-6">
+      {/* Header with Back Button and Title */}
+      <div className="mb-4 flex items-center justify-between">
+        <button
+          onClick={handleBackClick}
+          className="flex items-center gap-2 text-[#0F1044] hover:text-[#36A2EB] font-bold text-xl md:text-2xl transition-colors"
+        >
+          <svg
+            className="w-5 h-5 md:w-6 md:h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <svg
-              className="w-5 h-5 md:w-6 md:h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            Operating Expenses
-          </button>
-        </div>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          Operating Expenses
+        </button>
       </div>
 
-      <div
-        className="px-6 below-md:px-3 overflow-y-auto scrollbar-none"
-        style={{ maxHeight: "calc(100vh - 120px)" }}
-      >
-        {/* Mobile and Tablet View (below 2xl) */}
-        <div className="flex flex-col gap-4 2xl:hidden">
-          <div className="w-full flex justify-center">
-            {canRenderChart && categories.length > 0 ? (
-              <ExpensesChart
-                storeid={pageData!.storeid}
-                startdate={pageData!.startdate}
-                enddate={pageData!.enddate}
-                months={pageData!.months}
-                categories={categories}
-                colors={chartColors}
-              />
-            ) : (
-              <Skeleton circle height={300} width={300} className="max-w-[300px]" />
-            )}
-          </div>
-          <div className="w-full flex justify-center items-center">
-            <div className="w-full max-w-[99%] md:max-w-full">
-              {categories.length > 0 ? (
+      {/* Mobile and Tablet View (below 2xl) */}
+      <div className="flex flex-col gap-4 2xl:hidden">
+        <div className="w-full flex justify-center">
+          {canRenderChart && categories.length > 0 ? (
+            <ExpensesChart
+              storeid={pageData!.storeid}
+              startdate={pageData!.startdate}
+              enddate={pageData!.enddate}
+              months={pageData!.months}
+              categories={categories}
+              colors={chartColors}
+            />
+          ) : (
+            <Skeleton circle height={300} width={300} className="max-w-[300px]" />
+          )}
+        </div>
+        <div className="w-full flex justify-center items-center">
+          <div className="w-full max-w-[99%] md:max-w-full">
+            {categories.length > 0 ? (
+              <div className="md:max-h-[400px] md:overflow-y-auto">
                 <table className="w-full border-collapse text-white table-fixed rounded-[10px] border border-[#E4E4EF]">
                   <thead className="bg-[#0F1044] top-0 z-10 sticky">
                     <tr>
@@ -335,77 +328,77 @@ const ExpensesPage = () => {
                     ))}
                   </tbody>
                 </table>
-              ) : (
-                renderTableSkeleton(true)
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Desktop View (2xl and above) */}
-        <div className="hidden 2xl:flex 2xl:flex-row 2xl:gap-6 flex-1">
-          <div className="w-full 2xl:w-2/3 flex justify-center items-center">
-            {canRenderChart && categories.length > 0 ? (
-              <ExpensesChart
-                storeid={pageData!.storeid}
-                startdate={pageData!.startdate}
-                enddate={pageData!.enddate}
-                months={pageData!.months}
-                categories={categories}
-                colors={chartColors}
-              />
+              </div>
             ) : (
-              <Skeleton circle height={450} width={450} className="max-w-[450px]" />
+              renderTableSkeleton(true)
             )}
-          </div>
-          <div className="w-full 2xl:w-1/3 flex justify-center items-center">
-            <div className="w-full max-w-[31rem]">
-              {categories.length > 0 ? (
-                <table className="w-full border-collapse text-white table-fixed rounded-[10px] border border-[#E4E4EF]">
-                  <thead className="bg-[#0F1044] top-0 z-10">
-                    <tr>
-                      <th className="text-center px-4 py-2 text-[#FFFFFF] font-normal text-[15px] border-r border-[#E4E4EF] w-[55%]">
-                        Label
-                      </th>
-                      <th className="text-center px-4 py-2 text-[#FFFFFF] font-normal text-[15px] border-r border-[#E4E4EF] w-[22.5%]">
-                        Amount
-                      </th>
-                      <th className="text-center px-4 py-2 text-[#FFFFFF] font-normal text-[15px] w-[22.5%]">
-                        %
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {categories.map((item, index) => (
-                      <tr
-                        key={index}
-                        className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
-                      >
-                        <td className="px-4 py-1.5 text-[#636363] text-[14px] border-r borderhes: ['#E4E4EF] text-left truncate flex items-center gap-2">
-                          <span
-                            className="w-3 h-3 rounded-full"
-                            style={{ backgroundColor: chartColors[index] || "#E0E0E0" }}
-                          ></span>
-                          {item.label || "N/A"}
-                        </td>
-                        <td className="px-4 py-1.5 text-[#636363] text-[14px] text-right border-r border-[#E4E4EF]">
-                          ${Math.round(item.value).toLocaleString()}
-                        </td>
-                        <td className="px-4 py-1.5 text-[#636363] text-[14px] text-right">
-                          {((item.value / total) * 100).toFixed(2)}%
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                renderTableSkeleton(false)
-              )}
-            </div>
           </div>
         </div>
       </div>
-    </main>
+
+      {/* Desktop View (2xl and above) */}
+      <div className="hidden 2xl:flex 2xl:flex-row 2xl:gap-6 flex-1">
+        <div className="w-full 2xl:w-2/3 flex justify-center items-center">
+          {canRenderChart && categories.length > 0 ? (
+            <ExpensesChart
+              storeid={pageData!.storeid}
+              startdate={pageData!.startdate}
+              enddate={pageData!.enddate}
+              months={pageData!.months}
+              categories={categories}
+              colors={chartColors}
+            />
+          ) : (
+            <Skeleton circle height={450} width={450} className="max-w-[450px]" />
+          )}
+        </div>
+        <div className="w-full 2xl:w-1/3 flex justify-center items-center">
+          <div className="w-full max-w-[31rem]">
+            {categories.length > 0 ? (
+              <table className="w-full border-collapse text-white table-fixed rounded-[10px] border border-[#E4E4EF]">
+                <thead className="bg-[#0F1044] top-0 z-10">
+                  <tr>
+                    <th className="text-center px-4 py-2 text-[#FFFFFF] font-normal text-[15px] border-r border-[#E4E4EF] w-[55%]">
+                      Label
+                    </th>
+                    <th className="text-center px-4 py-2 text-[#FFFFFF] font-normal text-[15px] border-r border-[#E4E4EF] w-[22.5%]">
+                      Amount
+                    </th>
+                    <th className="text-center px-4 py-2 text-[#FFFFFF] font-normal text-[15px] w-[22.5%]">
+                      %
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {categories.map((item, index) => (
+                    <tr
+                      key={index}
+                      className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
+                    >
+                      <td className="px-4 py-1.5 text-[#636363] text-[14px] border-r border-[#E4E4EF] text-left truncate flex items-center gap-2">
+                        <span
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: chartColors[index] || "#E0E0E0" }}
+                        ></span>
+                        {item.label || "N/A"}
+                      </td>
+                      <td className="px-4 py-1.5 text-[#636363] text-[14px] text-right border-r border-[#E4E4EF]">
+                        ${Math.round(item.value).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-1.5 text-[#636363] text-[14px] text-right">
+                        {((item.value / total) * 100).toFixed(2)}%
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              renderTableSkeleton(false)
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
