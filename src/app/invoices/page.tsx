@@ -662,13 +662,10 @@ parsedState.endDate ? new Date(parsedState.endDate) : defaultEndDate
     }
   };
 
-  return (
+return (
     <main
-    className={`relative px-6 below-md:px-3 overflow-auto border-none ${
-      data?.length > 10 ? "max-h-[calc(100vh-180px)]" : "h-[600px]"
-    }`}
-    
-      style={{ scrollbarWidth: "thin" }}
+      className="relative px-6 below-md:px-3 max-h-[calc(100vh-180px)] overflow-hidden" 
+      style={{ scrollbarWidth: "none" }}
     >
       <ToastNotification
         message={customToast?.message}

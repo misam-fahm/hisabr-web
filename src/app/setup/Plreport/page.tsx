@@ -374,16 +374,16 @@ const downloadPDF = () => {
 
   // Header
   const addHeader = (page: number) => {
-    doc.setFontSize(16);
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text('Income Statement', 105, 15, { align: 'center' });
-    doc.setFontSize(12);
+    doc.setFontSize(11);
     doc.setFont('helvetica', 'normal');
-    doc.text(storeLocation, 105, 22, { align: 'center' });
-    doc.text(`For the Year Ended December 31, ${selectedYear}`, 105, 28, { align: 'center' });
+    doc.text(storeLocation, 105, 21, { align: 'center' });
+    doc.text(`For the Year Ended December 31, ${selectedYear}`, 105, 27, { align: 'center' });
     doc.setDrawColor(0, 0, 0);
-    doc.setLineWidth(0.5);
-    doc.line(10, 32, 200, 32);
+    doc.setLineWidth(0.3);
+    doc.line(10, 30, 200, 30);
   };
 
   // Footer
@@ -401,21 +401,21 @@ const downloadPDF = () => {
     doc.text(`Page ${page} of ${pageCount}`, 200, 287, { align: 'right' });
   };
 
-  // Table Styling
+  // ✅ Uniform table styles with TypeScript-safe color tuples
   const tableStyles = {
     theme: 'grid' as const,
     headStyles: {
       fillColor: [255, 255, 255] as [number, number, number],
       textColor: [0, 0, 0] as [number, number, number],
       fontStyle: 'bold' as const,
+      fontSize: 11,
+      cellPadding: 2,
       halign: 'left' as const,
-      fontSize: 10,
-      cellPadding: 3,
     },
     bodyStyles: {
-      fontSize: 10,
+      fontSize: 11,
       textColor: [0, 0, 0] as [number, number, number],
-      cellPadding: 3,
+      cellPadding: 2,
       halign: 'left' as const,
       fillColor: [255, 255, 255] as [number, number, number],
     },
@@ -431,9 +431,9 @@ const downloadPDF = () => {
     },
   };
 
-  // Add first page header
+  // Add header
   addHeader(1);
-  let currentY = 40;
+  let currentY = 38; // Spacing after header (includes padding before Income)
 
   // Income Section
   const incomeData = [['Sale of Goods', formatAmount(netSales), '100.0%']];
@@ -444,12 +444,10 @@ const downloadPDF = () => {
     body: [...incomeData, ['Total Income', formatAmount(totalIncome), '100.0%']],
     ...tableStyles,
   });
-  currentY = (doc as any).lastAutoTable.finalY + 10;
+  currentY = (doc as any).lastAutoTable.finalY + 6;
 
   // Cost of Goods Sold Section
-  const cogsData = [
-    ['Cost of Goods', formatAmount(totalCogsAmount), calculatePercentage(totalCogsAmount, totalIncome)],
-  ];
+  const cogsData = [['Cost of Goods', formatAmount(totalCogsAmount), calculatePercentage(totalCogsAmount, totalIncome)]];
   const totalCogs = totalCogsAmount;
   autoTable(doc, {
     startY: currentY,
@@ -457,59 +455,43 @@ const downloadPDF = () => {
     body: [...cogsData, ['Total Cost of Goods Sold', formatAmount(totalCogs), calculatePercentage(totalCogs, totalIncome)]],
     ...tableStyles,
   });
-  currentY = (doc as any).lastAutoTable.finalY + 10;
+  currentY = (doc as any).lastAutoTable.finalY + 6;
 
   // Gross Profit Section
   const grossProfit = totalIncome - totalCogs;
   autoTable(doc, {
     startY: currentY,
     body: [['Gross Profit', formatAmount(grossProfit), calculatePercentage(grossProfit, totalIncome)]],
-    theme: 'grid' as const,
+    ...tableStyles,
     styles: {
-      fontSize: 10,
-      cellPadding: 3,
-      fontStyle: 'bold' as const,
-      textColor: [0, 0, 0],
-      fillColor: [255, 255, 255],
-    },
-    columnStyles: {
-      0: { cellWidth: 90, halign: 'left' as const },
-      1: { cellWidth: 60, halign: 'right' as const },
-      2: { cellWidth: 40, halign: 'right' as const },
+      ...tableStyles.bodyStyles,
+      fontStyle: 'bold',
     },
   });
-  currentY = (doc as any).lastAutoTable.finalY + 10;
+  currentY = (doc as any).lastAutoTable.finalY + 6;
 
   // Operating Expenses Section
   const expensesData = data.map((row) => [
     row.label,
     formatAmount(row.value),
-    calculatePercentage(row.value, totalAmount), // Changed from netSales to totalAmount
+    calculatePercentage(row.value, totalAmount),
   ]);
   autoTable(doc, {
     startY: currentY,
     head: [['Operating Expenses', '', '']],
-    body: [...expensesData, ['Total Operating Expenses', formatAmount(totalAmount), '100.0%']], // Total is 100%
+    body: [...expensesData, ['Total Operating Expenses', formatAmount(totalAmount), '100.0%']],
     ...tableStyles,
   });
-  currentY = (doc as any).lastAutoTable.finalY + 10;
+  currentY = (doc as any).lastAutoTable.finalY + 6;
 
   // Net Income Section
   autoTable(doc, {
     startY: currentY,
     body: [['Net Income', formatAmount(netIncome), calculatePercentage(netIncome, totalIncome)]],
-    theme: 'grid' as const,
+    ...tableStyles,
     styles: {
-      fontSize: 10,
-      cellPadding: 3,
-      fontStyle: 'bold' as const,
-      textColor: [0, 0, 0],
-      fillColor: [255, 255, 255],
-    },
-    columnStyles: {
-      0: { cellWidth: 90, halign: 'left' as const },
-      1: { cellWidth: 60, halign: 'right' as const },
-      2: { cellWidth: 40, halign: 'right' as const },
+      ...tableStyles.bodyStyles,
+      fontStyle: 'bold',
     },
   });
 
@@ -522,6 +504,8 @@ const downloadPDF = () => {
   // Save the PDF
   doc.save(`Income_Statement_${storeLocation}_${selectedYear}.pdf`);
 };
+
+
   return (
     <main
       className={`relative px-6 below-md:px-3 overflow-auto border-none h-full ${
