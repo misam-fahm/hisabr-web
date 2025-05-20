@@ -224,7 +224,7 @@ const fetchData = async () => {
           value: (config.rent_mortgage_exp || 0) * months,
         },
         {
-          label: "Labor Salary",
+          label: "Labor Operator Salary",
           value: (config.labor_operat_salary_exp || 0) * months,
         },
         ...(royaltyAmount > 0.50
@@ -238,7 +238,7 @@ const fetchData = async () => {
         ...(laborCostAmount > 0.50
           ? [
               {
-                label: `Labor Cost (${payrollTaxPercentage}%)`,
+                label: `Labor Cost`,
                 value: laborCostAmount,
               },
             ]
