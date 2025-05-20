@@ -85,7 +85,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
     { title: "Invoices", src: "invoices", path: "/invoices" },
     { title: "Expenses", src: "expences", path: "/expenses" },
     {
-      title: "Cash Reconciliation",
+      title: "Cash Recon.",
       src: "cash-register-solid",
       path: "/cashreconc",
     },
