@@ -171,99 +171,121 @@ const PLReport: FC = () => {
     }
   }, []);
 
-  const fetchData = async () => {
-    if (!pageData && !selectedStore) return;
-    setLoading(true);
-    try {
-      const response: any = await sendApiRequest({
-        mode: "getplreport",
-        storeid: selectedStore?.id || pageData?.storeid || 69,
-        startdate: `${selectedYear}-01-01`,
-        enddate: `${selectedYear}-12-31`,
-        search: globalFilter,
-      });
+const fetchData = async () => {
+  if (!pageData && !selectedStore) return;
+  setLoading(true);
+  try {
+    const response: any = await sendApiRequest({
+      mode: "getplreport",
+      storeid: selectedStore?.id || pageData?.storeid || 69,
+      startdate: `${selectedYear}-01-01`,
+      enddate: `${selectedYear}-12-31`,
+      search: globalFilter,
+    });
 
-      if (response?.status === 200) {
-        const saleskpi = response?.data?.expenses[0];
-        const config = saleskpi?.config || {};
-        const additionalExpenses = saleskpi?.additional_expense || [];
-        const cogs = saleskpi?.cogs || [];
+    if (response?.status === 200) {
+      const saleskpi = response?.data?.expenses[0];
+      const config = saleskpi?.config || {};
+      const additionalExpenses = saleskpi?.additional_expense || [];
+      const cogs = saleskpi?.cogs || [];
 
-        const months = 12; // Define months (or calculate if dynamic)
+      const months = 12; // Define months (or calculate if dynamic)
 
-        const payrollTaxAmt =
-          saleskpi?.labour_cost && config?.payroll_tax
-            ? saleskpi.labour_cost * (config.payroll_tax / 100)
-            : 0;
+      const payrollTaxAmt =
+        saleskpi?.labour_cost && config?.payroll_tax
+          ? saleskpi.labour_cost * (config.payroll_tax / 100)
+          : 0;
 
-        const allExpenses: TableRow[] = [
-          { label: "Payroll Tax", value: payrollTaxAmt },
-          { label: "PAR", value: (config.par || 0) * months },
-          { label: "NuCO2", value: (config.nuco2 || 0) * months },
-          { label: "Trash", value: (config.trash || 0) * months },
-          { label: "Repairs", value: (config.repair_exp || 0) * months },
-          { label: "Gas Bill", value: (config.gas_bill_exp || 0) * months },
-          { label: "Internet", value: (config.internet_exp || 0) * months },
-          {
-            label: "Insurance",
-            value: ((config.insurance_exp || 0) / 12) * months,
-          },
-          { label: "Water Bill", value: (config.water_bill_exp || 0) * months },
-          {
-            label: "Property Tax",
-            value: ((config.property_tax_exp || 0) / 12) * months,
-          },
-          {
-            label: "Rent/Mortgage",
-            value: (config.rent_mortgage_exp || 0) * months,
-          },
-          {
-            label: "Labor Salary",
-            value: (config.labor_operat_salary_exp || 0) * months,
-          },
-          ...additionalExpenses.map((exp: any) => ({
-            label: exp.expname,
-            value: Number(exp.amount) || 0,
-          })),
-        ].filter((item) => item.value > 0);
+      // Add royalty and labour_cost to expenses if amount > 0.50
+      const royaltyAmount = saleskpi?.royalty || 0;
+      const royaltyPercentage = config?.royalty || 0;
+      const laborCostAmount = saleskpi?.labour_cost || 0;
+      const payrollTaxPercentage = config?.payroll_tax || 0;
 
-        const sortedExpenses = allExpenses.sort((a, b) => b.value - a.value);
+      const allExpenses: TableRow[] = [
+        { label: "Payroll Tax", value: payrollTaxAmt },
+        { label: "PAR", value: (config.par || 0) * months },
+        { label: "NuCO2", value: (config.nuco2 || 0) * months },
+        { label: "Trash", value: (config.trash || 0) * months },
+        { label: "Repairs", value: (config.repair_exp || 0) * months },
+        { label: "Gas Bill", value: (config.gas_bill_exp || 0) * months },
+        { label: "Internet", value: (config.internet_exp || 0) * months },
+        {
+          label: "Insurance",
+          value: ((config.insurance_exp || 0) / 12) * months,
+        },
+        { label: "Water Bill", value: (config.water_bill_exp || 0) * months },
+        {
+          label: "Property Tax",
+          value: ((config.property_tax_exp || 0) / 12) * months,
+        },
+        {
+          label: "Rent/Mortgage",
+          value: (config.rent_mortgage_exp || 0) * months,
+        },
+        {
+          label: "Labor Salary",
+          value: (config.labor_operat_salary_exp || 0) * months,
+        },
+        ...(royaltyAmount > 0.50
+          ? [
+              {
+                label: `Royalty (${royaltyPercentage}%)`,
+                value: royaltyAmount,
+              },
+            ]
+          : []),
+        ...(laborCostAmount > 0.50
+          ? [
+              {
+                label: `Labor Cost (${payrollTaxPercentage}%)`,
+                value: laborCostAmount,
+              },
+            ]
+          : []),
+        ...additionalExpenses.map((exp: any) => ({
+          label: exp?.expname || "Unknown Expense",
+          value: Number(exp?.amount) || 0,
+        })),
+      ].filter((item) => item.value > 0);
 
-        const total = sortedExpenses.reduce(
-          (sum: number, expense: TableRow) => sum + expense.value,
-          0
-        );
+      const sortedExpenses = allExpenses.sort((a, b) => b.value - a.value);
 
-        const totalCogs = cogs.reduce(
-          (sum: number, item: any) => sum + (Number(item.producttotal) || 0),
-          0
-        );
+      const total = sortedExpenses.reduce(
+        (sum: number, expense: TableRow) => sum + expense.value,
+        0
+      );
 
-        // Calculate Net Income
-        const calculatedNetIncome = (saleskpi.net_sales || 0) - totalCogs - total;
+      const totalCogs = cogs.reduce(
+        (sum: number, item: any) => sum + (Number(item.producttotal) || 0),
+        0
+      );
 
-        setData(sortedExpenses);
-        setNetSales(saleskpi.net_sales || 0);
-        setTotalItems(sortedExpenses.length);
-        setTotalAmount(total);
-        setTotalCogsAmount(totalCogs);
-        setNetIncome(calculatedNetIncome);
-      } else {
-        setCustomToast({
-          message: response?.message,
-          type: "error",
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
+      // Calculate Net Income
+      const calculatedNetIncome = (saleskpi.net_sales || 0) - totalCogs - total;
+
+      setData(sortedExpenses);
+      setNetSales(saleskpi.net_sales || 0);
+      setTotalItems(sortedExpenses.length);
+      setTotalAmount(total);
+      setTotalCogsAmount(totalCogs);
+      setNetIncome(calculatedNetIncome);
+    } else {
       setCustomToast({
-        message: "Error fetching expenses data",
+        message: response?.message,
         type: "error",
       });
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    setCustomToast({
+      message: "Error fetching expenses data",
+      type: "error",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     if ((selectedStore || pageData) && selectedYear) {
