@@ -25,6 +25,7 @@ export default {
         "tablet-home": { min: "769px", max: "1350px" },
         "below-lg": { min: "1025px" },
         "small-laptop": { min: "1280px", max: "1440px" },
+        "above-tablet-home": { min: "1351px" },
         
        },
     },
