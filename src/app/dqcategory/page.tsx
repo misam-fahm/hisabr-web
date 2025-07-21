@@ -473,13 +473,31 @@ useEffect(() => {
     "10\" Round Cake": "10 Round",
   };
 
-  const getTotalByCategory = (name) => {
-    const allData = [...(items || []), ...(Sitems || [])];
-    const category = allData.find((item) => item.name === name);
-    return category && category.totalextprice !== undefined && category.totalextprice !== null
-      ? Math.round(category.totalextprice)
+  const getTotalByCategory = (name: string) => {
+  const allData = [...(items || []), ...(Sitems || [])];
+  const category = allData.find((item) => item.name === name);
+  if (!category) return 0;
+
+  // For these categories, export qty_times_pieces
+  const useQtyTimesPiecesFor = new Set([
+    "Mix Ice Cream",       // => Mix Gall\Litre
+    '8" Round Cake',       // => 8 Round
+    '10" Round Cake',      // => 10 Round
+    "Sheet Cake",          // => Sheet
+  ]);
+
+  if (useQtyTimesPiecesFor.has(name)) {
+    return category?.qty_times_pieces
+      ? Math.round(Number(category.qty_times_pieces))
       : 0;
-  };
+  }
+
+  // Default: use totalextprice
+  return category?.totalextprice != null
+    ? Math.round(Number(category.totalextprice))
+    : 0;
+};
+
 
   const mapData = () => {
     const header = [
@@ -541,24 +559,14 @@ useEffect(() => {
       return getTotalByCategory(originalName);
     });
 
-    const secondRow = header.map((category) => {
-      const originalName = nameMapping[category] || category;
-      const item = allData.find((item) => item.name === originalName);
-      if (["8 Round", "10 Round", "Sheet"].includes(category)) {
-        return item?.qty_times_pieces ? Math.round(item.qty_times_pieces) : 0;
-      }
-      if (["Dilly", "Starkiss", "NF/NSA Bars", "Buster Bar"].includes(category)) {
-        return item?.totalqty ? Math.round(item.totalqty) : 0;
-      }
-      return "";
-    });
+   
 
-    return [header, firstRow, secondRow];
+    return [header, firstRow, ];
   };
 
   const exportToExcel = () => {
-    const [headers, firstRow, secondRow] = mapData();
-    const worksheet = XLSX.utils.aoa_to_sheet([headers, firstRow, secondRow]);
+    const [headers, firstRow,] = mapData();
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, firstRow,]);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
 
