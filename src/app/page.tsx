@@ -1348,7 +1348,7 @@ const normalizedDonutPercentages =
 
 
   {/* Total Revenue Card */}
-<div
+{/* <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
 >
   <div>
@@ -1373,7 +1373,6 @@ const normalizedDonutPercentages =
           : "$00,000"}
       </span>
     </p>
-    {/* Percentage Change and Difference in One Line */}
     {data?.revenue !== undefined && prevYearData?.revenue !== undefined ? (
       (() => {
         const prevRevenue = Math.round(prevYearData.revenue);
@@ -1409,7 +1408,7 @@ const normalizedDonutPercentages =
   <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
     <img src="./images/saleskpiprofit.svg" />
   </div>
-</div>
+</div> */}
 
           {/* Discount Card */}
 <div
