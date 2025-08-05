@@ -99,6 +99,7 @@ const Header: React.FC = () => {
       grossrevenue: "Gross Revenue",
       customercount: "Customer Count",
       logout: "Logout",
+      plreport: "P&L",
     };
     return routeTitles[normalizedRoute.toLowerCase()] || "Dashboard";
   };
