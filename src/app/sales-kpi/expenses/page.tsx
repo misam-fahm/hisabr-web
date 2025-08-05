@@ -373,29 +373,23 @@ const ExpensesPage = () => {
                     {categories.map((item, index) => (
                       <tr
                         key={index}
-                        className={
-                          item.label === "Tender Commission"
-                            ? "bg-[#168A6F] text-white"
-                            : index % 2 === 1 
-                            ? "bg-[#F3F3F6]" 
-                            : "bg-white"
-                        }
+                        className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
                       >
-                        <td className={`px-2 py-1 ${item.label === "Tender Commission" ? "text-white" : "text-[#636363]"} text-[11px] md:text-[19px] border-r border-[#E4E4EF] text-left truncate flex items-center gap-1.5`}>
+                        <td className="px-2 py-1 text-[#636363] text-[11px] md:text-[19px] border-r border-[#E4E4EF] text-left truncate flex items-center gap-1.5">
                           <span
                             className="w-2 h-2 rounded-full"
                             style={{ backgroundColor: chartColors[index] || "#E0E0E0" }}
                           ></span>
                           {item.label || "N/A"}
                         </td>
-                        <td className={`px-2 py-1 ${item.label === "Tender Commission" ? "text-white" : "text-[#636363]"} text-[11px] md:text-[19px] text-right border-r border-[#E4E4EF]`}>
+                        <td className="px-2 py-1 text-[#636363] text-[11px] md:text-[19px] text-right border-r border-[#E4E4EF]">
                           {tenderCommissionLoading && item.label === "Tender Commission" ? (
                             <Skeleton width="60%" />
                           ) : (
                             `$${Math.round(item.value).toLocaleString()}`
                           )}
                         </td>
-                        <td className={`px-2 py-1 ${item.label === "Tender Commission" ? "text-white" : "text-[#636363]"} text-[11px] md:text-[19px] text-right`}>
+                        <td className="px-2 py-1 text-[#636363] text-[11px] md:text-[19px] text-right">
                           {tenderCommissionLoading && item.label === "Tender Commission" ? (
                             <Skeleton width="60%" />
                           ) : (
@@ -462,29 +456,23 @@ const ExpensesPage = () => {
                     {categories.map((item, index) => (
                       <tr
                         key={index}
-                        className={
-                          item.label === "Tender Commission"
-                            ? "bg-[#168A6F] text-white"
-                            : index % 2 === 1 
-                            ? "bg-[#F3F3F6]" 
-                            : "bg-white"
-                        }
+                        className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
                       >
-                        <td className={`px-4 py-1.5 ${item.label === "Tender Commission" ? "text-white" : "text-[#636363]"} text-[14px] border-r border-[#E4E4EF] text-left truncate flex items-center gap-2`}>
+                        <td className="px-4 py-1.5 text-[#636363] text-[14px] border-r border-[#E4E4EF] text-left truncate flex items-center gap-2">
                           <span
                             className="w-3 h-3 rounded-full"
                             style={{ backgroundColor: chartColors[index] || "#E0E0E0" }}
                           ></span>
                           {item.label || "N/A"}
                         </td>
-                        <td className={`px-4 py-1.5 ${item.label === "Tender Commission" ? "text-white" : "text-[#636363]"} text-[14px] text-right border-r border-[#E4E4EF]`}>
+                        <td className="px-4 py-1.5 text-[#636363] text-[14px] text-right border-r border-[#E4E4EF]">
                           {tenderCommissionLoading && item.label === "Tender Commission" ? (
                             <Skeleton width="60%" />
                           ) : (
                             `$${Math.round(item.value).toLocaleString()}`
                           )}
                         </td>
-                        <td className={`px-4 py-1.5 ${item.label === "Tender Commission" ? "text-white" : "text-[#636363]"} text-[14px] text-right`}>
+                        <td className="px-4 py-1.5 text-[#636363] text-[14px] text-right">
                           {tenderCommissionLoading && item.label === "Tender Commission" ? (
                             <Skeleton width="60%" />
                           ) : (
