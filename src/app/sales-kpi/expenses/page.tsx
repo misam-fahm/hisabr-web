@@ -20,6 +20,10 @@ const ExpensesPage = () => {
   const [categories, setCategories] = useState<{ label: string; value: number }[]>([]);
   const [pageData, setPageData] = useState<ExpensesPageData | null>(null);
   const [chartColors, setChartColors] = useState<string[]>([]);
+  
+  // Add tender commission state variables
+  const [totalTenderCommission, setTotalTenderCommission] = useState<number>(0);
+  const [tenderCommissionLoading, setTenderCommissionLoading] = useState<boolean>(false);
 
   // Color palette
   const colorPalette = [
@@ -42,7 +46,44 @@ const ExpensesPage = () => {
     "#FFB6C1", // Light Pink
     "#708090", // Slate Gray
     "#F4A460", // Sandy Brown
+    "#168A6F", // Tender Commission Color (Green)
   ];
+
+  // Add tender commission fetch function
+  const fetchTenderCommissionData = async () => {
+    if (!pageData) {
+      return;
+    }
+    
+    setTenderCommissionLoading(true);
+    try {
+      const { storeid, startdate, enddate } = pageData;
+
+      const response: any = await sendApiRequest({
+        mode: 'getLatestTenders',
+        storeid: parseInt(storeid) || 69,
+        startdate,
+        enddate,
+      });
+
+      if (response?.status === 200) {
+        const tenders = response?.data?.tenders || [];
+        const totalCommission = tenders.reduce(
+          (sum: number, row: any) => sum + ((row.payments * row.commission) / 100 || 0),
+          0
+        );
+        setTotalTenderCommission(totalCommission);
+      } else {
+        setTotalTenderCommission(0);
+        console.error("Failed to fetch tender commission data:", response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching tender commission data:", error);
+      setTotalTenderCommission(0);
+    } finally {
+      setTenderCommissionLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Retrieve data from localStorage
@@ -125,14 +166,27 @@ const ExpensesPage = () => {
               })),
             ].filter((item) => item.value > 0);
 
+            // Add tender commission if available
+            if (totalTenderCommission > 0) {
+              cats.push({
+                label: "Tender Commission",
+                value: totalTenderCommission,
+              });
+            }
+
             // Sort categories by value in descending order
             const sortedCats = cats.sort((a, b) => b.value - a.value);
 
-            // Generate colors: red for highest value, others from palette
-            const maxValueIndex = sortedCats.length > 0 ? 0 : -1;
-            const colors = sortedCats.map((_, index) =>
-              index === maxValueIndex ? "#E74C3C" : colorPalette[index % colorPalette.length]
-            );
+            // Generate colors: red for highest value, tender commission gets special green color, others from palette
+            const colors = sortedCats.map((item, index) => {
+              if (item.label === "Tender Commission") {
+                return "#168A6F"; // Special green color for tender commission
+              }
+              if (index === 0 && item.label !== "Tender Commission") {
+                return "#E74C3C"; // Red for highest value (if not tender commission)
+              }
+              return colorPalette[index % colorPalette.length];
+            });
 
             setCategories(sortedCats);
             setChartColors(colors);
@@ -151,7 +205,8 @@ const ExpensesPage = () => {
     };
 
     fetchExpensesData();
-  }, [pageData]);
+    fetchTenderCommissionData(); // Fetch tender commission data
+  }, [pageData, totalTenderCommission]); // Add totalTenderCommission as dependency
 
   const renderTableSkeleton = (isMobile: boolean) => {
     const rowCount = 5;
@@ -242,7 +297,7 @@ const ExpensesPage = () => {
   // Only render ExpensesChart if pageData is fully defined
   const canRenderChart = pageData?.storeid && pageData?.startdate && pageData?.enddate && pageData?.months !== undefined;
 
-  // Calculate total for table percentages
+  // Calculate total for table percentages (including tender commission)
   const total = categories.reduce((sum, item) => sum + item.value, 0);
 
   return (
@@ -272,6 +327,8 @@ const ExpensesPage = () => {
             </svg>
             Operating Expenses
           </button>
+          
+        
         </div>
       </div>
 
@@ -316,23 +373,49 @@ const ExpensesPage = () => {
                     {categories.map((item, index) => (
                       <tr
                         key={index}
-                        className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
+                        className={
+                          item.label === "Tender Commission"
+                            ? "bg-[#168A6F] text-white"
+                            : index % 2 === 1 
+                            ? "bg-[#F3F3F6]" 
+                            : "bg-white"
+                        }
                       >
-                        <td className="px-2 py-1 text-[#636363] text-[11px] md:text-[19px] border-r border-[#E4E4EF] text-left truncate flex items-center gap-1.5">
+                        <td className={`px-2 py-1 ${item.label === "Tender Commission" ? "text-white" : "text-[#636363]"} text-[11px] md:text-[19px] border-r border-[#E4E4EF] text-left truncate flex items-center gap-1.5`}>
                           <span
                             className="w-2 h-2 rounded-full"
                             style={{ backgroundColor: chartColors[index] || "#E0E0E0" }}
                           ></span>
                           {item.label || "N/A"}
                         </td>
-                        <td className="px-2 py-1 text-[#636363] text-[11px] md:text-[19px] text-right border-r border-[#E4E4EF]">
-                          ${Math.round(item.value).toLocaleString()}
+                        <td className={`px-2 py-1 ${item.label === "Tender Commission" ? "text-white" : "text-[#636363]"} text-[11px] md:text-[19px] text-right border-r border-[#E4E4EF]`}>
+                          {tenderCommissionLoading && item.label === "Tender Commission" ? (
+                            <Skeleton width="60%" />
+                          ) : (
+                            `$${Math.round(item.value).toLocaleString()}`
+                          )}
                         </td>
-                        <td className="px-2 py-1 text-[#636363] text-[11px] md:text-[19px] text-right">
-                          {((item.value / total) * 100).toFixed(2)}%
+                        <td className={`px-2 py-1 ${item.label === "Tender Commission" ? "text-white" : "text-[#636363]"} text-[11px] md:text-[19px] text-right`}>
+                          {tenderCommissionLoading && item.label === "Tender Commission" ? (
+                            <Skeleton width="60%" />
+                          ) : (
+                            `${((item.value / total) * 100).toFixed(2)}%`
+                          )}
                         </td>
                       </tr>
                     ))}
+                    {/* Total Row */}
+                    <tr className="bg-[#0F1044] text-white border-t-2 border-[#E4E4EF]">
+                      <td className="px-2 py-1.5 text-[11px] md:text-[19px] font-bold border-r border-[#E4E4EF] text-left">
+                        Total
+                      </td>
+                      <td className="px-2 py-1.5 text-[11px] md:text-[19px] font-bold text-right border-r border-[#E4E4EF]">
+                        ${Math.round(total).toLocaleString()}
+                      </td>
+                      <td className="px-2 py-1.5 text-[11px] md:text-[19px] font-bold text-right">
+                        100%
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               ) : (
@@ -379,23 +462,49 @@ const ExpensesPage = () => {
                     {categories.map((item, index) => (
                       <tr
                         key={index}
-                        className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
+                        className={
+                          item.label === "Tender Commission"
+                            ? "bg-[#168A6F] text-white"
+                            : index % 2 === 1 
+                            ? "bg-[#F3F3F6]" 
+                            : "bg-white"
+                        }
                       >
-                        <td className="px-4 py-1.5 text-[#636363] text-[14px] border-r borderhes: ['#E4E4EF] text-left truncate flex items-center gap-2">
+                        <td className={`px-4 py-1.5 ${item.label === "Tender Commission" ? "text-white" : "text-[#636363]"} text-[14px] border-r border-[#E4E4EF] text-left truncate flex items-center gap-2`}>
                           <span
                             className="w-3 h-3 rounded-full"
                             style={{ backgroundColor: chartColors[index] || "#E0E0E0" }}
                           ></span>
                           {item.label || "N/A"}
                         </td>
-                        <td className="px-4 py-1.5 text-[#636363] text-[14px] text-right border-r border-[#E4E4EF]">
-                          ${Math.round(item.value).toLocaleString()}
+                        <td className={`px-4 py-1.5 ${item.label === "Tender Commission" ? "text-white" : "text-[#636363]"} text-[14px] text-right border-r border-[#E4E4EF]`}>
+                          {tenderCommissionLoading && item.label === "Tender Commission" ? (
+                            <Skeleton width="60%" />
+                          ) : (
+                            `$${Math.round(item.value).toLocaleString()}`
+                          )}
                         </td>
-                        <td className="px-4 py-1.5 text-[#636363] text-[14px] text-right">
-                          {((item.value / total) * 100).toFixed(2)}%
+                        <td className={`px-4 py-1.5 ${item.label === "Tender Commission" ? "text-white" : "text-[#636363]"} text-[14px] text-right`}>
+                          {tenderCommissionLoading && item.label === "Tender Commission" ? (
+                            <Skeleton width="60%" />
+                          ) : (
+                            `${((item.value / total) * 100).toFixed(2)}%`
+                          )}
                         </td>
                       </tr>
                     ))}
+                    {/* Total Row */}
+                    <tr className="bg-[#0F1044] text-white border-t-2 border-[#E4E4EF]">
+                      <td className="px-4 py-1.5 text-[14px] font-bold border-r border-[#E4E4EF] text-left">
+                        Total
+                      </td>
+                      <td className="px-4 py-1.5 text-[14px] font-bold text-right border-r border-[#E4E4EF]">
+                        ${Math.round(total).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-1.5 text-[14px] font-bold text-right">
+                        100%
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               ) : (
