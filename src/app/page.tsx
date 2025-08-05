@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, useCallback } from "react";
 import DonutChart from "@/Components/Charts-Graph/DonutChart";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
@@ -46,6 +46,7 @@ const SalesKPI: FC = () => {
   const [store, setStore] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [periodTenderCommission, setPeriodTenderCommission] = useState(0);
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [data, setData] = useState<any>([]);
@@ -62,6 +63,8 @@ const SalesKPI: FC = () => {
   const [operatExpAmt, setOperatExpAmt] = useState(0);
   const [royaltyAmt, setRoyaltyAmt] = useState(0);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
+const [currYearTenderCommission, setCurrYearTenderCommission] = useState(0);
+  const [prevYearTenderCommission, setPrevYearTenderCommission] = useState(0);
 
   // Calculations
   const labourCost = Number(data?.labour_cost) || 0;
@@ -174,29 +177,70 @@ const normalizedDonutPercentages =
       })
     : donutPercentageValues.map(() => "0");
 
-  // Update dateRangeOptions to include value
+  // Add a constant for custom range
+  const CUSTOM_RANGE_OPTION: DateRangeOption = { name: "Custom Range", value: "custom", id: 99 };
+
+  // Update dateRangeOptions to include custom range
   const dateRangeOptions: DateRangeOption[] = [
     { name: "This Month (MTD)", value: "this_month", id: 1 },
     { name: "This Year (YTD)", value: "this_year", id: 2 },
     { name: "Last Month", value: "last_month", id: 3 },
     { name: "Last Year", value: "last_year", id: 4 },
+    CUSTOM_RANGE_OPTION,
   ];
 
-  useEffect(() => {
-    if (isVerifiedUser) {
-      const now = new Date();
-      setStartDate(new Date(now.getFullYear(), now.getMonth(), 1));
-      setEndDate(now);
-      getUserStore();
-      fetchCurrentYearData(now.getFullYear());
-    }
-  }, [isVerifiedUser]);
+  // Helper to check if two dates are the same (ignoring time)
+  const isSameDay = (d1?: Date, d2?: Date) =>
+    d1 && d2 && d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
+
+  // Helper to check if current start/end match a preset
+  const getMatchingPreset = (start: Date, end: Date): DateRangeOption | undefined => {
+    const now = new Date();
+    const presets = [
+      {
+        option: dateRangeOptions[0], // This Month
+        start: new Date(now.getFullYear(), now.getMonth(), 1),
+        end: now,
+      },
+      {
+        option: dateRangeOptions[1], // This Year
+        start: new Date(now.getFullYear(), 0, 1),
+        end: now,
+      },
+      {
+        option: dateRangeOptions[2], // Last Month
+        start: new Date(now.getFullYear(), now.getMonth() - 1, 1),
+        end: new Date(now.getFullYear(), now.getMonth(), 0),
+      },
+      {
+        option: dateRangeOptions[3], // Last Year
+        start: new Date(now.getFullYear() - 1, 0, 1),
+        end: new Date(now.getFullYear() - 1, 11, 31),
+      },
+    ];
+    return presets.find(
+      (p) => isSameDay(start, p.start) && isSameDay(end, p.end)
+    )?.option;
+  };
+
+ useEffect(() => {
+  if (currYearData && selectedOption && isVerifiedUser) {
+    const currentYear = new Date().getFullYear();
+    const today = new Date();
+    const yearStart = new Date(currentYear, 0, 1); // January 1st of current year
+    
+    const startDate = format(yearStart, "yyyy-MM-dd");
+    const endDate = format(today, "yyyy-MM-dd");
+    
+    fetchTenderCommission(selectedOption.id, startDate, endDate).then(setCurrYearTenderCommission);
+  }
+}, [currYearData, selectedOption, isVerifiedUser,]);
 
   const toggleDateRangeDropdown = () => {
     setIsDateRangeOpen((prev) => !prev);
   };
 
-  // Update handleDateRangeSelect to set correct dates
+  // When user selects a preset from dropdown
   const handleDateRangeSelect = (option: DateRangeOption) => {
     setSelectedDateRange(option.name);
     const now = new Date();
@@ -227,7 +271,10 @@ const normalizedDonutPercentages =
 
     setStartDate(newStartDate);
     setEndDate(newEndDate);
+    setIsDateRangeOpen(false);
   };
+
+
 
   const fetchCurrentYearData = async (currentYear: number) => {
     try {
@@ -766,6 +813,48 @@ const normalizedDonutPercentages =
   }, [startDate, endDate, selectedOption]);
 
   const [showTooltip, setShowTooltip] = useState(false);
+/* Duplicate fetchCurrentYearData removed to fix redeclaration error */
+  // Helper to fetch tender commission for a period
+  const fetchTenderCommission = useCallback(async (storeid: number, startdate: string, enddate: string) => {
+    try {
+      const response: any = await sendApiRequest({
+        mode: 'getLatestTenders',
+        storeid: storeid || 69,
+        startdate,
+        enddate,
+      });
+      if (response?.status === 200) {
+        const tenders = response?.data?.tenders || [];
+        return tenders.reduce(
+          (sum: number, row: any) => sum + ((row.payments * row.commission) / 100 || 0),
+          0
+        );
+      }
+    } catch (e) {
+      // ignore
+    }
+    return 0;
+  }, []);
+
+  // Fetch for current year
+useEffect(() => {
+  if (startDate && endDate && selectedOption) {
+    const start = format(startDate, "yyyy-MM-dd");
+    const end = format(endDate, "yyyy-MM-dd");
+    fetchTenderCommission(selectedOption.id, start, end).then(setPeriodTenderCommission);
+  }
+}, [startDate, endDate, selectedOption, fetchTenderCommission]);
+
+  // Fetch for previous year
+  useEffect(() => {
+    if (prevYearData && selectedOption && startDate && endDate) {
+      const prevYearStart = new Date(startDate.getFullYear() - 1, startDate.getMonth(), startDate.getDate());
+      const prevYearEnd = new Date(endDate.getFullYear() - 1, endDate.getMonth(), endDate.getDate());
+      const start = format(prevYearStart, "yyyy-MM-dd");
+      const end = format(prevYearEnd, "yyyy-MM-dd");
+      fetchTenderCommission(selectedOption.id, start, end).then(setPrevYearTenderCommission);
+    }
+  }, [prevYearData, selectedOption, startDate, endDate, fetchTenderCommission]);
 
   return (
     isVerifiedUser && (
@@ -792,16 +881,13 @@ const normalizedDonutPercentages =
     <Dropdown
       options={dateRangeOptions}
       selectedOption={selectedDateRange}
-      onSelect={(option: DateRangeOption) => {
-        handleDateRangeSelect(option);
-        setIsDateRangeOpen(false);
-      }}
+      onSelect={handleDateRangeSelect}
       isOpen={isDateRangeOpen}
       toggleOpen={toggleDateRangeDropdown}
       widthchange="w-[30%] tablet:w-full below-md:w-full"
     />
     <div className="w-[300px] tablet:w-[160%] below-md:w-full">
-      <DateRangePicker
+        <DateRangePicker
         startDate={startDate}
         endDate={endDate}
         setStartDate={setStartDate}
@@ -1223,32 +1309,36 @@ const normalizedDonutPercentages =
   onClick={handleExpensesCardClick}
 >
   <div>
-    <p className="text-[14px] text-[#575F6DCC] font-medium">Operating Expenses ({normalizedDonutPercentages[3]}%)</p>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">
+      Operating Expenses ({normalizedDonutPercentages[3]}%)
+    </p>
     <p className="text-[16px] text-[#2D3748] font-bold">
-      {operatExpAmt && operatExpAmt !== 0
-        ? `$${Math.round(operatExpAmt).toLocaleString()}`
+      {/* This period: operatExpAmt + periodTenderCommission */}
+      {operatExpAmt + periodTenderCommission !== 0
+        ? `$${Math.round((operatExpAmt || 0) + periodTenderCommission).toLocaleString()}`
         : "$00,000"}
     </p>
     <p className="text-[11px] text-[#575F6D] font-normal">
-      <span>
-        Prev. Yr.{" "}
-        {prevYearData?.operatExpAmt && prevYearData.operatExpAmt !== 0
-          ? `$${Math.round(prevYearData.operatExpAmt).toLocaleString()}`
-          : "$00,000"}
-      </span>
-      <br />
-      <span>
-        Curr. Yr.{" "}
-        {currYearData?.operatExpAmt && currYearData.operatExpAmt !== 0
-          ? `$${Math.round(currYearData.operatExpAmt).toLocaleString()}`
-          : "$00,000"}
-      </span>
-    </p>
+  <span>
+    Prev. Yr.{" "}
+    {(prevYearData?.operatExpAmt || 0) + prevYearTenderCommission !== 0
+      ? `$${Math.round((prevYearData?.operatExpAmt || 0) + prevYearTenderCommission).toLocaleString()}`
+      : "$00,000"}
+  </span>
+  <br />
+  
+  <span>
+  Curr. Yr.{" "}
+  {((currYearData?.operatExpAmt || 0) + currYearTenderCommission) !== 0
+    ? `$${Math.round((currYearData?.operatExpAmt || 0) + currYearTenderCommission).toLocaleString()}`
+    : "$00,000"}
+</span>
+</p>
     {/* Percentage Change and Difference in One Line */}
-    {operatExpAmt !== undefined && prevYearData?.operatExpAmt !== undefined ? (
+    {(operatExpAmt !== undefined && prevYearData?.operatExpAmt !== undefined) ? (
       (() => {
-        const prevExp = Math.round(prevYearData.operatExpAmt);
-        const currExp = Math.round(operatExpAmt);
+        const prevExp = Math.round((prevYearData?.operatExpAmt || 0) + prevYearTenderCommission);
+        const currExp = Math.round((operatExpAmt || 0) + periodTenderCommission);
         const difference = currExp - prevExp;
         const percentageChange =
           prevExp !== 0
@@ -1749,11 +1839,11 @@ const normalizedDonutPercentages =
                 </tfoot> }
               </table>
             </div>
-          </div> */}
+          </div>
 
           {/* <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[100%] items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6 pb-3">
-              <div className="flex flex-row gap-2 ">
+              <div className="flex flex-row gap-2">
                 <img src="/images/items.svg" />
                 <p className="text-[#334155]  text-[16px] font-bold">Items</p>
               </div>

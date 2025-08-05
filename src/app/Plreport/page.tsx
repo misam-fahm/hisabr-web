@@ -66,6 +66,9 @@ const PLReport: FC = () => {
   const [netSales, setNetSales] = useState<number>(0);
   const [pageData, setPageData] = useState<ExpensesPageData | null>(null);
   const [months, setMonths] = useState<number>(1);
+  // New state for tender commission data
+  const [totalTenderCommission, setTotalTenderCommission] = useState<number>(0);
+  const [tenderCommissionLoading, setTenderCommissionLoading] = useState<boolean>(false);
 
   const formatAmount = (value: number) => {
     return value
@@ -300,6 +303,49 @@ const PLReport: FC = () => {
     return { startdate, enddate, monthsCount };
   };
 
+  // New function to fetch tender commission data
+  const fetchTenderCommissionData = async () => {
+    if (!pageData && !selectedStore) {
+      return;
+    }
+    
+    setTenderCommissionLoading(true);
+    try {
+      const { startdate, enddate } = getDateRange();
+
+      const response: any = await sendApiRequest({
+        mode: 'getLatestTenders',
+        storeid: selectedStore?.id || pageData?.storeid || 69,
+        startdate,
+        enddate,
+      });
+
+      if (response?.status === 200) {
+        const tenders = response?.data?.tenders || [];
+        const totalCommission = tenders.reduce(
+          (sum: number, row: any) => sum + ((row.payments * row.commission) / 100 || 0),
+          0
+        );
+        setTotalTenderCommission(totalCommission);
+      } else {
+        setTotalTenderCommission(0);
+        setCustomToast({
+          message: response?.message || "Failed to fetch tender commission data",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching tender commission data:", error);
+      setTotalTenderCommission(0);
+      setCustomToast({
+        message: "Error fetching tender commission data",
+        type: "error",
+      });
+    } finally {
+      setTenderCommissionLoading(false);
+    }
+  };
+
   const fetchData = async () => {
     if (!pageData && !selectedStore) {
       setCustomToast({
@@ -423,8 +469,25 @@ const PLReport: FC = () => {
   useEffect(() => {
     if (isVerifiedUser && selectedStore && selectedYear && (selectedPeriod === "Yearly" || selectedSubPeriod)) {
       fetchData();
+      fetchTenderCommissionData(); // Fetch tender commission data alongside expenses
     }
   }, [isVerifiedUser, selectedStore]);
+
+  // Combine data and tender commission for table and total
+  const tableDataWithTenderCommission = React.useMemo(() => {
+    let rows = [...data];
+    if (totalTenderCommission > 0) {
+      // Remove any existing Tender Commission row to avoid duplicates
+      rows = rows.filter(row => row.label !== 'Tender Commission');
+      rows.push({ label: 'Tender Commission', value: totalTenderCommission });
+    }
+    return rows;
+  }, [data, totalTenderCommission]);
+
+  // Calculate total including tender commission
+  const totalWithTender = React.useMemo(() => {
+    return tableDataWithTenderCommission.reduce((sum, row) => sum + row.value, 0);
+  }, [tableDataWithTenderCommission]);
 
   const getUserStore = async () => {
     try {
@@ -516,6 +579,7 @@ const PLReport: FC = () => {
       return;
     }
     fetchData();
+    fetchTenderCommissionData(); // Also fetch tender commission data on search
   };
 
   const downloadPDF = () => {
@@ -631,10 +695,10 @@ const PLReport: FC = () => {
   currentY = (doc as any).lastAutoTable.finalY + 6;
 
   // Operating Expenses Section
-  const expensesData = data.map((row) => [
+  const expensesData = tableDataWithTenderCommission.map((row) => [
     row.label,
     formatAmount(row.value),
-    calculatePercentage(row.value, totalAmount),
+    calculatePercentage(row.value, totalWithTender),
   ]);
   autoTable(doc, {
     startY: currentY,
@@ -643,7 +707,7 @@ const PLReport: FC = () => {
       ...expensesData,
       [
         { content: 'Total Operating Expenses', styles: { fontStyle: 'bold', fontSize: 14 } },
-        { content: formatAmount(totalAmount), styles: { fontStyle: 'bold', fontSize: 14, halign: 'right' } },
+        { content: formatAmount(totalWithTender), styles: { fontStyle: 'bold', fontSize: 14, halign: 'right' } },
         { content: '100.0%', styles: { fontStyle: 'bold', fontSize: 14, halign: 'right' } },
       ],
     ],
@@ -792,7 +856,8 @@ return (
           <div className="flex flex-col gap-2">
             <p className="text-[16px] text-[#575F6DCC] font-bold">{item.label}</p>
             <p className="text-[20px] text-[#2D3748] font-bold">
-              {loading ? <Skeleton width={100} /> : formatAmount(item.value)}
+              {(loading || (item.label === 'Tender Commission' && tenderCommissionLoading)) ? 
+                <Skeleton width={100} /> : formatAmount(item.value)}
             </p>
           </div>
         </div>
@@ -800,7 +865,7 @@ return (
     </div>
 
     {/* Data Table */}
-    <div className="shadow-sm border border-[#E4E4EF] rounded-md flex-grow flex flex-col mt-4">
+ <div className="shadow-sm border border-[#E4E4EF] rounded-md flex-grow flex flex-col mt-4">
       <div className="w-full overflow-x-auto rounded-md">
         <table className="min-w-full border-collapse text-[12px] below-md:text-[11px] tablet:text-[11px] table-auto">
           <thead className="bg-[#0F1044]">
@@ -842,30 +907,36 @@ return (
                   ))}
                 </tr>
               ))
-            ) : data.length > 0 ? (
+            ) : tableDataWithTenderCommission.length > 0 ? (
               <>
-                {table.getRowModel().rows.map((row) => (
+                {tableDataWithTenderCommission.map((row, rowIndex) => (
                   <tr
-                    key={row.id}
+                    key={rowIndex}
                     className={
-                      row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                      rowIndex % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
                     }
                   >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="px-4 py-1.5 text-[#636363] text-[13px] below-md:text-[11px] tablet:text-[12px]"
-                        style={{ minWidth: `${cell.column.getSize()}px` }}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
+                    <td
+                      className="px-4 py-1.5 text-[#636363] text-[13px] below-md:text-[11px] tablet:text-[12px]"
+                      style={{ minWidth: `${columns[0].size}px` }}
+                    >
+                      {row.label}
+                    </td>
+                    <td
+                      className="px-4 py-1.5 text-[#636363] text-[13px] below-md:text-[11px] tablet:text-[12px] text-right pr-3"
+                      style={{ minWidth: `${columns[1].size}px` }}
+                    >
+                      {formatAmount(row.value)}
+                    </td>
+                    <td
+                      className="px-4 py-1.5 text-[#636363] text-[13px] below-md:text-[11px] tablet:text-[12px] text-right pr-3"
+                      style={{ minWidth: `${columns[2].size}px` }}
+                    >
+                      {calculatePercentage(row.value, totalWithTender)}
+                    </td>
                   </tr>
                 ))}
-                {data.length > 0 && !loading && (
+                {tableDataWithTenderCommission.length > 0 && !loading && (
                   <tr className="bg-[#0F1044] text-white border-t border-[#E4E4EF]">
                     <td
                       className="px-4 py-1.5 text-[13px] font-bold below-md:text-[11px] tablet:text-[12px]"
@@ -877,7 +948,7 @@ return (
                       className="px-4 py-1.5 text-[13px] text-right pr-3 below-md:text-[11px] tablet:text-[12px]"
                       style={{ minWidth: `${columns[1].size}px` }}
                     >
-                      {formatAmount(totalAmount)}
+                      {formatAmount(totalWithTender)}
                     </td>
                     <td
                       className="px-4 py-1.5 text-[13px] text-right pr-3 below-md:text-[11px] tablet:text-[12px]"
@@ -903,10 +974,8 @@ return (
       </div>
     </div>
   </main>
-);
-
-
-
+  );
 };
+
 
 export default PLReport;

@@ -84,7 +84,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
     // { title: "Summary", src: "summary", path: "/summary" },
     { title: "Sales", src: "sales", path: "/sales" },
     { title: "Invoices", src: "invoices", path: "/invoices" },
-    { title: "P&L", src: "plreport", path: "Plreport" },
+    
     { title: "Expenses", src: "expences", path: "/expenses" },
     {
       title: "Cash Recon.",
@@ -92,6 +92,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
       path: "/cashreconc",
     },
     { title: "DQ Export", src: "dq", path: "/dqcategory" },
+    { title: "P&L", src: "plreport", path: "Plreport" },
     // { title: "DQ Export", src: "Categories", path: "/dqcategory" },
     { type: "Setup", title: "SETUP" },
 
