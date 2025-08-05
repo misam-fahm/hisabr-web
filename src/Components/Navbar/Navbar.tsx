@@ -51,6 +51,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
         case "dqcategory":
           newTitle = "DQ Category";
           break;
+          
         case "logout":
           newTitle = "Logout";
           break;
@@ -83,6 +84,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
     // { title: "Summary", src: "summary", path: "/summary" },
     { title: "Sales", src: "sales", path: "/sales" },
     { title: "Invoices", src: "invoices", path: "/invoices" },
+    { title: "P&L", src: "plreport", path: "Plreport" },
     { title: "Expenses", src: "expences", path: "/expenses" },
     {
       title: "Cash Recon.",
