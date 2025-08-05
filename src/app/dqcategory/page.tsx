@@ -412,8 +412,7 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
     }
   }, []);
 
- // ...existing code...
-useEffect(() => {
+ useEffect(() => {
   if (isVerifiedUser) {
     // Calculate last month's start and end dates
     const today = new Date();
@@ -428,7 +427,6 @@ useEffect(() => {
     getUserStore();
   }
 }, [isVerifiedUser]);
-// ...existing code...
   
   useEffect(() => {
     if (startDate && endDate && selectedOption) {
@@ -545,6 +543,18 @@ useEffect(() => {
       if (category === "Transaction Count") return totalOrders || 0;
       if (category === "Inventory Purchases") return productTotal ? Math.round(productTotal) : 0;
       if (category === "Ending Inventory") return Math.round(subtotal || 0);
+
+      // For these 4 categories, export totalqty instead of totalextprice
+      if (
+        category === "Dilly" ||
+        category === "Starkiss" ||
+        category === "NF/NSA Bars" ||
+        category === "Buster Bar"
+      ) {
+        const originalName = nameMapping[category] || category;
+        const item = allData.find((i) => i.name === originalName);
+        return item?.totalqty != null ? Math.round(Number(item.totalqty)) : 0;
+      }
 
       const originalName = nameMapping[category] || category;
       if (category === "Cakes") {
