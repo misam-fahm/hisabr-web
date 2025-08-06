@@ -276,64 +276,53 @@ const normalizedDonutPercentages =
 
 
 
-const fetchCurrentYearData = async (currentYear: number) => {
-  try {
-    const today = new Date();
-    const formattedToday = today.toISOString().split('T')[0];
-
-    const response: any = await sendApiRequest({
-      mode: "getSalesKpi",
-      storeid: selectedOption?.id || 69,
-      startdate: `${currentYear}-01-01`,
-      enddate: formattedToday,
-    });
-
-    if (response?.status === 200) {
-      const salesKpi = response?.data?.saleskpi[0] || {};
-      setCurrYearData(salesKpi);
-
-      const months = today.getMonth() + 1;
-      const payrollTaxAmt = salesKpi.labour_cost * (salesKpi.payrolltax / 100) || 0;
-      const yearExpAmt = (salesKpi.Yearly_expense / 12) * months || 0;
-      
-      // Get tender commission for current year
-      const yearStartDate = format(new Date(currentYear, 0, 1), "yyyy-MM-dd");
-      const currentDateFormatted = format(today, "yyyy-MM-dd");
-      const currYearTenderComm = await fetchTenderCommission(
-        selectedOption?.id || 69,
-        yearStartDate,
-        currentDateFormatted
-      );
-      
-      const currYearOperatExpAmt =
-        (salesKpi.additional_expense || 0) +
-        payrollTaxAmt +
-        yearExpAmt +
-        (salesKpi.monthly_expense * months || 0) +
-        currYearTenderComm; // Include tender commission here
-      
-      const currYearRoyaltyAmt =
-        salesKpi.net_sales * (salesKpi.royalty / 100 || 0.09) || 0;
-
-      setCurrYearData((prev: any) => ({
-        ...prev,
-        operatExpAmt: currYearOperatExpAmt,
-        royaltyAmt: currYearRoyaltyAmt,
-      }));
-
+  const fetchCurrentYearData = async (currentYear: number) => {
+    try {
+      const today = new Date();
+      const formattedToday = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  
+      const response: any = await sendApiRequest({
+        mode: "getSalesKpi",
+        storeid: selectedOption?.id || 69,
+        startdate: `${currentYear}-01-01`,
+        enddate: formattedToday, // Use current date instead of year-end
+      });
+  
+      if (response?.status === 200) {
+        const salesKpi = response?.data?.saleskpi[0] || {};
+        setCurrYearData(salesKpi);
+  
+        // Calculate operatExpAmt and royaltyAmt for current year
+        const months = today.getMonth() + 1; // Number of months until today
+        const payrollTaxAmt = salesKpi.labour_cost * (salesKpi.payrolltax / 100) || 0;
+        const yearExpAmt = (salesKpi.Yearly_expense / 12) * months || 0; // Prorate yearly expenses
+        const currYearOperatExpAmt =
+          (salesKpi.additional_expense || 0) +
+          payrollTaxAmt +
+          yearExpAmt +
+          (salesKpi.monthly_expense * months || 0);
+        const currYearRoyaltyAmt =
+          salesKpi.net_sales * (salesKpi.royalty / 100 || 0.09) || 0;
+  
+        // Update currYearData with calculated values
+        setCurrYearData((prev: any) => ({
+          ...prev,
+          operatExpAmt: currYearOperatExpAmt,
+          royaltyAmt: currYearRoyaltyAmt,
+        }));
+  
         // Update global operatExpAmt and royaltyAmt for consistency in profit calculation
-      setOperatExpAmt(currYearOperatExpAmt);
-      setRoyaltyAmt(currYearRoyaltyAmt);
-      setCurrYearTenderCommission(currYearTenderComm);
+        setOperatExpAmt(currYearOperatExpAmt);
+        setRoyaltyAmt(currYearRoyaltyAmt);
+      }
+    } catch (error) {
+      console.error("Error fetching current year data:", error);
+      setCustomToast({
+        message: "Error fetching current year data",
+        type: "error",
+      });
     }
-  } catch (error) {
-    console.error("Error fetching current year data:", error);
-    setCustomToast({
-      message: "Error fetching current year data",
-      type: "error",
-    });
-  }
-};
+  };
   useEffect(() => {
     if (startDate && endDate && selectedOption) {
       fetchData();
@@ -363,58 +352,50 @@ const fetchCurrentYearData = async (currentYear: number) => {
     return 12;
   };
 
-const fetchData = async () => {
-  try {
-    if (startDate && endDate) {
-      setLoading(true);
-      const response: any = await sendApiRequest({
-        mode: "getSalesKpi",
-        storeid: selectedOption?.id || 69,
-        startdate: startDate && format(startDate, "yyyy-MM-dd"),
-        enddate: endDate && format(endDate, "yyyy-MM-dd"),
-      });
-
-      if (response?.status === 200) {
-        setData(response?.data?.saleskpi[0] || []);
-        const months = getMonthsDifference() || 12;
-        const payrollTaxAmt =
-          response?.data?.saleskpi[0]?.labour_cost *
-          (response?.data?.saleskpi[0]?.payrolltax / 100);
-        const yearExpAmt =
-          (response?.data?.saleskpi[0]?.Yearly_expense / 12) * months;
-        
-        // Get tender commission for the current period
-        const tenderCommission = await fetchTenderCommission(
-          selectedOption?.id || 69,
-          format(startDate, "yyyy-MM-dd"),
-          format(endDate, "yyyy-MM-dd")
-        );
-        
-        // Include tender commission in operatExpAmt calculation
-        setOperatExpAmt(
-          response?.data?.saleskpi[0]?.additional_expense +
-            payrollTaxAmt +
-            yearExpAmt +
-            response?.data?.saleskpi[0]?.monthly_expense * months +
-            tenderCommission || 0
-        );
-        
-        setRoyaltyAmt(
-          response?.data?.saleskpi[0]?.net_sales *
-            (response?.data?.saleskpi[0]?.royalty / 100 || 0.09)
-        );
-      } else {
-        setCustomToast({
-          ...customToast,
-          message: response?.message,
-          type: "error",
+  const fetchData = async () => {
+    try {
+      if (startDate && endDate) {
+        setLoading(true);
+        const response: any = await sendApiRequest({
+          mode: "getSalesKpi",
+          storeid: selectedOption?.id || 69,
+          startdate: startDate && format(startDate, "yyyy-MM-dd"),
+          enddate: endDate && format(endDate, "yyyy-MM-dd"),
         });
+
+        if (response?.status === 200) {
+          setData(response?.data?.saleskpi[0] || []);
+          const months = getMonthsDifference() || 12;
+          const payrollTaxAmt =
+            response?.data?.saleskpi[0]?.labour_cost *
+            (response?.data?.saleskpi[0]?.payrolltax / 100);
+          const yearExpAmt =
+            (response?.data?.saleskpi[0]?.Yearly_expense / 12) * months;
+          setOperatExpAmt(
+            response?.data?.saleskpi[0]?.additional_expense +
+              payrollTaxAmt +
+              yearExpAmt +
+              response?.data?.saleskpi[0]?.monthly_expense * months || 0
+          );
+          setRoyaltyAmt(
+            response?.data?.saleskpi[0]?.net_sales *
+              (response?.data?.saleskpi[0]?.royalty / 100 || 0.09)
+          );
+          // response?.data?.total > 0 &&
+          //   setTotalItems(response?.data?.saleskpi[0] || 0);
+        } else {
+          setCustomToast({
+            ...customToast,
+            message: response?.message,
+            type: "error",
+          });
+        }
       }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
+  };
+
   useEffect(() => {
     if (startDate && endDate && selectedOption) {
       fetchData();
@@ -764,65 +745,52 @@ const fetchData = async () => {
     return { prevYearStart, prevYearEnd };
   };
 
-const fetchPreviousData = async () => {
-  if (!startDate || !endDate || !selectedOption) return;
+  const fetchPreviousData = async () => {
+    if (!startDate || !endDate || !selectedOption) return;
 
-  const { prevYearStart, prevYearEnd } = getPreviousDates();
-  if (!prevYearStart || !prevYearEnd) return;
+    const { prevYearStart, prevYearEnd } = getPreviousDates();
+    if (!prevYearStart || !prevYearEnd) return;
 
-  try {
-    setLoading(true);
-    const prevYearResponse: any = await sendApiRequest({
-      mode: "getSalesKpi",
-      storeid: selectedOption?.id || 69,
-      startdate: format(prevYearStart, "yyyy-MM-dd"),
-      enddate: format(prevYearEnd, "yyyy-MM-dd"),
-    });
+    try {
+      setLoading(true);
+      const prevYearResponse: any = await sendApiRequest({
+        mode: "getSalesKpi",
+        storeid: selectedOption?.id || 69,
+        startdate: format(prevYearStart, "yyyy-MM-dd"),
+        enddate: format(prevYearEnd, "yyyy-MM-dd"),
+      });
 
-    if (prevYearResponse?.status === 200) {
-      const prevYearSalesKpi = prevYearResponse?.data?.saleskpi[0] || {};
-      setPrevYearData(prevYearSalesKpi);
+      if (prevYearResponse?.status === 200) {
+        const prevYearSalesKpi = prevYearResponse?.data?.saleskpi[0] || {};
+        setPrevYearData(prevYearSalesKpi);
 
-      const months = getMonthsDifference();
-      const payrollTaxAmt = prevYearSalesKpi.labour_cost * (prevYearSalesKpi.payrolltax / 100) || 0;
-      const yearExpAmt = (prevYearSalesKpi.Yearly_expense / 12) * months || 0;
-      
-      // Get tender commission for previous year period
-      const prevYearTenderComm = await fetchTenderCommission(
-        selectedOption?.id || 69,
-        format(prevYearStart, "yyyy-MM-dd"),
-        format(prevYearEnd, "yyyy-MM-dd")
-      );
-      
-      const prevYearOperatExpAmt =
-        (prevYearSalesKpi.additional_expense || 0) +
-        payrollTaxAmt +
-        yearExpAmt +
-        (prevYearSalesKpi.monthly_expense * months || 0) +
-        prevYearTenderComm; // Include tender commission here
-      
-      const prevYearRoyaltyAmt = prevYearSalesKpi.net_sales * (prevYearSalesKpi.royalty / 100 || 0.09) || 0;
+        const months = getMonthsDifference();
+        const payrollTaxAmt = prevYearSalesKpi.labour_cost * (prevYearSalesKpi.payrolltax / 100) || 0;
+        const yearExpAmt = (prevYearSalesKpi.Yearly_expense / 12) * months || 0;
+        const prevYearOperatExpAmt =
+          (prevYearSalesKpi.additional_expense || 0) +
+          payrollTaxAmt +
+          yearExpAmt +
+          (prevYearSalesKpi.monthly_expense * months || 0);
+        const prevYearRoyaltyAmt = prevYearSalesKpi.net_sales * (prevYearSalesKpi.royalty / 100 || 0.09) || 0;
 
-      setPrevYearData((prev: any) => ({
-        ...prev,
-        operatExpAmt: prevYearOperatExpAmt,
-        royaltyAmt: prevYearRoyaltyAmt,
-      }));
-      
-      setPrevYearTenderCommission(prevYearTenderComm);
-    } else {
-      setPrevYearData({});
+        setPrevYearData((prev: any) => ({
+          ...prev,
+          operatExpAmt: prevYearOperatExpAmt,
+          royaltyAmt: prevYearRoyaltyAmt,
+        }));
+      } else {
+        setPrevYearData({});
+      }
+    } catch (error) {
+      console.error("Error fetching previous data:", error);
+      setCustomToast({
+        message: "Error fetching previous period data",
+        type: "error",
+      });
+      setPrevPeriodData({}); // Clear previous period data on error
     }
-  } catch (error) {
-    console.error("Error fetching previous data:", error);
-    setCustomToast({
-      message: "Error fetching previous period data",
-      type: "error",
-    });
-    setPrevPeriodData({});
-  }
-};
-
+  };
 
   const calculateProfit = (data: any): number => {
     if (!data?.net_sales) return 0;
@@ -1345,30 +1313,32 @@ useEffect(() => {
       Operating Expenses ({normalizedDonutPercentages[3]}%)
     </p>
     <p className="text-[16px] text-[#2D3748] font-bold">
-      {operatExpAmt !== 0
-        ? `$${Math.round(operatExpAmt).toLocaleString()}`
+      {/* This period: operatExpAmt + periodTenderCommission */}
+      {operatExpAmt + periodTenderCommission !== 0
+        ? `$${Math.round((operatExpAmt || 0) + periodTenderCommission).toLocaleString()}`
         : "$00,000"}
     </p>
     <p className="text-[11px] text-[#575F6D] font-normal">
-      <span>
-        Prev. Yr.{" "}
-        {prevYearData?.operatExpAmt && prevYearData.operatExpAmt !== 0
-          ? `$${Math.round(prevYearData.operatExpAmt).toLocaleString()}`
-          : "$00,000"}
-      </span>
-      <br />
-      <span>
-        Curr. Yr.{" "}
-        {currYearData?.operatExpAmt && currYearData.operatExpAmt !== 0
-          ? `$${Math.round(currYearData.operatExpAmt).toLocaleString()}`
-          : "$00,000"}
-      </span>
-    </p>
-    {/* Percentage Change and Difference calculation */}
+  <span>
+    Prev. Yr.{" "}
+    {(prevYearData?.operatExpAmt || 0) + prevYearTenderCommission !== 0
+      ? `$${Math.round((prevYearData?.operatExpAmt || 0) + prevYearTenderCommission).toLocaleString()}`
+      : "$00,000"}
+  </span>
+  <br />
+  
+  <span>
+  Curr. Yr.{" "}
+  {((currYearData?.operatExpAmt || 0) + currYearTenderCommission) !== 0
+    ? `$${Math.round((currYearData?.operatExpAmt || 0) + currYearTenderCommission).toLocaleString()}`
+    : "$00,000"}
+</span>
+</p>
+    {/* Percentage Change and Difference in One Line */}
     {(operatExpAmt !== undefined && prevYearData?.operatExpAmt !== undefined) ? (
       (() => {
-        const prevExp = Math.round(prevYearData?.operatExpAmt || 0);
-        const currExp = Math.round(operatExpAmt || 0);
+        const prevExp = Math.round((prevYearData?.operatExpAmt || 0) + prevYearTenderCommission);
+        const currExp = Math.round((operatExpAmt || 0) + periodTenderCommission);
         const difference = currExp - prevExp;
         const percentageChange =
           prevExp !== 0
