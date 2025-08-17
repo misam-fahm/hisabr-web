@@ -137,7 +137,7 @@ const ExpensesPage = () => {
               { label: "PAR", value: (config.par || 0) * months },
               { label: "NuCO2", value: (config.nuco2 || 0) * months },
               { label: "Trash", value: (config.trash || 0) * months },
-              { label: "Repairs", value: (config.repair_exp || 0) * months },
+              { label: "Power Bill", value: (config.repair_exp || 0) * months },
               { label: "Gas Bill", value: (config.gas_bill_exp || 0) * months },
               { label: "Internet", value: (config.internet_exp || 0) * months },
               {

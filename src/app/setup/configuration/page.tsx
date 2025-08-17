@@ -656,7 +656,7 @@ const Page = () => {
                 <div className="below-lg:w-[25%]  below-lg:ml-5 below-md:w-full below-md:pt-4 ">
                   <InputField
                     type="text"
-                    label="Repair"
+                    label="Power Bill"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
                     value={repair}
