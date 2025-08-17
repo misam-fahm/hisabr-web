@@ -387,7 +387,7 @@ const PLReport: FC = () => {
           { label: "PAR", value: (config.par || 0) * monthsCount },
           { label: "NuCO2", value: (config.nuco2 || 0) * monthsCount },
           { label: "Trash", value: (config.trash || 0) * monthsCount },
-          { label: "Repairs", value: (config.repair_exp || 0) * monthsCount },
+          { label: "Power Bill", value: (config.repair_exp || 0) * monthsCount },
           { label: "Gas Bill", value: (config.gas_bill_exp || 0) * monthsCount },
           { label: "Internet", value: (config.internet_exp || 0) * monthsCount },
           {

@@ -81,18 +81,15 @@ const [currYearTenderCommission, setCurrYearTenderCommission] = useState(0);
     : 0;
   // const royalty = data?.net_sales ? Number((data.net_sales * 0.09 /).toFixed(2)) : 0;
   // const operatingExpenses = data?.labour_cost ? 109817 : 0;
-  const validProfit = data?.net_sales
-    ? Math.max(
-        Math.round(
-          data.net_sales -
-            data.producttotal -
-            data.labour_cost -
-            operatExpAmt -
-            royaltyAmt
-        ),
-        0
-      )
-    : 0;
+ const validProfit = data?.net_sales
+  ? Math.round(
+      data.net_sales -
+      data.producttotal -
+      data.labour_cost -
+      operatExpAmt -
+      royaltyAmt
+    )
+  : 0;
 
   // Calculate total excluding Sales
   const total =
@@ -833,7 +830,7 @@ const fetchPreviousData = async () => {
         (data.operatExpAmt || 0) -
         (data.royaltyAmt || 0)
     );
-    return profit < 0 ? 0 : profit;
+    return profit;
   };
 
   // Update useEffect to fetch previous data when startDate, endDate, or selectedOption changes
@@ -1045,33 +1042,32 @@ useEffect(() => {
     {/* Percentage Change and Difference in One Line */}
     {data?.net_sales !== undefined && prevYearData?.net_sales !== undefined ? (
       (() => {
-        const prevProfit = Math.round(calculateProfit(prevYearData));
-        const currProfit = Math.round(validProfit);
-        const difference = currProfit - prevProfit;
-        const percentageChange =
-          prevProfit !== 0
-            ? ((difference / Math.abs(prevProfit)) * 100).toFixed(1)
-            : currProfit > 0
-            ? "100.0"
-            : "0.0";
-        const isGrowth = difference >= 0;
+      const prevProfit = Math.round(calculateProfit(prevYearData));
+      const currProfit = Math.round(validProfit);
+      const difference = currProfit - prevProfit;
+      const percentageChange =
+        prevProfit !== 0
+        ? ((difference / Math.abs(prevProfit)) * 100).toFixed(1)
+        : currProfit > 0
+        ? "100.0"
+        : "0.0";
+      const isGrowth = difference >= 0;
 
-        return (
-          <div className="flex items-center mt-1">
-            <span
-              className={`text-[11px] font-medium ${
-                isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
-              }`}
-            >
-              {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | $
-              {Math.abs(difference).toLocaleString()}
-            </span>
-          </div>
-        );
+      return (
+        <div className="flex items-center mt-1">
+        <span
+          className={`text-[11px] font-medium ${
+          isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
+          }`}
+        >
+          {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | ${Math.abs(difference).toLocaleString()}
+        </span>
+        </div>
+      );
       })()
     ) : (
       <div className="text-[11px] text-[#575F6D] mt-1">
-        No comparison data available
+      No comparison data available
       </div>
     )}
   </div>
