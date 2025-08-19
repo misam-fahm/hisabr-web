@@ -1,0 +1,741 @@
+"use client";
+import React, { FC, useState, useRef, useEffect } from "react";
+import "react-datepicker/dist/react-datepicker.css";
+import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
+import Dropdown from "@/Components/UI/Themes/DropDown";
+import { useRouter } from "next/navigation";
+import { format } from "date-fns";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  flexRender,
+  ColumnDef,
+} from "@tanstack/react-table";
+import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import { sendApiRequest } from "@/utils/apiUtils";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
+import ToastNotification from "@/Components/UI/ToastNotification/ToastNotification";
+import Tooltip from "@/Components/UI/Toolstips/Tooltip";
+import Pagination from "@/Components/UI/Pagination/Pagination";
+
+interface DateRangeOption {
+  name: string;
+  value?: string;
+  id: number;
+}
+
+interface TableRow {
+  itemcode: string;
+  itemname: string;
+  dqcategory: string; // Added DQ Category
+  avgrate: number;
+  totalqty: number;
+  totalcost: number;
+  packsize: number;
+  unit: string;
+  rateperunit: number;
+  totalunits: number;
+  id: any;
+}
+
+const ItemMustReport: FC = () => {
+  const router = useRouter();
+  const [showBackIcon, setShowBackIcon] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef(null);
+  const [isScrollbarVisible, setIsScrollbarVisible] = useState(false);
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [data, setData] = useState<TableRow[]>([]);
+  const [totalItems, setTotalItems] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedOption, setSelectedOption] = useState<any>();
+  const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
+  const [customToast, setCustomToast] = useState<ToastNotificationProps>({
+    message: "",
+    type: "",
+  });
+  const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
+  const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (MTD)");
+
+  const dateRangeOptions: DateRangeOption[] = [
+    { name: "This Month (MTD)", value: "this_month", id: 1 },
+    { name: "This Year (YTD)", value: "this_year", id: 2 },
+    { name: "Last Month", value: "last_month", id: 3 },
+    { name: "Last Year", value: "last_year", id: 4 },
+  ];
+
+  // Custom filter function for searching across Item Code, Item Name, Unit, and DQ Category
+  const globalFilterFn = (row: any, columnId: string, value: string) => {
+    const search = value.toLowerCase();
+    const itemCode = String(row.original.itemcode || '').toLowerCase();
+    const itemName = String(row.original.itemname || '').toLowerCase();
+    const unit = String(row.original.unit || '').toLowerCase();
+    const dqcategory = String(row.original.dqcategory || '').toLowerCase();
+    
+    return itemCode.includes(search) || 
+           itemName.includes(search) || 
+           unit.includes(search) ||
+           dqcategory.includes(search);
+  };
+
+  const formatValue = (value: any, decimals = 2) => {
+    if (
+      value === null ||
+      value === undefined ||
+      value === "" ||
+      (typeof value === "number" && isNaN(value))
+    ) {
+      return "-";
+    }
+    if (typeof value === "number") {
+      return value.toFixed(decimals);
+    }
+    return value;
+  };
+
+  const columns: ColumnDef<TableRow>[] = [
+    {
+      accessorKey: "itemcode",
+      header: () => <div className="text-left">Item Code</div>,
+      cell: (info) => (
+        <span className="text-[#636363]">
+          {formatValue(info.row.original.itemcode, 0)}
+        </span>
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "itemname",
+      header: () => <div className="text-left">Item Name</div>,
+      cell: (info) => {
+        const itemname: any = info?.row?.original?.itemname;
+        if (
+          itemname === null ||
+          itemname === undefined ||
+          itemname === "" ||
+          (typeof itemname === "number" && isNaN(itemname))
+        ) {
+          return <span className="text-[#636363]">-</span>;
+        }
+        const truncatedName =
+          itemname?.length > 20 ? `${itemname?.slice(0, 15)}...` : itemname;
+        return itemname?.length > 20 ? (
+          <span className="text-[#636363]">
+            <Tooltip text={itemname}>{truncatedName}</Tooltip>
+          </span>
+        ) : (
+          <span className="text-[#636363]">{itemname}</span>
+        );
+      },
+      size: 150,
+    },
+    {
+      accessorKey: "totalqty",
+      header: () => <div className="flex justify-end mr-3">Total Qty</div>,
+      cell: (info) => (
+        <span className="flex justify-end mr-3 text-[#636363]">
+          {formatValue(info.row.original.totalqty)}
+        </span>
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "avgrate",
+      header: () => <div className="flex justify-end mr-3">Avg Rate</div>,
+      cell: (info) => (
+        <span className="flex justify-end mr-3 text-[#636363]">
+          {formatValue(info.row.original.avgrate)}
+        </span>
+      ),
+      size: 90,
+    },
+    {
+      accessorKey: "totalcost",
+      header: () => <div className="flex justify-end mr-3">Total Cost</div>,
+      cell: (info) => (
+        <span className="flex justify-end mr-3 text-[#636363] font-semibold">
+          {formatValue(info.row.original.totalcost)}
+        </span>
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "packsize",
+      header: () => <div className="text-right mr-1">Pack Size</div>, // changed to text-right
+      cell: (info) => (
+        <span className="flex justify-end mr-3 text-[#636363]">
+          {formatValue(info.row.original.packsize)}
+        </span>
+      ),
+      size: 90,
+    },
+    {
+      accessorKey: "rateperunit",
+      header: () => <div className="text-right mr-1">Rate Per Unit</div>, // changed to text-right
+      cell: (info) => (
+        <span className="flex justify-end mr-3 text-[#636363]">
+          {formatValue(info.row.original.rateperunit)}
+        </span>
+      ),
+      size: 110,
+    },
+    {
+      accessorKey: "unit",
+      header: () => <div className="flex justify-center mr-3">Unit</div>,
+      cell: (info) => (
+        <span className="flex justify-center mr-3 text-[#636363]">
+          {formatValue(info.row.original.unit, 0)}
+        </span>
+      ),
+      size: 90,
+    },
+    {
+      accessorKey: "totalunits",
+      header: () => <div className="flex justify-end mr-3">Total Units</div>,
+      cell: (info) => (
+        <span className="flex justify-end mr-3 text-[#636363]">
+          {formatValue(info.row.original.totalunits)}
+        </span>
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "dqcategory",
+      header: () => <div className="text-left">DQ Category</div>,
+      cell: (info) => {
+        const dq = info.row.original.dqcategory;
+        const display = (!dq || dq === "Uncategorized") ? "-" : dq;
+        if (display === "-") {
+          return <span className="text-[#636363]">-</span>;
+        }
+        const truncated = display.length > 13 ? `${display.slice(0, 13)}..` : display;
+        return display.length > 13 ? (
+            <span className="text-[#636363]">{truncated}</span>
+        ) : (
+          <span className="text-[#636363]">{display}</span>
+        );
+      },
+      size: 120,
+    },
+  ];
+
+  const table = useReactTable({
+    data: data || [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    globalFilterFn,
+    state: {
+      globalFilter,
+    },
+    onGlobalFilterChange: setGlobalFilter,
+    initialState: {
+      pagination: {
+        pageSize: 10,
+        pageIndex: 0,
+      },
+    },
+    manualPagination: true, // Enable manual pagination
+    pageCount: Math.ceil(totalItems / 10),
+  });
+
+  const { pageIndex, pageSize } = table.getState().pagination;
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await sendApiRequest({
+        mode: "reportitemmust",
+        storeid: selectedOption?.id || 69,
+        startdate: startDate && format(startDate, "yyyy-MM-dd"),
+        enddate: endDate && format(endDate, "yyyy-MM-dd"),
+        search: globalFilter,
+        page: pageIndex + 1,
+        limit: pageSize,
+      });
+
+      console.log("API Response:", response); // Debug API response
+
+      if (response?.status === 200) {
+        const items = response?.data?.data || [];
+        setData(items);
+        // Update total items for pagination
+        if (response?.data?.total > 0) {
+          setTotalItems(response?.data?.total || 0);
+        }
+      } else {
+        setCustomToast({
+          message: response?.message || "Failed to fetch item must report",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setCustomToast({
+        message: "An error occurred while fetching data",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Dependencies:", { selectedOption, startDate, endDate, globalFilter, pageIndex, pageSize });
+    if (startDate && endDate && selectedOption) {
+      fetchData();
+    }
+  }, [selectedOption, startDate, endDate, globalFilter, pageIndex, pageSize]);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+    }
+  };
+
+  const getUserStore = async () => {
+    try {
+      const response = await sendApiRequest({ mode: "getUserStore" });
+      if (response?.status === 200) {
+        const stores = response?.data?.stores || [];
+        const formattedStores = stores.map((store: any) => ({
+          name: `${store.name} - ${store.location || "Unknown Location"}`,
+          id: store.id,
+        }));
+
+        setStore(formattedStores);
+
+        if (stores.length > 0) {
+          setSelectedOption({
+            name: `${stores[0].name} - ${stores[0].location || "Unknown Location"}`,
+            id: stores[0].id,
+          });
+        } else {
+          setCustomToast({
+            message: "No stores available",
+            type: "error",
+          });
+        }
+      } else {
+        setCustomToast({
+          message: response?.message || "Failed to fetch stores",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+      setCustomToast({
+        message: "An error occurred while fetching stores",
+        type: "error",
+      });
+    }
+  };
+
+  const verifyToken = async (token: string) => {
+    try {
+      const res: any = await sendApiRequest({ token }, `auth/verifyToken`);
+      if (res?.status === 200) {
+        setIsVerifiedUser(true);
+      } else {
+        router.replace("/login");
+      }
+    } catch (error) {
+      console.error("Token verification failed:", error);
+      router.replace("/login");
+    }
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.replace("/login");
+    } else {
+      verifyToken(token);
+    }
+  }, [router]);
+
+  useEffect(() => {
+    if (isVerifiedUser) {
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth();
+      setStartDate(new Date(currentYear, currentMonth, 1));
+      setEndDate(new Date(currentYear, currentMonth + 1, 0));
+      getUserStore();
+    }
+  }, [isVerifiedUser]);
+
+  const handleClick = () => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  };
+
+  const toggleStoreDropdown = () => {
+    setIsStoreDropdownOpen((prev) => !prev);
+  };
+
+  const toggleDateRangeDropdown = () => {
+    setIsDateRangeOpen((prev) => !prev);
+  };
+
+  const handleDateRangeSelect = (option: DateRangeOption) => {
+    setSelectedDateRange(option.name);
+    const now = new Date();
+    let newStartDate: Date;
+    let newEndDate: Date;
+
+    switch (option.value) {
+      case "this_month":
+        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        newEndDate = now;
+        break;
+      case "this_year":
+        newStartDate = new Date(now.getFullYear(), 0, 1);
+        newEndDate = now;
+        break;
+      case "last_month":
+        newStartDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        newEndDate = new Date(now.getFullYear(), now.getMonth(), 0);
+        break;
+      case "last_year":
+        newStartDate = new Date(now.getFullYear() - 1, 0, 1);
+        newEndDate = new Date(now.getFullYear() - 1, 11, 31);
+        break;
+      default:
+        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        newEndDate = now;
+    }
+
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
+    setIsDateRangeOpen(false);
+    // Reset pagination to first page when date range changes
+    table.setPageIndex(0);
+  };
+
+  const checkScrollbarVisibility = () => {
+    const container: any = containerRef.current;
+    if (container) {
+      const hasScrollbar = container.scrollHeight > container.clientHeight;
+      setIsScrollbarVisible(hasScrollbar);
+    }
+  };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    checkScrollbarVisibility();
+    const observer = new MutationObserver(() => {
+      checkScrollbarVisibility();
+    });
+    observer.observe(container, {
+      childList: true,
+      subtree: true,
+    });
+
+    window.addEventListener("resize", checkScrollbarVisibility);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", checkScrollbarVisibility);
+    };
+  }, [table]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const fromHome = params.get("fromHome") === "true";
+      const fromLabourAnalysis = params.has("fromLabourAnalysis");
+      if (fromHome || fromLabourAnalysis) {
+        setShowBackIcon(true);
+        const currentUrl = window.location.pathname;
+        window.history.replaceState({}, "", currentUrl);
+      }
+    }
+  }, []);
+
+  const clearSearch = () => {
+    setGlobalFilter("");
+    // Reset pagination to first page when search is cleared
+    table.setPageIndex(0);
+  };
+
+  const filteredMobileData = data?.filter((item: TableRow) => {
+    if (!globalFilter) return true;
+    const search = globalFilter.toLowerCase();
+    const itemCode = String(item.itemcode || '').toLowerCase();
+    const itemName = String(item.itemname || '').toLowerCase();
+    const unit = String(item.unit || '').toLowerCase();
+    const dqcategory = String(item.dqcategory || '').toLowerCase();
+    
+    return itemCode.includes(search) || 
+           itemName.includes(search) || 
+           unit.includes(search) ||
+           dqcategory.includes(search);
+  }) || [];
+
+  return (
+    <main
+      className={`relative px-6 below-md:px-3 border-none`} // Removed overflow-auto
+      style={{ scrollbarWidth: "thin", overflow: "visible" }} // Ensure overflow is visible
+    >
+      <ToastNotification message={customToast.message} type={customToast.type} />
+      <div className="sticky z-20 bg-[#f7f8f9] pb-6 pt-4 below-md:pt-4 below-md:pb-4 tablet:pt-4">
+        <div className="flex flex-row flex-nowrap gap-3 w-full below-md:flex-col">
+          <div className="flex flex-row gap-3 w-full below-md:flex-col below-laptop:w-4/5 small-laptop:w-full">
+            <div className="flex items-center">
+              {showBackIcon && (
+                <img
+                  onClick={() => router.back()}
+                  alt="Back Arrow"
+                  className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
+                  src="/images/webbackicon.svg"
+                />
+              )}
+            </div>
+
+            <Dropdown
+              options={store}
+              selectedOption={selectedOption?.name || "Store"}
+              onSelect={(selectedOption: any) => {
+                setSelectedOption({
+                  name: selectedOption.name,
+                  id: selectedOption.id,
+                });
+                setIsStoreDropdownOpen(false);
+                table.setPageIndex(0); // Already present
+              }}
+              isOpen={isStoreDropdownOpen}
+              toggleOpen={toggleStoreDropdown}
+              widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
+            />
+
+            <Dropdown
+              options={dateRangeOptions}
+              selectedOption={selectedDateRange}
+              onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
+              isOpen={isDateRangeOpen}
+              toggleOpen={toggleDateRangeDropdown}
+              widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
+            />
+
+            <div className="flex-1 min-w-[300px] below-lg:min-w-[256.08px] h-[35px] below-lg:h-[29.876px] w-full">
+              <DateRangePicker
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={(date) => {
+                  setStartDate(date);
+                  table.setPageIndex(0); // Reset to first page on date change
+                }}
+                setEndDate={(date) => {
+                  setEndDate(date);
+                  table.setPageIndex(0); // Reset to first page on date change
+                }}
+                fetchData={fetchData}
+              />
+            </div>
+
+            <div className="flex-1 min-w-[150px] below-lg:min-w-[128.04px] h-[35px] below-lg:h-[29.876px] w-full relative">
+              <input
+                type="text"
+                value={globalFilter ?? ""}
+                onChange={(e) => {
+                  setGlobalFilter(e.target.value);
+                  table.setPageIndex(0); // Reset to first page on search
+                }}
+                onKeyDown={handleKeyDown}
+                ref={searchInputRef}
+                placeholder="Search Item Code, Name, Unit, or DQ Category" // Updated placeholder
+                className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] below-lg:text-[10.2432px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
+              />
+              {globalFilter && (
+                <div className="absolute right-8 inset-y-0 flex items-center cursor-pointer">
+                  <img
+                    className="w-4 h-4"
+                    src="/images/cancelicon.svg"
+                    onClick={clearSearch}
+                    alt="Clear Search"
+                  />
+                </div>
+              )}
+              <div className="absolute inset-y-0 right-2 flex items-center cursor-pointer">
+                <img
+                  src="/images/searchicon.svg"
+                  alt="Search Icon"
+                  className="below-lg:scale-[0.8536]"
+                  onClick={() => searchInputRef.current?.focus()}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="below-md:hidden tablet:hidden pl-4 flex items-center"></div>
+        </div>
+      </div>
+
+      <div className="block md:hidden mb-5">
+        {filteredMobileData?.map((card, index) => (
+          <div
+            key={index}
+            className="flex flex-col w-full rounded-lg bg-white border border-b border-[#E4E4EF] below-lg:hidden my-3"
+          >
+            <div className="flex justify-between items-start">
+              <div className="flex gap-4 px-3 py-4">
+                <p className="text-[14px] font-bold">
+                  {formatValue(card.itemcode, 0)}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center px-4 -mt-4">
+              <div className="border-t border-gray-200 w-full"></div>
+            </div>
+            <div className="flex justify-between items-center px-4 py-3">
+              <div className="flex flex-col text-[13px] space-y-3">
+                <p className="text-[#636363]">Item Name</p>
+                <p className="text-[#636363]">DQ </p> {/* Added DQ Category */}
+                <p className="text-[#636363]">Total Qty</p>
+                <p className="text-[#636363]">Avg Rate</p>
+                <p className="text-[#636363]">Total Cost</p>
+                <p className="text-[#636363]">Pack Size</p>
+                <p className="text-[#636363]">Rate Per Unit</p>
+                <p className="text-[#636363]">Unit</p>
+                <p className="text-[#636363]">Total Units</p>
+              </div>
+              <div className="flex flex-col text-[14px] text-right space-y-3">
+                <p className="text-[#1A1A1A]">
+                  {
+                    card.itemname === null ||
+                    card.itemname === undefined ||
+                    card.itemname === "" ||
+                    (typeof card.itemname === "number" && isNaN(card.itemname))
+                      ? "-"
+                      : card.itemname?.length > 10
+                        ? `${card.itemname?.slice(0, 10)}...`
+                        : card.itemname
+                  }
+                </p>
+                <p className="text-[#1A1A1A]">
+                  {
+                    (!card.dqcategory || card.dqcategory === "Uncategorized")
+                      ? "-"
+                      : card.dqcategory.length > 10
+                        ? (
+                          <span>
+                            <Tooltip text={card.dqcategory}>
+                              {card.dqcategory.slice(0, 10) + ".."}
+                            </Tooltip>
+                          </span>
+                        )
+                        : card.dqcategory
+                  }
+                </p> {/* Show DQ Category */}
+                <p className="text-[#1A1A1A]">{formatValue(card.totalqty)}</p>
+                <p className="text-[#1A1A1A]">{formatValue(card.avgrate)}</p>
+                <p className="text-[#000000]">{formatValue(card.totalcost)}</p>
+                <p className="text-[#1A1A1A]">{formatValue(card.packsize)}</p>
+                <p className="text-[#1A1A1A]">{formatValue(card.rateperunit)}</p>
+                <p className="text-[#1A1A1A]">{formatValue(card.unit, 0)}</p>
+                <p className="text-[#1A1A1A]">{formatValue(card.totalunits)}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+        {filteredMobileData?.length === 0 && !loading && (
+          <div className="text-center py-8">
+            <NoDataFound />
+          </div>
+        )}
+      </div>
+
+      <div className="overflow-x-auto shadow-sm border-collapse border border-b border-[#E4E4EF] rounded-md flex-grow flex flex-col below-md:hidden">
+        <div className="overflow-hidden max-w-full rounded-md">
+          <table className="w-full border-collapse text-white table-fixed rounded-md">
+            <thead className="bg-[#0F1044] top-0 z-10">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      key={header.id}
+                      className="text-left px-4 py-2 text-[#FFFFFF] font-normal text-[15px]"
+                      style={{
+                        width: isScrollbarVisible
+                          ? `${header.column.getSize() + 8}px`
+                          : `${header.column.getSize()}px`,
+                      }}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+          </table>
+          <div
+            ref={containerRef}
+            className="w-full overflow-y-auto scrollbar-thin flex-grow"
+            style={{
+              maxHeight: "calc(100vh - 270px)",
+              background: "transparent", // Ensure no white background overlays data
+              marginBottom: 0, // Remove any margin that could hide data
+              paddingBottom: 0, // Remove any padding that could hide data
+            }}
+          >
+            <table className="w-full border-collapse text-[12px] text-white table-fixed">
+              <tbody>
+                {loading ? (
+                  Array.from({ length: 10 }).map((_, index) => (
+                    <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+                      {columns.map((column, colIndex) => (
+                        <td key={colIndex} className="px-4 py-1.5" style={{ width: `${column.size}px` }}>
+                          <Skeleton height={18} />
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                ) : table.getRowModel().rows.length > 0 ? (
+                  table.getRowModel().rows.map((row) => (
+                    <tr key={row.id} className={row.index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          key={cell.id}
+                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          style={{ width: `${cell.column.getSize()}px` }}
+                        >
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={columns.length} className="py-6 text-center">
+                      <NoDataFound />
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* Pagination Numbers */}
+      <div className="mt-4 below-md:hidden">
+        <Pagination table={table} totalItems={totalItems} />
+      </div>
+    </main>
+  );
+};
+
+export default ItemMustReport;

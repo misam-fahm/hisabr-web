@@ -94,6 +94,7 @@ const Header: React.FC = () => {
       dqcategory: "DQ Export",
       sales: "Sales",
       invoices: "Invoices",
+      itemratebyunit: "Item Rate by Unit",
       expenses: "Expenses",
       cashreconc: "Cash Reconciliation",
       grossrevenue: "Gross Revenue",
