@@ -186,6 +186,10 @@ const normalizedDonutPercentages =
     CUSTOM_RANGE_OPTION,
   ];
 
+  // Helper to check if a value is a valid Date object
+  const isValidDate = (date: any): date is Date =>
+    date instanceof Date && !isNaN(date.getTime());
+
   // Helper to check if two dates are the same (ignoring time)
   const isSameDay = (d1?: Date, d2?: Date) =>
     d1 && d2 && d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
@@ -266,8 +270,16 @@ const normalizedDonutPercentages =
         newEndDate = now;
     }
 
-    setStartDate(newStartDate);
-    setEndDate(newEndDate);
+    // Only update if dates are valid
+    if (isValidDate(newStartDate) && isValidDate(newEndDate)) {
+      setStartDate(newStartDate);
+      setEndDate(newEndDate);
+    } else {
+      setCustomToast({
+        message: "Invalid date range selected.",
+        type: "error",
+      });
+    }
     setIsDateRangeOpen(false);
   };
 
@@ -362,51 +374,57 @@ const fetchCurrentYearData = async (currentYear: number) => {
 
 const fetchData = async () => {
   try {
-    if (startDate && endDate) {
-      setLoading(true);
-      const response: any = await sendApiRequest({
-        mode: "getSalesKpi",
-        storeid: selectedOption?.id || 69,
-        startdate: startDate && format(startDate, "yyyy-MM-dd"),
-        enddate: endDate && format(endDate, "yyyy-MM-dd"),
+    // Guard: Only fetch if dates are valid
+    if (!isValidDate(startDate) || !isValidDate(endDate)) {
+      setCustomToast({
+        message: "Invalid date range.",
+        type: "error",
       });
+      return;
+    }
+    setLoading(true);
+    const response: any = await sendApiRequest({
+      mode: "getSalesKpi",
+      storeid: selectedOption?.id || 69,
+      startdate: format(startDate, "yyyy-MM-dd"),
+      enddate: format(endDate, "yyyy-MM-dd"),
+    });
 
-      if (response?.status === 200) {
-        setData(response?.data?.saleskpi[0] || []);
-        const months = getMonthsDifference() || 12;
-        const payrollTaxAmt =
-          response?.data?.saleskpi[0]?.labour_cost *
-          (response?.data?.saleskpi[0]?.payrolltax / 100);
-        const yearExpAmt =
-          (response?.data?.saleskpi[0]?.Yearly_expense / 12) * months;
+    if (response?.status === 200) {
+      setData(response?.data?.saleskpi[0] || []);
+      const months = getMonthsDifference() || 12;
+      const payrollTaxAmt =
+        response?.data?.saleskpi[0]?.labour_cost *
+        (response?.data?.saleskpi[0]?.payrolltax / 100);
+      const yearExpAmt =
+        (response?.data?.saleskpi[0]?.Yearly_expense / 12) * months;
         
-        // Get tender commission for the current period
-        const tenderCommission = await fetchTenderCommission(
-          selectedOption?.id || 69,
-          format(startDate, "yyyy-MM-dd"),
-          format(endDate, "yyyy-MM-dd")
-        );
-        
-        // Include tender commission in operatExpAmt calculation
-        setOperatExpAmt(
-          response?.data?.saleskpi[0]?.additional_expense +
-            payrollTaxAmt +
-            yearExpAmt +
-            response?.data?.saleskpi[0]?.monthly_expense * months +
-            tenderCommission || 0
-        );
-        
-        setRoyaltyAmt(
-          response?.data?.saleskpi[0]?.net_sales *
-            (response?.data?.saleskpi[0]?.royalty / 100 || 0.09)
-        );
-      } else {
-        setCustomToast({
-          ...customToast,
-          message: response?.message,
-          type: "error",
-        });
-      }
+      // Get tender commission for the current period
+      const tenderCommission = await fetchTenderCommission(
+        selectedOption?.id || 69,
+        format(startDate, "yyyy-MM-dd"),
+        format(endDate, "yyyy-MM-dd")
+      );
+      
+      // Include tender commission in operatExpAmt calculation
+      setOperatExpAmt(
+        response?.data?.saleskpi[0]?.additional_expense +
+          payrollTaxAmt +
+          yearExpAmt +
+          response?.data?.saleskpi[0]?.monthly_expense * months +
+          tenderCommission || 0
+      );
+      
+      setRoyaltyAmt(
+        response?.data?.saleskpi[0]?.net_sales *
+          (response?.data?.saleskpi[0]?.royalty / 100 || 0.09)
+      );
+    } else {
+      setCustomToast({
+        ...customToast,
+        message: response?.message,
+        type: "error",
+      });
     }
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -919,8 +937,12 @@ useEffect(() => {
         <DateRangePicker
         startDate={startDate}
         endDate={endDate}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
+        setStartDate={(date: Date) => {
+          if (isValidDate(date)) setStartDate(date);
+        }}
+        setEndDate={(date: Date) => {
+          if (isValidDate(date)) setEndDate(date);
+        }}
         fetchData={fetchData}
         // fetchDataForItems={fetchDataForItems}
       />

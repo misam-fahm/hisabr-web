@@ -86,6 +86,15 @@ const ItemMustReport: FC = () => {
            dqcategory.includes(search);
   };
 
+  const formatNumberWithCommas = (value: number, decimals = 2) => {
+    if (typeof value !== "number" || isNaN(value)) return "-";
+    // Show no decimals if .00, else show up to 2 decimals
+    if (Number.isInteger(value) || Number(value.toFixed(decimals)) === Math.round(value)) {
+      return Math.round(value).toLocaleString();
+    }
+    return value.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  };
+
   const formatValue = (value: any, decimals = 2) => {
     if (
       value === null ||
@@ -96,7 +105,7 @@ const ItemMustReport: FC = () => {
       return "-";
     }
     if (typeof value === "number") {
-      return value.toFixed(decimals);
+      return formatNumberWithCommas(value, decimals);
     }
     return value;
   };
@@ -106,7 +115,7 @@ const ItemMustReport: FC = () => {
       accessorKey: "itemcode",
       header: () => <div className="text-left">Item Code</div>,
       cell: (info) => (
-        <span className="text-[#636363]">
+        <span className="text-[#636363] text-left block">
           {formatValue(info.row.original.itemcode, 0)}
         </span>
       ),
@@ -139,9 +148,9 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "totalqty",
-      header: () => <div className="flex justify-end mr-3">Total Qty</div>,
+      header: () => <div className="text-right mr-3">Total Qty</div>,
       cell: (info) => (
-        <span className="flex justify-end mr-3 text-[#636363]">
+        <span className="flex justify-end mr-3 text-[#636363] text-right w-full">
           {formatValue(info.row.original.totalqty)}
         </span>
       ),
@@ -149,9 +158,9 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "avgrate",
-      header: () => <div className="flex justify-end mr-3">Avg Rate</div>,
+      header: () => <div className="text-right mr-3">Avg Rate</div>,
       cell: (info) => (
-        <span className="flex justify-end mr-3 text-[#636363]">
+        <span className="flex justify-end mr-3 text-[#636363] text-right w-full">
           {formatValue(info.row.original.avgrate)}
         </span>
       ),
@@ -159,9 +168,9 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "totalcost",
-      header: () => <div className="flex justify-end mr-3">Total Cost</div>,
+      header: () => <div className="text-right mr-3">Total Cost</div>,
       cell: (info) => (
-        <span className="flex justify-end mr-3 text-[#636363] font-semibold">
+        <span className="flex justify-end mr-3 text-[#636363] font-semibold text-right w-full">
           {formatValue(info.row.original.totalcost)}
         </span>
       ),
@@ -169,9 +178,9 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "packsize",
-      header: () => <div className="text-right mr-1">Pack Size</div>, // changed to text-right
+      header: () => <div className="text-right mr-1">Pack Size</div>,
       cell: (info) => (
-        <span className="flex justify-end mr-3 text-[#636363]">
+        <span className="flex justify-end mr-3 text-[#636363] text-right w-full">
           {formatValue(info.row.original.packsize)}
         </span>
       ),
@@ -179,9 +188,9 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "rateperunit",
-      header: () => <div className="text-right mr-1">Rate Per Unit</div>, // changed to text-right
+      header: () => <div className="text-right mr-1">Unit Rate</div>,
       cell: (info) => (
-        <span className="flex justify-end mr-3 text-[#636363]">
+        <span className="flex justify-end mr-3 text-[#636363] text-right w-full">
           {formatValue(info.row.original.rateperunit)}
         </span>
       ),
@@ -189,9 +198,9 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "unit",
-      header: () => <div className="flex justify-center mr-3">Unit</div>,
+      header: () => <div className="text-left mr-3">Unit</div>,
       cell: (info) => (
-        <span className="flex justify-center mr-3 text-[#636363]">
+        <span className="text-[#636363] text-left block">
           {formatValue(info.row.original.unit, 0)}
         </span>
       ),
@@ -199,9 +208,9 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "totalunits",
-      header: () => <div className="flex justify-end mr-3">Total Units</div>,
+      header: () => <div className="text-right mr-3">Total Units</div>,
       cell: (info) => (
-        <span className="flex justify-end mr-3 text-[#636363]">
+        <span className="flex justify-end mr-3 text-[#636363] text-right w-full">
           {formatValue(info.row.original.totalunits)}
         </span>
       ),
@@ -209,7 +218,7 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "dqcategory",
-      header: () => <div className="text-left">DQ Category</div>,
+      header: () => <div className="text-left">DQ Categ.</div>,
       cell: (info) => {
         const dq = info.row.original.dqcategory;
         const display = (!dq || dq === "Uncategorized") ? "-" : dq;
@@ -486,8 +495,8 @@ const ItemMustReport: FC = () => {
 
   return (
     <main
-      className={`relative px-6 below-md:px-3 border-none`} // Removed overflow-auto
-      style={{ scrollbarWidth: "thin", overflow: "visible" }} // Ensure overflow is visible
+      className={`relative px-6 below-md:px-3 overflow-auto border-none`} // Changed to overflow-auto
+      style={{ scrollbarWidth: "thin" }} // Removed overflow: visible
     >
       <ToastNotification message={customToast.message} type={customToast.type} />
       <div className="sticky z-20 bg-[#f7f8f9] pb-6 pt-4 below-md:pt-4 below-md:pb-4 tablet:pt-4">
@@ -601,12 +610,12 @@ const ItemMustReport: FC = () => {
             <div className="flex justify-between items-center px-4 py-3">
               <div className="flex flex-col text-[13px] space-y-3">
                 <p className="text-[#636363]">Item Name</p>
-                <p className="text-[#636363]">DQ </p> {/* Added DQ Category */}
+                <p className="text-[#636363]">DQ Categ.</p>
                 <p className="text-[#636363]">Total Qty</p>
                 <p className="text-[#636363]">Avg Rate</p>
                 <p className="text-[#636363]">Total Cost</p>
                 <p className="text-[#636363]">Pack Size</p>
-                <p className="text-[#636363]">Rate Per Unit</p>
+                <p className="text-[#636363]">Unit Rate</p>
                 <p className="text-[#636363]">Unit</p>
                 <p className="text-[#636363]">Total Units</p>
               </div>
@@ -618,26 +627,16 @@ const ItemMustReport: FC = () => {
                     card.itemname === "" ||
                     (typeof card.itemname === "number" && isNaN(card.itemname))
                       ? "-"
-                      : card.itemname?.length > 10
-                        ? `${card.itemname?.slice(0, 10)}...`
-                        : card.itemname
+                      : card.itemname
                   }
                 </p>
                 <p className="text-[#1A1A1A]">
                   {
                     (!card.dqcategory || card.dqcategory === "Uncategorized")
                       ? "-"
-                      : card.dqcategory.length > 10
-                        ? (
-                          <span>
-                            <Tooltip text={card.dqcategory}>
-                              {card.dqcategory.slice(0, 10) + ".."}
-                            </Tooltip>
-                          </span>
-                        )
-                        : card.dqcategory
+                      : card.dqcategory
                   }
-                </p> {/* Show DQ Category */}
+                </p>
                 <p className="text-[#1A1A1A]">{formatValue(card.totalqty)}</p>
                 <p className="text-[#1A1A1A]">{formatValue(card.avgrate)}</p>
                 <p className="text-[#000000]">{formatValue(card.totalcost)}</p>
@@ -654,18 +653,31 @@ const ItemMustReport: FC = () => {
             <NoDataFound />
           </div>
         )}
+        {/* Mobile Pagination */}
+        <div className="mt-4 md:hidden">
+          <Pagination table={table} totalItems={totalItems} />
+        </div>
       </div>
 
-      <div className="overflow-x-auto shadow-sm border-collapse border border-b border-[#E4E4EF] rounded-md flex-grow flex flex-col below-md:hidden">
-        <div className="overflow-hidden max-w-full rounded-md">
-          <table className="w-full border-collapse text-white table-fixed rounded-md">
+      {/* Web Table */}
+      <div className="shadow-sm border-collapse border border-b border-[#E4E4EF] rounded-md flex-grow flex flex-col below-md:hidden">
+        <div className="rounded-md">
+          <table className="w-full border-collapse text-white rounded-md">
             <thead className="bg-[#0F1044] top-0 z-10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="text-left px-4 py-2 text-[#FFFFFF] font-normal text-[15px]"
+                      className={
+                        // Align header right for number columns, left for text columns
+                        [
+                          "px-4 py-2 text-[#FFFFFF] font-normal text-[15px]",
+                          ["totalqty", "avgrate", "totalcost", "packsize", "rateperunit", "totalunits"].includes(header.column.id)
+                            ? "text-right"
+                            : "text-left"
+                        ].join(" ")
+                      }
                       style={{
                         width: isScrollbarVisible
                           ? `${header.column.getSize() + 8}px`
@@ -686,18 +698,30 @@ const ItemMustReport: FC = () => {
             className="w-full overflow-y-auto scrollbar-thin flex-grow"
             style={{
               maxHeight: "calc(100vh - 270px)",
-              background: "transparent", // Ensure no white background overlays data
-              marginBottom: 0, // Remove any margin that could hide data
-              paddingBottom: 0, // Remove any padding that could hide data
+              background: "transparent",
+              marginBottom: 0,
+              paddingBottom: 0,
             }}
           >
-            <table className="w-full border-collapse text-[12px] text-white table-fixed">
+            <table className="w-full border-collapse text-[12px] text-white">
               <tbody>
                 {loading ? (
                   Array.from({ length: 10 }).map((_, index) => (
                     <tr key={index} className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}>
                       {columns.map((column, colIndex) => (
-                        <td key={colIndex} className="px-4 py-1.5" style={{ width: `${column.size}px` }}>
+                        <td
+                          key={colIndex}
+                          className={
+                            // Align cell right for number columns, left for text columns
+                            [
+                              "px-4 py-1.5",
+                              ["totalqty", "avgrate", "totalcost", "packsize", "rateperunit", "totalunits"].includes(column.id as string)
+                                ? "text-right"
+                                : "text-left"
+                            ].join(" ")
+                          }
+                          style={{ width: `${column.size}px` }}
+                        >
                           <Skeleton height={18} />
                         </td>
                       ))}
@@ -709,7 +733,14 @@ const ItemMustReport: FC = () => {
                       {row.getVisibleCells().map((cell) => (
                         <td
                           key={cell.id}
-                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          className={
+                            [
+                              "px-4 py-1.5 text-[#636363] text-[14px]",
+                              ["totalqty", "avgrate", "totalcost", "packsize", "rateperunit", "totalunits"].includes(cell.column.id)
+                                ? "text-right"
+                                : "text-left"
+                            ].join(" ")
+                          }
                           style={{ width: `${cell.column.getSize()}px` }}
                         >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -729,7 +760,6 @@ const ItemMustReport: FC = () => {
           </div>
         </div>
       </div>
-
       {/* Pagination Numbers */}
       <div className="mt-4 below-md:hidden">
         <Pagination table={table} totalItems={totalItems} />
