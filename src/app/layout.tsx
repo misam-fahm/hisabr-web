@@ -6,6 +6,7 @@ import Header from "@/Components/Header/header";
 import Navbar from "@/Components/Navbar/Navbar";
 import { usePathname } from "next/navigation";
 import { ToastContainer } from "react-toastify";
+import { GlobalProvider } from "@/Components/Header/header";
 
 // export const metadata: Metadata = {
 //   title: "Dashboard",
@@ -27,22 +28,24 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="w-full">
-        <div className="flex w-full ">
-          {!shouldHideSidebar && (
-            <div className="w-auto">
-              <Navbar children={undefined} />
-            </div>
-          )}
-          <div className="flex w-full flex-col">
+        <GlobalProvider>
+          <div className="flex w-full ">
             {!shouldHideSidebar && (
-              <div>
-                <Header />
+              <div className="w-auto">
+                <Navbar children={undefined} />
               </div>
             )}
-            <main>{children}</main>
-            <ToastContainer />
+            <div className="flex w-full flex-col">
+              {!shouldHideSidebar && (
+                <div>
+                  <Header />
+                </div>
+              )}
+              <main>{children}</main>
+              <ToastContainer />
+            </div>
           </div>
-        </div>
+        </GlobalProvider>
       </body>
     </html>
   );
