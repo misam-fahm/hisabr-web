@@ -211,12 +211,8 @@ const Invoices = () => {
     sessionStorage.setItem(
       "invoicesState",
       JSON.stringify({
-        selectedStore: selectedStore ? { name: selectedStore.name, id: selectedStore.id } : null,
-        selectedDateRange: selectedDateRange?.name,
-        startDate: startDate ? startDate.toISOString() : null,
-        endDate: endDate ? endDate.toISOString() : null,
-        globalFilter,
-        pageIndex: table.getState().pagination.pageIndex,
+        globalFilter, // Only store search term
+        pageIndex: table.getState().pagination.pageIndex, // Only store current page
         navigationId,
       })
     );
@@ -328,20 +324,8 @@ const Invoices = () => {
         try {
           const parsedState = JSON.parse(savedState);
           if (parsedState.navigationId === fromInvoiceDetails) {
-            setSelectedDateRange(parsedState.selectedDateRange || dateRangeOptions[0]);
+            // Only restore search and pagination - leave other filters unchanged
             setGlobalFilter(parsedState.globalFilter || "");
-            setStartDate(
-              parsedState.startDate ? new Date(parsedState.startDate) : startDate
-            );
-            setEndDate(
-              parsedState.endDate ? new Date(parsedState.endDate) : endDate
-            );
-            if (parsedState.selectedStore && parsedState.selectedStore.id && parsedState.selectedStore.name) {
-              setSelectedStore({
-                name: parsedState.selectedStore.name,
-                id: parsedState.selectedStore.id,
-              });
-            }
             if (parsedState.pageIndex) {
               table.setPageIndex(parsedState.pageIndex);
             }
