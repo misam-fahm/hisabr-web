@@ -90,15 +90,38 @@ const getRangeFromOption = (option: DateRangeOption): { start: Date; end: Date }
 
 const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [storeOptions, setStoreOptions] = useState<StoreOption[]>([]);
-  const [selectedStore, setSelectedStore] = useState<StoreOption | null>(null);
+  // Load persisted selectedDateRange first (lazy init)
   const [dateRangeOptions] = useState<DateRangeOption[]>(dateRangeOptionsDefault);
-  const [selectedDateRange, setSelectedDateRange] = useState<DateRangeOption>(dateRangeOptionsDefault[0]);
-  // Set initial start/end date based on default selectedDateRange
-  const initialRange = getRangeFromOption(dateRangeOptionsDefault[0]);
+  const [selectedDateRange, setSelectedDateRange] = useState<DateRangeOption>(() => {
+    if (typeof window !== "undefined") {
+      const savedId = localStorage.getItem("selectedDateRangeId");
+      if (savedId) {
+        const found = dateRangeOptionsDefault.find(o => o.id === Number(savedId));
+        if (found) return found;
+      }
+    }
+    return dateRangeOptionsDefault[0];
+  });
+  // Initial range from (possibly persisted) selectedDateRange
+  const initialRange = getRangeFromOption(
+    typeof window !== "undefined"
+      ? (selectedDateRange || dateRangeOptionsDefault[0])
+      : dateRangeOptionsDefault[0]
+  );
   const [startDate, setStartDate] = useState<Date | undefined>(initialRange.start);
   const [endDate, setEndDate] = useState<Date | undefined>(initialRange.end);
+  // Persisted store
+  const [selectedStore, setSelectedStore] = useState<StoreOption | null>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("selectedStore");
+      if (saved) {
+        try { return JSON.parse(saved); } catch {}
+      }
+    }
+    return null;
+  });
 
-  // Fetch stores and set default selection
+  // Fetch stores and reconcile persisted selection
   useEffect(() => {
     const fetchStores = async () => {
       try {
@@ -110,25 +133,36 @@ const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
             id: store.id,
           }));
           setStoreOptions(formattedStores);
-          if (formattedStores.length > 0) setSelectedStore(formattedStores[0]);
+          // If persisted store still exists use it, else default to first
+          if (formattedStores.length > 0) {
+            setSelectedStore(prev => {
+              if (prev && formattedStores.some(s => s.id === prev.id)) return prev;
+              return formattedStores[0];
+            });
+          }
         }
-      } catch (e) {
-        // fail silently for context
+      } catch {
+        // silent
       }
     };
     fetchStores();
   }, []);
 
-  // When selectedDateRange changes, update startDate and endDate
+  // Persist selectedStore
+  useEffect(() => {
+    if (selectedStore) {
+      try { localStorage.setItem("selectedStore", JSON.stringify(selectedStore)); } catch {}
+    }
+  }, [selectedStore]);
+
+  // When selectedDateRange changes, update dates & persist
   useEffect(() => {
     if (!selectedDateRange) return;
     const { start, end } = getRangeFromOption(selectedDateRange);
     setStartDate(start);
     setEndDate(end);
+    try { localStorage.setItem("selectedDateRangeId", String(selectedDateRange.id)); } catch {}
   }, [selectedDateRange]);
-
-  // Optionally, if user picks a custom date in the date picker, you can set a "Custom" range or clear dropdown selection.
-  // (Not required for basic sync, but can be added for full two-way sync.)
 
   return (
     <GlobalContext.Provider
@@ -333,77 +367,78 @@ const Header: React.FC = () => {
     </header>
   );
 
-  if (!isMounted || data === null) return renderSkeleton();
-  if (isAuthorized === false) return null;
-
   return (
     <GlobalProvider>
-      <header className="w-full sticky z-30 bg-white h-[50px] flex justify-center items-center shadow">
-        <div className="flex justify-between items-center w-full below-md:justify-center">
-          <div className="flex justify-center items-center pl-8 below-md:pl-0">
-            <span className="text-[18px] font-bold text-defaultblack">{title || "Loading..."}</span>
-          </div>
-          <div className="flex justify-end items-center below-md:absolute below-md:right-0">
-            {data ? (
-              <>
-                {data.profileImage && !imageError ? (
-                  <img
-                    className="w-10 h-10 mr-4 rounded-full"
-                    src={data.profileImage}
-                    alt="Profile"
-                    onError={() => setImageError(true)}
-                  />
-                ) : (
-                  <div className="w-10 h-10 mr-4 flex items-center justify-center rounded-full bg-[#29235bb1] text-defaultwhite font-semibold text-lg">
-                    {getInitials()}
+      {(!isMounted || data === null) && renderSkeleton()}
+      {isMounted && data !== null && isAuthorized !== false && (
+        <header className="w-full sticky z-30 bg-white h-[50px] flex justify-center items-center shadow">
+          <div className="flex justify-between items-center w-full below-md:justify-center">
+            <div className="flex justify-center items-center pl-8 below-md:pl-0">
+              <span className="text-[18px] font-bold text-defaultblack">{title || "Loading..."}</span>
+            </div>
+            <div className="flex justify-end items-center below-md:absolute below-md:right-0">
+              {data ? (
+                <>
+                  {data.profileImage && !imageError ? (
+                    <img
+                      className="w-10 h-10 mr-4 rounded-full"
+                      src={data.profileImage}
+                      alt="Profile"
+                      onError={() => setImageError(true)}
+                    />
+                  ) : (
+                    <div className="w-10 h-10 mr-4 flex items-center justify-center rounded-full bg-[#29235bb1] text-defaultwhite font-semibold text-lg">
+                      {getInitials()}
+                    </div>
+                  )}
+                  <div className="flex flex-col below-md:hidden">
+                    <p className="text-[14px] font-semibold text-right">{data.firstname}</p>
+                    <p className="text-[12px] font-medium">{data.lastname}</p>
                   </div>
-                )}
-                <div className="flex flex-col below-md:hidden">
-                  <p className="text-[14px] font-semibold text-right">{data.firstname}</p>
-                  <p className="text-[12px] font-medium">{data.lastname}</p>
-                </div>
-              </>
-            ) : (
-              <div className="w-10 h-10 mr-4 flex items-center justify-center rounded-full bg-[#29235bb1] text-defaultwhite font-semibold text-lg">
-                NA
-              </div>
-            )}
-            <div className="ml-8 mr-4 cursor-pointer below-md:hidden relative" ref={dropdownRef}>
-              <button
-                onClick={handleToggle}
-                className="w-10 h-10 flex items-center justify-center"
-                aria-label="Toggle profile dropdown"
-              >
-                <img
-                  src="/images/profiledropdownside.svg"
-                  alt="Dropdown Icon"
-                  className={`transition-transform duration-300 ${isRotated ? "rotate-180" : "rotate-0"}`}
-                />
-              </button>
-              {isOpen && (
-                <div className="absolute right-0 mt-3 mr-2 pl-4 w-52 bg-white shadow-lg rounded-lg">
-                  <ul className="py-2">
-                    <li
-                      className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]"
-                      onClick={() => router.push("/myprofile")}
-                    >
-                      <img src="/images/Profile.svg" className="inline-block mr-2" alt="Profile" />
-                      My Profile
-                    </li>
-                    <li
-                      className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]"
-                      onClick={handleLogout}
-                    >
-                      <img src="/images/navbarlogouticon.svg" className="inline-block mr-2" alt="Logout" />
-                      Logout
-                    </li>
-                  </ul>
+                </>
+              ) : (
+                <div className="w-10 h-10 mr-4 flex items-center justify-center rounded-full bg-[#29235bb1] text-defaultwhite font-semibold text-lg">
+                  NA
                 </div>
               )}
+              <div className="ml-8 mr-4 cursor-pointer below-md:hidden relative" ref={dropdownRef}>
+                <button
+                  onClick={handleToggle}
+                  className="w-10 h-10 flex items-center justify-center"
+                  aria-label="Toggle profile dropdown"
+                >
+                  <img
+                    src="/images/profiledropdownside.svg"
+                    alt="Dropdown Icon"
+                    className={`transition-transform duration-300 ${isRotated ? "rotate-180" : "rotate-0"}`}
+                  />
+                </button>
+                {isOpen && (
+                  <div className="absolute right-0 mt-3 mr-2 pl-4 w-52 bg-white shadow-lg rounded-lg">
+                    <ul className="py-2">
+                      <li
+                        className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]"
+                        onClick={() => router.push("/myprofile")}
+                      >
+                        <img src="/images/Profile.svg" className="inline-block mr-2" alt="Profile" />
+                        My Profile
+                      </li>
+                      <li
+                        className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]"
+                        onClick={handleLogout}
+                      >
+                        <img src="/images/navbarlogouticon.svg" className="inline-block mr-2" alt="Logout" />
+                        Logout
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
+      )}
+      {isMounted && data !== null && isAuthorized === false && null}
     </GlobalProvider>
   );
 };
