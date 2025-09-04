@@ -14,16 +14,25 @@ import Tooltip from "@/Components/UI/Toolstips/Tooltip";
 import YearlySalesGraph from "@/Components/Charts-Graph/YearlySalesGraph";
 import TenderRevenueChart from "@/Components/Charts-Graph/TenderRevenueChart";
 import TenderCommAmtChart from "@/Components/Charts-Graph/TenderCommAmtChart";
-
-// Define DateRangeOption type
-interface DateRangeOption {
-  name: string;
-  value?: string;
-  id: number;
-}
+import { useGlobalContext } from "@/Components/Header/header";
 
 const SalesKPI: FC = () => {
   const router = useRouter();
+  
+  // Get global context values
+  const {
+    storeOptions,
+    dateRangeOptions,
+    selectedDateRange,
+    setSelectedDateRange,
+    startDate,
+    endDate,
+    setStartDate,
+    setEndDate,
+    selectedStore,
+    setSelectedStore,
+  } = useGlobalContext();
+
   const tableDataForTender: any[] = [
     { name: "Cash", revenue: 10000, commission: "", amount: 0 },
     { name: "Amex", revenue: 15000, commission: "3.0%", amount: 450.0 },
@@ -38,19 +47,13 @@ const SalesKPI: FC = () => {
     { name: "Soft Serve", revenue: 77, commission: "350.00" },
     { name: "Donations", revenue: 56, commission: "450.00" },
   ];
-  const [selectedOption, setSelectedOption] = useState<any>();
+
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [selectedDateRange, setSelectedDateRange] =
-    useState<string>("This Month (MTD)");
   const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
-  const [store, setStore] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [periodTenderCommission, setPeriodTenderCommission] = useState(0);
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [data, setData] = useState<any>([]);
-  // const [isFirstCall, setIsFirstCall] = useState<boolean>(true);
   const [tender, setTender] = useState<any>([]);
   const [items, setItems] = useState<any>([]);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
@@ -63,7 +66,7 @@ const SalesKPI: FC = () => {
   const [operatExpAmt, setOperatExpAmt] = useState(0);
   const [royaltyAmt, setRoyaltyAmt] = useState(0);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
-const [currYearTenderCommission, setCurrYearTenderCommission] = useState(0);
+  const [currYearTenderCommission, setCurrYearTenderCommission] = useState(0);
   const [prevYearTenderCommission, setPrevYearTenderCommission] = useState(0);
 
   // Calculations
@@ -79,17 +82,16 @@ const [currYearTenderCommission, setCurrYearTenderCommission] = useState(0);
           royaltyAmt
       )
     : 0;
-  // const royalty = data?.net_sales ? Number((data.net_sales * 0.09 /).toFixed(2)) : 0;
-  // const operatingExpenses = data?.labour_cost ? 109817 : 0;
- const validProfit = data?.net_sales
-  ? Math.round(
-      data.net_sales -
-      data.producttotal -
-      data.labour_cost -
-      operatExpAmt -
-      royaltyAmt
-    )
-  : 0;
+  
+  const validProfit = data?.net_sales
+    ? Math.round(
+        data.net_sales -
+        data.producttotal -
+        data.labour_cost -
+        operatExpAmt -
+        royaltyAmt
+      )
+    : 0;
 
   // Calculate total excluding Sales
   const total =
@@ -126,230 +128,233 @@ const [currYearTenderCommission, setCurrYearTenderCommission] = useState(0);
     percentageSum > 0
       ? percentageValues.map((val) => ((val / percentageSum) * 100).toFixed(2))
       : percentageValues.map(() => "0.00");
-const cogs = Number(data?.producttotal) || 0;
-const royalty = Number(royaltyAmt) || 0;
-const opExp = Number(operatExpAmt) || 0;
-// Removed duplicate declaration of validProfit
+  
+  const cogs = Number(data?.producttotal) || 0;
+  const royalty = Number(royaltyAmt) || 0;
+  const opExp = Number(operatExpAmt) || 0;
 
-// Calculate total for DonutChart items (excluding Tax Amount)
-const donutTotal = labourCost + cogs + royalty + opExp + validProfit;
+  // Calculate total for DonutChart items (excluding Tax Amount)
+  const donutTotal = labourCost + cogs + royalty + opExp + validProfit;
 
-// Calculate raw percentages for DonutChart items
-const donutPercentages =
-  donutTotal > 0
-    ? {
-        labourCost: (labourCost / donutTotal) * 100,
-        cogs: (cogs / donutTotal) * 100,
-        royalty: (royalty / donutTotal) * 100,
-        operatingExpenses: (opExp / donutTotal) * 100,
-        profit: (validProfit / donutTotal) * 100,
-      }
-    : {
-        labourCost: 0,
-        cogs: 0,
-        royalty: 0,
-        operatingExpenses: 0,
-        profit: 0,
-      };
+  // Calculate raw percentages for DonutChart items
+  const donutPercentages =
+    donutTotal > 0
+      ? {
+          labourCost: (labourCost / donutTotal) * 100,
+          cogs: (cogs / donutTotal) * 100,
+          royalty: (royalty / donutTotal) * 100,
+          operatingExpenses: (opExp / donutTotal) * 100,
+          profit: (validProfit / donutTotal) * 100,
+        }
+      : {
+          labourCost: 0,
+          cogs: 0,
+          royalty: 0,
+          operatingExpenses: 0,
+          profit: 0,
+        };
 
-// Normalize percentages to sum to 100%
-const donutPercentageValues = [
-  donutPercentages.labourCost,
-  donutPercentages.cogs,
-  donutPercentages.royalty,
-  donutPercentages.operatingExpenses,
-  donutPercentages.profit,
-];
-const donutPercentageSum = donutPercentageValues.reduce((sum, val) => sum + val, 0);
-const normalizedDonutPercentages =
-  donutPercentageSum > 0
-    ? donutPercentageValues.map((val) => {
-        const num = (val / donutPercentageSum) * 100;
-        return Math.round(num) === num
-          ? num.toString()
-          : (num % 1 >= 0.5
-              ? Math.ceil(num)
-              : Math.floor(num)
-            ).toString();
-      })
-    : donutPercentageValues.map(() => "0");
-
-  // Add a constant for custom range
-  const CUSTOM_RANGE_OPTION: DateRangeOption = { name: "Custom Range", value: "custom", id: 99 };
-
-  // Update dateRangeOptions to include custom range
-  const dateRangeOptions: DateRangeOption[] = [
-    { name: "This Month (MTD)", value: "this_month", id: 1 },
-    { name: "This Year (YTD)", value: "this_year", id: 2 },
-    { name: "Last Month", value: "last_month", id: 3 },
-    { name: "Last Year", value: "last_year", id: 4 },
-    CUSTOM_RANGE_OPTION,
+  // Normalize percentages to sum to 100%
+  const donutPercentageValues = [
+    donutPercentages.labourCost,
+    donutPercentages.cogs,
+    donutPercentages.royalty,
+    donutPercentages.operatingExpenses,
+    donutPercentages.profit,
   ];
+  const donutPercentageSum = donutPercentageValues.reduce((sum, val) => sum + val, 0);
+  const normalizedDonutPercentages =
+    donutPercentageSum > 0
+      ? donutPercentageValues.map((val) => {
+          const num = (val / donutPercentageSum) * 100;
+          return Math.round(num) === num
+            ? num.toString()
+            : (num % 1 >= 0.5
+                ? Math.ceil(num)
+                : Math.floor(num)
+              ).toString();
+        })
+      : donutPercentageValues.map(() => "0");
 
   // Helper to check if a value is a valid Date object
   const isValidDate = (date: any): date is Date =>
     date instanceof Date && !isNaN(date.getTime());
 
-  // Helper to check if two dates are the same (ignoring time)
-  const isSameDay = (d1?: Date, d2?: Date) =>
-    d1 && d2 && d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
+  // Unified data fetch (sales + tenders for all periods)
+  const fetchAllData = useCallback(async () => {
+    if (!isValidDate(startDate) || !isValidDate(endDate) || !selectedStore) return;
+    try {
+      setLoading(true);
+      const start = format(startDate, "yyyy-MM-dd");
+      const end = format(endDate, "yyyy-MM-dd");
 
-  // Helper to check if current start/end match a preset
-  const getMatchingPreset = (start: Date, end: Date): DateRangeOption | undefined => {
-    const now = new Date();
-    const presets = [
-      {
-        option: dateRangeOptions[0], // This Month
-        start: new Date(now.getFullYear(), now.getMonth(), 1),
-        end: now,
-      },
-      {
-        option: dateRangeOptions[1], // This Year
-        start: new Date(now.getFullYear(), 0, 1),
-        end: now,
-      },
-      {
-        option: dateRangeOptions[2], // Last Month
-        start: new Date(now.getFullYear(), now.getMonth() - 1, 1),
-        end: new Date(now.getFullYear(), now.getMonth(), 0),
-      },
-      {
-        option: dateRangeOptions[3], // Last Year
-        start: new Date(now.getFullYear() - 1, 0, 1),
-        end: new Date(now.getFullYear() - 1, 11, 31),
-      },
-    ];
-    return presets.find(
-      (p) => isSameDay(start, p.start) && isSameDay(end, p.end)
-    )?.option;
-  };
+      const [salesResp, tendersResp]: any = await Promise.all([
+        sendApiRequest({
+          mode: "getSalesKpiData",          // RENAMED
+          storeid: selectedStore.id,
+          startdate: start,
+          enddate: end,
+        }),
+        sendApiRequest({
+          mode: "getTendersData",           // NEW consolidated tenders endpoint
+          storeid: selectedStore.id,
+          startdate: start,
+          enddate: end,
+        }),
+      ]);
 
- useEffect(() => {
-  if (currYearData && selectedOption && isVerifiedUser) {
-    const currentYear = new Date().getFullYear();
-    const today = new Date();
-    const yearStart = new Date(currentYear, 0, 1); // January 1st of current year
-    
-    const startDate = format(yearStart, "yyyy-MM-dd");
-    const endDate = format(today, "yyyy-MM-dd");
-    
-    fetchTenderCommission(selectedOption.id, startDate, endDate).then(setCurrYearTenderCommission);
-  }
-}, [currYearData, selectedOption, isVerifiedUser,]);
+      // Parse Sales KPI data
+      if (salesResp?.status === 200) {
+        const salesObj = salesResp?.data?.saleskpi || {};
+        const currentYtd = salesObj.current_ytd?.[0] || {};
+        // CHANGED: was salesObj.previous_ytd?.[0]
+        const previousYtd = salesObj.previous_custom_range?.[0] || {};
+        const customRange = salesObj.custom_range?.[0] || {};
+
+        // Temporarily store (before enhancement)
+        setCurrYearData(currentYtd);
+        setPrevYearData(previousYtd);
+        setData(customRange);
+
+        // Prepare month counts
+        const customMonths = getMonthsDifference() || 12;
+        const monthsCurrYtd = new Date().getMonth() + 1;
+        // CHANGED: previous custom range should mirror custom range length (not YTD)
+        const monthsPrevYtd = customMonths;
+
+        // We'll finalize oper/royalty after tender commissions parsed below
+        // Store raw refs for later combination
+        (fetchAllData as any)._salesTemp = {
+          currentYtd,
+          previousYtd,
+          customRange,
+          customMonths,
+          monthsCurrYtd,
+          monthsPrevYtd,
+        };
+      } else {
+        handleError(salesResp?.message || "Failed to load Sales KPI");
+      }
+
+      // Parse Tenders data (commission aggregation)
+      if (tendersResp?.status === 200) {
+        const tendersObj = tendersResp?.data?.tenders || {};
+        const currentTenders = tendersObj.current_ytd || [];
+        // CHANGED: was tendersObj.previous_ytd
+        const previousTenders = tendersObj.previous_custom_range || [];
+        const customTenders = tendersObj.custom_range || [];
+
+        // Set table tender data to custom period by design
+        setTender(customTenders);
+
+        const commissionSum = (arr: any[]) =>
+          arr.reduce(
+            (sum, row) =>
+              sum + ((row.payments || 0) * (row.commission || 0)) / 100,
+            0
+          );
+
+        const customCommission = commissionSum(customTenders);
+        const currCommission = commissionSum(currentTenders);
+        const prevCommission = commissionSum(previousTenders);
+
+        setPeriodTenderCommission(customCommission);
+        setCurrYearTenderCommission(currCommission);
+        setPrevYearTenderCommission(prevCommission);
+
+        // Enhance operating expenses & royalty now that commissions known
+        const temp = (fetchAllData as any)._salesTemp;
+        if (temp) {
+          const {
+            currentYtd,
+            previousYtd,
+            customRange,
+            customMonths,
+            monthsCurrYtd,
+            monthsPrevYtd,
+          } = temp;
+
+            const computeOperExp = (rec: any, months: number, tenderComm: number) => {
+              if (!rec) return 0;
+              const payrollTaxAmt =
+                (rec.labour_cost || 0) * ((rec.payrolltax || 0) / 100);
+              const yearExpAmt = ((rec.Yearly_expense || 0) / 12) * months;
+              return (
+                (rec.additional_expense || 0) +
+                payrollTaxAmt +
+                yearExpAmt +
+                ((rec.monthly_expense || 0) * months || 0) +
+                tenderComm
+              );
+            };
+
+            const computeRoyalty = (rec: any) =>
+              (rec?.net_sales || 0) * ((rec?.royalty || 9) / 100);
+
+            const customOper = computeOperExp(
+              customRange,
+              customMonths,
+              customCommission
+            );
+            const currOper = computeOperExp(
+              currentYtd,
+              monthsCurrYtd,
+              currCommission
+            );
+            const prevOper = computeOperExp(
+              previousYtd,
+              monthsPrevYtd,
+              prevCommission
+            );
+
+            const customRoyalty = computeRoyalty(customRange);
+            const currRoyalty = computeRoyalty(currentYtd);
+            const prevRoyalty = computeRoyalty(previousYtd);
+
+            setOperatExpAmt(customOper);
+            setRoyaltyAmt(customRoyalty);
+
+            setCurrYearData({
+              ...currentYtd,
+              operatExpAmt: currOper,
+              royaltyAmt: currRoyalty,
+            });
+            setPrevYearData({
+              ...previousYtd,
+              operatExpAmt: prevOper,
+              royaltyAmt: prevRoyalty,
+            });
+            setData({
+              ...customRange,
+              operatExpAmt: customOper,
+              royaltyAmt: customRoyalty,
+            });
+        }
+      } else {
+        handleError(tendersResp?.message || "Failed to load Tenders");
+      }
+    } catch (e) {
+      handleError("Error fetching dashboard data");
+    } finally {
+      setLoading(false);
+    }
+  }, [startDate, endDate, selectedStore]);
+
+  // Wrapper to keep prop name used by DateRangePicker
+  const fetchData = useCallback(() => {
+    fetchAllData();
+  }, [fetchAllData]);
+
+  // Unified effect (replaces several previous effects)
+  useEffect(() => {
+    if (isVerifiedUser && startDate && endDate && selectedStore) {
+      fetchAllData();
+    }
+  }, [isVerifiedUser, startDate, endDate, selectedStore, fetchAllData]);
 
   const toggleDateRangeDropdown = () => {
     setIsDateRangeOpen((prev) => !prev);
   };
-
-  // When user selects a preset from dropdown
-  const handleDateRangeSelect = (option: DateRangeOption) => {
-    setSelectedDateRange(option.name);
-    const now = new Date();
-    let newStartDate: Date;
-    let newEndDate: Date;
-
-    switch (option.value) {
-      case "this_month":
-        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        newEndDate = now;
-        break;
-      case "this_year":
-        newStartDate = new Date(now.getFullYear(), 0, 1);
-        newEndDate = now;
-        break;
-      case "last_month":
-        newStartDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        newEndDate = new Date(now.getFullYear(), now.getMonth(), 0);
-        break;
-      case "last_year":
-        newStartDate = new Date(now.getFullYear() - 1, 0, 1);
-        newEndDate = new Date(now.getFullYear() - 1, 11, 31);
-        break;
-      default:
-        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        newEndDate = now;
-    }
-
-    // Only update if dates are valid
-    if (isValidDate(newStartDate) && isValidDate(newEndDate)) {
-      setStartDate(newStartDate);
-      setEndDate(newEndDate);
-    } else {
-      setCustomToast({
-        message: "Invalid date range selected.",
-        type: "error",
-      });
-    }
-    setIsDateRangeOpen(false);
-  };
-
-
-
-const fetchCurrentYearData = async (currentYear: number) => {
-  try {
-    const today = new Date();
-    const formattedToday = today.toISOString().split('T')[0];
-
-    const response: any = await sendApiRequest({
-      mode: "getSalesKpi",
-      storeid: selectedOption?.id || 69,
-      startdate: `${currentYear}-01-01`,
-      enddate: formattedToday,
-    });
-
-    if (response?.status === 200) {
-      const salesKpi = response?.data?.saleskpi[0] || {};
-      setCurrYearData(salesKpi);
-
-      const months = today.getMonth() + 1;
-      const payrollTaxAmt = salesKpi.labour_cost * (salesKpi.payrolltax / 100) || 0;
-      const yearExpAmt = (salesKpi.Yearly_expense / 12) * months || 0;
-      
-      // Get tender commission for current year
-      const yearStartDate = format(new Date(currentYear, 0, 1), "yyyy-MM-dd");
-      const currentDateFormatted = format(today, "yyyy-MM-dd");
-      const currYearTenderComm = await fetchTenderCommission(
-        selectedOption?.id || 69,
-        yearStartDate,
-        currentDateFormatted
-      );
-      
-      const currYearOperatExpAmt =
-        (salesKpi.additional_expense || 0) +
-        payrollTaxAmt +
-        yearExpAmt +
-        (salesKpi.monthly_expense * months || 0) +
-        currYearTenderComm; // Include tender commission here
-      
-      const currYearRoyaltyAmt =
-        salesKpi.net_sales * (salesKpi.royalty / 100 || 0.09) || 0;
-
-      setCurrYearData((prev: any) => ({
-        ...prev,
-        operatExpAmt: currYearOperatExpAmt,
-        royaltyAmt: currYearRoyaltyAmt,
-      }));
-
-        // Update global operatExpAmt and royaltyAmt for consistency in profit calculation
-      setOperatExpAmt(currYearOperatExpAmt);
-      setRoyaltyAmt(currYearRoyaltyAmt);
-      setCurrYearTenderCommission(currYearTenderComm);
-    }
-  } catch (error) {
-    console.error("Error fetching current year data:", error);
-    setCustomToast({
-      message: "Error fetching current year data",
-      type: "error",
-    });
-  }
-};
-  useEffect(() => {
-    if (startDate && endDate && selectedOption) {
-      fetchData();
-      // setIsFirstCall(false);
-      // fetchDataForItems();
-    }
-  }, [selectedOption]);
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -361,9 +366,8 @@ const fetchCurrentYearData = async (currentYear: number) => {
       type: "error",
     });
   };
+  
   const getMonthsDifference = () => {
-    // const start = new Date(startDate);
-    // const end = new Date(endDate);
     if (startDate && endDate) {
       const yearDiff = endDate.getFullYear() - startDate.getFullYear();
       const monthDiff = endDate.getMonth() - startDate.getMonth();
@@ -372,140 +376,10 @@ const fetchCurrentYearData = async (currentYear: number) => {
     return 12;
   };
 
-const fetchData = async () => {
-  try {
-    // Guard: Only fetch if dates are valid
-    if (!isValidDate(startDate) || !isValidDate(endDate)) {
-      setCustomToast({
-        message: "Invalid date range.",
-        type: "error",
-      });
-      return;
-    }
-    setLoading(true);
-    const response: any = await sendApiRequest({
-      mode: "getSalesKpi",
-      storeid: selectedOption?.id || 69,
-      startdate: format(startDate, "yyyy-MM-dd"),
-      enddate: format(endDate, "yyyy-MM-dd"),
-    });
-
-    if (response?.status === 200) {
-      setData(response?.data?.saleskpi[0] || []);
-      const months = getMonthsDifference() || 12;
-      const payrollTaxAmt =
-        response?.data?.saleskpi[0]?.labour_cost *
-        (response?.data?.saleskpi[0]?.payrolltax / 100);
-      const yearExpAmt =
-        (response?.data?.saleskpi[0]?.Yearly_expense / 12) * months;
-        
-      // Get tender commission for the current period
-      const tenderCommission = await fetchTenderCommission(
-        selectedOption?.id || 69,
-        format(startDate, "yyyy-MM-dd"),
-        format(endDate, "yyyy-MM-dd")
-      );
-      
-      // Include tender commission in operatExpAmt calculation
-      setOperatExpAmt(
-        response?.data?.saleskpi[0]?.additional_expense +
-          payrollTaxAmt +
-          yearExpAmt +
-          response?.data?.saleskpi[0]?.monthly_expense * months +
-          tenderCommission || 0
-      );
-      
-      setRoyaltyAmt(
-        response?.data?.saleskpi[0]?.net_sales *
-          (response?.data?.saleskpi[0]?.royalty / 100 || 0.09)
-      );
-    } else {
-      setCustomToast({
-        ...customToast,
-        message: response?.message,
-        type: "error",
-      });
-    }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
-  useEffect(() => {
-    if (startDate && endDate && selectedOption) {
-      fetchData();
-    }
-  }, [startDate, endDate, selectedOption]);
-  // const fetchDataForItems = async () => {
-  //   try {
-  //     if (startDate && endDate) {
-  //       const response: any = await sendApiRequest({
-  //         mode: "getDqRevCenterSmmary",
-  //         storeid: selectedOption?.id || 69,
-  //         startdate: startDate && format(startDate, 'yyyy-MM-dd'),
-  //         enddate: endDate && format(endDate, 'yyyy-MM-dd'),
-  //       });
-
-  //       if (response?.status === 200) {
-  //         setItems(response?.data?.dqcategories || []);
-  //         // response?.data?.total > 0 &&
-  //         //   setTotalItems(response?.data?.saleskpi[0] || 0);
-  //       } else {
-  //         setCustomToast({
-  //           ...customToast,
-  //           message: response?.message,
-  //           type: "error",
-  //         });
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  // }
-  // };
-
-  // const fetchDropdownData = async () => {
-  //   try {
-  //     const response = await sendApiRequest({ mode: "getAllStores" });
-  //     if (response?.status === 200) {
-  //       setStore(response?.data?.stores || []);
-  //     } else {
-  //       handleError(response?.message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching stores:", error);
-  //   }
-  // };
-
   const [openSection, setOpenSection] = useState<null | string>(null);
 
   const toggleSection = (section: string) => {
     setOpenSection((prev) => (prev === section ? null : section));
-  };
-
-  const getUserStore = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getUserStore" });
-      if (response?.status === 200) {
-        const stores = response?.data?.stores || [];
-        // Map stores to the format expected by the Dropdown component
-        const formattedStores = stores.map((store) => ({
-          name: `${store.name} - ${store.location || "Unknown Location"}`, // Ensure location is handled
-          id: store.id,
-        }));
-
-        setStore(formattedStores); // Update store state with formatted data
-
-        if (stores.length > 0) {
-          setSelectedOption({
-            name: `${stores[0].name} - ${stores[0].location || "Unknown Location"}`,
-            id: stores[0].id,
-          });
-        }
-      } else {
-        handleError(response?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
-    }
   };
 
   const verifyToken = async (token: string) => {
@@ -557,52 +431,29 @@ const fetchData = async () => {
       const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
       const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-      setStartDate(initialStartDate || firstDayOfMonth);
-      setEndDate(initialEndDate || lastDayOfMonth);
+      if (!startDate && !endDate) {
+        setStartDate(initialStartDate || firstDayOfMonth);
+        setEndDate(initialEndDate || lastDayOfMonth);
+      }
 
-      // Fetch stores and set selectedOption
-      const initializeStore = async () => {
-        try {
-          const response = await sendApiRequest({ mode: "getUserStore" });
-          if (response?.status === 200) {
-            const stores = response?.data?.stores || [];
-            const formattedStores = stores.map((store: any) => ({
-              name: `${store.name} - ${store.location || "Unknown Location"}`,
-              id: store.id,
-            }));
-            setStore(formattedStores);
-
-            // Set selectedOption based on storeid from return data or default to first store
-            const selectedStore = initialStoreId
-              ? formattedStores.find(
-                  (store: any) => store.id === initialStoreId
-                )
-              : formattedStores[0];
-            if (selectedStore) {
-              setSelectedOption({
-                name: selectedStore.name,
-                id: selectedStore.id,
-              });
-            }
-          } else {
-            handleError(response?.message);
-          }
-        } catch (error) {
-          console.error("Error fetching stores:", error);
+      // Set selectedStore based on return data or use the current one from context
+      if (initialStoreId && storeOptions.length > 0) {
+        const matchingStore = storeOptions.find(store => String(store.id) === initialStoreId);
+        if (matchingStore) {
+          setSelectedStore(matchingStore);
         }
-      };
+      }
 
-      initializeStore();
-      fetchCurrentYearData(now.getFullYear());
+      fetchAllData();
     }
-  }, [isVerifiedUser]);
+  }, [isVerifiedUser, storeOptions]);
 
   useEffect(() => {
-    if (selectedOption && isVerifiedUser) {
+    if (selectedStore && isVerifiedUser) {
       const now = new Date();
-      fetchCurrentYearData(now.getFullYear());
+      fetchAllData();
     }
-  }, [selectedOption, isVerifiedUser]);
+  }, [selectedStore, isVerifiedUser]);
 
   const handlePressStart = () => {
     setShowTooltip(true);
@@ -649,10 +500,10 @@ const fetchData = async () => {
   );
 
   const handleExpensesCardClick = () => {
-    if (startDate && endDate && selectedOption?.id) {
+    if (startDate && endDate && selectedStore?.id) {
       const startdate = format(startDate, "yyyy-MM-dd");
       const enddate = format(endDate, "yyyy-MM-dd");
-      const storeid = selectedOption.id;
+      const storeid = selectedStore.id;
       const months = getMonthsDifference();
 
       // Store data in localStorage
@@ -670,6 +521,7 @@ const fetchData = async () => {
       });
     }
   };
+  
   // Ensure there's no error when `items` is empty
   const hasItems = items && items.length > 0;
 
@@ -692,6 +544,7 @@ const fetchData = async () => {
     ...item,
     color: colorMapping[item.itemname] || "#CCCCCC", // Default color if not found
   }));
+
   // Helper function to determine the period type (year, quarter, month, or multi)
   const determinePeriodType = (
     start: Date,
@@ -744,11 +597,11 @@ const fetchData = async () => {
   };
 
   const handleCogsCardClick = () => {
-    if (startDate && endDate && selectedOption?.id) {
+    if (startDate && endDate && selectedStore?.id) {
       // Format dates to strings
       const startdate = format(startDate, "yyyy-MM-dd");
       const enddate = format(endDate, "yyyy-MM-dd");
-      const storeid = selectedOption.id;
+      const storeid = selectedStore.id;
 
       // Store data in localStorage
       localStorage.setItem(
@@ -779,66 +632,6 @@ const fetchData = async () => {
     return { prevYearStart, prevYearEnd };
   };
 
-const fetchPreviousData = async () => {
-  if (!startDate || !endDate || !selectedOption) return;
-
-  const { prevYearStart, prevYearEnd } = getPreviousDates();
-  if (!prevYearStart || !prevYearEnd) return;
-
-  try {
-    setLoading(true);
-    const prevYearResponse: any = await sendApiRequest({
-      mode: "getSalesKpi",
-      storeid: selectedOption?.id || 69,
-      startdate: format(prevYearStart, "yyyy-MM-dd"),
-      enddate: format(prevYearEnd, "yyyy-MM-dd"),
-    });
-
-    if (prevYearResponse?.status === 200) {
-      const prevYearSalesKpi = prevYearResponse?.data?.saleskpi[0] || {};
-      setPrevYearData(prevYearSalesKpi);
-
-      const months = getMonthsDifference();
-      const payrollTaxAmt = prevYearSalesKpi.labour_cost * (prevYearSalesKpi.payrolltax / 100) || 0;
-      const yearExpAmt = (prevYearSalesKpi.Yearly_expense / 12) * months || 0;
-      
-      // Get tender commission for previous year period
-      const prevYearTenderComm = await fetchTenderCommission(
-        selectedOption?.id || 69,
-        format(prevYearStart, "yyyy-MM-dd"),
-        format(prevYearEnd, "yyyy-MM-dd")
-      );
-      
-      const prevYearOperatExpAmt =
-        (prevYearSalesKpi.additional_expense || 0) +
-        payrollTaxAmt +
-        yearExpAmt +
-        (prevYearSalesKpi.monthly_expense * months || 0) +
-        prevYearTenderComm; // Include tender commission here
-      
-      const prevYearRoyaltyAmt = prevYearSalesKpi.net_sales * (prevYearSalesKpi.royalty / 100 || 0.09) || 0;
-
-      setPrevYearData((prev: any) => ({
-        ...prev,
-        operatExpAmt: prevYearOperatExpAmt,
-        royaltyAmt: prevYearRoyaltyAmt,
-      }));
-      
-      setPrevYearTenderCommission(prevYearTenderComm);
-    } else {
-      setPrevYearData({});
-    }
-  } catch (error) {
-    console.error("Error fetching previous data:", error);
-    setCustomToast({
-      message: "Error fetching previous period data",
-      type: "error",
-    });
-    setPrevPeriodData({});
-  }
-};
-
-
   const calculateProfit = (data: any): number => {
     if (!data?.net_sales) return 0;
     const profit = Math.round(
@@ -851,57 +644,8 @@ const fetchPreviousData = async () => {
     return profit;
   };
 
-  // Update useEffect to fetch previous data when startDate, endDate, or selectedOption changes
-  useEffect(() => {
-    if (startDate && endDate && selectedOption) {
-      fetchData();
-      fetchPreviousData();
-    }
-  }, [startDate, endDate, selectedOption]);
-
   const [showTooltip, setShowTooltip] = useState(false);
-/* Duplicate fetchCurrentYearData removed to fix redeclaration error */
-  // Helper to fetch tender commission for a period
-  const fetchTenderCommission = useCallback(async (storeid: number, startdate: string, enddate: string) => {
-    try {
-      const response: any = await sendApiRequest({
-        mode: 'getLatestTenders',
-        storeid: storeid || 69,
-        startdate,
-        enddate,
-      });
-      if (response?.status === 200) {
-        const tenders = response?.data?.tenders || [];
-        return tenders.reduce(
-          (sum: number, row: any) => sum + ((row.payments * row.commission) / 100 || 0),
-          0
-        );
-      }
-    } catch (e) {
-      // ignore
-    }
-    return 0;
-  }, []);
 
-  // Fetch for current year
-useEffect(() => {
-  if (startDate && endDate && selectedOption) {
-    const start = format(startDate, "yyyy-MM-dd");
-    const end = format(endDate, "yyyy-MM-dd");
-    fetchTenderCommission(selectedOption.id, start, end).then(setPeriodTenderCommission);
-  }
-}, [startDate, endDate, selectedOption, fetchTenderCommission]);
-
-  // Fetch for previous year
-  useEffect(() => {
-    if (prevYearData && selectedOption && startDate && endDate) {
-      const prevYearStart = new Date(startDate.getFullYear() - 1, startDate.getMonth(), startDate.getDate());
-      const prevYearEnd = new Date(endDate.getFullYear() - 1, endDate.getMonth(), endDate.getDate());
-      const start = format(prevYearStart, "yyyy-MM-dd");
-      const end = format(prevYearEnd, "yyyy-MM-dd");
-      fetchTenderCommission(selectedOption.id, start, end).then(setPrevYearTenderCommission);
-    }
-  }, [prevYearData, selectedOption, startDate, endDate, fetchTenderCommission]);
 
   return (
     isVerifiedUser && (
@@ -909,43 +653,38 @@ useEffect(() => {
         className="max-h-[calc(100vh-60px)] min-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] overflow-auto"
         style={{ scrollbarWidth: "thin" }}
       >
-<div className="flex flex-row below-md:flex-col below-md:items-start below-md:w-full tablet:w-full box-border sticky justify-between pt-6 below-md:pt-4 below-md:px-2 tablet:px-2 pl-6 pr-6 pb-1.5 below-md:pb-4 bg-[#f7f8f9]">
-  <div className="flex flex-row below-md:flex-col below-md:w-full gap-3">
-    <Dropdown
-      options={store}
-      selectedOption={selectedOption?.name || "Store"}
-      onSelect={(selectedOption: any) => {
-        setSelectedOption({
-          name: selectedOption.name,
-          id: selectedOption.id,
-        });
-        setIsStoreDropdownOpen(false);
-      }}
-      isOpen={isStoreDropdownOpen}
-      toggleOpen={toggleStoreDropdown}
-      widthchange="w-[35%] tablet:w-full below-md:w-full"
-    />
-    <Dropdown
-      options={dateRangeOptions}
-      selectedOption={selectedDateRange}
-      onSelect={handleDateRangeSelect}
-      isOpen={isDateRangeOpen}
-      toggleOpen={toggleDateRangeDropdown}
-      widthchange="w-[30%] tablet:w-full below-md:w-full"
-    />
-    <div className="w-[300px] tablet:w-[160%] below-md:w-full">
+        <div className="flex flex-row below-md:flex-col below-md:items-start below-md:w-full tablet:w-full box-border sticky justify-between pt-6 below-md:pt-4 below-md:px-2 tablet:px-2 pl-6 pr-6 pb-1.5 below-md:pb-4 bg-[#f7f8f9]">
+          <div className="flex flex-row below-md:flex-col below-md:w-full gap-3">
+            <Dropdown
+              options={storeOptions}
+              selectedOption={selectedStore?.name || "Store"}
+              onSelect={(option: any) => {
+                setSelectedStore(option);
+                setIsStoreDropdownOpen(false);
+              }}
+              isOpen={isStoreDropdownOpen}
+              toggleOpen={toggleStoreDropdown}
+              widthchange="w-[35%] tablet:w-full below-md:w-full"
+            />
+            <Dropdown
+              options={dateRangeOptions}
+              selectedOption={selectedDateRange?.name}
+              onSelect={(option: any) => {
+                setSelectedDateRange(option);
+                setIsDateRangeOpen(false);
+              }}
+              isOpen={isDateRangeOpen}
+              toggleOpen={toggleDateRangeDropdown}
+              widthchange="w-[30%] tablet:w-full below-md:w-full"
+            />
+            <div className="w-[300px] tablet:w-[160%] below-md:w-full">
         <DateRangePicker
-        startDate={startDate}
-        endDate={endDate}
-        setStartDate={(date: Date) => {
-          if (isValidDate(date)) setStartDate(date);
-        }}
-        setEndDate={(date: Date) => {
-          if (isValidDate(date)) setEndDate(date);
-        }}
-        fetchData={fetchData}
-        // fetchDataForItems={fetchDataForItems}
-      />
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+                fetchData={fetchData}
+              />
     </div>
   </div>
   {/* <div className="below-md:hidden tablet:hidden">
@@ -1772,7 +1511,7 @@ useEffect(() => {
                   <TenderRevenueChart
                     startDate={startDate}
                     endDate={endDate}
-                    storeid={selectedOption?.id || 69}
+                    storeid={selectedStore?.id || 69}
                     setCustomToast={setCustomToast}
                   />
                 </div>
@@ -1793,7 +1532,7 @@ useEffect(() => {
                   <TenderCommAmtChart
                     startDate={startDate}
                     endDate={endDate}
-                    storeid={selectedOption?.id || 69}
+                    storeid={selectedStore?.id || 69}
                     setCustomToast={setCustomToast}
                   />
                 </div>

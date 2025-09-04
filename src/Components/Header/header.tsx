@@ -1,8 +1,53 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  createContext,
+  useContext,
+  ReactNode,
+} from "react";
 import { usePathname, useRouter, useParams } from "next/navigation";
 import { sendApiRequest } from "@/utils/apiUtils";
+
+// --- Global Context Types ---
+interface StoreOption {
+  id: number;
+  name: string;
+}
+interface DateRangeOption {
+  id: number;
+  name: string;
+  value: string;
+}
+interface GlobalContextType {
+  storeOptions: StoreOption[];
+  selectedStore: StoreOption | null;
+  setSelectedStore: (store: StoreOption) => void;
+  dateRangeOptions: DateRangeOption[];
+  selectedDateRange: DateRangeOption;
+  setSelectedDateRange: (range: DateRangeOption) => void;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  setStartDate: (date: Date | undefined) => void;
+  setEndDate: (date: Date | undefined) => void;
+}
+const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
+
+// --- Global Context Provider ---
+const dateRangeOptionsDefault: DateRangeOption[] = [
+  { id: 1, name: "This Month (MTD)", value: "this_month" },
+  { id: 2, name: "This Year (YTD)", value: "this_year" },
+  { id: 3, name: "Last Month", value: "last_month" },
+  { id: 4, name: "Last Year", value: "last_year" },
+];
+
+export function useGlobalContext() {
+  const ctx = useContext(GlobalContext);
+  if (!ctx) throw new Error("useGlobalContext must be used within GlobalContext.Provider");
+  return ctx;
+}
 
 interface UserData {
   firstname: string;
@@ -16,6 +61,96 @@ interface ToastState {
   type: string;
 }
 
+const getRangeFromOption = (option: DateRangeOption): { start: Date; end: Date } => {
+  const now = new Date();
+  let start: Date, end: Date;
+  switch (option.value) {
+    case "this_month":
+      start = new Date(now.getFullYear(), now.getMonth(), 1);
+      end = now;
+      break;
+    case "this_year":
+      start = new Date(now.getFullYear(), 0, 1);
+      end = now;
+      break;
+    case "last_month":
+      start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      end = new Date(now.getFullYear(), now.getMonth(), 0);
+      break;
+    case "last_year":
+      start = new Date(now.getFullYear() - 1, 0, 1);
+      end = new Date(now.getFullYear() - 1, 11, 31);
+      break;
+    default:
+      start = new Date(now.getFullYear(), now.getMonth(), 1);
+      end = now;
+  }
+  return { start, end };
+};
+
+const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [storeOptions, setStoreOptions] = useState<StoreOption[]>([]);
+  const [selectedStore, setSelectedStore] = useState<StoreOption | null>(null);
+  const [dateRangeOptions] = useState<DateRangeOption[]>(dateRangeOptionsDefault);
+  const [selectedDateRange, setSelectedDateRange] = useState<DateRangeOption>(dateRangeOptionsDefault[0]);
+  // Set initial start/end date based on default selectedDateRange
+  const initialRange = getRangeFromOption(dateRangeOptionsDefault[0]);
+  const [startDate, setStartDate] = useState<Date | undefined>(initialRange.start);
+  const [endDate, setEndDate] = useState<Date | undefined>(initialRange.end);
+
+  // Fetch stores and set default selection
+  useEffect(() => {
+    const fetchStores = async () => {
+      try {
+        const response = await sendApiRequest({ mode: "getUserStore" });
+        if (response?.status === 200) {
+          const stores = response?.data?.stores || [];
+          const formattedStores = stores.map((store: any) => ({
+            name: `${store.name} - ${store.location || "Unknown Location"}`,
+            id: store.id,
+          }));
+          setStoreOptions(formattedStores);
+          if (formattedStores.length > 0) setSelectedStore(formattedStores[0]);
+        }
+      } catch (e) {
+        // fail silently for context
+      }
+    };
+    fetchStores();
+  }, []);
+
+  // When selectedDateRange changes, update startDate and endDate
+  useEffect(() => {
+    if (!selectedDateRange) return;
+    const { start, end } = getRangeFromOption(selectedDateRange);
+    setStartDate(start);
+    setEndDate(end);
+  }, [selectedDateRange]);
+
+  // Optionally, if user picks a custom date in the date picker, you can set a "Custom" range or clear dropdown selection.
+  // (Not required for basic sync, but can be added for full two-way sync.)
+
+  return (
+    <GlobalContext.Provider
+      value={{
+        storeOptions,
+        selectedStore,
+        setSelectedStore,
+        dateRangeOptions,
+        selectedDateRange,
+        setSelectedDateRange,
+        startDate,
+        endDate,
+        setStartDate,
+        setEndDate,
+      }}
+    >
+      {children}
+    </GlobalContext.Provider>
+  );
+};
+
+// --- Header Component ---
 const Header: React.FC = () => {
   const [imageError, setImageError] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +159,7 @@ const Header: React.FC = () => {
   const [title, setTitle] = useState("");
   const [customToast, setCustomToast] = useState<ToastState>({ message: "", type: "" });
   const [isMounted, setIsMounted] = useState(false);
-  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null); // New state for authorization
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -49,7 +184,6 @@ const Header: React.FC = () => {
       const response: any = await sendApiRequest({ mode: "getUserById" });
       if (response?.status === 200) {
         setData(response.data.user[0]);
-        
       } else {
         setCustomToast({
           message: response?.message || "Failed to fetch user data.",
@@ -128,7 +262,7 @@ const Header: React.FC = () => {
   };
 
   const checkAccessControl = () => {
-    if (!data) return true; // Assume authorized until data is loaded
+    if (!data) return true;
     const currentRoute = currentPath.replace(/^\/|\/$/g, "").toLowerCase();
     const userType = data.usertype;
     const restrictedSetupRoutes = [
@@ -200,76 +334,79 @@ const Header: React.FC = () => {
   );
 
   if (!isMounted || data === null) return renderSkeleton();
-  if (isAuthorized === false) return null; // Prevent rendering before redirect
+  if (isAuthorized === false) return null;
 
   return (
-    <header className="w-full sticky z-30 bg-white h-[50px] flex justify-center items-center shadow">
-      <div className="flex justify-between items-center w-full below-md:justify-center">
-        <div className="flex justify-center items-center pl-8 below-md:pl-0">
-          <span className="text-[18px] font-bold text-defaultblack">{title || "Loading..."}</span>
-        </div>
-        <div className="flex justify-end items-center below-md:absolute below-md:right-0">
-          {data ? (
-            <>
-              {data.profileImage && !imageError ? (
-                <img
-                  className="w-10 h-10 mr-4 rounded-full"
-                  src={data.profileImage}
-                  alt="Profile"
-                  onError={() => setImageError(true)}
-                />
-              ) : (
-                <div className="w-10 h-10 mr-4 flex items-center justify-center rounded-full bg-[#29235bb1] text-defaultwhite font-semibold text-lg">
-                  {getInitials()}
+    <GlobalProvider>
+      <header className="w-full sticky z-30 bg-white h-[50px] flex justify-center items-center shadow">
+        <div className="flex justify-between items-center w-full below-md:justify-center">
+          <div className="flex justify-center items-center pl-8 below-md:pl-0">
+            <span className="text-[18px] font-bold text-defaultblack">{title || "Loading..."}</span>
+          </div>
+          <div className="flex justify-end items-center below-md:absolute below-md:right-0">
+            {data ? (
+              <>
+                {data.profileImage && !imageError ? (
+                  <img
+                    className="w-10 h-10 mr-4 rounded-full"
+                    src={data.profileImage}
+                    alt="Profile"
+                    onError={() => setImageError(true)}
+                  />
+                ) : (
+                  <div className="w-10 h-10 mr-4 flex items-center justify-center rounded-full bg-[#29235bb1] text-defaultwhite font-semibold text-lg">
+                    {getInitials()}
+                  </div>
+                )}
+                <div className="flex flex-col below-md:hidden">
+                  <p className="text-[14px] font-semibold text-right">{data.firstname}</p>
+                  <p className="text-[12px] font-medium">{data.lastname}</p>
                 </div>
-              )}
-              <div className="flex flex-col below-md:hidden">
-                <p className="text-[14px] font-semibold text-right">{data.firstname}</p>
-                <p className="text-[12px] font-medium">{data.lastname}</p>
-              </div>
-            </>
-          ) : (
-            <div className="w-10 h-10 mr-4 flex items-center justify-center rounded-full bg-[#29235bb1] text-defaultwhite font-semibold text-lg">
-              NA
-            </div>
-          )}
-          <div className="ml-8 mr-4 cursor-pointer below-md:hidden relative" ref={dropdownRef}>
-            <button
-              onClick={handleToggle}
-              className="w-10 h-10 flex items-center justify-center"
-              aria-label="Toggle profile dropdown"
-            >
-              <img
-                src="/images/profiledropdownside.svg"
-                alt="Dropdown Icon"
-                className={`transition-transform duration-300 ${isRotated ? "rotate-180" : "rotate-0"}`}
-              />
-            </button>
-            {isOpen && (
-              <div className="absolute right-0 mt-3 mr-2 pl-4 w-52 bg-white shadow-lg rounded-lg">
-                <ul className="py-2">
-                  <li
-                    className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]"
-                    onClick={() => router.push("/myprofile")}
-                  >
-                    <img src="/images/Profile.svg" className="inline-block mr-2" alt="Profile" />
-                    My Profile
-                  </li>
-                  <li
-                    className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]"
-                    onClick={handleLogout}
-                  >
-                    <img src="/images/navbarlogouticon.svg" className="inline-block mr-2" alt="Logout" />
-                    Logout
-                  </li>
-                </ul>
+              </>
+            ) : (
+              <div className="w-10 h-10 mr-4 flex items-center justify-center rounded-full bg-[#29235bb1] text-defaultwhite font-semibold text-lg">
+                NA
               </div>
             )}
+            <div className="ml-8 mr-4 cursor-pointer below-md:hidden relative" ref={dropdownRef}>
+              <button
+                onClick={handleToggle}
+                className="w-10 h-10 flex items-center justify-center"
+                aria-label="Toggle profile dropdown"
+              >
+                <img
+                  src="/images/profiledropdownside.svg"
+                  alt="Dropdown Icon"
+                  className={`transition-transform duration-300 ${isRotated ? "rotate-180" : "rotate-0"}`}
+                />
+              </button>
+              {isOpen && (
+                <div className="absolute right-0 mt-3 mr-2 pl-4 w-52 bg-white shadow-lg rounded-lg">
+                  <ul className="py-2">
+                    <li
+                      className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]"
+                      onClick={() => router.push("/myprofile")}
+                    >
+                      <img src="/images/Profile.svg" className="inline-block mr-2" alt="Profile" />
+                      My Profile
+                    </li>
+                    <li
+                      className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer text-[13px]"
+                      onClick={handleLogout}
+                    >
+                      <img src="/images/navbarlogouticon.svg" className="inline-block mr-2" alt="Logout" />
+                      Logout
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </GlobalProvider>
   );
 };
 
+export { GlobalProvider };
 export default Header;
