@@ -145,9 +145,9 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "totalqty",
-      header: () => <div className="text-right mr-3">Total Qty</div>,
+      header: () => <div className="text-right">Total Qty</div>,
       cell: (info) => (
-        <span className="flex justify-end mr-3 text-[#636363] text-right w-full">
+        <span className="flex justify-end text-[#636363] text-right w-full">
           {formatValue(info.row.original.totalqty)}
         </span>
       ),
@@ -155,9 +155,9 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "avgrate",
-      header: () => <div className="text-right mr-3">Avg Rate</div>,
+      header: () => <div className="text-right">Avg Rate</div>,
       cell: (info) => (
-        <span className="flex justify-end mr-3 text-[#636363] text-right w-full">
+        <span className="flex justify-end text-[#636363] text-right w-full">
           {formatValue(info.row.original.avgrate)}
         </span>
       ),
@@ -165,9 +165,9 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "totalcost",
-      header: () => <div className="text-right mr-3">Total Cost</div>,
+      header: () => <div className="text-right">Total Cost</div>,
       cell: (info) => (
-        <span className="flex justify-end mr-3 text-[#636363] font-semibold text-right w-full">
+        <span className="flex justify-end text-[#636363] font-semibold text-right w-full">
           {formatValue(info.row.original.totalcost)}
         </span>
       ),
@@ -175,9 +175,9 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "packsize",
-      header: () => <div className="text-right mr-1">Pack Size</div>,
+      header: () => <div className="text-right">Pack Size</div>,
       cell: (info) => (
-        <span className="flex justify-end mr-3 text-[#636363] text-right w-full">
+        <span className="flex justify-end text-[#636363] text-right w-full">
           {formatValue(info.row.original.packsize)}
         </span>
       ),
@@ -185,9 +185,9 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "rateperunit",
-      header: () => <div className="text-right mr-1">Unit Rate</div>,
+      header: () => <div className="text-right">Unit Rate</div>,
       cell: (info) => (
-        <span className="flex justify-end mr-3 text-[#636363] text-right w-full">
+        <span className="flex justify-end text-[#636363] text-right w-full">
           {formatValue(info.row.original.rateperunit)}
         </span>
       ),
@@ -195,7 +195,7 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "unit",
-      header: () => <div className="text-left mr-3">Unit</div>,
+      header: () => <div className="text-left">Unit</div>,
       cell: (info) => (
         <span className="text-[#636363] text-left block">
           {formatValue(info.row.original.unit, 0)}
@@ -205,9 +205,9 @@ const ItemMustReport: FC = () => {
     },
     {
       accessorKey: "totalunits",
-      header: () => <div className="text-right mr-3">Total Units</div>,
+      header: () => <div className="text-right">Total Units</div>,
       cell: (info) => (
-        <span className="flex justify-end mr-3 text-[#636363] text-right w-full">
+        <span className="flex justify-end text-[#636363] text-right w-full">
           {formatValue(info.row.original.totalunits)}
         </span>
       ),
@@ -587,19 +587,14 @@ const ItemMustReport: FC = () => {
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className={
-                        // Align header right for number columns, left for text columns
-                        [
-                          "px-4 py-2 text-[#FFFFFF] font-normal text-[15px]",
-                          ["totalqty", "avgrate", "totalcost", "packsize", "rateperunit", "totalunits"].includes(header.column.id)
-                            ? "text-right"
-                            : "text-left"
-                        ].join(" ")
-                      }
+                      className="px-4 py-2 text-[#FFFFFF] font-normal text-[15px]"
                       style={{
                         width: isScrollbarVisible
                           ? `${header.column.getSize() + 8}px`
                           : `${header.column.getSize()}px`,
+                        textAlign: ["totalqty", "avgrate", "totalcost", "packsize", "rateperunit", "totalunits"].includes(header.column.id)
+                          ? "right"
+                          : "left",
                       }}
                     >
                       {header.isPlaceholder
@@ -629,16 +624,13 @@ const ItemMustReport: FC = () => {
                       {columns.map((column, colIndex) => (
                         <td
                           key={colIndex}
-                          className={
-                            // Align cell right for number columns, left for text columns
-                            [
-                              "px-4 py-1.5",
-                              ["totalqty", "avgrate", "totalcost", "packsize", "rateperunit", "totalunits"].includes(column.id as string)
-                                ? "text-right"
-                                : "text-left"
-                            ].join(" ")
-                          }
-                          style={{ width: `${column.size}px` }}
+                          className="px-4 py-1.5"
+                          style={{ 
+                            width: `${column.size}px`,
+                            textAlign: ["totalqty", "avgrate", "totalcost", "packsize", "rateperunit", "totalunits"].includes(column.id as string)
+                              ? "right"
+                              : "left",
+                          }}
                         >
                           <Skeleton height={18} />
                         </td>
@@ -651,15 +643,13 @@ const ItemMustReport: FC = () => {
                       {row.getVisibleCells().map((cell) => (
                         <td
                           key={cell.id}
-                          className={
-                            [
-                              "px-4 py-1.5 text-[#636363] text-[14px]",
-                              ["totalqty", "avgrate", "totalcost", "packsize", "rateperunit", "totalunits"].includes(cell.column.id)
-                                ? "text-right"
-                                : "text-left"
-                            ].join(" ")
-                          }
-                          style={{ width: `${cell.column.getSize()}px` }}
+                          className="px-4 py-1.5 text-[#636363] text-[14px]"
+                          style={{ 
+                            width: `${cell.column.getSize()}px`,
+                            textAlign: ["totalqty", "avgrate", "totalcost", "packsize", "rateperunit", "totalunits"].includes(cell.column.id)
+                              ? "right"
+                              : "left",
+                          }}
                         >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
