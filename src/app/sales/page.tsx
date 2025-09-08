@@ -24,6 +24,7 @@ import ToastNotification, {
 import moment from "moment";
 import Loading from "@/Components/UI/Themes/Loading";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
+import { useGlobalContext } from "@/Components/Header/header";
 
 interface TableRow {
   sales_date: string;
@@ -36,33 +37,40 @@ interface TableRow {
   salesid: number;
   order_average_amt: any;
 }
-interface DateRangeOption {
-  name: string;
-  value?: string;
-  id: number;
-}
+
 const Sales: FC = () => {
   const router = useRouter();
   const [data, setData] = useState<TableRow[]>([]);
-  const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
-  const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (MTD)");
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<any>();
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedSaleId, setSelectedSaleId] = useState<number | null>(null);
+  const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [store, setStore] = useState<any[]>([]);
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
   });
   const [globalFilter, setGlobalFilter] = React.useState("");
   const fileInputRef: any = useRef(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Get global context values
+  const {
+    storeOptions,
+    dateRangeOptions,
+    selectedDateRange,
+    setSelectedDateRange,
+    startDate,
+    endDate,
+    setStartDate,
+    setEndDate,
+    selectedStore,
+    setSelectedStore,
+  } = useGlobalContext();
+
   const navigateToSalesView = (salesId: any) => {
     const encodedId = btoa(salesId);
     const urlSafeEncodedId = encodedId
@@ -71,6 +79,7 @@ const Sales: FC = () => {
       ?.replace(/=+$/, "");
     router.push(`/sales/${urlSafeEncodedId}`);
   };
+
   const handleDeleteSale = async () => {
     if (!selectedSaleId) return;
   
@@ -103,7 +112,6 @@ const Sales: FC = () => {
       setSelectedSaleId(null);
     }
   };
-  
   
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -211,11 +219,11 @@ const Sales: FC = () => {
   ];
 
   useEffect(() => {
-    if (startDate && endDate && selectedOption) {
+    if (startDate && endDate && selectedStore) {
       table.setPageIndex(0); // reset to first page
       fetchData();
     }
-  }, [startDate, endDate, selectedOption, globalFilter]);
+  }, [startDate, endDate, selectedStore, globalFilter]);
 
   const table = useReactTable({
     data: data,
@@ -245,7 +253,7 @@ const Sales: FC = () => {
         mode: "getSales",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
-        storeid: selectedOption?.id || 69,
+        storeid: selectedStore?.id || 69,
         startdate: startDate && format(startDate, "yyyy-MM-dd"),
         enddate: endDate && format(endDate, "yyyy-MM-dd"),
         search: globalFilter,
@@ -274,35 +282,6 @@ const Sales: FC = () => {
     fetchData();
   }, [pageIndex, pageSize]);
 
-  const getUserStore = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getUserStore" });
-      if (response?.status === 200) {
-        const stores = response?.data?.stores || [];
-        // Map stores to the format expected by the Dropdown component
-        const formattedStores = stores?.map((store: any) => ({
-          storeno: store?.name,
-          name: `${store?.name} - ${store?.location || "Unknown Location"}`, // Ensure location is handled
-          id: store?.id,
-        }));
-        
-        setStore(formattedStores); // Update store state with formatted data
-        
-        if (stores?.length > 0) {
-          setSelectedOption({
-            storeno: stores[0]?.name,
-            name: `${stores[0]?.name} - ${stores[0]?.location || "Unknown Location"}`,
-            id: stores[0]?.id,
-          });
-        }
-      } else {
-        handleError(response?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
-    }
-  };
-
   const verifyToken = async (token: string) => {
     try {
       const res: any = await sendApiRequest(
@@ -328,72 +307,20 @@ const Sales: FC = () => {
 
   useEffect(() => {
     if (isVerifiedUser) {
-      const today = new Date();
-      const currentYear = today.getFullYear();
-      const currentMonth = today.getMonth();
-      setStartDate(new Date(currentYear, currentMonth, 1));
-      setEndDate(new Date(currentYear, currentMonth + 1, 0)); // Last day of current month
-      getUserStore();
-      // fetchDropdownData();
+      // Initialize with default values if not already set
+      if (!startDate || !endDate) {
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        const currentMonth = today.getMonth();
+        setStartDate(new Date(currentYear, currentMonth, 1));
+        setEndDate(new Date(currentYear, currentMonth + 1, 0)); // Last day of current month
+      }
     }
   }, [isVerifiedUser]);
-
-  // const fetchDropdownData = async () => {
-  //   try {
-  //     const response = await sendApiRequest({ mode: "getAllStores" });
-  //     if (response?.status === 200) {
-  //       setStore(response?.data?.stores || []);
-  //     } else {
-  //       handleError(response?.message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching stores:", error);
-  //   }
-  // };
-  const dateRangeOptions: DateRangeOption[] = [
-    { name: "This Month (MTD)", value: "this_month", id: 1 },
-    { name: "This Year (YTD)", value: "this_year", id: 2 },
-    { name: "Last Month", value: "last_month", id: 3 },
-    { name: "Last Year", value: "last_year", id: 4 },
-  ];
 
   const toggleDateRangeDropdown = () => {
     setIsDateRangeOpen((prev) => !prev);
   };
-
-  const handleDateRangeSelect = (option: DateRangeOption) => {
-    setSelectedDateRange(option.name);
-    const now = new Date();
-    let newStartDate: Date;
-    let newEndDate: Date;
-
-    switch (option.value) {
-      case "this_month":
-        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        newEndDate = now;
-        break;
-      case "this_year":
-        newStartDate = new Date(now.getFullYear(), 0, 1);
-        newEndDate = now;
-        break;
-      case "last_month":
-        newStartDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        newEndDate = new Date(now.getFullYear(), now.getMonth(), 0);
-        break;
-      case "last_year":
-        newStartDate = new Date(now.getFullYear() - 1, 0, 1);
-        newEndDate = new Date(now.getFullYear() - 1, 11, 31);
-        break;
-      default:
-        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        newEndDate = now;
-    }
-
-    setStartDate(newStartDate);
-    setEndDate(newEndDate);
-    setIsDateRangeOpen(false);
-  };
-
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -420,7 +347,8 @@ const Sales: FC = () => {
           const responseData = await response.json();
           if (response.ok) {
             let getStore: any = [];
-            if (selectedOption?.storeno == responseData?.store_name) {
+            const selectedStoreId = selectedStore?.name?.split(' - ')[0]?.trim();
+          if (String(selectedStoreId) === String(responseData?.store_name).trim()) {
               if (responseData?.store_name !== "Not Found") {
                 getStore = await sendApiRequest({
                   mode: "getStoreByName",
@@ -505,8 +433,6 @@ const Sales: FC = () => {
                     []
                   );
 
-                  // if (uniqueTenders) {
-                  // const tendersString = uniqueTenders?.map((item: any) => `"${item}"`).join(", ");
                   const responseTenders: any = await sendApiRequest({
                     mode: "getTendersByNames",
                     tenders: uniqueTenders,
@@ -543,7 +469,6 @@ const Sales: FC = () => {
                       });
                     }
                   }
-                  // };
                   await sendApiRequest(newTenderTxns, `insertBulkTenders`);
                   const res: any = await sendApiRequest(
                     responseData?.revenue_centers,
@@ -560,10 +485,6 @@ const Sales: FC = () => {
                       type: "error",
                     });
                   }
-                  // const val: any = {
-                  //   invoiceDetails: responseData?.invoice_items || [],
-                  // };
-                  // const res: any = await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
                   fetchData();
                 } else {
                   setTimeout(() => {
@@ -596,13 +517,9 @@ const Sales: FC = () => {
                 type: "error",
               });
             }, 0);
-            // alert("Failed to upload file.");
           }
         } catch (error) {
-          // console.error("Error uploading file:", error);
-          // alert("An error occurred.");
           setCustomToast({
-            // message: "An error occurred while uploading the file.",
             message: "Invalid PDF format.",
             type: "error",
           });
@@ -616,7 +533,6 @@ const Sales: FC = () => {
             type: "error",
           });
         }, 0);
-        // alert("Please upload a PDF file.");
       }
     } else {
       setTimeout(() => {
@@ -625,17 +541,11 @@ const Sales: FC = () => {
           type: "error",
         });
       }, 0);
-      // alert("Please select a file.");
       return;
     }
   };
 
-  const handleImageClick = () => {
-    router.push("/sales/sales_view");
-  };
-
   const handleUploadClick = () => {
-    // document.getElementById("fileInput")?.click(); // Programmatically click the hidden input
     fileInputRef.current.value = "";
     fileInputRef.current?.click();
   };
@@ -649,6 +559,28 @@ const Sales: FC = () => {
       message,
       type: "error",
     });
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      table.getState().pagination.pageIndex == 0
+        ? fetchData()
+        : table.setPageIndex(0);
+    }
+  };
+
+  const clearSearch = async () => {
+    try {
+      setLoading(true);
+      setGlobalFilter("");
+      table.getState().pagination.pageIndex == 0
+        ? fetchData()
+        : table.setPageIndex(0);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   //tooltip for mobile
@@ -679,50 +611,53 @@ const Sales: FC = () => {
       />
       {uploadPdfloading && <Loading />}
       <div className="sticky z-20 bg-[#f7f8f9] pb-6 pt-4 below-md:pt-4 below-md:pb-4 tablet:pt-4">
-  <div className="flex flex-row flex-nowrap gap-3 pb-6 w-full below-md:flex-col">
-    {/* Store and Date Range Dropdowns */}
-    <div className="flex flex-row flex-wrap gap-3 w-full below-md:flex-col">
-      <Dropdown
-        options={store}
-        selectedOption={selectedOption?.name || "Store"}
-        onSelect={(selectedOption: any) => {
-          setSelectedOption({
-            storeno: selectedOption.storeno,
-            name: selectedOption.name,
-            id: selectedOption.id,
-          });
-          setIsStoreDropdownOpen(false);
-        }}
-        isOpen={isStoreDropdownOpen}
-        toggleOpen={toggleStoreDropdown}
-        widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
-      />
-      <Dropdown
-        options={dateRangeOptions}
-        selectedOption={selectedDateRange}
-        onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
-        isOpen={isDateRangeOpen}
-        toggleOpen={toggleDateRangeDropdown}
-        widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
-      />
-    </div>
+        <div className="flex flex-row flex-nowrap gap-3 pb-6 w-full below-md:flex-col">
+          {/* Store and Date Range Dropdowns */}
+          <div className="flex flex-row flex-wrap gap-3 w-full below-md:flex-col">
+            <Dropdown
+              options={storeOptions}
+              selectedOption={selectedStore?.name || "Store"}
+              onSelect={(selectedOption: any) => {
+                setSelectedStore({
+                  name: selectedOption.name,
+                  id: selectedOption.id,
+                });
+                setIsStoreDropdownOpen(false);
+              }}
+              isOpen={isStoreDropdownOpen}
+              toggleOpen={toggleStoreDropdown}
+              widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
+            />
+            <Dropdown
+              options={dateRangeOptions}
+              selectedOption={selectedDateRange?.name}
+              onSelect={(option: any) => {
+                setSelectedDateRange(option);
+                setIsDateRangeOpen(false);
+              }}
+              isOpen={isDateRangeOpen}
+              toggleOpen={toggleDateRangeDropdown}
+              widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
+            />
+          </div>
 
-    {/* Date Picker and Search */}
-    <div className="flex flex-row gap-3 w-full below-md:flex-col below-laptop:w-3/5 small-laptop:w-1/2">
-      <div className="flex-1 min-w-[300px] below-lg:min-w-[256.08px] h-[35px] below-lg:h-[29.876px] w-full">
-        <DateRangePicker
-          startDate={startDate}
-          endDate={endDate}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-          fetchData={fetchData}
-        />
-      </div>
-      <div className="flex-1 min-w-[150px] below-lg:min-w-[128.04px] h-[35px] below-lg:h-[29.876px] w-full relative">
-        <input
-          type="search"
-          value={globalFilter ?? ""}
-          onChange={(e) => setGlobalFilter(e.target.value)}
+          {/* Date Picker and Search */}
+          <div className="flex flex-row gap-3 w-full below-md:flex-col below-laptop:w-3/5 small-laptop:w-1/2">
+            <div className="flex-1 min-w-[300px] below-lg:min-w-[256.08px] h-[35px] below-lg:h-[29.876px] w-full">
+              <DateRangePicker
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+                fetchData={fetchData}
+              />
+            </div>
+            <div className="flex-1 min-w-[150px] below-lg:min-w-[128.04px] h-[35px] below-lg:h-[29.876px] w-full relative">
+              <input
+                type="text"
+                value={globalFilter ?? ""}
+                onChange={(e) => setGlobalFilter(e.target.value)}
+               
           placeholder="Search"
           className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] below-lg:text-[10.2432px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
         />
