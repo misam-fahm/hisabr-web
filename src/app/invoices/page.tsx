@@ -12,6 +12,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import moment from "moment";
 // import Image from "next/image"
+import { useGlobalContext } from "@/Components/Header/header";
 import {
   useReactTable,
   getCoreRowModel,
@@ -40,11 +41,7 @@ interface TableRow {
   total: any;
   invoicenumber: string;
 }
-interface DateRangeOption {
-  name: string;
-  value?: string;
-  id: number;
-}
+
 const Invoices = () => {
   const router = useRouter();
   const [showBackIcon, setShowBackIcon] = useState(false);
@@ -52,25 +49,34 @@ const Invoices = () => {
   const [totalItems, setTotalItems] = useState<number>(0);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
-  const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (MTD)");
-  const [selectedInvoiceId, setSelectedInvoiceId] = useState<number | null>(
-    null
-  );
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = React.useState("");
-  const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [store, setStore] = useState<any[]>([]);
   const [showTooltip, setShowTooltip] = useState(false);
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const fileInputRef: any = useRef(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
   });
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
+
+  // Get global context values
+  const {
+    storeOptions,
+    dateRangeOptions,
+    selectedDateRange,
+    setSelectedDateRange,
+    startDate,
+    endDate,
+    setStartDate,
+    setEndDate,
+    selectedStore,
+    setSelectedStore,
+  } = useGlobalContext();
+
   const handleDeleteInvoice = async () => {
     if (!selectedInvoiceId) return;
 
@@ -205,12 +211,8 @@ const Invoices = () => {
     sessionStorage.setItem(
       "invoicesState",
       JSON.stringify({
-        selectedOption: selectedOption ? { name: selectedOption.name, id: selectedOption.id } : null,
-        selectedDateRange,
-        startDate: startDate ? startDate.toISOString() : null,
-        endDate: endDate ? endDate.toISOString() : null,
-        globalFilter,
-        pageIndex: table.getState().pagination.pageIndex,
+        globalFilter, // Only store search term
+        pageIndex: table.getState().pagination.pageIndex, // Only store current page
         navigationId,
       })
     );
@@ -225,61 +227,15 @@ const Invoices = () => {
   };
 
   useEffect(() => {
-    if (startDate && endDate && selectedOption) {
-      table.setPageIndex(0); // reset to first page
+    if (startDate && endDate && selectedStore) {
+      table.setPageIndex(0);
       fetchData(globalFilter);
     }
-  }, [startDate, endDate, selectedOption, globalFilter]);
-
-  // useEffect(() => {
-  //   if (startDate && endDate && selectedOption) {
-  //     fetchData(globalFilter);
-  //   }
-  // }, [selectedOption]);
-  const dateRangeOptions: DateRangeOption[] = [
-    { name: "This Month (MTD)", value: "this_month", id: 1 },
-    { name: "This Year (YTD)", value: "this_year", id: 2 },
-    { name: "Last Month", value: "last_month", id: 3 },
-    { name: "Last Year", value: "last_year", id: 4 },
-  ];
+  }, [startDate, endDate, selectedStore, globalFilter]);
 
   const toggleDateRangeDropdown = () => {
     setIsDateRangeOpen((prev) => !prev);
   };
-
-  const handleDateRangeSelect = (option: DateRangeOption) => {
-    setSelectedDateRange(option.name);
-    const now = new Date();
-    let newStartDate: Date;
-    let newEndDate: Date;
-
-    switch (option.value) {
-      case "this_month":
-        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        newEndDate = now;
-        break;
-      case "this_year":
-        newStartDate = new Date(now.getFullYear(), 0, 1);
-        newEndDate = now;
-        break;
-      case "last_month":
-        newStartDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        newEndDate = new Date(now.getFullYear(), now.getMonth(), 0);
-        break;
-      case "last_year":
-        newStartDate = new Date(now.getFullYear() - 1, 0, 1);
-        newEndDate = new Date(now.getFullYear() - 1, 11, 31);
-        break;
-      default:
-        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        newEndDate = now;
-    }
-
-    setStartDate(newStartDate);
-    setEndDate(newEndDate);
-    setIsDateRangeOpen(false);
-  };
-
 
   const table = useReactTable({
     data: data,
@@ -293,7 +249,7 @@ const Invoices = () => {
         pageIndex: 0,
       },
     },
-    manualPagination: true, // Enable manual pagination
+    manualPagination: true,
     pageCount: Math.ceil(totalItems / 10),
   });
 
@@ -307,7 +263,7 @@ const Invoices = () => {
         mode: "getInvoices",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
-        storeid: selectedOption?.id || 69,
+        storeid: selectedStore?.id || 69,
         startdate: startDate && format(startDate, "yyyy-MM-dd"),
         enddate: endDate && format(endDate, "yyyy-MM-dd"),
         search: search,
@@ -335,43 +291,6 @@ const Invoices = () => {
   useEffect(() => {
     fetchData(globalFilter);
   }, [pageIndex, pageSize]);
-
-  const getUserStore = async (restoredSelectedOption: { name: string; id: number } | null) => {
-    try {
-      const response = await sendApiRequest({ mode: "getUserStore" });
-      if (response?.status === 200) {
-        const stores = response?.data?.stores || [];
-        // Map stores to the format expected by the Dropdown component
-        const formattedStores = stores.map((store) => ({
-          name: `${store.name} - ${store.location || "Unknown Location"}`, // Ensure location is handled
-          id: store.id,
-        }));
-
-        setStore(formattedStores);
-
-        if (restoredSelectedOption && formattedStores.some((store: any) => store.id === restoredSelectedOption.id)) {
-          setSelectedOption({
-            name: restoredSelectedOption.name,
-            id: restoredSelectedOption.id,
-          });
-        } else if (formattedStores.length > 0) {
-          setSelectedOption({
-            name: `${stores[0].name} - ${stores[0].location || "Unknown Location"}`,
-            id: stores[0].id,
-          });
-        } else {
-          setSelectedOption(null);
-        }
-      } else {
-        handleError(response?.message);
-        setSelectedOption(null);
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
-      handleError("Failed to fetch stores");
-      setSelectedOption(null);
-    }
-  };
 
   const verifyToken = async (token: string) => {
     try {
@@ -401,62 +320,23 @@ const Invoices = () => {
       const fromInvoiceDetails = sessionStorage.getItem("fromInvoiceDetails");
       const savedState = sessionStorage.getItem("invoicesState");
 
-      const today = new Date();
-      const currentYear = today.getFullYear();
-      const currentMonth = today.getMonth();
-      const defaultStartDate = new Date(currentYear, currentMonth, 1);
-      const defaultEndDate = new Date(currentYear, currentMonth + 1, 0);
-
-      let restoredSelectedOption: { name: string; id: number } | null = null;
-
       if (fromInvoiceDetails && savedState) {
         try {
           const parsedState = JSON.parse(savedState);
           if (parsedState.navigationId === fromInvoiceDetails) {
-            setSelectedDateRange(parsedState.selectedDateRange || "This Month (MTD)");
+            // Only restore search and pagination - leave other filters unchanged
             setGlobalFilter(parsedState.globalFilter || "");
-            setStartDate(
-              parsedState.startDate ? new Date(parsedState.startDate) : defaultStartDate
-            );
-            setEndDate(
-parsedState.endDate ? new Date(parsedState.endDate) : defaultEndDate
-            );
-            if (parsedState.selectedOption && parsedState.selectedOption.id && parsedState.selectedOption.name) {
-              restoredSelectedOption = {
-                name: parsedState.selectedOption.name,
-                id: parsedState.selectedOption.id,
-              };
-            }
             if (parsedState.pageIndex) {
               table.setPageIndex(parsedState.pageIndex);
             }
-          } else {
-            setSelectedDateRange("This Month (MTD)");
-            setGlobalFilter("");
-            setStartDate(defaultStartDate);
-            setEndDate(defaultEndDate);
-            table.setPageIndex(0);
           }
         } catch (error) {
           console.error("Error parsing saved state:", error);
-          setSelectedDateRange("This Month (MTD)");
-          setGlobalFilter("");
-          setStartDate(defaultStartDate);
-          setEndDate(defaultEndDate);
-          table.setPageIndex(0);
         }
-      } else {
-        setSelectedDateRange("This Month (MTD)");
-        setGlobalFilter("");
-        setStartDate(defaultStartDate);
-        setEndDate(defaultEndDate);
-        table.setPageIndex(0);
       }
 
       sessionStorage.removeItem("invoicesState");
       sessionStorage.removeItem("fromInvoiceDetails");
-
-      getUserStore(restoredSelectedOption);
     }
   }, [isVerifiedUser]);
 
@@ -470,7 +350,7 @@ parsedState.endDate ? new Date(parsedState.endDate) : defaultEndDate
       if (fromHome || fromItemsAnalysis || fromSaleItems) {
         setShowBackIcon(true);
         const currentUrl = window.location.pathname;
-        window.history.replaceState({}, "", currentUrl); // Update the URL without the query parameter
+        window.history.replaceState({}, "", currentUrl);
       }
     }
   }, []);
@@ -621,7 +501,6 @@ parsedState.endDate ? new Date(parsedState.endDate) : defaultEndDate
     });
   };
 
-  const searchInputRef = useRef<HTMLInputElement>(null);
   const handleClick = () => {
     // Focus the input field when the image is clicked
     if (searchInputRef.current) {
@@ -662,7 +541,7 @@ parsedState.endDate ? new Date(parsedState.endDate) : defaultEndDate
     }
   };
 
-return (
+  return (
     <main
       className="relative px-6 below-md:px-3 max-h-[calc(100vh-180px)] overflow-hidden" 
       style={{ scrollbarWidth: "none" }}
@@ -673,102 +552,108 @@ return (
       />
       {uploadPdfloading && <Loading />}
       <div className="sticky z-20 bg-[#f7f8f9] pb-6 pt-4 below-md:pt-4 below-md:pb-4 tablet:pt-4">
-  <div className="flex flex-row flex-nowrap gap-3 w-full below-md:flex-col">
-    
-    {/* Store, Date Range, Date Picker, and Search */}
-    <div className="flex flex-row flex-wrap gap-3 w-full below-md:flex-col">
-      {showBackIcon && (
-        <img
-          onClick={() => router.back()}
-          alt="Back Arrow"
-          className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
-          src="/images/webbackicon.svg"
-        />
-      )}
-      
-      <Dropdown
-        options={store}
-        selectedOption={selectedOption?.name || "Store"}
-        onSelect={(selectedOption: any) => {
-          setSelectedOption({
-            name: selectedOption.name,
-            id: selectedOption.id,
-          });
-          setIsStoreDropdownOpen(false);
-        }}
-        isOpen={isStoreDropdownOpen}
-        toggleOpen={toggleStoreDropdown}
-        widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
-      />
+        <div className="flex flex-row flex-nowrap gap-3 w-full below-md:flex-col">
+          
+          {/* Filter Controls: Back, Store, Date, Picker, Search */}
+          <div className="flex flex-row gap-3 w-full below-md:flex-col below-laptop:w-4/5 small-laptop:w-full">
+            <div className="flex items-center">
+              {showBackIcon && (
+                <img
+                  onClick={() => router.back()}
+                  alt="Back Arrow"
+                  className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
+                  src="/images/webbackicon.svg"
+                />
+              )}
+            </div>
 
-      <Dropdown
-        options={dateRangeOptions}
-        selectedOption={selectedDateRange}
-        onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
-        isOpen={isDateRangeOpen}
-        toggleOpen={toggleDateRangeDropdown}
-        widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
-      />
+            <Dropdown
+              options={storeOptions}
+              selectedOption={selectedStore?.name || "Store"}
+              onSelect={(option: any) => {
+                setSelectedStore(option);
+                setIsStoreDropdownOpen(false);
+              }}
+              isOpen={isStoreDropdownOpen}
+              toggleOpen={toggleStoreDropdown}
+              widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
+            />
 
-      <div className="flex-1 min-w-[300px] below-lg:min-w-[256.08px] h-[35px] below-lg:h-[29.876px] w-full">
-        <DateRangePicker
-          startDate={startDate}
-          endDate={endDate}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-          fetchData={fetchData}
-        />
-      </div>
+            <Dropdown
+              options={dateRangeOptions}
+              selectedOption={selectedDateRange?.name}
+              onSelect={(option: any) => {
+                setSelectedDateRange(option);
+                setIsDateRangeOpen(false);
+              }}
+              isOpen={isDateRangeOpen}
+              toggleOpen={toggleDateRangeDropdown}
+              widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
+            />
 
-      <div className="flex-1 min-w-[150px] below-lg:min-w-[128.04px] h-[35px] below-lg:h-[29.876px] w-full relative">
-        <input
-          type="text"
-          value={globalFilter ?? ""}
-          onChange={(e) => setGlobalFilter(e.target.value)}
-          onKeyDown={handleKeyDown}
-          ref={searchInputRef}
-          placeholder="Search"
-          className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] below-lg:text-[10.2432px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
-        />
-        {globalFilter && (
-          <div className="absolute inset-y-0 right-7 flex items-center cursor-pointer" onClick={clearSearch}>
-            <img src="/images/cancelicon.svg" alt="Clear" />
+            <div className="flex-1 min-w-[300px] below-lg:min-w-[256.08px] h-[35px] below-lg:h-[29.876px] w-full">
+              <DateRangePicker
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+                fetchData={fetchData}
+              />
+            </div>
+
+            <div className="flex-1 min-w-[150px] below-lg:min-w-[128.04px] h-[35px] below-lg:h-[29.876px] w-full relative">
+              <input
+                type="text"
+                value={globalFilter ?? ""}
+                onChange={(e) => setGlobalFilter(e.target.value)}
+                onKeyDown={handleKeyDown}
+                ref={searchInputRef}
+                placeholder="Search"
+                className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] below-lg:text-[10.2432px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
+              />
+              {globalFilter && (
+                <div className="absolute inset-y-0 right-7 flex items-center cursor-pointer" onClick={clearSearch}>
+                  <img
+                    className="w-4 h-4"
+                    src="/images/cancelicon.svg"
+                    alt="Clear Search"
+                  />
+                </div>
+              )}
+              <div className="absolute inset-y-0 right-2 flex items-center cursor-pointer">
+                <img
+                  src="/images/searchicon.svg"
+                  alt="Search Icon"
+                  onClick={() =>
+                    table.getState().pagination.pageIndex == 0
+                      ? fetchData(globalFilter)
+                      : table.setPageIndex(0)
+                  }
+                  className="below-lg:scale-[0.8536]"
+                />
+              </div>
+            </div>
           </div>
-        )}
-        <div className="absolute inset-y-0 right-2 flex items-center cursor-pointer">
-          <img
-            src="/images/searchicon.svg"
-            alt="Search Icon"
-            onClick={() =>
-              table.getState().pagination.pageIndex == 0
-                ? fetchData(globalFilter)
-                : table.setPageIndex(0)
-            }
-            className="below-lg:scale-[0.8536]"
-          />
+
+          {/* Upload Invoice Button */}
+          <div className="below-md:hidden tablet:hidden pl-4 flex items-center">
+            <input
+              type="file"
+              ref={fileInputRef}
+              id="fileInput"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
+            <button
+              onClick={handleButtonClick}
+              className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[159px] below-lg:w-[135.7224px] h-[35px] below-lg:h-[29.876px] rounded-md text-white text-[13px] below-lg:text-[11.0968px] font-medium"
+            >
+              <img src="/images/webuploadicon.svg" alt="Upload Icon" className="mr-1 below-lg:scale-[0.8536]" />
+              Upload Invoice
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-
-    {/* Upload Button */}
-    <div className="below-md:hidden tablet:hidden">
-      <input
-        type="file"
-        ref={fileInputRef}
-        id="fileInput"
-        style={{ display: "none" }}
-        onChange={handleFileChange}
-      />
-      <button
-        onClick={handleButtonClick}
-        className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[159px] below-lg:w-[135.7224px] h-[35px] below-lg:h-[29.876px] rounded-md text-white text-[13px] below-lg:text-[11.0968px] font-medium"
-      >
-        <img src="/images/webuploadicon.svg" alt="Upload Icon" className="mr-1 below-lg:scale-[0.8536]" />
-        Upload Invoice
-      </button>
-    </div>
-  </div>
-</div>
 
 
       {/* Mobile View : Card section */}
@@ -801,7 +686,14 @@ return (
                   </div>
                 </button>
                 <div className="px-2">
-                  <img src="/images/deletebinicon.svg" className="w-5 h-4" />
+                  <button
+                    onClick={() => {
+                      setSelectedInvoiceId(card.invoiceid);
+                      setIsDeleteOpen(true);
+                    }}
+                  >
+                    <img src="/images/deletebinicon.svg" className="w-5 h-4" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -830,8 +722,8 @@ return (
         <div className="fixed bottom-[70px] right-3">
           <button
             className="focus:outline-none flex items-center bg-[#168A6F]  justify-center  w-[56px] h-[56px] rounded-xl relative"
-            onTouchStart={handlePressStart} // For mobile devices
-            onMouseLeave={handlePressEnd} // Hide tooltip on mouse leave
+            onTouchStart={handlePressStart}
+            onMouseLeave={handlePressEnd}
             onClick={handleButtonClick}
           >
             <img
@@ -842,7 +734,6 @@ return (
             {showTooltip && (
               <div className="absolute bottom-[75px] right-[80%] transform translate-x-1/2 bg-[#79747E] text-white text-[12px] px-5 py-2 rounded-md whitespace-nowrap">
                 Upload Invoice
-                {/* Tooltip Pointer */}
                 <div className="absolute top-full right-[20%] transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#79747E]"></div>
               </div>
             )}
@@ -887,7 +778,7 @@ return (
           <div
             className="w-full relative overflow-y-auto scrollbar-thin flex-grow"
             style={{ maxHeight: "calc(100vh - 320px)" }}
-            >
+          >
             <table className="w-full border-collapse text-[12px] text-white table-fixed">
               <tbody>
                 {loading ? (

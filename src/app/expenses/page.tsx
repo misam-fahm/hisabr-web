@@ -6,6 +6,7 @@ import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
+import { useGlobalContext } from "@/Components/Header/header";
 
 import {
   useReactTable,
@@ -46,35 +47,38 @@ const Expenses: FC = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef(null);
   const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
-  const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (MTD)");
   const [isScrollbarVisible, setIsScrollbarVisible] = useState(false);
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [data, setData] = useState<any>();
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedOption, setSelectedOption] = useState<any>();
-
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [store, setStore] = useState<any[]>([]);
   const [isOpenAddExpenses, setAddExpenses] = useState(false);
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
   });
+
+  // Get global context values
+  const {
+    storeOptions,
+    dateRangeOptions,
+    selectedDateRange,
+    setSelectedDateRange,
+    startDate,
+    endDate,
+    setStartDate,
+    setEndDate,
+    selectedStore,
+    setSelectedStore,
+  } = useGlobalContext();
+
   useEffect(() => {
-    if (startDate && endDate && selectedOption) {
+    if (startDate && endDate && selectedStore) {
       fetchData();
     }
-  }, [selectedOption,globalFilter, startDate, endDate]);
-
-  // useEffect(() => {
-  //   if (startDate && endDate && selectedOption) {
-      
-  //   }
-  // }, [selectedOption]);
+  }, [selectedStore, globalFilter, startDate, endDate]);
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -216,48 +220,8 @@ const Expenses: FC = () => {
 
   const { pageIndex, pageSize } = table.getState().pagination;
 
-  const dateRangeOptions: DateRangeOption[] = [
-    { name: "This Month (MTD)", value: "this_month", id: 1 },
-    { name: "This Year (YTD)", value: "this_year", id: 2 },
-    { name: "Last Month", value: "last_month", id: 3 },
-    { name: "Last Year", value: "last_year", id: 4 },
-  ];
-
   const toggleDateRangeDropdown = () => {
     setIsDateRangeOpen((prev) => !prev);
-  };
-
-  const handleDateRangeSelect = (option: DateRangeOption) => {
-    setSelectedDateRange(option.name);
-    const now = new Date();
-    let newStartDate: Date;
-    let newEndDate: Date;
-
-    switch (option.value) {
-      case "this_month":
-        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        newEndDate = now;
-        break;
-      case "this_year":
-        newStartDate = new Date(now.getFullYear(), 0, 1);
-        newEndDate = now;
-        break;
-      case "last_month":
-        newStartDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        newEndDate = new Date(now.getFullYear(), now.getMonth(), 0);
-        break;
-      case "last_year":
-        newStartDate = new Date(now.getFullYear() - 1, 0, 1);
-        newEndDate = new Date(now.getFullYear() - 1, 11, 31);
-        break;
-      default:
-        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        newEndDate = now;
-    }
-
-    setStartDate(newStartDate);
-    setEndDate(newEndDate);
-    setIsDateRangeOpen(false);
   };
 
   const fetchData = async () => {
@@ -267,7 +231,7 @@ const Expenses: FC = () => {
         mode: "getExpenses",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
-        storeid: selectedOption?.id || 69,
+        storeid: selectedStore?.id || 69,
         startdate: startDate && format(startDate, "yyyy-MM-dd"),
         enddate: endDate && format(endDate, "yyyy-MM-dd"),
         search: globalFilter,
@@ -301,32 +265,6 @@ const Expenses: FC = () => {
     }
   };
 
-  const getUserStore = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getUserStore" });
-      if (response?.status === 200) {
-        const stores = response?.data?.stores || [];
-        // Map stores to the format expected by the Dropdown component
-        const formattedStores = stores.map((store) => ({
-          name: `${store.name} - ${store.location || "Unknown Location"}`, // Ensure location is handled
-          id: store.id,
-        }));
-        
-        setStore(formattedStores); // Update store state with formatted data
-        
-        if (stores.length > 0) {
-          setSelectedOption({
-            name: `${stores[0].name} - ${stores[0].location || "Unknown Location"}`,
-            id: stores[0].id,
-          });
-        }
-      } else {
-        handleError(response?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
-    }
-  };
   const verifyToken = async (token: string) => {
     try {
       const res: any = await sendApiRequest(
@@ -349,18 +287,6 @@ const Expenses: FC = () => {
       verifyToken(token);
     }
   }, []);
-
-  useEffect(() => {
-    if (isVerifiedUser) {
-      const today = new Date();
-      const currentYear = today.getFullYear();
-      const currentMonth = today.getMonth();
-      setStartDate(new Date(currentYear, currentMonth, 1));
-      setEndDate(new Date(currentYear, currentMonth + 1, 0)); // Last day of current month
-      getUserStore();
-      // fetchDropdownData();
-    }
-  }, [isVerifiedUser]);
 
   const handleClick = () => {
     if (searchInputRef.current) {
@@ -448,7 +374,7 @@ const Expenses: FC = () => {
         mode: "getExpenses",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
-        storeid: selectedOption?.id || 69,
+        storeid: selectedStore?.id || 69,
         startdate: startDate && format(startDate, "yyyy-MM-dd"),
         enddate: endDate && format(endDate, "yyyy-MM-dd"),
         search: "",
@@ -496,29 +422,31 @@ const Expenses: FC = () => {
         )}
       </div>
 
-      <Dropdown
-        options={store}
-        selectedOption={selectedOption?.name || "Store"}
-        onSelect={(selectedOption: any) => {
-          setSelectedOption({
-            name: selectedOption.name,
-            id: selectedOption.id,
-          });
-          setIsStoreDropdownOpen(false);
-        }}
-        isOpen={isStoreDropdownOpen}
-        toggleOpen={toggleStoreDropdown}
-        widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
-      />
+       <Dropdown
+                options={storeOptions}
+                selectedOption={selectedStore?.name || "Store"}
+                onSelect={(option: any) => {
+                  setSelectedStore(option);
+                  setIsStoreDropdownOpen(false); // Auto close after selection
+                }} isOpen={isStoreDropdownOpen}
+                toggleOpen={toggleStoreDropdown}
+                widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
 
-      <Dropdown
-        options={dateRangeOptions}
-        selectedOption={selectedDateRange}
-        onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
-        isOpen={isDateRangeOpen}
-        toggleOpen={toggleDateRangeDropdown}
-        widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
-      />
+              />
+
+              {/* Date Range Dropdown using global context */}
+              <Dropdown
+                options={dateRangeOptions}
+                selectedOption={selectedDateRange?.name}
+                onSelect={(option: any) => {
+                  setSelectedDateRange(option);
+                  setIsDateRangeOpen(false); // Auto close after selection
+                }}
+                isOpen={isDateRangeOpen}
+                toggleOpen={toggleDateRangeDropdown}
+                widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
+              />
+
 
       <div className="flex-1 min-w-[300px] below-lg:min-w-[256.08px] h-[35px] below-lg:h-[29.876px] w-full">
         <DateRangePicker
@@ -567,7 +495,7 @@ const Expenses: FC = () => {
 
     {/* Add Expenses Button */}
     <div className="below-md:hidden tablet:hidden pl-4 flex items-center">
-      <AddExpenses setAddExpenses={setAddExpenses} SelectedStore={selectedOption} />
+      <AddExpenses setAddExpenses={setAddExpenses} SelectedStore={selectedStore} />
     </div>
   </div>
 </div>
