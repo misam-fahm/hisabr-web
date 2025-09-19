@@ -39,6 +39,9 @@ const LoginForm = () => {
   
   const onSubmit = async (data: any) => {
     try {
+      // Clear localStorage at the start of login process
+      localStorage.clear();
+
       setIsLoading(true);
       setCustomToast({
         ...customToast,
@@ -68,7 +71,8 @@ const LoginForm = () => {
                 toastMessage: "Welcome Back",
                 toastType: "success",
               });
-              router.replace("/");
+              // Force reload to ensure all providers re-initialize with fresh data
+              window.location.replace("/");
             } else {
               // router.push("/login");
             }
