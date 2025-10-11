@@ -56,7 +56,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ values, operatExpAmt }) => {
   const hasData = total > 0;
 
   const dataItems = [
-    { label: "Labour Cost", amount: labourCost, color: backgroundColors[0] },
+    { label: "Labor Cost", amount: labourCost, color: backgroundColors[0] },
     { label: "COGS", amount: cogs, color: backgroundColors[1] },
     { label: "Royalty", amount: royalty, color: backgroundColors[2] },
     {

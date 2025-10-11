@@ -901,12 +901,12 @@ const SalesKPI: FC = () => {
   </div>
 </div>
 
-{/* Labour Cost Card */}
+{/* Labor Cost Card */}
 <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
 >
   <div>
-    <p className="text-[14px] text-[#575F6DCC] font-medium">Labour Cost ({normalizedDonutPercentages[0]}%)</p>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Labor Cost ({normalizedDonutPercentages[0]}%)</p>
     <p className="text-[16px] text-[#2D3748] font-bold">
       {data?.labour_cost && data.labour_cost !== 0
         ? `$${Math.round(data.labour_cost).toLocaleString()}`
