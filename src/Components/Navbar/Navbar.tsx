@@ -92,8 +92,11 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
       path: "/cashreconc",
     },
     { title: "DQ Export", src: "dq", path: "/dqcategory" },
-    { title: "P&L", src: "plreport", path: "/Plreport" },
     // { title: "DQ Export", src: "Categories", path: "/dqcategory" },
+    { type: "Report", title: "REPORT" },
+    { title: "P&L", src: "plreport", path: "/Plreport" },
+        { title: "Costing", src: "financialreport", path: "/itemratebyunit" },
+
     { type: "Setup", title: "SETUP" },
 
     ...(userType === "A"
@@ -198,7 +201,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
         />
 
         <div
-          className={`flex gap-x-4 mt-[13px] ${open ? "pl-3" : "pl-3"}  below-md:pl-1 ${open ? "ml-[13px]" : "ml-[3px]"}`}
+          className={`flex gap-x-4 mt-0 ${open ? "pl-3" : "pl-3"}  below-md:pl-1 ${open ? "ml-[13px]" : "ml-[3px]"}`}
         >
           <img
             src={open ? "/images/hisabarlogo.svg" : "/images/halflogo.svg"}
@@ -222,7 +225,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
             )
           )}
         </div>
-        <div className="max-h-[calc(100vh-160px)] py-4 overflow-auto scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent">
+        <div className="max-h-[calc(100vh-160px)] pt-0 pb-2 overflow-auto scrollbar-thin scrollbar-thumb-[#A9A5CA33] scrollbar-track-transparent">
           <ul>
             {Menus.map((menu: any, index) => (
               <div key={index}>
@@ -233,25 +236,25 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
                       ? setSetupOpen(!setupOpen)
                       : handleNavigation(menu.path!)
                   }
-                  className={`text-[#FFFFFFCC] text-[14px] flex items-center gap-x-4 cursor-pointer p-3 pl-6 hover:bg-[#A9A5CA33] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] mr-5 rounded-tr-full rounded-br-full
+                  className={`text-[#FFFFFFCC] text-[14px] flex items-center gap-x-4 cursor-pointer p-2  pl-6 hover:bg-[#A9A5CA33] hover:shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33] mr-5 rounded-tr-full rounded-br-full
             ${currentPath === menu.path ? " bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]" : ""}
-            ${open ? "mt-0.5" : "mt-1"} 
+            ${open ? "mt-0" : "mt-0"} 
             ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""}
             ${
-              menu.title === "SETUP"
-                ? `border border-[#B8BCC3B2] cursor-default pointer-events-none w-12 h-5 ml-5 pl-[9px] hover:bg-transparent hover:shadow-none rounded-tl-full rounded-bl-full py-1 !text-[#B8BCC3B2] text-[9px] 
+              menu.title === "SETUP" || menu.title === "REPORT"
+                ? `border border-[#B8BCC3B2] cursor-default pointer-events-none w-[58px] h-5 ml-5 !pl-0 !pr-0 justify-center hover:bg-transparent hover:shadow-none rounded-full py-1 !text-[#B8BCC3B2] text-[9px] mt-4
               ${!open ? "ml-[7px]" : ""}`
                 : ""
             }`}
                 >
-                  {/* Only render the image if the menu is not "Setup" */}
-                  {menu.title !== "SETUP" && (
+                  {/* Only render the image if the menu is not "Setup" or "Report" */}
+                  {menu.title !== "SETUP" && menu.title !== "REPORT" && (
                     <img src={`/images/${menu.src}.svg`} />
                   )}
 
-                  {/* Show the "SETUP" title even when drawer is closed */}
+                  {/* Show the "SETUP" or "REPORT" title even when drawer is closed */}
                   <span
-                    className={`${!open && menu.title !== "SETUP" ? "hidden" : ""} origin-left duration-200`}
+                    className={`${!open && menu.title !== "SETUP" && menu.title !== "REPORT" ? "hidden" : ""} origin-left duration-200`}
                   >
                     {menu.title}
                   </span>
