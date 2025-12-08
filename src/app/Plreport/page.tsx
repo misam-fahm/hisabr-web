@@ -2,6 +2,7 @@
 import React, { FC, useState, useRef, useEffect } from "react";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { useRouter } from "next/navigation";
+import { useGlobalContext } from "@/Components/Header/header";
 import {
   useReactTable,
   getCoreRowModel,
@@ -55,9 +56,14 @@ const PLReport: FC = () => {
   const [totalCogsAmount, setTotalCogsAmount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [netIncome, setNetIncome] = useState<number>(0);
-  const [selectedStore, setSelectedStore] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState<boolean>(false);
-  const [stores, setStores] = useState<any[]>([]);
+
+  // Use global context for store selection
+  const {
+    storeOptions,
+    selectedStore,
+    setSelectedStore,
+  } = useGlobalContext();
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
@@ -489,29 +495,6 @@ const PLReport: FC = () => {
     return tableDataWithTenderCommission.reduce((sum, row) => sum + row.value, 0);
   }, [tableDataWithTenderCommission]);
 
-  const getUserStore = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getUserStore" });
-      if (response?.status === 200) {
-        const formattedStores = response?.data?.stores.map((store: any) => ({
-          name: `${store.name} - ${store.location || "Unknown Location"}`,
-          id: store.id,
-        }));
-        setStores(formattedStores);
-        if (formattedStores.length > 0) {
-          setSelectedStore(formattedStores[0]);
-        }
-      } else {
-        setCustomToast({
-          message: response?.message,
-          type: "error",
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
-    }
-  };
-
   const verifyToken = async (token: string) => {
     try {
       const res: any = await sendApiRequest({ token }, `auth/verifyToken`);
@@ -530,11 +513,7 @@ const PLReport: FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (isVerifiedUser) {
-      getUserStore();
-    }
-  }, [isVerifiedUser]);
+  // Store is now managed by global context, no need to fetch separately
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -754,7 +733,7 @@ return (
     <div className="sticky top-0 z-20 bg-[#f7f8f9] pb-4 pt-4 below-md:pt-3 below-md:pb-3 tablet:pt-3">
       <div className="flex flex-row items-center gap-3 w-full flex-wrap below-md:flex-col below-md:items-stretch tablet:flex-row tablet-home:flex-row">
         <Dropdown
-          options={stores}
+          options={storeOptions}
           selectedOption={selectedStore?.name || "Store"}
           onSelect={(option: any) => {
             setSelectedStore(option);
