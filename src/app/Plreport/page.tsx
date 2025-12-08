@@ -17,6 +17,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+// Ensure jspdf-autotable is properly imported
 
 interface ExpensesPageData {
   storeid: string;
