@@ -15,9 +15,6 @@ import { sendApiRequest } from "@/utils/apiUtils";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-// Ensure jspdf-autotable is properly imported
 
 interface ExpensesPageData {
   storeid: string;
@@ -59,7 +56,6 @@ const PLReport: FC = () => {
   const [netIncome, setNetIncome] = useState<number>(0);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState<boolean>(false);
 
-  // Use global context for store selection
   const {
     storeOptions,
     selectedStore,
@@ -73,17 +69,18 @@ const PLReport: FC = () => {
   const [netSales, setNetSales] = useState<number>(0);
   const [pageData, setPageData] = useState<ExpensesPageData | null>(null);
   const [months, setMonths] = useState<number>(1);
-  // New state for tender commission data
   const [totalTenderCommission, setTotalTenderCommission] = useState<number>(0);
   const [tenderCommissionLoading, setTenderCommissionLoading] = useState<boolean>(false);
 
   const formatAmount = (value: number) => {
-    return value
-      ? `$${value.toLocaleString("en-US", {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        })}`
-      : "$0";
+    if (!value) return "$0";
+    const isNegative = value < 0;
+    const absoluteValue = Math.abs(value);
+    const formatted = absoluteValue.toLocaleString("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+    return isNegative ? `-$${formatted}` : `$${formatted}`;
   };
 
   const calculatePercentage = (value: number, relativeTo: number): string => {
@@ -310,7 +307,6 @@ const PLReport: FC = () => {
     return { startdate, enddate, monthsCount };
   };
 
-  // New function to fetch tender commission data
   const fetchTenderCommissionData = async () => {
     if (!pageData && !selectedStore) {
       return;
@@ -476,22 +472,19 @@ const PLReport: FC = () => {
   useEffect(() => {
     if (isVerifiedUser && selectedStore && selectedYear && (selectedPeriod === "Yearly" || selectedSubPeriod)) {
       fetchData();
-      fetchTenderCommissionData(); // Fetch tender commission data alongside expenses
+      fetchTenderCommissionData();
     }
   }, [isVerifiedUser, selectedStore]);
 
-  // Combine data and tender commission for table and total
   const tableDataWithTenderCommission = React.useMemo(() => {
     let rows = [...data];
     if (totalTenderCommission > 0) {
-      // Remove any existing Tender Commission row to avoid duplicates
       rows = rows.filter(row => row.label !== 'Tender Commission');
       rows.push({ label: 'Tender Commission', value: totalTenderCommission });
     }
     return rows;
   }, [data, totalTenderCommission]);
 
-  // Calculate total including tender commission
   const totalWithTender = React.useMemo(() => {
     return tableDataWithTenderCommission.reduce((sum, row) => sum + row.value, 0);
   }, [tableDataWithTenderCommission]);
@@ -513,8 +506,6 @@ const PLReport: FC = () => {
       verifyToken(token);
     }
   }, []);
-
-  // Store is now managed by global context, no need to fetch separately
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -559,403 +550,454 @@ const PLReport: FC = () => {
       return;
     }
     fetchData();
-    fetchTenderCommissionData(); // Also fetch tender commission data on search
+    fetchTenderCommissionData();
   };
 
-  const downloadPDF = () => {
-  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const downloadPDF = async (): Promise<void> => {
+  // Dynamically import pdfMake only when needed (client-side only)
+  const pdfMake = (await import('pdfmake/build/pdfmake')).default;
+  const pdfFonts = await import('pdfmake/build/vfs_fonts');
+  
+  // Initialize fonts
+  pdfMake.vfs = pdfFonts.pdfMake?.vfs || (pdfFonts as any).default?.pdfMake?.vfs || {};
 
-  doc.setProperties({
-    title: `Income Statement ${storeLocation} ${getPeriodDisplay()}`,
-    author: storeLocation,
-    creator: 'Financial Reporting System',
+  const today = new Date().toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
   });
 
-  doc.setFont('helvetica', 'normal');
+  const gross = netSales - totalCogsAmount;
 
-  const addHeader = (page: number) => {
-    doc.setFontSize(18); // Title bigger
-    doc.setFont('helvetica', 'bold');
-    doc.text('Income Statement', 105, 15, { align: 'center' });
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'normal');
-    doc.text(storeLocation, 105, 21, { align: 'center' });
-    doc.text(`For the Period: ${getPeriodDisplay()}`, 105, 27, { align: 'center' });
-    doc.setDrawColor(0, 0, 0);
-    doc.setLineWidth(0.3);
-    doc.line(10, 30, 200, 30);
+  // Helper function to create table rows with underlines
+  const createTableRow = (label: string, amount: string, percentage: string, isBold = false, hasUnderline = true) => {
+    return [
+      { text: label, style: isBold ? 'tableBold' : 'tableCell', border: [false, false, false, hasUnderline] },
+      { text: amount, style: isBold ? 'tableBold' : 'tableCell', alignment: 'right', border: [false, false, false, hasUnderline] },
+      { text: percentage, style: isBold ? 'tableBold' : 'tableCell', alignment: 'right', border: [false, false, false, hasUnderline] }
+    ];
   };
 
-  const addFooter = (page: number) => {
-    const pageCount = (doc as any).getNumberOfPages();
-    doc.setPage(page);
-    doc.setFontSize(8);
-    const today = new Date().toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-    doc.text(`Prepared by: ${storeLocation}`, 10, 287);
-    doc.text(`Generated on: ${today}`, 105, 287, { align: 'center' });
-    doc.text(`Page ${page} of ${pageCount}`, 200, 287, { align: 'right' });
+  // Income section
+  const incomeTable = {
+    table: {
+      widths: [250, 120, 80],
+      body: [
+        [
+          { text: 'Income', style: 'tableHeader', border: [false, false, false, true], colSpan: 3 },
+          {},
+          {}
+        ],
+        createTableRow('Sale of Goods', formatAmount(netSales), '100.0%'),
+        createTableRow('Total Income', formatAmount(netSales), '100.0%', true, false)
+      ]
+    },
+    layout: {
+      hLineWidth: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 0.5 : 0.3,
+      hLineColor: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 'black' : '#C8C8C8',
+      vLineWidth: () => 0
+    },
+    margin: [0, 0, 0, 10] as [number, number, number, number]
   };
 
-  const sectionHeaderStyles = {
-    fontSize: 16,  // font size 16 for all titles
-    fontStyle: 'bold' as const,
-    textColor: [0, 0, 0] as [number, number, number],
-    cellPadding: 2,
-    halign: 'left' as const,
-    fillColor: [255, 255, 255] as [number, number, number],
+  // COGS section
+  const cogsTable = {
+    table: {
+      widths: [250, 120, 80],
+      body: [
+        [
+          { text: 'Cost of Goods Sold', style: 'tableHeader', border: [false, false, false, true], colSpan: 3 },
+          {},
+          {}
+        ],
+        createTableRow('Cost of Goods', formatAmount(totalCogsAmount), calculatePercentage(totalCogsAmount, netSales)),
+        createTableRow('Total Cost of Goods Sold', formatAmount(totalCogsAmount), calculatePercentage(totalCogsAmount, netSales), true, false)
+      ]
+    },
+    layout: {
+      hLineWidth: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 0.5 : 0.3,
+      hLineColor: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 'black' : '#C8C8C8',
+      vLineWidth: () => 0
+    },
+    margin: [0, 0, 0, 10] as [number, number, number, number]
   };
 
-  const baseTableStyles = {
-    theme: 'grid' as const,
-    headStyles: {
-      ...sectionHeaderStyles,
+  // Gross Profit section
+  const grossProfitTable = {
+    table: {
+      widths: [250, 120, 80],
+      body: [
+        [
+          { text: 'Gross Profit', style: 'grossProfit', border: [false, true, false, true] },
+          { text: formatAmount(gross), style: 'grossProfit', alignment: 'right', border: [false, true, false, true] },
+          { text: calculatePercentage(gross, netSales), style: 'grossProfit', alignment: 'right', border: [false, true, false, true] }
+        ]
+      ]
     },
-    bodyStyles: {
-      fontSize: 11,
-      textColor: [0, 0, 0] as [number, number, number],
-      cellPadding: 2,
-      halign: 'left' as const,
-      fillColor: [255, 255, 255] as [number, number, number],
+    layout: {
+      hLineWidth: () => 0.5,
+      hLineColor: () => 'black',
+      vLineWidth: () => 0
     },
-    columnStyles: {
-      0: { cellWidth: 90, halign: 'left' as const },
-      1: { cellWidth: 60, halign: 'right' as const },
-      2: { cellWidth: 40, halign: 'right' as const },
-    },
-    didDrawCell: (data: any) => {
-      if (data.section === 'body' && data.row.index === data.table.body.length - 1) {
-        data.cell.styles.fontStyle = 'bold';
-        data.cell.styles.fontSize = 16;  // total rows font size 16
-      }
-    },
+    margin: [0, 0, 0, 10] as [number, number, number, number]
   };
 
-  addHeader(1);
-  let currentY = 38;
-
-  // Income Section
-  const incomeData = [['Sale of Goods', formatAmount(netSales), '100.0%']];
-  const totalIncome = netSales;
-  autoTable(doc, {
-    startY: currentY,
-    head: [['Income', '', '']],
-    body: [...incomeData, ['Total Income', formatAmount(totalIncome), '100.0%']],
-    ...baseTableStyles,
-  });
-  currentY = (doc as any).lastAutoTable.finalY + 6;
-
-  // Cost of Goods Sold Section
-  const cogsData = [['Cost of Goods', formatAmount(totalCogsAmount), calculatePercentage(totalCogsAmount, totalIncome)]];
-  const totalCogs = totalCogsAmount;
-  autoTable(doc, {
-    startY: currentY,
-    head: [['Cost of Goods Sold', '', '']],
-    body: [...cogsData, ['Total Cost of Goods Sold', formatAmount(totalCogs), calculatePercentage(totalCogs, totalIncome)]],
-    ...baseTableStyles,
-  });
-  currentY = (doc as any).lastAutoTable.finalY + 6;
-
-  // Gross Profit Section (no header, just body)
-  const grossProfit = totalIncome - totalCogs;
-  autoTable(doc, {
-    startY: currentY,
-    body: [['Gross Profit', formatAmount(grossProfit), calculatePercentage(grossProfit, totalIncome)]],
-    ...baseTableStyles,
-    styles: {
-      ...baseTableStyles.bodyStyles,
-      fontStyle: 'bold',
-      fontSize: 16,  // bigger font size for emphasis
+  // Operating Expenses section
+  const expenseRows = tableDataWithTenderCommission.map((r) => 
+    createTableRow(r.label, formatAmount(r.value), calculatePercentage(r.value, totalWithTender))
+  );
+  
+  const expensesTable = {
+    table: {
+      widths: [250, 120, 80],
+      body: [
+        [
+          { text: 'Operating Expenses', style: 'tableHeader', border: [false, false, false, true], colSpan: 3 },
+          {},
+          {}
+        ],
+        ...expenseRows,
+        createTableRow('Total Operating Expenses', formatAmount(totalWithTender), '100.0%', true, false)
+      ]
     },
-    showHead: 'never',
-  });
-  currentY = (doc as any).lastAutoTable.finalY + 6;
+    layout: {
+      hLineWidth: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 0.5 : 0.3,
+      hLineColor: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 'black' : '#C8C8C8',
+      vLineWidth: () => 0
+    },
+    margin: [0, 0, 0, 10] as [number, number, number, number]
+  };
 
-  // Operating Expenses Section
-  const expensesData = tableDataWithTenderCommission.map((row) => [
-    row.label,
-    formatAmount(row.value),
-    calculatePercentage(row.value, totalWithTender),
-  ]);
-  autoTable(doc, {
-    startY: currentY,
-    head: [['Operating Expenses', '', '']],
-    body: [
-      ...expensesData,
-      [
-        { content: 'Total Operating Expenses', styles: { fontStyle: 'bold', fontSize: 14 } },
-        { content: formatAmount(totalWithTender), styles: { fontStyle: 'bold', fontSize: 14, halign: 'right' } },
-        { content: '100.0%', styles: { fontStyle: 'bold', fontSize: 14, halign: 'right' } },
-      ],
+  // Net Income section
+  const netIncomeTable = {
+    table: {
+      widths: [250, 120, 80],
+      body: [
+        [
+          { text: 'Net Income', style: 'grossProfit', border: [false, true, false, true] },
+          { text: formatAmount(netIncome), style: 'grossProfit', alignment: 'right', border: [false, true, false, true] },
+          { text: calculatePercentage(netIncome, netSales), style: 'grossProfit', alignment: 'right', border: [false, true, false, true] }
+        ]
+      ]
+    },
+    layout: {
+      hLineWidth: () => 0.5,
+      hLineColor: () => 'black',
+      vLineWidth: () => 0
+    },
+    margin: [0, 0, 0, 10] as [number, number, number, number]
+  };
+
+  const docDefinition: any = {
+    info: {
+      title: `Income Statement ${storeLocation} ${getPeriodDisplay()}`,
+      author: storeLocation,
+      creator: 'Financial Reporting System'
+    },
+    pageSize: 'A4',
+    pageOrientation: 'portrait',
+    pageMargins: [40, 80, 40, 60],
+    header: (currentPage: number, pageCount: number) => {
+      return {
+        columns: [
+          {
+            width: '*',
+            stack: [
+              { text: 'Income Statement', style: 'header', alignment: 'center' },
+              { text: storeLocation, style: 'subheader', alignment: 'center' },
+              { text: `For the Period: ${getPeriodDisplay()}`, style: 'subheader', alignment: 'center' },
+              { canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, lineWidth: 1 }] }
+            ],
+            margin: [40, 15, 40, 0]
+          }
+        ]
+      };
+    },
+    footer: (currentPage: number, pageCount: number) => {
+      return {
+        columns: [
+          { text: `Prepared by: ${storeLocation}`, style: 'footer', alignment: 'left', margin: [40, 0, 0, 0] },
+          { text: `Generated on: ${today}`, style: 'footer', alignment: 'center' },
+          { text: `Page ${currentPage} of ${pageCount}`, style: 'footer', alignment: 'right', margin: [0, 0, 40, 0] }
+        ],
+        margin: [0, 10, 0, 0]
+      };
+    },
+    content: [
+      incomeTable,
+      cogsTable,
+      grossProfitTable,
+      expensesTable,
+      netIncomeTable
     ],
-    ...baseTableStyles,
-    didDrawCell: (data: any) => {
-      if (data.section === 'body' && data.row.index === data.table.body.length - 1) {
-        data.cell.styles.fontStyle = 'bold';
-        data.cell.styles.fontSize = 14; // enforce font size 16 for total row
+    styles: {
+      header: {
+        fontSize: 18,
+        bold: true,
+        margin: [0, 0, 0, 5]
+      },
+      subheader: {
+        fontSize: 11,
+        margin: [0, 2, 0, 2]
+      },
+      tableHeader: {
+        fontSize: 13,
+        bold: true,
+        margin: [0, 2, 0, 2]
+      },
+      tableCell: {
+        fontSize: 11,
+        margin: [0, 2, 0, 2]
+      },
+      tableBold: {
+        fontSize: 12,
+        bold: true,
+        margin: [0, 2, 0, 2]
+      },
+      grossProfit: {
+        fontSize: 13,
+        bold: true,
+        margin: [0, 2, 0, 2]
+      },
+      footer: {
+        fontSize: 8
       }
     },
-  });
-  currentY = (doc as any).lastAutoTable.finalY + 6;
+    defaultStyle: {
+      font: 'Roboto'
+    }
+  };
 
-  // Net Income Section (no header, just body)
-  autoTable(doc, {
-    startY: currentY,
-    body: [['Net Income', formatAmount(netIncome), calculatePercentage(netIncome, totalIncome)]],
-    ...baseTableStyles,
-    styles: {
-      ...baseTableStyles.bodyStyles,
-      fontStyle: 'bold',
-      fontSize: 16,
-    },
-    showHead: 'never',
-  });
-
-  const pageCount = (doc as any).getNumberOfPages();
-  for (let i = 1; i <= pageCount; i++) {
-    addFooter(i);
-  }
-
-  doc.save(`Income_Statement_${storeLocation}_${getPeriodDisplay().replace(/\s+/g, '_')}.pdf`);
+  pdfMake.createPdf(docDefinition).download(`Income_Statement_${storeLocation}_${getPeriodDisplay().replace(/\s+/g, "_")}.pdf`);
 };
 
-
-return (
-  <main
-    className={`relative px-6 below-md:px-3 overflow-auto border-none h-full ${
-      data.length > 10 ? "max-h-[calc(100vh-50px)]" : "min-h-[500px]"
-    }`}
-    style={{ scrollbarWidth: "thin" }}
-  >
-    {/* Sticky Filter Header */}
-    <div className="sticky top-0 z-20 bg-[#f7f8f9] pb-4 pt-4 below-md:pt-3 below-md:pb-3 tablet:pt-3">
-      <div className="flex flex-row items-center gap-3 w-full flex-wrap below-md:flex-col below-md:items-stretch tablet:flex-row tablet-home:flex-row">
-        <Dropdown
-          options={storeOptions}
-          selectedOption={selectedStore?.name || "Store"}
-          onSelect={(option: any) => {
-            setSelectedStore(option);
-            setIsStoreDropdownOpen(false);
-          }}
-          isOpen={isStoreDropdownOpen}
-          toggleOpen={toggleStoreDropdown}
-          widthchange="flex-1 min-w-[140px]"
-        />
-
-        <Dropdown
-          options={periodOptions}
-          selectedOption={selectedPeriod}
-          onSelect={handlePeriodSelect}
-          isOpen={isPeriodOpen}
-          toggleOpen={togglePeriodDropdown}
-          widthchange="flex-1 min-w-[120px]"
-        />
-
-        <Dropdown
-          options={yearOptions}
-          selectedOption={selectedYear}
-          onSelect={handleYearSelect}
-          isOpen={isYearOpen}
-          toggleOpen={toggleYearDropdown}
-          widthchange="flex-1 min-w-[100px]"
-        />
-
-        {selectedPeriod !== "Yearly" && (
+  return (
+    <main
+      className={`relative px-6 below-md:px-3 overflow-auto border-none h-full ${
+        data.length > 10 ? "max-h-[calc(100vh-50px)]" : "min-h-[500px]"
+      }`}
+      style={{ scrollbarWidth: "thin" }}
+    >
+      <div className="sticky top-0 z-20 bg-[#f7f8f9] pb-4 pt-4 below-md:pt-3 below-md:pb-3 tablet:pt-3">
+        <div className="flex flex-row items-center gap-3 w-full flex-wrap below-md:flex-col below-md:items-stretch tablet:flex-row tablet-home:flex-row">
           <Dropdown
-            options={
-              selectedPeriod === "Monthly"
-                ? monthOptions
-                : selectedPeriod === "Quarterly"
-                ? quarterOptions
-                : halfYearOptions
-            }
-            selectedOption={selectedSubPeriod || "Select"}
-            onSelect={handleSubPeriodSelect}
-            isOpen={isSubPeriodOpen}
-            toggleOpen={toggleSubPeriodDropdown}
+            options={storeOptions}
+            selectedOption={selectedStore?.name || "Store"}
+            onSelect={(option: any) => {
+              setSelectedStore(option);
+              setIsStoreDropdownOpen(false);
+            }}
+            isOpen={isStoreDropdownOpen}
+            toggleOpen={toggleStoreDropdown}
+            widthchange="flex-1 min-w-[140px]"
+          />
+
+          <Dropdown
+            options={periodOptions}
+            selectedOption={selectedPeriod}
+            onSelect={handlePeriodSelect}
+            isOpen={isPeriodOpen}
+            toggleOpen={togglePeriodDropdown}
             widthchange="flex-1 min-w-[120px]"
           />
-        )}
 
-        <button
-          onClick={handleSearch}
-          className="flex items-center justify-center bg-[#0F1044] hover:bg-[#0A0B2F] shadow-lg px-4 py-2 rounded-md text-white text-sm font-medium below-md:w-full"
-          disabled={loading}
-        >
-          Search
-        </button>
+          <Dropdown
+            options={yearOptions}
+            selectedOption={selectedYear}
+            onSelect={handleYearSelect}
+            isOpen={isYearOpen}
+            toggleOpen={toggleYearDropdown}
+            widthchange="flex-1 min-w-[100px]"
+          />
 
-        {/* Download PDF for screens > 1350px */}
-        <div className="hidden tablet-home:hidden xl:block ml-auto">
+          {selectedPeriod !== "Yearly" && (
+            <Dropdown
+              options={
+                selectedPeriod === "Monthly"
+                  ? monthOptions
+                  : selectedPeriod === "Quarterly"
+                  ? quarterOptions
+                  : halfYearOptions
+              }
+              selectedOption={selectedSubPeriod || "Select"}
+              onSelect={handleSubPeriodSelect}
+              isOpen={isSubPeriodOpen}
+              toggleOpen={toggleSubPeriodDropdown}
+              widthchange="flex-1 min-w-[120px]"
+            />
+          )}
+
           <button
-            onClick={downloadPDF}
-            className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg px-6 py-2 rounded-md text-white text-sm font-medium"
+            onClick={handleSearch}
+            className="flex items-center justify-center bg-[#0F1044] hover:bg-[#0A0B2F] shadow-lg px-4 py-2 rounded-md text-white text-sm font-medium below-md:w-full"
             disabled={loading}
           >
-            <img
-              src="/images/webuploadicon.svg"
-              alt="Download Icon"
-              className="mr-1 rotate-180"
-            />
-            Download PDF
+            Search
           </button>
-        </div>
-      </div>
-    </div>
 
-    {/* Floating PDF Download for smaller screens */}
-    <div className="below-md:block tablet:block tablet-home:block xl:hidden hidden fixed bottom-6 right-6 z-30">
-      <button
-        onClick={downloadPDF}
-        className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[60px] h-[60px] rounded-lg text-white font-medium"
-        disabled={loading}
-      >
-        <img
-          src="/images/webuploadicon.svg"
-          alt="Download Icon"
-          className="w-6 h-6 rotate-180"
-        />
-      </button>
-    </div>
-
-    {/* KPI Cards */}
-    <div className="flex flex-wrap gap-4 mt-4 md:grid-cols-2">
-      {[
-        { label: 'Net Sales', value: netSales },
-        { label: 'Cost of Goods', value: totalCogsAmount },
-        { label: 'Total Expenses', value: totalAmount },
-        { label: 'Net Income', value: netIncome },
-      ].map((item, index) => (
-        <div
-          key={index}
-          className="flex-1 min-w-[220px] bg-white rounded-lg shadow-sm border-[#7b7b7b] border-b-4 p-4"
-        >
-          <div className="flex flex-col gap-2">
-            <p className="text-[16px] text-[#575F6DCC] font-bold">{item.label}</p>
-            <p className="text-[20px] text-[#2D3748] font-bold">
-              {(loading || (item.label === 'Tender Commission' && tenderCommissionLoading)) ? 
-                <Skeleton width={100} /> : formatAmount(item.value)}
-            </p>
+          <div className="hidden tablet-home:hidden xl:block ml-auto">
+            <button
+              onClick={downloadPDF}
+              className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg px-6 py-2 rounded-md text-white text-sm font-medium"
+              disabled={loading}
+            >
+              <img
+                src="/images/webuploadicon.svg"
+                alt="Download Icon"
+                className="mr-1 rotate-180"
+              />
+              Download PDF
+            </button>
           </div>
         </div>
-      ))}
-    </div>
+      </div>
 
-    {/* Data Table */}
- <div className="shadow-sm border border-[#E4E4EF] rounded-md flex-grow flex flex-col mt-4">
-      <div className="w-full overflow-x-auto rounded-md">
-        <table className="min-w-full border-collapse text-[12px] below-md:text-[11px] tablet:text-[11px] table-auto">
-          <thead className="bg-[#0F1044]">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className="text-left px-4 py-2 text-[#FFFFFF] font-normal text-[14px] below-md:text-[12px] tablet:text-[13px]"
-                    style={{
-                      minWidth: `${header.column.getSize()}px`,
-                      width: `${header.column.getSize()}px`,
-                    }}
-                  >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {loading ? (
-              Array.from({ length: 10 }).map((_, index) => (
-                <tr
-                  key={index}
-                  className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
-                >
-                  {columns.map((column, colIndex) => (
-                    <td
-                      key={colIndex}
-                      className="px-4 py-1.5"
-                      style={{ minWidth: `${column.size}px` }}
+      <div className="below-md:block tablet:block tablet-home:block xl:hidden hidden fixed bottom-6 right-6 z-30">
+        <button
+          onClick={downloadPDF}
+          className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[60px] h-[60px] rounded-lg text-white font-medium"
+          disabled={loading}
+        >
+          <img
+            src="/images/webuploadicon.svg"
+            alt="Download Icon"
+            className="w-6 h-6 rotate-180"
+          />
+        </button>
+      </div>
+
+      <div className="flex flex-wrap gap-4 mt-4 md:grid-cols-2">
+        {[
+          { label: 'Net Sales', value: netSales },
+          { label: 'Cost of Goods', value: totalCogsAmount },
+          { label: 'Total Expenses', value: totalAmount },
+          { label: 'Net Income', value: netIncome },
+        ].map((item, index) => (
+          <div
+            key={index}
+            className="flex-1 min-w-[220px] bg-white rounded-lg shadow-sm border-[#7b7b7b] border-b-4 p-4"
+          >
+            <div className="flex flex-col gap-2">
+              <p className="text-[16px] text-[#575F6DCC] font-bold">{item.label}</p>
+              <p className="text-[20px] text-[#2D3748] font-bold">
+                {(loading || (item.label === 'Tender Commission' && tenderCommissionLoading)) ? 
+                  <Skeleton width={100} /> : formatAmount(item.value)}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="shadow-sm border border-[#E4E4EF] rounded-md flex-grow flex flex-col mt-4">
+        <div className="w-full overflow-x-auto rounded-md">
+          <table className="min-w-full border-collapse text-[12px] below-md:text-[11px] tablet:text-[11px] table-auto">
+            <thead className="bg-[#0F1044]">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      key={header.id}
+                      className="text-left px-4 py-2 text-[#FFFFFF] font-normal text-[14px] below-md:text-[12px] tablet:text-[13px]"
+                      style={{
+                        minWidth: `${header.column.getSize()}px`,
+                        width: `${header.column.getSize()}px`,
+                      }}
                     >
-                      <Skeleton height={30} />
-                    </td>
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </th>
                   ))}
                 </tr>
-              ))
-            ) : tableDataWithTenderCommission.length > 0 ? (
-              <>
-                {tableDataWithTenderCommission.map((row, rowIndex) => (
+              ))}
+            </thead>
+            <tbody>
+              {loading ? (
+                Array.from({ length: 10 }).map((_, index) => (
                   <tr
-                    key={rowIndex}
-                    className={
-                      rowIndex % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
-                    }
+                    key={index}
+                    className={index % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"}
                   >
-                    <td
-                      className="px-4 py-1.5 text-[#636363] text-[13px] below-md:text-[11px] tablet:text-[12px]"
-                      style={{ minWidth: `${columns[0].size}px` }}
-                    >
-                      {row.label}
-                    </td>
-                    <td
-                      className="px-4 py-1.5 text-[#636363] text-[13px] below-md:text-[11px] tablet:text-[12px] text-right pr-3"
-                      style={{ minWidth: `${columns[1].size}px` }}
-                    >
-                      {formatAmount(row.value)}
-                    </td>
-                    <td
-                      className="px-4 py-1.5 text-[#636363] text-[13px] below-md:text-[11px] tablet:text-[12px] text-right pr-3"
-                      style={{ minWidth: `${columns[2].size}px` }}
-                    >
-                      {calculatePercentage(row.value, totalWithTender)}
-                    </td>
+                    {columns.map((column, colIndex) => (
+                      <td
+                        key={colIndex}
+                        className="px-4 py-1.5"
+                        style={{ minWidth: `${column.size}px` }}
+                      >
+                        <Skeleton height={30} />
+                      </td>
+                    ))}
                   </tr>
-                ))}
-                {tableDataWithTenderCommission.length > 0 && !loading && (
-                  <tr className="bg-[#0F1044] text-white border-t border-[#E4E4EF]">
-                    <td
-                      className="px-4 py-1.5 text-[13px] font-bold below-md:text-[11px] tablet:text-[12px]"
-                      style={{ minWidth: `${columns[0].size}px` }}
+                ))
+              ) : tableDataWithTenderCommission.length > 0 ? (
+                <>
+                  {tableDataWithTenderCommission.map((row, rowIndex) => (
+                    <tr
+                      key={rowIndex}
+                      className={
+                        rowIndex % 2 === 1 ? "bg-[#F3F3F6]" : "bg-white"
+                      }
                     >
-                      Total
-                    </td>
-                    <td
-                      className="px-4 py-1.5 text-[13px] text-right pr-3 below-md:text-[11px] tablet:text-[12px]"
-                      style={{ minWidth: `${columns[1].size}px` }}
-                    >
-                      {formatAmount(totalWithTender)}
-                    </td>
-                    <td
-                      className="px-4 py-1.5 text-[13px] text-right pr-3 below-md:text-[11px] tablet:text-[12px]"
-                      style={{ minWidth: `${columns[2].size}px` }}
-                    >
-                      100%
-                    </td>
-                  </tr>
-                )}
-              </>
-            ) : (
-              <tr>
-                <td
-                  colSpan={columns.length}
-                  className="py-6 text-center text-[13px] below-md:text-[11px] tablet:text-[12px]"
-                >
-                  <NoDataFound />
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+                      <td
+                        className="px-4 py-1.5 text-[#636363] text-[13px] below-md:text-[11px] tablet:text-[12px]"
+                        style={{ minWidth: `${columns[0].size}px` }}
+                      >
+                        {row.label}
+                      </td>
+                      <td
+                        className="px-4 py-1.5 text-[#636363] text-[13px] below-md:text-[11px] tablet:text-[12px] text-right pr-3"
+                        style={{ minWidth: `${columns[1].size}px` }}
+                      >
+                        {formatAmount(row.value)}
+                      </td>
+                      <td
+                        className="px-4 py-1.5 text-[#636363] text-[13px] below-md:text-[11px] tablet:text-[12px] text-right pr-3"
+                        style={{ minWidth: `${columns[2].size}px` }}
+                      >
+                        {calculatePercentage(row.value, totalWithTender)}
+                      </td>
+                    </tr>
+                  ))}
+                  {tableDataWithTenderCommission.length > 0 && !loading && (
+                    <tr className="bg-[#0F1044] text-white border-t border-[#E4E4EF]">
+                      <td
+                        className="px-4 py-1.5 text-[13px] font-bold below-md:text-[11px] tablet:text-[12px]"
+                        style={{ minWidth: `${columns[0].size}px` }}
+                      >
+                        Total
+                      </td>
+                      <td
+                        className="px-4 py-1.5 text-[13px] text-right pr-3 below-md:text-[11px] tablet:text-[12px]"
+                        style={{ minWidth: `${columns[1].size}px` }}
+                      >
+                        {formatAmount(totalWithTender)}
+                      </td>
+                      <td
+                        className="px-4 py-1.5 text-[13px] text-right pr-3 below-md:text-[11px] tablet:text-[12px]"
+                        style={{ minWidth: `${columns[2].size}px` }}
+                      >
+                        100%
+                      </td>
+                    </tr>
+                  )}
+                </>
+              ) : (
+                <tr>
+                  <td
+                    colSpan={columns.length}
+                    className="py-6 text-center text-[13px] below-md:text-[11px] tablet:text-[12px]"
+                  >
+                    <NoDataFound />
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-  </main>
+    </main>
   );
 };
-
 
 export default PLReport;
