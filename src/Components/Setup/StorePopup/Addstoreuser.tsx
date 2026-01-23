@@ -26,10 +26,11 @@ interface User {
 interface AddStoreUserProps {
   initialData: TableRow;
   isOpenAddStore: boolean;
-  setAddStore: (isOpen: boolean) => void;
+  setAddStore: (isOpen: any) => void;
+  autoOpen?: boolean;
 }
 
-const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setAddStore }) => {
+const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setAddStore, autoOpen }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]); // State for filtered users
@@ -52,6 +53,7 @@ const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setA
 
   const closeModal = () => {
     setIsOpen(false);
+    setSearchQuery(""); // Clear search query
     setAddStore(false);
   };
 
@@ -169,27 +171,28 @@ const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setA
     }
   };
 
-  // Sync `isOpen` with `isOpenAddStore` prop
   useEffect(() => {
-    setIsOpen(isOpenAddStore);
-    if (isOpenAddStore) {
+    if (autoOpen) {
+      setIsOpen(true);
       fetchUsers();
     }
-  }, [isOpenAddStore]);
+  }, [autoOpen]);
 
   return (
     <>
       <ToastNotification message={customToast.message} type={customToast.type} />
 
-      <div>
-        <button onClick={openModal}>
-          <img
-            src="/images/users.svg"
-            alt="Add user icon"
-            className="flex justify-center items-center w-5 h-5 below-md:w-5 below-md:h-5"
-          />
-        </button>
-      </div>
+      {!autoOpen && (
+        <div>
+          <button onClick={openModal}>
+            <img
+              src="/images/users.svg"
+              alt="Add user icon"
+              className="flex justify-center items-center w-5 h-5 below-md:w-5 below-md:h-5"
+            />
+          </button>
+        </div>
+      )}
 
       {/* Dialog for the modal */}
       <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>

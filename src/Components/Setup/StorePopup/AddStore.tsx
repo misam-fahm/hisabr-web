@@ -59,7 +59,7 @@ const AddStore = ({ setAddStore }: any) => {
   };
 
   const openModal = () => setIsOpen(true);
-  
+
   const closeModal = () => {
     setIsOpen(false);
     // Clear all local state
@@ -67,7 +67,7 @@ const AddStore = ({ setAddStore }: any) => {
     setStoreName("");
     setOwner("");
     setLocation("");
-    
+
     // Clear react-hook-form data
     methods.reset({
       storeName: "",
@@ -76,7 +76,7 @@ const AddStore = ({ setAddStore }: any) => {
       county: "",
       // royalty: ""
     });
-    
+
     // Clear form errors
     methods.clearErrors();
   };
@@ -101,14 +101,17 @@ const AddStore = ({ setAddStore }: any) => {
       const { status, data: responseData } = result;
       setTimeout(() => {
         setCustomToast({
-          toastMessage: status === 200 ? "Item added successfully!" : "Failed to add item.",
+          toastMessage: status === 200 ? "Store added successfully!" : (result?.error || result?.message || "An error occurred"),
           toastType: status === 200 ? "success" : "error",
         });
       }, 0);
 
       if (status === 200) {
-        // closeModal(); // <-- Remove this line to keep modal open after submit
-        setAddStore(true)
+        closeModal(); // Close modal after successful submission
+        setAddStore({
+          ...responseData,
+          storeid: responseData?.id || responseData?.storeid,
+        }); // Trigger data refresh and pass new store data
       }
     } catch (error: any) {
       setTimeout(() => {

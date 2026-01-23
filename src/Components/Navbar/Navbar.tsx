@@ -51,7 +51,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
         case "dqcategory":
           newTitle = "DQ Category";
           break;
-          
+
         case "logout":
           newTitle = "Logout";
           break;
@@ -82,9 +82,10 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
     { title: "Dashboard", src: "saleskpi", path: "/" },
     // { title: "Home", src: "home1", path: "/" },
     // { title: "Summary", src: "summary", path: "/summary" },
+
     { title: "Sales", src: "sales", path: "/sales" },
     { title: "Invoices", src: "invoices", path: "/invoices" },
-    
+
     { title: "Expenses", src: "expences", path: "/expenses" },
     {
       title: "Cash Recon.",
@@ -92,10 +93,11 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
       path: "/cashreconc",
     },
     { title: "DQ Export", src: "dq", path: "/dqcategory" },
+    // { title: "Sales Summary", src: "summary", path: "/inventory" },
     // { title: "DQ Export", src: "Categories", path: "/dqcategory" },
     { type: "Report", title: "REPORT" },
     { title: "P&L", src: "plreport", path: "/Plreport" },
-        { title: "Costing", src: "financialreport", path: "/itemratebyunit" },
+    { title: "Costing", src: "financialreport", path: "/itemratebyunit" },
 
     { type: "Setup", title: "SETUP" },
 
@@ -104,12 +106,12 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
       : []),
     ...(userType === "A"
       ? [
-          {
-            title: "DQ Categories",
-            src: "category-svgrepo-com",
-            path: "/setup/dqcategories",
-          },
-        ]
+        {
+          title: "DQ Categories",
+          src: "category-svgrepo-com",
+          path: "/setup/dqcategories",
+        },
+      ]
       : []),
 
     { title: "Items", src: "Items2", path: "/setup/items" },
@@ -160,11 +162,10 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
 
   return (
     <main
-      className={`flex h-[100vh] ${
-        pathsToHideHamburger.some((path) => currentPath?.includes(path))
-          ? "tablet:hidden"
-          : ""
-      }`}
+      className={`flex h-[100vh] ${pathsToHideHamburger.some((path) => currentPath?.includes(path))
+        ? "tablet:hidden"
+        : ""
+        }`}
     >
       {/* Backdrop */}
       {open && (
@@ -175,8 +176,8 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
       )}
 
       {title === "My Profile" ||
-      title === "Edit Profile" ||
-      title === "Invoice Details" ? (
+        title === "Edit Profile" ||
+        title === "Invoice Details" ? (
         <img
           src="/images/mobilebackicon.svg"
           className="fixed top-4 left-4 cursor-pointer z-50"
@@ -208,8 +209,8 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
             className={`cursor-pointer ${open ? "w-[136px] -mt-1 " : "w-[36px] mb-2"} `}
           />
           {title === "My Profile" ||
-          title === "Edit Profile" ||
-          title === "Invoice Details" ? (
+            title === "Edit Profile" ||
+            title === "Invoice Details" ? (
             <img
               src="/images/mobilebackicon.svg"
               className="fixed top-4 left-4 cursor-pointer z-50"
@@ -240,12 +241,11 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
             ${currentPath === menu.path ? " bg-[#A9A5CA33] shadow-[inset_2px_3px_6.9px_0px_#A9A5CA33]" : ""}
             ${open ? "mt-0" : "mt-0"} 
             ${menu.title === "Logout" ? "rounded-tr-none rounded-br-none rounded-lg" : ""}
-            ${
-              menu.title === "SETUP" || menu.title === "REPORT"
-                ? `border border-[#B8BCC3B2] cursor-default pointer-events-none w-[58px] h-5 ml-5 !pl-0 !pr-0 justify-center hover:bg-transparent hover:shadow-none rounded-full py-1 !text-[#B8BCC3B2] text-[9px] mt-4
+            ${menu.title === "SETUP" || menu.title === "REPORT"
+                      ? `border border-[#B8BCC3B2] cursor-default pointer-events-none w-[58px] h-5 ml-5 !pl-0 !pr-0 justify-center hover:bg-transparent hover:shadow-none rounded-full py-1 !text-[#B8BCC3B2] text-[9px] mt-4
               ${!open ? "ml-[7px]" : ""}`
-                : ""
-            }`}
+                      : ""
+                    }`}
                 >
                   {/* Only render the image if the menu is not "Setup" or "Report" */}
                   {menu.title !== "SETUP" && menu.title !== "REPORT" && (
