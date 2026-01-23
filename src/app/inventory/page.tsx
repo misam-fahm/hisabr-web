@@ -51,8 +51,6 @@ interface TableRow {
 
 // Interface for file upload
 interface InventoryItem {
-    store_name: string;
-    filename: string;
     item_name: string;
     quantity: number;
     total: number;
@@ -676,8 +674,6 @@ const Inventory: FC = () => {
                             parsedData.push(tableRow);
 
                             inventoryItems.push({
-                                store_name: storeId || selectedStore?.name || "",
-                                filename: file.name,
                                 item_name: tableRow.item_name,
                                 quantity: tableRow.quantity,
                                 total: tableRow.total,
@@ -703,6 +699,7 @@ const Inventory: FC = () => {
                             week_start: weekStart,
                             week_end: weekEnd,
                             file_time: fileTime || new Date().toISOString().slice(0, 19).replace('T', ' '),
+                            filename: file.name,
                             total_qty: totalQty,
                             total_amount: totalAmount,
                             items: inventoryItems,
