@@ -153,7 +153,7 @@ const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Persist selectedStore
   useEffect(() => {
     if (selectedStore) {
-      try { localStorage.setItem("selectedStore", JSON.stringify(selectedStore)); } catch {}
+      try { localStorage.setItem("selectedStore", JSON.stringify(selectedStore)); } catch { }
     }
   }, [selectedStore]);
 
@@ -163,7 +163,7 @@ const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const { start, end } = getRangeFromOption(selectedDateRange);
     setStartDate(start);
     setEndDate(end);
-    try { localStorage.setItem("selectedDateRangeId", String(selectedDateRange.id)); } catch {}
+    try { localStorage.setItem("selectedDateRangeId", String(selectedDateRange.id)); } catch { }
   }, [selectedDateRange]);
 
   // Listen for storage changes to reset state when localStorage is cleared
@@ -480,23 +480,24 @@ const Header: React.FC = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
-    const dropdownRef = useRef<HTMLDivElement>(null);
-    const router = useRouter();
-    const currentPath = usePathname();
-    const { invoiceid, salesid }: any = useParams();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const currentPath = usePathname();
+  const { invoiceid, salesid, inventoryid }: any = useParams();
 
-    const safeDecodeBase64 = (str: string | undefined): string => {
-      if (!str) return "";
-      try {
-        return atob(str.replace(/\-/g, "+").replace(/_/g, "/"));
-      } catch (error) {
-        console.error("Invalid Base64 string:", str);
-        return "";
-      }
-    };
+  const safeDecodeBase64 = (str: string | undefined): string => {
+    if (!str) return "";
+    try {
+      return atob(str.replace(/\-/g, "+").replace(/_/g, "/"));
+    } catch (error) {
+      console.error("Invalid Base64 string:", str);
+      return "";
+    }
+  };
 
-    const decodedSaleId = safeDecodeBase64(salesid);
-    const decodedId = safeDecodeBase64(invoiceid);
+  const decodedSaleId = safeDecodeBase64(salesid);
+  const decodedId = safeDecodeBase64(invoiceid);
+  const decodedInventoryId = safeDecodeBase64(inventoryid);
 
   const fetchUserData = async () => {
     try {
@@ -514,30 +515,34 @@ const Header: React.FC = () => {
     }
   };
 
-    const getTitle = (route: string, userType?: string): string => {
-      const normalizedRoute = route.replace(/^\/|\/$/g, "");
-      const normalizedDecodedSaleId = decodedSaleId?.trim();
-      const normalizedDecodedId = decodedId?.trim();
+  const getTitle = (route: string, userType?: string): string => {
+    const normalizedRoute = route.replace(/^\/|\/$/g, "");
+    const normalizedDecodedSaleId = decodedSaleId?.trim();
+    const normalizedDecodedId = decodedId?.trim();
+    const normalizedDecodedInventoryId = decodedInventoryId?.trim();
 
-      if (normalizedRoute.startsWith("setup/")) {
-        const setupRoutes: Record<string, string> = {
-          "setup/items": "Items",
-          "setup/stores": "Stores",
-          "setup/configuration": "Configuration",
-          "setup/categories": userType === "A" ? "Categories" : "Access Denied",
-          "setup/dqcategories": userType === "A" ? "DQ Categories" : "Access Denied",
-          "setup/tenders": userType === "A" ? "Tenders" : "Access Denied",
-          "setup/userdetails": userType === "A" ? "User Management" : "Access Denied",
-        };
-        return setupRoutes[normalizedRoute.toLowerCase()] || "Setup";
-      }
+    if (normalizedRoute.startsWith("setup/")) {
+      const setupRoutes: Record<string, string> = {
+        "setup/items": "Items",
+        "setup/stores": "Stores",
+        "setup/configuration": "Configuration",
+        "setup/categories": userType === "A" ? "Categories" : "Access Denied",
+        "setup/dqcategories": userType === "A" ? "DQ Categories" : "Access Denied",
+        "setup/tenders": userType === "A" ? "Tenders" : "Access Denied",
+        "setup/userdetails": userType === "A" ? "User Management" : "Access Denied",
+      };
+      return setupRoutes[normalizedRoute.toLowerCase()] || "Setup";
+    }
 
-      if (normalizedRoute.startsWith("invoices/") && normalizedDecodedId) {
-        return "Invoices/Invoice Details";
-      }
-      if (normalizedRoute.startsWith("sales/") && normalizedDecodedSaleId) {
-        return "Sales/Sales Details";
-      }
+    if (normalizedRoute.startsWith("invoices/") && normalizedDecodedId) {
+      return "Invoices/Invoice Details";
+    }
+    if (normalizedRoute.startsWith("sales/") && normalizedDecodedSaleId) {
+      return "Sales/Sales Details";
+    }
+    if (normalizedRoute.startsWith("inventory/") && normalizedDecodedInventoryId) {
+      return "Sales Summary/Details";
+    }
 
     const routeTitles: Record<string, string> = {
       myprofile: "My Profile",
@@ -552,33 +557,34 @@ const Header: React.FC = () => {
       cashreconc: "Cash Reconciliation",
       grossrevenue: "Gross Revenue",
       customercount: "Customer Count",
+      inventory: "Sales Summary",
       logout: "Logout",
       plreport: "P&L",
     };
     return routeTitles[normalizedRoute.toLowerCase()] || "Dashboard";
   };
 
-    const updateTitleWithQueryParams = () => {
-      let newTitle = getTitle(currentPath, data?.usertype);
-      const normalizedRoute = currentPath.replace(/^\/|\/$/g, "");
+  const updateTitleWithQueryParams = () => {
+    let newTitle = getTitle(currentPath, data?.usertype);
+    const normalizedRoute = currentPath.replace(/^\/|\/$/g, "");
 
-      if (typeof window !== "undefined") {
-        const searchParams = new URLSearchParams(window.location.search);
-        if (normalizedRoute === "invoices") {
-          if (searchParams.get("fromItemsAnalysis") === "true") newTitle = "Items";
-          else if (searchParams.get("fromHome") === "true") newTitle = "Cost";
-        } else if (normalizedRoute === "expenses") {
-          if (searchParams.get("fromLabourAnalysis") === "true") newTitle = "Labour";
-          else if (searchParams.get("fromHome") === "true") newTitle = "Operating Expense";
-        } else if (normalizedRoute === "cashreconc") {
-          if (searchParams.get("fromLabourAnalysis") === "true") newTitle = "Labour";
-          else if (searchParams.get("fromHome") === "true") newTitle = "Operating cashreconc";
-        }
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (normalizedRoute === "invoices") {
+        if (searchParams.get("fromItemsAnalysis") === "true") newTitle = "Items";
+        else if (searchParams.get("fromHome") === "true") newTitle = "Cost";
+      } else if (normalizedRoute === "expenses") {
+        if (searchParams.get("fromLabourAnalysis") === "true") newTitle = "Labour";
+        else if (searchParams.get("fromHome") === "true") newTitle = "Operating Expense";
+      } else if (normalizedRoute === "cashreconc") {
+        if (searchParams.get("fromLabourAnalysis") === "true") newTitle = "Labour";
+        else if (searchParams.get("fromHome") === "true") newTitle = "Operating cashreconc";
       }
+    }
 
-      setTitle(newTitle);
-      document.title = newTitle;
-    };
+    setTitle(newTitle);
+    document.title = newTitle;
+  };
 
   const checkAccessControl = () => {
     if (!data) return true;
@@ -591,40 +597,40 @@ const Header: React.FC = () => {
       "setup/userdetails",
     ];
 
-      const isRestricted = restrictedSetupRoutes.includes(currentRoute) && userType !== "A";
-      setIsAuthorized(!isRestricted);
-      return !isRestricted;
-    };
+    const isRestricted = restrictedSetupRoutes.includes(currentRoute) && userType !== "A";
+    setIsAuthorized(!isRestricted);
+    return !isRestricted;
+  };
 
-    useEffect(() => {
-      setIsMounted(true);
-      fetchUserData();
-    }, []);
+  useEffect(() => {
+    setIsMounted(true);
+    fetchUserData();
+  }, []);
 
-    useEffect(() => {
-      if (!isMounted || !data) return;
-      updateTitleWithQueryParams();
-      const isAllowed = checkAccessControl();
-      if (!isAllowed) {
-        router.push(data.usertype === "U" ? "/unauthorised" : "/");
+  useEffect(() => {
+    if (!isMounted || !data) return;
+    updateTitleWithQueryParams();
+    const isAllowed = checkAccessControl();
+    if (!isAllowed) {
+      router.push(data.usertype === "U" ? "/unauthorised" : "/");
+    }
+  }, [currentPath, data, isMounted, router]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+        setIsRotated(false);
       }
-    }, [currentPath, data, isMounted, router]);
-
-    useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-          setIsOpen(false);
-          setIsRotated(false);
-        }
-      };
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    const handleToggle = () => {
-      setIsOpen((prev) => !prev);
-      setIsRotated((prev) => !prev);
     };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleToggle = () => {
+    setIsOpen((prev) => !prev);
+    setIsRotated((prev) => !prev);
+  };
 
   const handleLogout = () => {
     localStorage.clear();
@@ -635,10 +641,10 @@ const Header: React.FC = () => {
     router.replace("/login");
   };
 
-    const getInitials = (): string =>
-      data?.firstname && data?.lastname
-        ? `${data.firstname.charAt(0).toUpperCase()}${data.lastname.charAt(0).toUpperCase()}`
-        : "NA";
+  const getInitials = (): string =>
+    data?.firstname && data?.lastname
+      ? `${data.firstname.charAt(0).toUpperCase()}${data.lastname.charAt(0).toUpperCase()}`
+      : "NA";
 
   const renderSkeleton = () => (
     <header className="w-full sticky z-30 bg-white h-[50px] flex justify-center items-center shadow">

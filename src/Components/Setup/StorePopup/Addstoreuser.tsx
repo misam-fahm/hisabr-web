@@ -52,6 +52,7 @@ const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setA
 
   const closeModal = () => {
     setIsOpen(false);
+    setSearchQuery(""); // Clear search query
     setAddStore(false);
   };
 
@@ -169,13 +170,7 @@ const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setA
     }
   };
 
-  // Sync `isOpen` with `isOpenAddStore` prop
-  useEffect(() => {
-    setIsOpen(isOpenAddStore);
-    if (isOpenAddStore) {
-      fetchUsers();
-    }
-  }, [isOpenAddStore]);
+  // Removed the useEffect that was causing auto-opening
 
   return (
     <>

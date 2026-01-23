@@ -26,7 +26,7 @@ export default function RootLayout({
   const shouldHideSidebar = hideSidebarRoutes.includes(pathname);
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="w-full">
         <GlobalProvider>
           <div className="flex w-full ">

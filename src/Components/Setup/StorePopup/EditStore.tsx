@@ -89,13 +89,13 @@ const EditStore = ({ initialData, setAddStore, isOpenAddStore }: any) => {
       console.log("API Response:", result);
 
       setCustomToast({
-        message: status === 200 ? "Item updated successfully!" : "Failed to add item.",
+        message: status === 200 ? "Store updated successfully!" : result?.message,
         type: status === 200 ? "success" : "error",
       });
 
       if (status === 200) {
         setCustomToast({
-          message: status === 200 ? "Item updated successfully!" : "Failed to add item.",
+          message: status === 200 ? "Store updated successfully!" : result?.message,
           type: status === 200 ? "success" : "error",
         });
         setTimeout(() => {
@@ -104,7 +104,7 @@ const EditStore = ({ initialData, setAddStore, isOpenAddStore }: any) => {
         }, 300);
       };
     } catch (error) {
-      setCustomToast({ message: "Error adding item", type: "error" });
+      setCustomToast({ message: "Error updating store", type: "error" });
       console.error("Error submitting form:", error);
     }
   };

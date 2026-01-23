@@ -124,7 +124,7 @@ const Page: FC = () => {
       cell: (info) => (
         <div className="text-right">
           {info.row.original.royalty !== null &&
-          info.row.original.royalty !== undefined
+            info.row.original.royalty !== undefined
             ? `${info.row.original.royalty}%`
             : ""}
         </div>
@@ -258,11 +258,11 @@ const Page: FC = () => {
                   setAddStore={setopenAddStore}
                 />
                 {/* Add Store User */}
-          <AddStoreUser
-            initialData={row.original}
-            isOpenAddStore={isOpenAddStore}
-            setAddStore={setopenAddStore}
-          />
+                <AddStoreUser
+                  initialData={row.original}
+                  isOpenAddStore={isOpenAddStore}
+                  setAddStore={setopenAddStore}
+                />
               </div>
             </div>
             {/* Border */}
@@ -303,7 +303,7 @@ const Page: FC = () => {
               <span className="text-[#636363] text-[13px] mb-2">Royalty</span>{" "}
               <span className="text-[14px]">
                 {row.original.royalty !== null &&
-                row.original.royalty !== undefined
+                  row.original.royalty !== undefined
                   ? `${row.original.royalty}%`
                   : ""}
               </span>
@@ -335,9 +335,9 @@ const Page: FC = () => {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </th>
                   ))}
                 </tr>
