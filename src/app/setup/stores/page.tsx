@@ -37,7 +37,8 @@ const Page: FC = () => {
   const [data, setData] = useState<TableRow[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isOpenAddStore, setopenAddStore] = useState(false);
+  const [isOpenAddStore, setopenAddStore] = useState<any>(false);
+  const [allocationStore, setAllocationStore] = useState<TableRow | null>(null);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
@@ -209,6 +210,10 @@ const Page: FC = () => {
   };
   useEffect(() => {
     fetchData();
+    if (typeof isOpenAddStore === "object" && isOpenAddStore !== null) {
+      setAllocationStore(isOpenAddStore);
+      setopenAddStore(false); // Reset to allow the component to stay mounted/open
+    }
   }, [pageIndex, pageSize, isOpenAddStore]);
 
   const [userType, setUserType] = useState<any>();
@@ -405,6 +410,14 @@ const Page: FC = () => {
       <div className="mt-4 below-md:hidden">
         <Pagination table={table} totalItems={totalItems} />
       </div>
+      {allocationStore && (
+        <AddStoreUser
+          initialData={allocationStore}
+          isOpenAddStore={false}
+          setAddStore={() => setAllocationStore(null)}
+          autoOpen={true}
+        />
+      )}
     </main>
   );
 };

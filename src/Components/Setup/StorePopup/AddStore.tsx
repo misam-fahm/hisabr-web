@@ -108,7 +108,10 @@ const AddStore = ({ setAddStore }: any) => {
 
       if (status === 200) {
         closeModal(); // Close modal after successful submission
-        setAddStore(true); // Trigger data refresh
+        setAddStore({
+          ...responseData,
+          storeid: responseData?.id || responseData?.storeid,
+        }); // Trigger data refresh and pass new store data
       }
     } catch (error: any) {
       setTimeout(() => {

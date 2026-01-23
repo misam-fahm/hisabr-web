@@ -93,7 +93,7 @@ const Navbar: React.FC<DrawerProps> = ({ children }) => {
       path: "/cashreconc",
     },
     { title: "DQ Export", src: "dq", path: "/dqcategory" },
-    { title: "Sales Summary", src: "summary", path: "/inventory" },
+    // { title: "Sales Summary", src: "summary", path: "/inventory" },
     // { title: "DQ Export", src: "Categories", path: "/dqcategory" },
     { type: "Report", title: "REPORT" },
     { title: "P&L", src: "plreport", path: "/Plreport" },
