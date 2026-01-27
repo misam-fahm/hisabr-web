@@ -5,18 +5,9 @@ import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import Pagination from "@/Components/UI/Pagination/Pagination";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  flexRender,
-  ColumnDef,
-} from "@tanstack/react-table";
 import { sendApiRequest } from "@/utils/apiUtils";
 import ToastNotification, {
   ToastNotificationProps,
@@ -25,6 +16,7 @@ import moment from "moment";
 import Loading from "@/Components/UI/Themes/Loading";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 import Tooltip from "@/Components/UI/Toolstips/Tooltip";
+import { useGlobalContext } from "@/Components/Header/header";
 
 interface TableRow {
   name: string;
@@ -122,16 +114,11 @@ const Sales: FC = () => {
   const [totalOrders, setTotalOrders] = useState<number>();
   const [totalsalecount, setTotalSaleCount] = useState<number>(0);
   const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
-const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (MTD)");
   const [productTotal, setProductTotal] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
   const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<any>();
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [store, setStore] = useState<any[]>([]);
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
     message: "",
     type: "",
@@ -190,6 +177,19 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
   // });
 
   // const { pageIndex, pageSize } = table.getState().pagination;
+  // Get global context values
+  const {
+    storeOptions,
+    dateRangeOptions,
+    selectedDateRange,
+    setSelectedDateRange,
+    startDate,
+    endDate,
+    setStartDate,
+    setEndDate,
+    selectedStore,
+    setSelectedStore,
+  } = useGlobalContext();
 
   const mergeCategories = (categories: any[]) => {
     // Initialize the merged category
@@ -222,51 +222,11 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
     }
 
     return filteredCategories;
-};  
+  };  
 
-  const dateRangeOptions: DateRangeOption[] = [
-    { name: "This Month (MTD)", value: "this_month", id: 1 },
-    { name: "This Year (YTD)", value: "this_year", id: 2 },
-    { name: "Last Month", value: "last_month", id: 3 },
-    { name: "Last Year", value: "last_year", id: 4 },
-  ];
-  
   // Add handler functions within the Sales component
   const toggleDateRangeDropdown = () => {
     setIsDateRangeOpen((prev) => !prev);
-  };
-
-  const handleDateRangeSelect = (option: DateRangeOption) => {
-    setSelectedDateRange(option.name);
-    const now = new Date();
-    let newStartDate: Date;
-    let newEndDate: Date;
-
-    switch (option.value) {
-      case "this_month":
-        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        newEndDate = now;
-        break;
-      case "this_year":
-        newStartDate = new Date(now.getFullYear(), 0, 1);
-        newEndDate = now;
-        break;
-      case "last_month":
-        newStartDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        newEndDate = new Date(now.getFullYear(), now.getMonth(), 0);
-        break;
-      case "last_year":
-        newStartDate = new Date(now.getFullYear() - 1, 0, 1);
-        newEndDate = new Date(now.getFullYear() - 1, 11, 31);
-        break;
-      default:
-        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        newEndDate = now;
-    }
-
-    setStartDate(newStartDate);
-    setEndDate(newEndDate);
-    setIsDateRangeOpen(false);
   };
 
   const fetchData2 = async () => {
@@ -274,7 +234,7 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
     try {
       const response: any = await sendApiRequest({
         mode: "getDqRevCenterData",
-        storeid: selectedOption?.id || 69,
+        storeid: selectedStore?.id || 69,
         startdate: startDate && format(startDate, "yyyy-MM-dd"),
         enddate: endDate && format(endDate, "yyyy-MM-dd"),
       });
@@ -308,7 +268,7 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
       const response: any = await sendApiRequest({
         mode: "getDqRevCenterData",
         sp: "GetDQCategoryData",
-        storeid: selectedOption?.id || 69,
+        storeid: selectedStore?.id || 69,
         startdate: startDate && format(startDate, "yyyy-MM-dd"),
         enddate: endDate && format(endDate, "yyyy-MM-dd"),
       });
@@ -335,7 +295,7 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
     try {
       const response: any = await sendApiRequest({
         mode: "getStoreByName",
-        storename: selectedOption?.name || "13246",
+        storename: selectedStore?.name || "13246",
       });
 
       if (response?.status === 200) {
@@ -354,40 +314,12 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
   };
 
   useEffect(() => {
-    if (startDate && endDate && selectedOption) {
+    if (startDate && endDate && selectedStore) {
       fetchData2();
       fetchData();
       // fetchDataForAddress();
     }
-    1;
-  }, [selectedOption]);
-
-  const getUserStore = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getUserStore" });
-      if (response?.status === 200) {
-        const stores = response?.data?.stores || [];
-        // Map stores to the format expected by the Dropdown component
-        const formattedStores = stores?.map((store) => ({
-          name: `${store?.name} - ${store?.location || "Unknown Location"}`,
-          id: store?.id,
-        }));
-
-        setStore(formattedStores);
-
-        if (stores.length > 0) {
-          setSelectedOption({
-            name: `${stores[0]?.name} - ${stores[0]?.location || "Unknown Location"}`,
-            id: stores[0]?.id,
-          });
-        }
-      } else {
-        handleError(response?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
-    }
-  };
+  }, [startDate, endDate, selectedStore]);
 
   const verifyToken = async (token: string) => {
     try {
@@ -411,31 +343,6 @@ const [selectedDateRange, setSelectedDateRange] = useState<string>("This Month (
       verifyToken(token);
     }
   }, []);
-
- // ...existing code...
-useEffect(() => {
-  if (isVerifiedUser) {
-    // Calculate last month's start and end dates
-    const today = new Date();
-    const lastMonth = today.getMonth() === 0 ? 11 : today.getMonth() - 1;
-    const lastMonthYear = today.getMonth() === 0 ? today.getFullYear() - 1 : today.getFullYear();
-    const lastMonthStart = new Date(lastMonthYear, lastMonth, 1);
-    const lastMonthEnd = new Date(lastMonthYear, lastMonth + 1, 0);
-
-    setStartDate(lastMonthStart);
-    setEndDate(lastMonthEnd);
-    setSelectedDateRange("Last Month"); // Set the dropdown to "Last Month"
-    getUserStore();
-  }
-}, [isVerifiedUser]);
-// ...existing code...
-  
-  useEffect(() => {
-    if (startDate && endDate && selectedOption) {
-      fetchData2();
-      fetchData();
-    }
-  }, [selectedOption, startDate, endDate]);
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -473,13 +380,31 @@ useEffect(() => {
     "10\" Round Cake": "10 Round",
   };
 
-  const getTotalByCategory = (name) => {
-    const allData = [...(items || []), ...(Sitems || [])];
-    const category = allData.find((item) => item.name === name);
-    return category && category.totalextprice !== undefined && category.totalextprice !== null
-      ? Math.round(category.totalextprice)
+  const getTotalByCategory = (name: string) => {
+  const allData = [...(items || []), ...(Sitems || [])];
+  const category = allData.find((item) => item.name === name);
+  if (!category) return 0;
+
+  // For these categories, export qty_times_pieces
+  const useQtyTimesPiecesFor = new Set([
+    "Mix Ice Cream",       // => Mix Gall\Litre
+    '8" Round Cake',       // => 8 Round
+    '10" Round Cake',      // => 10 Round
+    "Sheet Cake",          // => Sheet
+  ]);
+
+  if (useQtyTimesPiecesFor.has(name)) {
+    return category?.qty_times_pieces
+      ? Math.round(Number(category.qty_times_pieces))
       : 0;
-  };
+  }
+
+  // Default: use totalextprice
+  return category?.totalextprice != null
+    ? Math.round(Number(category.totalextprice))
+    : 0;
+};
+
 
   const mapData = () => {
     const header = [
@@ -515,8 +440,8 @@ useEffect(() => {
 
     let storeNumber = "";
     let storeAddress = "";
-    if (selectedOption?.name) {
-      const [number, ...locationParts] = selectedOption.name.split(" - ");
+    if (selectedStore?.name) {
+      const [number, ...locationParts] = selectedStore.name.split(" - ");
       storeNumber = number || "";
       storeAddress = locationParts.join(" - ") || "";
     }
@@ -527,6 +452,18 @@ useEffect(() => {
       if (category === "Transaction Count") return totalOrders || 0;
       if (category === "Inventory Purchases") return productTotal ? Math.round(productTotal) : 0;
       if (category === "Ending Inventory") return Math.round(subtotal || 0);
+
+      // For these 4 categories, export totalqty instead of totalextprice
+      if (
+        category === "Dilly" ||
+        category === "Starkiss" ||
+        category === "NF/NSA Bars" ||
+        category === "Buster Bar"
+      ) {
+        const originalName = nameMapping[category] || category;
+        const item = allData.find((i) => i.name === originalName);
+        return item?.totalqty != null ? Math.round(Number(item.totalqty)) : 0;
+      }
 
       const originalName = nameMapping[category] || category;
       if (category === "Cakes") {
@@ -540,28 +477,18 @@ useEffect(() => {
       }
       return getTotalByCategory(originalName);
     });
+  
 
-    const secondRow = header.map((category) => {
-      const originalName = nameMapping[category] || category;
-      const item = allData.find((item) => item.name === originalName);
-      if (["8 Round", "10 Round", "Sheet"].includes(category)) {
-        return item?.qty_times_pieces ? Math.round(item.qty_times_pieces) : 0;
-      }
-      if (["Dilly", "Starkiss", "NF/NSA Bars", "Buster Bar"].includes(category)) {
-        return item?.totalqty ? Math.round(item.totalqty) : 0;
-      }
-      return "";
-    });
-
-    return [header, firstRow, secondRow];
+    
+    return [header, firstRow, ];
   };
 
   const exportToExcel = () => {
-    const [headers, firstRow, secondRow] = mapData();
-    const worksheet = XLSX.utils.aoa_to_sheet([headers, firstRow, secondRow]);
+    const [headers, firstRow] = mapData();
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, firstRow]);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-
+    
     // Define column widths to match the uploaded Excel file
     const wscols = [
       { wch: 20 },
@@ -614,13 +541,10 @@ useEffect(() => {
       <div className="flex flex-row justify-between below-md:flex-col pb-2 sticky z-20 w-full below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4 gap-6 tablet:grid tablet:grid-cols-2">
   <div className="flex flex-row below-md:flex-col w-[70%] tablet:w-[100%] below-md:w-full gap-3 below-md:gap-4 tablet:col-span-2">
     <Dropdown
-      options={store}
-      selectedOption={selectedOption?.name || "Store"}
-      onSelect={(selectedOption: any) => {
-        setSelectedOption({
-          name: selectedOption.name,
-          id: selectedOption.id,
-        });
+      options={storeOptions}
+      selectedOption={selectedStore?.name || "Store"}
+      onSelect={(option: any) => {
+        setSelectedStore(option);
         setIsStoreDropdownOpen(false);
       }}
       isOpen={isStoreDropdownOpen}
@@ -629,8 +553,11 @@ useEffect(() => {
       />
     <Dropdown
       options={dateRangeOptions}
-      selectedOption={selectedDateRange}
-      onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
+      selectedOption={selectedDateRange?.name}
+      onSelect={(option: any) => {
+        setSelectedDateRange(option);
+        setIsDateRangeOpen(false);
+      }}
       isOpen={isDateRangeOpen}
       toggleOpen={toggleDateRangeDropdown}
       widthchange="w-[30%] tablet:w-full below-md:w-full"

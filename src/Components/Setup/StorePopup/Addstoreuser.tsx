@@ -27,9 +27,10 @@ interface AddStoreUserProps {
   initialData: TableRow;
   isOpenAddStore: boolean;
   setAddStore: (isOpen: boolean) => void;
+  autoOpen?: boolean;
 }
 
-const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setAddStore }) => {
+const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setAddStore, autoOpen }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]); // State for filtered users
@@ -52,8 +53,15 @@ const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setA
 
   const closeModal = () => {
     setIsOpen(false);
+    setSearchQuery(""); // Clear search query
     setAddStore(false);
   };
+
+  useEffect(() => {
+    if (autoOpen) {
+      openModal();
+    }
+  }, [autoOpen]);
 
   // Fetch users for the store
   const fetchUsers = async () => {
@@ -169,13 +177,7 @@ const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setA
     }
   };
 
-  // Sync `isOpen` with `isOpenAddStore` prop
-  useEffect(() => {
-    setIsOpen(isOpenAddStore);
-    if (isOpenAddStore) {
-      fetchUsers();
-    }
-  }, [isOpenAddStore]);
+  // Removed the useEffect that was causing auto-opening
 
   return (
     <>

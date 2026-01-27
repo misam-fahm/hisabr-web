@@ -23,12 +23,7 @@ import AddCashreconc from "@/Components/cashreconcpopup/AddCashreconc";
 import Editcashreconc from "@/Components/cashreconcpopup/Editcashreconc";
 import ToastNotification from "@/Components/UI/ToastNotification/ToastNotification";
 import Deletecashreconc from "@/Components/cashreconcpopup/Deletecashreconc";
-
-interface DateRangeOption {
-  name: string;
-  value?: string;
-  id: number;
-}
+import { useGlobalContext } from "@/Components/Header/header";
 
 interface TableRow {
   recdate: string;
@@ -48,11 +43,7 @@ const CashReconciliations: FC = () => {
   const [data, setData] = useState<any>();
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedOption, setSelectedOption] = useState<any>();
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [store, setStore] = useState<any[]>([]);
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
   const [isOpenAddReconciliation, setAddReconciliation] = useState(false);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
@@ -60,15 +51,20 @@ const CashReconciliations: FC = () => {
     type: "",
   });
   const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
-  const [selectedDateRange, setSelectedDateRange] =
-    useState<string>("This Month (MTD)");
 
-  const dateRangeOptions: DateRangeOption[] = [
-    { name: "This Month (MTD)", value: "this_month", id: 1 },
-    { name: "This Year (YTD)", value: "this_year", id: 2 },
-    { name: "Last Month", value: "last_month", id: 3 },
-    { name: "Last Year", value: "last_year", id: 4 },
-  ];
+  // Use global context for store and date range
+  const {
+    storeOptions,
+    selectedStore,
+    setSelectedStore,
+    dateRangeOptions,
+    selectedDateRange,
+    setSelectedDateRange,
+    startDate,
+    endDate,
+    setStartDate,
+    setEndDate,
+  } = useGlobalContext();
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -152,7 +148,7 @@ const CashReconciliations: FC = () => {
           <Deletecashreconc
             initialData={info?.row?.original}
             setAddReconciliation={setAddReconciliation}
-            selectedStoreId={selectedOption?.id || 69}
+            selectedStoreId={selectedStore?.id || 69}
           />
         </span>
       ),
@@ -185,7 +181,9 @@ const CashReconciliations: FC = () => {
         mode: "getCashReconciliations",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
-        storeid: selectedOption?.id || 69,
+        storeid: selectedStore?.id || 69,
+        // Use selectedDateRange.value for date range
+        daterange: selectedDateRange.value,
         startdate: startDate && format(startDate, "yyyy-MM-dd"),
         enddate: endDate && format(endDate, "yyyy-MM-dd"),
         search: globalFilter,
@@ -211,41 +209,14 @@ const CashReconciliations: FC = () => {
   };
 
   useEffect(() => {
-    if (startDate && endDate && selectedOption) {
+    if (startDate && endDate && selectedStore) {
       fetchData();
     }
-  }, [pageIndex, pageSize, isOpenAddReconciliation, selectedOption, startDate, endDate]);
+  }, [pageIndex, pageSize, isOpenAddReconciliation, selectedStore, startDate, endDate]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       fetchData();
-    }
-  };
-
-  const getUserStore = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getUserStore" });
-      if (response?.status === 200) {
-        const stores = response?.data?.stores || [];
-        // Map stores to the format expected by the Dropdown component
-        const formattedStores = stores.map((store) => ({
-          name: `${store.name} - ${store.location || "Unknown Location"}`, // Ensure location is handled
-          id: store.id,
-        }));
-
-        setStore(formattedStores); // Update store state with formatted data
-
-        if (stores.length > 0) {
-          setSelectedOption({
-            name: `${stores[0].name} - ${stores[0].location || "Unknown Location"}`,
-            id: stores[0].id,
-          });
-        }
-      } else {
-        handleError(response?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
     }
   };
 
@@ -269,12 +240,12 @@ const CashReconciliations: FC = () => {
 
   useEffect(() => {
     if (isVerifiedUser) {
-      const today = new Date();
-      const currentYear = today.getFullYear();
-      const currentMonth = today.getMonth();
-      setStartDate(new Date(currentYear, currentMonth, 1));
-      setEndDate(new Date(currentYear, currentMonth + 1, 0)); // Last day of current month
-      getUserStore();
+      // REMOVE these lines to prevent overriding global context dates:
+      // const today = new Date();
+      // const currentYear = today.getFullYear();
+      // const currentMonth = today.getMonth();
+      // setStartDate(new Date(currentYear, currentMonth, 1));
+      // setEndDate(new Date(currentYear, currentMonth + 1, 0)); // Last day of current month
     }
   }, [isVerifiedUser]);
 
@@ -290,39 +261,6 @@ const CashReconciliations: FC = () => {
 
   const toggleDateRangeDropdown = () => {
     setIsDateRangeOpen((prev) => !prev);
-  };
-
-  const handleDateRangeSelect = (option: DateRangeOption) => {
-    setSelectedDateRange(option.name);
-    const now = new Date();
-    let newStartDate: Date;
-    let newEndDate: Date;
-
-    switch (option.value) {
-      case "this_month":
-        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        newEndDate = now;
-        break;
-      case "this_year":
-        newStartDate = new Date(now.getFullYear(), 0, 1);
-        newEndDate = now;
-        break;
-      case "last_month":
-        newStartDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        newEndDate = new Date(now.getFullYear(), now.getMonth(), 0);
-        break;
-      case "last_year":
-        newStartDate = new Date(now.getFullYear() - 1, 0, 1);
-        newEndDate = new Date(now.getFullYear() - 1, 11, 31);
-        break;
-      default:
-        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        newEndDate = now;
-    }
-
-    setStartDate(newStartDate);
-    setEndDate(newEndDate);
-    setIsDateRangeOpen(false);
   };
 
   const handleError = (message: string) => {
@@ -381,7 +319,7 @@ const CashReconciliations: FC = () => {
         mode: "getCashReconciliations",
         page: table.getState().pagination.pageIndex + 1,
         limit: table.getState().pagination.pageSize,
-        storeid: selectedOption?.id || 69,
+        storeid: selectedStore?.id || 69,
         startdate: startDate && format(startDate, "yyyy-MM-dd"),
         enddate: endDate && format(endDate, "yyyy-MM-dd"),
         search: "",
@@ -407,106 +345,107 @@ const CashReconciliations: FC = () => {
 
   return (
     <main
-      className={`relative px-6 below-md:px-3 overflow-auto border-none ${
-        data?.length > 10 ? "max-h-[calc(100vh-50px)]" : "h-[500px]"
-      }`}
+      className={`relative px-6 below-md:px-3 overflow-auto border-none ${data?.length > 10 ? "max-h-[calc(100vh-50px)]" : "h-[500px]"
+        }`}
       style={{ scrollbarWidth: "thin" }}
     >
       <ToastNotification message={customToast.message} type={customToast.type} />
       <>
-      <div className="sticky z-20 bg-[#f7f8f9] pb-6 pt-4 below-md:pt-4 below-md:pb-4 tablet:pt-4">
-  <div className="flex flex-row flex-nowrap gap-3 w-full below-md:flex-col">
-    
-    {/* Filter Controls: Back, Store, Date, Picker, Search */}
-    <div className="flex flex-row gap-3 w-full below-md:flex-col below-laptop:w-4/5 small-laptop:w-full">
-      <div className="flex items-center">
-        {showBackIcon && (
-          <img
-            onClick={() => router.back()}
-            alt="Back Arrow"
-            className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
-            src="/images/webbackicon.svg"
-          />
-        )}
-      </div>
+        <div className="sticky z-20 bg-[#f7f8f9] pb-6 pt-4 below-md:pt-4 below-md:pb-4 tablet:pt-4">
+          <div className="flex flex-row flex-nowrap gap-3 w-full below-md:flex-col">
 
-      <Dropdown
-        options={store}
-        selectedOption={selectedOption?.name || "Store"}
-        onSelect={(selectedOption: any) => {
-          setSelectedOption({
-            name: selectedOption.name,
-            id: selectedOption.id,
-          });
-          setIsStoreDropdownOpen(false);
-        }}
-        isOpen={isStoreDropdownOpen}
-        toggleOpen={toggleStoreDropdown}
-        widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
-      />
+            {/* Filter Controls: Back, Store, Date, Picker, Search */}
+            <div className="flex flex-row gap-3 w-full below-md:flex-col below-laptop:w-4/5 small-laptop:w-full">
+              <div className="flex items-center">
+                {showBackIcon && (
+                  <img
+                    onClick={() => router.back()}
+                    alt="Back Arrow"
+                    className="w-7 h-7 mt-1 below-md:hidden cursor-pointer"
+                    src="/images/webbackicon.svg"
+                  />
+                )}
+              </div>
 
-      <Dropdown
-        options={dateRangeOptions}
-        selectedOption={selectedDateRange}
-        onSelect={(option: DateRangeOption) => handleDateRangeSelect(option)}
-        isOpen={isDateRangeOpen}
-        toggleOpen={toggleDateRangeDropdown}
-        widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
-      />
+              {/* Store Dropdown using global context */}
+              <Dropdown
+                options={storeOptions}
+                selectedOption={selectedStore?.name || "Store"}
+                onSelect={(option: any) => {
+                  setSelectedStore(option);
+                  setIsStoreDropdownOpen(false); // Auto close after selection
+                }} isOpen={isStoreDropdownOpen}
+                toggleOpen={toggleStoreDropdown}
+                widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
 
-      <div className="flex-1 min-w-[300px] below-lg:min-w-[256.08px] h-[35px] below-lg:h-[29.876px] w-full">
-        <DateRangePicker
-          startDate={startDate}
-          endDate={endDate}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-          fetchData={fetchData}
-        />
-      </div>
+              />
 
-      <div className="flex-1 min-w-[150px] below-lg:min-w-[128.04px] h-[35px] below-lg:h-[29.876px] w-full relative">
-        <input
-          type="text"
-          value={globalFilter ?? ""}
-          onChange={(e) => setGlobalFilter(e.target.value)}
-          onKeyDown={handleKeyDown}
-          ref={searchInputRef}
-          placeholder="Search"
-          className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] below-lg:text-[10.2432px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
-        />
-        {globalFilter && (
-          <div className="absolute right-8 inset-y-0 flex items-center cursor-pointer">
-            <img
-              className="w-4 h-4"
-              src="/images/cancelicon.svg"
-              onClick={clearSearch}
-              alt="Clear Search"
-            />
+              {/* Date Range Dropdown using global context */}
+              <Dropdown
+                options={dateRangeOptions}
+                selectedOption={selectedDateRange?.name}
+                onSelect={(option: any) => {
+                  setSelectedDateRange(option);
+                  setIsDateRangeOpen(false); // Auto close after selection
+                }}
+                isOpen={isDateRangeOpen}
+                toggleOpen={toggleDateRangeDropdown}
+                widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
+              />
+
+              <div className="flex-1 min-w-[300px] below-lg:min-w-[256.08px] h-[35px] below-lg:h-[29.876px] w-full">
+                <DateRangePicker
+                  startDate={startDate}
+                  endDate={endDate}
+                  setStartDate={setStartDate}
+                  setEndDate={setEndDate}
+                  fetchData={fetchData}
+                />
+              </div>
+
+              <div className="flex-1 min-w-[150px] below-lg:min-w-[128.04px] h-[35px] below-lg:h-[29.876px] w-full relative">
+                <input
+                  type="text"
+                  value={globalFilter ?? ""}
+                  onChange={(e) => setGlobalFilter(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  ref={searchInputRef}
+                  placeholder="Search"
+                  className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] below-lg:text-[10.2432px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
+                />
+                {globalFilter && (
+                  <div className="absolute right-8 inset-y-0 flex items-center cursor-pointer">
+                    <img
+                      className="w-4 h-4"
+                      src="/images/cancelicon.svg"
+                      onClick={clearSearch}
+                      alt="Clear Search"
+                    />
+                  </div>
+                )}
+                <div className="absolute inset-y-0 right-2 flex items-center cursor-pointer">
+                  <img
+                    src="/images/searchicon.svg"
+                    alt="Search Icon"
+                    className="below-lg:scale-[0.8536]"
+                    onClick={() =>
+                      table.getState().pagination.pageIndex === 0
+                        ? fetchData()
+                        : table.setPageIndex(0)
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Add Expenses Button */}
+            <div className="below-md:hidden tablet:hidden pl-4 flex items-center">
+              <AddCashreconc
+                setAddReconciliation={setAddReconciliation}
+                SelectedStore={selectedStore}
+              />    </div>
           </div>
-        )}
-        <div className="absolute inset-y-0 right-2 flex items-center cursor-pointer">
-          <img
-            src="/images/searchicon.svg"
-            alt="Search Icon"
-            className="below-lg:scale-[0.8536]"
-            onClick={() =>
-              table.getState().pagination.pageIndex === 0
-                ? fetchData()
-                : table.setPageIndex(0)
-            }
-          />
         </div>
-      </div>
-    </div>
-
-    {/* Add Expenses Button */}
-    <div className="below-md:hidden tablet:hidden pl-4 flex items-center">
-    <AddCashreconc
-              setAddReconciliation={setAddReconciliation}
-              SelectedStore={selectedOption}
-            />    </div>
-  </div>
-</div>
 
         {/* Mobile View: Card section */}
         <div className="block md:hidden mb-5">
@@ -533,7 +472,7 @@ const CashReconciliations: FC = () => {
                   <Deletecashreconc
                     initialData={card}
                     setAddReconciliation={setAddReconciliation}
-                    selectedStoreId={selectedOption?.id || 69}
+                    selectedStoreId={selectedStore?.id || 69}
                   />
                 </div>
               </div>
@@ -561,7 +500,7 @@ const CashReconciliations: FC = () => {
           <div className="fixed hidden below-md:block bottom-[70px] right-3">
             <AddCashreconc
               setAddReconciliation={setAddReconciliation}
-              SelectedStore={selectedOption}
+              SelectedStore={selectedStore}
             />
           </div>
           <div className="hidden below-md:block">

@@ -119,8 +119,12 @@ const AddExpenses = ({ setAddExpenses , SelectedStore }: any) => {
     try {
       const response = await sendApiRequest({ mode: "getUserStore" });
       if (response?.status === 200) {
-        setStore(response?.data?.stores || []);
-      
+        // Format store options as "id - name"
+        const formattedStores = (response?.data?.stores || []).map((store: any) => ({
+          name: `${store.name}${store.location ? ` - ${store.location}` : ""}`,
+          id: store.id,
+        }));
+        setStore(formattedStores);
       } else {
         handleError(response?.message);
       }

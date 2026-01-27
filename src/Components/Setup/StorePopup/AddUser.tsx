@@ -385,7 +385,6 @@ const AddUser = ({ setAddStore, onUserAdded }: AddUserProps) => {
                       value={phoneno}
                       textColor="text-[#636363]"
                       {...methods.register("phoneno", {
-                        required: "Phone Number is required",
                         pattern: {
                           value: /^[0-9]{10,15}$/,
                           message: "Phone number must be 10 to 15 digits",
