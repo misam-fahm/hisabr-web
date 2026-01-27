@@ -51,6 +51,8 @@ interface TableRow {
 
 // Interface for file upload
 interface InventoryItem {
+    store_name: string;
+    filename: string;
     item_name: string;
     quantity: number;
     total: number;
@@ -217,7 +219,7 @@ const Inventory: FC = () => {
         {
             id: "weeknumber",
             accessorKey: "weekstart",
-            header: () => <div className="text-center">Week Number</div>,
+            header: () => <div className="text-center">Week</div>,
             cell: (info) => {
                 const row = info.row.original;
                 const weekStart = new Date(row.weekstart);
@@ -234,7 +236,7 @@ const Inventory: FC = () => {
                     }
                 }
 
-                return <span className="flex justify-center">Week {String(weekNumber).padStart(2, '0')}</span>;
+                return <span className="flex justify-center">{String(weekNumber).padStart(2, '0')}</span>;
             },
             size: 100,
         },
@@ -674,6 +676,8 @@ const Inventory: FC = () => {
                             parsedData.push(tableRow);
 
                             inventoryItems.push({
+                                store_name: storeId || selectedStore?.name || "",
+                                filename: file.name,
                                 item_name: tableRow.item_name,
                                 quantity: tableRow.quantity,
                                 total: tableRow.total,
@@ -699,7 +703,6 @@ const Inventory: FC = () => {
                             week_start: weekStart,
                             week_end: weekEnd,
                             file_time: fileTime || new Date().toISOString().slice(0, 19).replace('T', ' '),
-                            filename: file.name,
                             total_qty: totalQty,
                             total_amount: totalAmount,
                             items: inventoryItems,

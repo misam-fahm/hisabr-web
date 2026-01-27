@@ -126,7 +126,12 @@ const Invoices = () => {
       accessorKey: "invoicenumber",
       header: () => <div className="text-left">Invoice</div>,
       cell: (info) => (
-        <span className="text-left pl-1">{info.getValue() as string}</span>
+        <span
+          className="text-left pl-1 text-black font-medium cursor-pointer hover:underline"
+          onClick={() => navigateToInvoice(info.row.original.invoiceid)}
+        >
+          {info.getValue() as string}
+        </span>
       ),
       size: 30,
     },
@@ -543,7 +548,7 @@ const Invoices = () => {
 
   return (
     <main
-      className="relative px-6 below-md:px-3 max-h-[calc(100vh-180px)] overflow-hidden" 
+      className="relative px-6 below-md:px-3 max-h-[calc(100vh-180px)] overflow-hidden"
       style={{ scrollbarWidth: "none" }}
     >
       <ToastNotification
@@ -553,7 +558,7 @@ const Invoices = () => {
       {uploadPdfloading && <Loading />}
       <div className="sticky z-20 bg-[#f7f8f9] pb-6 pt-4 below-md:pt-4 below-md:pb-4 tablet:pt-4">
         <div className="flex flex-row flex-nowrap gap-3 w-full below-md:flex-col">
-          
+
           {/* Filter Controls: Back, Store, Date, Picker, Search */}
           <div className="flex flex-row gap-3 w-full below-md:flex-col below-laptop:w-4/5 small-laptop:w-full">
             <div className="flex items-center">
@@ -766,9 +771,9 @@ const Invoices = () => {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </th>
                   ))}
                 </tr>

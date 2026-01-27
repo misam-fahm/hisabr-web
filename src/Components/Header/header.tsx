@@ -86,16 +86,17 @@ const getRangeFromOption = (option: DateRangeOption): { start: Date; end: Date }
 const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [storeOptions, setStoreOptions] = useState<StoreOption[]>([]);
   const [dateRangeOptions] = useState<DateRangeOption[]>(dateRangeOptionsDefault);
-  const [selectedDateRange, setSelectedDateRange] = useState<DateRangeOption>(() => {
+  const [selectedDateRange, setSelectedDateRange] = useState<DateRangeOption>(dateRangeOptionsDefault[0]);
+
+  useEffect(() => {
     if (typeof window !== "undefined") {
       const savedId = localStorage.getItem("selectedDateRangeId");
       if (savedId) {
         const found = dateRangeOptionsDefault.find(o => o.id === Number(savedId));
-        if (found) return found;
+        if (found) setSelectedDateRange(found);
       }
     }
-    return dateRangeOptionsDefault[0];
-  });
+  }, []);
   const initialRange = getRangeFromOption(
     typeof window !== "undefined"
       ? (selectedDateRange || dateRangeOptionsDefault[0])
@@ -269,6 +270,7 @@ const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         cashreconc: "Cash Reconciliation",
         grossrevenue: "Gross Revenue",
         customercount: "Customer Count",
+        invoicedetails: "Invoice Details",
         logout: "Logout",
         plreport: "P&L",
       };
@@ -558,6 +560,7 @@ const Header: React.FC = () => {
       grossrevenue: "Gross Revenue",
       customercount: "Customer Count",
       inventory: "Sales Summary",
+      invoicedetails: "Invoice Details",
       logout: "Logout",
       plreport: "P&L",
     };
