@@ -1,6 +1,6 @@
 
 "use client";
-import React, { FC, useState, useRef, useEffect } from "react";
+import React, { FC, useState, useRef, useEffect, Suspense } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 
 import Dropdown from "@/Components/UI/Themes/DropDown";
@@ -93,7 +93,7 @@ const parseQuantity = (value: string): number => {
     return isNaN(num) ? 0 : num;
 };
 
-const Inventory: FC = () => {
+const InventoryContent: FC = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const containerRef = useRef(null);
@@ -1196,6 +1196,14 @@ const Inventory: FC = () => {
                 </div>
             </Dialog>
         </main>
+    );
+};
+
+const Inventory: FC = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <InventoryContent />
+        </Suspense>
     );
 };
 
