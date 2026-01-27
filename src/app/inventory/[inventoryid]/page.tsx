@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, Suspense } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { sendApiRequest } from "@/utils/apiUtils";
 import { format } from "date-fns";
@@ -100,7 +100,7 @@ const getWeekNumber = (dateStr: string): number => {
     return 1;
 };
 
-const InventoryDetails = () => {
+const InventoryDetailsContent = () => {
     const { inventoryid }: any = useParams();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -560,6 +560,14 @@ const InventoryDetails = () => {
                 )}
             </div>
         </main>
+    );
+};
+
+const InventoryDetails = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <InventoryDetailsContent />
+        </Suspense>
     );
 };
 
