@@ -53,7 +53,6 @@ const PLReport: FC = () => {
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [totalCogsAmount, setTotalCogsAmount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [netIncome, setNetIncome] = useState<number>(0);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState<boolean>(false);
 
   const {
@@ -113,7 +112,7 @@ const PLReport: FC = () => {
       header: () => <div className="text-right pr-3">%</div>,
       cell: (info) => (
         <span className="text-right block pr-3">
-          {calculatePercentage(info.row.original.value, totalAmount)}
+          {calculatePercentage(info.row.original.value, netSales)}
         </span>
       ),
       size: 100,
@@ -188,10 +187,10 @@ const PLReport: FC = () => {
       option.name === "Monthly"
         ? new Date().toLocaleString('en-US', { month: 'long' })
         : option.name === "Quarterly"
-        ? "Q1 (Jan-Mar)"
-        : option.name === "Half-Yearly"
-        ? "1st Half (Jan–Jun)"
-        : ""
+          ? "Q1 (Jan-Mar)"
+          : option.name === "Half-Yearly"
+            ? "1st Half (Jan–Jun)"
+            : ""
     );
     setIsPeriodOpen(false);
     setMonths(option.name === "Yearly" ? 12 : option.name === "Half-Yearly" ? 6 : option.name === "Quarterly" ? 3 : 1);
@@ -311,7 +310,7 @@ const PLReport: FC = () => {
     if (!pageData && !selectedStore) {
       return;
     }
-    
+
     setTenderCommissionLoading(true);
     try {
       const { startdate, enddate } = getDateRange();
@@ -412,19 +411,19 @@ const PLReport: FC = () => {
           },
           ...(royaltyAmount > 0.50
             ? [
-                {
-                  label: `Royalty (${royaltyPercentage}%)`,
-                  value: royaltyAmount,
-                },
-              ]
+              {
+                label: `Royalty (${royaltyPercentage}%)`,
+                value: royaltyAmount,
+              },
+            ]
             : []),
           ...(laborCostAmount > 0.50
             ? [
-                {
-                  label: `Labor Cost`,
-                  value: laborCostAmount,
-                },
-              ]
+              {
+                label: `Labor Cost`,
+                value: laborCostAmount,
+              },
+            ]
             : []),
           ...additionalExpenses.map((exp: any) => ({
             label: exp?.expname || "Unknown Expense",
@@ -444,14 +443,11 @@ const PLReport: FC = () => {
           0
         );
 
-        const calculatedNetIncome = (saleskpi.net_sales || 0) - totalCogs - total;
-
         setData(sortedExpenses);
         setNetSales(saleskpi.net_sales || 0);
         setTotalItems(sortedExpenses.length);
         setTotalAmount(total);
         setTotalCogsAmount(totalCogs);
-        setNetIncome(calculatedNetIncome);
       } else {
         setCustomToast({
           message: response?.message,
@@ -488,6 +484,10 @@ const PLReport: FC = () => {
   const totalWithTender = React.useMemo(() => {
     return tableDataWithTenderCommission.reduce((sum, row) => sum + row.value, 0);
   }, [tableDataWithTenderCommission]);
+
+  const netIncome = React.useMemo(() => {
+    return netSales - totalCogsAmount - totalWithTender;
+  }, [netSales, totalCogsAmount, totalWithTender]);
 
   const verifyToken = async (token: string) => {
     try {
@@ -554,228 +554,227 @@ const PLReport: FC = () => {
   };
 
   const downloadPDF = async (): Promise<void> => {
-  // Dynamically import pdfMake only when needed (client-side only)
-  const pdfMake = (await import('pdfmake/build/pdfmake')).default;
-  const pdfFonts = await import('pdfmake/build/vfs_fonts');
-  
-  // Initialize fonts
-  pdfMake.vfs = pdfFonts.pdfMake?.vfs || (pdfFonts as any).default?.pdfMake?.vfs || {};
+    // Dynamically import pdfMake only when needed (client-side only)
+    const pdfMake = (await import('pdfmake/build/pdfmake')).default;
+    const pdfFonts = await import('pdfmake/build/vfs_fonts');
 
-  const today = new Date().toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+    // Initialize fonts
+    pdfMake.vfs = pdfFonts.pdfMake?.vfs || (pdfFonts as any).default?.pdfMake?.vfs || {};
 
-  const gross = netSales - totalCogsAmount;
+    const today = new Date().toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
 
-  // Helper function to create table rows with underlines
-  const createTableRow = (label: string, amount: string, percentage: string, isBold = false, hasUnderline = true) => {
-    return [
-      { text: label, style: isBold ? 'tableBold' : 'tableCell', border: [false, false, false, hasUnderline] },
-      { text: amount, style: isBold ? 'tableBold' : 'tableCell', alignment: 'right', border: [false, false, false, hasUnderline] },
-      { text: percentage, style: isBold ? 'tableBold' : 'tableCell', alignment: 'right', border: [false, false, false, hasUnderline] }
-    ];
-  };
+    const gross = netSales - totalCogsAmount;
 
-  // Income section
-  const incomeTable = {
-    table: {
-      widths: [250, 120, 80],
-      body: [
-        [
-          { text: 'Income', style: 'tableHeader', border: [false, false, false, true], colSpan: 3 },
-          {},
-          {}
-        ],
-        createTableRow('Sale of Goods', formatAmount(netSales), '100.0%'),
-        createTableRow('Total Income', formatAmount(netSales), '100.0%', true, false)
-      ]
-    },
-    layout: {
-      hLineWidth: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 0.5 : 0.3,
-      hLineColor: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 'black' : '#C8C8C8',
-      vLineWidth: () => 0
-    },
-    margin: [0, 0, 0, 10] as [number, number, number, number]
-  };
+    // Helper function to create table rows with underlines
+    const createTableRow = (label: string, amount: string, percentage: string, isBold = false, hasUnderline = true) => {
+      return [
+        { text: label, style: isBold ? 'tableBold' : 'tableCell', border: [false, false, false, hasUnderline] },
+        { text: amount, style: isBold ? 'tableBold' : 'tableCell', alignment: 'right', border: [false, false, false, hasUnderline] },
+        { text: percentage, style: isBold ? 'tableBold' : 'tableCell', alignment: 'right', border: [false, false, false, hasUnderline] }
+      ];
+    };
 
-  // COGS section
-  const cogsTable = {
-    table: {
-      widths: [250, 120, 80],
-      body: [
-        [
-          { text: 'Cost of Goods Sold', style: 'tableHeader', border: [false, false, false, true], colSpan: 3 },
-          {},
-          {}
-        ],
-        createTableRow('Cost of Goods', formatAmount(totalCogsAmount), calculatePercentage(totalCogsAmount, netSales)),
-        createTableRow('Total Cost of Goods Sold', formatAmount(totalCogsAmount), calculatePercentage(totalCogsAmount, netSales), true, false)
-      ]
-    },
-    layout: {
-      hLineWidth: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 0.5 : 0.3,
-      hLineColor: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 'black' : '#C8C8C8',
-      vLineWidth: () => 0
-    },
-    margin: [0, 0, 0, 10] as [number, number, number, number]
-  };
-
-  // Gross Profit section
-  const grossProfitTable = {
-    table: {
-      widths: [250, 120, 80],
-      body: [
-        [
-          { text: 'Gross Profit', style: 'grossProfit', border: [false, true, false, true] },
-          { text: formatAmount(gross), style: 'grossProfit', alignment: 'right', border: [false, true, false, true] },
-          { text: calculatePercentage(gross, netSales), style: 'grossProfit', alignment: 'right', border: [false, true, false, true] }
+    // Income section
+    const incomeTable = {
+      table: {
+        widths: [250, 120, 80],
+        body: [
+          [
+            { text: 'Income', style: 'tableHeader', border: [false, false, false, true], colSpan: 3 },
+            {},
+            {}
+          ],
+          createTableRow('Sale of Goods', formatAmount(netSales), '100.0%'),
+          createTableRow('Total Income', formatAmount(netSales), '100.0%', true, false)
         ]
-      ]
-    },
-    layout: {
-      hLineWidth: () => 0.5,
-      hLineColor: () => 'black',
-      vLineWidth: () => 0
-    },
-    margin: [0, 0, 0, 10] as [number, number, number, number]
-  };
+      },
+      layout: {
+        hLineWidth: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 0.5 : 0.3,
+        hLineColor: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 'black' : '#C8C8C8',
+        vLineWidth: () => 0
+      },
+      margin: [0, 0, 0, 10] as [number, number, number, number]
+    };
 
-  // Operating Expenses section
-  const expenseRows = tableDataWithTenderCommission.map((r) => 
-    createTableRow(r.label, formatAmount(r.value), calculatePercentage(r.value, totalWithTender))
-  );
-  
-  const expensesTable = {
-    table: {
-      widths: [250, 120, 80],
-      body: [
-        [
-          { text: 'Operating Expenses', style: 'tableHeader', border: [false, false, false, true], colSpan: 3 },
-          {},
-          {}
-        ],
-        ...expenseRows,
-        createTableRow('Total Operating Expenses', formatAmount(totalWithTender), '100.0%', true, false)
-      ]
-    },
-    layout: {
-      hLineWidth: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 0.5 : 0.3,
-      hLineColor: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 'black' : '#C8C8C8',
-      vLineWidth: () => 0
-    },
-    margin: [0, 0, 0, 10] as [number, number, number, number]
-  };
-
-  // Net Income section
-  const netIncomeTable = {
-    table: {
-      widths: [250, 120, 80],
-      body: [
-        [
-          { text: 'Net Income', style: 'grossProfit', border: [false, true, false, true] },
-          { text: formatAmount(netIncome), style: 'grossProfit', alignment: 'right', border: [false, true, false, true] },
-          { text: calculatePercentage(netIncome, netSales), style: 'grossProfit', alignment: 'right', border: [false, true, false, true] }
+    // COGS section
+    const cogsTable = {
+      table: {
+        widths: [250, 120, 80],
+        body: [
+          [
+            { text: 'Cost of Goods Sold', style: 'tableHeader', border: [false, false, false, true], colSpan: 3 },
+            {},
+            {}
+          ],
+          createTableRow('Cost of Goods', formatAmount(totalCogsAmount), calculatePercentage(totalCogsAmount, netSales)),
+          createTableRow('Total Cost of Goods Sold', formatAmount(totalCogsAmount), calculatePercentage(totalCogsAmount, netSales), true, false)
         ]
-      ]
-    },
-    layout: {
-      hLineWidth: () => 0.5,
-      hLineColor: () => 'black',
-      vLineWidth: () => 0
-    },
-    margin: [0, 0, 0, 10] as [number, number, number, number]
-  };
+      },
+      layout: {
+        hLineWidth: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 0.5 : 0.3,
+        hLineColor: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 'black' : '#C8C8C8',
+        vLineWidth: () => 0
+      },
+      margin: [0, 0, 0, 10] as [number, number, number, number]
+    };
 
-  const docDefinition: any = {
-    info: {
-      title: `Income Statement ${storeLocation} ${getPeriodDisplay()}`,
-      author: storeLocation,
-      creator: 'Financial Reporting System'
-    },
-    pageSize: 'A4',
-    pageOrientation: 'portrait',
-    pageMargins: [40, 80, 40, 60],
-    header: (currentPage: number, pageCount: number) => {
-      return {
-        columns: [
-          {
-            width: '*',
-            stack: [
-              { text: 'Income Statement', style: 'header', alignment: 'center' },
-              { text: storeLocation, style: 'subheader', alignment: 'center' },
-              { text: `For the Period: ${getPeriodDisplay()}`, style: 'subheader', alignment: 'center' },
-              { canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, lineWidth: 1 }] }
-            ],
-            margin: [40, 15, 40, 0]
-          }
+    // Gross Profit section
+    const grossProfitTable = {
+      table: {
+        widths: [250, 120, 80],
+        body: [
+          [
+            { text: 'Gross Profit', style: 'grossProfit', border: [false, true, false, true] },
+            { text: formatAmount(gross), style: 'grossProfit', alignment: 'right', border: [false, true, false, true] },
+            { text: calculatePercentage(gross, netSales), style: 'grossProfit', alignment: 'right', border: [false, true, false, true] }
+          ]
         ]
-      };
-    },
-    footer: (currentPage: number, pageCount: number) => {
-      return {
-        columns: [
-          { text: `Prepared by: ${storeLocation}`, style: 'footer', alignment: 'left', margin: [40, 0, 0, 0] },
-          { text: `Generated on: ${today}`, style: 'footer', alignment: 'center' },
-          { text: `Page ${currentPage} of ${pageCount}`, style: 'footer', alignment: 'right', margin: [0, 0, 40, 0] }
-        ],
-        margin: [0, 10, 0, 0]
-      };
-    },
-    content: [
-      incomeTable,
-      cogsTable,
-      grossProfitTable,
-      expensesTable,
-      netIncomeTable
-    ],
-    styles: {
-      header: {
-        fontSize: 18,
-        bold: true,
-        margin: [0, 0, 0, 5]
       },
-      subheader: {
-        fontSize: 11,
-        margin: [0, 2, 0, 2]
+      layout: {
+        hLineWidth: () => 0.5,
+        hLineColor: () => 'black',
+        vLineWidth: () => 0
       },
-      tableHeader: {
-        fontSize: 13,
-        bold: true,
-        margin: [0, 2, 0, 2]
+      margin: [0, 0, 0, 10] as [number, number, number, number]
+    };
+
+    // Operating Expenses section
+    const expenseRows = tableDataWithTenderCommission.map((r) =>
+      createTableRow(r.label, formatAmount(r.value), calculatePercentage(r.value, netSales))
+    );
+
+    const expensesTable = {
+      table: {
+        widths: [250, 120, 80],
+        body: [
+          [
+            { text: 'Operating Expenses', style: 'tableHeader', border: [false, false, false, true], colSpan: 3 },
+            {},
+            {}
+          ],
+          ...expenseRows,
+          createTableRow('Total Operating Expenses', formatAmount(totalWithTender), calculatePercentage(totalWithTender, netSales), true, false)
+        ]
       },
-      tableCell: {
-        fontSize: 11,
-        margin: [0, 2, 0, 2]
+      layout: {
+        hLineWidth: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 0.5 : 0.3,
+        hLineColor: (i: number, node: any) => (i === 1 || i === node.table.body.length) ? 'black' : '#C8C8C8',
+        vLineWidth: () => 0
       },
-      tableBold: {
-        fontSize: 12,
-        bold: true,
-        margin: [0, 2, 0, 2]
+      margin: [0, 0, 0, 10] as [number, number, number, number]
+    };
+
+    // Net Income section
+    const netIncomeTable = {
+      table: {
+        widths: [250, 120, 80],
+        body: [
+          [
+            { text: 'Net Income', style: 'grossProfit', border: [false, true, false, true] },
+            { text: formatAmount(netIncome), style: 'grossProfit', alignment: 'right', border: [false, true, false, true] },
+            { text: calculatePercentage(netIncome, netSales), style: 'grossProfit', alignment: 'right', border: [false, true, false, true] }
+          ]
+        ]
       },
-      grossProfit: {
-        fontSize: 13,
-        bold: true,
-        margin: [0, 2, 0, 2]
+      layout: {
+        hLineWidth: () => 0.5,
+        hLineColor: () => 'black',
+        vLineWidth: () => 0
       },
-      footer: {
-        fontSize: 8
+      margin: [0, 0, 0, 10] as [number, number, number, number]
+    };
+
+    const docDefinition: any = {
+      info: {
+        title: `Income Statement ${storeLocation} ${getPeriodDisplay()}`,
+        author: storeLocation,
+        creator: 'Financial Reporting System'
+      },
+      pageSize: 'A4',
+      pageOrientation: 'portrait',
+      pageMargins: [40, 80, 40, 60],
+      header: (currentPage: number, pageCount: number) => {
+        return {
+          columns: [
+            {
+              width: '*',
+              stack: [
+                { text: 'Income Statement', style: 'header', alignment: 'center' },
+                { text: storeLocation, style: 'subheader', alignment: 'center' },
+                { text: `For the Period: ${getPeriodDisplay()}`, style: 'subheader', alignment: 'center' },
+                { canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, lineWidth: 1 }] }
+              ],
+              margin: [40, 15, 40, 0]
+            }
+          ]
+        };
+      },
+      footer: (currentPage: number, pageCount: number) => {
+        return {
+          columns: [
+            { text: `Prepared by: ${storeLocation}`, style: 'footer', alignment: 'left', margin: [40, 0, 0, 0] },
+            { text: `Generated on: ${today}`, style: 'footer', alignment: 'center' },
+            { text: `Page ${currentPage} of ${pageCount}`, style: 'footer', alignment: 'right', margin: [0, 0, 40, 0] }
+          ],
+          margin: [0, 10, 0, 0]
+        };
+      },
+      content: [
+        incomeTable,
+        cogsTable,
+        grossProfitTable,
+        expensesTable,
+        netIncomeTable
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 0, 0, 5]
+        },
+        subheader: {
+          fontSize: 11,
+          margin: [0, 2, 0, 2]
+        },
+        tableHeader: {
+          fontSize: 13,
+          bold: true,
+          margin: [0, 2, 0, 2]
+        },
+        tableCell: {
+          fontSize: 11,
+          margin: [0, 2, 0, 2]
+        },
+        tableBold: {
+          fontSize: 12,
+          bold: true,
+          margin: [0, 2, 0, 2]
+        },
+        grossProfit: {
+          fontSize: 13,
+          bold: true,
+          margin: [0, 2, 0, 2]
+        },
+        footer: {
+          fontSize: 8
+        }
+      },
+      defaultStyle: {
+        font: 'Roboto'
       }
-    },
-    defaultStyle: {
-      font: 'Roboto'
-    }
-  };
+    };
 
-  pdfMake.createPdf(docDefinition).download(`Income_Statement_${storeLocation}_${getPeriodDisplay().replace(/\s+/g, "_")}.pdf`);
-};
+    pdfMake.createPdf(docDefinition).download(`Income_Statement_${storeLocation}_${getPeriodDisplay().replace(/\s+/g, "_")}.pdf`);
+  };
 
   return (
     <main
-      className={`relative px-6 below-md:px-3 overflow-auto border-none h-full ${
-        data.length > 10 ? "max-h-[calc(100vh-50px)]" : "min-h-[500px]"
-      }`}
+      className={`relative px-6 below-md:px-3 overflow-auto border-none h-full ${data.length > 10 ? "max-h-[calc(100vh-50px)]" : "min-h-[500px]"
+        }`}
       style={{ scrollbarWidth: "thin" }}
     >
       <div className="sticky top-0 z-20 bg-[#f7f8f9] pb-4 pt-4 below-md:pt-3 below-md:pb-3 tablet:pt-3">
@@ -816,8 +815,8 @@ const PLReport: FC = () => {
                 selectedPeriod === "Monthly"
                   ? monthOptions
                   : selectedPeriod === "Quarterly"
-                  ? quarterOptions
-                  : halfYearOptions
+                    ? quarterOptions
+                    : halfYearOptions
               }
               selectedOption={selectedSubPeriod || "Select"}
               onSelect={handleSubPeriodSelect}
@@ -870,7 +869,7 @@ const PLReport: FC = () => {
         {[
           { label: 'Net Sales', value: netSales },
           { label: 'Cost of Goods', value: totalCogsAmount },
-          { label: 'Total Expenses', value: totalAmount },
+          { label: 'Total Expenses', value: totalWithTender },
           { label: 'Net Income', value: netIncome },
         ].map((item, index) => (
           <div
@@ -879,10 +878,17 @@ const PLReport: FC = () => {
           >
             <div className="flex flex-col gap-2">
               <p className="text-[16px] text-[#575F6DCC] font-bold">{item.label}</p>
-              <p className="text-[20px] text-[#2D3748] font-bold">
-                {(loading || (item.label === 'Tender Commission' && tenderCommissionLoading)) ? 
-                  <Skeleton width={100} /> : formatAmount(item.value)}
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-[20px] text-[#2D3748] font-bold">
+                  {(loading || (item.label === 'Tender Commission' && tenderCommissionLoading)) ?
+                    <Skeleton width={100} /> : formatAmount(item.value)}
+                </p>
+                {!loading && (
+                  <span className="text-[14px] text-[#168A6F] font-semibold bg-[#E6F4F1] px-2 py-0.5 rounded-full">
+                    {calculatePercentage(item.value, netSales)}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         ))}
@@ -955,7 +961,7 @@ const PLReport: FC = () => {
                         className="px-4 py-1.5 text-[#636363] text-[13px] below-md:text-[11px] tablet:text-[12px] text-right pr-3"
                         style={{ minWidth: `${columns[2].size}px` }}
                       >
-                        {calculatePercentage(row.value, totalWithTender)}
+                        {calculatePercentage(row.value, netSales)}
                       </td>
                     </tr>
                   ))}
@@ -977,7 +983,7 @@ const PLReport: FC = () => {
                         className="px-4 py-1.5 text-[13px] text-right pr-3 below-md:text-[11px] tablet:text-[12px]"
                         style={{ minWidth: `${columns[2].size}px` }}
                       >
-                        100%
+                        {calculatePercentage(totalWithTender, netSales)}
                       </td>
                     </tr>
                   )}

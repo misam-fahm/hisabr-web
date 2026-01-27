@@ -59,7 +59,7 @@ const AddStore = ({ setAddStore }: any) => {
   };
 
   const openModal = () => setIsOpen(true);
-  
+
   const closeModal = () => {
     setIsOpen(false);
     // Clear all local state
@@ -67,7 +67,7 @@ const AddStore = ({ setAddStore }: any) => {
     setStoreName("");
     setOwner("");
     setLocation("");
-    
+
     // Clear react-hook-form data
     methods.reset({
       storeName: "",
@@ -76,7 +76,7 @@ const AddStore = ({ setAddStore }: any) => {
       county: "",
       // royalty: ""
     });
-    
+
     // Clear form errors
     methods.clearErrors();
   };
@@ -108,7 +108,15 @@ const AddStore = ({ setAddStore }: any) => {
 
       if (status === 200) {
         closeModal(); // Close modal after successful submission
-        setAddStore(true); // Trigger data refresh
+        setAddStore({
+          storeid: result?.data?.storeid || result?.data?.id || 0,
+          storename: data?.storeName || "",
+          location: data?.location || "",
+          owner: data?.owner || "",
+          county: data?.county || "",
+          createdate: new Date().toISOString(),
+          royalty: "0",
+        });
       }
     } catch (error: any) {
       setTimeout(() => {
