@@ -561,12 +561,14 @@ const InventoryDetailsContent = () => {
             </div>
         </main>
     );
-    const InventoryDetails = () => {
-        return (
-            <Suspense fallback={<div>Loading...</div>}>
-                <InventoryDetailsContent />
-            </Suspense>
-        );
-    };
+};
 
-    export default InventoryDetails;
+const InventoryDetails = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <InventoryDetailsContent />
+        </Suspense>
+    );
+};
+
+export default InventoryDetails;
