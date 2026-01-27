@@ -26,7 +26,7 @@ interface User {
 interface AddStoreUserProps {
   initialData: TableRow;
   isOpenAddStore: boolean;
-  setAddStore: (isOpen: any) => void;
+  setAddStore: (isOpen: boolean) => void;
   autoOpen?: boolean;
 }
 
@@ -56,6 +56,12 @@ const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setA
     setSearchQuery(""); // Clear search query
     setAddStore(false);
   };
+
+  useEffect(() => {
+    if (autoOpen) {
+      openModal();
+    }
+  }, [autoOpen]);
 
   // Fetch users for the store
   const fetchUsers = async () => {
@@ -171,28 +177,21 @@ const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setA
     }
   };
 
-  useEffect(() => {
-    if (autoOpen) {
-      setIsOpen(true);
-      fetchUsers();
-    }
-  }, [autoOpen]);
+  // Removed the useEffect that was causing auto-opening
 
   return (
     <>
       <ToastNotification message={customToast.message} type={customToast.type} />
 
-      {!autoOpen && (
-        <div>
-          <button onClick={openModal}>
-            <img
-              src="/images/users.svg"
-              alt="Add user icon"
-              className="flex justify-center items-center w-5 h-5 below-md:w-5 below-md:h-5"
-            />
-          </button>
-        </div>
-      )}
+      <div>
+        <button onClick={openModal}>
+          <img
+            src="/images/users.svg"
+            alt="Add user icon"
+            className="flex justify-center items-center w-5 h-5 below-md:w-5 below-md:h-5"
+          />
+        </button>
+      </div>
 
       {/* Dialog for the modal */}
       <Dialog open={isOpen} as="div" className="relative z-50" onClose={closeModal}>

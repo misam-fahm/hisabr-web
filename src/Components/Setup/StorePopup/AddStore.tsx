@@ -101,7 +101,7 @@ const AddStore = ({ setAddStore }: any) => {
       const { status, data: responseData } = result;
       setTimeout(() => {
         setCustomToast({
-          toastMessage: status === 200 ? "Store added successfully!" : (result?.error || result?.message || "An error occurred"),
+          toastMessage: status === 200 ? "Store added successfully!" : result?.message,
           toastType: status === 200 ? "success" : "error",
         });
       }, 0);
@@ -109,9 +109,14 @@ const AddStore = ({ setAddStore }: any) => {
       if (status === 200) {
         closeModal(); // Close modal after successful submission
         setAddStore({
-          ...responseData,
-          storeid: responseData?.id || responseData?.storeid,
-        }); // Trigger data refresh and pass new store data
+          storeid: result?.data?.storeid || result?.data?.id || 0,
+          storename: data?.storeName || "",
+          location: data?.location || "",
+          owner: data?.owner || "",
+          county: data?.county || "",
+          createdate: new Date().toISOString(),
+          royalty: "0",
+        });
       }
     } catch (error: any) {
       setTimeout(() => {

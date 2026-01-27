@@ -56,21 +56,21 @@ interface FileSummary {
     totalqty: number;
 }
 
-// Generate 52 weeks for a given year (Sunday to Saturday)
+// Generate weeks for a given year (Sunday to Saturday)
 const generateWeeksForYear = (year: number) => {
     const weeks: { id: number; start: Date; end: Date; }[] = [];
     const firstDayOfYear = new Date(year, 0, 1);
     const dayOfWeek = firstDayOfYear.getDay();
 
-    // Find the first Sunday of the year
-    let firstSunday = new Date(year, 0, 1);
-    if (dayOfWeek !== 0) {
-        firstSunday = new Date(year, 0, 1 + (7 - dayOfWeek));
-    }
+    // Find the Sunday of the week containing Jan 1st (start of Week 1)
+    const firstSunday = new Date(year, 0, 1 - dayOfWeek);
 
-    for (let i = 0; i < 52; i++) {
+    for (let i = 0; i < 53; i++) {
         const weekStart = new Date(firstSunday);
         weekStart.setDate(firstSunday.getDate() + (i * 7));
+
+        // If we've passed the end of the year and it's not the first few days of the next year, stop
+        if (weekStart.getFullYear() > year && weekStart.getDate() > 6) break;
 
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekStart.getDate() + 6);
@@ -135,6 +135,11 @@ const InventoryDetails = () => {
         message: "",
         type: "",
     });
+
+    // Build back URL with filter state preserved
+    const getBackUrl = () => {
+        return '/inventory';
+    };
 
     // Table columns
     const columns: ColumnDef<TableRow>[] = [
@@ -220,7 +225,7 @@ const InventoryDetails = () => {
         getFilteredRowModel: getFilteredRowModel(),
         initialState: {
             pagination: {
-                pageSize: 30,
+                pageSize: 100,
                 pageIndex: 0,
             },
         },
@@ -347,7 +352,7 @@ const InventoryDetails = () => {
             <div className="flex w-full items-start gap-4 mt-6 mb-6 below-md:mt-4 below-md:mb-4">
                 <div
                     className="below-md:hidden flex items-start cursor-pointer pt-2"
-                    onClick={() => router.back()}
+                    onClick={() => router.push(getBackUrl())}
                 >
                     <img src="/images/webbackicon.svg" alt="Back Arrow" className="w-7 h-7" />
                 </div>
@@ -366,9 +371,17 @@ const InventoryDetails = () => {
                         <p className="text-[#636363] text-[15px] font-semibold">
                             Week: {String(getWeekNumber(weekStart)).padStart(2, '0')}
                         </p>
-                        {weekStart && weekEnd && (
+                        {weekStart && (
                             <p className="text-[#636363] text-[15px] font-semibold">
-                                {format(new Date(weekStart), "MM/dd/yy")} - {format(new Date(weekEnd), "MM/dd/yy")}
+                                {(() => {
+                                    const date = new Date(weekStart);
+                                    const day = date.getDay();
+                                    const sunday = new Date(date);
+                                    sunday.setDate(date.getDate() - day);
+                                    const saturday = new Date(sunday);
+                                    saturday.setDate(sunday.getDate() + 6);
+                                    return `${format(sunday, "MM/dd/yy")} - ${format(saturday, "MM/dd/yy")}`;
+                                })()}
                             </p>
                         )}
                     </div>
@@ -392,7 +405,7 @@ const InventoryDetails = () => {
             {/* Mobile Back Button */}
             <div className="hidden below-md:flex mb-4">
                 <button
-                    onClick={() => router.back()}
+                    onClick={() => router.push(getBackUrl())}
                     className="bg-[#636363] hover:bg-[#4a4a4a] text-white text-[13px] px-4 py-2 rounded-md flex items-center gap-2"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -14,6 +14,12 @@ interface DateRangeOption {
   name: string;
   value: string;
 }
+interface WeekOption {
+  id: number;
+  name: string;
+  start: Date;
+  end: Date;
+}
 interface GlobalContextType {
   storeOptions: StoreOption[];
   selectedStore: StoreOption | null;
@@ -25,6 +31,10 @@ interface GlobalContextType {
   endDate: Date | undefined;
   setStartDate: (date: Date | undefined) => void;
   setEndDate: (date: Date | undefined) => void;
+  selectedYear: number;
+  setSelectedYear: (year: number) => void;
+  selectedWeek: WeekOption | null;
+  setSelectedWeek: (week: WeekOption | null) => void;
   resetGlobalState: () => void;
 }
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -86,16 +96,35 @@ const getRangeFromOption = (option: DateRangeOption): { start: Date; end: Date }
 const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [storeOptions, setStoreOptions] = useState<StoreOption[]>([]);
   const [dateRangeOptions] = useState<DateRangeOption[]>(dateRangeOptionsDefault);
-  const [selectedDateRange, setSelectedDateRange] = useState<DateRangeOption>(() => {
+  const [selectedDateRange, setSelectedDateRange] = useState<DateRangeOption>(dateRangeOptionsDefault[0]);
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+  const [selectedWeek, setSelectedWeek] = useState<WeekOption | null>(null);
+
+  useEffect(() => {
     if (typeof window !== "undefined") {
       const savedId = localStorage.getItem("selectedDateRangeId");
       if (savedId) {
         const found = dateRangeOptionsDefault.find(o => o.id === Number(savedId));
-        if (found) return found;
+        if (found) setSelectedDateRange(found);
+      }
+      const savedYear = localStorage.getItem("selectedYear");
+      if (savedYear) {
+        setSelectedYear(Number(savedYear));
+      }
+      const savedWeek = localStorage.getItem("selectedWeek");
+      if (savedWeek) {
+        try {
+          const parsed = JSON.parse(savedWeek);
+          // Convert date strings back to Date objects
+          if (parsed.start) parsed.start = new Date(parsed.start);
+          if (parsed.end) parsed.end = new Date(parsed.end);
+          setSelectedWeek(parsed);
+        } catch (e) {
+          console.error("Failed to parse saved week", e);
+        }
       }
     }
-    return dateRangeOptionsDefault[0];
-  });
+  }, []);
   const initialRange = getRangeFromOption(
     typeof window !== "undefined"
       ? (selectedDateRange || dateRangeOptionsDefault[0])
@@ -112,7 +141,26 @@ const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const initialRange = getRangeFromOption(dateRangeOptionsDefault[0]);
     setStartDate(initialRange.start);
     setEndDate(initialRange.end);
+    setSelectedYear(new Date().getFullYear());
+    setSelectedWeek(null);
   };
+
+  // Persist selectedYear and selectedWeek
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("selectedYear", String(selectedYear));
+    }
+  }, [selectedYear]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (selectedWeek) {
+        localStorage.setItem("selectedWeek", JSON.stringify(selectedWeek));
+      } else {
+        localStorage.removeItem("selectedWeek");
+      }
+    }
+  }, [selectedWeek]);
 
   // Always fetch stores on mount and when token changes
   useEffect(() => {
@@ -269,6 +317,7 @@ const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         cashreconc: "Cash Reconciliation",
         grossrevenue: "Gross Revenue",
         customercount: "Customer Count",
+        invoicedetails: "Invoice Details",
         logout: "Logout",
         plreport: "P&L",
       };
@@ -461,6 +510,10 @@ const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         endDate,
         setStartDate,
         setEndDate,
+        selectedYear,
+        setSelectedYear,
+        selectedWeek,
+        setSelectedWeek,
         resetGlobalState,
       }}
     >
@@ -558,6 +611,7 @@ const Header: React.FC = () => {
       grossrevenue: "Gross Revenue",
       customercount: "Customer Count",
       inventory: "Sales Summary",
+      invoicedetails: "Invoice Details",
       logout: "Logout",
       plreport: "P&L",
     };

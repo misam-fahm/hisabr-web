@@ -4,7 +4,7 @@ import React, { FC, useState, useRef, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 
 import Dropdown from "@/Components/UI/Themes/DropDown";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import * as XLSX from "xlsx";
 import {
@@ -51,8 +51,6 @@ interface TableRow {
 
 // Interface for file upload
 interface InventoryItem {
-    store_name: string;
-    filename: string;
     item_name: string;
     quantity: number;
     total: number;
@@ -97,12 +95,17 @@ const parseQuantity = (value: string): number => {
 
 const Inventory: FC = () => {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const containerRef = useRef(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isScrollbarVisible, setIsScrollbarVisible] = useState(false);
     const [inventoryFiles, setInventoryFiles] = useState<InventoryFile[]>([]);
     const [totalFiles, setTotalFiles] = useState<number>(0);
-    const [filesLoading, setFilesLoading] = useState<boolean>(false);
+    // Check if URL has storeId param (coming back from detail page)
+    const urlHasStoreId = useRef(false);
+    // Always start with loading true to prevent empty state flash
+    const [filesLoading, setFilesLoading] = useState<boolean>(true);
+    const [initialLoadComplete, setInitialLoadComplete] = useState<boolean>(false);
     const [uploadLoading, setUploadLoading] = useState<boolean>(false);
     const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
     const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
@@ -121,21 +124,21 @@ const Inventory: FC = () => {
         name: String(2023 + i),
     }));
 
-    // Generate 52 weeks for selected year (Sunday to Saturday)
+    // Generate weeks for selected year (Sunday to Saturday)
     const generateWeeksForYear = (year: number) => {
         const weeks: { id: number; name: string; start: Date; end: Date }[] = [];
         const firstDayOfYear = new Date(year, 0, 1);
         const dayOfWeek = firstDayOfYear.getDay();
 
-        // Find the first Sunday of the year
-        let firstSunday = new Date(year, 0, 1);
-        if (dayOfWeek !== 0) {
-            firstSunday = new Date(year, 0, 1 + (7 - dayOfWeek));
-        }
+        // Find the Sunday of the week containing Jan 1st (start of Week 1)
+        const firstSunday = new Date(year, 0, 1 - dayOfWeek);
 
-        for (let i = 0; i < 52; i++) {
+        for (let i = 0; i < 53; i++) {
             const weekStart = new Date(firstSunday);
             weekStart.setDate(firstSunday.getDate() + (i * 7));
+
+            // If we've passed the end of the year and it's not the first few days of the next year's first week, stop
+            if (weekStart.getFullYear() > year && weekStart.getDate() > 6) break;
 
             const weekEnd = new Date(weekStart);
             weekEnd.setDate(weekStart.getDate() + 6);
@@ -171,9 +174,22 @@ const Inventory: FC = () => {
         return weeks[0];
     };
 
+    // Use global context for store, year, week, and date range
+    const {
+        storeOptions,
+        selectedStore,
+        setSelectedStore,
+        startDate,
+        endDate,
+        setStartDate,
+        setEndDate,
+        selectedYear,
+        setSelectedYear,
+        selectedWeek,
+        setSelectedWeek,
+    } = useGlobalContext();
+
     // Year and Week selection for Excel upload
-    const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
-    const [selectedWeek, setSelectedWeek] = useState<{ id: number; name: string; start: Date; end: Date } | null>(null);
     const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
     const [isWeekDropdownOpen, setIsWeekDropdownOpen] = useState(false);
 
@@ -203,23 +219,12 @@ const Inventory: FC = () => {
         "44329", // Alpharetta
     ];
 
-    // Use global context for store and date range
-    const {
-        storeOptions,
-        selectedStore,
-        setSelectedStore,
-        startDate,
-        endDate,
-        setStartDate,
-        setEndDate,
-    } = useGlobalContext();
-
     // Columns for inventory files
     const fileColumns: ColumnDef<InventoryFile>[] = [
         {
             id: "weeknumber",
             accessorKey: "weekstart",
-            header: () => <div className="text-center">Week Number</div>,
+            header: () => <div className="text-center">Week</div>,
             cell: (info) => {
                 const row = info.row.original;
                 const weekStart = new Date(row.weekstart);
@@ -236,24 +241,35 @@ const Inventory: FC = () => {
                     }
                 }
 
-                return <span className="flex justify-center">Week {String(weekNumber).padStart(2, '0')}</span>;
+                return <span className="flex justify-center">{String(weekNumber).padStart(2, '0')}</span>;
             },
             size: 100,
         },
         {
             accessorKey: "weekstart",
             header: () => <div className="text-center">Week Start</div>,
-            cell: (info) => (
-                <span className="flex justify-center">{info.getValue() as string}</span>
-            ),
+            cell: (info) => {
+                const date = new Date(info.getValue() as string);
+                // Adjust to the Sunday of that week
+                const day = date.getDay();
+                const sunday = new Date(date);
+                sunday.setDate(date.getDate() - day);
+                return <span className="flex justify-center">{format(sunday, 'MM/dd/yyyy')}</span>;
+            },
             size: 100,
         },
         {
             accessorKey: "weekend",
             header: () => <div className="text-center">Week End</div>,
-            cell: (info) => (
-                <span className="flex justify-center">{info.getValue() as string}</span>
-            ),
+            cell: (info) => {
+                // We use weekstart to calculate the Saturday of the same week
+                const row = info.row.original;
+                const date = new Date(row.weekstart);
+                const day = date.getDay();
+                const saturday = new Date(date);
+                saturday.setDate(date.getDate() + (6 - day));
+                return <span className="flex justify-center">{format(saturday, 'MM/dd/yyyy')}</span>;
+            },
             size: 100,
         },
         {
@@ -280,7 +296,7 @@ const Inventory: FC = () => {
             id: "actions",
             header: () => <div className="text-center">Actions</div>,
             cell: ({ row }) => (
-                <div className="flex justify-center gap-3">
+                <div className="flex justify-center gap-8">
                     <button
                         onClick={() => handleViewItems(row.original)}
                         className="text-green-500 hover:text-green-700"
@@ -320,11 +336,16 @@ const Inventory: FC = () => {
         getFilteredRowModel: getFilteredRowModel(),
         initialState: {
             pagination: {
-                pageSize: 10,
+                pageSize: 50,
                 pageIndex: 0,
             },
         },
+        manualPagination: true,
+        pageCount: Math.ceil(totalFiles / 50),
     });
+
+    // Get pagination state from table
+    const { pageIndex, pageSize } = fileTable.getState().pagination;
 
     // Fetch inventory files
     const fetchInventoryFiles = async (overrideFilter?: 'week' | 'date') => {
@@ -366,23 +387,34 @@ const Inventory: FC = () => {
                 startdate: format(startDateToUse, "yyyy-MM-dd"),
                 enddate: format(endDateToUse, "yyyy-MM-dd"),
                 search: "",
-                page: currentPage,
-                limit: 10,
+                page: fileTable.getState().pagination.pageIndex + 1,
+                limit: fileTable.getState().pagination.pageSize,
             });
 
             if (response?.status === 200 && response?.data?.inventoryfiles) {
                 setInventoryFiles(response.data.inventoryfiles);
-                setTotalFiles(response.data.total || 0);
+                // Only update totalFiles on page 0 (first page) to keep pagination stable
+                const total = response.data.total;
+                if (total !== undefined) {
+                    if (fileTable.getState().pagination.pageIndex === 0) {
+                        setTotalFiles(Number(total) || 0);
+                    }
+                }
             } else {
                 setInventoryFiles([]);
-                setTotalFiles(0);
+                if (fileTable.getState().pagination.pageIndex === 0) {
+                    setTotalFiles(0);
+                }
             }
         } catch (error) {
             console.error("Error fetching inventory files:", error);
             setInventoryFiles([]);
-            setTotalFiles(0);
+            if (fileTable.getState().pagination.pageIndex === 0) {
+                setTotalFiles(0);
+            }
         } finally {
             setFilesLoading(false);
+            setInitialLoadComplete(true);
         }
     };
 
@@ -405,7 +437,13 @@ const Inventory: FC = () => {
         const encodedWe = encodeUrlSafe(file.weekend || "");
         const encodedStoreName = encodeUrlSafe(fullStoreName);
 
-        router.push(`/inventory/${encodedId}?ws=${encodedWs}&we=${encodedWe}&sn=${encodedStoreName}`);
+        // Build URL with specific file info
+        const params = new URLSearchParams();
+        params.set('ws', encodedWs);
+        params.set('we', encodedWe);
+        params.set('sn', encodedStoreName);
+
+        router.push(`/inventory/${encodedId}?${params.toString()}`);
     };
 
     // Handle delete file (called from modal)
@@ -676,8 +714,6 @@ const Inventory: FC = () => {
                             parsedData.push(tableRow);
 
                             inventoryItems.push({
-                                store_name: storeId || selectedStore?.name || "",
-                                filename: file.name,
                                 item_name: tableRow.item_name,
                                 quantity: tableRow.quantity,
                                 total: tableRow.total,
@@ -700,6 +736,7 @@ const Inventory: FC = () => {
                             mode: "insertInventory",
                             store_id: selectedStore?.id || 69,
                             store_name: storeId || selectedStore?.name || "",
+                            filename: file.name,
                             week_start: weekStart,
                             week_end: weekEnd,
                             file_time: fileTime || new Date().toISOString().slice(0, 19).replace('T', ' '),
@@ -798,22 +835,37 @@ const Inventory: FC = () => {
         }
     }, []);
 
+    // Initial loading state handle
+    useEffect(() => {
+        if (storeOptions?.length > 0 && !selectedStore?.id) {
+            // No store selected - stop loading, show empty state
+            setFilesLoading(false);
+            setInitialLoadComplete(true);
+        } else if (selectedStore?.id) {
+            setFilesLoading(false);
+        }
+    }, [storeOptions, selectedStore]);
+
     // Fetch inventory files when store, year, week, or date changes
     useEffect(() => {
         if (selectedStore?.id) {
-            setInventoryFiles([]); // Clear old data
-            setTotalFiles(0);
-            setCurrentPage(1); // Reset to first page when filters change
-            fetchInventoryFiles();
+            // Set loading state to show skeleton - don't clear data here to avoid flash of empty state
+            setFilesLoading(true);
+            // Reset to first page when filters change
+            if (fileTable.getState().pagination.pageIndex !== 0) {
+                fileTable.setPageIndex(0);
+            } else {
+                fetchInventoryFiles();
+            }
         }
     }, [selectedStore?.id, selectedYear, selectedWeek]);
 
-    // Fetch when page number changes
+    // Fetch when page index or page size changes
     useEffect(() => {
-        if (selectedStore?.id && currentPage > 1) {
+        if (selectedStore?.id) {
             fetchInventoryFiles();
         }
-    }, [currentPage]);
+    }, [pageIndex, pageSize]);
 
     const toggleStoreDropdown = () => {
         setIsStoreDropdownOpen((prev) => !prev);
@@ -933,7 +985,7 @@ const Inventory: FC = () => {
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                                         </svg>
-                                        Upload Excel
+                                        Upload
                                     </>
                                 )}
                             </button>
@@ -995,9 +1047,11 @@ const Inventory: FC = () => {
                             </div>
                         </div>
                     ))}
-                    <div className="hidden below-md:block">
-                        <Pagination table={fileTable} totalItems={totalFiles} />
-                    </div>
+                    {totalFiles > 0 && (
+                        <div className="hidden below-md:block">
+                            <Pagination table={fileTable} totalItems={totalFiles} />
+                        </div>
+                    )}
                 </div>
 
                 {/* Web View: Table */}
@@ -1086,7 +1140,7 @@ const Inventory: FC = () => {
                         </div>
                     </div>
                 </div>
-                {inventoryFiles && inventoryFiles.length > 0 && (
+                {totalFiles > 0 && (
                     <div className="mt-4 below-md:hidden">
                         <Pagination table={fileTable} totalItems={totalFiles} />
                     </div>
