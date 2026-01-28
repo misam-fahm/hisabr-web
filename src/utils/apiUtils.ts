@@ -7,11 +7,20 @@ export const sendApiRequest = async (jsonData: any, apiRoute: string = 'apiCallV
       const userData: any = decodeToken(token);
       userData ? jsonData.userid = userData.userid : null;
     }
+
+    // Prepare headers
+    const headers: any = {
+      'Content-Type': 'application/json',
+    };
+
+    // Add Authorization header if token exists
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response: any = await fetch(`/api/${apiRoute}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: headers,
       body: JSON.stringify(jsonData),
     });
 
@@ -28,4 +37,3 @@ export const sendApiRequest = async (jsonData: any, apiRoute: string = 'apiCallV
     throw error;  // Rethrow the error so that the calling function can handle it
   }
 };
-  
