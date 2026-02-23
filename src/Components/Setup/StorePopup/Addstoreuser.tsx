@@ -57,12 +57,6 @@ const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setA
     setAddStore(false);
   };
 
-  useEffect(() => {
-    if (autoOpen) {
-      openModal();
-    }
-  }, [autoOpen]);
-
   // Fetch users for the store
   const fetchUsers = async () => {
     setLoading(true);
@@ -177,7 +171,11 @@ const AddStoreUser: FC<AddStoreUserProps> = ({ initialData, isOpenAddStore, setA
     }
   };
 
-  // Removed the useEffect that was causing auto-opening
+  useEffect(() => {
+    if (autoOpen) {
+      openModal();
+    }
+  }, [autoOpen]);
 
   return (
     <>

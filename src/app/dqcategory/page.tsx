@@ -116,6 +116,7 @@ const Sales: FC = () => {
   const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
   const [productTotal, setProductTotal] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [priorMonthData, setPriorMonthData] = useState<any>({ cogs: 0, labour_cost: 0 });
   const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
@@ -190,6 +191,20 @@ const Sales: FC = () => {
     selectedStore,
     setSelectedStore,
   } = useGlobalContext();
+
+  // Calculate prior month dates
+  const getPriorMonthDates = () => {
+    if (!startDate) return { priorStartDate: null, priorEndDate: null };
+    
+    const date = new Date(startDate);
+    const priorMonth = new Date(date.getFullYear(), date.getMonth() - 1, 1);
+    const priorEndDate = new Date(date.getFullYear(), date.getMonth(), 0);
+    
+    return {
+      priorStartDate: priorMonth,
+      priorEndDate: priorEndDate
+    };
+  };
 
   const mergeCategories = (categories: any[]) => {
     // Initialize the merged category
@@ -313,10 +328,41 @@ const Sales: FC = () => {
     }
   };
 
+  const fetchPriorMonthData = async () => {
+    try {
+      const { priorStartDate, priorEndDate } = getPriorMonthDates();
+      
+      if (!priorStartDate || !priorEndDate) {
+        setPriorMonthData({ cogs: 0, labour_cost: 0 });
+        return;
+      }
+
+      const response: any = await sendApiRequest({
+        mode: "dq_data",
+        storeid: selectedStore?.id || 69,
+        startdate: format(priorStartDate, "yyyy-MM-dd"),
+        enddate: format(priorEndDate, "yyyy-MM-dd"),
+      });
+
+      if (response?.status === 200 && response?.data?.dq_data) {
+        setPriorMonthData({
+          cogs: response.data.dq_data.cogs || 0,
+          labour_cost: response.data.dq_data.labour_cost || 0
+        });
+      } else {
+        setPriorMonthData({ cogs: 0, labour_cost: 0 });
+      }
+    } catch (error) {
+      console.error("Error fetching prior month data:", error);
+      setPriorMonthData({ cogs: 0, labour_cost: 0 });
+    }
+  };
+
   useEffect(() => {
     if (startDate && endDate && selectedStore) {
       fetchData2();
       fetchData();
+      fetchPriorMonthData();
       // fetchDataForAddress();
     }
   }, [startDate, endDate, selectedStore]);
@@ -429,6 +475,8 @@ const Sales: FC = () => {
       "Transaction Count",
       "Inventory Purchases",
       "Ending Inventory",
+      "Prior Month Cost of Goods Sold (COGS)",
+      "Prior Month Labor",
     ];
 
     const allData = [...(items || []), ...(Sitems || [])];
@@ -452,6 +500,8 @@ const Sales: FC = () => {
       if (category === "Transaction Count") return totalOrders || 0;
       if (category === "Inventory Purchases") return productTotal ? Math.round(productTotal) : 0;
       if (category === "Ending Inventory") return Math.round(subtotal || 0);
+      if (category === "Prior Month Cost of Goods Sold (COGS)") return Math.round(priorMonthData.cogs || 0);
+      if (category === "Prior Month Labor") return Math.round(priorMonthData.labour_cost || 0);
 
       // For these 4 categories, export totalqty instead of totalextprice
       if (
@@ -512,6 +562,8 @@ const Sales: FC = () => {
       { wch: 30 },
       { wch: 30 },
       { wch: 30 },
+      { wch: 40 },
+      { wch: 25 },
     ];
     worksheet["!cols"] = wscols;
 
