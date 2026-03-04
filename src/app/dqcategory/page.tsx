@@ -116,7 +116,7 @@ const Sales: FC = () => {
   const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
   const [productTotal, setProductTotal] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
-  const [priorMonthData, setPriorMonthData] = useState<any>({ cogs: 0, labour_cost: 0 });
+  const [priorMonthData, setPriorMonthData] = useState<any>({ cogs: 0, labour_cost: 0, rent_mortgage_exp: 0, operatExpAmt: 0 });
   const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
@@ -192,52 +192,39 @@ const Sales: FC = () => {
     setSelectedStore,
   } = useGlobalContext();
 
-  // Calculate prior month dates
-  const getPriorMonthDates = () => {
-    if (!startDate) return { priorStartDate: null, priorEndDate: null };
-    
-    const date = new Date(startDate);
-    const priorMonth = new Date(date.getFullYear(), date.getMonth() - 1, 1);
-    const priorEndDate = new Date(date.getFullYear(), date.getMonth(), 0);
-    
-    return {
-      priorStartDate: priorMonth,
-      priorEndDate: priorEndDate
-    };
-  };
 
   const mergeCategories = (categories: any[]) => {
     // Initialize the merged category
     let dqIceCream = {
-        name: "DQ (Ice Cream)",
-        totalqty: 0,
-        totalextprice: 0,
+      name: "DQ (Ice Cream)",
+      totalqty: 0,
+      totalextprice: 0,
     };
 
     // Filter out categories to merge and calculate totals, then map for renaming
     const filteredCategories = categories
-        .filter((category) => {
-            if (category.name === "Soft Serve" || category.name === "Novelties-Boxed") {
-                dqIceCream.totalqty += Number(category.totalqty || 0); // Handle undefined/null
-                dqIceCream.totalextprice += Number(category.totalextprice || 0); // Handle undefined/null
-                return false; // Exclude from final array
-            }
-            return true; // Keep other categories
-        })
-        .map((category) => {
-            if (category.name === "Mix Ice Cream") {
-                return { ...category, name: "Mix Gall\\Litre" };
-            }
-            return category;
-        });
+      .filter((category) => {
+        if (category.name === "Soft Serve" || category.name === "Novelties-Boxed") {
+          dqIceCream.totalqty += Number(category.totalqty || 0); // Handle undefined/null
+          dqIceCream.totalextprice += Number(category.totalextprice || 0); // Handle undefined/null
+          return false; // Exclude from final array
+        }
+        return true; // Keep other categories
+      })
+      .map((category) => {
+        if (category.name === "Mix Ice Cream") {
+          return { ...category, name: "Mix Gall\\Litre" };
+        }
+        return category;
+      });
 
     // Only add "DQ (Ice Cream)" if it has non-zero values
     if (dqIceCream.totalqty > 0 || dqIceCream.totalextprice > 0) {
-        filteredCategories.push(dqIceCream);
+      filteredCategories.push(dqIceCream);
     }
 
     return filteredCategories;
-  };  
+  };
 
   // Add handler functions within the Sales component
   const toggleDateRangeDropdown = () => {
@@ -330,31 +317,65 @@ const Sales: FC = () => {
 
   const fetchPriorMonthData = async () => {
     try {
-      const { priorStartDate, priorEndDate } = getPriorMonthDates();
-      
-      if (!priorStartDate || !priorEndDate) {
-        setPriorMonthData({ cogs: 0, labour_cost: 0 });
+      if (!startDate || !endDate) {
+        setPriorMonthData({ cogs: 0, labour_cost: 0, rent_mortgage_exp: 0, operatExpAmt: 0 });
         return;
       }
 
-      const response: any = await sendApiRequest({
-        mode: "dq_data",
-        storeid: selectedStore?.id || 69,
-        startdate: format(priorStartDate, "yyyy-MM-dd"),
-        enddate: format(priorEndDate, "yyyy-MM-dd"),
-      });
+      const startdate = format(startDate, "yyyy-MM-dd");
+      const enddate = format(endDate, "yyyy-MM-dd");
+      const storeid = selectedStore?.id || 69;
 
-      if (response?.status === 200 && response?.data?.dq_data) {
-        setPriorMonthData({
-          cogs: response.data.dq_data.cogs || 0,
-          labour_cost: response.data.dq_data.labour_cost || 0
-        });
-      } else {
-        setPriorMonthData({ cogs: 0, labour_cost: 0 });
-      }
+      const months = (() => {
+        const yearDiff = endDate.getFullYear() - startDate.getFullYear();
+        const monthDiff = endDate.getMonth() - startDate.getMonth();
+        return yearDiff * 12 + (monthDiff + 1);
+      })();
+
+      // Call both APIs in parallel — same as page.tsx
+      const [dqResp, salesResp, tendersResp]: any = await Promise.all([
+        sendApiRequest({ mode: "dq_data", storeid, startdate, enddate }),
+        sendApiRequest({ mode: "getSalesKpiData", storeid, startdate, enddate }),
+        sendApiRequest({ mode: "getTendersData", storeid, startdate, enddate }),
+      ]);
+
+      // Extract dq_data fields (cogs, labour_cost, rent_mortgage_exp)
+      const dqData = dqResp?.status === 200 && dqResp?.data?.dq_data
+        ? dqResp.data.dq_data
+        : {};
+
+      // Extract salesKpi custom_range record (same as page.tsx)
+      const salesObj = salesResp?.status === 200 ? (salesResp?.data?.saleskpi || {}) : {};
+      const customRange = salesObj.custom_range?.[0] || {};
+
+      // Extract tender commissions for custom range (same as page.tsx)
+      const customTenders = tendersResp?.status === 200
+        ? (tendersResp?.data?.tenders?.custom_range || [])
+        : [];
+      const customCommission = customTenders.reduce(
+        (sum: number, row: any) => sum + ((row.payments || 0) * (row.commission || 0)) / 100,
+        0
+      );
+
+      // Compute operatExpAmt exactly like page.tsx does
+      const payrollTaxAmt = (customRange.labour_cost || 0) * ((customRange.payrolltax || 0) / 100);
+      const yearExpAmt = ((customRange.Yearly_expense || 0) / 12) * months;
+      const computedOperatExpAmt =
+        (customRange.additional_expense || 0) +
+        payrollTaxAmt +
+        yearExpAmt +
+        ((customRange.monthly_expense || 0) * months || 0) +
+        customCommission;
+
+      setPriorMonthData({
+        cogs: dqData.cogs || 0,
+        labour_cost: dqData.labour_cost || 0,
+        rent_mortgage_exp: dqData.rent_mortgage_exp || 0,
+        operatExpAmt: computedOperatExpAmt,
+      });
     } catch (error) {
       console.error("Error fetching prior month data:", error);
-      setPriorMonthData({ cogs: 0, labour_cost: 0 });
+      setPriorMonthData({ cogs: 0, labour_cost: 0, rent_mortgage_exp: 0, operatExpAmt: 0 });
     }
   };
 
@@ -427,29 +448,29 @@ const Sales: FC = () => {
   };
 
   const getTotalByCategory = (name: string) => {
-  const allData = [...(items || []), ...(Sitems || [])];
-  const category = allData.find((item) => item.name === name);
-  if (!category) return 0;
+    const allData = [...(items || []), ...(Sitems || [])];
+    const category = allData.find((item) => item.name === name);
+    if (!category) return 0;
 
-  // For these categories, export qty_times_pieces
-  const useQtyTimesPiecesFor = new Set([
-    "Mix Ice Cream",       // => Mix Gall\Litre
-    '8" Round Cake',       // => 8 Round
-    '10" Round Cake',      // => 10 Round
-    "Sheet Cake",          // => Sheet
-  ]);
+    // For these categories, export qty_times_pieces
+    const useQtyTimesPiecesFor = new Set([
+      "Mix Ice Cream",       // => Mix Gall\Litre
+      '8" Round Cake',       // => 8 Round
+      '10" Round Cake',      // => 10 Round
+      "Sheet Cake",          // => Sheet
+    ]);
 
-  if (useQtyTimesPiecesFor.has(name)) {
-    return category?.qty_times_pieces
-      ? Math.round(Number(category.qty_times_pieces))
+    if (useQtyTimesPiecesFor.has(name)) {
+      return category?.qty_times_pieces
+        ? Math.round(Number(category.qty_times_pieces))
+        : 0;
+    }
+
+    // Default: use totalextprice
+    return category?.totalextprice != null
+      ? Math.round(Number(category.totalextprice))
       : 0;
-  }
-
-  // Default: use totalextprice
-  return category?.totalextprice != null
-    ? Math.round(Number(category.totalextprice))
-    : 0;
-};
+  };
 
 
   const mapData = () => {
@@ -477,6 +498,8 @@ const Sales: FC = () => {
       "Ending Inventory",
       "Prior Month Cost of Goods Sold (COGS)",
       "Prior Month Labor",
+      "Prior Month Restaurant Controllables",
+      "Prior Month Occupancy Costs",
     ];
 
     const allData = [...(items || []), ...(Sitems || [])];
@@ -502,6 +525,8 @@ const Sales: FC = () => {
       if (category === "Ending Inventory") return Math.round(subtotal || 0);
       if (category === "Prior Month Cost of Goods Sold (COGS)") return Math.round(priorMonthData.cogs || 0);
       if (category === "Prior Month Labor") return Math.round(priorMonthData.labour_cost || 0);
+      if (category === "Prior Month Restaurant Controllables") return Math.round((priorMonthData.operatExpAmt || 0) - (priorMonthData.rent_mortgage_exp || 0));
+      if (category === "Prior Month Occupancy Costs") return Math.round(priorMonthData.rent_mortgage_exp || 0);
 
       // For these 4 categories, export totalqty instead of totalextprice
       if (
@@ -527,10 +552,10 @@ const Sales: FC = () => {
       }
       return getTotalByCategory(originalName);
     });
-  
 
-    
-    return [header, firstRow, ];
+
+
+    return [header, firstRow,];
   };
 
   const exportToExcel = () => {
@@ -538,7 +563,7 @@ const Sales: FC = () => {
     const worksheet = XLSX.utils.aoa_to_sheet([headers, firstRow]);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    
+
     // Define column widths to match the uploaded Excel file
     const wscols = [
       { wch: 20 },
@@ -564,6 +589,8 @@ const Sales: FC = () => {
       { wch: 30 },
       { wch: 40 },
       { wch: 25 },
+      { wch: 35 },
+      { wch: 30 },
     ];
     worksheet["!cols"] = wscols;
 
@@ -577,11 +604,10 @@ const Sales: FC = () => {
 
   return (
     <main
-      className={`relative px-6 below-md:px-3  overflow-auto ${
-        items?.length > 6 || Sitems?.length > 6
-          ? "max-h-[calc(100vh-60px)]"
-          : "h-[620px]"
-      }`}
+      className={`relative px-6 below-md:px-3  overflow-auto ${items?.length > 6 || Sitems?.length > 6
+        ? "max-h-[calc(100vh-60px)]"
+        : "h-[620px]"
+        }`}
       style={{ scrollbarWidth: "thin" }}
     >
       <ToastNotification
@@ -590,41 +616,41 @@ const Sales: FC = () => {
       />
       {uploadPdfloading && <Loading />}
       <div className="px-6 mt-3 below-md:px-3 below-md:mt-0 tablet:mt-4">
-      <div className="flex flex-row justify-between below-md:flex-col pb-2 sticky z-20 w-full below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4 gap-6 tablet:grid tablet:grid-cols-2">
-  <div className="flex flex-row below-md:flex-col w-[70%] tablet:w-[100%] below-md:w-full gap-3 below-md:gap-4 tablet:col-span-2">
-    <Dropdown
-      options={storeOptions}
-      selectedOption={selectedStore?.name || "Store"}
-      onSelect={(option: any) => {
-        setSelectedStore(option);
-        setIsStoreDropdownOpen(false);
-      }}
-      isOpen={isStoreDropdownOpen}
-      toggleOpen={toggleStoreDropdown}
-      widthchange="w-[35%] tablet:w-full below-md:w-full"
-      />
-    <Dropdown
-      options={dateRangeOptions}
-      selectedOption={selectedDateRange?.name}
-      onSelect={(option: any) => {
-        setSelectedDateRange(option);
-        setIsDateRangeOpen(false);
-      }}
-      isOpen={isDateRangeOpen}
-      toggleOpen={toggleDateRangeDropdown}
-      widthchange="w-[30%] tablet:w-full below-md:w-full"
-    />
-    <div className="w-[300px] tablet:w-full below-md:w-full">
-    <DateRangePicker
-        startDate={startDate}
-        endDate={endDate}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
-        fetchData={fetchData}
-        fetchDataForTender={fetchData2}
-      />
-    </div>
-  </div>
+        <div className="flex flex-row justify-between below-md:flex-col pb-2 sticky z-20 w-full below-md:pt-4 tablet:pt-4 bg-[#f7f8f9] below-md:pb-4 gap-6 tablet:grid tablet:grid-cols-2">
+          <div className="flex flex-row below-md:flex-col w-[70%] tablet:w-[100%] below-md:w-full gap-3 below-md:gap-4 tablet:col-span-2">
+            <Dropdown
+              options={storeOptions}
+              selectedOption={selectedStore?.name || "Store"}
+              onSelect={(option: any) => {
+                setSelectedStore(option);
+                setIsStoreDropdownOpen(false);
+              }}
+              isOpen={isStoreDropdownOpen}
+              toggleOpen={toggleStoreDropdown}
+              widthchange="w-[35%] tablet:w-full below-md:w-full"
+            />
+            <Dropdown
+              options={dateRangeOptions}
+              selectedOption={selectedDateRange?.name}
+              onSelect={(option: any) => {
+                setSelectedDateRange(option);
+                setIsDateRangeOpen(false);
+              }}
+              isOpen={isDateRangeOpen}
+              toggleOpen={toggleDateRangeDropdown}
+              widthchange="w-[30%] tablet:w-full below-md:w-full"
+            />
+            <div className="w-[300px] tablet:w-full below-md:w-full">
+              <DateRangePicker
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+                fetchData={fetchData}
+                fetchDataForTender={fetchData2}
+              />
+            </div>
+          </div>
 
           {/* Export Button with padding */}
           <div className="flex below-md:w-full below-md:pt-4 gap-6 items-center below-md:justify-center">
@@ -742,67 +768,67 @@ const Sales: FC = () => {
           </div>
         </div> */}
 
-<div className="flex gap-6 below-md:grid below-md:grid-cols-1 below-md:gap-3 below-md:pl-3 below-md:pr-3 tablet:grid tablet:grid-cols-2">
-  {/* COGS */}
-  <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%] tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
-    <div className="flex flex-col gap-2">
-      <p className="text-[14px] text-[#575F6DCC] font-bold">COGS</p>
-      <p className="text-[18px] text-[#2D3748] font-bold">
-        {productTotal
-          ? `$${productTotal.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
-          : "$0"}
-      </p>
-    </div>
-  </div>
+        <div className="flex gap-6 below-md:grid below-md:grid-cols-1 below-md:gap-3 below-md:pl-3 below-md:pr-3 tablet:grid tablet:grid-cols-2">
+          {/* COGS */}
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%] tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
+            <div className="flex flex-col gap-2">
+              <p className="text-[14px] text-[#575F6DCC] font-bold">COGS</p>
+              <p className="text-[18px] text-[#2D3748] font-bold">
+                {productTotal
+                  ? `$${productTotal.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+                  : "$0"}
+              </p>
+            </div>
+          </div>
 
-  {/* Order Counts */}
-  <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%]  tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
-    <div className="flex flex-col gap-2">
-      <p className="text-[14px] text-[#575F6DCC] font-bold">Order Counts</p>
-      <p className="text-[18px] text-[#2D3748] font-bold">
-        {totalOrders ? totalOrders.toLocaleString("en-US") : "0"}
-      </p>
-    </div>
-  </div>
+          {/* Order Counts */}
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%]  tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
+            <div className="flex flex-col gap-2">
+              <p className="text-[14px] text-[#575F6DCC] font-bold">Order Counts</p>
+              <p className="text-[18px] text-[#2D3748] font-bold">
+                {totalOrders ? totalOrders.toLocaleString("en-US") : "0"}
+              </p>
+            </div>
+          </div>
 
-  {/* Ending Inventory (always visible) */}
-  <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%] tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
-    <div className="flex flex-col gap-2">
-      <p className="text-[14px] text-[#575F6DCC] font-bold">Ending Inventory</p>
-      <p className="text-[18px] text-[#2D3748] font-bold">
-        ${subtotal
-          ? subtotal.toLocaleString("en-US", {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })
-          : "0"}
-      </p>
-    </div>
-  </div>
-</div>
-
-   <div className="grid grid-cols-5 ipad-pro:grid-cols-4 ipad-air:grid-cols-4 tablet:grid-cols-2 below-md:grid-cols-1 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 items-stretch tablet:flex-wrap tablet:gap-3">
-  {["DQ (Ice Cream)", "Food", "Cakes", "Beverage"].map((categoryName, index) => {
-    const item = Sitems?.find((i: any) => i.name === categoryName);
-    return (
-      <div
-        key={index}
-        className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4 p-2 justify-between items-stretch w-full ipad-air:w-[105%]"
-      >
-        <div className="flex flex-col gap-2">
-          <Tooltip position="left" text={categoryName?.length > 15 ? categoryName : ""}>
-            <p className="text-[16px] text-[#575F6DCC] font-bold h-7">
-              {categoryName?.length > 15 ? categoryName.substring(0, 15) + "..." : categoryName || "--"}
-            </p>
-          </Tooltip>
-          <p className="text-[20px] text-[#2D3748] font-bold">
-            {item?.totalextprice ? `$${Math.round(item.totalextprice).toLocaleString()}` : "$0"}
-          </p>
+          {/* Ending Inventory (always visible) */}
+          <div className="flex flex-row bg-[#FFFFFF] rounded-lg mb-8 shadow-sm border-[#7b7b7b] border-b-4 w-[20%] tablet:w-[100%] below-md:w-full p-3 below-md:p-3 justify-between items-stretch">
+            <div className="flex flex-col gap-2">
+              <p className="text-[14px] text-[#575F6DCC] font-bold">Ending Inventory</p>
+              <p className="text-[18px] text-[#2D3748] font-bold">
+                ${subtotal
+                  ? subtotal.toLocaleString("en-US", {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  })
+                  : "0"}
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-    );
-  })}
-</div>
+
+        <div className="grid grid-cols-5 ipad-pro:grid-cols-4 ipad-air:grid-cols-4 tablet:grid-cols-2 below-md:grid-cols-1 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 items-stretch tablet:flex-wrap tablet:gap-3">
+          {["DQ (Ice Cream)", "Food", "Cakes", "Beverage"].map((categoryName, index) => {
+            const item = Sitems?.find((i: any) => i.name === categoryName);
+            return (
+              <div
+                key={index}
+                className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#b1d0b3] border-b-4 p-2 justify-between items-stretch w-full ipad-air:w-[105%]"
+              >
+                <div className="flex flex-col gap-2">
+                  <Tooltip position="left" text={categoryName?.length > 15 ? categoryName : ""}>
+                    <p className="text-[16px] text-[#575F6DCC] font-bold h-7">
+                      {categoryName?.length > 15 ? categoryName.substring(0, 15) + "..." : categoryName || "--"}
+                    </p>
+                  </Tooltip>
+                  <p className="text-[20px] text-[#2D3748] font-bold">
+                    {item?.totalextprice ? `$${Math.round(item.totalextprice).toLocaleString()}` : "$0"}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
         {/* Item Cards */}
         <div className="grid grid-cols-5 ipad-pro:grid-cols-4 ipad-air:grid-cols-4 tablet:grid-cols-2 below-md:grid-cols-1 w-full h-full gap-6 below-md:gap-3 below-md:pl-3 below-md:pr-3 mt-6 items-stretch tablet:flex-wrap tablet:gap-3">
@@ -859,7 +885,7 @@ const Sales: FC = () => {
                     <p className="text-[11px] text-[#000000] font-semibold">
                       ${Items.per_piece_price.toFixed(2)}/
                       {Items?.unit?.toLowerCase() === "piece" ||
-                      Items?.unit?.toLowerCase() === "pieces"
+                        Items?.unit?.toLowerCase() === "pieces"
                         ? "pcs"
                         : Items?.unit || "unit"}
                     </p>
