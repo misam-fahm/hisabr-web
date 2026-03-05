@@ -35,14 +35,14 @@ const Exceldata = [
   [
     "Store Number",
     "Store Address",
-    "Dairy Queen",
+    "Soft Serve",
     "DQ Food",
     "Beverages",
     "Breakfast",
-    "Cakes",
+    "Cakes/Logs/Treatzza Pizza",
     "OJ Beverages",
-    "Mix Gall\\Litre",
-    "Meat Lbs\\Kg",
+    "Mix Gall/Litre",
+    "Meat Lbs./Kg",
     "8 Round",
     "10 Round",
     "Sheet",
@@ -52,7 +52,6 @@ const Exceldata = [
     "NSA/Non Dairy Dilly",
     "Buster Bar",
     "Transaction Count",
-    "Inventory Purchases",
     "Ending Inventory",
   ],
   [
@@ -68,7 +67,6 @@ const Exceldata = [
     "1000.00",
     "0.00",
     "2.00",
-    "0.00",
     "0.00",
     "0.00",
     "0.00",
@@ -98,7 +96,6 @@ const Exceldata = [
     "",
     "",
     "ORDER COUNT",
-    "COGS AMOUNT",
     "LAST SYSCO & GORDON INVOICE",
     "AMOUNT",
   ],
@@ -213,7 +210,7 @@ const Sales: FC = () => {
       })
       .map((category) => {
         if (category.name === "Mix Ice Cream") {
-          return { ...category, name: "Mix Gall\\Litre" };
+          return { ...category, name: "Mix Gall/Litre" };
         }
         return category;
       });
@@ -436,13 +433,13 @@ const Sales: FC = () => {
     "NF/NSA Bars (No sugar added)": "NF/NSA Bars",
     "Buster Bar": "Buster Bar",
     Beverage: "Beverages",
-    Cakes: "Cakes",
+    Cakes: "Cakes/Logs/Treatzza Pizza",
     Food: "DQ Food",
     Starkiss: "Starkiss",
-    "Soft Serve": "Dairy Queen",
-    "Mix Ice Cream": "Mix Gall\\Litre",
-    "DQ (Ice Cream)": "Dairy Queen", // Map "Dairy Queen" to "DQ (Ice Cream)"
-    Meat: "Meat Lbs\\Kg",
+    "Soft Serve": "Soft Serve",
+    "Mix Ice Cream": "Mix Gall/Litre",
+    "DQ (Ice Cream)": "Soft Serve",
+    Meat: "Meat Lbs./Kg",
     "8\" Round Cake": "8 Round",
     "10\" Round Cake": "10 Round",
   };
@@ -454,7 +451,7 @@ const Sales: FC = () => {
 
     // For these categories, export qty_times_pieces
     const useQtyTimesPiecesFor = new Set([
-      "Mix Ice Cream",       // => Mix Gall\Litre
+      "Mix Ice Cream",       // => Mix Gall/Litre
       '8" Round Cake',       // => 8 Round
       '10" Round Cake',      // => 10 Round
       "Sheet Cake",          // => Sheet
@@ -477,14 +474,14 @@ const Sales: FC = () => {
     const header = [
       "Store Number",
       "Store Address",
-      "Dairy Queen",
+      "Soft Serve",
       "DQ Food",
       "Beverages",
       "Breakfast",
-      "Cakes",
+      "Cakes/Logs/Treatzza Pizza",
       "OJ Beverages",
-      "Mix Gall\\Litre",
-      "Meat Lbs\\Kg",
+      "Mix Gall/Litre",
+      "Meat Lbs./Kg",
       "8 Round",
       "10 Round",
       "Sheet",
@@ -493,13 +490,12 @@ const Sales: FC = () => {
       "NF/NSA Bars",
       "NSA/Non Dairy Dilly",
       "Buster Bar",
-      "Transaction Count",
-      "Inventory Purchases",
-      "Ending Inventory",
       "Prior Month Cost of Goods Sold (COGS)",
       "Prior Month Labor",
       "Prior Month Restaurant Controllables",
       "Prior Month Occupancy Costs",
+      "Transaction Count",
+      "Ending Inventory",
     ];
 
     const allData = [...(items || []), ...(Sitems || [])];
@@ -521,7 +517,6 @@ const Sales: FC = () => {
       if (category === "Store Number") return storeNumber;
       if (category === "Store Address") return storeAddress;
       if (category === "Transaction Count") return totalOrders || 0;
-      if (category === "Inventory Purchases") return productTotal ? Math.round(productTotal) : 0;
       if (category === "Ending Inventory") return Math.round(subtotal || 0);
       if (category === "Prior Month Cost of Goods Sold (COGS)") return Math.round(priorMonthData.cogs || 0);
       if (category === "Prior Month Labor") return Math.round(priorMonthData.labour_cost || 0);
@@ -541,12 +536,12 @@ const Sales: FC = () => {
       }
 
       const originalName = nameMapping[category] || category;
-      if (category === "Cakes") {
+      if (category === "Cakes/Logs/Treatzza Pizza") {
         const cakesItem = allData.find((item) => item.name === "Cakes");
         let totalCakes = (cakesItem?.totalextprice || 0);
         return Math.round(totalCakes);
       }
-      if (category === "Meat Lbs\\Kg") {
+      if (category === "Meat Lbs./Kg") {
         const meatItem = allData.find((item) => item.name === "Meat");
         return meatItem?.totalqty ? Math.round(meatItem.totalqty * 20) : 0;
       }
@@ -566,31 +561,30 @@ const Sales: FC = () => {
 
     // Define column widths to match the uploaded Excel file
     const wscols = [
-      { wch: 20 },
-      { wch: 35 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 10 },
-      { wch: 10 },
-      { wch: 10 },
-      { wch: 10 },
-      { wch: 10 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 30 },
-      { wch: 30 },
-      { wch: 30 },
-      { wch: 40 },
-      { wch: 25 },
-      { wch: 35 },
-      { wch: 30 },
+      { wch: 20 },  // Store Number
+      { wch: 35 },  // Store Address
+      { wch: 15 },  // Soft Serve
+      { wch: 15 },  // DQ Food
+      { wch: 15 },  // Beverages
+      { wch: 15 },  // Breakfast
+      { wch: 30 },  // Cakes/Logs/Treatzza Pizza
+      { wch: 15 },  // OJ Beverages
+      { wch: 18 },  // Mix Gall/Litre
+      { wch: 16 },  // Meat Lbs./Kg
+      { wch: 10 },  // 8 Round
+      { wch: 10 },  // 10 Round
+      { wch: 10 },  // Sheet
+      { wch: 10 },  // Dilly
+      { wch: 10 },  // Starkiss
+      { wch: 15 },  // NF/NSA Bars
+      { wch: 22 },  // NSA/Non Dairy Dilly
+      { wch: 15 },  // Buster Bar
+      { wch: 40 },  // Prior Month Cost of Goods Sold (COGS)
+      { wch: 25 },  // Prior Month Labor
+      { wch: 40 },  // Prior Month Restaurant Controllables
+      { wch: 30 },  // Prior Month Occupancy Costs
+      { wch: 20 },  // Transaction Count
+      { wch: 20 },  // Ending Inventory
     ];
     worksheet["!cols"] = wscols;
 
