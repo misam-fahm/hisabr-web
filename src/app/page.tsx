@@ -65,6 +65,7 @@ const SalesKPI: FC = () => {
   const [currYearData, setCurrYearData] = useState<any>(null);
   const [operatExpAmt, setOperatExpAmt] = useState(0);
   const [royaltyAmt, setRoyaltyAmt] = useState(0);
+  const [laborCost, setLaborCost] = useState(0);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
   const [currYearTenderCommission, setCurrYearTenderCommission] = useState(0);
   const [prevYearTenderCommission, setPrevYearTenderCommission] = useState(0);
@@ -276,15 +277,30 @@ const SalesKPI: FC = () => {
 
             const computeOperExp = (rec: any, months: number, tenderComm: number) => {
               if (!rec) return 0;
-              const payrollTaxAmt =
-                (rec.labour_cost || 0) * ((rec.payrolltax || 0) / 100);
+              // const payrollTaxAmt =
+              //   (rec.labour_cost || 0) * ((rec.payrolltax || 0) / 100);
               const yearExpAmt = ((rec.Yearly_expense || 0) / 12) * months;
               return (
                 (rec.additional_expense || 0) +
-                payrollTaxAmt +
+                // payrollTaxAmt +
                 yearExpAmt +
                 ((rec.monthly_expense || 0) * months || 0) +
                 tenderComm
+              );
+            };
+
+            const computeLabourCost = (rec: any) => {
+              if (!rec) return 0;
+              const payrollTaxAmt =
+                (rec.labour_cost || 0) * ((rec.payrolltax || 0) / 100);
+              // const yearExpAmt = ((rec.Yearly_expense || 0) / 12) * months;
+              return (
+                (rec.labour_cost || 0) +
+                payrollTaxAmt +
+                (rec.additional_labor_expense || 0)
+                // yearExpAmt +
+                // ((rec.monthly_expense || 0) * months || 0) +
+                // tenderComm
               );
             };
 
@@ -311,18 +327,24 @@ const SalesKPI: FC = () => {
             const currRoyalty = computeRoyalty(currentYtd);
             const prevRoyalty = computeRoyalty(previousYtd);
 
+            const customLaborCost = computeLabourCost(customRange);
+            const currLaborCost = computeLabourCost(currentYtd);
+            const prevLaborCost = computeLabourCost(previousYtd);
+
             setOperatExpAmt(customOper);
             setRoyaltyAmt(customRoyalty);
-
+            setLaborCost(customLaborCost);
             setCurrYearData({
               ...currentYtd,
               operatExpAmt: currOper,
               royaltyAmt: currRoyalty,
+              labour_cost: currLaborCost,
             });
             setPrevYearData({
               ...previousYtd,
               operatExpAmt: prevOper,
               royaltyAmt: prevRoyalty,
+              labour_cost: prevLaborCost,
             });
             setData({
               ...customRange,
@@ -908,8 +930,8 @@ const SalesKPI: FC = () => {
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Labor Cost ({normalizedDonutPercentages[0]}%)</p>
     <p className="text-[16px] text-[#2D3748] font-bold">
-      {data?.labour_cost && data.labour_cost !== 0
-        ? `$${Math.round(data.labour_cost).toLocaleString()}`
+      {laborCost && laborCost !== 0
+        ? `$${Math.round(laborCost).toLocaleString()}`
         : "$00,000"}
     </p>
     <p className="text-[11px] text-[#575F6D] font-normal">

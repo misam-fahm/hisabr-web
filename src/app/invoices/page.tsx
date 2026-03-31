@@ -442,7 +442,7 @@ const Invoices = () => {
             responseData?.invoice_details?.sub_total,
           subtotal: responseData?.invoice_details?.sub_total,
           misc: responseData?.invoice_details?.misc,
-          tax: responseData?.invoice_details?.tax,
+          tax: responseData?.invoice_details?.tax_total,
           storeid: getStore?.data?.store[0]?.storeid
             ? getStore?.data?.store[0]?.storeid
             : null,
