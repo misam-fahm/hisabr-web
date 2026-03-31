@@ -23,6 +23,7 @@ interface JsonData {
   gasbill: number;
   repair: number;
   storeid: number;
+  landscaping: number;
 }
 
 interface CustomToast {
@@ -54,6 +55,7 @@ const Page = () => {
   const [gasbill, setGasBill] = useState(data?.gas_bill_exp || "");
   const [par, setPAR] = useState(data?.par || "");
   const [royalty, setRoyalty] = useState(data?.royalty || "");
+  const [landscaping, setLandscaping] = useState(data?.landscaping || "");
   const [repair, setRepair] = useState(data?.repair_exp || "");
   const [loading, setLoading] = useState(true);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
@@ -130,9 +132,15 @@ const Page = () => {
     setPAR(data); // Update local state
     methods.setValue("par", data); // Update form state in react-hook-form
   };
+
   const handleChangeRoyalty = (data: any) => {
     setRoyalty(data); // Update local state
     methods.setValue("royalty", parseFloat(data).toFixed(2), { shouldValidate: true }); // Update form state in react-hook-form
+  };
+  
+  const handleChangeLandscaping = (data: any) => {
+    setLandscaping(data); // Update local state
+    methods.setValue("landscaping", data); // Update form state in react-hook-form
   };
 
   const handleChangeRepair = (data: any) => {
@@ -220,6 +228,7 @@ const Page = () => {
         setGasBill((storeData.gas_bill_exp ?? 0).toString());
         setPAR((storeData.par ?? 0).toString());
         setRoyalty(parseFloat(storeData.royalty ?? 0).toFixed(2));
+        setLandscaping((storeData.landscaping_exp ?? 0).toString());
         setRepair((storeData.repair_exp ?? 0).toString());
          setValue("store", storeId ? storeId : 69);
       } else {
@@ -261,6 +270,7 @@ const Page = () => {
         gasbill: Number(gasbill),
         repair: Number(repair),
         storeid: Number(data.store),
+        landscaping: parseFloat(landscaping) || 0,
       };
   
       const result: any = await sendApiRequest(jsonData);
@@ -291,6 +301,7 @@ const Page = () => {
         setWaterBill(result?.data?.waterbill || "");
         setGasBill(result?.data?.gasbill || "");
         setRepair(result?.data?.repair || "");
+        setLandscaping(result?.data?.landscaping || "");
       } else {
         console.error("API Error:", result);
         setCustomToast({
@@ -593,6 +604,30 @@ const Page = () => {
                     variant="outline"
                     onChange={(e) =>
                       handleChangeRoyalty(
+                        e.target.value          //.replace(/\D/g, "")
+                          .replace(/[^0-9.]/g, "")
+                        //.slice(0, 3)
+                      )
+                    }
+                  />
+                </div>
+                <div className="below-lg:w-[25%] below-lg:ml-5  below-md:w-full below-md:pt-4">
+                  <InputField
+                    type="text"
+                    label="Landscaping"
+                    borderClassName="border border-gray-300"
+                    labelBackgroundColor="bg-white"
+                    value={landscaping}
+                    textColor="text-[#636363]"
+                    placeholder="Landscaping"
+                    {...methods?.register("landscaping", {
+                      maxLength: 5,
+                      pattern: /^[0-9]*\.?[0-9]*$/,
+                    })}
+                    errors={methods.formState.errors.landscaping}
+                    variant="outline"
+                    onChange={(e) =>
+                      handleChangeLandscaping(
                         e.target.value          //.replace(/\D/g, "")
                           .replace(/[^0-9.]/g, "")
                         //.slice(0, 3)
