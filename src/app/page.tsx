@@ -88,7 +88,7 @@ const SalesKPI: FC = () => {
     ? Math.round(
         data.net_sales -
         data.producttotal -
-        data.labour_cost -
+        laborCost -
         operatExpAmt -
         royaltyAmt
       )
