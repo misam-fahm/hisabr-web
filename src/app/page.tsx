@@ -96,13 +96,13 @@ const SalesKPI: FC = () => {
 
   // Calculate total excluding Sales
   const total =
-    labourCost + taxAmount + royaltyAmt + operatExpAmt + validProfit;
+    laborCost + taxAmount + royaltyAmt + operatExpAmt + validProfit;
 
   // Calculate raw percentages
   const percentages =
     total > 0
       ? {
-          labourCost: (labourCost / total) * 100,
+          labourCost: (laborCost / total) * 100,
           taxAmount: (taxAmount / total) * 100,
           royalty: (royaltyAmt / total) * 100,
           operatingExpenses: (operatExpAmt / total) * 100,
@@ -135,13 +135,13 @@ const SalesKPI: FC = () => {
   const opExp = Number(operatExpAmt) || 0;
 
   // Calculate total for DonutChart items (excluding Tax Amount)
-  const donutTotal = labourCost + cogs + royalty + opExp + validProfit;
+  const donutTotal = laborCost + cogs + royalty + opExp + validProfit;
 
   // Calculate raw percentages for DonutChart items
   const donutPercentages =
     donutTotal > 0
       ? {
-          labourCost: (labourCost / donutTotal) * 100,
+          labourCost: (laborCost / donutTotal) * 100,
           cogs: (cogs / donutTotal) * 100,
           royalty: (royalty / donutTotal) * 100,
           operatingExpenses: (opExp / donutTotal) * 100,

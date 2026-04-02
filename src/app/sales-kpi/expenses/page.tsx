@@ -129,11 +129,11 @@ const ExpensesPage = () => {
         if (response?.status === 200) {
           const saleskpi = response?.data?.expenses[0];
           const config = saleskpi?.config || {};
-          const payrollTaxAmt = saleskpi?.labour_cost && config?.payroll_tax ? saleskpi.labour_cost * (config.payroll_tax / 100) : 0;
+          // const payrollTaxAmt = saleskpi?.labour_cost && config?.payroll_tax ? saleskpi.labour_cost * (config.payroll_tax / 100) : 0;
 
           if (saleskpi) {
             const cats = [
-              { label: "Payroll Tax", value: payrollTaxAmt },
+              // { label: "Payroll Tax", value: payrollTaxAmt },
               { label: "PAR", value: (config.par || 0) * months },
               { label: "NuCO2", value: (config.nuco2 || 0) * months },
               { label: "Trash", value: (config.trash || 0) * months },
@@ -159,6 +159,10 @@ const ExpensesPage = () => {
               {
                 label: "Labor Salary",
                 value: (config.labor_operat_salary_exp || 0) * months,
+              },
+              {
+                label: "Landscaping",
+                value: (config.landscaping_exp || 0) * months,
               },
               ...(saleskpi?.additional_expense || []).map((item: any) => ({
                 label: item.expname,

@@ -383,10 +383,10 @@ const AddExpenses = ({ setAddExpenses , SelectedStore }: any) => {
                     textColor="text-[#636363]"
                     {...methods?.register("amount", {
                       required: "Amount is required",
-                      min: {
-                        value: 0,
-                        message: "Amount must be a positive number",
-                      },
+                      // min: {
+                      //   value: 0,
+                      //   message: "Amount must be a positive number",
+                      // },
                     })}
                     errors={methods.formState.errors.amount}
                     placeholder="Enter Amount"
