@@ -466,23 +466,23 @@ const Expenses: FC = () => {
           onKeyDown={handleKeyDown}
           ref={searchInputRef}
           placeholder="Search"
-          className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] below-lg:text-[10.2432px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
+          className="w-full rounded border border-gray-300 bg-white h-[35px] px-3 pr-14 text-[12px] below-lg:text-[12.2432px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
         />
         {globalFilter && (
-          <div className="absolute right-8 inset-y-0 flex items-center cursor-pointer">
+          <div className="absolute right-9 top-1/2 -translate-y-1/2 flex items-center cursor-pointer justify-center w-4 h-4">
             <img
-              className="w-4 h-4"
+              className="w-full h-full object-contain"
               src="/images/cancelicon.svg"
               onClick={clearSearch}
               alt="Clear Search"
             />
           </div>
         )}
-        <div className="absolute inset-y-0 right-2 flex items-center cursor-pointer">
+        <div className="absolute top-1/2 -translate-y-1/2 right-3 flex items-center cursor-pointer justify-center w-4 h-4">
           <img
             src="/images/searchicon.svg"
             alt="Search Icon"
-            className="below-lg:scale-[0.8536]"
+            className="w-full h-full object-contain"
             onClick={() =>
               table.getState().pagination.pageIndex === 0
                 ? fetchData()

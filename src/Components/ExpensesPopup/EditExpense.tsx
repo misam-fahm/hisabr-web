@@ -255,7 +255,7 @@ const EditExpense = ({ initialData , setAddExpenses}:any) => {
 
                   {/* Date input field */}
                   <CustomDatePicker
-                       value={  selecetedDate ? selecetedDate: initialData?.expensedate }
+                       value={  selecetedDate ? new Date(selecetedDate): initialData?.expensedate }
                        onChange={(date) =>
                        methods.setValue("date", date, { shouldValidate: true })
                      }

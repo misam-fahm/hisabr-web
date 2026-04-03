@@ -614,7 +614,7 @@ const Invoices = () => {
                 onKeyDown={handleKeyDown}
                 ref={searchInputRef}
                 placeholder="Search"
-                className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] below-lg:text-[10.2432px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
+                className="w-full rounded border border-gray-300 bg-white py-[10px] h-[35px] px-3 pr-14 text-[12px] below-lg:text-[12.2432px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
               />
               {globalFilter && (
                 <div className="absolute inset-y-0 right-7 flex items-center cursor-pointer" onClick={clearSearch}>

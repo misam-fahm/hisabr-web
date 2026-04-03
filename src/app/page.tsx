@@ -677,38 +677,42 @@ const SalesKPI: FC = () => {
       >
         <div className="flex flex-row below-md:flex-col below-md:items-start below-md:w-full tablet:w-full box-border sticky justify-between pt-6 below-md:pt-4 below-md:px-2 tablet:px-2 pl-6 pr-6 pb-1.5 below-md:pb-4 bg-[#f7f8f9]">
           <div className="flex flex-row below-md:flex-col below-md:w-full gap-3">
-            <Dropdown
-              options={storeOptions}
-              selectedOption={selectedStore?.name || "Store"}
-              onSelect={(option: any) => {
-                setSelectedStore(option);
-                setIsStoreDropdownOpen(false);
-              }}
-              isOpen={isStoreDropdownOpen}
-              toggleOpen={toggleStoreDropdown}
-              widthchange="w-[35%] tablet:w-full below-md:w-full"
-            />
-            <Dropdown
-              options={dateRangeOptions}
-              selectedOption={selectedDateRange?.name}
-              onSelect={(option: any) => {
-                setSelectedDateRange(option);
-                setIsDateRangeOpen(false);
-              }}
-              isOpen={isDateRangeOpen}
-              toggleOpen={toggleDateRangeDropdown}
-              widthchange="w-[30%] tablet:w-full below-md:w-full"
-            />
-            <div className="w-[300px] tablet:w-[160%] below-md:w-full">
-        <DateRangePicker
+            <div className="flex-1 min-w-[180px]">
+              <Dropdown
+                options={storeOptions}
+                selectedOption={selectedStore?.name || "Store"}
+                onSelect={(option: any) => {
+                  setSelectedStore(option);
+                  setIsStoreDropdownOpen(false);
+                }}
+                isOpen={isStoreDropdownOpen}
+                toggleOpen={toggleStoreDropdown}
+                // widthchange="w-[35%] tablet:w-full below-md:w-full"
+              />
+            </div>
+            <div className="flex-1 min-w-[160px]">
+              <Dropdown
+                options={dateRangeOptions}
+                selectedOption={selectedDateRange?.name}
+                onSelect={(option: any) => {
+                  setSelectedDateRange(option);
+                  setIsDateRangeOpen(false);
+                }}
+                isOpen={isDateRangeOpen}
+                toggleOpen={toggleDateRangeDropdown}
+                // widthchange="w-[30%] tablet:w-full below-md:w-full"
+              />
+            </div>
+            <div className="flex-1 min-w-[280px]">
+              <DateRangePicker
                 startDate={startDate}
                 endDate={endDate}
                 setStartDate={setStartDate}
                 setEndDate={setEndDate}
                 fetchData={fetchData}
               />
-    </div>
-  </div>
+            </div>
+          </div>
   {/* <div className="below-md:hidden tablet:hidden">
     <button className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[170px] h-[35px] rounded-md text-white text-[13px] font-medium">
       <img

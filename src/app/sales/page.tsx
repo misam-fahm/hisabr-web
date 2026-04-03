@@ -611,38 +611,42 @@ const Sales: FC = () => {
       />
       {uploadPdfloading && <Loading />}
       <div className="sticky z-20 bg-[#f7f8f9] pb-6 pt-4 below-md:pt-4 below-md:pb-4 tablet:pt-4">
-        <div className="flex flex-row flex-nowrap gap-3 pb-6 w-full below-md:flex-col">
+        <div className="flex flex-row flex-1 gap-3 pb-6 w-full below-md:flex-col">
           {/* Store and Date Range Dropdowns */}
-          <div className="flex flex-row flex-wrap gap-3 w-full below-md:flex-col">
-            <Dropdown
-              options={storeOptions}
-              selectedOption={selectedStore?.name || "Store"}
-              onSelect={(selectedOption: any) => {
-                setSelectedStore({
-                  name: selectedOption.name,
-                  id: selectedOption.id,
-                });
-                setIsStoreDropdownOpen(false);
-              }}
-              isOpen={isStoreDropdownOpen}
-              toggleOpen={toggleStoreDropdown}
-              widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
-            />
-            <Dropdown
-              options={dateRangeOptions}
-              selectedOption={selectedDateRange?.name}
-              onSelect={(option: any) => {
-                setSelectedDateRange(option);
-                setIsDateRangeOpen(false);
-              }}
-              isOpen={isDateRangeOpen}
-              toggleOpen={toggleDateRangeDropdown}
-              widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
-            />
+          <div className="flex flex-row flex-1 gap-3 w-full below-md:flex-col">
+            <div className="flex-1 min-w-[180px] relative">
+              <Dropdown
+                options={storeOptions}
+                selectedOption={selectedStore?.name || "Store"}
+                onSelect={(selectedOption: any) => {
+                  setSelectedStore({
+                    name: selectedOption.name,
+                    id: selectedOption.id,
+                  });
+                  setIsStoreDropdownOpen(false);
+                }}
+                isOpen={isStoreDropdownOpen}
+                toggleOpen={toggleStoreDropdown}
+                widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
+              />
+            </div>
+            <div className="flex-1 min-w-[180px] relative">
+              <Dropdown
+                options={dateRangeOptions}
+                selectedOption={selectedDateRange?.name}
+                onSelect={(option: any) => {
+                  setSelectedDateRange(option);
+                  setIsDateRangeOpen(false);
+                }}
+                isOpen={isDateRangeOpen}
+                toggleOpen={toggleDateRangeDropdown}
+                widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
+              />
+            </div>
           </div>
 
           {/* Date Picker and Search */}
-          <div className="flex flex-row gap-3 w-full below-md:flex-col below-laptop:w-3/5 small-laptop:w-1/2">
+          <div className="flex flex-row flex-1 gap-3 w-full below-md:flex-col below-laptop:w-3/5 small-laptop:w-1/2">
             <div className="flex-1 min-w-[300px] below-lg:min-w-[256.08px] h-[35px] below-lg:h-[29.876px] w-full">
               <DateRangePicker
                 startDate={startDate}
@@ -659,16 +663,16 @@ const Sales: FC = () => {
                 onChange={(e) => setGlobalFilter(e.target.value)}
                
           placeholder="Search"
-          className="w-full rounded border border-gray-300 bg-white py-[10px] pr-7 pl-3 h-full text-[12px] below-lg:text-[10.2432px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
+          className="w-full rounded border border-gray-300 bg-white h-[35px] px-3 pr-14 text-[12px] below-lg:text-[12px] placeholder:text-[#636363] focus:outline-none focus:ring-1 focus:ring-white"
         />
-        <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+        <div className="absolute top-1/2 right-2 -translate-y-1/2 flex items-center pointer-events-none">
           <img src="/images/searchicon.svg" alt="Search Icon" className="cursor-pointer below-lg:scale-[0.8536]" />
         </div>
       </div>
     </div>
 
     {/* Upload Button */}
-    <div className="below-md:hidden tablet:hidden">
+    <div className="flex items-center below-md:hidden tablet:hidden">
       <input
         type="file"
         ref={fileInputRef}
