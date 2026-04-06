@@ -392,6 +392,7 @@ const PLReport: FC = () => {
           { label: "Power Bill", value: (config.repair_exp || 0) * monthsCount },
           { label: "Gas Bill", value: (config.gas_bill_exp || 0) * monthsCount },
           { label: "Internet", value: (config.internet_exp || 0) * monthsCount },
+          { label: "Landscaping", value: (config.landscaping_exp || 0) * monthsCount },
           {
             label: "Insurance",
             value: ((config.insurance_exp || 0) / 12) * monthsCount,

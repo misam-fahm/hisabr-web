@@ -447,7 +447,7 @@ const ItemMustReport: FC = () => {
               }}
               isOpen={isStoreDropdownOpen}
               toggleOpen={toggleStoreDropdown}
-              widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
+              widthchange="flex-[0.9] min-w-[180px] below-lg:min-w-[153.648px]"
             />
 
             <Dropdown
@@ -459,10 +459,10 @@ const ItemMustReport: FC = () => {
               }}
               isOpen={isDateRangeOpen}
               toggleOpen={toggleDateRangeDropdown}
-              widthchange="flex-1 min-w-[180px] below-lg:min-w-[153.648px] w-full"
+              widthchange="flex-[0.9] min-w-[180px] below-lg:min-w-[153.648px]"
             />
 
-            <div className="flex-1 min-w-[300px] below-lg:min-w-[256.08px] h-[35px] below-lg:h-[29.876px] w-full">
+            <div className="flex-1 min-w-[300px] below-lg:min-w-[256.08px] h-[35px] below-lg:h-[29.876px]">
               <DateRangePicker
                 startDate={startDate}
                 endDate={endDate}
@@ -472,7 +472,7 @@ const ItemMustReport: FC = () => {
               />
             </div>
 
-            <div className="flex-1 min-w-[150px] below-lg:min-w-[128.04px] h-[35px] below-lg:h-[29.876px] w-full relative">
+            <div className="flex-[1.2] min-w-[150px] below-lg:min-w-[128.04px] h-[35px] below-lg:h-[29.876px] relative">
               <input
                 type="text"
                 value={globalFilter ?? ""}
