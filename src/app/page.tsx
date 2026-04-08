@@ -4,7 +4,7 @@ import DonutChart from "@/Components/Charts-Graph/DonutChart";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { useRouter } from "next/navigation";
-import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { sendApiRequest } from "@/utils/apiUtils";
@@ -66,12 +66,15 @@ const SalesKPI: FC = () => {
   const [operatExpAmt, setOperatExpAmt] = useState(0);
   const [royaltyAmt, setRoyaltyAmt] = useState(0);
   const [laborCost, setLaborCost] = useState(0);
+  const [labourCost, setLabourCost] = useState(0);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
   const [currYearTenderCommission, setCurrYearTenderCommission] = useState(0);
   const [prevYearTenderCommission, setPrevYearTenderCommission] = useState(0);
+  const [payrollTaxAmount, setPayrollTaxAmount] = useState(0);
+  const [additionalLaborExpense, setAdditionalLaborExpense] = useState(0);
 
   // Calculations
-  const labourCost = Number(data?.labour_cost) || 0;
+  // const labourCost = Number(data?.labour_cost) || 0;
   const taxAmount = Number(data?.tax_amt) || 0;
   const sales: any = data?.net_sales ? Math.round(data?.net_sales) : 0;
   const profit: any = data?.net_sales
@@ -294,6 +297,9 @@ const SalesKPI: FC = () => {
               const payrollTaxAmt =
                 (rec.labour_cost || 0) * ((rec.payrolltax || 0) / 100);
               // const yearExpAmt = ((rec.Yearly_expense || 0) / 12) * months;
+              setLabourCost(rec.labour_cost || 0);
+              setPayrollTaxAmount(payrollTaxAmt);
+              setAdditionalLaborExpense(rec.additional_labor_expense || 0);
               return (
                 (rec.labour_cost || 0) +
                 payrollTaxAmt +
@@ -544,6 +550,42 @@ const SalesKPI: FC = () => {
     }
   };
   
+  const handleLaborcostCardClick = () => {
+    setCustomToast({
+      message: "",
+      type: "",
+    });
+    if (laborCost == 0) {
+      setTimeout(() => {
+        setCustomToast({
+          message: "No data available",
+          type: "error",
+        });
+      }, 0);
+    return;
+    }
+    if (startDate && endDate && selectedStore?.id) {
+      const startdate = format(startDate, "yyyy-MM-dd");
+      const enddate = format(endDate, "yyyy-MM-dd");
+      const storeid = selectedStore.id;
+      const months = getMonthsDifference();
+
+      // Store data in localStorage
+      localStorage.setItem(
+        "laborCostPageData",
+        JSON.stringify({ storeid, startdate, enddate, months, data})
+      );
+
+      // Navigate to labor cost page
+      router.push("/sales-kpi/labor-cost");
+    } else {
+      setCustomToast({
+        message: "Please select a store and date range",
+        type: "error",
+      });
+    }
+  };
+
   // Ensure there's no error when `items` is empty
   const hasItems = items && items.length > 0;
 
@@ -675,6 +717,10 @@ const SalesKPI: FC = () => {
         className="max-h-[calc(100vh-60px)] min-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] overflow-auto"
         style={{ scrollbarWidth: "thin" }}
       >
+        <ToastNotification
+          message={customToast.message}
+          type={customToast.type}
+        />
         <div className="flex flex-row below-md:flex-col below-md:items-start below-md:w-full tablet:w-full box-border sticky justify-between pt-6 below-md:pt-4 below-md:px-2 tablet:px-2 pl-6 pr-6 pb-1.5 below-md:pb-4 bg-[#f7f8f9]">
           <div className="flex flex-row below-md:flex-col below-md:w-full gap-3">
             <div className="flex-1 min-w-[180px]">
@@ -929,7 +975,8 @@ const SalesKPI: FC = () => {
 
 {/* Labor Cost Card */}
 <div
-  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={handleLaborcostCardClick}
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Labor Cost ({normalizedDonutPercentages[0]}%)</p>
