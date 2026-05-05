@@ -46,7 +46,11 @@ const DonutChart: React.FC<DonutChartProps> = ({ values, operatExpAmt }) => {
           royalty
       )
     : 0;
-  const labourCost = Number(values?.labour_cost) || 0;
+  const labour = Number(values?.labour_cost) || 0;
+  const payrollTaxAmount = labour * ((values?.payrolltax || 0) / 100);
+  const additionalLaborExpense = values?.additional_labor_expense || 0;
+  const labourCost = labour + payrollTaxAmount + additionalLaborExpense;
+  // const labourCost = Number(values?.labour_cost)  + additionalLaborExpense + payrollTaxAmount || 0;
   const taxAmount = Number(values?.tax_amt) || 0;
   const operatingExpenses = Number(operatExpAmt) || 0;
   const validProfit = profit < 0 ? 0 : profit;
