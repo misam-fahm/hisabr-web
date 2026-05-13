@@ -852,9 +852,15 @@ const SalesKPI: FC = () => {
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Profit ({normalizedDonutPercentages[4]}%)</p>
-    <p className="text-[16px] text-[#2D3748] font-bold">
+    <p className={`text-[16px] ${
+      Math.round(validProfit) < 0 
+      ? "text-[#FF0000]" 
+      : "text-[#2D3748]"
+      } font-bold`}>
       {data?.net_sales && validProfit !== 0
-        ? `$${Math.round(validProfit).toLocaleString()}`
+        ? Math.round(validProfit) < 0
+          ? `$(${Math.abs(Math.round(validProfit)).toLocaleString()})`
+          : `$${Math.round(validProfit).toLocaleString()}`
         : "$00,000"}
     </p>
     <p className="text-[11px] text-[#575F6D] font-normal">
@@ -1004,7 +1010,7 @@ const SalesKPI: FC = () => {
     {data?.labour_cost !== undefined && prevYearData?.labour_cost !== undefined ? (
       (() => {
         const prevCost = Math.round(prevYearData.labour_cost);
-        const currCost = Math.round(data.labour_cost);
+        const currCost = Math.round(laborCost);
         const difference = currCost - prevCost;
         const percentageChange =
           prevCost !== 0
@@ -1170,8 +1176,8 @@ const SalesKPI: FC = () => {
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
   onClick={handleExpensesCardClick}
 >
-  <div>
-    <p className="text-[14px] text-[#575F6DCC] font-medium">
+  <div className="flex-1 min-w-0">
+    <p className="text-[14px] text-[#575F6DCC] font-medium whitespace-nowrap">
       Operating Expenses ({normalizedDonutPercentages[3]}%)
     </p>
     <p className="text-[16px] text-[#2D3748] font-bold">
