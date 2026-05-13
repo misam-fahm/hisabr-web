@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { useGlobalContext } from "@/Components/Header/header";
 import { InputField } from "@/Components/UI/Themes/InputField";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
@@ -35,6 +36,12 @@ const Page = () => {
   const router = useRouter();
   const methods = useForm();
   const { watch, setValue, clearErrors } = methods;
+
+  const {
+      storeOptions,
+      selectedStore,
+      setSelectedStore,
+    } = useGlobalContext();
 
   //const selectedStore = watch("store");
   const [storeId, setStoreId] = useState(null); // No default storeId initially
@@ -198,11 +205,11 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
-    if (isVerifiedUser) {
-      getUserStore();
+    if (isVerifiedUser && selectedStore) {
+      setSelectedOption(selectedStore);
     }
-  }, [isVerifiedUser]);
-  
+  }, [isVerifiedUser, selectedStore]);
+
   const fetchData = async (storeId) => {
     if (!storeId) return; // Don't fetch data if storeId is not set
     setLoading(true);
@@ -353,13 +360,14 @@ const Page = () => {
                 Select Store:
               </p>
               <Dropdown
-                options={store}
+                options={storeOptions}
                 selectedOption={selectedOption?.name || "Store"}
                 onSelect={(selectedOption: any) => {
                   setSelectedOption({
                     name: selectedOption.name,
                     id: selectedOption.id,
                   });
+                  setSelectedStore(selectedOption);
                   setIsStoreDropdownOpen(false);
                 }}
                 isOpen={isStoreDropdownOpen}
