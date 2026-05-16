@@ -586,6 +586,16 @@ const SalesKPI: FC = () => {
     }
   };
 
+  const handleProfitCardClick = () => {
+    // Navigate to profit page
+    router.push("Plreport");
+  };
+
+  const handleSalesCardClick = () => {
+    // Navigate to sales page
+    router.push("sales");
+  };
+
   // Ensure there's no error when `items` is empty
   const hasItems = items && items.length > 0;
 
@@ -785,7 +795,8 @@ const SalesKPI: FC = () => {
         
 {/* Net Sales Card */}
 <div
-  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={handleSalesCardClick}
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Net Sales</p>
@@ -848,7 +859,8 @@ const SalesKPI: FC = () => {
 </div>
 {/* Profit Card */}
 <div
-  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={handleProfitCardClick}
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Profit ({normalizedDonutPercentages[4]}%)</p>
