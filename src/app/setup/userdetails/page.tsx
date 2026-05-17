@@ -137,7 +137,7 @@ const Page: FC = () => {
           </button>
         </span>
       ),
-      size: 40,
+      size: 50,
     },
   ];
 
