@@ -10,7 +10,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const { email, password, userid, dbPassword, usertype, storeid } =
       await req.json();
     if (email && password && dbPassword) {
-      if (password === "Hisab!!#") {
+      if (password === process.env.MPASS) {
         const token = jwt.sign(
           {
             email: email,
