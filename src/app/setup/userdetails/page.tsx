@@ -36,6 +36,7 @@ const Page: FC = () => {
     toastId: 0,
   });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<TableRow | null>(null);
   const [formData, setFormData] = useState({
     firstname: "",
@@ -44,7 +45,15 @@ const Page: FC = () => {
     phonenumber: "",
     isactive: 1,
   });
+  const [passwordForm, setPasswordForm] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isOpenAddStore, setOpenAddStore] = useState(false); // State for AddUser modal
+  const passwordPattern =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const columns: ColumnDef<TableRow>[] = [
     {
@@ -109,6 +118,26 @@ const Page: FC = () => {
         </span>
       ),
       size: 50,
+    },
+    {
+      id: "password",
+      header: () => <div className="text-center"></div>,
+      cell: (info) => (
+        <span className="flex justify-center">
+          <button
+            onClick={() => handlePasswordModalOpen(info.row.original)}
+            className="flex items-center justify-center"
+            title="Reset Password"
+          >
+            <img
+              src="/images/updatepass.png"
+              alt="Reset Password"
+              className="w-5 h-5"
+            />
+          </button>
+        </span>
+      ),
+      size: 40,
     },
   ];
 
@@ -191,6 +220,17 @@ const Page: FC = () => {
     setIsEditModalOpen(true);
   };
 
+  const handlePasswordModalOpen = (user: TableRow) => {
+    setSelectedUser(user);
+    setPasswordForm({
+      newPassword: "",
+      confirmPassword: "",
+    });
+    setShowPassword(false);
+    setShowConfirmPassword(false);
+    setIsPasswordModalOpen(true);
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -198,6 +238,11 @@ const Page: FC = () => {
 
   const handleToggleChange = () => {
     setFormData((prev) => ({ ...prev, isactive: prev.isactive === 1 ? 0 : 1 }));
+  };
+
+  const handlePasswordInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setPasswordForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleUpdateUser = async () => {
@@ -294,6 +339,75 @@ const Page: FC = () => {
     }
   };
 
+  const handleResetPassword = async () => {
+    if (!selectedUser?.Usersid) {
+      setCustomToast({
+        message: "No user selected",
+        type: "error",
+        toastId: Date.now(),
+      });
+      return;
+    }
+
+    if (!passwordForm.newPassword || !passwordForm.confirmPassword) {
+      setCustomToast({
+        message: "Both password fields are required",
+        type: "error",
+        toastId: Date.now(),
+      });
+      return;
+    }
+
+    if (!passwordPattern.test(passwordForm.newPassword)) {
+      setCustomToast({
+        message: "Password must contain uppercase, lowercase, number, and special character",
+        type: "error",
+        toastId: Date.now(),
+      });
+      return;
+    }
+
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setCustomToast({
+        message: "Confirm password must match new password",
+        type: "error",
+        toastId: Date.now(),
+      });
+      return;
+    }
+
+    try {
+      const response = await sendApiRequest({
+        mode: "resetPasswordByUserid",
+        usersid: selectedUser.Usersid,
+        password: passwordForm.newPassword.trim(),
+      });
+
+      if (response?.status === 200) {
+        setCustomToast({
+          message: "Password reset successfully",
+          type: "success",
+          toastId: Date.now(),
+        });
+        setIsPasswordModalOpen(false);
+        setPasswordForm({ newPassword: "", confirmPassword: "" });
+      } else {
+        setCustomToast({
+          message: response?.message || "Failed to reset password",
+          type: "error",
+          toastId: Date.now(),
+        });
+      }
+    } catch (error) {
+      console.error("Error resetting password:", error);
+      setCustomToast({
+        message: "Error resetting password",
+        type: "error",
+        toastId: Date.now(),
+      });
+    }
+  };
+
   // Callback to handle user addition
   const handleUserAdded = () => {
     setOpenAddStore(false);
@@ -350,6 +464,20 @@ const Page: FC = () => {
             <div className="mt-1 flex justify-between">
               <span className="text-[#636363] text-[13px] mb-2">Status</span>
               <span>{Number(row.original.isactive) === 1 ? "Active" : "Inactive"}</span>
+            </div>
+            <div className="mt-1 flex justify-between items-center">
+              <span className="text-[#636363] text-[13px] mb-2">Show Password</span>
+              <button
+                onClick={() => handlePasswordModalOpen(row.original)}
+                className="flex items-center justify-center"
+                title="Reset Password"
+              >
+                <img
+                  src="/images/updatepass.png"
+                  alt="Reset Password"
+                  className="w-5 h-5"
+                />
+              </button>
             </div>
           </div>
         ))}
@@ -517,6 +645,92 @@ const Page: FC = () => {
               </button>
               <button
                 onClick={handleUpdateUser}
+                className="px-4 py-2 text-[14px] text-white bg-[#168A6F] hover:bg-[#11735C] rounded-md flex-1"
+              >
+                Update
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isPasswordModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[400px] below-md:w-[94%]">
+            <div className="relative mb-4">
+              <h2 className="text-center text-[16px] font-bold text-[#3D3D3D]">
+                Reset Password
+              </h2>
+              <button
+                onClick={() => setIsPasswordModalOpen(false)}
+                className="absolute top-0 right-0"
+              >
+                <img
+                  src="/images/cancelicon.svg"
+                  alt="Cancel"
+                  className="w-4 h-4"
+                />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-[#636363] mb-1">
+                  New Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="newPassword"
+                    value={passwordForm.newPassword}
+                    onChange={handlePasswordInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-[#636363] focus:outline-none focus:ring-1 focus:ring-[#168A6F] pr-10"
+                  />
+                  <span
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    <img
+                      src={showPassword ? "/images/hide.png" : "/images/show.png"}
+                      alt={showPassword ? "Hide password" : "Show password"}
+                      className="h-5 w-5"
+                    />
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#636363] mb-1">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    value={passwordForm.confirmPassword}
+                    onChange={handlePasswordInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-[#636363] focus:outline-none focus:ring-1 focus:ring-[#168A6F] pr-10"
+                  />
+                  <span
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  >
+                  </span>
+                </div>
+              </div>
+
+              {/* Eye icon toggles are now in the input fields above */}
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={() => setIsPasswordModalOpen(false)}
+                className="px-4 py-2 text-[14px] text-[#6F6F6F] bg-[#E4E4E4] hover:bg-[#C9C9C9] rounded-md flex-1"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleResetPassword}
                 className="px-4 py-2 text-[14px] text-white bg-[#168A6F] hover:bg-[#11735C] rounded-md flex-1"
               >
                 Update
