@@ -82,12 +82,45 @@ const PLReport: FC = () => {
     return isNegative ? `-$${formatted}` : `$${formatted}`;
   };
 
+  const formatAmountV2 = (value: number) => {
+    if (!value) return "$0";
+
+    const isNegative = value < 0;
+    const absoluteValue = Math.abs(value);
+
+    const formatted = absoluteValue.toLocaleString("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+
+    return isNegative ? `$(${formatted})` : `$${formatted}`;
+  };
+
   const calculatePercentage = (value: number, relativeTo: number): string => {
     if (!relativeTo || relativeTo === 0 || isNaN(value) || isNaN(relativeTo)) {
       return "0%";
     }
     const percentage = (value / relativeTo) * 100;
-    return `${percentage.toFixed(1)}%`;
+    return `${percentage.toFixed(2)}%`;
+  };
+
+  const calculatePercentageV2 = (
+    value: number,
+    relativeTo: number
+  ) => {
+    if (!relativeTo || relativeTo === 0 || isNaN(value) || isNaN(relativeTo)) {
+      return {
+        value: 0,
+        formatted: "0%",
+      };
+    }
+
+    const percentage = (value / relativeTo) * 100;
+
+    return {
+      value: percentage,
+      formatted: `${percentage.toFixed(1)}%`,
+    };
   };
 
   const columns: ColumnDef<TableRow>[] = [
@@ -880,15 +913,28 @@ const PLReport: FC = () => {
             <div className="flex flex-col gap-2">
               <p className="text-[16px] text-[#575F6DCC] font-bold">{item.label}</p>
               <div className="flex items-center justify-between">
-                <p className="text-[20px] text-[#2D3748] font-bold">
+                <p className={`text-[20px] font-bold ${
+                  item.value < 0 ? "text-[#FF0000]" : "text-[#2D3748]" 
+                  }`}
+                >
                   {(loading || (item.label === 'Tender Commission' && tenderCommissionLoading)) ?
-                    <Skeleton width={100} /> : formatAmount(item.value)}
+                    <Skeleton width={100} /> : formatAmountV2(item.value)}
                 </p>
-                {!loading && (
-                  <span className="text-[14px] text-[#168A6F] font-semibold bg-[#E6F4F1] px-2 py-0.5 rounded-full">
-                    {calculatePercentage(item.value, netSales)}
-                  </span>
-                )}
+                {!loading && (() => {
+                  const percentageData = calculatePercentageV2(item.value, netSales);
+
+                  return (
+                    <span className={`text-[14px] font-semibold px-2 py-0.5 rounded-full ${
+                      percentageData.value < 0
+                        ? "text-[#FF0000] bg-[#FFE5E5]"
+                        : "text-[#168A6F] bg-[#E6F4F1]"
+                      }`}
+                    >
+                      {/* {calculatePercentage(item.value, netSales)} */}
+                      {percentageData.formatted}
+                    </span>
+                  );
+                })()}
               </div>
             </div>
           </div>
