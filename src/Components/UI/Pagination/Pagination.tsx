@@ -39,7 +39,9 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
     };
   }, []);
 
-  return totalItems > 0 ? (
+  if (totalItems === 0) return null;
+
+  return (
     <main>
       <div className="mt-4 relative flex below-md:flex-col gap-2 justify-between items-center ">
         {/* Page Range Display */}
@@ -139,7 +141,7 @@ const Pagination: React.FC<PaginationProps> = ({ table, totalItems }) => {
         </div>
       </div>
     </main>
-  ) : null;
+  );
 };
 
 export default Pagination;

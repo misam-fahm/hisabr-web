@@ -92,9 +92,13 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
     try {
       const response = await sendApiRequest({ mode: "getUserStore" });
       if (response?.status === 200) {
-        const storeList = response?.data?.stores || [];
-        setStores(storeList);
-        const defaultStore = SelectedStore || storeList[0];
+        // Format store options as "name - location"
+        const formattedStores = (response?.data?.stores || []).map((store: any) => ({
+          name: `${store.name}${store.location ? ` - ${store.location}` : ""}`,
+          id: store.id,
+        }));
+        setStores(formattedStores);
+        const defaultStore = SelectedStore || formattedStores[0];
         if (defaultStore) {
           setSelectedStore(defaultStore);
           setValue("store", defaultStore.name);
@@ -232,7 +236,7 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
       // Show success message, even if there’s a warning
       setToast({
         message: status === 200
-          ? "Cash Reconciliation added successfully!"
+          ? "Cash Reconciliation added successfully."
           : result.message || "Failed to add reconciliation.",
         type: status === 200 ? "success" : "error",
       });
@@ -364,7 +368,7 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
                       textColor="text-[#636363]"
                       value={systemBalance ?? ""}
                       readOnly
-                      style={{ cursor: "not-allowed" }} // Inline cursor style
+                      style={{ cursor: "not-allowed" }}
                       {...register("systemBalance", {
                         required: "System Balance is required",
                         min: { value: 0, message: "System Balance must be positive" },
@@ -400,7 +404,7 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
                           background: "red",
                         }}
                       />
-                    </div>
+                      </div>
                   </div>
                   <InputField
                     type="number"
@@ -435,7 +439,7 @@ const AddCashReconciliation = ({ setAddReconciliation, SelectedStore }: any) => 
                     </button>
                     <button
                       type="submit"
-                      className="px-4 text-white md:text[13px] text-[14px] h-[35px] w-[165px] bg-[#168A6F] hover:bg-[#11735C] rounded-md"
+                      className={`px-4 text-white md:text[13px] text-[14px] h-[35px] w-[165px] rounded-md flex items-center justify-center ${isSubmitting || systemBalance === 0 || systemBalance === null ? "bg-[#C9C9C9] cursor-not-allowed" : "bg-[#168A6F] hover:bg-[#11735C]"}`}
                       disabled={isSubmitting || systemBalance === 0 || systemBalance === null}
                     >
                       {isSubmitting ? "Saving..." : "Save"}

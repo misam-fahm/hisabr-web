@@ -1,10 +1,10 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, useCallback } from "react";
 import DonutChart from "@/Components/Charts-Graph/DonutChart";
 import DateRangePicker from "@/Components/UI/Themes/DateRangePicker";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import { useRouter } from "next/navigation";
-import { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
+import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { sendApiRequest } from "@/utils/apiUtils";
@@ -14,16 +14,25 @@ import Tooltip from "@/Components/UI/Toolstips/Tooltip";
 import YearlySalesGraph from "@/Components/Charts-Graph/YearlySalesGraph";
 import TenderRevenueChart from "@/Components/Charts-Graph/TenderRevenueChart";
 import TenderCommAmtChart from "@/Components/Charts-Graph/TenderCommAmtChart";
-
-// Define DateRangeOption type
-interface DateRangeOption {
-  name: string;
-  value?: string;
-  id: number;
-}
+import { useGlobalContext } from "@/Components/Header/header";
 
 const SalesKPI: FC = () => {
   const router = useRouter();
+  
+  // Get global context values
+  const {
+    storeOptions,
+    dateRangeOptions,
+    selectedDateRange,
+    setSelectedDateRange,
+    startDate,
+    endDate,
+    setStartDate,
+    setEndDate,
+    selectedStore,
+    setSelectedStore,
+  } = useGlobalContext();
+
   const tableDataForTender: any[] = [
     { name: "Cash", revenue: 10000, commission: "", amount: 0 },
     { name: "Amex", revenue: 15000, commission: "3.0%", amount: 450.0 },
@@ -38,18 +47,13 @@ const SalesKPI: FC = () => {
     { name: "Soft Serve", revenue: 77, commission: "350.00" },
     { name: "Donations", revenue: 56, commission: "450.00" },
   ];
-  const [selectedOption, setSelectedOption] = useState<any>();
+
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
-  const [selectedDateRange, setSelectedDateRange] =
-    useState<string>("This Month (MTD)");
   const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
-  const [store, setStore] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [periodTenderCommission, setPeriodTenderCommission] = useState(0);
   const [data, setData] = useState<any>([]);
-  // const [isFirstCall, setIsFirstCall] = useState<boolean>(true);
   const [tender, setTender] = useState<any>([]);
   const [items, setItems] = useState<any>([]);
   const [customToast, setCustomToast] = useState<ToastNotificationProps>({
@@ -61,10 +65,17 @@ const SalesKPI: FC = () => {
   const [currYearData, setCurrYearData] = useState<any>(null);
   const [operatExpAmt, setOperatExpAmt] = useState(0);
   const [royaltyAmt, setRoyaltyAmt] = useState(0);
+  const [laborCost, setLaborCost] = useState(0);
+  const [labourCost, setLabourCost] = useState(0);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
-
+  const [currYearTenderCommission, setCurrYearTenderCommission] = useState(0);
+  const [prevYearTenderCommission, setPrevYearTenderCommission] = useState(0);
+  const [payrollTaxAmount, setPayrollTaxAmount] = useState(0);
+  const [additionalLaborExpense, setAdditionalLaborExpense] = useState(0);
+  const [storeGrades, setStoreGrades] = useState<Record<string, { rank: number | null; percentage: number }>>({});
+  const [gradesLoading, setGradesLoading] = useState<boolean>(false);
   // Calculations
-  const labourCost = Number(data?.labour_cost) || 0;
+  // const labourCost = Number(data?.labour_cost) || 0;
   const taxAmount = Number(data?.tax_amt) || 0;
   const sales: any = data?.net_sales ? Math.round(data?.net_sales) : 0;
   const profit: any = data?.net_sales
@@ -76,30 +87,26 @@ const SalesKPI: FC = () => {
           royaltyAmt
       )
     : 0;
-  // const royalty = data?.net_sales ? Number((data.net_sales * 0.09 /).toFixed(2)) : 0;
-  // const operatingExpenses = data?.labour_cost ? 109817 : 0;
+  
   const validProfit = data?.net_sales
-    ? Math.max(
-        Math.round(
-          data.net_sales -
-            data.producttotal -
-            data.labour_cost -
-            operatExpAmt -
-            royaltyAmt
-        ),
-        0
+    ? Math.round(
+        data.net_sales -
+        data.producttotal -
+        laborCost -
+        operatExpAmt -
+        royaltyAmt
       )
     : 0;
 
   // Calculate total excluding Sales
   const total =
-    labourCost + taxAmount + royaltyAmt + operatExpAmt + validProfit;
+    laborCost + taxAmount + royaltyAmt + operatExpAmt + validProfit;
 
   // Calculate raw percentages
   const percentages =
     total > 0
       ? {
-          labourCost: (labourCost / total) * 100,
+          labourCost: (laborCost / total) * 100,
           taxAmount: (taxAmount / total) * 100,
           royalty: (royaltyAmt / total) * 100,
           operatingExpenses: (operatExpAmt / total) * 100,
@@ -126,163 +133,276 @@ const SalesKPI: FC = () => {
     percentageSum > 0
       ? percentageValues.map((val) => ((val / percentageSum) * 100).toFixed(2))
       : percentageValues.map(() => "0.00");
-const cogs = Number(data?.producttotal) || 0;
-const royalty = Number(royaltyAmt) || 0;
-const opExp = Number(operatExpAmt) || 0;
-// Removed duplicate declaration of validProfit
+  
+  const cogs = Number(data?.producttotal) || 0;
+  const royalty = Number(royaltyAmt) || 0;
+  const opExp = Number(operatExpAmt) || 0;
 
-// Calculate total for DonutChart items (excluding Tax Amount)
-const donutTotal = labourCost + cogs + royalty + opExp + validProfit;
+  // Calculate total for DonutChart items (excluding Tax Amount)
+  const donutTotal = laborCost + cogs + royalty + opExp + validProfit;
 
-// Calculate raw percentages for DonutChart items
-const donutPercentages =
-  donutTotal > 0
-    ? {
-        labourCost: (labourCost / donutTotal) * 100,
-        cogs: (cogs / donutTotal) * 100,
-        royalty: (royalty / donutTotal) * 100,
-        operatingExpenses: (opExp / donutTotal) * 100,
-        profit: (validProfit / donutTotal) * 100,
-      }
-    : {
-        labourCost: 0,
-        cogs: 0,
-        royalty: 0,
-        operatingExpenses: 0,
-        profit: 0,
-      };
+  // Calculate raw percentages for DonutChart items
+  const donutPercentages =
+    donutTotal > 0
+      ? {
+          labourCost: (laborCost / donutTotal) * 100,
+          cogs: (cogs / donutTotal) * 100,
+          royalty: (royalty / donutTotal) * 100,
+          operatingExpenses: (opExp / donutTotal) * 100,
+          profit: (validProfit / donutTotal) * 100,
+        }
+      : {
+          labourCost: 0,
+          cogs: 0,
+          royalty: 0,
+          operatingExpenses: 0,
+          profit: 0,
+        };
 
-// Normalize percentages to sum to 100%
-const donutPercentageValues = [
-  donutPercentages.labourCost,
-  donutPercentages.cogs,
-  donutPercentages.royalty,
-  donutPercentages.operatingExpenses,
-  donutPercentages.profit,
-];
-const donutPercentageSum = donutPercentageValues.reduce((sum, val) => sum + val, 0);
-const normalizedDonutPercentages =
-  donutPercentageSum > 0
-    ? donutPercentageValues.map((val) => {
-        const num = (val / donutPercentageSum) * 100;
-        return Math.round(num) === num
-          ? num.toString()
-          : (num % 1 >= 0.5
-              ? Math.ceil(num)
-              : Math.floor(num)
-            ).toString();
-      })
-    : donutPercentageValues.map(() => "0");
-
-  // Update dateRangeOptions to include value
-  const dateRangeOptions: DateRangeOption[] = [
-    { name: "This Month (MTD)", value: "this_month", id: 1 },
-    { name: "This Year (YTD)", value: "this_year", id: 2 },
-    { name: "Last Month", value: "last_month", id: 3 },
-    { name: "Last Year", value: "last_year", id: 4 },
+  // Normalize percentages to sum to 100%
+  const donutPercentageValues = [
+    donutPercentages.labourCost,
+    donutPercentages.cogs,
+    donutPercentages.royalty,
+    donutPercentages.operatingExpenses,
+    donutPercentages.profit,
   ];
+  const donutPercentageSum = donutPercentageValues.reduce((sum, val) => sum + val, 0);
+  const normalizedDonutPercentages =
+    donutPercentageSum > 0
+      ? donutPercentageValues.map((val) => {
+          const num = (val / donutPercentageSum) * 100;
+          return Math.round(num) === num
+            ? num.toString()
+            : (num % 1 >= 0.5
+                ? Math.ceil(num)
+                : Math.floor(num)
+              ).toString();
+        })
+      : donutPercentageValues.map(() => "0");
 
-  useEffect(() => {
-    if (isVerifiedUser) {
-      const now = new Date();
-      setStartDate(new Date(now.getFullYear(), now.getMonth(), 1));
-      setEndDate(now);
-      getUserStore();
-      fetchCurrentYearData(now.getFullYear());
+  // Helper to check if a value is a valid Date object
+  const isValidDate = (date: any): date is Date =>
+    date instanceof Date && !isNaN(date.getTime());
+
+  // Unified data fetch (sales + tenders for all periods)
+  const fetchAllData = useCallback(async () => {
+    if (!isValidDate(startDate) || !isValidDate(endDate) || !selectedStore) return;
+    const start = format(startDate, "yyyy-MM-dd");
+    const end = format(endDate, "yyyy-MM-dd");
+    setStoreGrades({});
+    try {
+      setLoading(true);
+      const months = getMonthsDifference() || 12;
+
+      const [salesResp, tendersResp]: any = await Promise.all([
+        sendApiRequest({
+          mode: "getSalesKpiData",
+          storeid: selectedStore.id,
+          startdate: start,
+          enddate: end,
+        }),
+        sendApiRequest({
+          mode: "getTendersData",
+          storeid: selectedStore.id,
+          startdate: start,
+          enddate: end,
+        }),
+      ]);
+
+      // Parse Sales KPI data
+      if (salesResp?.status === 200) {
+        const salesObj = salesResp?.data?.saleskpi || {};
+        const currentYtd = salesObj.current_ytd?.[0] || {};
+        // CHANGED: was salesObj.previous_ytd?.[0]
+        const previousYtd = salesObj.previous_custom_range?.[0] || {};
+        const customRange = salesObj.custom_range?.[0] || {};
+
+        // Temporarily store (before enhancement)
+        setCurrYearData(currentYtd);
+        setPrevYearData(previousYtd);
+        setData(customRange);
+
+        // Prepare month counts
+        const customMonths = getMonthsDifference() || 12;
+        const monthsCurrYtd = new Date().getMonth() + 1;
+        // CHANGED: previous custom range should mirror custom range length (not YTD)
+        const monthsPrevYtd = customMonths;
+
+        // We'll finalize oper/royalty after tender commissions parsed below
+        // Store raw refs for later combination
+        (fetchAllData as any)._salesTemp = {
+          currentYtd,
+          previousYtd,
+          customRange,
+          customMonths,
+          monthsCurrYtd,
+          monthsPrevYtd,
+        };
+      } else {
+        handleError(salesResp?.message || "Failed to load Sales KPI");
+      }
+
+      // Parse Tenders data (commission aggregation)
+      if (tendersResp?.status === 200) {
+        const tendersObj = tendersResp?.data?.tenders || {};
+        const currentTenders = tendersObj.current_ytd || [];
+        // CHANGED: was tendersObj.previous_ytd
+        const previousTenders = tendersObj.previous_custom_range || [];
+        const customTenders = tendersObj.custom_range || [];
+
+        // Set table tender data to custom period by design
+        setTender(customTenders);
+
+        const commissionSum = (arr: any[]) =>
+          arr.reduce(
+            (sum, row) =>
+              sum + ((row.payments || 0) * (row.commission || 0)) / 100,
+            0
+          );
+
+        const customCommission = commissionSum(customTenders);
+        const currCommission = commissionSum(currentTenders);
+        const prevCommission = commissionSum(previousTenders);
+
+        setPeriodTenderCommission(customCommission);
+        setCurrYearTenderCommission(currCommission);
+        setPrevYearTenderCommission(prevCommission);
+
+        // Enhance operating expenses & royalty now that commissions known
+        const temp = (fetchAllData as any)._salesTemp;
+        if (temp) {
+          const {
+            currentYtd,
+            previousYtd,
+            customRange,
+            customMonths,
+            monthsCurrYtd,
+            monthsPrevYtd,
+          } = temp;
+
+            const computeOperExp = (rec: any, months: number, tenderComm: number) => {
+              if (!rec) return 0;
+              // const payrollTaxAmt =
+              //   (rec.labour_cost || 0) * ((rec.payrolltax || 0) / 100);
+              const yearExpAmt = ((rec.Yearly_expense || 0) / 12) * months;
+              return (
+                (rec.additional_expense || 0) +
+                // payrollTaxAmt +
+                yearExpAmt +
+                ((rec.monthly_expense || 0) * months || 0) +
+                tenderComm
+              );
+            };
+
+            const computeLabourCost = (rec: any) => {
+              if (!rec) return 0;
+              const payrollTaxAmt =
+                (rec.labour_cost || 0) * ((rec.payrolltax || 0) / 100);
+              // const yearExpAmt = ((rec.Yearly_expense || 0) / 12) * months;
+              setLabourCost(rec.labour_cost || 0);
+              setPayrollTaxAmount(payrollTaxAmt);
+              setAdditionalLaborExpense(rec.additional_labor_expense || 0);
+              return (
+                (rec.labour_cost || 0) +
+                payrollTaxAmt +
+                (rec.additional_labor_expense || 0)
+                // yearExpAmt +
+                // ((rec.monthly_expense || 0) * months || 0) +
+                // tenderComm
+              );
+            };
+
+            const computeRoyalty = (rec: any) =>
+              (rec?.net_sales || 0) * ((rec?.royalty || 9) / 100);
+
+            const customOper = computeOperExp(
+              customRange,
+              customMonths,
+              customCommission
+            );
+            const currOper = computeOperExp(
+              currentYtd,
+              monthsCurrYtd,
+              currCommission
+            );
+            const prevOper = computeOperExp(
+              previousYtd,
+              monthsPrevYtd,
+              prevCommission
+            );
+
+            const customRoyalty = computeRoyalty(customRange);
+            const currRoyalty = computeRoyalty(currentYtd);
+            const prevRoyalty = computeRoyalty(previousYtd);
+
+            const customLaborCost = computeLabourCost(customRange);
+            const currLaborCost = computeLabourCost(currentYtd);
+            const prevLaborCost = computeLabourCost(previousYtd);
+
+            setOperatExpAmt(customOper);
+            setRoyaltyAmt(customRoyalty);
+            setLaborCost(customLaborCost);
+            setCurrYearData({
+              ...currentYtd,
+              operatExpAmt: currOper,
+              royaltyAmt: currRoyalty,
+              labour_cost: currLaborCost,
+            });
+            setPrevYearData({
+              ...previousYtd,
+              operatExpAmt: prevOper,
+              royaltyAmt: prevRoyalty,
+              labour_cost: prevLaborCost,
+            });
+            setData({
+              ...customRange,
+              operatExpAmt: customOper,
+              royaltyAmt: customRoyalty,
+            });
+        }
+      } else {
+        handleError(tendersResp?.message || "Failed to load Tenders");
+      }
+
+    } catch (e) {
+      handleError("Error fetching dashboard data");
+    } finally {
+      setLoading(false);
     }
-  }, [isVerifiedUser]);
+    //
+    // Grades fetched sequentially — main dashboard renders first, skeleton shown in grade spots
+    try {
+      setGradesLoading(true);
+      const gradesResp: any = await sendApiRequest(
+        { storeid: selectedStore.id, startdate: start, enddate: end },
+        'storesGrade'
+      );
+      if (gradesResp?.status === 200 && gradesResp.data) {
+        setStoreGrades(gradesResp.data);
+      }
+    } catch {
+      // grades failure is non-critical
+    } finally {
+      setGradesLoading(false);
+    }
+  }, [startDate, endDate, selectedStore]);
+
+  // Wrapper to keep prop name used by DateRangePicker
+  const fetchData = useCallback(() => {
+    fetchAllData();
+  }, [fetchAllData]);
+
+  // Unified effect (replaces several previous effects)
+  useEffect(() => {
+    if (isVerifiedUser && startDate && endDate && selectedStore) {
+      fetchAllData();
+    }
+  }, [isVerifiedUser, startDate, endDate, selectedStore, fetchAllData]);
 
   const toggleDateRangeDropdown = () => {
     setIsDateRangeOpen((prev) => !prev);
   };
-
-  // Update handleDateRangeSelect to set correct dates
-  const handleDateRangeSelect = (option: DateRangeOption) => {
-    setSelectedDateRange(option.name);
-    const now = new Date();
-    let newStartDate: Date;
-    let newEndDate: Date;
-
-    switch (option.value) {
-      case "this_month":
-        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        newEndDate = now;
-        break;
-      case "this_year":
-        newStartDate = new Date(now.getFullYear(), 0, 1);
-        newEndDate = now;
-        break;
-      case "last_month":
-        newStartDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        newEndDate = new Date(now.getFullYear(), now.getMonth(), 0);
-        break;
-      case "last_year":
-        newStartDate = new Date(now.getFullYear() - 1, 0, 1);
-        newEndDate = new Date(now.getFullYear() - 1, 11, 31);
-        break;
-      default:
-        newStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        newEndDate = now;
-    }
-
-    setStartDate(newStartDate);
-    setEndDate(newEndDate);
-  };
-
-  const fetchCurrentYearData = async (currentYear: number) => {
-    try {
-      const today = new Date();
-      const formattedToday = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-  
-      const response: any = await sendApiRequest({
-        mode: "getSalesKpi",
-        storeid: selectedOption?.id || 69,
-        startdate: `${currentYear}-01-01`,
-        enddate: formattedToday, // Use current date instead of year-end
-      });
-  
-      if (response?.status === 200) {
-        const salesKpi = response?.data?.saleskpi[0] || {};
-        setCurrYearData(salesKpi);
-  
-        // Calculate operatExpAmt and royaltyAmt for current year
-        const months = today.getMonth() + 1; // Number of months until today
-        const payrollTaxAmt = salesKpi.labour_cost * (salesKpi.payrolltax / 100) || 0;
-        const yearExpAmt = (salesKpi.Yearly_expense / 12) * months || 0; // Prorate yearly expenses
-        const currYearOperatExpAmt =
-          (salesKpi.additional_expense || 0) +
-          payrollTaxAmt +
-          yearExpAmt +
-          (salesKpi.monthly_expense * months || 0);
-        const currYearRoyaltyAmt =
-          salesKpi.net_sales * (salesKpi.royalty / 100 || 0.09) || 0;
-  
-        // Update currYearData with calculated values
-        setCurrYearData((prev: any) => ({
-          ...prev,
-          operatExpAmt: currYearOperatExpAmt,
-          royaltyAmt: currYearRoyaltyAmt,
-        }));
-  
-        // Update global operatExpAmt and royaltyAmt for consistency in profit calculation
-        setOperatExpAmt(currYearOperatExpAmt);
-        setRoyaltyAmt(currYearRoyaltyAmt);
-      }
-    } catch (error) {
-      console.error("Error fetching current year data:", error);
-      setCustomToast({
-        message: "Error fetching current year data",
-        type: "error",
-      });
-    }
-  };
-  useEffect(() => {
-    if (startDate && endDate && selectedOption) {
-      fetchData();
-      // setIsFirstCall(false);
-      // fetchDataForItems();
-    }
-  }, [selectedOption]);
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -294,9 +414,22 @@ const normalizedDonutPercentages =
       type: "error",
     });
   };
+
+  const renderGradePercentage = (grade?: { rank: number | null; percentage: number }) => {
+    if (grade?.percentage === undefined) return null;
+
+    const isNegative = grade.percentage < 0;
+    const formattedPercentage = grade.percentage.toFixed(1);
+    const sign = grade.percentage > 0 ? "+" : "";
+
+    return (
+      <span className={`text-[12px] font-bold ${isNegative ? "text-[#FF0000]" : "text-[#168A6F]"}`}>
+        {isNegative ? "↓" : "↑"} {sign}{formattedPercentage}%
+      </span>
+    );
+  };
+  
   const getMonthsDifference = () => {
-    // const start = new Date(startDate);
-    // const end = new Date(endDate);
     if (startDate && endDate) {
       const yearDiff = endDate.getFullYear() - startDate.getFullYear();
       const monthDiff = endDate.getMonth() - startDate.getMonth();
@@ -305,126 +438,10 @@ const normalizedDonutPercentages =
     return 12;
   };
 
-  const fetchData = async () => {
-    try {
-      if (startDate && endDate) {
-        setLoading(true);
-        const response: any = await sendApiRequest({
-          mode: "getSalesKpi",
-          storeid: selectedOption?.id || 69,
-          startdate: startDate && format(startDate, "yyyy-MM-dd"),
-          enddate: endDate && format(endDate, "yyyy-MM-dd"),
-        });
-
-        if (response?.status === 200) {
-          setData(response?.data?.saleskpi[0] || []);
-          const months = getMonthsDifference() || 12;
-          const payrollTaxAmt =
-            response?.data?.saleskpi[0]?.labour_cost *
-            (response?.data?.saleskpi[0]?.payrolltax / 100);
-          const yearExpAmt =
-            (response?.data?.saleskpi[0]?.Yearly_expense / 12) * months;
-          setOperatExpAmt(
-            response?.data?.saleskpi[0]?.additional_expense +
-              payrollTaxAmt +
-              yearExpAmt +
-              response?.data?.saleskpi[0]?.monthly_expense * months || 0
-          );
-          setRoyaltyAmt(
-            response?.data?.saleskpi[0]?.net_sales *
-              (response?.data?.saleskpi[0]?.royalty / 100 || 0.09)
-          );
-          // response?.data?.total > 0 &&
-          //   setTotalItems(response?.data?.saleskpi[0] || 0);
-        } else {
-          setCustomToast({
-            ...customToast,
-            message: response?.message,
-            type: "error",
-          });
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (startDate && endDate && selectedOption) {
-      fetchData();
-    }
-  }, [startDate, endDate, selectedOption]);
-  // const fetchDataForItems = async () => {
-  //   try {
-  //     if (startDate && endDate) {
-  //       const response: any = await sendApiRequest({
-  //         mode: "getDqRevCenterSmmary",
-  //         storeid: selectedOption?.id || 69,
-  //         startdate: startDate && format(startDate, 'yyyy-MM-dd'),
-  //         enddate: endDate && format(endDate, 'yyyy-MM-dd'),
-  //       });
-
-  //       if (response?.status === 200) {
-  //         setItems(response?.data?.dqcategories || []);
-  //         // response?.data?.total > 0 &&
-  //         //   setTotalItems(response?.data?.saleskpi[0] || 0);
-  //       } else {
-  //         setCustomToast({
-  //           ...customToast,
-  //           message: response?.message,
-  //           type: "error",
-  //         });
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  // }
-  // };
-
-  // const fetchDropdownData = async () => {
-  //   try {
-  //     const response = await sendApiRequest({ mode: "getAllStores" });
-  //     if (response?.status === 200) {
-  //       setStore(response?.data?.stores || []);
-  //     } else {
-  //       handleError(response?.message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching stores:", error);
-  //   }
-  // };
-
   const [openSection, setOpenSection] = useState<null | string>(null);
 
   const toggleSection = (section: string) => {
     setOpenSection((prev) => (prev === section ? null : section));
-  };
-
-  const getUserStore = async () => {
-    try {
-      const response = await sendApiRequest({ mode: "getUserStore" });
-      if (response?.status === 200) {
-        const stores = response?.data?.stores || [];
-        // Map stores to the format expected by the Dropdown component
-        const formattedStores = stores.map((store) => ({
-          name: `${store.name} - ${store.location || "Unknown Location"}`, // Ensure location is handled
-          id: store.id,
-        }));
-
-        setStore(formattedStores); // Update store state with formatted data
-
-        if (stores.length > 0) {
-          setSelectedOption({
-            name: `${stores[0].name} - ${stores[0].location || "Unknown Location"}`,
-            id: stores[0].id,
-          });
-        }
-      } else {
-        handleError(response?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching stores:", error);
-    }
   };
 
   const verifyToken = async (token: string) => {
@@ -476,52 +493,29 @@ const normalizedDonutPercentages =
       const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
       const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-      setStartDate(initialStartDate || firstDayOfMonth);
-      setEndDate(initialEndDate || lastDayOfMonth);
+      if (!startDate && !endDate) {
+        setStartDate(initialStartDate || firstDayOfMonth);
+        setEndDate(initialEndDate || lastDayOfMonth);
+      }
 
-      // Fetch stores and set selectedOption
-      const initializeStore = async () => {
-        try {
-          const response = await sendApiRequest({ mode: "getUserStore" });
-          if (response?.status === 200) {
-            const stores = response?.data?.stores || [];
-            const formattedStores = stores.map((store: any) => ({
-              name: `${store.name} - ${store.location || "Unknown Location"}`,
-              id: store.id,
-            }));
-            setStore(formattedStores);
-
-            // Set selectedOption based on storeid from return data or default to first store
-            const selectedStore = initialStoreId
-              ? formattedStores.find(
-                  (store: any) => store.id === initialStoreId
-                )
-              : formattedStores[0];
-            if (selectedStore) {
-              setSelectedOption({
-                name: selectedStore.name,
-                id: selectedStore.id,
-              });
-            }
-          } else {
-            handleError(response?.message);
-          }
-        } catch (error) {
-          console.error("Error fetching stores:", error);
+      // Set selectedStore based on return data or use the current one from context
+      if (initialStoreId && storeOptions.length > 0) {
+        const matchingStore = storeOptions.find(store => String(store.id) === initialStoreId);
+        if (matchingStore) {
+          setSelectedStore(matchingStore);
         }
-      };
+      }
 
-      initializeStore();
-      fetchCurrentYearData(now.getFullYear());
+      fetchAllData();
     }
-  }, [isVerifiedUser]);
+  }, [isVerifiedUser, storeOptions]);
 
   useEffect(() => {
-    if (selectedOption && isVerifiedUser) {
+    if (selectedStore && isVerifiedUser) {
       const now = new Date();
-      fetchCurrentYearData(now.getFullYear());
+      fetchAllData();
     }
-  }, [selectedOption, isVerifiedUser]);
+  }, [selectedStore, isVerifiedUser]);
 
   const handlePressStart = () => {
     setShowTooltip(true);
@@ -568,10 +562,10 @@ const normalizedDonutPercentages =
   );
 
   const handleExpensesCardClick = () => {
-    if (startDate && endDate && selectedOption?.id) {
+    if (startDate && endDate && selectedStore?.id) {
       const startdate = format(startDate, "yyyy-MM-dd");
       const enddate = format(endDate, "yyyy-MM-dd");
-      const storeid = selectedOption.id;
+      const storeid = selectedStore.id;
       const months = getMonthsDifference();
 
       // Store data in localStorage
@@ -589,6 +583,53 @@ const normalizedDonutPercentages =
       });
     }
   };
+  
+  const handleLaborcostCardClick = () => {
+    setCustomToast({
+      message: "",
+      type: "",
+    });
+    if (laborCost == 0) {
+      setTimeout(() => {
+        setCustomToast({
+          message: "No data available",
+          type: "error",
+        });
+      }, 0);
+    return;
+    }
+    if (startDate && endDate && selectedStore?.id) {
+      const startdate = format(startDate, "yyyy-MM-dd");
+      const enddate = format(endDate, "yyyy-MM-dd");
+      const storeid = selectedStore.id;
+      const months = getMonthsDifference();
+
+      // Store data in localStorage
+      localStorage.setItem(
+        "laborCostPageData",
+        JSON.stringify({ storeid, startdate, enddate, months, data})
+      );
+
+      // Navigate to labor cost page
+      router.push("/sales-kpi/labor-cost");
+    } else {
+      setCustomToast({
+        message: "Please select a store and date range",
+        type: "error",
+      });
+    }
+  };
+
+  const handleProfitCardClick = () => {
+    // Navigate to profit page
+    router.push("Plreport");
+  };
+
+  const handleSalesCardClick = () => {
+    // Navigate to sales page
+    router.push("sales");
+  };
+
   // Ensure there's no error when `items` is empty
   const hasItems = items && items.length > 0;
 
@@ -611,6 +652,7 @@ const normalizedDonutPercentages =
     ...item,
     color: colorMapping[item.itemname] || "#CCCCCC", // Default color if not found
   }));
+
   // Helper function to determine the period type (year, quarter, month, or multi)
   const determinePeriodType = (
     start: Date,
@@ -663,11 +705,11 @@ const normalizedDonutPercentages =
   };
 
   const handleCogsCardClick = () => {
-    if (startDate && endDate && selectedOption?.id) {
+    if (startDate && endDate && selectedStore?.id) {
       // Format dates to strings
       const startdate = format(startDate, "yyyy-MM-dd");
       const enddate = format(endDate, "yyyy-MM-dd");
-      const storeid = selectedOption.id;
+      const storeid = selectedStore.id;
 
       // Store data in localStorage
       localStorage.setItem(
@@ -698,53 +740,6 @@ const normalizedDonutPercentages =
     return { prevYearStart, prevYearEnd };
   };
 
-  const fetchPreviousData = async () => {
-    if (!startDate || !endDate || !selectedOption) return;
-
-    const { prevYearStart, prevYearEnd } = getPreviousDates();
-    if (!prevYearStart || !prevYearEnd) return;
-
-    try {
-      setLoading(true);
-      const prevYearResponse: any = await sendApiRequest({
-        mode: "getSalesKpi",
-        storeid: selectedOption?.id || 69,
-        startdate: format(prevYearStart, "yyyy-MM-dd"),
-        enddate: format(prevYearEnd, "yyyy-MM-dd"),
-      });
-
-      if (prevYearResponse?.status === 200) {
-        const prevYearSalesKpi = prevYearResponse?.data?.saleskpi[0] || {};
-        setPrevYearData(prevYearSalesKpi);
-
-        const months = getMonthsDifference();
-        const payrollTaxAmt = prevYearSalesKpi.labour_cost * (prevYearSalesKpi.payrolltax / 100) || 0;
-        const yearExpAmt = (prevYearSalesKpi.Yearly_expense / 12) * months || 0;
-        const prevYearOperatExpAmt =
-          (prevYearSalesKpi.additional_expense || 0) +
-          payrollTaxAmt +
-          yearExpAmt +
-          (prevYearSalesKpi.monthly_expense * months || 0);
-        const prevYearRoyaltyAmt = prevYearSalesKpi.net_sales * (prevYearSalesKpi.royalty / 100 || 0.09) || 0;
-
-        setPrevYearData((prev: any) => ({
-          ...prev,
-          operatExpAmt: prevYearOperatExpAmt,
-          royaltyAmt: prevYearRoyaltyAmt,
-        }));
-      } else {
-        setPrevYearData({});
-      }
-    } catch (error) {
-      console.error("Error fetching previous data:", error);
-      setCustomToast({
-        message: "Error fetching previous period data",
-        type: "error",
-      });
-      setPrevPeriodData({}); // Clear previous period data on error
-    }
-  };
-
   const calculateProfit = (data: any): number => {
     if (!data?.net_sales) return 0;
     const profit = Math.round(
@@ -754,18 +749,11 @@ const normalizedDonutPercentages =
         (data.operatExpAmt || 0) -
         (data.royaltyAmt || 0)
     );
-    return profit < 0 ? 0 : profit;
+    return profit;
   };
 
-  // Update useEffect to fetch previous data when startDate, endDate, or selectedOption changes
-  useEffect(() => {
-    if (startDate && endDate && selectedOption) {
-      fetchData();
-      fetchPreviousData();
-    }
-  }, [startDate, endDate, selectedOption]);
-
   const [showTooltip, setShowTooltip] = useState(false);
+
 
   return (
     isVerifiedUser && (
@@ -773,44 +761,48 @@ const normalizedDonutPercentages =
         className="max-h-[calc(100vh-60px)] min-h-[calc(100vh-60px)] below-md:max-h-[calc(100vh-0)] overflow-auto"
         style={{ scrollbarWidth: "thin" }}
       >
-<div className="flex flex-row below-md:flex-col below-md:items-start below-md:w-full tablet:w-full box-border sticky justify-between pt-6 below-md:pt-4 below-md:px-2 tablet:px-2 pl-6 pr-6 pb-1.5 below-md:pb-4 bg-[#f7f8f9]">
-  <div className="flex flex-row below-md:flex-col below-md:w-full gap-3">
-    <Dropdown
-      options={store}
-      selectedOption={selectedOption?.name || "Store"}
-      onSelect={(selectedOption: any) => {
-        setSelectedOption({
-          name: selectedOption.name,
-          id: selectedOption.id,
-        });
-        setIsStoreDropdownOpen(false);
-      }}
-      isOpen={isStoreDropdownOpen}
-      toggleOpen={toggleStoreDropdown}
-      widthchange="w-[35%] tablet:w-full below-md:w-full"
-    />
-    <Dropdown
-      options={dateRangeOptions}
-      selectedOption={selectedDateRange}
-      onSelect={(option: DateRangeOption) => {
-        handleDateRangeSelect(option);
-        setIsDateRangeOpen(false);
-      }}
-      isOpen={isDateRangeOpen}
-      toggleOpen={toggleDateRangeDropdown}
-      widthchange="w-[30%] tablet:w-full below-md:w-full"
-    />
-    <div className="w-[300px] tablet:w-[160%] below-md:w-full">
-      <DateRangePicker
-        startDate={startDate}
-        endDate={endDate}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
-        fetchData={fetchData}
-        // fetchDataForItems={fetchDataForItems}
-      />
-    </div>
-  </div>
+        <ToastNotification
+          message={customToast.message}
+          type={customToast.type}
+        />
+        <div className="flex flex-row below-md:flex-col below-md:items-start below-md:w-full tablet:w-full box-border sticky justify-between pt-6 below-md:pt-4 below-md:px-2 tablet:px-2 pl-6 pr-6 pb-1.5 below-md:pb-4 bg-[#f7f8f9]">
+          <div className="flex flex-row below-md:flex-col below-md:w-full gap-3">
+            <div className="flex-1 min-w-[180px]">
+              <Dropdown
+                options={storeOptions}
+                selectedOption={selectedStore?.name || "Store"}
+                onSelect={(option: any) => {
+                  setSelectedStore(option);
+                  setIsStoreDropdownOpen(false);
+                }}
+                isOpen={isStoreDropdownOpen}
+                toggleOpen={toggleStoreDropdown}
+                // widthchange="w-[35%] tablet:w-full below-md:w-full"
+              />
+            </div>
+            <div className="flex-1 min-w-[160px]">
+              <Dropdown
+                options={dateRangeOptions}
+                selectedOption={selectedDateRange?.name}
+                onSelect={(option: any) => {
+                  setSelectedDateRange(option);
+                  setIsDateRangeOpen(false);
+                }}
+                isOpen={isDateRangeOpen}
+                toggleOpen={toggleDateRangeDropdown}
+                // widthchange="w-[30%] tablet:w-full below-md:w-full"
+              />
+            </div>
+            <div className="flex-1 min-w-[280px]">
+              <DateRangePicker
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+                fetchData={fetchData}
+              />
+            </div>
+          </div>
   {/* <div className="below-md:hidden tablet:hidden">
     <button className="flex items-center justify-center bg-[#168A6F] hover:bg-[#11735C] shadow-lg w-[170px] h-[35px] rounded-md text-white text-[13px] font-medium">
       <img
@@ -837,7 +829,8 @@ const normalizedDonutPercentages =
         
 {/* Net Sales Card */}
 <div
-  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={handleSalesCardClick}
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Net Sales</p>
@@ -894,19 +887,39 @@ const normalizedDonutPercentages =
       </div>
     )}
   </div>
-  <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpisales.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpisales.svg" />
+    </div>
+    {gradesLoading ? (
+      <Skeleton width={32} height={14} borderRadius={8} />
+    ) : (
+      <>
+        {storeGrades.netSales?.rank != null && (
+          <div className="bg-[#DDD8F0] rounded-full w-[32px] h-[32px] flex items-center justify-center">
+            <span className="text-[#5B4EA8] text-[13px] font-bold">{storeGrades.netSales.rank}</span>
+          </div>
+        )}
+        {renderGradePercentage(storeGrades.netSales)}
+      </>
+    )}
   </div>
 </div>
-{/* Profit Card */}
 <div
-  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={handleProfitCardClick}
 >
   <div>
     <p className="text-[14px] text-[#575F6DCC] font-medium">Profit ({normalizedDonutPercentages[4]}%)</p>
-    <p className="text-[16px] text-[#2D3748] font-bold">
+    <p className={`text-[16px] ${
+      Math.round(validProfit) < 0 
+      ? "text-[#FF0000]" 
+      : "text-[#2D3748]"
+      } font-bold`}>
       {data?.net_sales && validProfit !== 0
-        ? `$${Math.round(validProfit).toLocaleString()}`
+        ? Math.round(validProfit) < 0
+          ? `$(${Math.abs(Math.round(validProfit)).toLocaleString()})`
+          : `$${Math.round(validProfit).toLocaleString()}`
         : "$00,000"}
     </p>
     <p className="text-[11px] text-[#575F6D] font-normal">
@@ -927,38 +940,51 @@ const normalizedDonutPercentages =
     {/* Percentage Change and Difference in One Line */}
     {data?.net_sales !== undefined && prevYearData?.net_sales !== undefined ? (
       (() => {
-        const prevProfit = Math.round(calculateProfit(prevYearData));
-        const currProfit = Math.round(validProfit);
-        const difference = currProfit - prevProfit;
-        const percentageChange =
-          prevProfit !== 0
-            ? ((difference / Math.abs(prevProfit)) * 100).toFixed(1)
-            : currProfit > 0
-            ? "100.0"
-            : "0.0";
-        const isGrowth = difference >= 0;
+      const prevProfit = Math.round(calculateProfit(prevYearData));
+      const currProfit = Math.round(validProfit);
+      const difference = currProfit - prevProfit;
+      const percentageChange =
+        prevProfit !== 0
+        ? ((difference / Math.abs(prevProfit)) * 100).toFixed(1)
+        : currProfit > 0
+        ? "100.0"
+        : "0.0";
+      const isGrowth = difference >= 0;
 
-        return (
-          <div className="flex items-center mt-1">
-            <span
-              className={`text-[11px] font-medium ${
-                isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
-              }`}
-            >
-              {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | $
-              {Math.abs(difference).toLocaleString()}
-            </span>
-          </div>
-        );
+      return (
+        <div className="flex items-center mt-1">
+        <span
+          className={`text-[11px] font-medium ${
+          isGrowth ? "text-[#168A6F]" : "text-[#FF0000]"
+          }`}
+        >
+          {isGrowth ? "↑" : "↓"} {isGrowth ? "+" : ""}{percentageChange}% | ${Math.abs(difference).toLocaleString()}
+        </span>
+        </div>
+      );
       })()
     ) : (
       <div className="text-[11px] text-[#575F6D] mt-1">
-        No comparison data available
+      No comparison data available
       </div>
     )}
   </div>
-  <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpiprofit.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpiprofit.svg" />
+    </div>
+    {gradesLoading ? (
+      <Skeleton width={32} height={14} borderRadius={8} />
+    ) : (
+      <>
+        {storeGrades.profit?.rank != null && (
+          <div className="bg-[#DDD8F0] rounded-full w-[32px] h-[32px] flex items-center justify-center">
+            <span className="text-[#5B4EA8] text-[13px] font-bold">{storeGrades.profit.rank}</span>
+          </div>
+        )}
+        {renderGradePercentage(storeGrades.profit)}
+      </>
+    )}
   </div>
 </div>
 
@@ -1021,20 +1047,35 @@ const normalizedDonutPercentages =
       </div>
     )}
   </div>
-  <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpicustomercount.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpicustomercount.svg" />
+    </div>
+    {gradesLoading ? (
+      <Skeleton width={32} height={14} borderRadius={8} />
+    ) : (
+      <>
+        {storeGrades.customerCount?.rank != null && (
+          <div className="bg-[#DDD8F0] rounded-full w-[32px] h-[32px] flex items-center justify-center">
+            <span className="text-[#5B4EA8] text-[13px] font-bold">{storeGrades.customerCount.rank}</span>
+          </div>
+        )}
+        {renderGradePercentage(storeGrades.customerCount)}
+      </>
+    )}
   </div>
 </div>
 
-{/* Labour Cost Card */}
+{/* Labor Cost Card */}
 <div
-  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
+  className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
+  onClick={handleLaborcostCardClick}
 >
   <div>
-    <p className="text-[14px] text-[#575F6DCC] font-medium">Labour Cost ({normalizedDonutPercentages[0]}%)</p>
+    <p className="text-[14px] text-[#575F6DCC] font-medium">Labor Cost ({normalizedDonutPercentages[0]}%)</p>
     <p className="text-[16px] text-[#2D3748] font-bold">
-      {data?.labour_cost && data.labour_cost !== 0
-        ? `$${Math.round(data.labour_cost).toLocaleString()}`
+      {laborCost && laborCost !== 0
+        ? `$${Math.round(laborCost).toLocaleString()}`
         : "$00,000"}
     </p>
     <p className="text-[11px] text-[#575F6D] font-normal">
@@ -1056,7 +1097,7 @@ const normalizedDonutPercentages =
     {data?.labour_cost !== undefined && prevYearData?.labour_cost !== undefined ? (
       (() => {
         const prevCost = Math.round(prevYearData.labour_cost);
-        const currCost = Math.round(data.labour_cost);
+        const currCost = Math.round(laborCost);
         const difference = currCost - prevCost;
         const percentageChange =
           prevCost !== 0
@@ -1085,8 +1126,22 @@ const normalizedDonutPercentages =
       </div>
     )}
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/labour.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/labour.svg" />
+    </div>
+    {gradesLoading ? (
+      <Skeleton width={32} height={14} borderRadius={8} />
+    ) : (
+      <>
+        {storeGrades.laborCost?.rank != null && (
+          <div className="bg-[#DDD8F0] rounded-full w-[32px] h-[32px] flex items-center justify-center">
+            <span className="text-[#5B4EA8] text-[13px] font-bold">{storeGrades.laborCost.rank}</span>
+          </div>
+        )}
+        {renderGradePercentage(storeGrades.laborCost)}
+      </>
+    )}
   </div>
 </div>
 {/* Sales Tax Card */}
@@ -1148,8 +1203,11 @@ const normalizedDonutPercentages =
       </div>
     )}
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpisalestax.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpisalestax.svg" />
+    </div>
+
   </div>
 </div>
 
@@ -1212,8 +1270,11 @@ const normalizedDonutPercentages =
       </div>
     )}
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpiroyalty.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpiroyalty.svg" />
+    </div>
+
   </div>
 </div>
 
@@ -1222,10 +1283,12 @@ const normalizedDonutPercentages =
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
   onClick={handleExpensesCardClick}
 >
-  <div>
-    <p className="text-[14px] text-[#575F6DCC] font-medium">Operating Expenses ({normalizedDonutPercentages[3]}%)</p>
+  <div className="flex-1 min-w-0">
+    <p className="text-[14px] text-[#575F6DCC] font-medium whitespace-nowrap">
+      Operating Expenses ({normalizedDonutPercentages[3]}%)
+    </p>
     <p className="text-[16px] text-[#2D3748] font-bold">
-      {operatExpAmt && operatExpAmt !== 0
+      {operatExpAmt !== 0
         ? `$${Math.round(operatExpAmt).toLocaleString()}`
         : "$00,000"}
     </p>
@@ -1244,11 +1307,11 @@ const normalizedDonutPercentages =
           : "$00,000"}
       </span>
     </p>
-    {/* Percentage Change and Difference in One Line */}
-    {operatExpAmt !== undefined && prevYearData?.operatExpAmt !== undefined ? (
+    {/* Percentage Change and Difference calculation */}
+    {(operatExpAmt !== undefined && prevYearData?.operatExpAmt !== undefined) ? (
       (() => {
-        const prevExp = Math.round(prevYearData.operatExpAmt);
-        const currExp = Math.round(operatExpAmt);
+        const prevExp = Math.round(prevYearData?.operatExpAmt || 0);
+        const currExp = Math.round(operatExpAmt || 0);
         const difference = currExp - prevExp;
         const percentageChange =
           prevExp !== 0
@@ -1277,8 +1340,22 @@ const normalizedDonutPercentages =
       </div>
     )}
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpioperatingexpenses.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpioperatingexpenses.svg" />
+    </div>
+    {gradesLoading ? (
+      <Skeleton width={32} height={14} borderRadius={8} />
+    ) : (
+      <>
+        {storeGrades.operExp?.rank != null && (
+          <div className="bg-[#DDD8F0] rounded-full w-[32px] h-[32px] flex items-center justify-center">
+            <span className="text-[#5B4EA8] text-[13px] font-bold">{storeGrades.operExp.rank}</span>
+          </div>
+        )}
+        {renderGradePercentage(storeGrades.operExp)}
+      </>
+    )}
   </div>
 </div>
    {/* COGS Card */}
@@ -1341,14 +1418,28 @@ const normalizedDonutPercentages =
       </div>
     )}
   </div>
-  <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpicogs.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpicogs.svg" />
+    </div>
+    {gradesLoading ? (
+      <Skeleton width={32} height={14} borderRadius={8} />
+    ) : (
+      <>
+        {storeGrades.cogs?.rank != null && (
+          <div className="bg-[#DDD8F0] rounded-full w-[32px] h-[32px] flex items-center justify-center">
+            <span className="text-[#5B4EA8] text-[13px] font-bold">{storeGrades.cogs.rank}</span>
+          </div>
+        )}
+        {renderGradePercentage(storeGrades.cogs)}
+      </>
+    )}
   </div>
 </div>
 
 
   {/* Total Revenue Card */}
-<div
+{/* <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm border-[#E5D5D5] border-b-4 w-full p-4 justify-between items-stretch"
 >
   <div>
@@ -1373,7 +1464,6 @@ const normalizedDonutPercentages =
           : "$00,000"}
       </span>
     </p>
-    {/* Percentage Change and Difference in One Line */}
     {data?.revenue !== undefined && prevYearData?.revenue !== undefined ? (
       (() => {
         const prevRevenue = Math.round(prevYearData.revenue);
@@ -1409,7 +1499,7 @@ const normalizedDonutPercentages =
   <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
     <img src="./images/saleskpiprofit.svg" />
   </div>
-</div>
+</div> */}
 
           {/* Discount Card */}
 <div
@@ -1470,8 +1560,11 @@ const normalizedDonutPercentages =
       </div>
     )}
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpioperatingexpenses.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpioperatingexpenses.svg" />
+    </div>
+
   </div>
 </div>
 
@@ -1534,8 +1627,11 @@ const normalizedDonutPercentages =
       </div>
     )}
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpicustomercount.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpicustomercount.svg" />
+    </div>
+
   </div>
 </div>
 
@@ -1598,8 +1694,11 @@ const normalizedDonutPercentages =
       </div>
     )}
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpicogs.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpicogs.svg" />
+    </div>
+
   </div>
 </div>
           </div>
@@ -1635,7 +1734,7 @@ const normalizedDonutPercentages =
                   <TenderRevenueChart
                     startDate={startDate}
                     endDate={endDate}
-                    storeid={selectedOption?.id || 69}
+                    storeid={selectedStore?.id || 69}
                     setCustomToast={setCustomToast}
                   />
                 </div>
@@ -1656,7 +1755,7 @@ const normalizedDonutPercentages =
                   <TenderCommAmtChart
                     startDate={startDate}
                     endDate={endDate}
-                    storeid={selectedOption?.id || 69}
+                    storeid={selectedStore?.id || 69}
                     setCustomToast={setCustomToast}
                   />
                 </div>
@@ -1750,11 +1849,11 @@ const normalizedDonutPercentages =
                 </tfoot> }
               </table>
             </div>
-          </div> */}
+          </div>
 
           {/* <div className=" bg-white  border-t-4 border-[#BCC7D5]  rounded-md shadow-md below-md:shadow-none w-[100%] items-stretch">
             <div className="flex flex-row mt-4 justify-between px-6 pb-3">
-              <div className="flex flex-row gap-2 ">
+              <div className="flex flex-row gap-2">
                 <img src="/images/items.svg" />
                 <p className="text-[#334155]  text-[16px] font-bold">Items</p>
               </div>

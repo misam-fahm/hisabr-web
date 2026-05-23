@@ -59,13 +59,26 @@ const AddStore = ({ setAddStore }: any) => {
   };
 
   const openModal = () => setIsOpen(true);
+  
   const closeModal = () => {
-    setIsOpen(false),
-      // setRoyalty(""),
-      setCounty(""),
-      setStoreName(""),
-      setOwner("")
-
+    setIsOpen(false);
+    // Clear all local state
+    setCounty("");
+    setStoreName("");
+    setOwner("");
+    setLocation("");
+    
+    // Clear react-hook-form data
+    methods.reset({
+      storeName: "",
+      location: "",
+      owner: "",
+      county: "",
+      // royalty: ""
+    });
+    
+    // Clear form errors
+    methods.clearErrors();
   };
 
   const onSubmit = async (data: any) => {
@@ -88,14 +101,14 @@ const AddStore = ({ setAddStore }: any) => {
       const { status, data: responseData } = result;
       setTimeout(() => {
         setCustomToast({
-          toastMessage: status === 200 ? "Item added successfully!" : "Failed to add item.",
+          toastMessage: status === 200 ? "Store added successfully!" : result?.message,
           toastType: status === 200 ? "success" : "error",
         });
       }, 0);
 
       if (status === 200) {
-        closeModal();
-        setAddStore(true)
+        closeModal(); // Close modal after successful submission
+        setAddStore(true); // Trigger data refresh
       }
     } catch (error: any) {
       setTimeout(() => {
@@ -106,7 +119,6 @@ const AddStore = ({ setAddStore }: any) => {
       }, 0);
     }
   };
-
 
   return (
     <>
@@ -160,14 +172,12 @@ const AddStore = ({ setAddStore }: any) => {
                 alt="Cancel"
                 className="absolute top-1.5 right-0 cursor-pointer"
               />
-
             </div>
-
 
             <FormProvider {...methods}>
               <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <div className="flex flex-col mt-2 gap-3">
-                  <div className="w-full flex">
+                  <div className="w-full flex mb-2">
                     {/* Description Input Field */}
                     <InputField
                       type="text"
@@ -187,7 +197,7 @@ const AddStore = ({ setAddStore }: any) => {
                       }
                     />
                   </div>
-                  <div className="w-full flex">
+                  <div className="w-full flex mb-2">
                     {/* Description Input Field */}
                     <InputField
                       type="text"
@@ -207,7 +217,7 @@ const AddStore = ({ setAddStore }: any) => {
                       }
                     />
                   </div>
-                  <div className="w-full flex">
+                  <div className="w-full flex mb-2">
                     {/* Description Input Field */}
                     <InputField
                       type="text"
@@ -225,7 +235,7 @@ const AddStore = ({ setAddStore }: any) => {
                       onChange={(e: any) => handleChangeUser(e.target.value)}
                     />
                   </div>
-                  <div className="w-full flex">
+                  <div className="w-full flex mb-2">
                     {/* Description Input Field */}
                     <InputField
                       type="text"

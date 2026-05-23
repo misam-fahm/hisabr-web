@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { useGlobalContext } from "@/Components/Header/header";
 import { InputField } from "@/Components/UI/Themes/InputField";
 import Dropdown from "@/Components/UI/Themes/DropDown";
 import ToastNotification, { ToastNotificationProps } from "@/Components/UI/ToastNotification/ToastNotification";
@@ -23,6 +24,7 @@ interface JsonData {
   gasbill: number;
   repair: number;
   storeid: number;
+  landscaping: number;
 }
 
 interface CustomToast {
@@ -34,6 +36,12 @@ const Page = () => {
   const router = useRouter();
   const methods = useForm();
   const { watch, setValue, clearErrors } = methods;
+
+  const {
+      storeOptions,
+      selectedStore,
+      setSelectedStore,
+    } = useGlobalContext();
 
   //const selectedStore = watch("store");
   const [storeId, setStoreId] = useState(null); // No default storeId initially
@@ -54,6 +62,7 @@ const Page = () => {
   const [gasbill, setGasBill] = useState(data?.gas_bill_exp || "");
   const [par, setPAR] = useState(data?.par || "");
   const [royalty, setRoyalty] = useState(data?.royalty || "");
+  const [landscaping, setLandscaping] = useState(data?.landscaping || "");
   const [repair, setRepair] = useState(data?.repair_exp || "");
   const [loading, setLoading] = useState(true);
   const [isVerifiedUser, setIsVerifiedUser] = useState<boolean>(false);
@@ -130,9 +139,15 @@ const Page = () => {
     setPAR(data); // Update local state
     methods.setValue("par", data); // Update form state in react-hook-form
   };
+
   const handleChangeRoyalty = (data: any) => {
     setRoyalty(data); // Update local state
     methods.setValue("royalty", parseFloat(data).toFixed(2), { shouldValidate: true }); // Update form state in react-hook-form
+  };
+  
+  const handleChangeLandscaping = (data: any) => {
+    setLandscaping(data); // Update local state
+    methods.setValue("landscaping", data); // Update form state in react-hook-form
   };
 
   const handleChangeRepair = (data: any) => {
@@ -190,11 +205,11 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
-    if (isVerifiedUser) {
-      getUserStore();
+    if (isVerifiedUser && selectedStore) {
+      setSelectedOption(selectedStore);
     }
-  }, [isVerifiedUser]);
-  
+  }, [isVerifiedUser, selectedStore]);
+
   const fetchData = async (storeId) => {
     if (!storeId) return; // Don't fetch data if storeId is not set
     setLoading(true);
@@ -220,6 +235,7 @@ const Page = () => {
         setGasBill((storeData.gas_bill_exp ?? 0).toString());
         setPAR((storeData.par ?? 0).toString());
         setRoyalty(parseFloat(storeData.royalty ?? 0).toFixed(2));
+        setLandscaping((storeData.landscaping_exp ?? 0).toString());
         setRepair((storeData.repair_exp ?? 0).toString());
          setValue("store", storeId ? storeId : 69);
       } else {
@@ -261,6 +277,7 @@ const Page = () => {
         gasbill: Number(gasbill),
         repair: Number(repair),
         storeid: Number(data.store),
+        landscaping: parseFloat(landscaping) || 0,
       };
   
       const result: any = await sendApiRequest(jsonData);
@@ -291,6 +308,7 @@ const Page = () => {
         setWaterBill(result?.data?.waterbill || "");
         setGasBill(result?.data?.gasbill || "");
         setRepair(result?.data?.repair || "");
+        setLandscaping(result?.data?.landscaping || "");
       } else {
         console.error("API Error:", result);
         setCustomToast({
@@ -342,13 +360,14 @@ const Page = () => {
                 Select Store:
               </p>
               <Dropdown
-                options={store}
+                options={storeOptions}
                 selectedOption={selectedOption?.name || "Store"}
                 onSelect={(selectedOption: any) => {
                   setSelectedOption({
                     name: selectedOption.name,
                     id: selectedOption.id,
                   });
+                  setSelectedStore(selectedOption);
                   setIsStoreDropdownOpen(false);
                 }}
                 isOpen={isStoreDropdownOpen}
@@ -464,7 +483,7 @@ const Page = () => {
                 <div className="below-lg:w-[25%]  below-lg:ml-5 below-md:w-full below-md:pt-4">
                   <InputField
                     type="text"
-                    label="Operator/Labour Salary"
+                    label="Operator/Labor Salary"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
                     value={labouroperatsalary}
@@ -600,6 +619,30 @@ const Page = () => {
                     }
                   />
                 </div>
+                <div className="below-lg:w-[25%] below-lg:ml-5  below-md:w-full below-md:pt-4">
+                  <InputField
+                    type="text"
+                    label="Landscaping"
+                    borderClassName="border border-gray-300"
+                    labelBackgroundColor="bg-white"
+                    value={landscaping}
+                    textColor="text-[#636363]"
+                    placeholder="Landscaping"
+                    {...methods?.register("landscaping", {
+                      maxLength: 5,
+                      pattern: /^[0-9]*\.?[0-9]*$/,
+                    })}
+                    errors={methods.formState.errors.landscaping}
+                    variant="outline"
+                    onChange={(e) =>
+                      handleChangeLandscaping(
+                        e.target.value          //.replace(/\D/g, "")
+                          .replace(/[^0-9.]/g, "")
+                        //.slice(0, 3)
+                      )
+                    }
+                  />
+                </div>
               </div>
             </div>
             <div>
@@ -656,7 +699,7 @@ const Page = () => {
                 <div className="below-lg:w-[25%]  below-lg:ml-5 below-md:w-full below-md:pt-4 ">
                   <InputField
                     type="text"
-                    label="Repair"
+                    label="Power Bill"
                     borderClassName="border border-gray-300"
                     labelBackgroundColor="bg-white"
                     value={repair}

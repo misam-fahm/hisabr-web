@@ -6,11 +6,12 @@ import { sendApiRequest } from "@/utils/apiUtils";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-interface ExpensesPageData {
+interface LaborCostPageData {
   storeid: string;
   startdate: string;
   enddate: string;
   months: number;
+  data: any;
 }
 
 const ExpensesPage = () => {
@@ -18,20 +19,17 @@ const ExpensesPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [categories, setCategories] = useState<{ label: string; value: number }[]>([]);
-  const [pageData, setPageData] = useState<ExpensesPageData | null>(null);
+  const [pageData, setPageData] = useState<LaborCostPageData | null>(null);
   const [chartColors, setChartColors] = useState<string[]>([]);
-  
-  // Add tender commission state variables
-  const [totalTenderCommission, setTotalTenderCommission] = useState<number>(0);
-  const [tenderCommissionLoading, setTenderCommissionLoading] = useState<boolean>(false);
+  const [laborHours, setLaborHours] = useState<number>(0);
 
   // Color palette
   const colorPalette = [
     "#B22222", // Firebrick (Dark Red)
     "#FF7F7F", // Light Coral (Light Red)
+    "#DAA520", // Goldenrod
     "#1E90FF", // Dodger Blue
     "#2E8B57", // Sea Green
-    "#DAA520", // Goldenrod
     "#8A2BE2", // Blue Violet
     "#FF69B4", // Hot Pink
     "#708090", // Indian Red
@@ -49,48 +47,12 @@ const ExpensesPage = () => {
     "#168A6F", // Tender Commission Color (Green)
   ];
 
-  // Add tender commission fetch function
-  const fetchTenderCommissionData = async () => {
-    if (!pageData) {
-      return;
-    }
-    
-    setTenderCommissionLoading(true);
-    try {
-      const { storeid, startdate, enddate } = pageData;
-
-      const response: any = await sendApiRequest({
-        mode: 'getLatestTenders',
-        storeid: parseInt(storeid) || 69,
-        startdate,
-        enddate,
-      });
-
-      if (response?.status === 200) {
-        const tenders = response?.data?.tenders || [];
-        const totalCommission = tenders.reduce(
-          (sum: number, row: any) => sum + ((row.payments * row.commission) / 100 || 0),
-          0
-        );
-        setTotalTenderCommission(totalCommission);
-      } else {
-        setTotalTenderCommission(0);
-        console.error("Failed to fetch tender commission data:", response?.message);
-      }
-    } catch (error) {
-      console.error("Error fetching tender commission data:", error);
-      setTotalTenderCommission(0);
-    } finally {
-      setTenderCommissionLoading(false);
-    }
-  };
-
   useEffect(() => {
     // Retrieve data from localStorage
-    const storedData = localStorage.getItem("expensesPageData");
+    const storedData = localStorage.getItem("laborCostPageData");
     if (storedData) {
       try {
-        const parsedData: ExpensesPageData = JSON.parse(storedData);
+        const parsedData: LaborCostPageData = JSON.parse(storedData);
         if (parsedData.storeid && parsedData.startdate && parsedData.enddate && parsedData.months) {
           setPageData(parsedData);
         } else {
@@ -116,101 +78,41 @@ const ExpensesPage = () => {
   useEffect(() => {
     if (!pageData) return;
 
-    const { storeid, startdate, enddate, months } = pageData;
+    const { storeid, startdate, enddate, months, data } = pageData;
+    const cats = [
+        { label: "Labor Cost", value: (data?.labour_cost || 0) + (data?.additional_labor_expense || 0) },
+        { label: "Payroll Tax", value: (data?.labour_cost || 0) * ((data?.payrolltax || 0) / 100) || 0 },
+    ].filter((item) => item.value);
+
+    // Sort categories by value in descending order
+    const sortedCats = cats.sort((a, b) => b.value - a.value);
+    const colors = sortedCats.map((item, index) => {
+        return colorPalette[index % colorPalette.length];
+    });
+
+    setCategories(sortedCats);
+    setChartColors(colors);
 
     const fetchExpensesData = async () => {
       try {
         const response: any = await sendApiRequest({
-          mode: "getExpensesDtl",
+          mode: "getLaborDetail",
           storeid,
           startdate,
           enddate,
         });
         if (response?.status === 200) {
-          const saleskpi = response?.data?.expenses[0];
-          const config = saleskpi?.config || {};
-          // const payrollTaxAmt = saleskpi?.labour_cost && config?.payroll_tax ? saleskpi.labour_cost * (config.payroll_tax / 100) : 0;
-
-          if (saleskpi) {
-            const cats = [
-              // { label: "Payroll Tax", value: payrollTaxAmt },
-              { label: "PAR", value: (config.par || 0) * months },
-              { label: "NuCO2", value: (config.nuco2 || 0) * months },
-              { label: "Trash", value: (config.trash || 0) * months },
-              { label: "Power Bill", value: (config.repair_exp || 0) * months },
-              { label: "Gas Bill", value: (config.gas_bill_exp || 0) * months },
-              { label: "Internet", value: (config.internet_exp || 0) * months },
-              {
-                label: "Insurance",
-                value: ((config.insurance_exp || 0) / 12) * months,
-              },
-              {
-                label: "Water Bill",
-                value: (config.water_bill_exp || 0) * months,
-              },
-              {
-                label: "Property Tax",
-                value: ((config.property_tax_exp || 0) / 12) * months,
-              },
-              {
-                label: "Rent/Mortgage",
-                value: (config.rent_mortgage_exp || 0) * months,
-              },
-              {
-                label: "Labor Salary",
-                value: (config.labor_operat_salary_exp || 0) * months,
-              },
-              {
-                label: "Landscaping",
-                value: (config.landscaping_exp || 0) * months,
-              },
-              ...(saleskpi?.additional_expense || []).map((item: any) => ({
-                label: item.expname,
-                value: item.amount,
-              })),
-            ].filter((item) => item.value > 0);
-
-            // Add tender commission if available
-            if (totalTenderCommission > 0) {
-              cats.push({
-                label: "Tender Commission",
-                value: totalTenderCommission,
-              });
-            }
-
-            // Sort categories by value in descending order
-            const sortedCats = cats.sort((a, b) => b.value - a.value);
-
-            // Generate colors: red for highest value, tender commission gets special green color, others from palette
-            const colors = sortedCats.map((item, index) => {
-              if (item.label === "Tender Commission") {
-                return "#168A6F"; // Special green color for tender commission
-              }
-              if (index === 0 && item.label !== "Tender Commission") {
-                return "#E74C3C"; // Red for highest value (if not tender commission)
-              }
-              return colorPalette[index % colorPalette.length];
-            });
-
-            setCategories(sortedCats);
-            setChartColors(colors);
-          } else {
-            setCategories([]);
-            setChartColors([]);
-          }
-        } else {
-          setError("Failed to fetch expenses data");
+          setLaborHours(Number(response?.data?.labor_hours || 0));
         }
       } catch (err) {
+        console.error(err);
         setError("Error fetching expenses data");
       } finally {
         setLoading(false);
       }
     };
-
     fetchExpensesData();
-    fetchTenderCommissionData(); // Fetch tender commission data
-  }, [pageData, totalTenderCommission]); // Add totalTenderCommission as dependency
+  }, [pageData]); // Add totalTenderCommission as dependency
 
   const renderTableSkeleton = (isMobile: boolean) => {
     const rowCount = 5;
@@ -226,14 +128,14 @@ const ExpensesPage = () => {
               Label
             </th>
             <th
-              className={`text-center ${
+              className={`text-right ${
                 isMobile ? "px-2 py-1.5 text-[12px] md:text-[20px]" : "px-4 py-2 text-[15px]"
               } text-[#FFFFFF] font-normal border-r border-[#E4E4EF] w-[22.5%]`}
             >
               Amount
             </th>
             <th
-              className={`text-center ${
+              className={`text-right ${
                 isMobile ? "px-2 py-1.5 text-[12px] md:text-[20px]" : "px-4 py-2 text-[15px]"
               } text-[#FFFFFF] font-normal w-[22.5%]`}
             >
@@ -329,10 +231,8 @@ const ExpensesPage = () => {
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-            Operating Expenses
+            Labor Cost
           </button>
-          
-        
         </div>
       </div>
 
@@ -356,6 +256,62 @@ const ExpensesPage = () => {
               <Skeleton circle height={300} width={300} className="max-w-[300px]" />
             )}
           </div>
+          {/* 👇 Formula Row */}
+          {/* <div className="flex flex-col items-center bg-gray-100 px-4 py-3 rounded-lg shadow-sm">
+            <span className="text-lg font-semibold text-gray-700">
+                {`$${((pageData?.data?.labour_cost || 0) + (pageData?.data?.additional_labor_expense || 0)).toFixed(2)}`} / {laborHours} ={" "}
+                <span className="text-2xl font-bold text-gray-800 mt-1">
+                {(laborHours ? 
+                    `$${(((pageData?.data?.labour_cost || 0) +
+                        (pageData?.data?.additional_labor_expense || 0)) /
+                        laborHours
+                    ).toFixed(2)}`
+                    : "0"
+                )}
+                </span>
+            </span>
+            <span className="text-sm text-gray-500">
+                Labor Cost / Labor Hour = Labor Cost per Hour
+            </span>
+          </div> */}
+          {laborHours > 0 &&(<div className="flex flex-col items-center bg-gray-100 px-4 py-3 rounded-lg shadow-sm">
+            {/* Formula Row */}
+            <div className="flex items-center gap-2 text-lg font-semibold text-gray-700">
+                <span>
+                $
+                {(
+                    (pageData?.data?.labour_cost || 0) +
+                    (pageData?.data?.additional_labor_expense || 0)
+                ).toLocaleString()}
+                </span>
+
+                <span>/</span>
+
+                {/* 👇 This will now be vertically centered */}
+                <span className="flex items-center">
+                {laborHours.toLocaleString()}
+                </span>
+
+                <span>=</span>
+
+                {/* Result */}
+                <span className="text-2xl font-bold text-gray-800">
+                {laborHours
+                    ? `$${(
+                        ((pageData?.data?.labour_cost || 0) +
+                        (pageData?.data?.additional_labor_expense || 0)) /
+                        laborHours
+                    ).toFixed(2)}`
+                    : "$0"}
+                </span>
+            </div>
+
+            {/* Label */}
+            <span className="text-sm text-gray-500 mt-2 text-center">
+                Labor Cost / Labor Hour = Labor Cost per Hour
+            </span>
+          </div>)}
+          
           <div className="w-full flex justify-center items-center">
             <div className="w-full max-w-[99%] md:max-w-full">
               {categories.length > 0 ? (
@@ -365,10 +321,10 @@ const ExpensesPage = () => {
                       <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[12px] md:text-[20px] border-r border-[#E4E4EF] w-[55%]">
                         Label
                       </th>
-                      <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[12px] md:text-[20px] border-r border-[#E4E4EF] w-[22.5%]">
+                      <th className="text-right px-2 py-1.5 text-[#FFFFFF] font-normal text-[12px] md:text-[20px] border-r border-[#E4E4EF] w-[22.5%]">
                         Amount
                       </th>
-                      <th className="text-center px-2 py-1.5 text-[#FFFFFF] font-normal text-[12px] md:text-[20px] w-[22.5%]">
+                      <th className="text-right px-2 py-1.5 text-[#FFFFFF] font-normal text-[12px] md:text-[20px] w-[22.5%]">
                         %
                       </th>
                     </tr>
@@ -387,18 +343,10 @@ const ExpensesPage = () => {
                           {item.label || "N/A"}
                         </td>
                         <td className="px-2 py-1 text-[#636363] text-[11px] md:text-[19px] text-right border-r border-[#E4E4EF]">
-                          {tenderCommissionLoading && item.label === "Tender Commission" ? (
-                            <Skeleton width="60%" />
-                          ) : (
-                            `$${Math.round(item.value).toLocaleString()}`
-                          )}
+                          {`$${Math.round(item.value).toLocaleString()}`}
                         </td>
                         <td className="px-2 py-1 text-[#636363] text-[11px] md:text-[19px] text-right">
-                          {tenderCommissionLoading && item.label === "Tender Commission" ? (
-                            <Skeleton width="60%" />
-                          ) : (
-                            `${((item.value / total) * 100).toFixed(2)}%`
-                          )}
+                          {`${((item.value / total) * 100).toFixed(2)}%`}
                         </td>
                       </tr>
                     ))}
@@ -441,6 +389,43 @@ const ExpensesPage = () => {
           </div>
           <div className="w-full 2xl:w-1/3 flex justify-center items-center">
             <div className="w-full max-w-[31rem]">
+                {laborHours > 0 && (<div className="flex flex-col items-center bg-gray-100 px-4 py-3 rounded-lg shadow-sm">
+                    {/* Formula Row */}
+                    <div className="flex items-center gap-2 text-lg font-semibold text-gray-700">
+                        <span>
+                        $
+                        {(
+                            (pageData?.data?.labour_cost || 0) +
+                            (pageData?.data?.additional_labor_expense || 0)
+                        ).toLocaleString()}
+                        </span>
+
+                        <span>/</span>
+
+                        {/* 👇 This will now be vertically centered */}
+                        <span className="flex items-center">
+                        {laborHours.toLocaleString()}
+                        </span>
+
+                        <span>=</span>
+
+                        {/* Result */}
+                        <span className="text-2xl font-bold text-gray-800">
+                        {laborHours
+                            ? `$${(
+                                ((pageData?.data?.labour_cost || 0) +
+                                (pageData?.data?.additional_labor_expense || 0)) /
+                                laborHours
+                            ).toFixed(2)}`
+                            : "$0"}
+                        </span>
+                    </div>
+
+                    {/* Label */}
+                    <span className="text-sm text-gray-500 mt-2 text-center">
+                        Labor Cost / Labor Hour = Labor Cost per Hour
+                    </span>
+                </div>)}
               {categories.length > 0 ? (
                 <table className="w-full border-collapse text-white table-fixed rounded-[10px] border border-[#E4E4EF]">
                   <thead className="bg-[#0F1044] top-0 z-10">
@@ -448,10 +433,10 @@ const ExpensesPage = () => {
                       <th className="text-center px-4 py-2 text-[#FFFFFF] font-normal text-[15px] border-r border-[#E4E4EF] w-[55%]">
                         Label
                       </th>
-                      <th className="text-center px-4 py-2 text-[#FFFFFF] font-normal text-[15px] border-r border-[#E4E4EF] w-[22.5%]">
+                      <th className="text-right px-4 py-2 text-[#FFFFFF] font-normal text-[15px] border-r border-[#E4E4EF] w-[22.5%]">
                         Amount
                       </th>
-                      <th className="text-center px-4 py-2 text-[#FFFFFF] font-normal text-[15px] w-[22.5%]">
+                      <th className="text-right px-4 py-2 text-[#FFFFFF] font-normal text-[15px] w-[22.5%]">
                         %
                       </th>
                     </tr>
@@ -470,18 +455,10 @@ const ExpensesPage = () => {
                           {item.label || "N/A"}
                         </td>
                         <td className="px-4 py-1.5 text-[#636363] text-[14px] text-right border-r border-[#E4E4EF]">
-                          {tenderCommissionLoading && item.label === "Tender Commission" ? (
-                            <Skeleton width="60%" />
-                          ) : (
-                            `$${Math.round(item.value).toLocaleString()}`
-                          )}
+                            {`$${Math.round(item.value).toLocaleString()}`}
                         </td>
                         <td className="px-4 py-1.5 text-[#636363] text-[14px] text-right">
-                          {tenderCommissionLoading && item.label === "Tender Commission" ? (
-                            <Skeleton width="60%" />
-                          ) : (
-                            `${((item.value / total) * 100).toFixed(2)}%`
-                          )}
+                          {`${((item.value / total) * 100).toFixed(2)}%`}
                         </td>
                       </tr>
                     ))}
