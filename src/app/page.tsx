@@ -72,7 +72,8 @@ const SalesKPI: FC = () => {
   const [prevYearTenderCommission, setPrevYearTenderCommission] = useState(0);
   const [payrollTaxAmount, setPayrollTaxAmount] = useState(0);
   const [additionalLaborExpense, setAdditionalLaborExpense] = useState(0);
-
+  const [storeGrades, setStoreGrades] = useState<Record<string, { rank: number | null; percentage: number }>>({});
+  const [gradesLoading, setGradesLoading] = useState<boolean>(false);
   // Calculations
   // const labourCost = Number(data?.labour_cost) || 0;
   const taxAmount = Number(data?.tax_amt) || 0;
@@ -187,20 +188,22 @@ const SalesKPI: FC = () => {
   // Unified data fetch (sales + tenders for all periods)
   const fetchAllData = useCallback(async () => {
     if (!isValidDate(startDate) || !isValidDate(endDate) || !selectedStore) return;
+    const start = format(startDate, "yyyy-MM-dd");
+    const end = format(endDate, "yyyy-MM-dd");
+    setStoreGrades({});
     try {
       setLoading(true);
-      const start = format(startDate, "yyyy-MM-dd");
-      const end = format(endDate, "yyyy-MM-dd");
+      const months = getMonthsDifference() || 12;
 
       const [salesResp, tendersResp]: any = await Promise.all([
         sendApiRequest({
-          mode: "getSalesKpiData",          // RENAMED
+          mode: "getSalesKpiData",
           storeid: selectedStore.id,
           startdate: start,
           enddate: end,
         }),
         sendApiRequest({
-          mode: "getTendersData",           // NEW consolidated tenders endpoint
+          mode: "getTendersData",
           storeid: selectedStore.id,
           startdate: start,
           enddate: end,
@@ -361,10 +364,27 @@ const SalesKPI: FC = () => {
       } else {
         handleError(tendersResp?.message || "Failed to load Tenders");
       }
+
     } catch (e) {
       handleError("Error fetching dashboard data");
     } finally {
       setLoading(false);
+    }
+
+    // Grades fetched sequentially — main dashboard renders first, skeleton shown in grade spots
+    try {
+      setGradesLoading(true);
+      const gradesResp: any = await sendApiRequest(
+        { storeid: selectedStore.id, startdate: start, enddate: end },
+        'storesGrade'
+      );
+      if (gradesResp?.status === 200 && gradesResp.data) {
+        setStoreGrades(gradesResp.data);
+      }
+    } catch {
+      // grades failure is non-critical
+    } finally {
+      setGradesLoading(false);
     }
   }, [startDate, endDate, selectedStore]);
 
@@ -393,6 +413,20 @@ const SalesKPI: FC = () => {
       message,
       type: "error",
     });
+  };
+
+  const renderGradePercentage = (grade?: { rank: number | null; percentage: number }) => {
+    if (grade?.percentage === undefined) return null;
+
+    const isNegative = grade.percentage < 0;
+    const formattedPercentage = grade.percentage.toFixed(1);
+    const sign = grade.percentage > 0 ? "+" : "";
+
+    return (
+      <span className={`text-[12px] font-bold ${isNegative ? "text-[#FF0000]" : "text-[#168A6F]"}`}>
+        {isNegative ? "↓" : "↑"} {sign}{formattedPercentage}%
+      </span>
+    );
   };
   
   const getMonthsDifference = () => {
@@ -853,11 +887,24 @@ const SalesKPI: FC = () => {
       </div>
     )}
   </div>
-  <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpisales.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpisales.svg" />
+    </div>
+    {gradesLoading ? (
+      <Skeleton width={32} height={14} borderRadius={8} />
+    ) : (
+      <>
+        {storeGrades.netSales?.rank != null && (
+          <div className="bg-[#DDD8F0] rounded-full w-[32px] h-[32px] flex items-center justify-center">
+            <span className="text-[#5B4EA8] text-[13px] font-bold">{storeGrades.netSales.rank}</span>
+          </div>
+        )}
+        {renderGradePercentage(storeGrades.netSales)}
+      </>
+    )}
   </div>
 </div>
-{/* Profit Card */}
 <div
   className="flex flex-row bg-[#FFFFFF] rounded-lg shadow-sm cursor-pointer border-[#C2D1C3] border-b-4 w-full p-4 justify-between items-stretch"
   onClick={handleProfitCardClick}
@@ -922,8 +969,22 @@ const SalesKPI: FC = () => {
       </div>
     )}
   </div>
-  <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpiprofit.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpiprofit.svg" />
+    </div>
+    {gradesLoading ? (
+      <Skeleton width={32} height={14} borderRadius={8} />
+    ) : (
+      <>
+        {storeGrades.profit?.rank != null && (
+          <div className="bg-[#DDD8F0] rounded-full w-[32px] h-[32px] flex items-center justify-center">
+            <span className="text-[#5B4EA8] text-[13px] font-bold">{storeGrades.profit.rank}</span>
+          </div>
+        )}
+        {renderGradePercentage(storeGrades.profit)}
+      </>
+    )}
   </div>
 </div>
 
@@ -986,8 +1047,22 @@ const SalesKPI: FC = () => {
       </div>
     )}
   </div>
-  <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpicustomercount.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpicustomercount.svg" />
+    </div>
+    {gradesLoading ? (
+      <Skeleton width={32} height={14} borderRadius={8} />
+    ) : (
+      <>
+        {storeGrades.customerCount?.rank != null && (
+          <div className="bg-[#DDD8F0] rounded-full w-[32px] h-[32px] flex items-center justify-center">
+            <span className="text-[#5B4EA8] text-[13px] font-bold">{storeGrades.customerCount.rank}</span>
+          </div>
+        )}
+        {renderGradePercentage(storeGrades.customerCount)}
+      </>
+    )}
   </div>
 </div>
 
@@ -1051,8 +1126,22 @@ const SalesKPI: FC = () => {
       </div>
     )}
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/labour.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/labour.svg" />
+    </div>
+    {gradesLoading ? (
+      <Skeleton width={32} height={14} borderRadius={8} />
+    ) : (
+      <>
+        {storeGrades.laborCost?.rank != null && (
+          <div className="bg-[#DDD8F0] rounded-full w-[32px] h-[32px] flex items-center justify-center">
+            <span className="text-[#5B4EA8] text-[13px] font-bold">{storeGrades.laborCost.rank}</span>
+          </div>
+        )}
+        {renderGradePercentage(storeGrades.laborCost)}
+      </>
+    )}
   </div>
 </div>
 {/* Sales Tax Card */}
@@ -1114,8 +1203,11 @@ const SalesKPI: FC = () => {
       </div>
     )}
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpisalestax.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpisalestax.svg" />
+    </div>
+
   </div>
 </div>
 
@@ -1178,8 +1270,11 @@ const SalesKPI: FC = () => {
       </div>
     )}
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpiroyalty.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpiroyalty.svg" />
+    </div>
+
   </div>
 </div>
 
@@ -1245,8 +1340,22 @@ const SalesKPI: FC = () => {
       </div>
     )}
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpioperatingexpenses.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpioperatingexpenses.svg" />
+    </div>
+    {gradesLoading ? (
+      <Skeleton width={32} height={14} borderRadius={8} />
+    ) : (
+      <>
+        {storeGrades.operExp?.rank != null && (
+          <div className="bg-[#DDD8F0] rounded-full w-[32px] h-[32px] flex items-center justify-center">
+            <span className="text-[#5B4EA8] text-[13px] font-bold">{storeGrades.operExp.rank}</span>
+          </div>
+        )}
+        {renderGradePercentage(storeGrades.operExp)}
+      </>
+    )}
   </div>
 </div>
    {/* COGS Card */}
@@ -1309,8 +1418,22 @@ const SalesKPI: FC = () => {
       </div>
     )}
   </div>
-  <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpicogs.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#EFF6EFA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpicogs.svg" />
+    </div>
+    {gradesLoading ? (
+      <Skeleton width={32} height={14} borderRadius={8} />
+    ) : (
+      <>
+        {storeGrades.cogs?.rank != null && (
+          <div className="bg-[#DDD8F0] rounded-full w-[32px] h-[32px] flex items-center justify-center">
+            <span className="text-[#5B4EA8] text-[13px] font-bold">{storeGrades.cogs.rank}</span>
+          </div>
+        )}
+        {renderGradePercentage(storeGrades.cogs)}
+      </>
+    )}
   </div>
 </div>
 
@@ -1437,8 +1560,11 @@ const SalesKPI: FC = () => {
       </div>
     )}
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpioperatingexpenses.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpioperatingexpenses.svg" />
+    </div>
+
   </div>
 </div>
 
@@ -1501,8 +1627,11 @@ const SalesKPI: FC = () => {
       </div>
     )}
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpicustomercount.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpicustomercount.svg" />
+    </div>
+
   </div>
 </div>
 
@@ -1565,8 +1694,11 @@ const SalesKPI: FC = () => {
       </div>
     )}
   </div>
-  <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center self-center">
-    <img src="./images/saleskpicogs.svg" />
+  <div className="flex flex-col items-center justify-between gap-2 self-stretch py-1">
+    <div className="bg-[#F5EBEBA1] rounded-full w-[40px] h-[40px] flex items-center justify-center">
+      <img src="./images/saleskpicogs.svg" />
+    </div>
+
   </div>
 </div>
           </div>
