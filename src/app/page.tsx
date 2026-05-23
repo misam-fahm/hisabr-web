@@ -370,7 +370,7 @@ const SalesKPI: FC = () => {
     } finally {
       setLoading(false);
     }
-
+    
     // Grades fetched sequentially — main dashboard renders first, skeleton shown in grade spots
     try {
       setGradesLoading(true);
