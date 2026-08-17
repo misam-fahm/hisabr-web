@@ -29,6 +29,8 @@ import ToastNotification, {
 } from "@/Components/UI/ToastNotification/ToastNotification";
 import UploadInvoicepopup from "@/Components/Invoice/UploadInvoicePopup";
 import Loading from "@/Components/UI/Themes/Loading";
+import { useInvoiceUploadQueue } from "@/hooks/useInvoiceUploadQueue";
+import UploadQueuePanel from "@/Components/Invoice/UploadQueuePanel";
 import NoDataFound from "@/Components/UI/NoDataFound/NoDataFound";
 interface TableRow {
   invoicedate: string;
@@ -51,7 +53,16 @@ const Invoices = () => {
   const [isDateRangeOpen, setIsDateRangeOpen] = useState<boolean>(false);
   const [selectedInvoiceId, setSelectedInvoiceId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [uploadPdfloading, setUploadPdfLoading] = useState<boolean>(false);
+  // Upload queue hook — handles sequential multi-file uploads
+  const {
+    queue: uploadQueue,
+    addFiles: addFilesToQueue,
+    removeFromQueue,
+    clearCompleted,
+  } = useInvoiceUploadQueue(() => {
+    // Called when all uploads in queue are done
+    fetchData(globalFilter);
+  });
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [isStoreDropdownOpen, setIsStoreDropdownOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -365,135 +376,15 @@ const Invoices = () => {
     fileInputRef.current.click();
   };
 
-  const handleFileChange = async (event: any) => {
-    setCustomToast({
-      message: "",
-      type: "",
-    });
-    const file = event.target.files[0];
-
-    if (!file) {
-      alert("Please select a file.");
-      return;
-    }
-
-    if (file.type !== "application/pdf") {
-      alert("Please upload a PDF file.");
-      return;
-    }
-
-    setUploadPdfLoading(true); // Show loader during upload
-
-    try {
-      // console.log("Selected file:", file.name);
-      const formData = new FormData();
-      formData.append("file", file);
-      const response = await fetch(
-        "https://hisabr-pdf-extractor.vercel.app/process-invoice",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      const responseData = await response.json();
-      // console.log("Response:", responseData);
-
-      if (!response.ok) {
-        throw new Error("Failed to upload file.");
-      }
-
-      let getStore: any = [];
-      if (responseData?.invoice_details?.store_name !== "Not Found") {
-        getStore = await sendApiRequest({
-          mode: "getStoreByName",
-          storename: responseData?.invoice_details?.store_name,
-        });
-      }
-
-      const checkInvoiceUpload: any = await sendApiRequest({
-        mode: "checkInvoiceExist",
-        invoiceno: responseData?.invoice_details?.invoice_number,
-        storename: responseData?.invoice_details?.store_name,
-      });
-
-      if (checkInvoiceUpload?.status === 200) {
-        const jsonData: any = {
-          mode: "insertInvoice",
-          invoicenumber: responseData?.invoice_details?.invoice_number,
-          invoicedate: moment(
-            moment(
-              responseData?.invoice_details?.invoice_date,
-              "MM/DD/YYYY"
-            ).toDate()
-          ).format("YYYY-MM-DD"),
-          storename: responseData?.invoice_details?.store_name,
-          duedate: moment(
-            moment(
-              responseData?.invoice_details?.due_date,
-              "MM/DD/YYYY"
-            ).toDate()
-          ).format("YYYY-MM-DD"),
-          total: responseData?.invoice_details?.invoice_total,
-          sellername: responseData?.invoice_details?.seller_name,
-          quantity: responseData?.invoice_details?.qty_ship_total,
-          producttotal:
-            responseData?.invoice_details?.product_total ??
-            responseData?.invoice_details?.sub_total,
-          subtotal: responseData?.invoice_details?.sub_total,
-          misc: responseData?.invoice_details?.misc,
-          tax: responseData?.invoice_details?.tax_total,
-          storeid: getStore?.data?.store[0]?.storeid
-            ? getStore?.data?.store[0]?.storeid
-            : null,
-        };
-
-        const result: any = await sendApiRequest(jsonData);
-        if (result?.status === 200) {
-          const val: any = {
-            invoiceDetails: responseData?.invoice_items || [],
-          };
-          const res: any = await sendApiRequest(
-            val,
-            `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`
-          );
-          if (res?.status === 200) {
-            setCustomToast({
-              message: "Invoice uploaded successfully",
-              type: "success",
-            });
-          } else {
-            setCustomToast({
-              message: "Failed to upload invoice",
-              type: "error",
-            });
-          }
-          fetchData();
-        } else {
-          setCustomToast({
-            message: "Failed to insert invoice details",
-            type: "error",
-          });
-        }
-      } else {
-        setTimeout(() => {
-          setCustomToast({
-            message: "Invoice already uploaded",
-            type: "error",
-          });
-        }, 0);
-      }
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      setCustomToast({
-        // message: "An error occurred while uploading the file.",
-        message: "Invalid PDF format.",
-        type: "error",
-      });
-    } finally {
-      setUploadPdfLoading(false); // Hide loader after upload
-    }
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    addFilesToQueue(files);
+    // Reset input so re-selecting the same files works
+    event.target.value = "";
   };
+
+
 
   const toggleStoreDropdown = () => {
     setIsStoreDropdownOpen((prev) => !prev);
@@ -555,7 +446,7 @@ const Invoices = () => {
         message={customToast?.message}
         type={customToast?.type}
       />
-      {uploadPdfloading && <Loading />}
+
       <div className="sticky z-20 bg-[#f7f8f9] pb-6 pt-4 below-md:pt-4 below-md:pb-4 tablet:pt-4">
         <div className="flex flex-row flex-nowrap gap-3 w-full below-md:flex-col">
 
@@ -648,6 +539,8 @@ const Invoices = () => {
               id="fileInput"
               style={{ display: "none" }}
               onChange={handleFileChange}
+              multiple
+              accept=".pdf"
             />
             <button
               onClick={handleButtonClick}
@@ -748,6 +641,8 @@ const Invoices = () => {
             ref={fileInputRef}
             onChange={handleFileChange}
             className="hidden"
+            multiple
+            accept=".pdf"
           />
         </div>
         <div className="hidden below-md:block ">
@@ -889,6 +784,11 @@ const Invoices = () => {
           </DialogPanel>
         </div>
       </Dialog>
+      <UploadQueuePanel
+        queue={uploadQueue}
+        onRemove={removeFromQueue}
+        onClearCompleted={clearCompleted}
+      />
     </main>
   );
 };

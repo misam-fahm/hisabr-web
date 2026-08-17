@@ -23,6 +23,8 @@ import Skeleton from "react-loading-skeleton";
 import React from "react";
 import moment from "moment";
 import UploadInvoicepopup from "@/Components/Invoice/UploadInvoicePopup";
+import { useInvoiceUploadQueue } from "@/hooks/useInvoiceUploadQueue";
+import UploadQueuePanel from "@/Components/Invoice/UploadQueuePanel";
 
 interface TableRow {
   invoicedate: string;
@@ -226,6 +228,14 @@ const DetailsPage: React.FC = () => {
     type: "",
   });
 
+  // Upload queue hook — handles sequential multi-file uploads
+  const {
+    queue: uploadQueue,
+    addFiles: addFilesToQueue,
+    removeFromQueue,
+    clearCompleted,
+  } = useInvoiceUploadQueue();
+
   const navigateToInvoice = (invoiceId: any) => {
     const encodedId = btoa(invoiceId);
     // Make the Base64 URL-safe by replacing `+` with `-`, `/` with `_`, and removing the padding (`=`):
@@ -360,65 +370,12 @@ const DetailsPage: React.FC = () => {
     // Programmatically trigger the hidden file input
     fileInputRef.current.click();
   };
-  const handleFileChange = async (event: any) => {
-    const file = event.target.files[0];
-    if (file) {
-      console.log("Selected file:", file.name);
-      if (file && file.type === "application/pdf") {
-        const formData = new FormData();
-        formData.append("file", file);
-        try {
-          const response = await fetch("https://hisabr-pdf-extractor.vercel.app/convert-pdf", {
-            method: "POST",
-            body: formData,
-          });
-
-          const responseData = await response.json();
-          console.log("Response:", responseData);
-          if (response.ok) {
-            const jsonData: any = {
-              mode: "insertInvoice",
-              invoicenumber: responseData?.invoice_details?.invoice_number,
-              invoicedate: moment(moment(responseData?.invoice_details?.invoice_date, 'MM/DD/YYYY').toDate()).format('YYYY-MM-DD'),
-              storename: "13246",
-              duedate: moment(moment(responseData?.invoice_details?.due_date, 'MM/DD/YYYY').toDate()).format('YYYY-MM-DD'),
-              total: responseData?.invoice_details?.invoice_total,
-              sellername: responseData?.invoice_details?.seller_name,
-              quantity: responseData?.invoice_details?.qty_ship_total,
-              producttotal: responseData?.invoice_details?.product_total,
-              subtotal: responseData?.invoice_details?.sub_total,
-              misc: responseData?.invoice_details?.misc,
-              tax: responseData?.invoice_details?.tax
-            };
-            const result: any = await sendApiRequest(jsonData);
-            if (result?.status === 200) {
-              const val: any = {
-                invoiceDetails: responseData?.invoice_items || [],
-              };
-              const res: any = await sendApiRequest(val, `insertBulkInvoiceItems?invoiceid=${result?.data?.invoiceid}`);
-            } else {
-              setTimeout(() => {
-                setCustomToast({
-                  message: "Failed to insert invoice details",
-                  type: "error",
-                });
-              }, 0);
-            }
-
-          } else {
-            alert("Failed to upload file.");
-          }
-        } catch (error) {
-          console.error("Error uploading file:", error);
-          alert("An error occurred.");
-        }
-      } else {
-        alert("Please upload a PDF file.");
-      }
-    } else {
-      alert("Please select a file.");
-      return;
-    }
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    addFilesToQueue(files);
+    // Reset input so re-selecting the same files works
+    event.target.value = "";
   };
 
   const handleBack = () => {
@@ -747,6 +704,8 @@ const DetailsPage: React.FC = () => {
               ref={fileInputRef}
               onChange={handleFileChange}
               className="hidden"
+              multiple
+              accept=".pdf"
             />
           </div>
         </div>
@@ -884,6 +843,11 @@ const DetailsPage: React.FC = () => {
       <div className="mt-4  below-md:hidden">
         <Pagination table={table} totalItems={totalItems} />
       </div>
+      <UploadQueuePanel
+        queue={uploadQueue}
+        onRemove={removeFromQueue}
+        onClearCompleted={clearCompleted}
+      />
     </main>
   );
 };
